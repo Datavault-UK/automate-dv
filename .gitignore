@@ -4,3 +4,5 @@
 *.csv
 
 \.idea/
+
+*.json
