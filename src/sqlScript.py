@@ -3,7 +3,7 @@
 # from vaultBase.cliParse import CLIParse
 import sqlalchemy
 import pandas as pd
-import snowflake as sf
+import snowflake.connector as sf
 import json
 
 def create_history_statement():
@@ -96,17 +96,26 @@ def csv_file_export(result, path):
     result.to_csv(path)
 
 
-def snowflake_connector(path):
+def snowflake_connector(path, query):
     "Connects to the Snowflake database."
 
     credentials = get_credentials(path)
 
-    connection = sf.connector.connect(credentials["user"],
-                                      credentials["password"],
-                                      credentials["account_name"],
-                                      credentials["warehouse"],
-                                      credentials["database"],
-                                      credentials["schema"])
+    connection = sf.connect(user=credentials["user"],
+                            password=credentials["password"],
+                            account=credentials["account_name"],
+                            warehouse=credentials["warehouse"],
+                            database=credentials["database"],
+                            schema=credentials["schema"])
+
+    cur = connection.cursor(sf.DictCursor)
+    try:
+        results = cur.execute(query)
+        results_df = pd.DataFrame(results.fetchall())
+        print(results_df)
+    finally:
+        cur.close()
+    print(type(cur))
 
 
 def get_credentials(path):
@@ -117,7 +126,16 @@ def get_credentials(path):
 
     return credentials
 
+# def snowflake_type_to_dict(sf_type):
+#
+#     results_dict = {}
+#
+#     for row in sf_type:
 
-statement = create_history_statement()
-result = execute_statement("test_view_history", statement)
-csv_file_export(result, "./src/flatFiles/history.csv")
+
+
+# statement = create_history_statement()
+# result = execute_statement("test_view_history", statement)
+# csv_file_export(result, "/home/dev/PycharmProjects/SnowflakeDemo/src/flatFiles/history.csv")
+query = "SELECT * FROM NATION_SF_10 LIMIT 10"
+snowflake_connector("./configs/credentials.json", query)
