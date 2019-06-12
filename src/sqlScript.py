@@ -6,6 +6,7 @@ import pandas as pd
 import snowflake.connector as sf
 import json
 
+
 def create_history_statement():
     """Creating a sql statement to create a view of the history of the data."""
 
@@ -133,9 +134,23 @@ def get_credentials(path):
 #     for row in sf_type:
 
 
+def read_in_file(filepath):
+    """
+    Finds and reads in the sql file and cleans it.
+
+        :return: sql_file.
+    """
+    fd = open(filepath, 'r')
+    sql_file = fd.read()
+    fd.close()
+    sql_file = sql_file.replace('\n', "")
+    sql_file = sql_file.replace('\t', "")
+    sql_file.format("")
+    sql_commands = [command + ";" for command in sql_file.split(";") if command]
+    return sql_commands
 
 # statement = create_history_statement()
 # result = execute_statement("test_view_history", statement)
 # csv_file_export(result, "/home/dev/PycharmProjects/SnowflakeDemo/src/flatFiles/history.csv")
-query = "SELECT * FROM NATION_SF_10 LIMIT 10"
-snowflake_connector("./configs/credentials.json", query)
+# query = "SELECT * FROM NATION_SF_10 LIMIT 10"
+# snowflake_connector("./configs/credentials.json", query)
