@@ -1,9 +1,10 @@
-from vaultBase.connector import Connector
-from vaultBase.logger import Logger
-from vaultBase.cliParse import CLIParse
+# from vaultBase.connector import Connector
+# from vaultBase.logger import Logger
+# from vaultBase.cliParse import CLIParse
 import sqlalchemy
 import pandas as pd
-
+import snowflake.connector as sf
+import json
 
 def create_history_statement():
     """Creating a sql statement to create a view of the history of the data."""
@@ -60,39 +61,81 @@ def execute_statement(view_name, statement):
     # program_name = 'sqlScript'
     #
     # cli_args = CLIParse('Generates and executes sql statements', program_name)
-    # con_settings = "MYSQL+pymysql://root:Password123!!@192.168.1.98/sql_tests"
+    # con_settings = "mysql+pymysql://root:Password123!!@192.168.1.98/sql_tests"
     # log = Logger("connections", cli_args)
     # connector = Connector(log, con_settings)
+    #
+    # connector.query(statement)
 
-    con_string = "mysql+pymysql://root:Password123!!@192.168.1.98/sql_tests"
+    con_settings = "mysql+pymysql://root:Password123!!@192.168.1.98/sql_tests"
 
-    engine = sqlalchemy.create_engine(con_string)
+    engine = sqlalchemy.create_engine(con_settings)
 
-    connection = engine.connect()
+    connector = engine.connect()
 
-    connection.execute(statement)
+    connector.execute(statement)
 
-    result = pd.read_sql_table("test_view_history", con_string)
+    result = pd.read_sql_table(view_name, con_settings)
 
-    drop_view(view_name, connection)
+    drop_view(view_name, connector)
 
     return result
 
 
-def drop_view(view_name, connection):
+def drop_view(view_name, connector):
     """Dropping the view after it has been returned as a panda's dataframe."""
 
     statement = "DROP VIEW {};".format(view_name)
 
-    connection.execute(statement)
+    connector.execute(statement)
 
 
 def csv_file_export(result, path):
     """Exports the Panda's dataframe as a CSV file."""
 
-    result.to_csv(path, header=False)
+    result.to_csv(path)
 
 
-statement = create_history_statement()
-result = execute_statement("test_view_history", statement)
-csv_file_export(result, "/home/dev/PycharmProjects/SnowflakeDemo/src/flatFiles/history.csv")
+def snowflake_connector(path, query):
+    "Connects to the Snowflake database."
+
+    credentials = get_credentials(path)
+
+    connection = sf.connect(user=credentials["user"],
+                            password=credentials["password"],
+                            account=credentials["account_name"],
+                            warehouse=credentials["warehouse"],
+                            database=credentials["database"],
+                            schema=credentials["schema"])
+
+    cur = connection.cursor(sf.DictCursor)
+    try:
+        results = cur.execute(query)
+        results_df = pd.DataFrame(results.fetchall())
+        print(results_df)
+    finally:
+        cur.close()
+    print(type(cur))
+
+
+def get_credentials(path):
+    """Gets the required credentials from the json file."""
+
+    with open(path, "r") as read_file:
+        credentials = json.load(read_file)
+
+    return credentials
+
+# def snowflake_type_to_dict(sf_type):
+#
+#     results_dict = {}
+#
+#     for row in sf_type:
+
+
+
+# statement = create_history_statement()
+# result = execute_statement("test_view_history", statement)
+# csv_file_export(result, "/home/dev/PycharmProjects/SnowflakeDemo/src/flatFiles/history.csv")
+query = "SELECT * FROM NATION_SF_10 LIMIT 10"
+snowflake_connector("./configs/credentials.json", query)
