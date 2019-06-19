@@ -1,3 +1,4 @@
+create view V_DAY1 as
 select
   a.L_ORDERKEY as ORDERKEY,
 	a.L_PARTKEY as PARTKEY ,
@@ -67,4 +68,4 @@ left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.SUPPLIER as h on a.L_SUPPKEY = h.S_SUP
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.NATION as j on h.S_NATIONKEY = j.N_NATIONKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.REGION as k on j.N_REGIONKEY = k.R_REGIONKEY
 where b.O_ORDERDATE between cast('1993-01-01' as date) AND cast('1993-01-02' as date)
-limit 50
+limit 50;

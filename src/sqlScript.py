@@ -5,6 +5,8 @@ import sqlalchemy
 import pandas as pd
 import snowflake.connector as sf
 import json
+import os
+from codecs import open
 
 
 def create_history_statement():
@@ -76,11 +78,11 @@ def execute_statement(view_name, statement):
 
     connector.execute(statement)
 
-    result = pd.read_sql_table(view_name, con_settings)
+    # result = pd.read_sql_table(view_name, con_settings)
+    #
+    # drop_view(view_name, connector)
 
-    drop_view(view_name, connector)
-
-    return result
+    #return result
 
 
 def drop_view(view_name, connector):
@@ -97,10 +99,10 @@ def csv_file_export(result, path):
     result.to_csv(path)
 
 
-def snowflake_connector(path, query):
-    "Connects to the Snowflake database."
+def snowflake_connector(filepath, credentials_path): #, query):
+    """Connects to the Snowflake database."""
 
-    credentials = get_credentials(path)
+    credentials = get_credentials(credentials_path)
 
     connection = sf.connect(user=credentials["user"],
                             password=credentials["password"],
@@ -109,14 +111,19 @@ def snowflake_connector(path, query):
                             database=credentials["database"],
                             schema=credentials["schema"])
 
-    cur = connection.cursor(sf.DictCursor)
-    try:
-        results = cur.execute(query)
-        results_df = pd.DataFrame(results.fetchall())
-        print(results_df)
-    finally:
-        cur.close()
-    print(type(cur))
+    #cur = connection.cursor()
+
+    with open(filepath, 'r', encoding='utf-8') as f:
+        for cur in connection.execute_stream(f):
+            for ret in cur:
+                print(ret)
+    # try:
+    #     results = cur.execute(query)
+    #     # results_df = pd.DataFrame(results.fetchall())
+    #     # print(results_df)
+    # finally:
+    #     cur.close()
+    # #print(type(cur))
 
 
 def get_credentials(path):
@@ -148,6 +155,19 @@ def read_in_file(filepath):
     sql_file.format("")
     sql_commands = [command + ";" for command in sql_file.split(";") if command]
     return sql_commands
+
+
+def flat_file_view_loader(filepath, credentials_path="./configs/credentials.json"):
+    """
+    Puts the flat file load sql statements in an order and then executes them against the
+    Snowflake database.
+    """
+    files = os.listdir(filepath)
+
+    for file in files:
+        if ".sql" in file:
+            snowflake_connector(filepath+file, credentials_path)
+
 
 # statement = create_history_statement()
 # result = execute_statement("test_view_history", statement)

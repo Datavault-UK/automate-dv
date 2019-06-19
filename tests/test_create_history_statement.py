@@ -48,4 +48,7 @@ class TestSqlScript(TestCase):
             self.assertTrue(sql_commands[query_index], str)
             self.assertIn(";", sql_commands[query_index])
 
-
+    def test_flat_file_view_loader(self):
+        sql.flat_file_view_loader("./test_configs/flatfileloads/",
+                                  credentials_path="./test_configs/test_credentials.json")
+        #self.assertIsInstance(sql_commands, list)

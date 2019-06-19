@@ -1,0 +1,15 @@
+
+# This source entry describes the table:
+#   "raw"."public"."Orders_"
+#
+# It can be referenced with:
+#  {{ source('ecommerce', 'orders') }}
+
+version: 2
+
+sources:
+  - name: v_stg
+    database: DV_PROTOTYPE_DB  # Tell dbt to look for the source in the "raw" database
+    schema: STG # You wouldn't put your source data in public, would you?
+    tables:
+      - name: V_STG_CUSTOMER
