@@ -1,6 +1,6 @@
 from helpers.TestData import TestData
 
 
-def test_data(context, scenario):
-    testdata = TestData()
-    return testdata
+def before_scenario(context, scenario):
+    context.testdata = TestData("/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/credentials.json")
+

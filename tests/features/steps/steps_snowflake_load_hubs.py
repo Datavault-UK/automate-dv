@@ -9,15 +9,15 @@ use_step_matcher("parse")
 
 @given("there is an empty HUB_CUSTOMER table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "VLT", "HUB_CUSTOMER",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "TEST_SRC", "HUB_CUSTOMER",
                                      ["CUSTOMER_PK BINARY(16)", "CUSTOMERKEY NUMBER(38,0)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
 
 
 @step("there are records in the V_STG_CUSTOMER view")
 def step_impl(context):
-    pass
-
+    table = context.testdata.context_table_to_df(context.table)
+    print("")
 
 @step("I run the snowflakeDemonstrator")
 def step_impl(context):
