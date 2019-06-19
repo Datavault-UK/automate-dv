@@ -1,5 +1,7 @@
 from behave import *
 
+import bindings
+
 use_step_matcher("parse")
 
 # Data From TPCH is joined into a history flat file view
@@ -24,23 +26,60 @@ def step_impl(context):
 
 @step("the history flat file must have 57 columns")
 def step_impl(context):
-    result = context.testdata.general_sql_statement_to_df(
-                "SELECT COUNT(COLUMN_NAME) AS COLUMN_COUNT FROM DV_PROTOTYPE_DB.INFORMATION_SCHEMA.COLUMNS "
-                "WHERE TABLE_CATALOG = 'DV_PROTOTYPE_DB' "
-                "AND TABLE_SCHEMA = 'TEST_SRC' "
-                "AND TABLE_NAME = 'V_HISTORY';")
-    if result[0][0] == 57:
-        return True
-    else:
-        return False
+
+    bindings.column_count(context, "DV_PROTOTYPE_DB", "TEST_SRC", "V_HISTORY", 57)
 
 
 @step("there are no records past the specified date")
 def step_impl(context):
-    result = context.testdata.general_sql_statement_to_df(
-        "SELECT COUNT(*) FROM DV_PROTOTYPE_DB.TEST_SRC.V_HISTORY AS a "
-        "WHERE a.ORDERDATE > CAST('1993-01-01' AS DATE);")
+
+    sql = ("SELECT COUNT(*) FROM DV_PROTOTYPE_DB.TEST_SRC.V_HISTORY AS a "
+           "WHERE a.ORDERDATE > CAST('1993-01-01' AS DATE);")
+
+    result = context.testdata.general_sql_statement_to_df(sql)
+
     if result[0][0] == 0:
         return True
     else:
         return False
+
+# Data From TPCH is joined into a flat file view for day1 load
+
+
+@step("I run the sql query to create the day1 flat file")
+def step_impl(context):
+    context.testdata.drop_table("DV_PROTOTYPE_DB", "TEST_SRC", "V_DAY1", materialise="view")
+    context.testdata.execute_sql_from_file(
+        "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/v_day1.sql")
+
+
+@step("the day1 flat file must have 57 columns")
+def step_impl(context):
+
+    bindings.column_count(context, "DV_PROTOTYPE_DB", "TEST_SRC", "V_DAY1", 57)
+
+
+@step("there are only records between the day1 date and history date")
+def step_impl(context):
+
+    sql = [("SELECT COUNT(*) FROM DV_PROTOTYPE_DB.TEST_SRC.V_DAY1 AS a "
+            "WHERE a.ORDERDATE < CAST('1993-01-01' AS DATE)"),
+           ("SELECT COUNT(*) FROM DV_PROTOTYPE_DB.TEST_SRC.V_DAY1 AS a "
+            "WHERE a.ORDERDATE > CAST('1993-01-02' AS DATE)")]
+
+    results1 = context.testdata.general_sql_statement_to_df(sql[0])
+    results2 = context.testdata.general_sql_statement_to_df(sql[1])
+
+    if results1[0][0] == 0 and results2[0][0] == 0:
+        return True
+    else:
+        return False
+
+
+# Data From TPCH is joined into a flat file view for day2 load
+
+@step("I run the sql query to create the day2 flat file")
+def step_impl(context):
+    context.testdata.drop_table("DV_PROTOTYPE_DB", "TEST_SRC", "V_DAY2", materialise="view")
+    context.testdata.execute_sql_from_file(
+        "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/v_day2.sql")

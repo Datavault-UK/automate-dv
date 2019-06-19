@@ -14,3 +14,16 @@ Feature: Source Table Creator
     When I run the sql query to create the history flat file
     Then the history flat file must have 57 columns
     And there are no records past the specified date
+
+
+  Scenario: Data From TPCH is joined into a flat file view for day1 load
+    Given there is data in the TPCH sample data
+    When I run the sql query to create the day1 flat file
+    Then the day1 flat file must have 57 columns
+    And there are only records between the day1 date and history date
+
+  Scenario: Data From TPCH is joined into a flat file view for day2 load
+    Given there is data in the TPCH sample data
+    When I run the sql query to create the day2 flat file
+    Then the day2 flat file must have 57 columns
+    And there are only records between the day2 date and history date
