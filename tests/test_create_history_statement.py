@@ -35,3 +35,20 @@ class TestSqlScript(TestCase):
         for item in credentials:
             self.assertIsInstance(credentials[item], str)
 
+    def test_read_in_file_single_statement(self):
+        sql_file = sql.read_in_file("./test_configs/SnowflakeHistoryViewTemplateTest.sql")
+        self.assertIsInstance(sql_file, str)
+
+    def test_read_in_file_multiple_statements(self):
+        sql_commands = sql.read_in_file("./test_configs/snowflakeEnvSetupTest.sql")
+        self.assertIsInstance(sql_commands, list)
+        self.assertTrue(len(sql_commands), 3)
+
+        for query_index in range(len(sql_commands)):
+            self.assertTrue(sql_commands[query_index], str)
+            self.assertIn(";", sql_commands[query_index])
+
+    def test_flat_file_view_loader(self):
+        sql.flat_file_view_loader("./test_configs/flatfileloads/",
+                                  credentials_path="./test_configs/test_credentials.json")
+        #self.assertIsInstance(sql_commands, list)

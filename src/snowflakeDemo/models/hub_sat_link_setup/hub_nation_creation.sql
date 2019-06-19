@@ -1,0 +1,9 @@
+{{ config(schema='VLT') }}
+
+select
+  NATION_PK as NATION_PK,
+	CUSTOMER_NATIONKEY as CUSTOMER_NATION,
+	LOADDATE as LOADDATE,
+	SOURCE as SOURCE
+from DV_DATABASE_DB.STG.V_STG_CUSTOMER as stg
+where 1=0
