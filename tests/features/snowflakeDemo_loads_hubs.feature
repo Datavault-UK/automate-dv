@@ -12,16 +12,38 @@ Feature: Loads Hubs
   Scenario: Distinct data from stage is loaded into an empty hub
     Given there is an empty HUB_CUSTOMER table
     And there are records in the V_STG_CUSTOMER view
-      | CUSTOMER_PK           | CUSTOMERKEY | LOADDATE   | SOURCE |
-      | md5_binary('1388608') | 1388608     | 1993-01-02 | TPCH   |
-      | md5_binary('1244606') | 1244606     | 1993-01-02 | TPCH   |
-      | md5_binary('851140')  | 851140      | 1993-01-02 | TPCH   |
-      | md5_binary('592927')  | 592927      | 1993-01-02 | TPCH   |
-      | md5_binary('1388608') | 1388608     | 1993-01-02 | TPCH   |
-    When I run the snowflakeDemonstrator
-    Then the records from V_STG_CUSTOMER should have been inserted into HUB_CUSTOMER
-      | CUSTOMER_PK    | CUSTOMERKEY | LOADDATE   | SOURCE |
-      | md5('1388608') | 1388608     | 1993-01-02 | TPCH   |
-      | md5('1244606') | 1244606     | 1993-01-02 | TPCH   |
-      | md5('851140')  | 851140      | 1993-01-02 | TPCH   |
-      | md5('592927')  | 592927      | 1993-01-02 | TPCH   |
+      |CUSTOMER_PK|NATION_PK|CUSTOMER_NATION_PK|HASHDIFF                     |CUSTOMERKEY|CUSTOMER_NAME|CUSTOMER_PHONE  |CUSTOMER_NATIONKEY|LOADDATE  |SOURCE|
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-01|TPCH  |
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-01|TPCH  |
+      |md5('1002')|md5('8') |md5('1002**8')    |md5('BOB**17-214-233-1215')  |1002       |Bob          |17-214-233-1215 |8                 |1993-01-01|TPCH  |
+      |md5('1003')|md5('4') |md5('1003**4')    |md5('CHAD**17-214-233-1216') |1003       |Chad         |17-214-233-1216 |4                 |1993-01-01|TPCH  |
+      |md5('1004')|md5('9') |md5('1004**9')    |md5('DOM**17-214-233-1217')  |1004       |Dom          |17-214-233-1217 |9                 |1993-01-01|TPCH  |
+    When I run the hub load sql script
+    Then only distinct records from STG_CUSTOMER are inserted into HUB_CUSTOMER
+      | customer_pk | customerkey | loaddate   | source |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-01 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-01 | TPCH   |
+
+  Scenario: Unchanged records in stage are not loaded into the hub with pre-existing data
+    Given there are records in the HUB_CUSTOMER table
+      | customer_pk | customerkey | loaddate   | source |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+    And there is data in the stage
+      |CUSTOMER_PK|NATION_PK|CUSTOMER_NATION_PK|HASHDIFF                     |CUSTOMERKEY|CUSTOMER_NAME|CUSTOMER_PHONE  |CUSTOMER_NATIONKEY|LOADDATE  |SOURCE|
+      |md5('1002')|md5('8') |md5('1002**8')    |md5('BOB**17-214-233-1215')  |1002       |Bob          |17-214-233-1215 |8                 |1993-01-01|TPCH  |
+      |md5('1003')|md5('4') |md5('1003**4')    |md5('CHAD**17-214-233-1216') |1003       |Chad         |17-214-233-1216 |4                 |1993-01-01|TPCH  |
+      |md5('1004')|md5('9') |md5('1004**9')    |md5('DOM**17-214-233-1217')  |1004       |Dom          |17-214-233-1217 |9                 |1993-01-01|TPCH  |
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-02|TPCH  |
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-02|TPCH  |
+    When I run the hub load sql script
+    Then only different or unchanged records are loaded to the hub
+      | customer_pk | customerkey | loaddate   | source |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-01 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-01 | TPCH   |
+
+
