@@ -1,4 +1,4 @@
-{{ config(schema='VLT') }}
+{{ config(schema='VLT', materialized='table', enabled=false) }}
 
 MERGE INTO DV_PROTOTYPE_DB.VLT.LINK_CUSTOMER_NATION AS link
 USING (

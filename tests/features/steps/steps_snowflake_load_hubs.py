@@ -24,7 +24,7 @@ def step_impl(context):
                                       "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
                                       "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE"],
+                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"],
                                      materialise="table")
     context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "TEST_STG")
 
@@ -58,7 +58,7 @@ def step_impl(context):
                                       "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
                                       "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE"],
+                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"],
                                      materialise="table")
     context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "TEST_STG")
 

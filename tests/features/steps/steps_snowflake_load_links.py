@@ -42,7 +42,7 @@ def step_impl(context):
                                       "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
                                       "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE"],
+                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"],
                                      materialise="table")
     context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "TEST_STG")
 
@@ -78,18 +78,6 @@ def step_impl(context):
     context.testdata.insert_data_from_ct(context.table, "LINK_CUSTOMER_NATION", "TEST_VLT")
 
 
-@step("records are in STG_CUSTOMER")
-def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "TEST_STG", "STG_CUSTOMER",
-                                     ["CUSTOMER_PK VARCHAR(32)", "NATION_PK VARCHAR(32)",
-                                      "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
-                                      "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
-                                      "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE"],
-                                     materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "TEST_STG")
-
-
 @step("only different or unchanged records are loaded to the link")
 def step_impl(context):
     sql = "SELECT * FROM DV_PROTOTYPE_DB.TEST_VLT.LINK_CUSTOMER_NATION AS link ORDER BY link.LOADDATE;"
@@ -111,16 +99,9 @@ def step_impl(context):
                                       "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
                                       "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE"],
+                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"],
                                      materialise="table")
     context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "TEST_STG")
-
-
-# @step("I run the load to the link")
-# def step_impl(context):
-#     context.testdata.execute_sql_from_file(
-#         ("/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/"
-#          "sqlFiles/link_customer_nation_history_load.sql"))
 
 
 @step("only the first seen distinct records are loaded into the link")

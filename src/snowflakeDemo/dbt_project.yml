@@ -38,26 +38,15 @@ models:
   snowflake_demo:
 
     # configures models found in models/csvs/
-    csvs:
-      enabled: "true"
-      materialized: "view"
+    source_creation:
+      enabled: true
+      materialized: "incremental"
 
-    # This configures models found in models/events/
-    events:
+    stg:
       enabled: true
       materialized: view
 
-    # configures models found in models/stg/
-    stg:
-      enabled: "true"
-      materialized: "view"
-
-    # configures models found in models/hub_sat_link_setup/
-    hub_sat_link_setup:
+    hub_sat_link_load:
       enabled: true
       materialized: table
-
-    # configures models found in models/hub_sat_link_load/
-    hub_sat_link_load:
-      enabled: "true"
 

@@ -15,7 +15,7 @@ def step_impl(context):
                                       ("CUSTOMER_PK VARCHAR(32) FOREIGN KEY REFERENCES "
                                        "DV_PROTOTYPE_DB.TEST_VLT.HUB_CUSTOMER(CUSTOMER_PK)"),
                                       "CUSTOMER_NAME VARCHAR(25)", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
-                                      "SOURCE VARCHAR(4)"], materialise="table")
+                                      "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"], materialise="table")
 
 
 @step("I run the satellite load sql")
@@ -47,7 +47,7 @@ def step_impl(context):
                                       ("CUSTOMER_PK VARCHAR(32) FOREIGN KEY REFERENCES "
                                        "DV_PROTOTYPE_DB.TEST_VLT.HUB_CUSTOMER(CUSTOMER_PK)"),
                                       "CUSTOMER_NAME VARCHAR(25)", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
-                                      "SOURCE VARCHAR(4)"], materialise="table")
+                                      "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"], materialise="table")
     context.testdata.insert_data_from_ct(context.table, "SAT_HUB_CUSTOMER", "TEST_VLT")
 
 

@@ -1,3 +1,4 @@
+{{config(enabled=false)}}
 select
   a.L_ORDERKEY as ORDERKEY,
 	a.L_PARTKEY as PARTKEY ,
@@ -9,9 +10,9 @@ select
 	a.L_TAX as TAX,
 	a.L_RETURNFLAG as RETURNFLAG,
 	a.L_LINESTATUS as LINESTATUS,
-	case when a.L_SHIPDATE > '1993-01-03' then null else a.L_SHIPDATE end as SHIPDATE,
-	case when a.L_COMMITDATE > '1993-01-03' then null else a.L_COMMITDATE end as COMMITDATE,
-	case when a.L_RECEIPTDATE > '1993-01-03' then null else a.L_RECEIPTDATE end as RECEIPTDATE,
+	case when a.L_SHIPDATE > '1993-01-01' then null else a.L_SHIPDATE end as SHIPDATE,
+	case when a.L_COMMITDATE > '1993-01-01' then null else a.L_COMMITDATE end as COMMITDATE,
+	case when a.L_RECEIPTDATE > '1993-01-01' then null else a.L_RECEIPTDATE end as RECEIPTDATE,
 	a.L_SHIPINSTRUCT as SHIPINSTRUCT,
 	a.L_SHIPMODE as SHIPMODE,
 	a.L_COMMENT as LINE_COMMENT,
@@ -66,5 +67,5 @@ left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.PART as g on a.L_PARTKEY = g.P_PARTKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.SUPPLIER as h on a.L_SUPPKEY = h.S_SUPPKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.NATION as j on h.S_NATIONKEY = j.N_NATIONKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.REGION as k on j.N_REGIONKEY = k.R_REGIONKEY
-where b.O_ORDERDATE between cast('1993-01-01' as date) and cast('1993-1-03' as date)
-limit 50
+where b.O_ORDERDATE <= '1993-01-01'
+limit 10
