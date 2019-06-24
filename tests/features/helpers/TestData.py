@@ -144,6 +144,7 @@ class TestData:
     def general_sql_statement_to_df(self, query):
 
         result_df = pd.read_sql(query, self.engine)
+        result_df.columns = map(str.upper, result_df.columns)
 
         return result_df
 

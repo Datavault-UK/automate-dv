@@ -12,9 +12,9 @@ def step_impl(context):
     results = context.testdata.general_sql_statement_to_df(
         "SELECT COUNT(*) FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.ORDERS;")
     if results[0][0] != 0:
-        return True
+        assert True
     else:
-        return False
+        assert False
 
 
 @step("I run the sql query to create the history flat file")
@@ -43,9 +43,9 @@ def step_impl(context):
     result = context.testdata.general_sql_statement_to_df(sql)
 
     if result[0][0] == 0:
-        return True
+        assert True
     else:
-        return False
+        assert False
 
 # Data From TPCH is joined into a flat file view for day1 load
 
@@ -81,9 +81,9 @@ def step_impl(context):
     results2 = context.testdata.general_sql_statement_to_df(sql[1])
 
     if results1[0][0] == 0 and results2[0][0] == 0:
-        return True
+        assert True
     else:
-        return False
+        assert False
 
 
 # Data From TPCH is joined into a flat file view for day2 load
@@ -119,9 +119,9 @@ def step_impl(context):
     results2 = context.testdata.general_sql_statement_to_df(sql[1])
 
     if results1[0][0] == 0 and results2[0][0] == 0:
-        return True
+        assert True
     else:
-        return False
+        assert False
 
 
 # Data From TPCH is joined into a flat file view for day3 load
@@ -155,6 +155,6 @@ def step_impl(context):
     results2 = context.testdata.general_sql_statement_to_df(sql[1])
 
     if results1[0][0] == 0 and results2[0][0] == 0:
-        return True
+        assert True
     else:
-        return False
+        assert False

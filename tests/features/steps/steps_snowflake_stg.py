@@ -29,9 +29,9 @@ def step_impl(context):
     result = context.testdata.general_sql_statement_to_df(sql)
 
     if result["COUNT(*)"][0] > 0:
-        return True
+        assert True
     else:
-        return False
+        assert False
 
 
 @step("it contains the original data and required hashes")
@@ -40,6 +40,6 @@ def step_impl(context):
     result_df = DataFrame(context.testdata.get_table_data("DV_PROTOTYPE_DB.TEST_STG.V_STG_CUSTOMER"), dtype=str)
 
     if result_df.equals(table_df):
-        return True
+        assert True
     else:
-        return False
+        assert False
