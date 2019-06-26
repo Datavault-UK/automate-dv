@@ -1,5 +1,5 @@
 from unittest import TestCase
-import sqlScript as sql
+import sqlFunctionLibrary as sql
 import pandas as pd
 import sqlalchemy
 import os

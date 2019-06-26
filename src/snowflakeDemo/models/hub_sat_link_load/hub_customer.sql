@@ -1,5 +1,4 @@
-{{ config(schema='VLT', materialized='table', unique_key='DV_PROTOTYPE_DB.SRC_STG.V_STG_TPCH_DATA.CUSTOMER_PK',
-  post_hook = 'ALTER TABLE DV_PROTOTYPE_DB.SRC_VLT.HUB_CUSTOMER ADD PRIMARY KEY (CUSTOMER_PK)') }}
+{{ config(schema='VLT', materialized='incremental', unique_key='CUSTOMER_PK', enabled=true) }}
 
 SELECT DISTINCT
   stg.CUSTOMER_PK,
@@ -13,15 +12,15 @@ SELECT
 	a.LOADDATE,
 	LAG(a.LOADDATE, 1) OVER(PARTITION BY a.CUSTOMER_PK ORDER BY a.LOADDATE) AS FIRST_SEEN,
 	a.SOURCE
-FROM DV_PROTOTYPE_DB.SRC_STG.V_STG_TPCH_DATA AS a) AS stg
+FROM {{ref('v_stg_tpch_data')}} AS a) AS stg
 
 {% if is_incremental() %}
 
-  WHERE stg.FIRST_SEEN IS NULL
+WHERE stg.CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM {{this}}) AND stg.FIRST_SEEN IS NULL
 
 {% else %}
 
-  WHERE stg.FIRST_SEEN IS NULL
+WHERE stg.FIRST_SEEN IS NULL
 
 {% endif %}
 

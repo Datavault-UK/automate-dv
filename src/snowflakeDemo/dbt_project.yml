@@ -34,6 +34,10 @@ clean-targets:         # directories to be removed by `dbt clean`
 # dbt_project.yml
 
 models:
+  vars:
+    history_date: TO_DATE('1993-01-01')
+    date: TO_DATE('1993-01-01')
+
   # Be sure to namespace your model configs to your project name
   snowflake_demo:
 
@@ -49,4 +53,7 @@ models:
     hub_sat_link_load:
       enabled: true
       materialized: table
+
+    flags:
+      enabled: true
 

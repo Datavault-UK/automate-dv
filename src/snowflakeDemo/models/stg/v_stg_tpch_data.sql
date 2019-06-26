@@ -1,7 +1,7 @@
 {{config(
 	schema='STG',
 	materialized='view',
-	enabled=false
+	enabled=true
 )}}
 
 SELECT 
@@ -90,11 +90,11 @@ SELECT
 		IFNULL(UPPER(TRIM(CAST(a.LINENUMBER AS VARCHAR))), '^^'), '||',
 		IFNULL(UPPER(TRIM(CAST(a.SUPPLIERKEY AS VARCHAR))), '^^'))) AS LINEITEM_SUPPLIER_PK,
 	a.*,
-	CAST('1993-01-01' AS DATE) AS LOADDATE,
-  CAST('1993-01-01' AS DATE) AS EFFECTIVE_FROM,
+	{{var("date")}} AS LOADDATE,
+	{{var("date")}} AS EFFECTIVE_FROM,
 	'TPCH' AS SOURCE,
   a.ORDERKEY AS o_key
-FROM DV_PROTOTYPE_DB.SRC.SOURCE_SYSTEM AS a
+FROM {{ref('source_system')}} AS a
 ORDER BY a.ORDERKEY
-LIMIT 10
+LIMIT 20
 

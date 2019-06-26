@@ -1,4 +1,4 @@
-{{config(enabled=false,
+{{config(enabled=true,
 materialized='incremental')}}
 
 select
@@ -12,9 +12,9 @@ select
 	a.L_TAX as TAX,
 	a.L_RETURNFLAG as RETURNFLAG,
 	a.L_LINESTATUS as LINESTATUS,
-	case when a.L_SHIPDATE > '1993-01-01' then null else a.L_SHIPDATE end as SHIPDATE,
-	case when a.L_COMMITDATE > '1993-01-01' then null else a.L_COMMITDATE end as COMMITDATE,
-	case when a.L_RECEIPTDATE > '1993-01-01' then null else a.L_RECEIPTDATE end as RECEIPTDATE,
+	case when a.L_SHIPDATE > {{var("date")}} then null else a.L_SHIPDATE end as SHIPDATE,
+	case when a.L_COMMITDATE > {{var("date")}}  then null else a.L_COMMITDATE end as COMMITDATE,
+	case when a.L_RECEIPTDATE > {{var("date")}}  then null else a.L_RECEIPTDATE end as RECEIPTDATE,
 	a.L_SHIPINSTRUCT as SHIPINSTRUCT,
 	a.L_SHIPMODE as SHIPMODE,
 	a.L_COMMENT as LINE_COMMENT,
@@ -72,11 +72,11 @@ left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.REGION as k on j.N_REGIONKEY = k.R_REG
 
 {% if is_incremental() %}
 
-  where b.O_ORDERDATE between cast('1993-01-01' as date) and dateadd(day, 1, to_date('1993-01-01'))
+  where b.O_ORDERDATE between {{var("history_date")}}  and {{var("date")}}
 
 {% else %}
 
-  where b.O_ORDERDATE <= cast('1993-01-01' as date)
+  where b.O_ORDERDATE <= {{var("date")}}
 
 {% endif %}
 
