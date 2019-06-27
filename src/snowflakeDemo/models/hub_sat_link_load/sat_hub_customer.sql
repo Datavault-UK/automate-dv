@@ -1,4 +1,4 @@
-{{ config(schema='VLT', materialized='incremental', enabled=true)}}
+{{ config(schema='VLT', materialized='incremental', enabled=false)}}
 
 SELECT DISTINCT
 	stg.CUSTOMER_HASHDIFF,

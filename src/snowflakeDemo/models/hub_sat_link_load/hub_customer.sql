@@ -1,4 +1,4 @@
-{{ config(schema='VLT', materialized='incremental', unique_key='CUSTOMER_PK', enabled=true) }}
+{{ config(schema='VLT', materialized='incremental', unique_key='CUSTOMER_PK', enabled=false) }}
 
 SELECT DISTINCT
   stg.CUSTOMER_PK,
