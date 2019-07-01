@@ -1,0 +1,32 @@
+analysis-paths:
+- analysis
+clean-targets:
+- target
+- dbt_modules
+data-paths:
+- data
+macro-paths:
+- macros
+models:
+  snowflake_demo:
+    hub_sat_link_load:
+      enabled: true
+      materialized: incremental
+      tags: history
+    source_creation:
+      enabled: true
+      materialized: incremental
+      tags: history
+    stg:
+      enabled: true
+      materialized: view
+      tags: history
+  vars:
+    history_end_date: 1993-01-02
+    history_start_date: 1993-01-01
+profile: my-snowflake-db
+source-paths:
+- models
+target-path: target
+test-paths:
+- tests
