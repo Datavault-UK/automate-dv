@@ -1,14 +1,14 @@
 {{ config(schema='VLT', materialized='incremental', enabled=false, unique_key='CUSTOMER_NATION_PK') }}
 
 SELECT DISTINCT
-  stg.CUSTOMER_NATION_PK,
+  stg.CUSTOMERKEY_NATION_PK,
   stg.CUSTOMER_PK,
   stg.NATION_PK,
   stg.LOADDATE,
   stg.SOURCE
 FROM (
 SELECT
-  a.CUSTOMER_NATION_PK,
+  a.CUSTOMERKEY_NATION_PK,
   a.CUSTOMER_PK,
   a.NATION_PK,
   a.LOADDATE,

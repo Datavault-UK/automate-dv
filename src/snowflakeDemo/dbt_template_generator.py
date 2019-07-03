@@ -1,5 +1,6 @@
 import logging
 import datetime
+from toolz import pipe
 from yaml import load, dump
 
 try:

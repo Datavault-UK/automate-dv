@@ -1,4 +1,5 @@
-{{ config(schema='VLT', materialized='incremental', unique_key='NATION_PK', enabled=false) }}
+{{ config(schema='VLT', materialized='incremental', unique_key='NATION_PK', enabled=false,
+post_hook='DROP VIEW IF EXISTS {{ref("v_nation")}}') }}
 
 SELECT DISTINCT
   stg.NATION_PK,
@@ -21,6 +22,25 @@ WHERE stg.NATION_PK NOT IN (SELECT NATION_PK FROM {{this}}) AND stg.FIRST_SEEN I
 {% else %}
 
 WHERE stg.FIRST_SEEN IS NULL
+
+{% endif %}
+
+LIMIT 10
+
+SELECT DISTINCT
+	v.NATION_PK,
+	v.NATIONKEY,
+	v.LOADDATE,
+	v.SOURCE
+FROM {{ref('v_nation')}} AS v
+
+{% if is_incremental() %}
+
+WHERE v.NATION_PK NOT IN (SELECT NATION_PK FROM {{this}}) AND v.FIRST_SEEN IS NULL
+
+{% else %}
+
+WHERE v.FIRST_SEEN IS NULL
 
 {% endif %}
 

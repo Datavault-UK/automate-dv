@@ -29,7 +29,7 @@ def run():
 
         else:
             os.system('dbt run --models tag:sat')
-        
+
     # Incremental Section
     # for date in sim_dates:
     #     os.system('dbt run --vars {}'.format(date))

@@ -56,4 +56,6 @@ models:
       tags: "history"
       enabled: true
       materialized: table
-
+      on-run-end:
+        - "DROP VIEW IF EXISTS {{ref('v_nation')}}"
+        - "DROP VIEW IF EXISTS {{ref('v_region')}}"
