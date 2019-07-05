@@ -96,12 +96,40 @@ class TestTemplateGenerator(TestCase):
         self.assertEqual(hub_columns, expected_hub_string)
         self.assertEqual(stg_columns, expected_stg_string)
 
-    def test_get_table_keys(self):
+    def test_get_additional_file_metadata(self):
+        cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
+        cli_args.get_config_name = Mock(return_value="./test_configs/additionalFileConfig.ini")
+        cli_args.get_log_level = Mock(return_value=logging.INFO)
+        log = Logger("testTemplateGenerator", cli_args)
+        con_reader = ConfigReader(log, cli_args)
+        log.set_config(con_reader)
+        template_gen = TemplateGenerator(log, con_reader)
+        metadata_dict = template_gen.get_additional_file_metadata()
+        expected_dict = {"file1": {"metadata": "./test_additional_files/file1.data"},
+                         "file2": {"metadata": "./test_additional_files/file2.data"}}
+
+        updated_config = template_gen.config
+        self.assertIsInstance(metadata_dict, dict)
+        self.assertIsInstance(updated_config, dict)
+        self.assertEqual(expected_dict, metadata_dict)
+        self.assertIn("hub1", updated_config['hubs'])
+        self.assertIn("link1", updated_config['links'])
+        self.assertIn("sat1", updated_config['satellites'])
+        self.assertEqual(["col1", "col2", "col3"], updated_config['hubs']['hub1']['table_columns'])
+
+    def test_get_table_header_keys(self):
         expected_keys = {'hubs': ['customer', 'nation'], 'links': ['link_test', 'link_test2'],
                          'satellites': ['sat_test']}
-        actual_keys = self.template_gen.get_table_keys(['hubs', 'links', 'satellites'])
+        actual_keys = self.template_gen.get_table_header_keys(['hubs', 'links', 'satellites'])
         self.assertIsInstance(actual_keys, dict)
         self.assertEqual(actual_keys, expected_keys)
+
+    def test_get_table_name_values(self):
+        expected_keys = {'hubs': ['hub_test', 'hub_test2'], 'links': ['link_test', 'link_test2'],
+                         'satellites': ['sat_test']}
+        actual_keys = self.template_gen.get_table_name_values(['hubs', 'links', 'satellites'])
+        self.assertIsInstance(actual_keys, dict)
+        self.assertEqual(expected_keys, actual_keys)
 
     def test_get_table_file_path(self):
         file_path = self.template_gen.get_table_file_path("hubs", "customer")
@@ -204,7 +232,7 @@ class TestTemplateGenerator(TestCase):
 
     def test_create_sql_files(self):
         table_sections = self.template_gen.get_table_section_keys()
-        table_keys = self.template_gen.get_table_keys(table_sections)
+        table_keys = self.template_gen.get_table_header_keys(table_sections)
         path_list = []
 
         for table_key in table_keys:

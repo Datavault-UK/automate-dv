@@ -1,4 +1,4 @@
-{{config(materialized='view', enabled=true,
+{{config(materialized='view', enabled=false,
 post_hook='DROP VIEW IF EXISTS {{this}}')}}
 
 SELECT

@@ -1,6 +1,7 @@
 import logging
 import datetime
-from toolz import pipe
+import copy
+from vaultBase.metaHandler import MetaHandler
 from yaml import load, dump
 
 try:
@@ -14,7 +15,13 @@ class TemplateGenerator:
     def __init__(self, logger, con_reader):
         self._my_log = logger
         self.config = con_reader.get_config_dict()
+        self.additional_file_dict = self.get_additional_file_metadata()
         self.sim_dates = self.get_simulation_dates()
+
+        if isinstance(self.additional_file_dict, dict):
+            self.metahandler = MetaHandler(self._my_log, self.additional_file_dict)
+            self.metadata = self.metahandler.get_metadata_dict()
+            self.update_config()
 
     @staticmethod
     def hub_template(hub_columns, stg_columns, hub_pk):
@@ -148,6 +155,30 @@ class TemplateGenerator:
 
         return new_column_list
 
+    def get_additional_file_metadata(self):
+        """
+        Gets a dictionary of just the additional file metadata if it exists.
+        :return: A dictionary of the additional file.
+        """
+
+        try:
+            additional_file_metadata = self.config["additional files"]
+            return additional_file_metadata
+
+        except KeyError:
+            self._my_log.log("A key error occurred of 'additional_files' not found. If no additional files were "
+                             "provided then ignore this message.", logging.WARNING)
+            return False
+
+    def update_config(self):
+        """
+        Updates the config dictionary with the hubs, links, satellite metadata from the additional files.
+        """
+
+        for file in self.metadata:
+            for table_type in self.metadata[file]:
+                self.config[table_type].update(self.metadata[file][table_type])
+
     def get_simulation_dates(self):
         """
         Gets the dates for which the simulation will iterate over.
@@ -194,7 +225,7 @@ class TemplateGenerator:
 
         return [key for key in list(self.config.keys()) if key == 'hubs' or key == 'links' or key == 'satellites']
 
-    def get_table_keys(self, table_sections):
+    def get_table_header_keys(self, table_sections):
         """
         Gets the keys of all the tables listed in the config file.
         :return: returns the keys in a dict.
@@ -205,6 +236,24 @@ class TemplateGenerator:
         for table in table_sections:
 
             table_dict[table] = list(self.config[table].keys())
+
+        return table_dict
+
+    def get_table_name_values(self, table_sections):
+        """
+        Gets the values for the table name in each section listed in the config file.
+        :return: returns the values in a list in a dict.
+        """
+
+        table_dict = {}
+
+        for table_section in table_sections:
+
+            table_dict[table_section] = []
+
+            for table in self.config[table_section]:
+
+                table_dict[table_section].append(self.config[table_section][table]["name"])
 
         return table_dict
 
@@ -295,15 +344,25 @@ class TemplateGenerator:
         """
 
         table_sections = self.get_table_section_keys()
-        table_keys = self.get_table_keys(table_sections)
+        table_keys = self.get_table_header_keys(table_sections)
 
         for table_key in table_keys:
             for table in table_keys[table_key]:
 
                 try:
-                    statement = self.hub_template(self.get_table_columns(table_key, table),
-                                                  self.get_stg_columns(table_key, table),
-                                                  self.get_pk(table_key, table))
+                    if table_key == 'hubs':
+                        statement = self.hub_template(self.get_table_columns(table_key, table),
+                                                      self.get_stg_columns(table_key, table),
+                                                      self.get_pk(table_key, table))
+                    elif table_key == 'links':
+                        statement = self.link_template(self.get_table_columns(table_key, table),
+                                                       self.get_stg_columns(table_key, table),
+                                                       self.get_pk(table_key, table))
+                    else:
+                        statement = self.sat_template(self.get_table_columns(table_key, table),
+                                                      self.get_stg_columns(table_key, table),
+                                                      self.get_pk(table_key, table))
+
                     path = self.get_table_file_path(table_key, table)
                     self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
                     self.write_to_file(path, statement)

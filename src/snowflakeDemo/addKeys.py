@@ -1,5 +1,6 @@
 import sqlalchemy as sa
 import pandas as pd
+from toolz import pipe
 # import sqlFunctionLibrary as sql
 # import multiprocessing as mp
 
@@ -101,9 +102,9 @@ class KeyAdder:
 
         return fk_dict
 
-    def get_table_keys(self):
+    def get_table_name_values(self):
         """
-        Gets the table keys from the config file.
+        Gets the table name values from the config file.
         :return: A list of table names.
         """
 
@@ -114,6 +115,17 @@ class KeyAdder:
             table_names.append(self.config["links"][table]["name"])
 
         return table_names
+
+    def get_table_keys(self):
+
+        table_keys = []
+
+        for section in self.config:
+            if section == 'hubs' or section == 'links' or section == 'satellites':
+                for table_key in list(self.config[section].keys()):
+                    table_keys.append(table_key)
+
+        return table_keys
 
     def get_full_table_path(self, table_names):
         """
@@ -134,7 +146,7 @@ class KeyAdder:
         Executes all the primary key statements from the templates
         """
 
-        table_names = self.get_table_keys()
+        table_names = self.get_table_name_values()
         pk_dict = self.get_primary_keys(table_names)
         full_path_dict = self.get_full_table_path(table_names)
 
@@ -151,7 +163,7 @@ class KeyAdder:
         Executes all the foreign key statements from the templates
         """
 
-        table_names = self.get_table_keys()
+        table_names = self.get_table_name_values()
         fk_dict = self.get_foreign_keys(table_names)
         full_path_dict = self.get_full_table_path(table_names)
 
@@ -174,3 +186,22 @@ class KeyAdder:
     def snowflake_connector(self, query):
 
         pd.read_sql_query(query, self.engine)
+
+    def build_pk_template(self, table_name):
+
+        for table_section in self.config:
+            if table_section == 'hubs' or table_section == 'links' or table_section == 'satellites':
+                if table_name in list(self.config[table_section].keys()):
+                    pk = self.config[table_section][table_name]["pk"]
+                    full_table = self.config[table_section][table_name]["full_table_path"] + "." + \
+                                 self.config[table_section][table_name]["name"]
+                    break
+                else:
+                    pass
+
+        sql = self.primary_key_template(full_table, pk)
+
+        return sql
+
+    def pk_pipe(self, key):
+        return pipe(key, self.build_pk_template, self.snowflake_connector)

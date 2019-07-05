@@ -1,4 +1,4 @@
-{{config(schema='VLT', materialized='incremental', unique_key='NATION_PK', enabled=true)}}
+{{config(schema='VLT', materialized='incremental', unique_key='NATION_PK', enabled=false)}}
 
 SELECT DISTINCT stg.NATION_PK, stg.CUSTOMER_NATIONKEY, stg.LOADDATE, stg.SOURCE 
 FROM (

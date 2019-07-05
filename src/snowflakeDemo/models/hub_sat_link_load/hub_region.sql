@@ -1,5 +1,5 @@
 {{ config(enabled=false, materialized='incremental', unique_key='REGION_PK', schema='VLT',
-post_hook='DROP VIEW IF EXISTS {{ref("v_region")}}' }}
+post_hook='DROP VIEW IF EXISTS {{ref("v_region")}}') }}
 
 SELECT DISTINCT
   stg.REGION_PK,

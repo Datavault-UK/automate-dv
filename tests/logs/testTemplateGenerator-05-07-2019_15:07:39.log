@@ -1,0 +1,9 @@
+[05/07/2019 15:07:39,691](testTemplateGenerator)INFO:Logging to file: '/home/dev/PycharmProjects/SnowflakeDemo3/tests/logs/testTemplateGenerator-05-07-2019_15:07:39.log'
+[05/07/2019 15:07:39,695](testTemplateGenerator)INFO:Command line override found for logging level. Level for both console and file will be set to INFO.
+[05/07/2019 15:07:39,701](testTemplateGenerator)INFO:Config file '/home/dev/PycharmProjects/SnowflakeDemo3/tests/test_configs/keyerror.ini' loaded successfully.
+[05/07/2019 15:07:39,706](testTemplateGenerator)INFO:Config file details:
+[05/07/2019 15:07:39,714](testTemplateGenerator)INFO:Version: 1.0
+[05/07/2019 15:07:39,726](testTemplateGenerator)INFO:Date: 11.07.2018
+[05/07/2019 15:07:39,730](testTemplateGenerator)INFO:Status: dev
+[05/07/2019 15:07:39,734](testTemplateGenerator)INFO:testTemplateGenerator execution has started.
+[05/07/2019 15:07:39,740](testTemplateGenerator)WARNING:A key error occurred of 'additional_files' not found. If no additional files were provided then ignore this message.

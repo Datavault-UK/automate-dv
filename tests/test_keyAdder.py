@@ -64,11 +64,17 @@ class TestKeyAdder(TestCase):
         self.assertIsInstance(actual_fk, dict)
         self.assertEqual(actual_fk, expected_fk)
 
+    def test_get_table_name_value(self):
+        actual_names = self.key_adder.get_table_name_values()
+        expected_names = ['link_test', 'link_test2']
+        self.assertIsInstance(actual_names, list)
+        self.assertEqual(actual_names, expected_names)
+
     def test_get_table_keys(self):
-        actual_keys = self.key_adder.get_table_keys()
-        expected_keys = ['link_test', 'link_test2']
-        self.assertIsInstance(actual_keys, list)
-        self.assertEqual(actual_keys, expected_keys)
+        actual_key_list = self.key_adder.get_table_keys()
+        expected_key_list = ["customer", "nation", "link_test", "link_test2"]
+        self.assertIsInstance(actual_key_list, list)
+        self.assertEqual(expected_key_list, actual_key_list)
 
     def test_get_full_table_path(self):
         actual = self.key_adder.get_full_table_path(['link_test', 'link_test2'])
@@ -90,3 +96,10 @@ class TestKeyAdder(TestCase):
                     "DV_PROTOTYPE_DB.SRC_VLT.HUB_TEST3(REGION_PK);")
         self.assertIsInstance(actual, str)
         self.assertEqual(actual, expected)
+
+    def test_build_pk_template(self):
+        table_name = 'customer'
+        sql = self.key_adder.build_pk_template(table_name)
+        expected_sql = "ALTER TABLE DV_PROTOTYPE_DB.SRC_VLT.hub_test ADD PRIMARY KEY (CUSTOMER_PK);"
+        self.assertIsInstance(sql, str)
+        self.assertEqual(expected_sql, sql)

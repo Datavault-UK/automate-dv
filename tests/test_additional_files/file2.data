@@ -1,0 +1,29 @@
+[hubs]
+    [[hub2]]
+    name = hub2
+    dbt_path = ../src/snowflakeDemo/models/hub_sat_link_load
+    table_columns = col1, col2, col3
+    stg_columns = s_col1, s_col2, s_col3
+    pk = col1
+    full_table_path = DV_PROTOTYPE_DB.SRC_VLT
+
+[links]
+    [[link2]]
+    name = link2
+    dbt_path = ../src/snowflakeDemo/models/hub_sat_link_load
+    table_columns = col1, col2, col3
+    stg_columns = s_col1, s_col2, s_col3
+    pk = col2
+    fk = col1
+    ref = col1
+    ref_table = hub1
+    full_table_path = DV_PROTOTYPE_DB.SRC_VLT
+
+[satellites]
+    [[sat2]]
+    name = sat1
+    dbt_path = ../src/snowflakeDemo/models/hub_sat_link_load
+    table_columns = col1, col2, col3
+    stg_columns = s_col1, s_col2, s_col3
+    pk = col1
+    full_table_path = DV_PROTOTYPE_DB.SRC_VLT

@@ -1,4 +1,4 @@
-{{config(materialized='view', enabled=true, schema='VLT')}}
+{{config(materialized='view', enabled=false, schema='VLT')}}
 
 SELECT
   stg.CUSTOMER_REGION_PK AS REGION_PK,

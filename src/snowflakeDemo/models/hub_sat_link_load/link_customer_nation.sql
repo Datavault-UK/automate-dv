@@ -1,4 +1,4 @@
-{{ config(schema='VLT', materialized='incremental', enabled=false, unique_key='CUSTOMER_NATION_PK') }}
+{{ config(schema='VLT', materialized='incremental', enabled=true, unique_key='CUSTOMERKEY_NATION_PK') }}
 
 SELECT DISTINCT
   stg.CUSTOMERKEY_NATION_PK,
@@ -10,15 +10,15 @@ FROM (
 SELECT
   a.CUSTOMERKEY_NATION_PK,
   a.CUSTOMER_PK,
-  a.NATION_PK,
+  a.CUSTOMER_NATIONKEY_PK AS NATION_PK,
   a.LOADDATE,
-  LAG(a.LOADDATE, 1) OVER(PARTITION BY a.CUSTOMER_NATION_PK ORDER BY a.LOADDATE) AS FIRST_SEEN,
+  LAG(a.LOADDATE, 1) OVER(PARTITION BY a.CUSTOMERKEY_NATION_PK ORDER BY a.LOADDATE) AS FIRST_SEEN,
   a.SOURCE
 FROM {{ref('v_stg_tpch_data')}} AS a) AS stg
 
 {% if is_incremental() %}
 
-WHERE stg.CUSTOMER_NATION_PK NOT IN (SELECT CUSTOMER_NATION_PK FROM {{this}}) AND stg.FIRST_SEEN IS NULL
+WHERE stg.CUSTOMERKEY_NATION_PK NOT IN (SELECT CUSTOMERKEY_NATION_PK FROM {{this}}) AND stg.FIRST_SEEN IS NULL
 
 {% else %}
 

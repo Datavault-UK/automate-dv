@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true)}}
+{{config(materialized='incremental', schema='VLT', enabled=false)}}
 
 SELECT
   v.REGION_HASHDIFF,
