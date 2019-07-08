@@ -1,12 +1,23 @@
-{{config(schema='VLT', materialized='incremental', unique_key='NATION_PK', enabled=false)}}
+{config(materialized='incremental', schema='VLT', enabled=true)}
 
-SELECT DISTINCT stg.NATION_PK, stg.CUSTOMER_NATIONKEY, stg.LOADDATE, stg.SOURCE 
-FROM (
-SELECT a.NATION_PK, a.CUSTOMER_NATIONKEY, a.LOADDATE, a.SOURCE, LAG(a.LOADDATE, 1) OVER(PARTITION BY a.NATION_PK ORDER BY a.LOADDATE) AS FIRST_SEEN 
-FROM {{ref('v_stg_tpch_data')}} AS a) AS stg
+{% set hub_columns = 'stg.NATION_PK, stg.CUSTOMER_NATIONKEY, stg.LOADDATE, stg.SOURCE' %}
+{% set stg_columns1 = 'b.NATION_PK, b.CUSTOMER_NATIONKEY, b.LOADDATE, b.SOURCE' %}
+{% set stg_columns2 = 'a.NATION_PK, a.CUSTOMER_NATIONKEY, a.LOADDATE, a.SOURCE' %}
+{% set hub_pk = 'NATION_PK' %}
+{% set stg_name = 'v_stg_tpch_data' %}
+
+{{ hub_template(hub_columns, stg_columns1, hub_pk) }}
+
 {% if is_incremental() %}
-WHERE stg.NATION_PK NOT IN (SELECT NATION_PK FROM {{this}}) AND stg.FIRST_SEEN IS NULL
+
+(select
+ {{stg_columns2}} 
+from {{ref(stg_name)}} as a 
+left join {{this}} as c on a.{{hub_pk}}=c.{{hub_pk}} and c.{{hub_pk}} is null) as b) as stg 
+where stg.{{hub_pk}} not in (select {{hub_pk}} from {{this}}) and stg.FIRST_SEEN is null
+
 {% else %}
-WHERE stg.FIRST_SEEN IS NULL
+
+{{ref(stg_name)}} as b) as stg where stg.FIRST_SEEN is null
+
 {% endif %}
-LIMIT 10

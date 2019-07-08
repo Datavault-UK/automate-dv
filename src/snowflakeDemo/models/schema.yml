@@ -13,3 +13,12 @@ sources:
     schema: STG # You wouldn't put your source data in public, would you?
     tables:
       - name: V_STG_CUSTOMER
+
+#models:
+#  - name: sat_test
+#    columns:
+#      - name: CUSTOMER_HASHDIFF
+#        tests:
+#        - relationships:
+#          to: ref('v_stg_tpch_data')
+#          field: CUSTOMER_HASHDIFF

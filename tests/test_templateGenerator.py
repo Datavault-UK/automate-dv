@@ -35,6 +35,32 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_columns, hub_sql)
         self.assertIn(hub_pk, hub_sql)
 
+    def test_hub_template2(self):
+        hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
+        stg_columns1 = "b.CUSTOMER_PK, b.CUSTOMERKEY, b.LOADDATE, b.SOURCE"
+        stg_columns2 = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
+        hub_pk = "CUSTOMER_PK"
+        stg_name = "v_stg_tpch_data"
+        hub_sql = self.template_gen.hub_template2(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name)
+        self.assertIsInstance(hub_sql, str)
+
+    def test_hub_macro_template_first_run(self):
+        hub_macro_sql = self.template_gen.hub_macro_template()
+        self.assertIsInstance(hub_macro_sql, str)
+        self.assertIn("{{hub_columns}}", hub_macro_sql)
+        self.assertIn("stg_columns1", hub_macro_sql)
+        self.assertIn("{{hub_pk}}", hub_macro_sql)
+        self.assertNotIn("{{stg_columns2}}", hub_macro_sql)
+
+    # def test_hub_macro_template_increment(self):
+    #     hub_macro_sql = self.template_gen.hub_macro_template_increment()
+    #     self.assertIsInstance(hub_macro_sql, str)
+    #     self.assertIn("{{hub_columns}}", hub_macro_sql)
+    #     self.assertIn("{{stg_columns1}}", hub_macro_sql)
+    #     self.assertIn("{{hub_pk}}", hub_macro_sql)
+    #     self.assertIn("{{ref(stg_name)}}", hub_macro_sql)
+    #     self.assertIn("{{stg_columns2}}", hub_macro_sql)
+
     def test_link_template(self):
         link_columns = "stg.CUSTOMER_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
         stg_columns = "a.CUSTOMER_NATION_PK, a.CUSTOMER_PK, a.NATION_PK, a.LOADDATE, a.SOURCE"
@@ -89,7 +115,7 @@ class TestTemplateGenerator(TestCase):
         template_gen = TemplateGenerator(log, con_reader)
         hub_columns = template_gen.get_table_columns("hubs", "customer")
         expected_hub_string = "stg.CUSTOMER_PK AS PK, stg.CUSTOMERKEY AS BK, stg.LOADDATE, stg.SOURCE"
-        stg_columns = template_gen.get_stg_columns("hubs", "customer")
+        stg_columns = template_gen.get_stg_columns("hubs", "customer", "a")
         expected_stg_string = "a.CUSTOMER_PK AS PK, a.CUSTOMERKEY AS BK, a.LOADDATE, a.SOURCE"
         self.assertIsInstance(hub_columns, str)
         self.assertIsInstance(stg_columns, str)
@@ -141,6 +167,12 @@ class TestTemplateGenerator(TestCase):
         self.assertIsInstance(hub_name, str)
         self.assertEqual(hub_name.lower(), "hub_test")
 
+    def test_get_stg_table_name(self):
+        stg_name = self.template_gen.get_stg_table_name("hubs", "customer")
+        expected_stg_name = "v_stg_tpch_data"
+        self.assertIsInstance(stg_name, str)
+        self.assertEqual(expected_stg_name, stg_name)
+
     def test_get_pk(self):
         hub_pk = self.template_gen.get_pk("hubs", "customer")
         self.assertIsInstance(hub_pk, str)
@@ -164,7 +196,7 @@ class TestTemplateGenerator(TestCase):
         self.assertEqual(hub_columns, "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE")
 
     def test_get_stg_columns_list(self):
-        stage_columns = self.template_gen.get_stg_columns("hubs", "customer")
+        stage_columns = self.template_gen.get_stg_columns("hubs", "customer", "a")
         self.assertIsInstance(stage_columns, str)
         self.assertEqual(stage_columns, "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE")
 
@@ -176,7 +208,7 @@ class TestTemplateGenerator(TestCase):
         con_reader = ConfigReader(log, cli_args)
         log.set_config(con_reader)
         template_gen = TemplateGenerator(log, con_reader)
-        stage_columns = template_gen.get_stg_columns("hubs", "customer")
+        stage_columns = template_gen.get_stg_columns("hubs", "customer", "a")
         self.assertIsInstance(stage_columns, str)
         self.assertEqual(stage_columns, "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE")
 
@@ -268,6 +300,13 @@ class TestTemplateGenerator(TestCase):
 
         self.template_gen.create_dbt_project_file(history_date, date)
         self.assertTrue(os.path.isfile(path))
+
+    def test_create_template_macros(self):
+        self.template_gen.create_template_macros()
+        path_list = ["../src/snowflakeDemo/macros/hub_template.sql"]
+
+        for path in path_list:
+            self.assertTrue(os.path.isfile(path))
 
     @classmethod
     def tearDownClass(cls):

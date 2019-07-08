@@ -49,6 +49,57 @@ class TemplateGenerator:
         return hub_statement
 
     @staticmethod
+    def hub_template2(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
+        hub_statement = ("{{config(materialized='incremental', schema='VLT', enabled=true)}}\n\n"
+                         "{{% set hub_columns = '{hub_columns}' %}}\n"
+                         "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
+                         "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
+                         "{{% set hub_pk = '{hub_pk}' %}}\n"
+                         "{{% set stg_name = '{stg_name}' %}}\n\n"
+                         "{{{{ hub_template(hub_columns, stg_columns1, hub_pk) }}}}\n\n"
+                         "{{% if is_incremental() %}}\n\n"
+                         "(select\n {{{{stg_columns2}}}} \nfrom {{{{ref(stg_name)}}}} as a \n"
+                         "left join {{{{this}}}} as c on a.{{{{hub_pk}}}}=c.{{{{hub_pk}}}} and c.{{{{hub_pk}}}} "
+                         "is null) as b) as stg \n"
+                         "where stg.{{{{hub_pk}}}} not in (select {{{{hub_pk}}}} from {{{{this}}}}) "
+                         "and stg.FIRST_SEEN is null\n\n"
+                         "{{% else %}}\n\n"
+                         "{{{{ref(stg_name)}}}} as b) as stg where stg.FIRST_SEEN is null\n\n"
+                         "{{% endif %}}").format(hub_columns=hub_columns,
+                                                 stg_columns1=stg_columns1,
+                                                 stg_columns2=stg_columns2,
+                                                 hub_pk=hub_pk,
+                                                 stg_name=stg_name)
+        return hub_statement
+
+    @staticmethod
+    def hub_macro_template():
+
+        hub_macro_temp = ("{% macro hub_template(hub_columns, stg_columns1, hub_pk) %}\n\n "
+                          "select\n"
+                          "{{hub_columns}}\n "
+                          "from (\n "
+                          "select\n "
+                          "{{stg_columns1}}, \n"
+                          "lag(b.LOADDATE, 1) over(partition by {{hub_pk}} order by b.loaddate) as FIRST_SEEN\n "
+                          "from\n\n"
+                          "{% endmacro %}")
+
+        return hub_macro_temp
+
+    # @staticmethod
+    # def hub_macro_template_increment():
+    #
+    #     hub_macro_temp = ("{% macro hub_template_increment(hub_columns, stg_columns1,  stg_columns2, hub_pk, stg_name) "
+    #                       "%}\n\n select\n {{hub_columns}}\n from (\n select\n {{stg_columns1}}, \n"
+    #                       "lead(b.LOADDATE, 1) over(partition by {{hub_pk}} order by b.loaddate) as LATEST\n from (\n "
+    #                       "select\n {{stg_columns2}}\n from {{ref(stg_name)}} as a\n left join {{this}} as c on "
+    #                       "a.{{hub_pk}}=c.{{hub_pk}} and c.{{hub_pk}} is null) as b) as stg\n "
+    #                       "where stg.{{hub_pk}} not in (select {{hub_pk}} from {{this}}) and stg.LATEST is null\n\n"
+    #                       "{% endmacro %}")
+    #     return hub_macro_temp
+
+    @staticmethod
     def link_template(link_columns, stg_columns, link_pk):
         """
         Generates the link sql statement as a string.
@@ -274,6 +325,14 @@ class TemplateGenerator:
 
         return self.config[table_section][table_key]["name"]
 
+    def get_stg_table_name(self, table_section, table_key):
+        """
+        Gets the name of the stage table needed to build the sql statement.
+        :return: stage table name as a string.
+        """
+
+        return self.config[table_section][table_key]["stg_name"]
+
     def get_pk(self, table_section, table_key):
         """
         Gets the table primary key from the config file.
@@ -299,7 +358,7 @@ class TemplateGenerator:
 
             return ", ".join(aliased_table_columns)
 
-    def get_stg_columns(self, table_section, table_key):
+    def get_stg_columns(self, table_section, table_key, alias):
         """
         Gets the stage columns required to build the table.
         :return: The stage columns as a string.
@@ -308,12 +367,12 @@ class TemplateGenerator:
 
         if isinstance(stg_columns, str):
 
-            aliased_stg_columns = self.alias_adder("a", stg_columns)
+            aliased_stg_columns = self.alias_adder(alias, stg_columns)
 
             return " ".join(aliased_stg_columns)
         else:
 
-            aliased_stg_columns = self.alias_adder("a", stg_columns)
+            aliased_stg_columns = self.alias_adder(alias, stg_columns)
 
             return ", ".join(aliased_stg_columns)
 
@@ -351,17 +410,19 @@ class TemplateGenerator:
 
                 try:
                     if table_key == 'hubs':
-                        statement = self.hub_template(self.get_table_columns(table_key, table),
-                                                      self.get_stg_columns(table_key, table),
-                                                      self.get_pk(table_key, table))
-                    elif table_key == 'links':
-                        statement = self.link_template(self.get_table_columns(table_key, table),
-                                                       self.get_stg_columns(table_key, table),
-                                                       self.get_pk(table_key, table))
-                    else:
-                        statement = self.sat_template(self.get_table_columns(table_key, table),
-                                                      self.get_stg_columns(table_key, table),
-                                                      self.get_pk(table_key, table))
+                        statement = self.hub_template2(self.get_table_columns(table_key, table),
+                                                       self.get_stg_columns(table_key, table, "b"),
+                                                       self.get_stg_columns(table_key, table, "a"),
+                                                       self.get_pk(table_key, table),
+                                                       self.get_stg_table_name(table_key, table))
+                    # elif table_key == 'links':
+                    #     statement = self.link_template(self.get_table_columns(table_key, table),
+                    #                                    self.get_stg_columns(table_key, table),
+                    #                                    self.get_pk(table_key, table))
+                    # else:
+                    #     statement = self.sat_template(self.get_table_columns(table_key, table),
+                    #                                   self.get_stg_columns(table_key, table),
+                    #                                   self.get_pk(table_key, table))
 
                     path = self.get_table_file_path(table_key, table)
                     self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
@@ -395,3 +456,9 @@ class TemplateGenerator:
             dump(data, file, Dumper=Dumper)
             file.close()
 
+    def create_template_macros(self):
+        """
+        Creates the macros in the correct location in dbt.
+        """
+        path = self.config["dbt settings"]["macro_path"]
+        self.write_to_file(path + '/hub_template.sql', self.hub_macro_template())
