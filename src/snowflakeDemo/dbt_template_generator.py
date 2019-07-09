@@ -50,7 +50,7 @@ class TemplateGenerator:
 
     @staticmethod
     def hub_template2(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
-        hub_statement = ("{{config(materialized='incremental', schema='VLT', enabled=true)}}\n\n"
+        hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
                          "{{% set hub_columns = '{hub_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                          "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
@@ -86,6 +86,26 @@ class TemplateGenerator:
                           "{% endmacro %}")
 
         return hub_macro_temp
+
+    @staticmethod
+    def link_macro_template():
+
+        link_macro_temp = ("{% macro link_template(link_columns, stg_columns1, link_pk) %}\n\n"
+                           "select\n {{link_columns}}\nfrom (\nselect\n {{stg_columns1}},\n "
+                           "lag(b.LOADDATE, 1) over(partition by {{link_pk}} order by b.LOADDATE) as FIRST_SEEN\n"
+                           "from\n\n{% endmacro %}")
+
+        return link_macro_temp
+
+    @staticmethod
+    def sat_macro_template():
+
+        sat_macro_temp = ("{% macro sat_template(sat_columns, stg_columns1, sat_pk) %}\n\n"
+                          "select\n {{sat_columns}}\nfrom (\nselect\n {{stg_columns1}},\n "
+                          "lead(b.LOADDATE, 1) over(partition by b.{{sat_pk}} order by b.LOADDATE) as LATEST\n"
+                          "from\n\n{% endmacro %}")
+
+        return sat_macro_temp
 
     # @staticmethod
     # def hub_macro_template_increment():
@@ -123,6 +143,32 @@ class TemplateGenerator:
         return link_statement
 
     @staticmethod
+    def link_template2(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
+
+        link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
+                         "{{% set link_columns = {link_columns} %}}\n"
+                         "{{% set stg_columns1 = {stg_columns1} %}}\n"
+                         "{{% set stg_columns2 = {stg_columns2} %}}\n"
+                         "{{% set link_pk = {link_pk} %}}\n"
+                         "{{% set stg_name = {stg_name} %}}\n\n"
+                         "{{{{ link_template(link_columns, stg_columns1, link_pk)}}}}\n\n"
+                         "{{% if is_incremental() %}}\n\n"
+                         "(select\n {{{{stg_columns2}}}}\nfrom {{{{ref(stg_name)}}}} as a\n"
+                         "left join {{{{this}}}} as c on a.{{{{link_pk}}}}=c.{{{{link_pk}}}} and c.{{{{link_pk}}}} "
+                         "is null) as b) as stg\n"
+                         "where stg.{{{{link_pk}}}} not in (select {{{{link_pk}}}} from {{{{this}}}}) and "
+                         "stg.FIRST_SEEN is null\n\n"
+                         "{{% else %}}\n\n"
+                         "{{{{ref(stg_name)}}}} as b) as stg where stg.FIRST_SEEN is null\n\n"
+                         "{{% endif %}}").format(link_columns=link_columns,
+                                                 stg_columns1=stg_columns1,
+                                                 stg_columns2=stg_columns2,
+                                                 link_pk=link_pk,
+                                                 stg_name=stg_name)
+
+        return link_template
+
+    @staticmethod
     def sat_template(sat_columns, stg_columns, sat_pk):
         """
         Generates the satellite sql statement as a string.
@@ -144,6 +190,31 @@ class TemplateGenerator:
                          "LIMIT 10").format(sat_columns, stg_columns, sat_pk, sat_pk, sat_pk)
 
         return sat_statement
+
+    @staticmethod
+    def sat_template2(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
+
+        sat_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
+                        "{{% set sat_columns = {sat_columns} %}}\n"
+                        "{{% set stg_columns1 = {stg_columns1} %}}\n"
+                        "{{% set stg_columns2 = {stg_columns2} %}}\n"
+                        "{{% set sat_pk = {sat_pk} %}}\n"
+                        "{{% set stg_name = {stg_name} %}}\n\n"
+                        "{{{{ sat_template(sat_columns, stg_columns1, sat_pk)}}}}\n\n"
+                        "{{% if is_incremental() %}}\n\n(select\n {{{{stg_columns2}}}}\n"
+                        "from {{{{ref(stg_name)}}}} as a\n"
+                        "left join {{{{this}}}} as c on a.{{{{sat_pk}}}}=c.{{{{sat_pk}}}} and c.{{{{sat_pk}}}} is null)"
+                        " as b) as stg\n"
+                        "where stg.{{{{sat_pk}}}} not in (select {{{{sat_pk}}}} from {{{{this}}}}) "
+                        "and stg.LATEST is null\n\n"
+                        "{{% else %}}\n\n{{{{ref(stg_name)}}}} as b) as stg where stg.LATEST is null\n\n"
+                        "{{% endif %}}").format(sat_columns=sat_columns,
+                                                stg_columns1=stg_columns1,
+                                                stg_columns2=stg_columns2,
+                                                sat_pk=sat_pk,
+                                                stg_name=stg_name)
+
+        return sat_template
 
     @staticmethod
     def dbt_yaml_project_template(history_start_date, history_end_date):
@@ -415,14 +486,18 @@ class TemplateGenerator:
                                                        self.get_stg_columns(table_key, table, "a"),
                                                        self.get_pk(table_key, table),
                                                        self.get_stg_table_name(table_key, table))
-                    # elif table_key == 'links':
-                    #     statement = self.link_template(self.get_table_columns(table_key, table),
-                    #                                    self.get_stg_columns(table_key, table),
-                    #                                    self.get_pk(table_key, table))
-                    # else:
-                    #     statement = self.sat_template(self.get_table_columns(table_key, table),
-                    #                                   self.get_stg_columns(table_key, table),
-                    #                                   self.get_pk(table_key, table))
+                    elif table_key == 'links':
+                        statement = self.link_template2(self.get_table_columns(table_key, table),
+                                                        self.get_stg_columns(table_key, table, "b"),
+                                                        self.get_stg_columns(table_key, table, "a"),
+                                                        self.get_pk(table_key, table),
+                                                        self.get_stg_table_name(table_key, table))
+                    else:
+                        statement = self.sat_template2(self.get_table_columns(table_key, table),
+                                                      self.get_stg_columns(table_key, table, "b"),
+                                                      self.get_stg_columns(table_key, table, "a"),
+                                                      self.get_pk(table_key, table),
+                                                      self.get_stg_table_name(table_key, table))
 
                     path = self.get_table_file_path(table_key, table)
                     self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
@@ -462,3 +537,5 @@ class TemplateGenerator:
         """
         path = self.config["dbt settings"]["macro_path"]
         self.write_to_file(path + '/hub_template.sql', self.hub_macro_template())
+        self.write_to_file(path + "/link_template.sql", self.link_macro_template())
+        self.write_to_file(path + "/sat_template.sql", self.sat_macro_template())

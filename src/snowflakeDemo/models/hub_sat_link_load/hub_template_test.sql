@@ -6,7 +6,7 @@
 {% set hub_pk = 'CUSTOMER_PK' %}
 {% set stg_name = 'v_stg_tpch_data' %}
 
-{{ hub_template_general(hub_columns, stg_columns1, hub_pk) }}
+{{ hub_template(hub_columns, stg_columns1, hub_pk) }}
 
 {% if is_incremental() %}
 

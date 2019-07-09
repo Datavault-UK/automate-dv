@@ -44,13 +44,32 @@ class TestTemplateGenerator(TestCase):
         hub_sql = self.template_gen.hub_template2(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name)
         self.assertIsInstance(hub_sql, str)
 
-    def test_hub_macro_template_first_run(self):
+    def test_hub_macro_template(self):
         hub_macro_sql = self.template_gen.hub_macro_template()
         self.assertIsInstance(hub_macro_sql, str)
         self.assertIn("{{hub_columns}}", hub_macro_sql)
         self.assertIn("stg_columns1", hub_macro_sql)
         self.assertIn("{{hub_pk}}", hub_macro_sql)
         self.assertNotIn("{{stg_columns2}}", hub_macro_sql)
+
+    def test_link_macro_template(self):
+        link_macro_sql = self.template_gen.link_macro_template()
+        self.assertIsInstance(link_macro_sql, str)
+        self.assertIn("{{link_columns}}", link_macro_sql)
+        self.assertIn("{{stg_columns1}}", link_macro_sql)
+        self.assertIn("{{link_pk}}", link_macro_sql)
+        self.assertNotIn("{{stg_columns2}}", link_macro_sql)
+        self.assertNotIn("{{stg_name}}", link_macro_sql)
+
+    def test_sat_macro_template(self):
+        sat_macro_sql = self.template_gen.sat_macro_template()
+        self.assertIsInstance(sat_macro_sql, str)
+        self.assertIn("{{sat_columns}}", sat_macro_sql)
+        self.assertIn("{{stg_columns1}}", sat_macro_sql)
+        self.assertIn("{{sat_pk}}", sat_macro_sql)
+        self.assertNotIn("{{stg_columns2}}", sat_macro_sql)
+        self.assertNotIn("{{stg_name}}", sat_macro_sql)
+
 
     # def test_hub_macro_template_increment(self):
     #     hub_macro_sql = self.template_gen.hub_macro_template_increment()
@@ -74,6 +93,24 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_columns, link_sql)
         self.assertIn(link_pk, link_sql)
 
+    def test_link_template2(self):
+        link_columns = "stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
+        stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, " \
+                        "b.SOURCE")
+        stg_columns2 = "a.CUSTOMERKEY_NATION_PK, a.CUSTOMER_PK, a.CUSTOMER_NATIONKEY_PK, a.LOADDATE, a.SOURCE"
+        link_pk = "CUSTOMERKEY_NATION_PK"
+        stg_name = 'v_stg_tpch_data'
+        link_sql = self.template_gen.link_template2(link_columns, stg_columns1, stg_columns2, link_pk, stg_name)
+        self.assertIsInstance(link_sql, str)
+        self.assertIn("{% if is_incremental() %}", link_sql)
+        self.assertIn("{% else %", link_sql)
+        self.assertIn("{% endif %}", link_sql)
+        self.assertIn(link_columns, link_sql)
+        self.assertIn(stg_columns1, link_sql)
+        self.assertIn(stg_columns1, link_sql)
+        self.assertIn(link_pk, link_sql)
+        self.assertIn(stg_name, link_sql)
+
     def test_sat_template(self):
         sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
                        "stg.EFFECTIVE_FROM, stg.SOURCE")
@@ -88,6 +125,26 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(sat_columns, sat_sql)
         self.assertIn(stg_columns, sat_sql)
         self.assertIn(sat_pk, sat_sql)
+
+    def test_sat_template2(self):
+        sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
+                       "stg.EFFECTIVE_FROM, stg.SOURCE")
+        stg_columns1 = ("b.CUSTOMER_HASHDIFF, b.CUSTOMER_PK, b.CUSTOMER_NAME, b.CUSTOMER_PHONE, b.LOADDATE, "
+                        "b.EFFECTIVE FROM, b.SOURCE")
+        stg_columns2 = ("a.CUSTOMER_HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, "
+                        "a.EFFECTIVE FROM, a.SOURCE")
+        sat_pk = "CUSTOMER_HASHDIFF"
+        stg_name = "v_stg_tpch_data"
+        sat_sql = self.template_gen.sat_template2(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name)
+        self.assertIsInstance(sat_sql, str)
+        self.assertIn("{% if is_incremental() %}", sat_sql)
+        self.assertIn("{% else %", sat_sql)
+        self.assertIn("{% endif %}", sat_sql)
+        self.assertIn(sat_columns, sat_sql)
+        self.assertIn(stg_columns1, sat_sql)
+        self.assertIn(stg_columns2, sat_sql)
+        self.assertIn(sat_pk, sat_sql)
+        self.assertIn(stg_name, sat_sql)
 
     def test_table_section_keys(self):
         actual = self.template_gen.get_table_section_keys()
@@ -303,7 +360,9 @@ class TestTemplateGenerator(TestCase):
 
     def test_create_template_macros(self):
         self.template_gen.create_template_macros()
-        path_list = ["../src/snowflakeDemo/macros/hub_template.sql"]
+        path_list = ["../src/snowflakeDemo/macros/hub_template.sql",
+                     "../src/snowflakeDemo/macros/link_template.sql",
+                     "../src/snowflakeDemo/macros/sat_template.sql"]
 
         for path in path_list:
             self.assertTrue(os.path.isfile(path))
