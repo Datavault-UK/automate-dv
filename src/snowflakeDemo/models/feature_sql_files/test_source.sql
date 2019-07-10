@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='TEST_SRC')}}
+{{config(materialized='incremental', schema='TEST_SRC', enabled=false)}}
 
 select
   a.L_ORDERKEY as ORDERKEY,

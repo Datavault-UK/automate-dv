@@ -1,5 +1,4 @@
-{{config(enabled=true,
-materialized='incremental')}}
+{{config(enabled=true, materialized='incremental')}}
 
 select
   a.L_ORDERKEY as ORDERKEY,
@@ -73,11 +72,11 @@ left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.REGION as k on j.N_REGIONKEY = k.R_REG
 
 {% if is_incremental() %}
 
-  where b.O_ORDERDATE between {{var("history_date")}}  and {{var("date")}}
+where b.O_ORDERDATE between {{var("history_date")}}  and {{var("date")}}
 
 {% else %}
 
-  where b.O_ORDERDATE <= {{var("date")}}
+where b.O_ORDERDATE <= {{var("date")}}
 
 {% endif %}
 

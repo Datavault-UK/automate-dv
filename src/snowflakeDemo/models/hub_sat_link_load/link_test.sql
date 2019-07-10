@@ -1,4 +1,4 @@
-{config(materialized='incremental', schema='VLT', enabled=true)}
+{{config(materialized='incremental', schema='VLT', enabled=false)}}
 
 {% set hub_columns = 'stg.NATION_PK, stg.CUSTOMER_NATIONKEY, stg.LOADDATE, stg.SOURCE' %}
 {% set stg_columns1 = 'b.NATION_PK, b.CUSTOMER_NATIONKEY, b.LOADDATE, b.SOURCE' %}

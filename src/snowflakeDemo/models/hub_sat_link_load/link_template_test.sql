@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true)}}
+{{config(materialized='incremental', schema='VLT', enabled=false)}}
 
 {% set link_columns = 'stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE' %}
 {% set stg_columns1 = 'b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, b.SOURCE' %}

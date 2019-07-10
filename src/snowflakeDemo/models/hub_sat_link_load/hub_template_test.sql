@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true)}}
+{{config(materialized='incremental', schema='VLT', enabled=false)}}
 
 {% set hub_columns = 'CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, CAST(stg.CUSTOMERKEY AS NUMBER(38)) AS CUSTOMERKEY, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR(4)) AS SOURCE' %}
 {% set stg_columns1 = 'b.CUSTOMER_PK, b.CUSTOMERKEY, b.LOADDATE, b.SOURCE' %}

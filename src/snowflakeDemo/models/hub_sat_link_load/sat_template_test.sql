@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true)}}
+{{config(materialized='incremental', schema='VLT', enabled=false)}}
 
 {% set sat_columns = 'stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, stg.EFFECTIVE_FROM, stg.SOURCE' %}
 {% set stg_columns1 = 'b.CUSTOMER_HASHDIFF, b.CUSTOMER_PK, b.CUSTOMER_NAME, b.CUSTOMER_PHONE, b.LOADDATE, b.EFFECTIVE_FROM, b.SOURCE' %}

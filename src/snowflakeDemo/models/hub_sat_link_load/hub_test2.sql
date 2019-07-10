@@ -1,10 +1,10 @@
 {{config(materialized='incremental', schema='VLT', enabled=true)}}
 
-{% set hub_columns = 'stg.NATION_PK, stg.CUSTOMER_NATIONKEY, stg.LOADDATE, stg.SOURCE' %}
-{% set stg_columns1 = 'b.NATION_PK, b.CUSTOMER_NATIONKEY, b.LOADDATE, b.SOURCE' %}
-{% set stg_columns2 = 'a.NATION_PK, a.CUSTOMER_NATIONKEY, a.LOADDATE, a.SOURCE' %}
+{% set hub_columns = 'stg.NATION_PK, stg.NATIONKEY, stg.LOADDATE, stg.SOURCE' %}
+{% set stg_columns1 = 'b.NATION_PK, b.NATIONKEY, b.LOADDATE, b.SOURCE' %}
+{% set stg_columns2 = 'a.NATION_PK, a.NATIONKEY, a.LOADDATE, a.SOURCE' %}
 {% set hub_pk = 'NATION_PK' %}
-{% set stg_name = 'v_stg_tpch_data' %}
+{% set stg_name = 'v_nation' %}
 
 {{ hub_template(hub_columns, stg_columns1, hub_pk) }}
 

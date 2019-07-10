@@ -3,7 +3,7 @@
 select
  {{link_columns}}
 from (
-select
+select distinct
  {{stg_columns1}},
  lag(b.LOADDATE, 1) over(partition by {{link_pk}} order by b.LOADDATE) as FIRST_SEEN
 from

@@ -22,18 +22,18 @@ class TestTemplateGenerator(TestCase):
         cls.template_gen = TemplateGenerator(cls.log, cls.con_reader)
         cls.config = cls.template_gen.config
 
-    def test_hub_template(self):
-        hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
-        stg_columns = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
-        hub_pk = "CUSTOMER_PK"
-        hub_sql = self.template_gen.hub_template(hub_columns, stg_columns, hub_pk)
-        self.assertIsInstance(hub_sql, str)
-        self.assertIn("{% if is_incremental() %}", hub_sql)
-        self.assertIn("{% else %", hub_sql)
-        self.assertIn("{% endif %}", hub_sql)
-        self.assertIn(hub_columns, hub_sql)
-        self.assertIn(stg_columns, hub_sql)
-        self.assertIn(hub_pk, hub_sql)
+    # def test_hub_template(self):
+    #     hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
+    #     stg_columns = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
+    #     hub_pk = "CUSTOMER_PK"
+    #     hub_sql = self.template_gen.hub_template(hub_columns, stg_columns, hub_pk)
+    #     self.assertIsInstance(hub_sql, str)
+    #     self.assertIn("{% if is_incremental() %}", hub_sql)
+    #     self.assertIn("{% else %", hub_sql)
+    #     self.assertIn("{% endif %}", hub_sql)
+    #     self.assertIn(hub_columns, hub_sql)
+    #     self.assertIn(stg_columns, hub_sql)
+    #     self.assertIn(hub_pk, hub_sql)
 
     def test_hub_template2(self):
         hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
@@ -41,7 +41,7 @@ class TestTemplateGenerator(TestCase):
         stg_columns2 = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
         hub_pk = "CUSTOMER_PK"
         stg_name = "v_stg_tpch_data"
-        hub_sql = self.template_gen.hub_template2(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name)
+        hub_sql = self.template_gen.hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name)
         self.assertIsInstance(hub_sql, str)
 
     def test_hub_macro_template(self):
@@ -70,28 +70,18 @@ class TestTemplateGenerator(TestCase):
         self.assertNotIn("{{stg_columns2}}", sat_macro_sql)
         self.assertNotIn("{{stg_name}}", sat_macro_sql)
 
-
-    # def test_hub_macro_template_increment(self):
-    #     hub_macro_sql = self.template_gen.hub_macro_template_increment()
-    #     self.assertIsInstance(hub_macro_sql, str)
-    #     self.assertIn("{{hub_columns}}", hub_macro_sql)
-    #     self.assertIn("{{stg_columns1}}", hub_macro_sql)
-    #     self.assertIn("{{hub_pk}}", hub_macro_sql)
-    #     self.assertIn("{{ref(stg_name)}}", hub_macro_sql)
-    #     self.assertIn("{{stg_columns2}}", hub_macro_sql)
-
-    def test_link_template(self):
-        link_columns = "stg.CUSTOMER_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
-        stg_columns = "a.CUSTOMER_NATION_PK, a.CUSTOMER_PK, a.NATION_PK, a.LOADDATE, a.SOURCE"
-        link_pk = "CUSTOMER_NATION_PK"
-        link_sql = self.template_gen.link_template(link_columns, stg_columns, link_pk)
-        self.assertIsInstance(link_sql, str)
-        self.assertIn("{% if is_incremental() %}", link_sql)
-        self.assertIn("{% else %", link_sql)
-        self.assertIn("{% endif %}", link_sql)
-        self.assertIn(link_columns, link_sql)
-        self.assertIn(stg_columns, link_sql)
-        self.assertIn(link_pk, link_sql)
+    # def test_link_template(self):
+    #     link_columns = "stg.CUSTOMER_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
+    #     stg_columns = "a.CUSTOMER_NATION_PK, a.CUSTOMER_PK, a.NATION_PK, a.LOADDATE, a.SOURCE"
+    #     link_pk = "CUSTOMER_NATION_PK"
+    #     link_sql = self.template_gen.link_template(link_columns, stg_columns, link_pk)
+    #     self.assertIsInstance(link_sql, str)
+    #     self.assertIn("{% if is_incremental() %}", link_sql)
+    #     self.assertIn("{% else %", link_sql)
+    #     self.assertIn("{% endif %}", link_sql)
+    #     self.assertIn(link_columns, link_sql)
+    #     self.assertIn(stg_columns, link_sql)
+    #     self.assertIn(link_pk, link_sql)
 
     def test_link_template2(self):
         link_columns = "stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
@@ -100,7 +90,7 @@ class TestTemplateGenerator(TestCase):
         stg_columns2 = "a.CUSTOMERKEY_NATION_PK, a.CUSTOMER_PK, a.CUSTOMER_NATIONKEY_PK, a.LOADDATE, a.SOURCE"
         link_pk = "CUSTOMERKEY_NATION_PK"
         stg_name = 'v_stg_tpch_data'
-        link_sql = self.template_gen.link_template2(link_columns, stg_columns1, stg_columns2, link_pk, stg_name)
+        link_sql = self.template_gen.link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name)
         self.assertIsInstance(link_sql, str)
         self.assertIn("{% if is_incremental() %}", link_sql)
         self.assertIn("{% else %", link_sql)
@@ -111,20 +101,20 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(link_pk, link_sql)
         self.assertIn(stg_name, link_sql)
 
-    def test_sat_template(self):
-        sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
-                       "stg.EFFECTIVE_FROM, stg.SOURCE")
-        stg_columns = ("a.CUSTOMER_HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, "
-                       "a.EFFECTIVE FROM, a.SOURCE")
-        sat_pk = "CUSTOMER_HASHDIFF"
-        sat_sql = self.template_gen.sat_template(sat_columns, stg_columns, sat_pk)
-        self.assertIsInstance(sat_sql, str)
-        self.assertIn("{% if is_incremental() %}", sat_sql)
-        self.assertIn("{% else %", sat_sql)
-        self.assertIn("{% endif %}", sat_sql)
-        self.assertIn(sat_columns, sat_sql)
-        self.assertIn(stg_columns, sat_sql)
-        self.assertIn(sat_pk, sat_sql)
+    # def test_sat_template(self):
+    #     sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
+    #                    "stg.EFFECTIVE_FROM, stg.SOURCE")
+    #     stg_columns = ("a.CUSTOMER_HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, "
+    #                    "a.EFFECTIVE FROM, a.SOURCE")
+    #     sat_pk = "CUSTOMER_HASHDIFF"
+    #     sat_sql = self.template_gen.sat_template(sat_columns, stg_columns, sat_pk)
+    #     self.assertIsInstance(sat_sql, str)
+    #     self.assertIn("{% if is_incremental() %}", sat_sql)
+    #     self.assertIn("{% else %", sat_sql)
+    #     self.assertIn("{% endif %}", sat_sql)
+    #     self.assertIn(sat_columns, sat_sql)
+    #     self.assertIn(stg_columns, sat_sql)
+    #     self.assertIn(sat_pk, sat_sql)
 
     def test_sat_template2(self):
         sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
@@ -135,7 +125,7 @@ class TestTemplateGenerator(TestCase):
                         "a.EFFECTIVE FROM, a.SOURCE")
         sat_pk = "CUSTOMER_HASHDIFF"
         stg_name = "v_stg_tpch_data"
-        sat_sql = self.template_gen.sat_template2(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name)
+        sat_sql = self.template_gen.sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name)
         self.assertIsInstance(sat_sql, str)
         self.assertIn("{% if is_incremental() %}", sat_sql)
         self.assertIn("{% else %", sat_sql)
@@ -154,30 +144,44 @@ class TestTemplateGenerator(TestCase):
 
     def test_alias_adder(self):
         columns_list = ['CUSTOMER_PK', 'CUSTOMERKEY', 'LOADDATE', 'SOURCE']
-        columns_string = "CUSTOMER_PK, CUSTOMERKEY, LOADDATE, SOURCE"
         column_list_from_list = self.template_gen.alias_adder("stg", columns_list)
-        column_list_from_string = self.template_gen.alias_adder("stg", columns_string)
         self.assertIsInstance(column_list_from_list, list)
-        self.assertIsInstance(column_list_from_string, list)
         self.assertEqual(column_list_from_list, ['stg.CUSTOMER_PK', 'stg.CUSTOMERKEY', "stg.LOADDATE", 'stg.SOURCE'])
-        self.assertEqual(column_list_from_string, ['stg.CUSTOMER_PK,', 'stg.CUSTOMERKEY,', "stg.LOADDATE,", 'stg.SOURCE'])
 
-    def test_table_column_with_aliased_column_names_for_list(self):
-        cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
-        cli_args.get_config_name = Mock(return_value="./test_configs/templateConfigWithAliases.ini")
-        cli_args.get_log_level = Mock(return_value=logging.INFO)
-        log = Logger("testTemplateGenerator", cli_args)
-        con_reader = ConfigReader(log, cli_args)
-        log.set_config(con_reader)
-        template_gen = TemplateGenerator(log, con_reader)
-        hub_columns = template_gen.get_table_columns("hubs", "customer")
-        expected_hub_string = "stg.CUSTOMER_PK AS PK, stg.CUSTOMERKEY AS BK, stg.LOADDATE, stg.SOURCE"
-        stg_columns = template_gen.get_stg_columns("hubs", "customer", "a")
-        expected_stg_string = "a.CUSTOMER_PK AS PK, a.CUSTOMERKEY AS BK, a.LOADDATE, a.SOURCE"
-        self.assertIsInstance(hub_columns, str)
-        self.assertIsInstance(stg_columns, str)
-        self.assertEqual(hub_columns, expected_hub_string)
-        self.assertEqual(stg_columns, expected_stg_string)
+    # def test_table_column_with_aliased_column_names_for_list(self):
+    #     cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
+    #     cli_args.get_config_name = Mock(return_value="./test_configs/templateConfigWithAliases.ini")
+    #     cli_args.get_log_level = Mock(return_value=logging.INFO)
+    #     log = Logger("testTemplateGenerator", cli_args)
+    #     con_reader = ConfigReader(log, cli_args)
+    #     log.set_config(con_reader)
+    #     template_gen = TemplateGenerator(log, con_reader)
+    #     hub_columns = template_gen.get_table_columns("hubs", "customer")
+    #     expected_hub_string = "stg.CUSTOMER_PK AS PK, stg.CUSTOMERKEY AS BK, stg.LOADDATE, stg.SOURCE"
+    #     stg_columns = template_gen.get_stg_columns("hubs", "customer", "a")
+    #     expected_stg_string = "a.CUSTOMER_PK AS PK, a.CUSTOMERKEY AS BK, a.LOADDATE, a.SOURCE"
+    #     self.assertIsInstance(hub_columns, str)
+    #     self.assertIsInstance(stg_columns, str)
+    #     self.assertEqual(hub_columns, expected_hub_string)
+    #     self.assertEqual(stg_columns, expected_stg_string)
+
+    def test_data_type_forcer(self):
+        table_columns = ["CUSTOMER_PK", "CUSTOMERKEY", "LOADDATE", "SOURCE"]
+        aliased_table_columns = ["stg.CUSTOMER_PK", "stg.CUSTOMERKEY", "stg.LOADDATE", "stg.SOURCE"]
+        data_types = ["BINARY(16)", "NUMBER(38,0)", "DATE", "VARCHAR"]
+        actual_list = self.template_gen.data_type_forcer(table_columns, aliased_table_columns, data_types)
+        expected_list = ["CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK",
+                         "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY",
+                         "CAST(stg.LOADDATE AS DATE) AS LOADDATE",
+                         "CAST(stg.SOURCE AS VARCHAR) AS SOURCE"]
+        self.assertIsInstance(actual_list, list)
+        self.assertEqual(expected_list, actual_list)
+
+    def test_get_data_types(self):
+        data_type_list = self.template_gen.get_data_types("hubs", "customer")
+        expected_list = ["BINARY(16)", "NUMBER(38,0)", "DATE", "VARCHAR"]
+        self.assertIsInstance(data_type_list, list)
+        self.assertEqual(expected_list, data_type_list)
 
     def test_get_additional_file_metadata(self):
         cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
@@ -237,8 +241,12 @@ class TestTemplateGenerator(TestCase):
 
     def test_get_table_columns_as_list(self):
         hub_columns = self.template_gen.get_table_columns("hubs", "customer")
+        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, "
+                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, "
+                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, "
+                           "CAST(stg.SOURCE AS VARCHAR) AS SOURCE")
         self.assertIsInstance(hub_columns, str)
-        self.assertEqual(hub_columns, "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE")
+        self.assertEqual(expected_string, hub_columns)
 
     def test_get_table_columns_as_string(self):
         cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
@@ -249,8 +257,12 @@ class TestTemplateGenerator(TestCase):
         log.set_config(con_reader)
         template_gen = TemplateGenerator(log, con_reader)
         hub_columns = template_gen.get_table_columns("hubs", "customer")
+        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, "
+                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, "
+                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, "
+                           "CAST(stg.SOURCE AS VARCHAR) AS SOURCE")
         self.assertIsInstance(hub_columns, str)
-        self.assertEqual(hub_columns, "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE")
+        self.assertEqual(expected_string, hub_columns)
 
     def test_get_stg_columns_list(self):
         stage_columns = self.template_gen.get_stg_columns("hubs", "customer", "a")
@@ -271,9 +283,9 @@ class TestTemplateGenerator(TestCase):
 
     def test_get_simulation_dates(self):
         actual_dates = self.template_gen.sim_dates
-        expected_dates = {'history_start_date': "'TO_DATE(1992-12-20)'", 'history_end_date': "'TO_DATE(1993-01-01)'",
-                          'date1': "'TO_DATE(1993-01-02)'", 'date2': "'TO_DATE(1993-01-03)'",
-                          'date3': "'TO_DATE(1993-01-04)'"}
+        expected_dates = {'history_date': "TO_DATE('1993-01-01')",
+                          'date1': "TO_DATE('1993-01-02')", 'date2': "TO_DATE('1993-01-03')",
+                          'date3': "TO_DATE('1993-01-04')"}
         self.assertIsInstance(actual_dates, dict)
         self.assertEqual(expected_dates, actual_dates)
 
@@ -288,8 +300,8 @@ class TestTemplateGenerator(TestCase):
         date = "'TO_DATE(1993-01-02)'"
         document = self.template_gen.dbt_yaml_project_template(history_date, date)
         self.assertIsInstance(document, str)
-        self.assertIn("history_start_date: 'TO_DATE(1993-01-01)'", document)
-        self.assertIn("history_end_date: 'TO_DATE(1993-01-02)'", document)
+        self.assertIn("history_date: 'TO_DATE(1993-01-01)'", document)
+        self.assertIn("date: 'TO_DATE(1993-01-02)'", document)
 
     def test_write_to_file(self):
         path = "./test_configs/generated_sql_files/test_write_to_file.sql"
@@ -312,12 +324,6 @@ class TestTemplateGenerator(TestCase):
 
         self.assertIn("A file already exists in this path {}. It will be overwritten.".format(path),
                       "".join(cm.output))
-
-    def test_get_history_date_difference(self):
-        actual_date_diff = self.template_gen.get_history_date_difference()
-        expected_date_diff = 12
-        self.assertIsInstance(actual_date_diff, int)
-        self.assertEqual(expected_date_diff, actual_date_diff)
 
     def test_create_sql_files(self):
         table_sections = self.template_gen.get_table_section_keys()

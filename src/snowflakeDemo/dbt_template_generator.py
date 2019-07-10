@@ -23,33 +23,33 @@ class TemplateGenerator:
             self.metadata = self.metahandler.get_metadata_dict()
             self.update_config()
 
+    # @staticmethod
+    # def hub_template(hub_columns, stg_columns, hub_pk):
+    #     """
+    #     Generates the hub sql statement as a string.
+    #     :return: sql statement as a string.
+    #     """
+    #
+    #     hub_statement = ("{{{{config(schema='VLT', materialized='incremental', "
+    #                      "unique_key='{}', enabled=true)}}}}\n\n"
+    #                      "SELECT DISTINCT {} \nFROM "
+    #                      "(\nSELECT {}, "
+    #                      "LAG(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS FIRST_SEEN "
+    #                      "\nFROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
+    #                      "{{% if is_incremental() %}}\n"
+    #                      "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
+    #                      "AND stg.FIRST_SEEN IS NULL\n"
+    #                      "{{% else %}}\n"
+    #                      "WHERE stg.FIRST_SEEN IS NULL\n"
+    #                      "{{% endif %}}\n"
+    #                      "LIMIT 10").format(hub_pk, hub_columns,
+    #                                         stg_columns, hub_pk,
+    #                                         hub_pk, hub_pk)
+    #
+    #     return hub_statement
+
     @staticmethod
-    def hub_template(hub_columns, stg_columns, hub_pk):
-        """
-        Generates the hub sql statement as a string.
-        :return: sql statement as a string.
-        """
-
-        hub_statement = ("{{{{config(schema='VLT', materialized='incremental', "
-                         "unique_key='{}', enabled=true)}}}}\n\n"
-                         "SELECT DISTINCT {} \nFROM "
-                         "(\nSELECT {}, "
-                         "LAG(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS FIRST_SEEN "
-                         "\nFROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
-                         "{{% if is_incremental() %}}\n"
-                         "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
-                         "AND stg.FIRST_SEEN IS NULL\n"
-                         "{{% else %}}\n"
-                         "WHERE stg.FIRST_SEEN IS NULL\n" 
-                         "{{% endif %}}\n" 
-                         "LIMIT 10").format(hub_pk, hub_columns,
-                                            stg_columns, hub_pk,
-                                            hub_pk, hub_pk)
-
-        return hub_statement
-
-    @staticmethod
-    def hub_template2(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
+    def hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
         hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
                          "{{% set hub_columns = '{hub_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
@@ -119,31 +119,31 @@ class TemplateGenerator:
     #                       "{% endmacro %}")
     #     return hub_macro_temp
 
+    # @staticmethod
+    # def link_template(link_columns, stg_columns, link_pk):
+    #     """
+    #     Generates the link sql statement as a string.
+    #     :return: sql statement as a string.
+    #     """
+    #
+    #     link_statement = ("{{{{ config(schema='VLT', materialized='incremental', "
+    #                       "enabled=false, unique_key='{}') }}}}\n\n"
+    #                       "SELECT DISTINCT {} \nFROM "
+    #                       "(\nSELECT {}, \n"
+    #                       "LAG(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS FIRST_SEEN "
+    #                       "\nFROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
+    #                       "{{% if is_incremental() %}}\n"
+    #                       "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
+    #                       "AND stg.FIRST_SEEN IS NULL\n"
+    #                       "{{% else %}}\n"
+    #                       "WHERE stg.FIRST_SEEN IS NULL\n"
+    #                       "{{% endif %}}\n"
+    #                       "LIMIT 10").format(link_pk, link_columns, stg_columns, link_pk, link_pk, link_pk)
+    #
+    #     return link_statement
+
     @staticmethod
-    def link_template(link_columns, stg_columns, link_pk):
-        """
-        Generates the link sql statement as a string.
-        :return: sql statement as a string.
-        """
-
-        link_statement = ("{{{{ config(schema='VLT', materialized='incremental', "
-                          "enabled=false, unique_key='{}') }}}}\n\n"
-                          "SELECT DISTINCT {} \nFROM "
-                          "(\nSELECT {}, \n"
-                          "LAG(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS FIRST_SEEN "
-                          "\nFROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
-                          "{{% if is_incremental() %}}\n"
-                          "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
-                          "AND stg.FIRST_SEEN IS NULL\n"
-                          "{{% else %}}\n"
-                          "WHERE stg.FIRST_SEEN IS NULL\n" 
-                          "{{% endif %}}\n" 
-                          "LIMIT 10").format(link_pk, link_columns, stg_columns, link_pk, link_pk, link_pk)
-
-        return link_statement
-
-    @staticmethod
-    def link_template2(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
+    def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
 
         link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
                          "{{% set link_columns = {link_columns} %}}\n"
@@ -168,31 +168,31 @@ class TemplateGenerator:
 
         return link_template
 
+    # @staticmethod
+    # def sat_template(sat_columns, stg_columns, sat_pk):
+    #     """
+    #     Generates the satellite sql statement as a string.
+    #     :return: sql statement as a string.
+    #     """
+    #
+    #     sat_statement = ("{{{{ config(schema='VLT', materialized='incremental', enabled=true, "
+    #                      "tags=['history', 'sats'])}}}}\n\n "
+    #                      "SELECT DISTINCT {} \nFROM "
+    #                      "(\nSELECT {}, \n"
+    #                      "LEAD(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS LATEST "
+    #                      "\n FROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
+    #                      "{{% if is_incremental() %}}\n"
+    #                      "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
+    #                      "AND stg.LATEST IS NULL\n"
+    #                      "{{% else %}}\n"
+    #                      "WHERE stg.LATEST IS NULL\n"
+    #                      "{{% endif %}}\n"
+    #                      "LIMIT 10").format(sat_columns, stg_columns, sat_pk, sat_pk, sat_pk)
+    #
+    #     return sat_statement
+
     @staticmethod
-    def sat_template(sat_columns, stg_columns, sat_pk):
-        """
-        Generates the satellite sql statement as a string.
-        :return: sql statement as a string.
-        """
-
-        sat_statement = ("{{{{ config(schema='VLT', materialized='incremental', enabled=true, "
-                         "tags=['history', 'sats'])}}}}\n\n "
-                         "SELECT DISTINCT {} \nFROM "
-                         "(\nSELECT {}, \n"
-                         "LEAD(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS LATEST "
-                         "\n FROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
-                         "{{% if is_incremental() %}}\n"
-                         "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
-                         "AND stg.LATEST IS NULL\n"
-                         "{{% else %}}\n"
-                         "WHERE stg.LATEST IS NULL\n"
-                         "{{% endif %}}\n"
-                         "LIMIT 10").format(sat_columns, stg_columns, sat_pk, sat_pk, sat_pk)
-
-        return sat_statement
-
-    @staticmethod
-    def sat_template2(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
+    def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
 
         sat_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
                         "{{% set sat_columns = {sat_columns} %}}\n"
@@ -217,13 +217,15 @@ class TemplateGenerator:
         return sat_template
 
     @staticmethod
-    def dbt_yaml_project_template(history_start_date, history_end_date):
+    def dbt_yaml_project_template(history, date):
         """
         Generates a template yaml structure which can be passed on and written to a file for dbt.
         :return:
         """
 
         document = """
+        name: 'snowflakeDemo'
+        version: '1.0'
         profile: 'my-snowflake-db'
         source-paths: ["models"]
         analysis-paths: ["analysis"] 
@@ -237,8 +239,8 @@ class TemplateGenerator:
         
         models:
             vars:
-                history_start_date: {}
-                history_end_date: {}
+                history_date: {}
+                date: {}
                 
             snowflake_demo:
                 source_creation:
@@ -255,7 +257,12 @@ class TemplateGenerator:
                     tags: "history"
                     enabled: true 
                     materialized: incremental
-        """.format(history_start_date, history_end_date)
+                
+                feature_sql_files:
+                    tags: "feature"
+                    enabled: false
+                    materialized: incremental
+        """.format(history, date)
 
         return document
 
@@ -268,14 +275,27 @@ class TemplateGenerator:
         :return: A list that
         """
 
-        if isinstance(column_list, str):
-            column_list = column_list.split(", ")
-            column_list = [column + "," for column in column_list]
-            column_list[len(column_list) - 1] = column_list[len(column_list) - 1].replace(",", "")
+        # if isinstance(column_list, str):
+        #     column_list = column_list.split(", ")
+        #     column_list = [column + "," for column in column_list]
+        #     column_list[len(column_list) - 1] = column_list[len(column_list) - 1].replace(",", "")
 
         new_column_list = [(alias + "." + column) for column in column_list]
 
         return new_column_list
+
+    @staticmethod
+    def data_type_forcer(table_columns, aliased_table_columns, data_types):
+        """
+        Creates a list of strings that the sql will interpret as cast the column to a specific data type.
+        :param table_columns: the raw column names to be forced.
+        :param aliased_table_columns: the aliased column names to be forced.
+        :param data_types: data for for each column.
+        :return: a list with each element cast to specific data type (for sql).
+        """
+
+        return ["CAST({} AS {}) AS {}".format(aliased_table_columns[index], data_types[index], column)
+                for index, column in enumerate(table_columns)]
 
     def get_additional_file_metadata(self):
         """
@@ -312,23 +332,10 @@ class TemplateGenerator:
         # for date in self.config['simulation dates']:
         #     date_list.append("'TO_DATE({})'".format(self.config['simulation dates'][date]))
 
-        sim_dates = {key: ("'TO_DATE({})'".format(date)) for (key, date) in self.config['simulation dates'].items()
+        sim_dates = {key: ("TO_DATE('{}')".format(date)) for (key, date) in self.config['simulation dates'].items()
                      if key != "dbt_path"}
 
         return sim_dates
-
-    def get_history_date_difference(self):
-        """
-        Calculates the difference in days between the history start date and history end date.
-        :return: The number of days between the dates as an integer.
-        """
-
-        history_start_date = datetime.datetime.strptime(self.config['simulation dates']['history_start_date'], '%Y-%m-%d')
-        history_end_date = datetime.datetime.strptime(self.config['simulation dates']['history_end_date'], '%Y-%m-%d')
-
-        date_diff = history_end_date - history_start_date
-
-        return date_diff.days
 
     def get_dbt_project_path(self):
         """
@@ -411,6 +418,21 @@ class TemplateGenerator:
         """
         return self.config[table_section][table_key]["pk"]
 
+    def get_data_types(self, table_section, table_key):
+        """
+        Gets the data types for the columns from the config.
+        :param table_section: the section heading.
+        :param table_key: the target table key
+        :return: the data types as a list.
+        """
+        new_list = []
+
+        for item in self.config[table_section][table_key]["data_types"]:
+            new_list.append(item.replace(";", ","))
+
+        self.config[table_section][table_key]["data_types"] = new_list
+        return self.config[table_section][table_key]["data_types"]
+
     def get_table_columns(self, table_section, table_key):
         """
         Gets the table columns required for the sql statement.
@@ -418,16 +440,25 @@ class TemplateGenerator:
         """
         table_columns = self.config[table_section][table_key]["table_columns"]
 
+        data_types = self.get_data_types(table_section, table_key)
+
         if isinstance(table_columns, str):
+
+            table_columns = table_columns.split(", ")
 
             aliased_table_columns = self.alias_adder("stg", table_columns)
 
-            return " ".join(aliased_table_columns)
+            aliased_table_columns[len(aliased_table_columns) - 1] = aliased_table_columns[len(aliased_table_columns) - 1].replace(",", "")
+
+            data_type_forced_columns = self.data_type_forcer(table_columns, aliased_table_columns, data_types)
+
         else:
 
             aliased_table_columns = self.alias_adder("stg", table_columns)
 
-            return ", ".join(aliased_table_columns)
+            data_type_forced_columns = self.data_type_forcer(table_columns, aliased_table_columns, data_types)
+
+        return ", ".join(data_type_forced_columns)
 
     def get_stg_columns(self, table_section, table_key, alias):
         """
@@ -438,9 +469,11 @@ class TemplateGenerator:
 
         if isinstance(stg_columns, str):
 
+            stg_columns = stg_columns.split(", ")
+
             aliased_stg_columns = self.alias_adder(alias, stg_columns)
 
-            return " ".join(aliased_stg_columns)
+            return ", ".join(aliased_stg_columns)
         else:
 
             aliased_stg_columns = self.alias_adder(alias, stg_columns)
@@ -481,19 +514,19 @@ class TemplateGenerator:
 
                 try:
                     if table_key == 'hubs':
-                        statement = self.hub_template2(self.get_table_columns(table_key, table),
+                        statement = self.hub_template(self.get_table_columns(table_key, table),
+                                                      self.get_stg_columns(table_key, table, "b"),
+                                                      self.get_stg_columns(table_key, table, "a"),
+                                                      self.get_pk(table_key, table),
+                                                      self.get_stg_table_name(table_key, table))
+                    elif table_key == 'links':
+                        statement = self.link_template(self.get_table_columns(table_key, table),
                                                        self.get_stg_columns(table_key, table, "b"),
                                                        self.get_stg_columns(table_key, table, "a"),
                                                        self.get_pk(table_key, table),
                                                        self.get_stg_table_name(table_key, table))
-                    elif table_key == 'links':
-                        statement = self.link_template2(self.get_table_columns(table_key, table),
-                                                        self.get_stg_columns(table_key, table, "b"),
-                                                        self.get_stg_columns(table_key, table, "a"),
-                                                        self.get_pk(table_key, table),
-                                                        self.get_stg_table_name(table_key, table))
                     else:
-                        statement = self.sat_template2(self.get_table_columns(table_key, table),
+                        statement = self.sat_template(self.get_table_columns(table_key, table),
                                                       self.get_stg_columns(table_key, table, "b"),
                                                       self.get_stg_columns(table_key, table, "a"),
                                                       self.get_pk(table_key, table),
@@ -509,13 +542,13 @@ class TemplateGenerator:
                     self._my_log.log(("A KeyError was detected in constructing the sql file from the template. "
                                       "Please check the config file."), logging.ERROR)
 
-    def create_dbt_project_file(self, history_start_date, history_end_date):
+    def create_dbt_project_file(self, history_date, date):
         """
         Gets the yaml statement and dumps it into a yaml file.
         """
 
         path = self.get_dbt_project_path()
-        document = self.dbt_yaml_project_template(history_start_date, history_end_date)
+        document = self.dbt_yaml_project_template(history_date, date)
         data = load(document, Loader=Loader)
 
         try:
@@ -536,6 +569,11 @@ class TemplateGenerator:
         Creates the macros in the correct location in dbt.
         """
         path = self.config["dbt settings"]["macro_path"]
+
+        self._my_log.log("Creating macros...", logging.INFO)
+
         self.write_to_file(path + '/hub_template.sql', self.hub_macro_template())
         self.write_to_file(path + "/link_template.sql", self.link_macro_template())
         self.write_to_file(path + "/sat_template.sql", self.sat_macro_template())
+
+        self._my_log.log("Macros created.", logging.INFO)

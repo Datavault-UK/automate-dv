@@ -6,6 +6,7 @@ from addKeys import KeyAdder
 from multiprocessing import Pool
 from pathos.multiprocessing import ProcessPool
 import os
+import logging
 
 
 def run():
@@ -14,17 +15,29 @@ def run():
     logger = Logger(program_name, cli_args)
     config = ConfigReader(logger, cli_args)
     template_gen = TemplateGenerator(logger, config)
+    template_gen.create_template_macros()
     template_gen.create_sql_files()
     sim_dates = template_gen.sim_dates
 
-    template_gen.create_dbt_project_file(sim_dates['history_start_date'], sim_dates['history_end_date'])
+    template_gen.create_dbt_project_file(sim_dates['history_date'], sim_dates['history_date'])
 
-    key_add = KeyAdder(logger, config)
-    tables = key_add.get_table_keys()
+    logger.log("Loading the history into the data vault.", logging.INFO)
+
+    os.system("dbt run --full-refresh")
+
+    for date in sim_dates:
+        if "history" not in date:
+            logger.log("Running the day load for {}.".format(date), logging.INFO)
+            path = """dbt run --vars "{{'date':{}}}" """.format(sim_dates[date])
+            os.system(path)
+            logger.log("Day load for {} has finshed.".format(date), logging.INFO)
+
+    # key_add = KeyAdder(logger, config)
+    # tables = key_add.get_table_keys()
 
     # Adding keys to tables
-    with ProcessPool() as P:
-        P.map(key_add.pk_pipe, tables)
+    # with ProcessPool() as P:
+    #     P.map(key_add.pk_pipe, tables)
 
     # History Section
     # os.system('dbt run --models tag:history --exclude tag:sat')

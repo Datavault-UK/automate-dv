@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='TEST_VLT')}}
+{{config(materialized='incremental', schema='TEST_VLT', enabled=false)}}
 
 select
   stg.HASHDIFF,
