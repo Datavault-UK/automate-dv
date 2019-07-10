@@ -79,7 +79,7 @@ class TemplateGenerator:
                           "select\n"
                           "{{hub_columns}}\n "
                           "from (\n "
-                          "select\n "
+                          "select distinct\n "
                           "{{stg_columns1}}, \n"
                           "lag(b.LOADDATE, 1) over(partition by {{hub_pk}} order by b.loaddate) as FIRST_SEEN\n "
                           "from\n\n"
@@ -91,7 +91,7 @@ class TemplateGenerator:
     def link_macro_template():
 
         link_macro_temp = ("{% macro link_template(link_columns, stg_columns1, link_pk) %}\n\n"
-                           "select\n {{link_columns}}\nfrom (\nselect\n {{stg_columns1}},\n "
+                           "select\n {{link_columns}}\nfrom (\nselect distinct\n {{stg_columns1}},\n "
                            "lag(b.LOADDATE, 1) over(partition by {{link_pk}} order by b.LOADDATE) as FIRST_SEEN\n"
                            "from\n\n{% endmacro %}")
 
@@ -101,7 +101,7 @@ class TemplateGenerator:
     def sat_macro_template():
 
         sat_macro_temp = ("{% macro sat_template(sat_columns, stg_columns1, sat_pk) %}\n\n"
-                          "select\n {{sat_columns}}\nfrom (\nselect\n {{stg_columns1}},\n "
+                          "select\n {{sat_columns}}\nfrom (\nselect distinct\n {{stg_columns1}},\n "
                           "lead(b.LOADDATE, 1) over(partition by b.{{sat_pk}} order by b.LOADDATE) as LATEST\n"
                           "from\n\n{% endmacro %}")
 

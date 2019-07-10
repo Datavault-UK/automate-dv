@@ -59,3 +59,8 @@ models:
       enabled: true
       materialized: table
 
+    feature_sql_files:
+      tags: "feature"
+      enabled: false
+      materialized: incremental
+

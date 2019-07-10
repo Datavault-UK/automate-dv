@@ -14,7 +14,7 @@
  {{stg_columns2}}
  from {{ref(stg_name)}} as a
  left join {{this}} as c on a.{{hub_pk}}=c.{{hub_pk}} and c.{{hub_pk}} is null) as b) as stg
-where stg.{{hub_pk}} not in (select {{hub_pk}} from {{this}}) and stg.LATEST is null
+where stg.{{hub_pk}} not in (select {{hub_pk}} from {{this}}) and stg.FIRST_SEEN is null
 
 {% else %}
 
