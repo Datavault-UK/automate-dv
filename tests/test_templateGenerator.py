@@ -22,20 +22,7 @@ class TestTemplateGenerator(TestCase):
         cls.template_gen = TemplateGenerator(cls.log, cls.con_reader)
         cls.config = cls.template_gen.config
 
-    # def test_hub_template(self):
-    #     hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
-    #     stg_columns = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
-    #     hub_pk = "CUSTOMER_PK"
-    #     hub_sql = self.template_gen.hub_template(hub_columns, stg_columns, hub_pk)
-    #     self.assertIsInstance(hub_sql, str)
-    #     self.assertIn("{% if is_incremental() %}", hub_sql)
-    #     self.assertIn("{% else %", hub_sql)
-    #     self.assertIn("{% endif %}", hub_sql)
-    #     self.assertIn(hub_columns, hub_sql)
-    #     self.assertIn(stg_columns, hub_sql)
-    #     self.assertIn(hub_pk, hub_sql)
-
-    def test_hub_template2(self):
+    def test_hub_template(self):
         hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
         stg_columns1 = "b.CUSTOMER_PK, b.CUSTOMERKEY, b.LOADDATE, b.SOURCE"
         stg_columns2 = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
@@ -70,20 +57,7 @@ class TestTemplateGenerator(TestCase):
         self.assertNotIn("{{stg_columns2}}", sat_macro_sql)
         self.assertNotIn("{{stg_name}}", sat_macro_sql)
 
-    # def test_link_template(self):
-    #     link_columns = "stg.CUSTOMER_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
-    #     stg_columns = "a.CUSTOMER_NATION_PK, a.CUSTOMER_PK, a.NATION_PK, a.LOADDATE, a.SOURCE"
-    #     link_pk = "CUSTOMER_NATION_PK"
-    #     link_sql = self.template_gen.link_template(link_columns, stg_columns, link_pk)
-    #     self.assertIsInstance(link_sql, str)
-    #     self.assertIn("{% if is_incremental() %}", link_sql)
-    #     self.assertIn("{% else %", link_sql)
-    #     self.assertIn("{% endif %}", link_sql)
-    #     self.assertIn(link_columns, link_sql)
-    #     self.assertIn(stg_columns, link_sql)
-    #     self.assertIn(link_pk, link_sql)
-
-    def test_link_template2(self):
+    def test_link_template(self):
         link_columns = "stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
         stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, " \
                         "b.SOURCE")
@@ -101,22 +75,7 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(link_pk, link_sql)
         self.assertIn(stg_name, link_sql)
 
-    # def test_sat_template(self):
-    #     sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
-    #                    "stg.EFFECTIVE_FROM, stg.SOURCE")
-    #     stg_columns = ("a.CUSTOMER_HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, "
-    #                    "a.EFFECTIVE FROM, a.SOURCE")
-    #     sat_pk = "CUSTOMER_HASHDIFF"
-    #     sat_sql = self.template_gen.sat_template(sat_columns, stg_columns, sat_pk)
-    #     self.assertIsInstance(sat_sql, str)
-    #     self.assertIn("{% if is_incremental() %}", sat_sql)
-    #     self.assertIn("{% else %", sat_sql)
-    #     self.assertIn("{% endif %}", sat_sql)
-    #     self.assertIn(sat_columns, sat_sql)
-    #     self.assertIn(stg_columns, sat_sql)
-    #     self.assertIn(sat_pk, sat_sql)
-
-    def test_sat_template2(self):
+    def test_sat_template(self):
         sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
                        "stg.EFFECTIVE_FROM, stg.SOURCE")
         stg_columns1 = ("b.CUSTOMER_HASHDIFF, b.CUSTOMER_PK, b.CUSTOMER_NAME, b.CUSTOMER_PHONE, b.LOADDATE, "
@@ -136,6 +95,11 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(sat_pk, sat_sql)
         self.assertIn(stg_name, sat_sql)
 
+    def test_find_active_tables(self):
+        new_config = self.template_gen.find_active_tables()
+        self.assertIsInstance(new_config, dict)
+        self.assertNotIn("link_test2", list(new_config['links'].keys()))
+
     def test_table_section_keys(self):
         actual = self.template_gen.get_table_section_keys()
         expected = ['hubs', 'links', 'satellites']
@@ -147,23 +111,6 @@ class TestTemplateGenerator(TestCase):
         column_list_from_list = self.template_gen.alias_adder("stg", columns_list)
         self.assertIsInstance(column_list_from_list, list)
         self.assertEqual(column_list_from_list, ['stg.CUSTOMER_PK', 'stg.CUSTOMERKEY', "stg.LOADDATE", 'stg.SOURCE'])
-
-    # def test_table_column_with_aliased_column_names_for_list(self):
-    #     cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
-    #     cli_args.get_config_name = Mock(return_value="./test_configs/templateConfigWithAliases.ini")
-    #     cli_args.get_log_level = Mock(return_value=logging.INFO)
-    #     log = Logger("testTemplateGenerator", cli_args)
-    #     con_reader = ConfigReader(log, cli_args)
-    #     log.set_config(con_reader)
-    #     template_gen = TemplateGenerator(log, con_reader)
-    #     hub_columns = template_gen.get_table_columns("hubs", "customer")
-    #     expected_hub_string = "stg.CUSTOMER_PK AS PK, stg.CUSTOMERKEY AS BK, stg.LOADDATE, stg.SOURCE"
-    #     stg_columns = template_gen.get_stg_columns("hubs", "customer", "a")
-    #     expected_stg_string = "a.CUSTOMER_PK AS PK, a.CUSTOMERKEY AS BK, a.LOADDATE, a.SOURCE"
-    #     self.assertIsInstance(hub_columns, str)
-    #     self.assertIsInstance(stg_columns, str)
-    #     self.assertEqual(hub_columns, expected_hub_string)
-    #     self.assertEqual(stg_columns, expected_stg_string)
 
     def test_data_type_forcer(self):
         table_columns = ["CUSTOMER_PK", "CUSTOMERKEY", "LOADDATE", "SOURCE"]
@@ -219,7 +166,7 @@ class TestTemplateGenerator(TestCase):
         self.assertEqual(expected_keys, actual_keys)
 
     def test_get_table_file_path(self):
-        file_path = self.template_gen.get_table_file_path("hubs", "customer")
+        file_path = self.template_gen.get_table_file_path("hubs", "customer", "vault_path")
         self.assertIsInstance(file_path, str)
         self.assertEqual(file_path, "../src/snowflakeDemo/models/hub_sat_link_load/hub_test.sql")
 
@@ -332,7 +279,7 @@ class TestTemplateGenerator(TestCase):
 
         for table_key in table_keys:
             for table in table_keys[table_key]:
-                path = self.config[table_key][table]["dbt_path"]+"/"+self.config[table_key][table]["name"]+".sql"
+                path = self.config["dbt settings"]["vault_path"]+"/"+self.config[table_key][table]["name"]+".sql"
 
                 path_list.append(path)
 
@@ -340,6 +287,7 @@ class TestTemplateGenerator(TestCase):
 
         for path in path_list:
             self.assertTrue(os.path.isfile(path))
+            os.remove(path)
 
     def test_create_sql_file_key_error_handle(self):
         cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")

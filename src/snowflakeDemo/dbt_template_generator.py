@@ -23,6 +23,9 @@ class TemplateGenerator:
             self.metadata = self.metahandler.get_metadata_dict()
             self.update_config()
 
+        self.active_config = ''
+
+
     # @staticmethod
     # def hub_template(hub_columns, stg_columns, hub_pk):
     #     """
@@ -107,41 +110,6 @@ class TemplateGenerator:
 
         return sat_macro_temp
 
-    # @staticmethod
-    # def hub_macro_template_increment():
-    #
-    #     hub_macro_temp = ("{% macro hub_template_increment(hub_columns, stg_columns1,  stg_columns2, hub_pk, stg_name) "
-    #                       "%}\n\n select\n {{hub_columns}}\n from (\n select\n {{stg_columns1}}, \n"
-    #                       "lead(b.LOADDATE, 1) over(partition by {{hub_pk}} order by b.loaddate) as LATEST\n from (\n "
-    #                       "select\n {{stg_columns2}}\n from {{ref(stg_name)}} as a\n left join {{this}} as c on "
-    #                       "a.{{hub_pk}}=c.{{hub_pk}} and c.{{hub_pk}} is null) as b) as stg\n "
-    #                       "where stg.{{hub_pk}} not in (select {{hub_pk}} from {{this}}) and stg.LATEST is null\n\n"
-    #                       "{% endmacro %}")
-    #     return hub_macro_temp
-
-    # @staticmethod
-    # def link_template(link_columns, stg_columns, link_pk):
-    #     """
-    #     Generates the link sql statement as a string.
-    #     :return: sql statement as a string.
-    #     """
-    #
-    #     link_statement = ("{{{{ config(schema='VLT', materialized='incremental', "
-    #                       "enabled=false, unique_key='{}') }}}}\n\n"
-    #                       "SELECT DISTINCT {} \nFROM "
-    #                       "(\nSELECT {}, \n"
-    #                       "LAG(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS FIRST_SEEN "
-    #                       "\nFROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
-    #                       "{{% if is_incremental() %}}\n"
-    #                       "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
-    #                       "AND stg.FIRST_SEEN IS NULL\n"
-    #                       "{{% else %}}\n"
-    #                       "WHERE stg.FIRST_SEEN IS NULL\n"
-    #                       "{{% endif %}}\n"
-    #                       "LIMIT 10").format(link_pk, link_columns, stg_columns, link_pk, link_pk, link_pk)
-    #
-    #     return link_statement
-
     @staticmethod
     def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
 
@@ -167,29 +135,6 @@ class TemplateGenerator:
                                                  stg_name=stg_name)
 
         return link_template
-
-    # @staticmethod
-    # def sat_template(sat_columns, stg_columns, sat_pk):
-    #     """
-    #     Generates the satellite sql statement as a string.
-    #     :return: sql statement as a string.
-    #     """
-    #
-    #     sat_statement = ("{{{{ config(schema='VLT', materialized='incremental', enabled=true, "
-    #                      "tags=['history', 'sats'])}}}}\n\n "
-    #                      "SELECT DISTINCT {} \nFROM "
-    #                      "(\nSELECT {}, \n"
-    #                      "LEAD(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS LATEST "
-    #                      "\n FROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
-    #                      "{{% if is_incremental() %}}\n"
-    #                      "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
-    #                      "AND stg.LATEST IS NULL\n"
-    #                      "{{% else %}}\n"
-    #                      "WHERE stg.LATEST IS NULL\n"
-    #                      "{{% endif %}}\n"
-    #                      "LIMIT 10").format(sat_columns, stg_columns, sat_pk, sat_pk, sat_pk)
-    #
-    #     return sat_statement
 
     @staticmethod
     def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
@@ -275,14 +220,7 @@ class TemplateGenerator:
         :return: A list that
         """
 
-        # if isinstance(column_list, str):
-        #     column_list = column_list.split(", ")
-        #     column_list = [column + "," for column in column_list]
-        #     column_list[len(column_list) - 1] = column_list[len(column_list) - 1].replace(",", "")
-
-        new_column_list = [(alias + "." + column) for column in column_list]
-
-        return new_column_list
+        return [(alias + "." + column) for column in column_list]
 
     @staticmethod
     def data_type_forcer(table_columns, aliased_table_columns, data_types):
@@ -296,6 +234,28 @@ class TemplateGenerator:
 
         return ["CAST({} AS {}) AS {}".format(aliased_table_columns[index], data_types[index], column)
                 for index, column in enumerate(table_columns)]
+
+    def find_active_tables(self):
+        """
+        Finds all the active tables and removes them from the config dict.
+        :return:
+        """
+
+        new_config = copy.deepcopy(self.config)
+        table_sections = self.get_table_section_keys()
+
+        for section in table_sections:
+            keys = list(new_config[section].keys())
+            for table in keys:
+                if new_config[section][table]['isactive'] == 'False':
+                    del new_config[section][table]
+                else:
+                    pass
+
+
+
+        return new_config
+
 
     def get_additional_file_metadata(self):
         """
@@ -327,15 +287,8 @@ class TemplateGenerator:
         :return: the simulation dates as a dictionary.
         """
 
-        # date_list = []
-        #
-        # for date in self.config['simulation dates']:
-        #     date_list.append("'TO_DATE({})'".format(self.config['simulation dates'][date]))
-
-        sim_dates = {key: ("TO_DATE('{}')".format(date)) for (key, date) in self.config['simulation dates'].items()
-                     if key != "dbt_path"}
-
-        return sim_dates
+        return {key: ("TO_DATE('{}')".format(date)) for (key, date) in self.config['simulation dates'].items()
+                if key != "dbt_path"}
 
     def get_dbt_project_path(self):
         """
@@ -386,13 +339,17 @@ class TemplateGenerator:
 
         return table_dict
 
-    def get_table_file_path(self, table_section, table_key):
+    def get_table_file_path(self, table_section, table_key, dbt_dir):
         """
         Gets the file path to write the sql file in the dbt model.
         :return:
         """
-        file_path = self.config[table_section][table_key]["dbt_path"] + "/{}.sql".format(self.get_table_name(
-            table_section, table_key))
+        # file_path = self.config[table_section][table_key]["dbt_path"] + "/{}.sql".format(self.get_table_name(
+        #     table_section, table_key))
+
+        file_path = self.config['dbt settings'][dbt_dir] + "/{}.sql".format(self.get_table_name(table_section,
+                                                                                                table_key))
+
         return file_path
 
     def get_table_name(self, table_section, table_key):
@@ -431,6 +388,7 @@ class TemplateGenerator:
             new_list.append(item.replace(";", ","))
 
         self.config[table_section][table_key]["data_types"] = new_list
+
         return self.config[table_section][table_key]["data_types"]
 
     def get_table_columns(self, table_section, table_key):
@@ -532,7 +490,7 @@ class TemplateGenerator:
                                                       self.get_pk(table_key, table),
                                                       self.get_stg_table_name(table_key, table))
 
-                    path = self.get_table_file_path(table_key, table)
+                    path = self.get_table_file_path(table_key, table, 'vault_path')
                     self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
                     self.write_to_file(path, statement)
                     self._my_log.log("Successfully written sql to file.", logging.INFO)

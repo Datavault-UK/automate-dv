@@ -4,7 +4,7 @@
 {% set stg_columns1 = 'b.NATION_HASHDIFF, b.NATION_PK, b.NATION_NAME, b.NATION_COMMENT, b.LOADDATE, b.EFFECTIVE_FROM, b.SOURCE' %}
 {% set stg_columns2 = 'a.NATION_HASHDIFF, a.NATION_PK, a.NATION_NAME, a.NATION_COMMENT, a.LOADDATE, a.EFFECTIVE_FROM, a.SOURCE' %}
 {% set sat_pk = 'NATION_HASHDIFF' %}
-{% set stg_name = 'v_nation' %}
+{% set stg_name = 'v_nation_region' %}
 
 {{ sat_template(sat_columns, stg_columns1, sat_pk)}}
 

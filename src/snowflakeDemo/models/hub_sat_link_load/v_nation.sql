@@ -1,4 +1,4 @@
-{{config(materialized='view', schema='STG', enabled=true)}}
+{{config(materialized='view', schema='STG', enabled=false)}}
 
 SELECT
   stg.CUSTOMER_NATIONKEY_PK AS NATION_PK,

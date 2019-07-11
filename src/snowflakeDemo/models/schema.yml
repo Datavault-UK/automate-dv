@@ -14,60 +14,8 @@ version: 2
 #    tables:
 #      - name: V_STG_CUSTOMER
 
-#models:
-#  - name: sat_test
-#    columns:
-#      - name: CUSTOMER_HASHDIFF
-#        tests:
-#        - relationships:
-#          to: ref('v_stg_tpch_data')
-#          field: CUSTOMER_HASHDIFF
-
-# models:
-#  - name: hub_test2
-#    columns:
-#      - name: NATION_PK
-#        tests:
-#          - unique
-#          - not_null
-#      - name: NATIONKEY
-#        tests:
-#          - unique
-#          - not_null
-#  - name: hub_test
-#    columns:
-#      - name: CUSTOMER_PK
-#        tests:
-#          - unique
-#          - not_null
-#          - relationships:
-#              to: ref('v_stg_tpch_data')
-#              field: CUSTOMER_PK
-#      - name: CUSTOMERKEY
-#        tests:
-#          - unique
-#          - not_null
-#          - relationships:
-#              to: ref('v_stg_tpch_data')
-#              field: CUSTOMERKEY
-#  - name: link_customer_nation
-#    columns:
-#      - name: CUSTOMERKEY_NATION_PK
-#        tests:
-#          - unique
-#          - not_null
-#          - relationships:
-#              to: ref('v_stg_tpch_data')
-#              field:
-#  - name: sat_hub_customer
-#    columns:
-#      - name: CUSTOMER_HASHDIFF
-#        tests:
-#          - unique
-#          - not_null
-
 models:
-  - name: hub_test
+  - name: hub_customer
     tests:
       - unique:
           column_name: CUSTOMER_PK
@@ -85,7 +33,15 @@ models:
           column_name: CUSTOMERKEY
           to: ref('v_stg_tpch_data')
           field: CUSTOMERKEY
-  - name: hub_test2
+      - column_type:
+          table_name: hub_customer
+          column_name: CUSTOMER_PK
+          type: BINARY
+      - column_type:
+          table_name: hub_customer
+          column_name: CUSTOMERKEY
+          type: NUMBER
+  - name: hub_nation
     tests:
       - unique:
           column_name: NATION_PK
@@ -95,6 +51,14 @@ models:
           column_name: NATION_PK
       - not_null:
           column_name: NATIONKEY
+      - column_type:
+          table_name: hub_nation
+          column_name: NATION_PK
+          type: BINARY
+      - column_type:
+          table_name: hub_nation
+          column_name: NATIONKEY
+          type: NUMBER
   - name: link_customer_nation
     tests:
       - unique:
@@ -127,3 +91,8 @@ models:
           column_name: CUSTOMER_PK
           to: ref('hub_test')
           field: CUSTOMER_PK
+  - name: source_system
+    tests:
+      - within_date:
+          date_column: ORDERDATE
+          max_date: TO_DATE('1993-01-02')

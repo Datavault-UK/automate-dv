@@ -1,29 +1,23 @@
-{{ config(schema='VLT', materialized='incremental', enabled=false, unique_key='NATION_REGION_PK') }}
+{{config(materialized='incremental', schema='VLT', enabled=true)}}
 
-SELECT DISTINCT
-  stg.NATION_REGION_PK,
-  stg.NATION_PK,
-  stg.REGION_PK,
-  stg.LOADDATE,
-  stg.SOURCE
-FROM (
-SELECT
-  a.NATION_REGION_PK,
-  a.NATION_PK,
-  a.REGION_PK,
-  a.LOADDATE,
-  LAG(a.LOADDATE, 1) OVER(PARTITION BY a.NATION_REGION_PK ORDER BY a.LOADDATE) AS FIRST_SEEN,
-  a.SOURCE
-FROM {{ ref('v_stg_tpch_data') }} AS a) AS stg
+{% set link_columns = 'CAST(stg.NATION_REGION_PK AS BINARY(16)) AS NATION_REGION_PK, CAST(stg.NATION_PK AS BINARY(16)) AS NATION_PK, CAST(stg.REGION_PK AS BINARY(16)) AS REGION_PK, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR) AS SOURCE' %}
+{% set stg_columns1 = 'b.NATION_REGION_PK, b.NATION_PK, b.REGION_PK, b.LOADDATE, b.SOURCE' %}
+{% set stg_columns2 = 'a.NATION_REGION_PK, a.NATION_PK, a.REGION_PK, a.LOADDATE, a.SOURCE' %}
+{% set link_pk = 'NATION_REGION_PK' %}
+{% set stg_name = 'v_nation_region' %}
 
-{% if is_incremental %}
+{{ link_template(link_columns, stg_columns1, link_pk)}}
 
-WHERE stg.NATION_REGION_PK NOT IN (SELECT NATION_REGION_PK FROM {{this}}) AND stg.FIRST_SEEN IS NULL
+{% if is_incremental() %}
+
+(select
+ {{stg_columns2}}
+from {{ref(stg_name)}} as a
+left join {{this}} as c on a.{{link_pk}}=c.{{link_pk}} and c.{{link_pk}} is null) as b) as stg
+where stg.{{link_pk}} not in (select {{link_pk}} from {{this}}) and stg.FIRST_SEEN is null
 
 {% else %}
 
-WHERE stg.FIRST_SEEN IS NULL
+{{ref(stg_name)}} as b) as stg where stg.FIRST_SEEN is null
 
 {% endif %}
-
-LIMIT 10
