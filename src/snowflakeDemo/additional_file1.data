@@ -1,0 +1,9 @@
+[Satellites]
+    [[sat_hub_nation]]
+    name = sat_hub_nation
+    stg_name = v_nation
+    dbt_path = ./models/hub_sat_link_load
+    table_columns = NATION_HASHDIFF, NATION_PK, NATION_NAME, NATION_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
+    data_types = BINARY(16), BINARY(16), VARCHAR(25), VARCHAR(152), DATE, DATE, VARCHAR(4)
+    stg_columns = NATION_HASHDIFF, NATION_PK, NATION_NAME, NATION_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
+    pk = NATION_HASHDIFF

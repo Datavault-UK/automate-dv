@@ -146,11 +146,11 @@ class TemplateGenerator:
     def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
 
         link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
-                         "{{% set link_columns = {link_columns} %}}\n"
-                         "{{% set stg_columns1 = {stg_columns1} %}}\n"
-                         "{{% set stg_columns2 = {stg_columns2} %}}\n"
-                         "{{% set link_pk = {link_pk} %}}\n"
-                         "{{% set stg_name = {stg_name} %}}\n\n"
+                         "{{% set link_columns = '{link_columns}' %}}\n"
+                         "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
+                         "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
+                         "{{% set link_pk = '{link_pk}' %}}\n"
+                         "{{% set stg_name = '{stg_name}' %}}\n\n"
                          "{{{{ link_template(link_columns, stg_columns1, link_pk)}}}}\n\n"
                          "{{% if is_incremental() %}}\n\n"
                          "(select\n {{{{stg_columns2}}}}\nfrom {{{{ref(stg_name)}}}} as a\n"
@@ -195,11 +195,11 @@ class TemplateGenerator:
     def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
 
         sat_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
-                        "{{% set sat_columns = {sat_columns} %}}\n"
-                        "{{% set stg_columns1 = {stg_columns1} %}}\n"
-                        "{{% set stg_columns2 = {stg_columns2} %}}\n"
-                        "{{% set sat_pk = {sat_pk} %}}\n"
-                        "{{% set stg_name = {stg_name} %}}\n\n"
+                        "{{% set sat_columns = '{sat_columns}' %}}\n"
+                        "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
+                        "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
+                        "{{% set sat_pk = '{sat_pk}' %}}\n"
+                        "{{% set stg_name = '{stg_name}' %}}\n\n"
                         "{{{{ sat_template(sat_columns, stg_columns1, sat_pk)}}}}\n\n"
                         "{{% if is_incremental() %}}\n\n(select\n {{{{stg_columns2}}}}\n"
                         "from {{{{ref(stg_name)}}}} as a\n"

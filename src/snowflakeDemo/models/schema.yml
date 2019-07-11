@@ -7,12 +7,12 @@
 
 version: 2
 
-sources:
-  - name: v_stg
-    database: DV_PROTOTYPE_DB  # Tell dbt to look for the source in the "raw" database
-    schema: STG # You wouldn't put your source data in public, would you?
-    tables:
-      - name: V_STG_CUSTOMER
+#sources:
+#  - name: v_stg
+#    database: DV_PROTOTYPE_DB  # Tell dbt to look for the source in the "raw" database
+#    schema: STG # You wouldn't put your source data in public, would you?
+#    tables:
+#      - name: V_STG_CUSTOMER
 
 #models:
 #  - name: sat_test
@@ -22,3 +22,108 @@ sources:
 #        - relationships:
 #          to: ref('v_stg_tpch_data')
 #          field: CUSTOMER_HASHDIFF
+
+# models:
+#  - name: hub_test2
+#    columns:
+#      - name: NATION_PK
+#        tests:
+#          - unique
+#          - not_null
+#      - name: NATIONKEY
+#        tests:
+#          - unique
+#          - not_null
+#  - name: hub_test
+#    columns:
+#      - name: CUSTOMER_PK
+#        tests:
+#          - unique
+#          - not_null
+#          - relationships:
+#              to: ref('v_stg_tpch_data')
+#              field: CUSTOMER_PK
+#      - name: CUSTOMERKEY
+#        tests:
+#          - unique
+#          - not_null
+#          - relationships:
+#              to: ref('v_stg_tpch_data')
+#              field: CUSTOMERKEY
+#  - name: link_customer_nation
+#    columns:
+#      - name: CUSTOMERKEY_NATION_PK
+#        tests:
+#          - unique
+#          - not_null
+#          - relationships:
+#              to: ref('v_stg_tpch_data')
+#              field:
+#  - name: sat_hub_customer
+#    columns:
+#      - name: CUSTOMER_HASHDIFF
+#        tests:
+#          - unique
+#          - not_null
+
+models:
+  - name: hub_test
+    tests:
+      - unique:
+          column_name: CUSTOMER_PK
+      - unique:
+          column_name: CUSTOMERKEY
+      - not_null:
+          column_name: CUSTOMER_PK
+      - not_null:
+          column_name: CUSTOMERKEY
+      - relationships:
+          column_name: CUSTOMER_PK
+          to: ref('v_stg_tpch_data')
+          field: CUSTOMER_PK
+      - relationships:
+          column_name: CUSTOMERKEY
+          to: ref('v_stg_tpch_data')
+          field: CUSTOMERKEY
+  - name: hub_test2
+    tests:
+      - unique:
+          column_name: NATION_PK
+      - unique:
+          column_name: NATIONKEY
+      - not_null:
+          column_name: NATION_PK
+      - not_null:
+          column_name: NATIONKEY
+  - name: link_customer_nation
+    tests:
+      - unique:
+          column_name: CUSTOMERKEY_NATION_PK
+      - not_null:
+          column_name: CUSTOMERKEY_NATION_PK
+      - relationships:
+          column_name: CUSTOMERKEY_NATION_PK
+          to: ref('v_stg_tpch_data')
+          field: CUSTOMERKEY_NATION_PK
+      - relationships:
+          column_name: CUSTOMER_PK
+          to: ref('hub_test')
+          field: CUSTOMER_PK
+      - relationships:
+          column_name: CUSTOMER_NATIONKEY_PK
+          to: ref('hub_test2')
+          field: NATION_PK
+  - name: sat_hub_customer
+    tests:
+      - unique:
+          column_name: CUSTOMER_HASHDIFF
+      - not_null:
+          column_name: CUSTOMER_HASHDIFF
+      - relationships:
+          column_name: CUSTOMER_HASHDIFF
+          to: ref('v_stg_tpch_data')
+          field: CUSTOMER_HASHDIFF
+      - relationships:
+          column_name: CUSTOMER_PK
+          to: ref('hub_test')
+          field: CUSTOMER_PK
