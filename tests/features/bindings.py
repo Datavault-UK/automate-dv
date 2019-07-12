@@ -10,7 +10,7 @@ def column_count(context, database, schema, table, num_columns):
 
     result = context.testdata.general_sql_statement_to_df(sql)
 
-    if result[0][0] == num_columns:
+    if result['COLUMN_COUNT'][0] == num_columns:
         return True
     else:
         return False

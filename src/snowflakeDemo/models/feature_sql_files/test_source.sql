@@ -1,4 +1,5 @@
-{{config(enabled=false)}}
+{{config(materialized='incremental', schema='TEST_SRC', enabled=false)}}
+
 select
   a.L_ORDERKEY as ORDERKEY,
 	a.L_PARTKEY as PARTKEY ,
@@ -10,9 +11,9 @@ select
 	a.L_TAX as TAX,
 	a.L_RETURNFLAG as RETURNFLAG,
 	a.L_LINESTATUS as LINESTATUS,
-	case when a.L_SHIPDATE > '1993-01-04' then null else a.L_SHIPDATE end as SHIPDATE,
-	case when a.L_COMMITDATE > '1993-01-04' then null else a.L_COMMITDATE end as COMMITDATE,
-	case when a.L_RECEIPTDATE > '1993-01-04' then null else a.L_RECEIPTDATE end as RECEIPTDATE,
+	case when a.L_SHIPDATE > {{var("date")}} then null else a.L_SHIPDATE end as SHIPDATE,
+	case when a.L_COMMITDATE > {{var("date")}} then null else a.L_COMMITDATE end as COMMITDATE,
+	case when a.L_RECEIPTDATE > {{var("date")}}  then null else a.L_RECEIPTDATE end as RECEIPTDATE,
 	a.L_SHIPINSTRUCT as SHIPINSTRUCT,
 	a.L_SHIPMODE as SHIPMODE,
 	a.L_COMMENT as LINE_COMMENT,
@@ -55,8 +56,9 @@ select
 	h.S_COMMENT as SUPPLIER_COMMENT,
 	j.N_NAME as SUPPLIER_NATION_NAME,
 	j.N_COMMENT as SUPPLIER_NATION_COMMENT,
-	k.R_NAME as SUPPLIER_R_NAME,
-	k.R_COMMENT as SUPPLIER_R_COMMENT
+	j.N_REGIONKEY as SUPPLIER_REGIONKEY,
+	k.R_NAME as SUPPLIER_REGION_NAME,
+	k.R_COMMENT as SUPPLIER_REGION_COMMENT
 from SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.ORDERS as b
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.LINEITEM as a on a.L_ORDERKEY=b.O_ORDERKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.CUSTOMER as c on b.O_CUSTKEY = c.C_CUSTKEY
@@ -67,5 +69,16 @@ left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.PART as g on a.L_PARTKEY = g.P_PARTKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.SUPPLIER as h on a.L_SUPPKEY = h.S_SUPPKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.NATION as j on h.S_NATIONKEY = j.N_NATIONKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.REGION as k on j.N_REGIONKEY = k.R_REGIONKEY
-where b.O_ORDERDATE between cast('1993-01-01' as date) AND cast('1993-01-04' as date)
-limit 50
+
+{% if is_incremental() %}
+
+where b.O_ORDERDATE between to_date('1993-01-01') and to_date('1993-01-02')
+
+{% else %}
+
+where b.O_ORDERDATE <= to_date('1993-01-02')
+
+{% endif %}
+
+order by b.O_ORDERKEY
+limit 10

@@ -1,5 +1,4 @@
-{{config(enabled=true,
-materialized='incremental')}}
+{{config(enabled=true, materialized='incremental')}}
 
 select
   a.L_ORDERKEY as ORDERKEY,
@@ -57,8 +56,9 @@ select
 	h.S_COMMENT as SUPPLIER_COMMENT,
 	j.N_NAME as SUPPLIER_NATION_NAME,
 	j.N_COMMENT as SUPPLIER_NATION_COMMENT,
-	k.R_NAME as SUPPLIER_R_NAME,
-	k.R_COMMENT as SUPPLIER_R_COMMENT
+	j.N_REGIONKEY as SUPPLIER_REGIONKEY,
+	k.R_NAME as SUPPLIER_REGION_NAME,
+	k.R_COMMENT as SUPPLIER_REGION_COMMENT
 from SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.ORDERS as b
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.LINEITEM as a on a.L_ORDERKEY=b.O_ORDERKEY
 left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.CUSTOMER as c on b.O_CUSTKEY = c.C_CUSTKEY
@@ -72,13 +72,13 @@ left join SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.REGION as k on j.N_REGIONKEY = k.R_REG
 
 {% if is_incremental() %}
 
-  where b.O_ORDERDATE between {{var("history_date")}}  and {{var("date")}}
+where b.O_ORDERDATE between {{var("history_date")}}  and {{var("date")}}
 
 {% else %}
 
-  where b.O_ORDERDATE <= {{var("date")}}
+where b.O_ORDERDATE <= {{var("date")}}
 
 {% endif %}
 
 order by b.O_ORDERKEY
-limit 10
+limit 20

@@ -72,8 +72,9 @@ def read_in_file(filepath):
     fd.close()
     sql_file = sql_file.replace('\n', " ")
     sql_file = sql_file.replace('\t', "")
-    sql_file.format("")
-    sql_commands = [command + ";" for command in sql_file.split(";") if command]
+    sql_file = sql_file.split(";")
+    sql_commands = list(filter(bool, sql_file))
+    sql_commands = [command + ";" for command in sql_file if command]
     return sql_commands
 
 

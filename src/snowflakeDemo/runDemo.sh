@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+echo "Creating Hub, Link, and Satellite Templates..."
+
+python3 templateGenerator.py --cn ./config
+
+echo "Hubs, Links and Satellite Scripts Created."
+echo "Beginning first dbt run."
+
 dbt run --full-refresh # The history run (1st run of incremental models)
 
 echo "History loaded."

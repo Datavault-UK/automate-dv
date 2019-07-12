@@ -1,5 +1,5 @@
 from unittest import TestCase
-import sqlFunctionLibrary as sql
+import src.snowflakeDemo.sqlFunctionLibrary as sql
 import pandas as pd
 import sqlalchemy
 import os
@@ -7,26 +7,9 @@ import os
 
 class TestSqlScript(TestCase):
 
-    def test_create_history_statement(self):
-        statement = sql.create_history_statement()
-        self.assertIsInstance(statement, str)
-
-    def test_create_day_statement(self):
-        statement = sql.create_day_statement()
-        self.assertIsInstance(statement, str)
-
-    def test_execute_statement(self):
-        view_name = "test_view_test"
-        result = sql.execute_statement(view_name,
-                                       "CREATE VIEW {} AS "
-                                       "SELECT orderkey, quantity "
-                                       "FROM lineitem;".format(view_name))
-        self.assertIsInstance(result, pd.DataFrame)
-
-    def test_csv_file_export(self):
-        results = {"col1": [0, 1, 2, 3], "col2": [3, 2, 1, 0]}
-        sql.csv_file_export(pd.DataFrame.from_dict(results), "./testFlatFiles/test_csv.csv")
-        self.assertTrue(os.path.isfile("./testFlatFiles/test_csv.csv"))
+    @classmethod
+    def setUpClass(cls):
+        cls.credentials = sql.get_credentials("./test_configs/test_credentials.json")
 
     def test_get_credentials(self):
         credentials = sql.get_credentials("./test_configs/test_credentials.json")
@@ -37,7 +20,7 @@ class TestSqlScript(TestCase):
 
     def test_read_in_file_single_statement(self):
         sql_file = sql.read_in_file("./test_configs/SnowflakeHistoryViewTemplateTest.sql")
-        self.assertIsInstance(sql_file, str)
+        self.assertIsInstance(sql_file[0], str)
 
     def test_read_in_file_multiple_statements(self):
         sql_commands = sql.read_in_file("./test_configs/snowflakeEnvSetupTest.sql")
@@ -52,3 +35,8 @@ class TestSqlScript(TestCase):
         sql.flat_file_view_loader("./test_configs/flatfileloads/",
                                   credentials_path="./test_configs/test_credentials.json")
         #self.assertIsInstance(sql_commands, list)
+
+    def test_snowflake_connector(self):
+        engine = sql.snowflake_connector(self.credentials)
+        self.assertIsInstance(engine, sqlalchemy.engine.base.Engine)
+
