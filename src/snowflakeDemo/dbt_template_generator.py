@@ -23,7 +23,7 @@ class TemplateGenerator:
             self.metadata = self.metahandler.get_metadata_dict()
             self.update_config()
 
-        self.active_config = ''
+        self.active_config = self.find_active_tables()
 
 
     # @staticmethod
@@ -252,10 +252,14 @@ class TemplateGenerator:
                 else:
                     pass
 
-
+        # active_tables = []
+        #
+        # for section in table_sections:
+        #     for table in self.config[section]:
+        #         if self.config[section][table]['isactive'] == 'True':
+        #             active_tables.append(table)
 
         return new_config
-
 
     def get_additional_file_metadata(self):
         """
@@ -317,7 +321,7 @@ class TemplateGenerator:
 
         for table in table_sections:
 
-            table_dict[table] = list(self.config[table].keys())
+            table_dict[table] = list(self.active_config[table].keys())
 
         return table_dict
 

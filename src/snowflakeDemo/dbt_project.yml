@@ -26,8 +26,8 @@ models:
       materialized: view
       tags: history
   vars:
-    date: TO_DATE('1993-01-01')
-    history_date: TO_DATE('1993-01-01')
+    date: TO_DATE('1992-01-08')
+    history_date: TO_DATE('1992-01-08')
 name: snowflakeDemo
 profile: my-snowflake-db
 source-paths:

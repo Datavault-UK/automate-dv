@@ -1,6 +1,7 @@
 [hubs]
     [[hub2]]
     name = hub2
+    isactive = True
     dbt_path = ../src/snowflakeDemo/models/hub_sat_link_load
     table_columns = col1, col2, col3
     stg_columns = s_col1, s_col2, s_col3
@@ -10,6 +11,7 @@
 [links]
     [[link2]]
     name = link2
+    isactive = True
     dbt_path = ../src/snowflakeDemo/models/hub_sat_link_load
     table_columns = col1, col2, col3
     stg_columns = s_col1, s_col2, s_col3
@@ -22,6 +24,7 @@
 [satellites]
     [[sat2]]
     name = sat1
+    isactive = True
     dbt_path = ../src/snowflakeDemo/models/hub_sat_link_load
     table_columns = col1, col2, col3
     stg_columns = s_col1, s_col2, s_col3

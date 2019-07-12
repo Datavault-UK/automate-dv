@@ -98,7 +98,7 @@ class TestTemplateGenerator(TestCase):
     def test_find_active_tables(self):
         new_config = self.template_gen.find_active_tables()
         self.assertIsInstance(new_config, dict)
-        self.assertNotIn("link_test2", list(new_config['links'].keys()))
+        self.assertNotIn("link_test2", new_config)
 
     def test_table_section_keys(self):
         actual = self.template_gen.get_table_section_keys()
@@ -152,7 +152,7 @@ class TestTemplateGenerator(TestCase):
         self.assertEqual(["col1", "col2", "col3"], updated_config['hubs']['hub1']['table_columns'])
 
     def test_get_table_header_keys(self):
-        expected_keys = {'hubs': ['customer', 'nation'], 'links': ['link_test', 'link_test2'],
+        expected_keys = {'hubs': ['customer', 'nation'], 'links': ['link_test'],
                          'satellites': ['sat_test']}
         actual_keys = self.template_gen.get_table_header_keys(['hubs', 'links', 'satellites'])
         self.assertIsInstance(actual_keys, dict)
