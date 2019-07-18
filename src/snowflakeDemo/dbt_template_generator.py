@@ -53,7 +53,8 @@ class TemplateGenerator:
 
     @staticmethod
     def hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
-        hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
+        hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
+                         "tags=['static', 'increment'])}}}}\n\n"
                          "{{% set hub_columns = '{hub_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                          "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
@@ -113,7 +114,8 @@ class TemplateGenerator:
     @staticmethod
     def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
 
-        link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
+        link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
+                         "tags=['static', 'increment'])}}}}\n\n"
                          "{{% set link_columns = '{link_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                          "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
@@ -139,7 +141,8 @@ class TemplateGenerator:
     @staticmethod
     def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
 
-        sat_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true)}}}}\n\n"
+        sat_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
+                        "tags=['static', 'increment'])}}}}\n\n"
                         "{{% set sat_columns = '{sat_columns}' %}}\n"
                         "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                         "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
