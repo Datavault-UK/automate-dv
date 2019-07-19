@@ -95,6 +95,19 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(sat_pk, sat_sql)
         self.assertIn(stg_name, sat_sql)
 
+    def test_stg_template(self):
+        section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
+                        'inventory_pk': ['PARTKEY', 'SUPPLIERKEY']}
+        actual_template = self.template_gen.stg_template(section_dict)
+        expected_template = ("{{ config(materialized='view', schema='STG', tags='static', enabled=true) }}\n\nselect\n "
+                             "MD5_BINARY(UPPER(TRIM(CAST(PARTKEY AS VARCHAR)))) AS PART_PK\n, "
+                             "MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(PARTKEY AS VARCHAR))), '^^'), '||', "
+                             "IFNULL(UPPER(TRIM(CAST(SUPPLIERKEY AS VARCHAR))), '^^'))) AS INVENTORY_PK\n, "
+                             "*, {{var('date')}} AS LOADDATE, {{var('date')}} AS EFFECTIVE_FROM, 'TPCH' AS SOURCE "
+                             "FROM {{ref('v_src_stg_inventory')}}")
+        self.assertIsInstance(actual_template, str)
+        self.assertEqual(expected_template, actual_template)
+
     def test_find_active_tables(self):
         new_config = self.template_gen.find_active_tables()
         self.assertIsInstance(new_config, dict)
@@ -102,7 +115,7 @@ class TestTemplateGenerator(TestCase):
 
     def test_table_section_keys(self):
         actual = self.template_gen.get_table_section_keys()
-        expected = ['hubs', 'links', 'satellites']
+        expected = ['hashing', 'hubs', 'links', 'satellites']
         self.assertIsInstance(actual, list)
         self.assertEqual(actual, expected)
 
@@ -279,9 +292,15 @@ class TestTemplateGenerator(TestCase):
 
         for table_key in table_keys:
             for table in table_keys[table_key]:
-                path = self.config["dbt settings"]["vault_path"]+"/"+self.config[table_key][table]["name"]+".sql"
+                if table_key != 'hashing':
+                    path = self.config["dbt settings"]["vault_path"]+"/"+self.config[table_key][table]["name"]+".sql"
 
-                path_list.append(path)
+                    path_list.append(path)
+
+                else:
+                    path = self.config["dbt settings"]["stg_path"] + "/" + self.config[table_key][table]["name"] + ".sql"
+
+                    path_list.append(path)
 
         self.template_gen.create_sql_files()
 

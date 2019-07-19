@@ -25,32 +25,6 @@ class TemplateGenerator:
 
         self.active_config = self.find_active_tables()
 
-
-    # @staticmethod
-    # def hub_template(hub_columns, stg_columns, hub_pk):
-    #     """
-    #     Generates the hub sql statement as a string.
-    #     :return: sql statement as a string.
-    #     """
-    #
-    #     hub_statement = ("{{{{config(schema='VLT', materialized='incremental', "
-    #                      "unique_key='{}', enabled=true)}}}}\n\n"
-    #                      "SELECT DISTINCT {} \nFROM "
-    #                      "(\nSELECT {}, "
-    #                      "LAG(a.LOADDATE, 1) OVER(PARTITION BY a.{} ORDER BY a.LOADDATE) AS FIRST_SEEN "
-    #                      "\nFROM {{{{ref('v_stg_tpch_data')}}}} AS a) AS stg\n"
-    #                      "{{% if is_incremental() %}}\n"
-    #                      "WHERE stg.{} NOT IN (SELECT {} FROM {{{{this}}}}) "
-    #                      "AND stg.FIRST_SEEN IS NULL\n"
-    #                      "{{% else %}}\n"
-    #                      "WHERE stg.FIRST_SEEN IS NULL\n"
-    #                      "{{% endif %}}\n"
-    #                      "LIMIT 10").format(hub_pk, hub_columns,
-    #                                         stg_columns, hub_pk,
-    #                                         hub_pk, hub_pk)
-    #
-    #     return hub_statement
-
     @staticmethod
     def hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
         hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
@@ -215,6 +189,40 @@ class TemplateGenerator:
         return document
 
     @staticmethod
+    def stg_template(section_dict):
+        """
+        Creates the template for the stage.
+        :return: a string that can be written to a file.
+        """
+
+        stg_template = "{{ config(materialized='view', schema='STG', tags='static', enabled=true) }}\n\nselect\n "
+
+        hash_list = []
+
+        for key in section_dict:
+            if key == 'stg_table' or key == 'isactive' or key == 'name':
+                pass
+
+            elif isinstance(section_dict[key], str):
+                hash_list.append("MD5_BINARY(UPPER(TRIM(CAST({} AS VARCHAR)))) AS {}\n".format(section_dict[key].upper(),
+                                                                                               key.upper()))
+            else:
+
+                temp_list = []
+
+                for column in sorted(section_dict[key]):
+                    temp_list.append("IFNULL(UPPER(TRIM(CAST({} AS VARCHAR))), '^^')".format(column))
+
+                hash_str = "MD5_BINARY(CONCAT("
+                hash_list.append(hash_str + ", '||', ".join(temp_list) + ")) AS {}\n".format(key.upper()))
+
+        stg_template += ", ".join(hash_list) +(", *, {{{{var('date')}}}} AS LOADDATE, {{{{var('date')}}}} AS "
+                                               "EFFECTIVE_FROM, 'TPCH' AS SOURCE FROM {{{{ref('{}')}}}}"
+                                               ).format(section_dict['stg_table'])
+
+        return stg_template
+
+    @staticmethod
     def alias_adder(alias, column_list):
         """
         Adds an alias at the start of column names for the sql statement.
@@ -312,7 +320,8 @@ class TemplateGenerator:
         :return: a list of headings.
         """
 
-        return [key for key in list(self.config.keys()) if key == 'hubs' or key == 'links' or key == 'satellites']
+        return [key for key in list(self.config.keys()) if key == 'hubs' or key == 'links' or key == 'satellites'
+                or key == 'hashing']
 
     def get_table_header_keys(self, table_sections):
         """
@@ -490,12 +499,20 @@ class TemplateGenerator:
                                                        self.get_stg_columns(table_key, table, "a"),
                                                        self.get_pk(table_key, table),
                                                        self.get_stg_table_name(table_key, table))
-                    else:
+                    elif table_key == 'satellites':
                         statement = self.sat_template(self.get_table_columns(table_key, table),
                                                       self.get_stg_columns(table_key, table, "b"),
                                                       self.get_stg_columns(table_key, table, "a"),
                                                       self.get_pk(table_key, table),
                                                       self.get_stg_table_name(table_key, table))
+
+                    else:
+                        statement = self.stg_template(self.active_config[table_key][table])
+                        path = self.get_table_file_path(table_key, table, 'stg_path')
+                        self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
+                        self.write_to_file(path, statement)
+                        self._my_log.log("Successfully written sql to file.", logging.INFO)
+                        continue
 
                     path = self.get_table_file_path(table_key, table, 'vault_path')
                     self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
