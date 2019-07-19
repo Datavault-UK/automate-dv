@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'increment'])}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags='static')}}
 
 {% set link_columns = 'CAST(stg.LINK_SUPPLIER_NATION_PK AS BINARY(16)) AS LINK_SUPPLIER_NATION_PK, CAST(stg.SUPPLIER_PK AS BINARY(16)) AS SUPPLIER_PK, CAST(stg.SUPPLIER_NATION_KEY_PK AS BINARY(16)) AS SUPPLIER_NATION_KEY_PK, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR(4)) AS SOURCE' %}
 {% set stg_columns1 = 'b.LINK_SUPPLIER_NATION_PK, b.SUPPLIER_PK, b.SUPPLIER_NATION_KEY_PK, b.LOADDATE, b.SOURCE' %}

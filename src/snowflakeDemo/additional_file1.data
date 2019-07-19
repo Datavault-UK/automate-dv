@@ -7,6 +7,7 @@
     data_types = BINARY(16), NUMBER(38;0), DATE, VARCHAR(4)
     stg_columns = SUPPLIER_PK, SUPPLIERKEY, LOADDATE, SOURCE
     pk = SUPPLIER_PK
+    tags = 'static'
 
     [[hub_orders]]
     isActive = True
@@ -16,6 +17,7 @@
     data_types = BINARY(16), NUMBER(38;0), DATE, VARCHAR(4)
     stg_columns = ORDER_PK, ORDERKEY, LOADDATE, SOURCE
     pk = ORDER_PK
+    tags = 'static', 'incremental'
 
     [[hub_lineitem]]
     isActive = True
@@ -25,6 +27,7 @@
     data_types = BINARY(16), NUMBER(38;0), DATE, VARCHAR
     stg_columns = LINEITEM_PK, LINENUMBER, LOADDATE, SOURCE
     pk = LINEITEM_PK
+    tags = 'static', 'incremental'
 
     [[hub_parts]]
     isActive = True
@@ -34,6 +37,7 @@
     data_types = BINARY(16), NUMBER(38;0), DATE, VARCHAR
     stg_columns = PART_PK, PARTKEY, LOADDATE, SOURCE
     pk = PART_PK
+    tags = 'static'
 
 [Links]
     [[link_supplier_nation]]
@@ -44,6 +48,7 @@
     data_types = BINARY(16), BINARY(16), BINARY(16), DATE, VARCHAR(4)
     stg_columns = LINK_SUPPLIER_NATION_PK, SUPPLIER_PK, SUPPLIER_NATION_KEY_PK, LOADDATE, SOURCE
     pk = LINK_SUPPLIER_NATION_PK
+    tags = 'static'
 
     [[link_lineitem_orders]]
     isActive = True
@@ -53,6 +58,7 @@
     data_types = BINARY(16), BINARY(16), BINARY(16), DATE, VARCHAR(4)
     stg_columns = LINEITEM_ORDER_PK, LINEITEM_PK, ORDER_PK, LOADDATE, SOURCE
     pk = LINEITEM_ORDER_PK
+    tags = 'static', 'incremental'
 
     [[link_orders_customer]]
     isActive = True
@@ -62,15 +68,7 @@
     data_types = BINARY(16), BINARY(16), BINARY(16), DATE, VARCHAR(4)
     stg_columns = ORDER_CUSTOMER_PK, ORDER_PK, CUSTOMER_PK, LOADDATE, SOURCE
     pk = ORDER_CUSTOMER_PK
-
-    [[link_lineitem_part_supplier]]
-    isActive = False
-    name = link_lineitem_part_supplier
-    stg_name = v_stg_tpch_data
-    table_columns = LINEITEM_PART_SUPPLIER_PK, LINEITEM_PK, SUPPLIER_PK, PART_PK, LOADDATE, SOURCE
-    data_types = BINARY(16), BINARY(16), BINARY(16), BINARY(16), DATE, VARCHAR(4)
-    stg_columns = LINEITEM_PART_SUPPLIER_PK, LINEITEM_PK, SUPPLIER_PK, PART_PK, LOADDATE, SOURCE
-    pk = LINEITEM_PART_SUPPLIER_PK
+    tags = 'static', 'incremental'
 
     [[link_inventory]]
     isActive = True
@@ -80,6 +78,7 @@
     data_types = BINARY(16), BINARY(16), BINARY(16), DATE, VARCHAR(4)
     stg_columns = INVENTORY_PK, SUPPLIER_PK, PART_PK, LOADDATE, SOURCE
     pk = INVENTORY_PK
+    tags = 'static'
 
 [Satellites]
     [[sat_hub_nation]]
@@ -90,15 +89,7 @@
     data_types = BINARY(16), BINARY(16), VARCHAR(25), VARCHAR(152), DATE, DATE, VARCHAR(4)
     stg_columns = NATION_HASHDIFF, NATION_PK, NATION_NAME, NATION_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
     pk = NATION_HASHDIFF
-
-    [[sat_hub_region]]
-    isActive = True
-    name = sat_hub_region
-    stg_name = v_nation_region
-    table_columns = REGION_HASHDIFF, REGION_PK, REGION_NAME, REGION_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
-    data_types = BINARY(16), BINARY(16), VARCHAR(25), VARCHAR(152), DATE, DATE, VARCHAR(4)
-    stg_columns = REGION_HASHDIFF, REGION_PK, REGION_NAME, REGION_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
-    pk = REGION_HASHDIFF
+    tags = 'static'
 
     [[sat_hub_orders]]
     isActive = True
@@ -108,6 +99,7 @@
     data_types = BINARY(16), BINARY(16), VARCHAR(1), NUMBER(12;2), DATE, VARCHAR(15), VARCHAR(15), NUMBER(38;0), VARCHAR(79), DATE, DATE, VARCHAR(4)
     stg_columns = ORDER_HASHDIFF, ORDER_PK, ORDERSTATUS, TOTALPRICE, ORDERDATE, ORDERPRIORITY, CLERK, SHIPPRIORITY, ORDER_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
     pk = ORDER_HASHDIFF
+    tags = 'static', 'incremental'
 
     [[sat_hub_supplier]]
     isActive = True
@@ -117,6 +109,7 @@
     data_types = BINARY(16), BINARY(16), VARCHAR(25), VARCHAR(40), VARCHAR(15), NUMBER(12;2), VARCHAR(101), DATE, DATE, VARCHAR(4)
     stg_columns = SUPPLIER_HASHDIFF, SUPPLIER_PK, SUPPLIER_NAME, SUPPLIER_ADDRESS, SUPPLIER_PHONE, SUPPLIER_ACCTBAL, SUPPLIER_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
     pk = SUPPLIER_HASHDIFF
+    tags = 'static'
 
     [[sat_hub_parts]]
     isActive = True
@@ -126,13 +119,25 @@
     data_types = BINARY(16), BINARY(16), VARCHAR(55), VARCHAR(25), VARCHAR(10), VARCHAR(25), NUMBER(38;0), VARCHAR(10), NUMBER(12;2), VARCHAR(23), DATE, DATE, VARCHAR(4)
     stg_columns = PART_HASHDIFF, PART_PK, PART_NAME, PART_MFGR, PART_BRAND, PART_TYPE, PART_SIZE, PART_CONTAINER, PART_RETAILPRICE, PART_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
     pk = PART_HASHDIFF
+    tags = 'static'
 
     [[sat_link_inventory]]
     isActive = True
-    name = sat_hub_inventory
+    name = sat_link_inventory
     stg_name = v_stg_inventory
     table_columns = INVENTORY_HASHDIFF, INVENTORY_PK, AVAILQTY, SUPPLYCOST, PART_SUPPLY_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
     data_types = BINARY(16), BINARY(16), NUMBER(38;0), NUMBER(12;2), VARCHAR(199), DATE, DATE, VARCHAR(4)
     stg_columns = INVENTORY_HASHDIFF, INVENTORY_PK, AVAILQTY, SUPPLYCOST, PART_SUPPLY_COMMENT, LOADDATE, EFFECTIVE_FROM, SOURCE
     pk = INVENTORY_HASHDIFF
+    tags = 'static'
+
+    [[sat_hub_lineitem]]
+    isActive = True
+    name = sat_hub_lineitem
+    stg_name = v_stg_orders
+    table_columns = LINEITEM_HASHDIFF, LINEITEM_PK, COMMITDATE, DISCOUNT, EXTENDEDPRICE, LINE_COMMENT, LINESTATUS, QUANTITY, RECEIPTDATE, RETURNFLAG, SHIPDATE, SHIPINSTRUCT, SHIPMODE, TAX, LOADDATE, EFFECTIVE_FROM, SOURCE
+    data_types = BINARY(16), BINARY(16), DATE, NUMBER(12;2), NUMBER(12;2), VARCHAR(44), VARCHAR(1), NUMBER(12;2), DATE, VARCHAR(1), DATE, VARCHAR(25), VARCHAR(10), NUMBER(12;2), DATE, DATE, VARCHAR(4)
+    stg_columns = LINEITEM_HASHDIFF, LINEITEM_PK, COMMITDATE, DISCOUNT, EXTENDEDPRICE, LINE_COMMENT, LINESTATUS, QUANTITY, RECEIPTDATE, RETURNFLAG, SHIPDATE, SHIPINSTRUCT, SHIPMODE, TAX, LOADDATE, EFFECTIVE_FROM, SOURCE
+    pk = LINEITEM_HASHDIFF
+    tags = 'static', 'incremental'
 

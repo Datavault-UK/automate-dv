@@ -26,9 +26,12 @@ class TemplateGenerator:
         self.active_config = self.find_active_tables()
 
     @staticmethod
-    def hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name):
-        hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
-                         "tags=['static', 'increment'])}}}}\n\n"
+    def hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name, tags):
+
+        if isinstance(tags, str):
+            tags = "'{}'".format(tags)
+
+        hub_statement = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, tags={tags})}}}}\n\n"
                          "{{% set hub_columns = '{hub_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                          "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
@@ -43,7 +46,8 @@ class TemplateGenerator:
                          "and stg.FIRST_SEEN is null\n\n"
                          "{{% else %}}\n\n"
                          "{{{{ref(stg_name)}}}} as b) as stg where stg.FIRST_SEEN is null\n\n"
-                         "{{% endif %}}").format(hub_columns=hub_columns,
+                         "{{% endif %}}").format(tags=tags,
+                                                 hub_columns=hub_columns,
                                                  stg_columns1=stg_columns1,
                                                  stg_columns2=stg_columns2,
                                                  hub_pk=hub_pk,
@@ -86,10 +90,13 @@ class TemplateGenerator:
         return sat_macro_temp
 
     @staticmethod
-    def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name):
+    def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name, tags):
+
+        if isinstance(tags, str):
+            tags = "'{}'".format(tags)
 
         link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
-                         "tags=['static', 'increment'])}}}}\n\n"
+                         "tags={tags})}}}}\n\n"
                          "{{% set link_columns = '{link_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                          "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
@@ -104,7 +111,8 @@ class TemplateGenerator:
                          "stg.FIRST_SEEN is null\n\n"
                          "{{% else %}}\n\n"
                          "{{{{ref(stg_name)}}}} as b) as stg where stg.FIRST_SEEN is null\n\n"
-                         "{{% endif %}}").format(link_columns=link_columns,
+                         "{{% endif %}}").format(tags=tags,
+                                                 link_columns=link_columns,
                                                  stg_columns1=stg_columns1,
                                                  stg_columns2=stg_columns2,
                                                  link_pk=link_pk,
@@ -113,10 +121,13 @@ class TemplateGenerator:
         return link_template
 
     @staticmethod
-    def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name):
+    def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name, tags):
+
+        if isinstance(tags, str):
+            tags = "'{}'".format(tags)
 
         sat_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
-                        "tags=['static', 'increment'])}}}}\n\n"
+                        "tags={tags})}}}}\n\n"
                         "{{% set sat_columns = '{sat_columns}' %}}\n"
                         "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
                         "{{% set stg_columns2 = '{stg_columns2}' %}}\n"
@@ -130,7 +141,8 @@ class TemplateGenerator:
                         "where stg.{{{{sat_pk}}}} not in (select {{{{sat_pk}}}} from {{{{this}}}}) "
                         "and stg.LATEST is null\n\n"
                         "{{% else %}}\n\n{{{{ref(stg_name)}}}} as b) as stg where stg.LATEST is null\n\n"
-                        "{{% endif %}}").format(sat_columns=sat_columns,
+                        "{{% endif %}}").format(tags=tags,
+                                                sat_columns=sat_columns,
                                                 stg_columns1=stg_columns1,
                                                 stg_columns2=stg_columns2,
                                                 sat_pk=sat_pk,
@@ -166,41 +178,44 @@ class TemplateGenerator:
                 
             snowflake_demo:
                 source_creation:
-                    tags: "history"
                     enabled: true
                     materialized: "incremental"
                 
                 stg:
-                    tags: "history"
                     enabled: true
                     materialized: view
                     
                 hub_sat_link_load:
-                    tags: "history"
                     enabled: true 
                     materialized: incremental
                 
                 feature_sql_files:
-                    tags: "feature"
                     enabled: false
                     materialized: incremental
+                
+                star_schema:
+                    enabled: true
+                    materialized: view
         """.format(history, date)
 
         return document
 
     @staticmethod
-    def stg_template(section_dict):
+    def stg_template(section_dict, tags):
         """
         Creates the template for the stage.
         :return: a string that can be written to a file.
         """
+        if isinstance(tags, str):
+            tags = "'{}'".format(tags)
 
-        stg_template = "{{ config(materialized='view', schema='STG', tags='static', enabled=true) }}\n\nselect\n "
+        stg_template = ("{{{{ config(materialized='view', schema='STG', tags={}, enabled=true) }}}}"
+                        "\n\nselect\n ").format(tags)
 
         hash_list = []
 
         for key in section_dict:
-            if key == 'stg_table' or key == 'isactive' or key == 'name':
+            if key == 'stg_table' or key == 'isactive' or key == 'name' or key == 'tags':
                 pass
 
             elif isinstance(section_dict[key], str):
@@ -454,6 +469,13 @@ class TemplateGenerator:
 
             return ", ".join(aliased_stg_columns)
 
+    def get_tags(self, table_section, table_key):
+        """
+        Gets the tags for each model.
+        :return: returns the tags as either a string or a list.
+        """
+        return self.active_config[table_section][table_key]['tags']
+
     def write_to_file(self, path, statement):
         """
         Writes the generated statement to an sql file in the dbt directory.
@@ -492,22 +514,27 @@ class TemplateGenerator:
                                                       self.get_stg_columns(table_key, table, "b"),
                                                       self.get_stg_columns(table_key, table, "a"),
                                                       self.get_pk(table_key, table),
-                                                      self.get_stg_table_name(table_key, table))
+                                                      self.get_stg_table_name(table_key, table),
+                                                      self.get_tags(table_key, table))
                     elif table_key == 'links':
                         statement = self.link_template(self.get_table_columns(table_key, table),
                                                        self.get_stg_columns(table_key, table, "b"),
                                                        self.get_stg_columns(table_key, table, "a"),
                                                        self.get_pk(table_key, table),
-                                                       self.get_stg_table_name(table_key, table))
+                                                       self.get_stg_table_name(table_key, table),
+                                                       self.get_tags(table_key, table))
                     elif table_key == 'satellites':
                         statement = self.sat_template(self.get_table_columns(table_key, table),
                                                       self.get_stg_columns(table_key, table, "b"),
                                                       self.get_stg_columns(table_key, table, "a"),
                                                       self.get_pk(table_key, table),
-                                                      self.get_stg_table_name(table_key, table))
+                                                      self.get_stg_table_name(table_key, table),
+                                                      self.get_tags(table_key, table))
 
                     else:
-                        statement = self.stg_template(self.active_config[table_key][table])
+
+                        statement = self.stg_template(self.active_config[table_key][table],
+                                                      self.get_tags(table_key, table))
                         path = self.get_table_file_path(table_key, table, 'stg_path')
                         self._my_log.log("Writing {} template to file in dbt directory...".format(table), logging.INFO)
                         self.write_to_file(path, statement)

@@ -1,4 +1,4 @@
-{{ config(materialized='view', schema='STG', tags='static', enabled=true) }}
+{{ config(materialized='view', schema='STG', tags=['static', 'incremental'], enabled=true) }}
 
 select
  MD5_BINARY(UPPER(TRIM(CAST(ORDERKEY AS VARCHAR)))) AS ORDER_PK

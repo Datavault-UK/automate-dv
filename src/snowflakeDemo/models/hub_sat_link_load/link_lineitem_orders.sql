@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'increment'])}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'incremental'])}}
 
 {% set link_columns = 'CAST(stg.LINEITEM_ORDER_PK AS BINARY(16)) AS LINEITEM_ORDER_PK, CAST(stg.LINEITEM_PK AS BINARY(16)) AS LINEITEM_PK, CAST(stg.ORDER_PK AS BINARY(16)) AS ORDER_PK, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR(4)) AS SOURCE' %}
 {% set stg_columns1 = 'b.LINEITEM_ORDER_PK, b.LINEITEM_PK, b.ORDER_PK, b.LOADDATE, b.SOURCE' %}

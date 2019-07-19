@@ -23,12 +23,13 @@ class TestTemplateGenerator(TestCase):
         cls.config = cls.template_gen.config
 
     def test_hub_template(self):
+        tags = ['static', 'incremental']
         hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
         stg_columns1 = "b.CUSTOMER_PK, b.CUSTOMERKEY, b.LOADDATE, b.SOURCE"
         stg_columns2 = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
         hub_pk = "CUSTOMER_PK"
         stg_name = "v_stg_tpch_data"
-        hub_sql = self.template_gen.hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name)
+        hub_sql = self.template_gen.hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name, tags)
         self.assertIsInstance(hub_sql, str)
 
     def test_hub_macro_template(self):

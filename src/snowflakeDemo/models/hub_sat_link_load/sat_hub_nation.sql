@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'increment'])}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags='static')}}
 
 {% set sat_columns = 'CAST(stg.NATION_HASHDIFF AS BINARY(16)) AS NATION_HASHDIFF, CAST(stg.NATION_PK AS BINARY(16)) AS NATION_PK, CAST(stg.NATION_NAME AS VARCHAR(25)) AS NATION_NAME, CAST(stg.NATION_COMMENT AS VARCHAR(152)) AS NATION_COMMENT, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.EFFECTIVE_FROM AS DATE) AS EFFECTIVE_FROM, CAST(stg.SOURCE AS VARCHAR(4)) AS SOURCE' %}
 {% set stg_columns1 = 'b.NATION_HASHDIFF, b.NATION_PK, b.NATION_NAME, b.NATION_COMMENT, b.LOADDATE, b.EFFECTIVE_FROM, b.SOURCE' %}

@@ -1,4 +1,4 @@
-{{config(enabled=true, materialized='incremental', tags=['static', 'increment'])}}
+{{config(enabled=true, materialized='incremental', tags=['static', 'incremental'])}}
 
 select
   a.L_ORDERKEY as ORDERKEY,

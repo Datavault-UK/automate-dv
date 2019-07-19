@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'increment'])}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags='static')}}
 
 {% set hub_columns = 'CAST(stg.NATION_PK AS BINARY(16)) AS NATION_PK, CAST(stg.NATIONKEY AS NUMBER(38,0)) AS NATIONKEY, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR) AS SOURCE' %}
 {% set stg_columns1 = 'b.NATION_PK, b.NATIONKEY, b.LOADDATE, b.SOURCE' %}

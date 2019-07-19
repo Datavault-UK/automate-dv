@@ -1,4 +1,4 @@
-{{ config(materialized='view', schema='STG', enabled=true, tags=['static', 'increment']) }}
+{{ config(materialized='view', schema='STG', enabled=true, tags=['static', 'incremental']) }}
 
 SELECT
   a.*

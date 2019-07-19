@@ -12,19 +12,18 @@ models:
     feature_sql_files:
       enabled: false
       materialized: incremental
-      tags: feature
     hub_sat_link_load:
       enabled: true
       materialized: incremental
-      tags: history
     source_creation:
       enabled: true
       materialized: incremental
-      tags: history
+    star_schema:
+      enabled: true
+      materialized: view
     stg:
       enabled: true
       materialized: view
-      tags: history
   vars:
     date: TO_DATE('1992-01-08')
     history_date: TO_DATE('1992-01-08')

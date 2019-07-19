@@ -28,9 +28,9 @@ def run():
     # for date in sim_dates:
     #     if "history" not in date:
     #         logger.log("Running the day load for {}.".format(date), logging.INFO)
-    #         path = """dbt run --models tag:increment --vars "{{'date':{}}}" """.format(sim_dates[date])
+    #         path = """dbt run --models tag:incremental --vars "{{'date':{}}}" """.format(sim_dates[date])
     #         os.system(path)
-    #         logger.log("Day load for {} has finshed.".format(date), logging.INFO)
+    #         logger.log("Day load for {} has finished.".format(date), logging.INFO)
 
     # key_add = KeyAdder(logger, config)
     # tables = key_add.get_table_keys()
