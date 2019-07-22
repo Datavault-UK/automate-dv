@@ -60,12 +60,13 @@ class TestTemplateGenerator(TestCase):
 
     def test_link_template(self):
         link_columns = "stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
-        stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, " \
+        stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, "
                         "b.SOURCE")
         stg_columns2 = "a.CUSTOMERKEY_NATION_PK, a.CUSTOMER_PK, a.CUSTOMER_NATIONKEY_PK, a.LOADDATE, a.SOURCE"
         link_pk = "CUSTOMERKEY_NATION_PK"
+        tags = ['static', 'incremental']
         stg_name = 'v_stg_tpch_data'
-        link_sql = self.template_gen.link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name)
+        link_sql = self.template_gen.link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name, tags)
         self.assertIsInstance(link_sql, str)
         self.assertIn("{% if is_incremental() %}", link_sql)
         self.assertIn("{% else %", link_sql)
@@ -75,6 +76,8 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_columns1, link_sql)
         self.assertIn(link_pk, link_sql)
         self.assertIn(stg_name, link_sql)
+        for tag in tags:
+            self.assertIn(tag, link_sql)
 
     def test_sat_template(self):
         sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
@@ -84,8 +87,9 @@ class TestTemplateGenerator(TestCase):
         stg_columns2 = ("a.CUSTOMER_HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, "
                         "a.EFFECTIVE FROM, a.SOURCE")
         sat_pk = "CUSTOMER_HASHDIFF"
+        tags = ["'static'", "'incremental'"]
         stg_name = "v_stg_tpch_data"
-        sat_sql = self.template_gen.sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name)
+        sat_sql = self.template_gen.sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name, tags)
         self.assertIsInstance(sat_sql, str)
         self.assertIn("{% if is_incremental() %}", sat_sql)
         self.assertIn("{% else %", sat_sql)
@@ -95,12 +99,16 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_columns2, sat_sql)
         self.assertIn(sat_pk, sat_sql)
         self.assertIn(stg_name, sat_sql)
+        for tag in tags:
+            self.assertIn(tag, sat_sql)
 
     def test_stg_template(self):
         section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
                         'inventory_pk': ['PARTKEY', 'SUPPLIERKEY']}
-        actual_template = self.template_gen.stg_template(section_dict)
-        expected_template = ("{{ config(materialized='view', schema='STG', tags='static', enabled=true) }}\n\nselect\n "
+        tags = ['static', 'incremental']
+        actual_template = self.template_gen.stg_template(section_dict, tags)
+        expected_template = ("{{ config(materialized='view', schema='STG', tags=['static', 'incremental']"
+                             ", enabled=true) }}\n\nselect\n "
                              "MD5_BINARY(UPPER(TRIM(CAST(PARTKEY AS VARCHAR)))) AS PART_PK\n, "
                              "MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(PARTKEY AS VARCHAR))), '^^'), '||', "
                              "IFNULL(UPPER(TRIM(CAST(SUPPLIERKEY AS VARCHAR))), '^^'))) AS INVENTORY_PK\n, "
@@ -182,7 +190,7 @@ class TestTemplateGenerator(TestCase):
     def test_get_table_file_path(self):
         file_path = self.template_gen.get_table_file_path("hubs", "customer", "vault_path")
         self.assertIsInstance(file_path, str)
-        self.assertEqual(file_path, "../src/snowflakeDemo/models/hub_sat_link_load/hub_test.sql")
+        self.assertEqual("./test_configs/dbt_test_files/hub_test.sql", file_path)
 
     def test_get_table_name(self):
         hub_name = self.template_gen.get_table_name("hubs", "customer")
@@ -341,9 +349,29 @@ class TestTemplateGenerator(TestCase):
         for path in path_list:
             self.assertTrue(os.path.isfile(path))
 
+    def test_clear_files(self):
+        cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
+        cli_args.get_config_name = Mock(return_value="./test_configs/clearfiles.ini")
+        cli_args.get_log_level = Mock(return_value=logging.INFO)
+        log = Logger("testTemplateGenerator", cli_args)
+        con_reader = ConfigReader(log, cli_args)
+        log.set_config(con_reader)
+        template_gen = TemplateGenerator(log, con_reader)
+        template_gen.create_sql_files()
+        template_gen.clean_files()
+        files = os.listdir("./test_configs/test_clearfiles")
+        expected_files = ["v_stg_orders"]
+
+        for item,file in enumerate(files):
+            self.assertIn(expected_files[item], file)
+
     @classmethod
-    def tearDownClass(cls):
-        sql_path = "./test_configs/generated_sql_files/"
+    def tearDown(cls):
+        sql_paths = ["./test_configs/generated_sql_files/", "./test_configs/dbt_test_files/",
+                     "./test_configs/test_clearfiles/"]
         log_path = "./logs/"
-        file_list = [os.remove(os.path.join(sql_path, file)) for file in os.listdir(sql_path)]
-        log_list = [os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path)]
+
+        for sql_path in sql_paths:
+            [os.remove(os.path.join(sql_path, file)) for file in os.listdir(sql_path)]
+
+        [os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path)]

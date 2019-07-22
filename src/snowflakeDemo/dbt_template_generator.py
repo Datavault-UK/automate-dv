@@ -1,6 +1,7 @@
 import logging
 import datetime
 import copy
+import os
 from vaultBase.metaHandler import MetaHandler
 from yaml import load, dump
 
@@ -586,3 +587,12 @@ class TemplateGenerator:
         self.write_to_file(path + "/sat_template.sql", self.sat_macro_template())
 
         self._my_log.log("Macros created.", logging.INFO)
+
+    def clean_files(self):
+        """
+        Clears the dbt folder of any unnecessary files
+        :return:
+        """
+
+        [os.remove(os.path.join(self.config['dbt settings']['vault_path'], file)) for file in os.listdir(
+            self.config['dbt settings']['vault_path']) if 'hub' in file or 'link' in file or 'sat' in file]

@@ -16,6 +16,7 @@ def run():
     config = ConfigReader(logger, cli_args)
     template_gen = TemplateGenerator(logger, config)
     template_gen.create_template_macros()
+    template_gen.clean_files()
     template_gen.create_sql_files()
     sim_dates = template_gen.sim_dates
 
@@ -25,12 +26,12 @@ def run():
 
     os.system("dbt run --full-refresh --models tag:static")
 
-    for date in sim_dates:
-        if "history" not in date:
-            logger.log("Running the day load for {}.".format(date), logging.INFO)
-            path = """dbt run --models tag:incremental --vars "{{'date':{}}}" """.format(sim_dates[date])
-            os.system(path)
-            logger.log("Day load for {} has finished.".format(date), logging.INFO)
+    # for date in sim_dates:
+    #     if "history" not in date:
+    #         logger.log("Running the day load for {}.".format(date), logging.INFO)
+    #         path = """dbt run --models tag:incremental --vars "{{'date':{}}}" """.format(sim_dates[date])
+    #         os.system(path)
+    #         logger.log("Day load for {} has finished.".format(date), logging.INFO)
 
     # key_add = KeyAdder(logger, config)
     # tables = key_add.get_table_keys()
