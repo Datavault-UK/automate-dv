@@ -91,6 +91,28 @@ class TemplateGenerator:
         return sat_macro_temp
 
     @staticmethod
+    def md5_binary_macro():
+
+        md5_binary_temp = ("{% macro md5_binary(column, alias) %}\n\n"
+                           "MD5_BINARY(UPPER(TRIM(CAST({{column}} AS VARCHAR)))) AS {{alias}}\n\n"
+                           "{% endmacro %}")
+        return md5_binary_temp
+
+    @staticmethod
+    def md5_binary_concat_macro():
+
+        md5_binary_concat_temp = ("{% macro md5_binary_concat(columns, alias) %}\n\nMD5_BINARY(CONCAT(\n\n"
+                                  "{% for column in columns -%}\n\n"
+                                  "IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',\n\n"
+                                  "{%- if loop.last -%}\n\n"
+                                  "IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^')\n\n"
+                                  "{%- endif %}\n\n"
+                                  "{% endfor -%}\n\n"
+                                  ")) AS {{alias}}\n\n"
+                                  "{% endmacro %}")
+        return md5_binary_concat_temp
+
+    @staticmethod
     def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name, tags):
 
         if isinstance(tags, str):
@@ -213,28 +235,44 @@ class TemplateGenerator:
         stg_template = ("{{{{ config(materialized='view', schema='STG', tags={}, enabled=true) }}}}"
                         "\n\nselect\n ").format(tags)
 
+        # hash_list = []
+        #
+        # for key in section_dict:
+        #     if key == 'stg_table' or key == 'isactive' or key == 'name' or key == 'tags':
+        #         pass
+        #
+        #     elif isinstance(section_dict[key], str):
+        #         hash_list.append("MD5_BINARY(UPPER(TRIM(CAST({} AS VARCHAR)))) AS {}\n".format(section_dict[key].upper(),
+        #                                                                                        key.upper()))
+        #     else:
+        #
+        #         temp_list = []
+        #
+        #         for column in sorted(section_dict[key]):
+        #             temp_list.append("IFNULL(UPPER(TRIM(CAST({} AS VARCHAR))), '^^')".format(column))
+        #
+        #         hash_str = "MD5_BINARY(CONCAT("
+        #         hash_list.append(hash_str + ", '||', ".join(temp_list) + ")) AS {}\n".format(key.upper()))
+        #
+        # stg_template += ", ".join(hash_list) +(", *, {{{{var('date')}}}} AS LOADDATE, {{{{var('date')}}}} AS "
+        #                                        "EFFECTIVE_FROM, 'TPCH' AS SOURCE FROM {{{{ref('{}')}}}}"
+        #                                        ).format(section_dict['stg_table'])
+
         hash_list = []
 
         for key in section_dict:
             if key == 'stg_table' or key == 'isactive' or key == 'name' or key == 'tags':
                 pass
 
-            elif isinstance(section_dict[key], str):
-                hash_list.append("MD5_BINARY(UPPER(TRIM(CAST({} AS VARCHAR)))) AS {}\n".format(section_dict[key].upper(),
-                                                                                               key.upper()))
+            elif isinstance(section_dict[key], str) and ',' not in section_dict[key]:
+                hash_list.append("{{{{ md5_binary('{}', '{}') }}}}".format(section_dict[key], key.upper()))
+
             else:
+                hash_list.append("{{{{ md5_binary_concat({}, '{}') }}}}".format(sorted(section_dict[key]), key.upper()))
 
-                temp_list = []
-
-                for column in sorted(section_dict[key]):
-                    temp_list.append("IFNULL(UPPER(TRIM(CAST({} AS VARCHAR))), '^^')".format(column))
-
-                hash_str = "MD5_BINARY(CONCAT("
-                hash_list.append(hash_str + ", '||', ".join(temp_list) + ")) AS {}\n".format(key.upper()))
-
-        stg_template += ", ".join(hash_list) +(", *, {{{{var('date')}}}} AS LOADDATE, {{{{var('date')}}}} AS "
-                                               "EFFECTIVE_FROM, 'TPCH' AS SOURCE FROM {{{{ref('{}')}}}}"
-                                               ).format(section_dict['stg_table'])
+        stg_template += ", \n".join(hash_list) + (",\n *, {{{{var('date')}}}} AS LOADDATE, {{{{var('date')}}}} AS "
+                                                  "EFFECTIVE_FROM, 'TPCH' AS SOURCE FROM {{{{ref('{}')}}}}"
+                                                  ).format(section_dict['stg_table'])
 
         return stg_template
 
@@ -417,7 +455,7 @@ class TemplateGenerator:
         new_list = []
 
         for item in self.config[table_section][table_key]["data_types"]:
-            new_list.append(item.replace(";", ","))
+            new_list.append(item.replace("~", ","))
 
         self.config[table_section][table_key]["data_types"] = new_list
 
@@ -585,6 +623,8 @@ class TemplateGenerator:
         self.write_to_file(path + '/hub_template.sql', self.hub_macro_template())
         self.write_to_file(path + "/link_template.sql", self.link_macro_template())
         self.write_to_file(path + "/sat_template.sql", self.sat_macro_template())
+        self.write_to_file(path + "/md5_binary.sql", self.md5_binary_macro())
+        self.write_to_file(path + "/md5_binary_concat.sql", self.md5_binary_concat_macro())
 
         self._my_log.log("Macros created.", logging.INFO)
 

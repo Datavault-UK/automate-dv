@@ -102,6 +102,21 @@ class TestTemplateGenerator(TestCase):
         for tag in tags:
             self.assertIn(tag, sat_sql)
 
+    # def test_stg_template(self):
+    #     section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
+    #                     'inventory_pk': ['PARTKEY', 'SUPPLIERKEY']}
+    #     tags = ['static', 'incremental']
+    #     actual_template = self.template_gen.stg_template(section_dict, tags)
+    #     expected_template = ("{{ config(materialized='view', schema='STG', tags=['static', 'incremental']"
+    #                          ", enabled=true) }}\n\nselect\n "
+    #                          "MD5_BINARY(UPPER(TRIM(CAST(PARTKEY AS VARCHAR)))) AS PART_PK\n, "
+    #                          "MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(PARTKEY AS VARCHAR))), '^^'), '||', "
+    #                          "IFNULL(UPPER(TRIM(CAST(SUPPLIERKEY AS VARCHAR))), '^^'))) AS INVENTORY_PK\n, "
+    #                          "*, {{var('date')}} AS LOADDATE, {{var('date')}} AS EFFECTIVE_FROM, 'TPCH' AS SOURCE "
+    #                          "FROM {{ref('v_src_stg_inventory')}}")
+    #     self.assertIsInstance(actual_template, str)
+    #     self.assertEqual(expected_template, actual_template)
+
     def test_stg_template(self):
         section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
                         'inventory_pk': ['PARTKEY', 'SUPPLIERKEY']}
@@ -109,10 +124,9 @@ class TestTemplateGenerator(TestCase):
         actual_template = self.template_gen.stg_template(section_dict, tags)
         expected_template = ("{{ config(materialized='view', schema='STG', tags=['static', 'incremental']"
                              ", enabled=true) }}\n\nselect\n "
-                             "MD5_BINARY(UPPER(TRIM(CAST(PARTKEY AS VARCHAR)))) AS PART_PK\n, "
-                             "MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(PARTKEY AS VARCHAR))), '^^'), '||', "
-                             "IFNULL(UPPER(TRIM(CAST(SUPPLIERKEY AS VARCHAR))), '^^'))) AS INVENTORY_PK\n, "
-                             "*, {{var('date')}} AS LOADDATE, {{var('date')}} AS EFFECTIVE_FROM, 'TPCH' AS SOURCE "
+                             "{{ md5_binary('PARTKEY', 'PART_PK') }}, \n"
+                             "{{ md5_binary_concat(['PARTKEY', 'SUPPLIERKEY'], 'INVENTORY_PK') }},\n"
+                             " *, {{var('date')}} AS LOADDATE, {{var('date')}} AS EFFECTIVE_FROM, 'TPCH' AS SOURCE "
                              "FROM {{ref('v_src_stg_inventory')}}")
         self.assertIsInstance(actual_template, str)
         self.assertEqual(expected_template, actual_template)
