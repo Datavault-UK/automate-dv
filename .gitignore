@@ -8,3 +8,5 @@
 *.json
 
 *.pyc
+
+src/snowflakeDemo/orchestrator_logs/

@@ -379,13 +379,20 @@ class TestTemplateGenerator(TestCase):
         for item,file in enumerate(files):
             self.assertIn(expected_files[item], file)
 
+    def test_template_generator_logs(self):
+        log_path = "./logs"
+        log_files = os.listdir(log_path)
+        self.assertIn("testTemplateGenerator", log_files[0])
+
     @classmethod
     def tearDown(cls):
         sql_paths = ["./test_configs/generated_sql_files/", "./test_configs/dbt_test_files/",
                      "./test_configs/test_clearfiles/"]
-        log_path = "./logs/"
 
         for sql_path in sql_paths:
             [os.remove(os.path.join(sql_path, file)) for file in os.listdir(sql_path)]
 
+    @classmethod
+    def tearDownClass(cls):
+        log_path = "./logs/"
         [os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path)]
