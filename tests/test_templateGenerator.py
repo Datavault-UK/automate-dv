@@ -23,12 +23,13 @@ class TestTemplateGenerator(TestCase):
         cls.config = cls.template_gen.config
 
     def test_hub_template(self):
+        tags = ['static', 'incremental']
         hub_columns = "stg.CUSTOMER_PK, stg.CUSTOMERKEY, stg.LOADDATE, stg.SOURCE"
         stg_columns1 = "b.CUSTOMER_PK, b.CUSTOMERKEY, b.LOADDATE, b.SOURCE"
         stg_columns2 = "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE"
         hub_pk = "CUSTOMER_PK"
         stg_name = "v_stg_tpch_data"
-        hub_sql = self.template_gen.hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name)
+        hub_sql = self.template_gen.hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name, tags)
         self.assertIsInstance(hub_sql, str)
 
     def test_hub_macro_template(self):
@@ -57,14 +58,27 @@ class TestTemplateGenerator(TestCase):
         self.assertNotIn("{{stg_columns2}}", sat_macro_sql)
         self.assertNotIn("{{stg_name}}", sat_macro_sql)
 
+    def test_md5_binary_template(self):
+        md5_temp = self.template_gen.md5_binary_macro()
+        self.assertIsInstance(md5_temp, str)
+        self.assertIn("MD5_BINARY(UPPER(TRIM(CAST({{column}} AS VARCHAR)))) AS {{alias}}", md5_temp)
+
+    def test_md5_binary_concat(self):
+        md5_temp = self.template_gen.md5_binary_concat_macro()
+        self.assertIsInstance(md5_temp, str)
+        self.assertIn("MD5_BINARY(CONCAT(", md5_temp)
+        self.assertIn("IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',", md5_temp)
+        self.assertIn("IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^')", md5_temp)
+
     def test_link_template(self):
         link_columns = "stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
-        stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, " \
+        stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, "
                         "b.SOURCE")
         stg_columns2 = "a.CUSTOMERKEY_NATION_PK, a.CUSTOMER_PK, a.CUSTOMER_NATIONKEY_PK, a.LOADDATE, a.SOURCE"
         link_pk = "CUSTOMERKEY_NATION_PK"
+        tags = ['static', 'incremental']
         stg_name = 'v_stg_tpch_data'
-        link_sql = self.template_gen.link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name)
+        link_sql = self.template_gen.link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name, tags)
         self.assertIsInstance(link_sql, str)
         self.assertIn("{% if is_incremental() %}", link_sql)
         self.assertIn("{% else %", link_sql)
@@ -74,6 +88,8 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_columns1, link_sql)
         self.assertIn(link_pk, link_sql)
         self.assertIn(stg_name, link_sql)
+        for tag in tags:
+            self.assertIn(tag, link_sql)
 
     def test_sat_template(self):
         sat_columns = ("stg.CUSTOMER_HASHDIFF, stg.CUSTOMER_PK, stg.CUSTOMER_NAME, stg.CUSTOMER_PHONE, stg.LOADDATE, "
@@ -83,8 +99,9 @@ class TestTemplateGenerator(TestCase):
         stg_columns2 = ("a.CUSTOMER_HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, "
                         "a.EFFECTIVE FROM, a.SOURCE")
         sat_pk = "CUSTOMER_HASHDIFF"
+        tags = ["'static'", "'incremental'"]
         stg_name = "v_stg_tpch_data"
-        sat_sql = self.template_gen.sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name)
+        sat_sql = self.template_gen.sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name, tags)
         self.assertIsInstance(sat_sql, str)
         self.assertIn("{% if is_incremental() %}", sat_sql)
         self.assertIn("{% else %", sat_sql)
@@ -94,6 +111,22 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_columns2, sat_sql)
         self.assertIn(sat_pk, sat_sql)
         self.assertIn(stg_name, sat_sql)
+        for tag in tags:
+            self.assertIn(tag, sat_sql)
+
+    def test_stg_template(self):
+        section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
+                        'inventory_pk': ['PARTKEY', 'SUPPLIERKEY']}
+        tags = ['static', 'incremental']
+        actual_template = self.template_gen.stg_template(section_dict, tags)
+        expected_template = ("{{ config(materialized='view', schema='STG', tags=['static', 'incremental']"
+                             ", enabled=true) }}\n\nselect\n "
+                             "{{ md5_binary('PARTKEY', 'PART_PK') }}, \n"
+                             "{{ md5_binary_concat(['PARTKEY', 'SUPPLIERKEY'], 'INVENTORY_PK') }},\n"
+                             " *, {{var('date')}} AS LOADDATE, {{var('date')}} AS EFFECTIVE_FROM, 'TPCH' AS SOURCE "
+                             "FROM {{ref('v_src_stg_inventory')}}")
+        self.assertIsInstance(actual_template, str)
+        self.assertEqual(expected_template, actual_template)
 
     def test_find_active_tables(self):
         new_config = self.template_gen.find_active_tables()
@@ -102,7 +135,7 @@ class TestTemplateGenerator(TestCase):
 
     def test_table_section_keys(self):
         actual = self.template_gen.get_table_section_keys()
-        expected = ['hubs', 'links', 'satellites']
+        expected = ['hashing', 'hubs', 'links', 'satellites']
         self.assertIsInstance(actual, list)
         self.assertEqual(actual, expected)
 
@@ -168,7 +201,7 @@ class TestTemplateGenerator(TestCase):
     def test_get_table_file_path(self):
         file_path = self.template_gen.get_table_file_path("hubs", "customer", "vault_path")
         self.assertIsInstance(file_path, str)
-        self.assertEqual(file_path, "../src/snowflakeDemo/models/hub_sat_link_load/hub_test.sql")
+        self.assertEqual("./test_configs/dbt_test_files/hub_test.sql", file_path)
 
     def test_get_table_name(self):
         hub_name = self.template_gen.get_table_name("hubs", "customer")
@@ -188,9 +221,9 @@ class TestTemplateGenerator(TestCase):
 
     def test_get_table_columns_as_list(self):
         hub_columns = self.template_gen.get_table_columns("hubs", "customer")
-        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, "
-                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, "
-                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, "
+        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, \n"
+                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, \n"
+                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, \n"
                            "CAST(stg.SOURCE AS VARCHAR) AS SOURCE")
         self.assertIsInstance(hub_columns, str)
         self.assertEqual(expected_string, hub_columns)
@@ -204,9 +237,9 @@ class TestTemplateGenerator(TestCase):
         log.set_config(con_reader)
         template_gen = TemplateGenerator(log, con_reader)
         hub_columns = template_gen.get_table_columns("hubs", "customer")
-        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, "
-                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, "
-                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, "
+        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, \n"
+                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, \n"
+                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, \n"
                            "CAST(stg.SOURCE AS VARCHAR) AS SOURCE")
         self.assertIsInstance(hub_columns, str)
         self.assertEqual(expected_string, hub_columns)
@@ -214,7 +247,7 @@ class TestTemplateGenerator(TestCase):
     def test_get_stg_columns_list(self):
         stage_columns = self.template_gen.get_stg_columns("hubs", "customer", "a")
         self.assertIsInstance(stage_columns, str)
-        self.assertEqual(stage_columns, "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE")
+        self.assertEqual(stage_columns, "a.CUSTOMER_PK, \na.CUSTOMERKEY, \na.LOADDATE, \na.SOURCE")
 
     def test_get_stg_columns_string(self):
         cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
@@ -226,7 +259,7 @@ class TestTemplateGenerator(TestCase):
         template_gen = TemplateGenerator(log, con_reader)
         stage_columns = template_gen.get_stg_columns("hubs", "customer", "a")
         self.assertIsInstance(stage_columns, str)
-        self.assertEqual(stage_columns, "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE")
+        self.assertEqual(stage_columns, "a.CUSTOMER_PK, \na.CUSTOMERKEY, \na.LOADDATE, \na.SOURCE")
 
     def test_get_simulation_dates(self):
         actual_dates = self.template_gen.sim_dates
@@ -279,9 +312,15 @@ class TestTemplateGenerator(TestCase):
 
         for table_key in table_keys:
             for table in table_keys[table_key]:
-                path = self.config["dbt settings"]["vault_path"]+"/"+self.config[table_key][table]["name"]+".sql"
+                if table_key != 'hashing':
+                    path = self.config["dbt settings"]["vault_path"]+"/"+self.config[table_key][table]["name"]+".sql"
 
-                path_list.append(path)
+                    path_list.append(path)
+
+                else:
+                    path = self.config["dbt settings"]["stg_path"] + "/" + self.config[table_key][table]["name"] + ".sql"
+
+                    path_list.append(path)
 
         self.template_gen.create_sql_files()
 
@@ -301,16 +340,17 @@ class TestTemplateGenerator(TestCase):
         with self.assertLogs("testTemplateGenerator", logging.ERROR) as cm:
             template_gen.create_sql_files()
 
-        self.assertIn(("A KeyError was detected in constructing the sql file from the template. "
-                       "Please check the config file."), "".join(cm.output))
+        self.assertIn(("A KeyError was detected in constructing the customer file from the template. "
+                       "The creation of this file was skipped. Please check the config file."),
+                      "".join(cm.output))
 
-    def test_create_dbt_project_file(self):
-        path = self.template_gen.get_dbt_project_path()
-        history_date = '1993-01-01'
-        date = '1993-01-02'
-
-        self.template_gen.create_dbt_project_file(history_date, date)
-        self.assertTrue(os.path.isfile(path))
+    # def test_create_dbt_project_file(self):
+    #     path = self.template_gen.get_dbt_project_path()
+    #     history_date = '1993-01-01'
+    #     date = '1993-01-02'
+    #
+    #     self.template_gen.create_dbt_project_file(history_date, date)
+    #     self.assertTrue(os.path.isfile(path))
 
     def test_create_template_macros(self):
         self.template_gen.create_template_macros()
@@ -321,9 +361,36 @@ class TestTemplateGenerator(TestCase):
         for path in path_list:
             self.assertTrue(os.path.isfile(path))
 
+    def test_clear_files(self):
+        cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
+        cli_args.get_config_name = Mock(return_value="./test_configs/clearfiles.ini")
+        cli_args.get_log_level = Mock(return_value=logging.INFO)
+        log = Logger("testTemplateGenerator", cli_args)
+        con_reader = ConfigReader(log, cli_args)
+        log.set_config(con_reader)
+        template_gen = TemplateGenerator(log, con_reader)
+        template_gen.create_sql_files()
+        template_gen.clean_files()
+        files = os.listdir("./test_configs/test_clearfiles")
+        expected_files = ["v_stg_orders"]
+
+        for item,file in enumerate(files):
+            self.assertIn(expected_files[item], file)
+
+    def test_template_generator_logs(self):
+        log_path = "./logs"
+        log_files = os.listdir(log_path)
+        self.assertIn("testTemplateGenerator", log_files[0])
+
+    @classmethod
+    def tearDown(cls):
+        sql_paths = ["./test_configs/generated_sql_files/", "./test_configs/dbt_test_files/",
+                     "./test_configs/test_clearfiles/"]
+
+        for sql_path in sql_paths:
+            [os.remove(os.path.join(sql_path, file)) for file in os.listdir(sql_path)]
+
     @classmethod
     def tearDownClass(cls):
-        sql_path = "./test_configs/generated_sql_files/"
         log_path = "./logs/"
-        file_list = [os.remove(os.path.join(sql_path, file)) for file in os.listdir(sql_path)]
-        log_list = [os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path)]
+        [os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path)]

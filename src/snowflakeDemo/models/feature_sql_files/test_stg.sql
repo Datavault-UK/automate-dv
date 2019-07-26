@@ -1,4 +1,4 @@
-{{config(materialized='view', schema='TEST_STG', enabled=false)}}
+{{config(materialized='view', schema='TEST_STG', enabled=true, tags='feature')}}
 
 SELECT
 	MD5(UPPER(TRIM(CAST(c.CUSTOMERKEY AS VARCHAR)))) AS CUSTOMER_PK,

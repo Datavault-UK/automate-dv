@@ -1,8 +1,17 @@
-{{config(materialized='incremental', schema='VLT', enabled=true)}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags='static')}}
 
-{% set hub_columns = 'CAST(stg.NATION_PK AS BINARY(16)) AS NATION_PK, CAST(stg.NATIONKEY AS NUMBER(38,0)) AS NATIONKEY, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR) AS SOURCE' %}
-{% set stg_columns1 = 'b.NATION_PK, b.NATIONKEY, b.LOADDATE, b.SOURCE' %}
-{% set stg_columns2 = 'a.NATION_PK, a.NATIONKEY, a.LOADDATE, a.SOURCE' %}
+{% set hub_columns = 'CAST(stg.NATION_PK AS BINARY(16)) AS NATION_PK, 
+CAST(stg.NATIONKEY AS NUMBER(38,0)) AS NATIONKEY, 
+CAST(stg.LOADDATE AS DATE) AS LOADDATE, 
+CAST(stg.SOURCE AS VARCHAR) AS SOURCE' %}
+{% set stg_columns1 = 'b.NATION_PK, 
+b.NATIONKEY, 
+b.LOADDATE, 
+b.SOURCE' %}
+{% set stg_columns2 = 'a.NATION_PK, 
+a.NATIONKEY, 
+a.LOADDATE, 
+a.SOURCE' %}
 {% set hub_pk = 'NATION_PK' %}
 {% set stg_name = 'v_nation_region' %}
 

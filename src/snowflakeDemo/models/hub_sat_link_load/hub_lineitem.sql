@@ -1,10 +1,19 @@
-{{config(materialized='incremental', schema='VLT', enabled=true)}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'incremental'])}}
 
-{% set hub_columns = 'CAST(stg.LINEITEM_PK AS BINARY(16)) AS LINEITEM_PK, CAST(stg.LINENUMBER AS NUMBER(38,0)) AS LINENUMBER, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR) AS SOURCE' %}
-{% set stg_columns1 = 'b.LINEITEM_PK, b.LINENUMBER, b.LOADDATE, b.SOURCE' %}
-{% set stg_columns2 = 'a.LINEITEM_PK, a.LINENUMBER, a.LOADDATE, a.SOURCE' %}
+{% set hub_columns = 'CAST(stg.LINEITEM_PK AS BINARY(16)) AS LINEITEM_PK, 
+CAST(stg.LINENUMBER AS NUMBER(38,0)) AS LINENUMBER, 
+CAST(stg.LOADDATE AS DATE) AS LOADDATE, 
+CAST(stg.SOURCE AS VARCHAR) AS SOURCE' %}
+{% set stg_columns1 = 'b.LINEITEM_PK, 
+b.LINENUMBER, 
+b.LOADDATE, 
+b.SOURCE' %}
+{% set stg_columns2 = 'a.LINEITEM_PK, 
+a.LINENUMBER, 
+a.LOADDATE, 
+a.SOURCE' %}
 {% set hub_pk = 'LINEITEM_PK' %}
-{% set stg_name = 'v_stg_tpch_data' %}
+{% set stg_name = 'v_stg_orders' %}
 
 {{ hub_template(hub_columns, stg_columns1, hub_pk) }}
 
