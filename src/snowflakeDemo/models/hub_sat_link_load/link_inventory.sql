@@ -1,8 +1,20 @@
-{{config(materialized='incremental', schema='VLT', enabled=true, tags='static')}}
+{{config(materialized='incremental', schema ='VLT', enabled=true, tags='static')}}
 
-{% set link_columns = 'CAST(stg.INVENTORY_PK AS BINARY(16)) AS INVENTORY_PK, CAST(stg.SUPPLIER_PK AS BINARY(16)) AS SUPPLIER_PK, CAST(stg.PART_PK AS BINARY(16)) AS PART_PK, CAST(stg.LOADDATE AS DATE) AS LOADDATE, CAST(stg.SOURCE AS VARCHAR(4)) AS SOURCE' %}
-{% set stg_columns1 = 'b.INVENTORY_PK, b.SUPPLIER_PK, b.PART_PK, b.LOADDATE, b.SOURCE' %}
-{% set stg_columns2 = 'a.INVENTORY_PK, a.SUPPLIER_PK, a.PART_PK, a.LOADDATE, a.SOURCE' %}
+{% set link_columns = 'CAST(stg.INVENTORY_PK AS BINARY(16)) AS INVENTORY_PK, 
+CAST(stg.SUPPLIER_PK AS BINARY(16)) AS SUPPLIER_PK, 
+CAST(stg.PART_PK AS BINARY(16)) AS PART_PK, 
+CAST(stg.LOADDATE AS DATE) AS LOADDATE, 
+CAST(stg.SOURCE AS VARCHAR(4)) AS SOURCE' %}
+{% set stg_columns1 = 'b.INVENTORY_PK, 
+b.SUPPLIER_PK, 
+b.PART_PK, 
+b.LOADDATE, 
+b.SOURCE' %}
+{% set stg_columns2 = 'a.INVENTORY_PK, 
+a.SUPPLIER_PK, 
+a.PART_PK, 
+a.LOADDATE, 
+a.SOURCE' %}
 {% set link_pk = 'INVENTORY_PK' %}
 {% set stg_name = 'v_stg_inventory' %}
 

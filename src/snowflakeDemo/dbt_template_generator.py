@@ -12,14 +12,19 @@ except ImportError:
 
 
 class TemplateGenerator:
+    """
+    Generates sql files from templates using metadata supplied in a configuration file.
+    """
 
     def __init__(self, logger, con_reader):
+
         self._my_log = logger
         self.config = con_reader.get_config_dict()
         self.additional_file_dict = self.get_additional_file_metadata()
         self.sim_dates = self.get_simulation_dates()
 
         if isinstance(self.additional_file_dict, dict):
+
             self.metahandler = MetaHandler(self._my_log, self.additional_file_dict)
             self.metadata = self.metahandler.get_metadata_dict()
             self.update_config()
@@ -28,6 +33,17 @@ class TemplateGenerator:
 
     @staticmethod
     def hub_template(hub_columns, stg_columns1, stg_columns2, hub_pk, stg_name, tags):
+        """
+        The template for building hub sql statements for DBT.
+        :param hub_columns: The target table columns.
+        :param stg_columns1: The stage columns used the first sub query that involves the lead statement.
+        :param stg_columns2: The stage columns but used in the second sub query when joining the stage and target
+                             table on keys that only exist in the stage.
+        :param hub_pk: The target table primary key.
+        :param stg_name: The name of the staging table.
+        :param tags: The tags for DBT to run certain models only.
+        :return: The sql statement as a string ready to be written to a file.
+        """
 
         if isinstance(tags, str):
             tags = "'{}'".format(tags)
@@ -57,6 +73,10 @@ class TemplateGenerator:
 
     @staticmethod
     def hub_macro_template():
+        """
+        The template for building the hub macro sql file that the hub sql files use.
+        :return: A sql statement as a string ready to be written to a file.
+        """
 
         hub_macro_temp = ("{% macro hub_template(hub_columns, stg_columns1, hub_pk) %}\n\n "
                           "select\n"
@@ -71,54 +91,23 @@ class TemplateGenerator:
         return hub_macro_temp
 
     @staticmethod
-    def link_macro_template():
-
-        link_macro_temp = ("{% macro link_template(link_columns, stg_columns1, link_pk) %}\n\n"
-                           "select\n {{link_columns}}\nfrom (\nselect distinct\n {{stg_columns1}},\n "
-                           "lag(b.LOADDATE, 1) over(partition by {{link_pk}} order by b.LOADDATE) as FIRST_SEEN\n"
-                           "from\n\n{% endmacro %}")
-
-        return link_macro_temp
-
-    @staticmethod
-    def sat_macro_template():
-
-        sat_macro_temp = ("{% macro sat_template(sat_columns, stg_columns1, sat_pk) %}\n\n"
-                          "select\n {{sat_columns}}\nfrom (\nselect distinct\n {{stg_columns1}},\n "
-                          "lead(b.LOADDATE, 1) over(partition by b.{{sat_pk}} order by b.LOADDATE) as LATEST\n"
-                          "from\n\n{% endmacro %}")
-
-        return sat_macro_temp
-
-    @staticmethod
-    def md5_binary_macro():
-
-        md5_binary_temp = ("{% macro md5_binary(column, alias) %}\n\n"
-                           "MD5_BINARY(UPPER(TRIM(CAST({{column}} AS VARCHAR)))) AS {{alias}}\n\n"
-                           "{% endmacro %}")
-        return md5_binary_temp
-
-    @staticmethod
-    def md5_binary_concat_macro():
-
-        md5_binary_concat_temp = ("{% macro md5_binary_concat(columns, alias) %}\n\nMD5_BINARY(CONCAT(\n\n"
-                                  "{% for column in columns -%}\n\n"
-                                  "IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',\n\n"
-                                  "{%- if loop.last -%}\n\n"
-                                  "IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^')\n\n"
-                                  "{%- endif %}\n\n"
-                                  "{% endfor -%}\n\n"
-                                  ")) AS {{alias}}\n\n"
-                                  "{% endmacro %}")
-        return md5_binary_concat_temp
-
-    @staticmethod
     def link_template(link_columns, stg_columns1, stg_columns2, link_pk, stg_name, tags):
+        """
+        The template for building the link sql statements for DBT.
+        :param link_columns: The target table columns.
+        :param stg_columns1: The stage columns used the first sub query that involves the lead statement.
+        :param stg_columns2: The stage columns but used in the second sub query when joining the stage and target
+                             table on keys that only exist in the stage.
+        :param link_pk: The primary key for the target table.
+        :param stg_name: The name of the stage table where the stage columns are from.
+        :param tags: The tags for DBT to run certain models only.
+        :return: A sql statement as a string ready to be written to a file.
+        """
 
         if isinstance(tags, str):
             tags = "'{}'".format(tags)
 
-        link_template = ("{{{{config(materialized='incremental', schema='VLT', enabled=true, "
+        link_template = ("{{{{config(materialized='incremental', schema ='VLT', enabled=true, "
                          "tags={tags})}}}}\n\n"
                          "{{% set link_columns = '{link_columns}' %}}\n"
                          "{{% set stg_columns1 = '{stg_columns1}' %}}\n"
@@ -144,7 +133,32 @@ class TemplateGenerator:
         return link_template
 
     @staticmethod
+    def link_macro_template():
+        """
+        The template for building the link macor sql file that the link sql files use.
+        :return: A sql statement as a string ready to be written to a file.
+        """
+
+        link_macro_temp = ("{% macro link_template(link_columns, stg_columns1, link_pk) %}\n\n"
+                           "select\n {{link_columns}}\nfrom (\nselect distinct\n {{stg_columns1}},\n "
+                           "lag(b.LOADDATE, 1) over(partition by {{link_pk}} order by b.LOADDATE) as FIRST_SEEN\n"
+                           "from\n\n{% endmacro %}")
+
+        return link_macro_temp
+
+    @staticmethod
     def sat_template(sat_columns, stg_columns1, stg_columns2, sat_pk, stg_name, tags):
+        """
+        The template for building the satellite sql statements for DBT.
+        :param sat_columns: The target table columns.
+        :param stg_columns1: The stage columns used the first sub query that involves the lead statement.
+        :param stg_columns2: The stage columns but used in the second sub query when joining the stage and target
+                             table on keys that only exist in the stage.
+        :param sat_pk: The primary key of the target table.
+        :param stg_name: The name of the staging table which the stage columns are from.
+        :param tags: The tags for DBT to run certain models only.
+        :return: A sql statement as a string ready to be written to a file.
+        """
 
         if isinstance(tags, str):
             tags = "'{}'".format(tags)
@@ -174,10 +188,28 @@ class TemplateGenerator:
         return sat_template
 
     @staticmethod
+    def sat_macro_template():
+        """
+        The template for building the satellite macro sql file that the satellite sql file uses.
+        :return: A sql statement as a string ready to be written to a file.
+        """
+
+        sat_macro_temp = ("{% macro sat_template(sat_columns, stg_columns1, sat_pk) %}\n\n"
+                          "select\n {{sat_columns}}\nfrom (\nselect distinct\n {{stg_columns1}},\n "
+                          "lead(b.LOADDATE, 1) over(partition by b.{{sat_pk}} order by b.LOADDATE) as LATEST\n"
+                          "from\n\n{% endmacro %}")
+
+        return sat_macro_temp
+
+    @staticmethod
     def dbt_yaml_project_template(history, date):
         """
         Generates a template yaml structure which can be passed on and written to a file for dbt.
-        :return:
+        Currently this will not be used in the current version of the Snowflake Demonstrator until future
+        development is done in generalising this more.
+        :param history: The date from which the history will be built from.
+        :param date: The date from which the day load will be built from.
+        :return: A string of the yaml structure ready to be written to a yaml file.
         """
 
         document = """
@@ -227,7 +259,9 @@ class TemplateGenerator:
     def stg_template(section_dict, tags):
         """
         Creates the template for the stage.
-        :return: a string that can be written to a file.
+        :param section_dict: A dictionary containing the information from the config about a particular stage only.
+        :param tags: The tags for DBT to run certain models only.
+        :return: An sql string that can be written to a file.
         """
         if isinstance(tags, str):
             tags = "'{}'".format(tags)
@@ -235,39 +269,20 @@ class TemplateGenerator:
         stg_template = ("{{{{ config(materialized='view', schema='STG', tags={}, enabled=true) }}}}"
                         "\n\nselect\n ").format(tags)
 
-        # hash_list = []
-        #
-        # for key in section_dict:
-        #     if key == 'stg_table' or key == 'isactive' or key == 'name' or key == 'tags':
-        #         pass
-        #
-        #     elif isinstance(section_dict[key], str):
-        #         hash_list.append("MD5_BINARY(UPPER(TRIM(CAST({} AS VARCHAR)))) AS {}\n".format(section_dict[key].upper(),
-        #                                                                                        key.upper()))
-        #     else:
-        #
-        #         temp_list = []
-        #
-        #         for column in sorted(section_dict[key]):
-        #             temp_list.append("IFNULL(UPPER(TRIM(CAST({} AS VARCHAR))), '^^')".format(column))
-        #
-        #         hash_str = "MD5_BINARY(CONCAT("
-        #         hash_list.append(hash_str + ", '||', ".join(temp_list) + ")) AS {}\n".format(key.upper()))
-        #
-        # stg_template += ", ".join(hash_list) +(", *, {{{{var('date')}}}} AS LOADDATE, {{{{var('date')}}}} AS "
-        #                                        "EFFECTIVE_FROM, 'TPCH' AS SOURCE FROM {{{{ref('{}')}}}}"
-        #                                        ).format(section_dict['stg_table'])
-
         hash_list = []
 
         for key in section_dict:
+
             if key == 'stg_table' or key == 'isactive' or key == 'name' or key == 'tags':
+
                 pass
 
             elif isinstance(section_dict[key], str) and ',' not in section_dict[key]:
+
                 hash_list.append("{{{{ md5_binary('{}', '{}') }}}}".format(section_dict[key], key.upper()))
 
             else:
+
                 hash_list.append("{{{{ md5_binary_concat({}, '{}') }}}}".format(sorted(section_dict[key]), key.upper()))
 
         stg_template += ", \n".join(hash_list) + (",\n *, {{{{var('date')}}}} AS LOADDATE, {{{{var('date')}}}} AS "
@@ -277,12 +292,42 @@ class TemplateGenerator:
         return stg_template
 
     @staticmethod
+    def md5_binary_macro():
+        """
+        The template for building the md5_binary macro sql file that the staging sql files use.
+        :return: A sql statement as a string ready to be written to a file.
+        """
+
+        md5_binary_temp = ("{% macro md5_binary(column, alias) %}\n\n"
+                           "MD5_BINARY(UPPER(TRIM(CAST({{column}} AS VARCHAR)))) AS {{alias}}\n\n"
+                           "{% endmacro %}")
+        return md5_binary_temp
+
+    @staticmethod
+    def md5_binary_concat_macro():
+        """
+        The template for building the md5_binary_concat macro sql file that the staging sql files use.
+        :return: A sql statement as a string ready to be written to a file.
+        """
+
+        md5_binary_concat_temp = ("{% macro md5_binary_concat(columns, alias) %}\n\nMD5_BINARY(CONCAT(\n\n"
+                                  "{% for column in columns -%}\n\n"
+                                  "IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',\n\n"
+                                  "{%- if loop.last -%}\n\n"
+                                  "IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^')\n\n"
+                                  "{%- endif %}\n\n"
+                                  "{% endfor -%}\n\n"
+                                  ")) AS {{alias}}\n\n"
+                                  "{% endmacro %}")
+        return md5_binary_concat_temp
+
+    @staticmethod
     def alias_adder(alias, column_list):
         """
-        Adds an alias at the start of column names for the sql statement.
-        :param alias: The string that represents the alias.
-        :param column_list: The list of columns that the alias will be added to (could be either a string or a list).
-        :return: A list that
+        Adds an alias at the start of column names for the sql statements.
+        :param alias: The alias as a string.
+        :param column_list: The list of columns that the alias will be added.
+        :return: A list where the aliases have been added to each element.
         """
 
         return [(alias + "." + column) for column in column_list]
@@ -290,11 +335,11 @@ class TemplateGenerator:
     @staticmethod
     def data_type_forcer(table_columns, aliased_table_columns, data_types):
         """
-        Creates a list of strings that the sql will interpret as cast the column to a specific data type.
-        :param table_columns: the raw column names to be forced.
-        :param aliased_table_columns: the aliased column names to be forced.
-        :param data_types: data for for each column.
-        :return: a list with each element cast to specific data type (for sql).
+        Creates a list of strings that forces the data types to the columns in the sql.
+        :param table_columns: The raw column names to be forced.
+        :param aliased_table_columns: The aliased column names to be forced.
+        :param data_types: Data for for each column.
+        :return: A list with each element cast to specific data type (for sql).
         """
 
         return ["CAST({} AS {}) AS {}".format(aliased_table_columns[index], data_types[index], column)
@@ -302,27 +347,26 @@ class TemplateGenerator:
 
     def find_active_tables(self):
         """
-        Finds all the active tables and removes them from the config dict.
-        :return:
+        Finds all the active table metadata in the config dict and removes them if they're inactive.
+        :return: A dictionary containing only active table metadata.
         """
 
         new_config = copy.deepcopy(self.config)
         table_sections = self.get_table_section_keys()
 
         for section in table_sections:
-            keys = list(new_config[section].keys())
-            for table in keys:
-                if new_config[section][table]['isactive'] == 'False':
-                    del new_config[section][table]
-                else:
-                    pass
 
-        # active_tables = []
-        #
-        # for section in table_sections:
-        #     for table in self.config[section]:
-        #         if self.config[section][table]['isactive'] == 'True':
-        #             active_tables.append(table)
+            keys = list(new_config[section].keys())
+
+            for table in keys:
+
+                if new_config[section][table]['isactive'] == 'False':
+
+                    del new_config[section][table]
+
+                else:
+
+                    pass
 
         return new_config
 
@@ -333,12 +377,16 @@ class TemplateGenerator:
         """
 
         try:
+
             additional_file_metadata = self.config["additional files"]
+
             return additional_file_metadata
 
         except KeyError:
+
             self._my_log.log("A key error occurred of 'additional_files' not found. If no additional files were "
                              "provided then ignore this message.", logging.WARNING)
+
             return False
 
     def update_config(self):
@@ -347,13 +395,15 @@ class TemplateGenerator:
         """
 
         for file in self.metadata:
+
             for table_type in self.metadata[file]:
+
                 self.config[table_type].update(self.metadata[file][table_type])
 
     def get_simulation_dates(self):
         """
         Gets the dates for which the simulation will iterate over.
-        :return: the simulation dates as a dictionary.
+        :return: The simulation dates in a dictionary.
         """
 
         return {key: ("TO_DATE('{}')".format(date)) for (key, date) in self.config['simulation dates'].items()
@@ -361,17 +411,17 @@ class TemplateGenerator:
 
     def get_dbt_project_path(self):
         """
-        Gets the dbt project file path.
+        Gets the dbt project file path. Currently unused until DBT project yml file is updated.
         :return: the path for the dbt project file to be created.
         """
 
-        return self.config['simulation dates']['dbt_path'] + '/' + 'dbt_project.yml'
+        return self.config['simulation dates']['dbt_path'] + 'dbt_project.yml'
 
     def get_table_section_keys(self):
         """
         Gets a list of keys of the section headings required to build the statements (excludes log settings,
-        version, and connection settings).
-        :return: a list of headings.
+        version, simulation dates, dbt settings, and additional files).
+        :return: A list of section heading keys.
         """
 
         return [key for key in list(self.config.keys()) if key == 'hubs' or key == 'links' or key == 'satellites'
@@ -380,7 +430,8 @@ class TemplateGenerator:
     def get_table_header_keys(self, table_sections):
         """
         Gets the keys of all the tables listed in the config file.
-        :return: returns the keys in a dict.
+        :param table_sections: The sections of the config that contain the metadata for the tables.
+        :return:The keys in a dictionary as nested lists.
         """
 
         table_dict = {}
@@ -394,7 +445,8 @@ class TemplateGenerator:
     def get_table_name_values(self, table_sections):
         """
         Gets the values for the table name in each section listed in the config file.
-        :return: returns the values in a list in a dict.
+        :param table_sections: The sections of the config that contain the metadata for the tables.
+        :return: The values in nested lists in a dictionary.
         """
 
         table_dict = {}
@@ -412,20 +464,21 @@ class TemplateGenerator:
     def get_table_file_path(self, table_section, table_key, dbt_dir):
         """
         Gets the file path to write the sql file in the dbt model.
-        :return:
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
+        :param dbt_dir: The key for the particular DBT directory path specified in the config.
+        :return: A string of the DBT file path to write the model.
         """
-        # file_path = self.config[table_section][table_key]["dbt_path"] + "/{}.sql".format(self.get_table_name(
-        #     table_section, table_key))
 
-        file_path = self.config['dbt settings'][dbt_dir] + "/{}.sql".format(self.get_table_name(table_section,
-                                                                                                table_key))
-
-        return file_path
+        return (self.config['dbt settings'][dbt_dir] + "/{}.sql".format(self.get_table_name(table_section,
+                                                                                            table_key)))
 
     def get_table_name(self, table_section, table_key):
         """
         Gets the name of the table that the sql is being generated for and returns it as a string.
-        :return: name of table as string.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
+        :return: Name of table as string.
         """
 
         return self.config[table_section][table_key]["name"]
@@ -433,6 +486,8 @@ class TemplateGenerator:
     def get_stg_table_name(self, table_section, table_key):
         """
         Gets the name of the stage table needed to build the sql statement.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
         :return: stage table name as a string.
         """
 
@@ -440,21 +495,25 @@ class TemplateGenerator:
 
     def get_pk(self, table_section, table_key):
         """
-        Gets the table primary key from the config file.
+        Gets the target table primary key from the config file.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
         :return: The table primary key column as a string.
         """
+
         return self.config[table_section][table_key]["pk"]
 
     def get_data_types(self, table_section, table_key):
         """
-        Gets the data types for the columns from the config.
-        :param table_section: the section heading.
-        :param table_key: the target table key
-        :return: the data types as a list.
+        Formats and gets the data types for the target table columns from the config.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
+        :return: The data types as a list.
         """
         new_list = []
 
         for item in self.config[table_section][table_key]["data_types"]:
+
             new_list.append(item.replace("~", ","))
 
         self.config[table_section][table_key]["data_types"] = new_list
@@ -463,9 +522,12 @@ class TemplateGenerator:
 
     def get_table_columns(self, table_section, table_key):
         """
-        Gets the table columns required for the sql statement.
+        Formats and gets the table columns required for the sql statement.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
         :return: The table columns as a string.
         """
+
         table_columns = self.config[table_section][table_key]["table_columns"]
 
         data_types = self.get_data_types(table_section, table_key)
@@ -476,8 +538,6 @@ class TemplateGenerator:
 
             aliased_table_columns = self.alias_adder("stg", table_columns)
 
-            aliased_table_columns[len(aliased_table_columns) - 1] = aliased_table_columns[len(aliased_table_columns) - 1].replace(",", "")
-
             data_type_forced_columns = self.data_type_forcer(table_columns, aliased_table_columns, data_types)
 
         else:
@@ -486,13 +546,17 @@ class TemplateGenerator:
 
             data_type_forced_columns = self.data_type_forcer(table_columns, aliased_table_columns, data_types)
 
-        return ", ".join(data_type_forced_columns)
+        return ", \n".join(data_type_forced_columns)
 
     def get_stg_columns(self, table_section, table_key, alias):
         """
-        Gets the stage columns required to build the table.
+        Formats and gets the stage columns required to build the sql statements.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
+        :param alias: The alias assigned to the stage columns.
         :return: The stage columns as a string.
         """
+
         stg_columns = self.config[table_section][table_key]["stg_columns"]
 
         if isinstance(stg_columns, str):
@@ -501,28 +565,32 @@ class TemplateGenerator:
 
             aliased_stg_columns = self.alias_adder(alias, stg_columns)
 
-            return ", ".join(aliased_stg_columns)
+            return ", \n".join(aliased_stg_columns)
         else:
 
             aliased_stg_columns = self.alias_adder(alias, stg_columns)
 
-            return ", ".join(aliased_stg_columns)
+            return ", \n".join(aliased_stg_columns)
 
     def get_tags(self, table_section, table_key):
         """
         Gets the tags for each model.
+        :param table_section: The section key of the config that contain the metadata for the tables.
+        :param table_key: The key for the individual table.
         :return: returns the tags as either a string or a list.
         """
+
         return self.active_config[table_section][table_key]['tags']
 
     def write_to_file(self, path, statement):
         """
-        Writes the generated statement to an sql file in the dbt directory.
-        :param path: path to write file
-        :param statement: the generated sql statement.
+        Writes the generated statement to a file in the specified directory.
+        :param path: The path to write file.
+        :param statement: The generated statement.
         """
 
         try:
+
             file = open(path, "x")
             file.close()
             file = open(path, "w")
@@ -530,6 +598,7 @@ class TemplateGenerator:
             file.close()
 
         except FileExistsError:
+
             self._my_log.log("A file already exists in this path {}. It will be overwritten.".format(path),
                              logging.ERROR)
             file = open(path, "w")
@@ -538,31 +607,38 @@ class TemplateGenerator:
 
     def create_sql_files(self):
         """
-        Gets the statement and creates the file in the correct dbt directory.
+        Gets the statement and creates the files in the correct dbt directories.
         """
 
         table_sections = self.get_table_section_keys()
         table_keys = self.get_table_header_keys(table_sections)
 
         for table_key in table_keys:
+
             for table in table_keys[table_key]:
 
                 try:
+
                     if table_key == 'hubs':
+
                         statement = self.hub_template(self.get_table_columns(table_key, table),
                                                       self.get_stg_columns(table_key, table, "b"),
                                                       self.get_stg_columns(table_key, table, "a"),
                                                       self.get_pk(table_key, table),
                                                       self.get_stg_table_name(table_key, table),
                                                       self.get_tags(table_key, table))
+
                     elif table_key == 'links':
+
                         statement = self.link_template(self.get_table_columns(table_key, table),
                                                        self.get_stg_columns(table_key, table, "b"),
                                                        self.get_stg_columns(table_key, table, "a"),
                                                        self.get_pk(table_key, table),
                                                        self.get_stg_table_name(table_key, table),
                                                        self.get_tags(table_key, table))
+
                     elif table_key == 'satellites':
+
                         statement = self.sat_template(self.get_table_columns(table_key, table),
                                                       self.get_stg_columns(table_key, table, "b"),
                                                       self.get_stg_columns(table_key, table, "a"),
@@ -587,12 +663,16 @@ class TemplateGenerator:
 
                 except KeyError:
 
-                    self._my_log.log(("A KeyError was detected in constructing the sql file from the template. "
-                                      "Please check the config file."), logging.ERROR)
+                    self._my_log.log(("A KeyError was detected in constructing the {} file from the template. "
+                                      "The creation of this file was skipped. Please check the config file.").format(table),
+                                     logging.ERROR)
 
     def create_dbt_project_file(self, history_date, date):
         """
-        Gets the yaml statement and dumps it into a yaml file.
+        Gets the yaml statement and dumps it into a yaml file This feature is currently disabled
+        in the Snowflake Demonstrator.
+        :param history_date: The date from which the history will be built from.
+        :param date: The date from which the day load will be built from.
         """
 
         path = self.get_dbt_project_path()
@@ -630,8 +710,7 @@ class TemplateGenerator:
 
     def clean_files(self):
         """
-        Clears the dbt folder of any unnecessary files
-        :return:
+        Clears the dbt folder of any files related to the files being generated.
         """
 
         [os.remove(os.path.join(self.config['dbt settings']['vault_path'], file)) for file in os.listdir(

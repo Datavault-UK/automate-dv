@@ -13,15 +13,18 @@ models:
       enabled: false
       materialized: incremental
     hub_sat_link_load:
+      schema: "VLT"
       enabled: true
       materialized: incremental
     source_creation:
       enabled: true
       materialized: incremental
     star_schema:
+      schema: STAR
       enabled: true
       materialized: view
     stg:
+      schema: STG
       enabled: true
       materialized: view
   vars:

@@ -58,6 +58,18 @@ class TestTemplateGenerator(TestCase):
         self.assertNotIn("{{stg_columns2}}", sat_macro_sql)
         self.assertNotIn("{{stg_name}}", sat_macro_sql)
 
+    def test_md5_binary_template(self):
+        md5_temp = self.template_gen.md5_binary_macro()
+        self.assertIsInstance(md5_temp, str)
+        self.assertIn("MD5_BINARY(UPPER(TRIM(CAST({{column}} AS VARCHAR)))) AS {{alias}}", md5_temp)
+
+    def test_md5_binary_concat(self):
+        md5_temp = self.template_gen.md5_binary_concat_macro()
+        self.assertIsInstance(md5_temp, str)
+        self.assertIn("MD5_BINARY(CONCAT(", md5_temp)
+        self.assertIn("IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',", md5_temp)
+        self.assertIn("IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^')", md5_temp)
+
     def test_link_template(self):
         link_columns = "stg.CUSTOMERKEY_NATION_PK, stg.CUSTOMER_PK, stg.NATION_PK, stg.LOADDATE, stg.SOURCE"
         stg_columns1 = ("b.CUSTOMERKEY_NATION_PK, b.CUSTOMER_PK, b.CUSTOMER_NATIONKEY_PK as NATION_PK, b.LOADDATE, "
@@ -101,21 +113,6 @@ class TestTemplateGenerator(TestCase):
         self.assertIn(stg_name, sat_sql)
         for tag in tags:
             self.assertIn(tag, sat_sql)
-
-    # def test_stg_template(self):
-    #     section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
-    #                     'inventory_pk': ['PARTKEY', 'SUPPLIERKEY']}
-    #     tags = ['static', 'incremental']
-    #     actual_template = self.template_gen.stg_template(section_dict, tags)
-    #     expected_template = ("{{ config(materialized='view', schema='STG', tags=['static', 'incremental']"
-    #                          ", enabled=true) }}\n\nselect\n "
-    #                          "MD5_BINARY(UPPER(TRIM(CAST(PARTKEY AS VARCHAR)))) AS PART_PK\n, "
-    #                          "MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(PARTKEY AS VARCHAR))), '^^'), '||', "
-    #                          "IFNULL(UPPER(TRIM(CAST(SUPPLIERKEY AS VARCHAR))), '^^'))) AS INVENTORY_PK\n, "
-    #                          "*, {{var('date')}} AS LOADDATE, {{var('date')}} AS EFFECTIVE_FROM, 'TPCH' AS SOURCE "
-    #                          "FROM {{ref('v_src_stg_inventory')}}")
-    #     self.assertIsInstance(actual_template, str)
-    #     self.assertEqual(expected_template, actual_template)
 
     def test_stg_template(self):
         section_dict = {'isactive': 'True', 'stg_table': 'v_src_stg_inventory', 'part_pk': 'PARTKEY',
@@ -224,9 +221,9 @@ class TestTemplateGenerator(TestCase):
 
     def test_get_table_columns_as_list(self):
         hub_columns = self.template_gen.get_table_columns("hubs", "customer")
-        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, "
-                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, "
-                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, "
+        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, \n"
+                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, \n"
+                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, \n"
                            "CAST(stg.SOURCE AS VARCHAR) AS SOURCE")
         self.assertIsInstance(hub_columns, str)
         self.assertEqual(expected_string, hub_columns)
@@ -240,9 +237,9 @@ class TestTemplateGenerator(TestCase):
         log.set_config(con_reader)
         template_gen = TemplateGenerator(log, con_reader)
         hub_columns = template_gen.get_table_columns("hubs", "customer")
-        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, "
-                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, "
-                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, "
+        expected_string = ("CAST(stg.CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK, \n"
+                           "CAST(stg.CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY, \n"
+                           "CAST(stg.LOADDATE AS DATE) AS LOADDATE, \n"
                            "CAST(stg.SOURCE AS VARCHAR) AS SOURCE")
         self.assertIsInstance(hub_columns, str)
         self.assertEqual(expected_string, hub_columns)
@@ -250,7 +247,7 @@ class TestTemplateGenerator(TestCase):
     def test_get_stg_columns_list(self):
         stage_columns = self.template_gen.get_stg_columns("hubs", "customer", "a")
         self.assertIsInstance(stage_columns, str)
-        self.assertEqual(stage_columns, "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE")
+        self.assertEqual(stage_columns, "a.CUSTOMER_PK, \na.CUSTOMERKEY, \na.LOADDATE, \na.SOURCE")
 
     def test_get_stg_columns_string(self):
         cli_args = CLIParse("Reconciles data across different environments.", "testTemplateGenerator")
@@ -262,7 +259,7 @@ class TestTemplateGenerator(TestCase):
         template_gen = TemplateGenerator(log, con_reader)
         stage_columns = template_gen.get_stg_columns("hubs", "customer", "a")
         self.assertIsInstance(stage_columns, str)
-        self.assertEqual(stage_columns, "a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE")
+        self.assertEqual(stage_columns, "a.CUSTOMER_PK, \na.CUSTOMERKEY, \na.LOADDATE, \na.SOURCE")
 
     def test_get_simulation_dates(self):
         actual_dates = self.template_gen.sim_dates
@@ -343,16 +340,17 @@ class TestTemplateGenerator(TestCase):
         with self.assertLogs("testTemplateGenerator", logging.ERROR) as cm:
             template_gen.create_sql_files()
 
-        self.assertIn(("A KeyError was detected in constructing the sql file from the template. "
-                       "Please check the config file."), "".join(cm.output))
+        self.assertIn(("A KeyError was detected in constructing the customer file from the template. "
+                       "The creation of this file was skipped. Please check the config file."),
+                      "".join(cm.output))
 
-    def test_create_dbt_project_file(self):
-        path = self.template_gen.get_dbt_project_path()
-        history_date = '1993-01-01'
-        date = '1993-01-02'
-
-        self.template_gen.create_dbt_project_file(history_date, date)
-        self.assertTrue(os.path.isfile(path))
+    # def test_create_dbt_project_file(self):
+    #     path = self.template_gen.get_dbt_project_path()
+    #     history_date = '1993-01-01'
+    #     date = '1993-01-02'
+    #
+    #     self.template_gen.create_dbt_project_file(history_date, date)
+    #     self.assertTrue(os.path.isfile(path))
 
     def test_create_template_macros(self):
         self.template_gen.create_template_macros()

@@ -24,7 +24,7 @@ def run():
 
     logger.log("Loading the history into the data vault.", logging.INFO)
 
-    # os.system("dbt run --full-refresh --models tag:static")
+    os.system("dbt run --full-refresh --models tag:static")
 
     for date in sim_dates:
         if "history" not in date:
@@ -32,6 +32,8 @@ def run():
             path = """dbt run --models tag:incremental --vars "{{'date':{}}}" """.format(sim_dates[date])
             os.system(path)
             logger.log("Day load for {} has finished.".format(date), logging.INFO)
+        else:
+            continue
 
 
 if __name__ == '__main__':

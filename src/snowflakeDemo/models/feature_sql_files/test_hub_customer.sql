@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='test_vlt', enabled=false)}}
+{{config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature')}}
 
 select
   stg.CUSTOMER_PK,
