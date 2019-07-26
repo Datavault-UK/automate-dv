@@ -60,4 +60,4 @@ where b.O_ORDERDATE <= {{var("date")}}
 {% endif %}
 
 order by b.O_ORDERKEY
-limit 10
+limit 100

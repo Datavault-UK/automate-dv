@@ -2,6 +2,7 @@
 
 select
   a.ORDER_PK
+, a.LINEITEM_PK
 , a.CUSTOMER_PK
 , a.PART_PK
 , a.SUPPLIER_PK

@@ -1,5 +1,4 @@
 import logging
-import datetime
 import copy
 import os
 from vaultBase.metaHandler import MetaHandler
@@ -510,13 +509,9 @@ class TemplateGenerator:
         :param table_key: The key for the individual table.
         :return: The data types as a list.
         """
-        new_list = []
 
-        for item in self.config[table_section][table_key]["data_types"]:
-
-            new_list.append(item.replace("~", ","))
-
-        self.config[table_section][table_key]["data_types"] = new_list
+        self.config[table_section][table_key]["data_types"] = [item.replace("~", ",") for item in
+                                                               self.config[table_section][table_key]['data_types']]
 
         return self.config[table_section][table_key]["data_types"]
 
@@ -669,7 +664,7 @@ class TemplateGenerator:
 
     def create_dbt_project_file(self, history_date, date):
         """
-        Gets the yaml statement and dumps it into a yaml file This feature is currently disabled
+        Gets the yaml statement and dumps it into a yaml file. This feature is currently disabled
         in the Snowflake Demonstrator.
         :param history_date: The date from which the history will be built from.
         :param date: The date from which the day load will be built from.
