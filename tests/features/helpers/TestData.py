@@ -1,12 +1,11 @@
+import json
+import re
+from hashlib import md5
+
 import pandas as pd
 import snowflake.connector as sf
-from numpy import NaN
-from hashlib import md5
-import re
-import json
-import os
 import sqlalchemy as sa
-import datetime
+from numpy import NaN
 
 
 class TestData:
