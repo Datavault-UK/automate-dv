@@ -3,7 +3,7 @@ import os
 from behave import *
 
 import bindings
-from definitions import ROOT_DIR
+from definitions import DBT_ROOT
 
 use_step_matcher("parse")
 
@@ -23,7 +23,7 @@ def step_impl(context):
 
 @step("I run the sql query to create the source table for the history")
 def step_impl(context):
-    os.chdir(ROOT_DIR)
+    os.chdir(DBT_ROOT)
     os.system("dbt run --full-refresh --models test_source")
 
 
@@ -53,7 +53,7 @@ def step_impl(context):
 
 @step("I run the sql query to create the source table for the day")
 def step_impl(context):
-    os.chdir(ROOT_DIR)
+    os.chdir(DBT_ROOT)
     os.system("dbt run --models test_source")
 
 

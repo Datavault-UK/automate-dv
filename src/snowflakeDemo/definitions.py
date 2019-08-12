@@ -2,6 +2,8 @@
 A file containing project constants
 """
 
-import os
+from pathlib import PurePath
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+DBT_ROOT = PurePath(__file__).parent
+PROJECT_ROOT = PurePath(__file__).parents[2]
+TESTS_ROOT = "{}/tests".format(PROJECT_ROOT)

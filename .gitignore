@@ -6,3 +6,5 @@ tests/features/helpers/credentials\.json
 src/snowflakeDemo/target/
 
 *.log
+
+src/snowflakeDemo/logs/

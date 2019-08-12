@@ -4,7 +4,7 @@ from behave import *
 from pandas import DataFrame
 
 import bindings
-from definitions import ROOT_DIR
+from definitions import DBT_ROOT
 
 use_step_matcher("parse")
 
@@ -34,7 +34,7 @@ def step_impl(context):
 
 @step("I run the dbt hub load sql script")
 def step_impl(context):
-    os.chdir(ROOT_DIR)
+    os.chdir(DBT_ROOT)
     os.system("dbt run --full-refresh --models test_hub_customer")
 
 
@@ -67,7 +67,7 @@ def step_impl(context):
 
 @step("I run the hub load sql script")
 def step_impl(context):
-    os.chdir(ROOT_DIR)
+    os.chdir(DBT_ROOT)
     os.system("dbt run --models test_hub_customer")
 
 

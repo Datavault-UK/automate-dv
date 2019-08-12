@@ -3,7 +3,7 @@ import os
 from behave import *
 from pandas import DataFrame
 
-from definitions import ROOT_DIR
+from definitions import DBT_ROOT
 
 use_step_matcher("parse")
 
@@ -52,7 +52,7 @@ def step_impl(context):
 
 @step("I run the dbt load to the link")
 def step_impl(context):
-    os.chdir(ROOT_DIR)
+    os.chdir(DBT_ROOT)
     os.system("dbt run --full-refresh --models test_link_customer_nation")
 
 
@@ -88,7 +88,7 @@ def step_impl(context):
 
 @step("I run the dbt day load to the link")
 def step_impl(context):
-    os.chdir(ROOT_DIR)
+    os.chdir(DBT_ROOT)
     os.system("dbt run --models test_link_customer_nation")
 
 

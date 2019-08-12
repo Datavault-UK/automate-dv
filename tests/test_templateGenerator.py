@@ -6,6 +6,7 @@ from vaultBase.configReader import ConfigReader
 import os
 import logging
 from unittest.mock import Mock
+from definitions import TESTS_ROOT
 
 
 class TestTemplateGenerator(TestCase):
@@ -21,6 +22,8 @@ class TestTemplateGenerator(TestCase):
         cls.log.set_config(cls.con_reader)
         cls.template_gen = TemplateGenerator(cls.log, cls.con_reader)
         cls.config = cls.template_gen.config
+
+        cls.setup_test_dirs()
 
     def test_hub_template(self):
         tags = ['static', 'incremental']
@@ -375,14 +378,42 @@ class TestTemplateGenerator(TestCase):
         self.assertIn("testTemplateGenerator", log_files[0])
 
     @classmethod
-    def tearDown(cls):
-        sql_paths = ["./test_configs/generated_sql_files/", "./test_configs/dbt_test_files/",
-                     "./test_configs/test_clearfiles/"]
+    def setup_test_dirs(cls):
+        """
+        Creates directories for testing
+        """
+
+        sql_paths = ["{}/test_configs/generated_sql_files/".format(TESTS_ROOT),
+                     "{}/test_configs/dbt_test_files/".format(TESTS_ROOT),
+                     "{}/test_configs/test_clearfiles/".format(TESTS_ROOT)]
 
         for sql_path in sql_paths:
-            [os.remove(os.path.join(sql_path, file)) for file in os.listdir(sql_path)]
+            if not os.path.isdir(sql_path):
+                os.mkdir(sql_path)
+
+    @classmethod
+    def clear_test_dirs(cls):
+        """
+        Removes files in directories created for testing
+        """
+        sql_paths = ["{}/test_configs/generated_sql_files/".format(TESTS_ROOT),
+                     "{}/test_configs/dbt_test_files/".format(TESTS_ROOT),
+                     "{}/test_configs/test_clearfiles/".format(TESTS_ROOT)]
+
+        for sql_folder in sql_paths:
+
+            for file in os.listdir(sql_folder):
+                os.remove(os.path.join(sql_folder, file))
+
+    @classmethod
+    def tearDown(cls):
+
+        cls.clear_test_dirs()
 
     @classmethod
     def tearDownClass(cls):
         log_path = "./logs/"
-        [os.remove(os.path.join(log_path, file)) for file in os.listdir(log_path)]
+        for file in os.listdir(log_path):
+            os.remove(os.path.join(log_path, file))
+
+        cls.clear_test_dirs()
