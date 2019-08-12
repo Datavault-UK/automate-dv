@@ -10,11 +10,11 @@ class TestTestData(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.testdata = TestData("./test_configs/credentials.json")
+        cls.testdata = TestData("./test_configs/test_credentials.json")
 
     def test_get_credentials(self):
-        credentials = self.testdata.get_credentials("./test_configs/credentials.json")
-        key_values = ["user", "password", "account_name", "warehouse", "database", "schema"]
+        credentials = self.testdata.get_credentials("./test_configs/test_credentials.json")
+        key_values = ["user", "password", "account_name", "warehouse", "database", "schema", "role"]
         self.assertIsInstance(credentials, dict)
         self.assertEqual(key_values, list(credentials.keys()))
 
@@ -25,15 +25,12 @@ class TestTestData(TestCase):
 
     @staticmethod
     def snowflake_test_connector(query):
-        with open("./test_configs/credentials.json", "r") as read_file:
+        with open("./test_configs/test_credentials.json", "r") as read_file:
             credentials = json.load(read_file)
 
-        connection = sf.connect(user=credentials["user"],
-                                password=credentials["password"],
-                                account=credentials["account_name"],
-                                warehouse=credentials["warehouse"],
-                                database=credentials["database"],
-                                schema=credentials["schema"])
+        connection = sf.connect(user=credentials["user"], password=credentials["password"],
+                                account=credentials["account_name"], warehouse=credentials["warehouse"],
+                                database=credentials["database"], schema=credentials["schema"])
 
         cur = connection.cursor()
 
@@ -42,5 +39,3 @@ class TestTestData(TestCase):
         cur.close()
 
         return result
-
-
