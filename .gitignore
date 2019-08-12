@@ -2,3 +2,7 @@
 \.idea/
 
 tests/features/helpers/credentials\.json
+
+src/snowflakeDemo/target/
+
+*.log
