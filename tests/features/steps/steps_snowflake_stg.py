@@ -1,11 +1,12 @@
-from behave import *
-
-from pandas import DataFrame
-
-import bindings
 import os
 
+from behave import *
+from pandas import DataFrame
+
+from definitions import ROOT_DIR
+
 use_step_matcher("parse")
+
 
 # The data from v_history is staged into a view with hashes, loaddates, and sources for the customers
 
@@ -19,11 +20,7 @@ def step_impl(context):
 
 @step("I run the dbt sql for the stage")
 def step_impl(context):
-    # context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
-    # context.testdata.drop_table("DV_PROTOTYPE_DB", "SRC_TEST_STG", "TEST_STG", materialise="view")
-    # context.testdata.execute_sql_from_file(
-    #     "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/v_stg_customer.sql")
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --models test_stg")
 
 
@@ -32,7 +29,7 @@ def step_impl(context):
     sql = "SELECT COUNT(*) FROM DV_PROTOTYPE_DB.SRC_TEST_STG.TEST_STG"
     result = context.testdata.general_sql_statement_to_df(sql)
 
-    if result["COUNT(*)"][0] > 0:
+    if int(result["COUNT(*)"][0]) > 0:
         assert True
     else:
         assert False

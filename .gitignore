@@ -1,12 +1,4 @@
 
-*.xml
-
-*.csv
-
 \.idea/
 
-*.json
-
-*.pyc
-
-src/snowflakeDemo/orchestrator_logs/
+tests/features/helpers/credentials\.json

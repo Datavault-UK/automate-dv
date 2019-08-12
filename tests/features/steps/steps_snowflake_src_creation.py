@@ -1,9 +1,12 @@
+import os
+
 from behave import *
 
 import bindings
-import os
+from definitions import ROOT_DIR
 
 use_step_matcher("parse")
+
 
 # Data from TPCH is joined into a table representing the history
 
@@ -12,35 +15,25 @@ use_step_matcher("parse")
 def step_impl(context):
     results = context.testdata.general_sql_statement_to_df(
         "SELECT COUNT(*) FROM SNOWFLAKE_SAMPLE_DATA.TPCH_SF10.ORDERS;")
-    if results['COUNT(*)'][0] != 0:
+    if int(results['COUNT(*)'][0]) != 0:
         assert True
     else:
         assert False
 
 
-# @step("I run the sql query to create the history flat file")
-# def step_impl(context):
-#     context.testdata.create_schema("DV_PROTOTYPE_DB", "TEST_SRC")
-#     context.testdata.drop_table("DV_PROTOTYPE_DB", "TEST_SRC", "V_HISTORY", materialise="view")
-#     context.testdata.execute_sql_from_file(
-#         "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/v_history.sql")
-
-
 @step("I run the sql query to create the source table for the history")
 def step_impl(context):
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --full-refresh --models test_source")
 
 
-@step("the source table must have 57 columns")
+@step("the source table must have 58 columns")
 def step_impl(context):
-
-    bindings.column_count(context, "DV_PROTOTYPE_DB", "SRC_TEST_SRC", "TEST_SOURCE", 57)
+    assert bindings.column_count(context, "DV_PROTOTYPE_DB", "SRC_TEST_SRC", "TEST_SOURCE", 58)
 
 
 @step("there are no records past the specified date")
 def step_impl(context):
-
     sql = ("SELECT COUNT(*) FROM DV_PROTOTYPE_DB.SRC_TEST_SRC.TEST_SOURCE AS a "
            "WHERE a.ORDERDATE > CAST('1993-01-01' AS DATE) "
            "AND a.SHIPDATE > CAST('1993-01-01' AS DATE) "
@@ -54,21 +47,18 @@ def step_impl(context):
     else:
         assert False
 
+
 # Data From TPCH is joined into a flat file view for day1 load
 
 
 @step("I run the sql query to create the source table for the day")
 def step_impl(context):
-    # context.testdata.drop_table("DV_PROTOTYPE_DB", "TEST_SRC", "V_DAY1", materialise="view")
-    # context.testdata.execute_sql_from_file(
-    #     "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/v_day1.sql")
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --models test_source")
 
 
 @step("there no records past the day1 date")
 def step_impl(context):
-
     sql = ("SELECT COUNT(*) FROM DV_PROTOTYPE_DB.SRC_TEST_SRC.TEST_SOURCE AS a "
            "WHERE a.ORDERDATE > CAST('1993-01-02' AS DATE) "
            "AND a.SHIPDATE > CAST('1993-01-02' AS DATE) "
@@ -81,7 +71,6 @@ def step_impl(context):
         assert True
     else:
         assert False
-
 
 # Data From TPCH is joined into a flat file view for day2 load
 

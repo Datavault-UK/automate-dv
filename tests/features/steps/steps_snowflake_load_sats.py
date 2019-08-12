@@ -1,9 +1,12 @@
-from behave import *
-from pandas import DataFrame, Timestamp
 import os
-import bindings
+
+from behave import *
+from pandas import DataFrame
+
+from definitions import ROOT_DIR
 
 use_step_matcher("parse")
+
 
 # Distinct history of data is loaded into a satellite table
 
@@ -21,9 +24,7 @@ def step_impl(context):
 
 @step("I run the dbt satellite load sql")
 def step_impl(context):
-    # context.testdata.execute_sql_from_file(
-    #     "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/sat_customer_load.sql")
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --full-refresh --models test_sat_hub_customer")
 
 
@@ -56,7 +57,7 @@ def step_impl(context):
 
 @step("I run the dbt day satellite load sql")
 def step_impl(context):
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --models test_sat_hub_customer")
 
 
@@ -77,7 +78,8 @@ def step_impl(context):
 
 @step("any changed records are loaded to the satellite")
 def step_impl(context):
-    sql = "SELECT * FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_SAT_HUB_CUSTOMER AS sat ORDER BY sat.LOADDATE, sat.CUSTOMER_NAME;"
+    sql = "SELECT * FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_SAT_HUB_CUSTOMER AS sat ORDER BY sat.LOADDATE, " \
+          "sat.CUSTOMER_NAME;"
     table_df = context.testdata.context_table_to_df(context.table)
     result_df = DataFrame(context.testdata.general_sql_statement_to_df(sql), dtype=str)
 
@@ -92,7 +94,8 @@ def step_impl(context):
 
 @step("only the latest records are loaded into the satellite")
 def step_impl(context):
-    sql = "SELECT * FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_SAT_HUB_CUSTOMER AS sat ORDER BY sat.LOADDATE, sat.CUSTOMER_NAME;"
+    sql = "SELECT * FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_SAT_HUB_CUSTOMER AS sat ORDER BY sat.LOADDATE, " \
+          "sat.CUSTOMER_NAME;"
     table_df = context.testdata.context_table_to_df(context.table)
     result_df = DataFrame(context.testdata.general_sql_statement_to_df(sql), dtype=str)
 

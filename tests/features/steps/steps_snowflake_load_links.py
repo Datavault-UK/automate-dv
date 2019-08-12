@@ -1,10 +1,12 @@
-from behave import *
-
-from pandas import DataFrame, Timestamp
-
 import os
 
+from behave import *
+from pandas import DataFrame
+
+from definitions import ROOT_DIR
+
 use_step_matcher("parse")
+
 
 # Distinct history of data linking two hubs is loaded into a link table
 
@@ -33,8 +35,8 @@ def step_impl(context):
                                       ("CUSTOMER_PK VARCHAR(32) FOREIGN KEY REFERENCES "
                                        "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER(CUSTOMER_PK)"),
                                       ("NATION_PK VARCHAR(32) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_NATION(NATION_PK)"),
-                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_NATION(NATION_PK)"), "LOADDATE DATE",
+                                      "SOURCE VARCHAR(4)"], materialise="table")
 
 
 @step("I have data in the STG_CUSTOMER table")
@@ -44,30 +46,30 @@ def step_impl(context):
                                       "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
                                       "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"],
-                                     materialise="table")
+                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"], materialise="table")
     context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "SRC_TEST_STG")
 
 
 @step("I run the dbt load to the link")
 def step_impl(context):
-    # context.testdata.execute_sql_from_file(
-    #     "/home/dev/PycharmProjects/SnowflakeDemo3/tests/features/helpers/sqlFiles/link_customer_nation_history_load.sql")
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --full-refresh --models test_link_customer_nation")
 
 
 @step("only distinct records from the STG_CUSTOMER are loaded into the link")
+@step("only the first seen distinct records are loaded into the link")
 def step_impl(context):
     table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.get_table_data("DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_CUSTOMER_NATION"), dtype=str)
+    result_df = DataFrame(context.testdata.get_table_data("DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_CUSTOMER_NATION"),
+                          dtype=str)
     table = table_df.to_dict(orient="list")
     results = result_df.to_dict(orient='list')
 
-    if list(table.values()).sort() == list(results.values()).sort(): #result_df.equals(table_df):
+    if list(table.values()).sort() == list(results.values()).sort():  # result_df.equals(table_df):
         assert True
     else:
         assert False
+
 
 # Unchanged records in stage are not loaded into the link with pre-existing data
 
@@ -79,14 +81,14 @@ def step_impl(context):
                                       ("CUSTOMER_PK VARCHAR(32) FOREIGN KEY REFERENCES "
                                        "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER(CUSTOMER_PK)"),
                                       ("NATION_PK VARCHAR(32) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_NATION(NATION_PK)"),
-                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_NATION(NATION_PK)"), "LOADDATE DATE",
+                                      "SOURCE VARCHAR(4)"], materialise="table")
     context.testdata.insert_data_from_ct(context.table, "TEST_LINK_CUSTOMER_NATION", "SRC_TEST_VLT")
 
 
 @step("I run the dbt day load to the link")
 def step_impl(context):
-    os.chdir("/home/dev/PycharmProjects/SnowflakeDemo3/src/snowflakeDemo")
+    os.chdir(ROOT_DIR)
     os.system("dbt run --models test_link_customer_nation")
 
 
@@ -101,6 +103,7 @@ def step_impl(context):
     else:
         assert False
 
+
 # Only the first instance of a record is loaded into the link table for the history
 
 
@@ -111,19 +114,5 @@ def step_impl(context):
                                       "CUSTOMER_NATION_PK VARCHAR(32)", "HASHDIFF VARCHAR(32)",
                                       "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"],
-                                     materialise="table")
+                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"], materialise="table")
     context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER", "SRC_TEST_STG")
-
-
-@step("only the first seen distinct records are loaded into the link")
-def step_impl(context):
-    table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.get_table_data("DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_CUSTOMER_NATION"), dtype=str)
-    table = table_df.to_dict(orient="list")
-    results = result_df.to_dict(orient='list')
-
-    if list(table.values()).sort() == list(results.values()).sort():
-        assert True
-    else:
-        assert False
