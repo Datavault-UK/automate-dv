@@ -25,7 +25,7 @@ class TemplateGenerator:
         if isinstance(self.additional_file_dict, dict):
 
             self.metahandler = MetaHandler(self._my_log, self.additional_file_dict)
-            self.metadata = self.metahandler.get_metadata_dict()
+            self.metadata = self.metahandler.metadata
             self.update_config()
 
         self.active_config = self.find_active_tables()
