@@ -1,10 +1,6 @@
 ### dbt models for [your org/project name]
 
-
-#### Our Docs
-- 1
 ---
-#### DBT Docs
 - [What is dbt](https://dbt.readme.io/docs/overview)?
 - Read the [dbt viewpoint](https://dbt.readme.io/docs/viewpoint)
 - [Installation](https://dbt.readme.io/docs/installation)
