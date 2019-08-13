@@ -1,4 +1,5 @@
 @test_data
+@clean_data
 Feature: Loads Hubs
 # =============================================================================
 # CHANGE HISTORY
@@ -9,7 +10,7 @@ Feature: Loads Hubs
 # 18.06.19 CF  1.0     First release.
 # 09.07.19 CF  1.1     Updated to test the sql used by dbt.
 # =============================================================================
-  @clean_data
+
   Scenario: Distinct history of data from the stage is loaded into an empty hub
     Given there is an empty TEST_HUB_CUSTOMER table
     And there are records in the STG_CUSTOMER table
