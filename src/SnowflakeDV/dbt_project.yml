@@ -1,7 +1,7 @@
-name: 'snowflake_dv'
+name: 'snow_vault'
 version: '1.0'
 
-profile: 'snowflake_dv'
+profile: 'snow_vault'
 
 source-paths: ["models"]
 analysis-paths: ["analysis"] 
@@ -13,32 +13,3 @@ target-path: "target"
 clean-targets:
     - "target"
     - "dbt_modules"
-
-models:
-  hub_sat_link_load:
-    hub:
-      enabled: true
-      vars:
-        hub_columns   :
-        hub_pk        :
-        stg_name      :
-        stg_columns1  :
-        stg_columns2  :
-    sat:
-      enabled: true
-      vars:
-        sat_columns   :
-        sat_pk        :
-        stg_name      :
-        stg_columns1  :
-        stg_columns2  :
-    link:
-      enabled: true
-      vars:
-        link_columns  :
-        link_pk       :
-        stg_name      :
-        stg_columns1  :
-        stg_columns2  :
-
-
