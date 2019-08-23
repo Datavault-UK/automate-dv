@@ -1,4 +1,4 @@
-    {% macro hub_template(hub_columns, stg_columns, hub_pk) %}
+{% macro hub_template(hub_columns, stg_columns, hub_pk) %}
 
  select
 {{hub_columns}}
