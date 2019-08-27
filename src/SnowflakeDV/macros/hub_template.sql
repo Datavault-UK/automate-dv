@@ -1,11 +1,18 @@
-{% macro hub_template(hub_columns, stg_columns, hub_pk) %}
+{% macro hub_template(src_table, src_pk, src_nk, src_ldts, src_source, tgt_table, tgt_pk, tgt_nk) %}
 
  select
-{{hub_columns}}
- from (
- select distinct
- {{stg_columns}},
-lag(b.LOADDATE, 1) over(partition by {{hub_pk}} order by b.loaddate) as FIRST_SEEN
+{{tgt_pk}}, {{tgt_nk}}
  from
+ (select distinct {{src_pk}}, {{src_nk}}
+  from (
+    select {{src_pk}}, {{src_nk}}
+    from
+    {{src_table}} as a
+    left join {{tgt_table}}
+    as c
+    on a.{{src_pk}}=c.{{tgt_pk}}
+    and c.{{tgt_pk}} is null)
+  as b)
+ as stg
 
 {% endmacro %}
