@@ -1,18 +1,15 @@
-{% macro hub_template(src_table, src_pk, src_nk, src_ldts, src_source, tgt_table, tgt_pk, tgt_nk) %}
+{%- macro hub_template(src_table, src_pk, src_nk, src_ldts, src_source, tgt_table, tgt_pk, tgt_nk) -%}
 
- select
-{{tgt_pk}}, {{tgt_nk}}
- from
- (select distinct {{src_pk}}, {{src_nk}}
-  from (
-    select {{src_pk}}, {{src_nk}}
-    from
-    {{src_table}} as a
-    left join {{tgt_table}}
-    as c
-    on a.{{src_pk}}=c.{{tgt_pk}}
-    and c.{{tgt_pk}} is null)
-  as b)
- as stg
+SELECT {{ tgt_pk }}, {{ tgt_nk }}
+ FROM (
+  SELECT DISTINCT {{ snow_vault.prefix(src_pk, 'b')}}, {{ snow_vault.prefix(src_nk, 'b') }}
+  FROM (
+    SELECT {{ snow_vault.prefix(src_pk, 'a') }}, {{ snow_vault.prefix(src_nk, 'a') }}
+    FROM {{ src_table }} AS a
+    LEFT JOIN {{ tgt_table }} AS c
+    ON {{ snow_vault.prefix(src_pk, 'a') }} = c.{{ tgt_pk }}
+    AND c.{{ tgt_pk }} IS NULL)
+ AS b)
+AS stg
 
-{% endmacro %}
+{%- endmacro -%}
