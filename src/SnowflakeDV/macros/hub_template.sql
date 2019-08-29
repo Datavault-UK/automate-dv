@@ -1,4 +1,4 @@
-{%- macro hub_template(src_table, src_pk, src_nk, src_ldts, src_source, tgt_pk, tgt_nk, hash_model) -%}
+{%- macro hub_template(src_table, src_pk, src_nk, tgt_pk, tgt_nk, hash_model) -%}
 
 SELECT {{ tgt_pk }}, {{ tgt_nk }}
  FROM (
