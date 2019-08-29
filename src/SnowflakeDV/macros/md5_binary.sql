@@ -1,6 +1,6 @@
-{% macro md5_binary(columns, alias) %}
+{%- macro md5_binary(columns, alias) -%}
 
-{% if columns is string %}
+{%- if columns is string -%}
 
 MD5_BINARY(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS {{alias}}
 
@@ -8,7 +8,7 @@ MD5_BINARY(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS {{alias}}
 
 MD5_BINARY(CONCAT(
 
-{% for column in columns[:-1] -%}
+{%- for column in columns[:-1] -%}
 
 IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',
 
@@ -16,8 +16,8 @@ IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',
 
 IFNULL(UPPER(TRIM(CAST({{columns[-1]}} AS VARCHAR))), '^^') )) AS {{alias}}
 
-{% endif %}
-{% endfor -%}
-{% endif %}
-{% endmacro %}
+{%- endif    -%}
+{%- endfor   -%}
+{%- endif    -%}
+{%- endmacro -%}
 
