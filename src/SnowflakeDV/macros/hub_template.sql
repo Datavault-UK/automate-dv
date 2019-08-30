@@ -1,6 +1,6 @@
-{%- macro hub_template(src_table, src_pk, src_nk, tgt_pk, tgt_nk, hash_model) -%}
+{%- macro hub_template(src_table, src_pk, src_nk, tgt_pk, tgt_columns, hash_model) -%}
 
-SELECT {{ tgt_pk }}, {{ tgt_nk }}
+SELECT {{ tgt_columns }}
  FROM (
   SELECT DISTINCT {{ snow_vault.prefix(src_pk, 'b')}}, {{ snow_vault.prefix(src_nk, 'b') }}
   FROM (
