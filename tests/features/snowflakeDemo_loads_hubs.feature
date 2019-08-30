@@ -48,20 +48,20 @@ Feature: Loads Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  Scenario: Only the first instance of a record is loaded into the hub table for the history
+  Scenario: Only one instance of a record is loaded into the hub table for the history with multiple sources
     Given there is an empty TEST_HUB_CUSTOMER table
     And there is data in the stage
       |CUSTOMER_PK|NATION_PK|CUSTOMER_NATION_PK|HASHDIFF                     |CUSTOMERKEY|CUSTOMER_NAME|CUSTOMER_PHONE  |CUSTOMER_NATIONKEY|LOADDATE  |EFFECTIVE_FROM|SOURCE|
-      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-01|1993-01-01    |TPCH  |
-      |md5('1002')|md5('8') |md5('1002**8')    |md5('BOB**17-214-233-1215')  |1002       |Bob          |17-214-233-1215 |8                 |1993-01-01|1993-01-01    |TPCH  |
-      |md5('1003')|md5('4') |md5('1003**4')    |md5('CHAD**17-214-233-1216') |1003       |Chad         |17-214-233-1216 |4                 |1993-01-01|1993-01-01    |TPCH  |
-      |md5('1004')|md5('9') |md5('1004**9')    |md5('DOM**17-214-233-1217')  |1004       |Dom          |17-214-233-1217 |9                 |1993-01-01|1993-01-01    |TPCH  |
-      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-02|1993-01-02    |TPCH  |
-      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-02|1993-01-02    |TPCH  |
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-01|1993-01-01    |TPC1 |
+      |md5('1002')|md5('8') |md5('1002**8')    |md5('BOB**17-214-233-1215')  |1002       |Bob          |17-214-233-1215 |8                 |1993-01-01|1993-01-01    |TPC1 |
+      |md5('1003')|md5('4') |md5('1003**4')    |md5('CHAD**17-214-233-1216') |1003       |Chad         |17-214-233-1216 |4                 |1993-01-01|1993-01-01    |TPC1 |
+      |md5('1004')|md5('9') |md5('1004**9')    |md5('DOM**17-214-233-1217')  |1004       |Dom          |17-214-233-1217 |9                 |1993-01-01|1993-01-01    |TPC1 |
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-01|1993-01-01    |TPC2 |
+      |md5('1001')|md5('7') |md5('1001**7')    |md5('ALICE**17-214-233-1214')|1001       |Alice        |17-214-233-1214 |7                 |1993-01-01|1993-01-01    |TPC3 |
     When I run the dbt hub load sql script
     Then only the first instance of a distinct record is loaded into the hub
       | customer_pk | customerkey | loaddate   | source |
-      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
-      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-      | md5('1003') | 1003        | 1993-01-01 | TPCH   |
-      | md5('1004') | 1004        | 1993-01-01 | TPCH   |
+      | md5('1001') | 1001        | 1993-01-01 | TPC1  |
+      | md5('1002') | 1002        | 1993-01-01 | TPC1  |
+      | md5('1003') | 1003        | 1993-01-01 | TPC1  |
+      | md5('1004') | 1004        | 1993-01-01 | TPC1  |

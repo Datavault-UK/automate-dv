@@ -1,16 +1,24 @@
 {%- macro prefix(columns, prefix_str) -%}
 
-{%- if columns.split(',')|length == 1 -%}
+{%- if columns is iterable -%}
 
-{{prefix_str}}.{{columns.strip()}}
+    {#- If only single string provided -#}
+    {%- if columns is string -%}
 
-{%- else -%}
+        {{prefix_str}}.{{columns.strip()}}
 
-{%- for column in columns.split(',') -%}
+    {%- else -%}
 
-{{prefix_str}}.{{column.strip()}}
-{%- if not loop.last -%} , {% endif %}
+        {#- For each column in the given list, prefix with given prefix_str -#}
+        {%- for column in columns -%}
 
-{%- endfor -%}
+        {{prefix_str}}.{{column.strip()}}
+
+        {%- if not loop.last -%} , {% endif %}
+
+        {%- endfor -%}
+
+    {%- endif -%}
+
 {%- endif -%}
 {%- endmacro -%}

@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='TEST_VLT', enabled=true, tags='feature')}}
+{{config(materialized='incremental', schema='TEST_VLT', enabled=false, tags='feature')}}
 
 select
   stg.CUSTOMER_NATION_PK,

@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature')}}
+{{config(materialized='incremental', schema='test_vlt', enabled=false, tags='feature')}}
 
 SELECT CUSTOMER_PK, CUSTOMERKEY, LOADDATE, SOURCE
  FROM (
@@ -11,3 +11,4 @@ SELECT CUSTOMER_PK, CUSTOMERKEY, LOADDATE, SOURCE
     AND c.CUSTOMER_PK IS NULL)
  AS b)
 AS stg
+where stg.CUSTOMER_PK not in (select CUSTOMER_PK from {{ this }})

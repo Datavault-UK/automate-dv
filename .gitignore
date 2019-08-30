@@ -8,3 +8,4 @@ src/snowflakeDemo/target/
 *.log
 
 src/snowflakeDemo/logs/
+/src/SnowflakeDV/models/feature_sql_files/old/
