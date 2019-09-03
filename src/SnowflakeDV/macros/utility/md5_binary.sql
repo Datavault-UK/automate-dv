@@ -2,7 +2,7 @@
 
 {%- if columns is string -%}
 
-CAST(MD5_BINARY(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS BINARY(32)) AS {{alias}}
+CAST(MD5_BINARY(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS BINARY(16)) AS {{alias}}
 
 {%- else -%}
 
@@ -14,7 +14,7 @@ IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',
 
 {%- if loop.last -%}
 
-IFNULL(UPPER(TRIM(CAST({{columns[-1]}} AS VARCHAR))), '^^') )) AS BINARY(32)) AS {{alias}}
+IFNULL(UPPER(TRIM(CAST({{columns[-1]}} AS VARCHAR))), '^^') )) AS BINARY(16)) AS {{alias}}
 
 {%- endif    -%}
 {%- endfor   -%}
