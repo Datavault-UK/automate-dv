@@ -7,7 +7,7 @@
     LEFT JOIN {{ this }} AS c
     ON a.CUSTOMER_PK = c.CUSTOMER_PK
     AND c.CUSTOMER_PK IS NULL
-    {% endif %}
+    {%- endif -%}
     {% if not loop.last -%}
     UNION
     {% endif %}
