@@ -1,14 +1,23 @@
-{{config(materialized='incremental', schema='test_vlt', enabled=false, tags='feature')}}
+{{config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature')}}
 
-SELECT CUSTOMER_PK, CUSTOMERKEY, LOADDATE, SOURCE
+SELECT
+                CAST(CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK,
+                CAST(CUSTOMERKEY AS NUMBER(38,0)) AS CUSTOMERKEY,
+                CAST(SOURCE AS VARCHAR(4)) AS SOURCE,
+                CAST(LOADDATE AS DATE) AS LOADDATE
  FROM (
-  SELECT DISTINCT b.CUSTOMER_PK, b.CUSTOMERKEY, b.LOADDATE, b.SOURCE
-  FROM (
-    SELECT a.CUSTOMER_PK, a.CUSTOMERKEY, a.LOADDATE, a.SOURCE
+  SELECT DISTINCT CUSTOMER_PK, CUSTOMERKEY, SOURCE, LOADDATE
+  FROM
+    (SELECT a.CUSTOMER_PK, a.CUSTOMERKEY, a.SOURCE, a.LOADDATE
     FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER AS a
-    LEFT JOIN {{ this }} AS c
+    {% if is_incremental() -%}
+    LEFT JOIN DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER AS c
     ON a.CUSTOMER_PK = c.CUSTOMER_PK
-    AND c.CUSTOMER_PK IS NULL)
+    AND c.CUSTOMER_PK IS NULL
+    {%- endif -%}
+    )
  AS b)
 AS stg
-where stg.CUSTOMER_PK not in (select CUSTOMER_PK from {{ this }})
+{% if is_incremental() -%}
+WHERE stg.CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER)
+{%- endif -%}
