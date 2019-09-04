@@ -8,25 +8,21 @@ import sqlalchemy as sa
 from numpy import NaN
 
 
+# TODO: MOVE THIS ALL TO THE VAULTBASE
 class TestData:
 
     def __init__(self, path):
         self.credentials = self.get_credentials(path)
-        self.connection = sf.connect(user=self.credentials["user"],
-                                     password=self.credentials["password"],
-                                     account=self.credentials["account_name"],
-                                     warehouse=self.credentials["warehouse"],
-                                     database=self.credentials["database"],
-                                     schema=self.credentials["schema"])
+        self.connection = sf.connect(user=self.credentials["user"], password=self.credentials["password"],
+                                     account=self.credentials["account_name"], warehouse=self.credentials["warehouse"],
+                                     database=self.credentials["database"], schema=self.credentials["schema"])
         self.con_string = ("snowflake://{user}:{password}@{account}/"
                            "{database}/{schema}?warehouse={warehouse}?"
-                           "role={role}").format(user=self.credentials['user'],
-                                                 password=self.credentials['password'],
+                           "role={role}").format(user=self.credentials['user'], password=self.credentials['password'],
                                                  account=self.credentials['account_name'],
                                                  schema=self.credentials['schema'],
                                                  database=self.credentials['database'],
-                                                 warehouse=self.credentials['warehouse'],
-                                                 role=self.credentials['role'])
+                                                 warehouse=self.credentials['warehouse'], role=self.credentials['role'])
         self.engine = sa.create_engine(self.con_string)
         self.cur = self.connection.cursor()
 
@@ -110,7 +106,7 @@ class TestData:
 
             sql = "DROP TABLE IF EXISTS {}"
 
-        execute_sql = sql.format(database+"."+schema+"."+table_name)
+        execute_sql = sql.format(database + "." + schema + "." + table_name)
 
         connection = self.engine.connect()
 
@@ -125,13 +121,13 @@ class TestData:
 
             sql = "CREATE VIEW IF NOT EXISTS {} AS SELECT ({}) FROM {} WHERE 1=0"
 
-            execute_sql = sql.format(database+"."+schema+"."+table_name, ", ".join(columns), ref_table)
+            execute_sql = sql.format(database + "." + schema + "." + table_name, ", ".join(columns), ref_table)
 
         else:
 
             sql = "CREATE TABLE IF NOT EXISTS {} ({})"
 
-            execute_sql = sql.format(database+"."+schema+"."+table_name, ", ".join(columns))
+            execute_sql = sql.format(database + "." + schema + "." + table_name, ", ".join(columns))
 
         connection = self.engine.connect()
 
@@ -160,6 +156,15 @@ class TestData:
 
         result = pd.read_sql_query(sql, self.engine)
         result.columns = map(str.upper, result.columns)
+
+        return result
+
+    # TODO: Make this more generic (e.g. Run a SQL statement)
+    def get_hub_table_data(self, select, table_name):
+
+        sql = "{} FROM {}".format(select, table_name)
+
+        result = pd.read_sql_query(sql, self.engine)
 
         return result
 
