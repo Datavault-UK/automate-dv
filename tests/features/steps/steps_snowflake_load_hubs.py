@@ -93,4 +93,4 @@ def step_impl(context):
 
 @step("only the first instance of a distinct record is loaded into the hub")
 def step_impl(context):
-    bindings.compare_ct_to_db_table(context, "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER")
+    bindings.compare_ct_to_db_table(context, "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER", True)
