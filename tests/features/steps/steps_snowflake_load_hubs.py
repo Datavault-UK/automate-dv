@@ -16,7 +16,9 @@ use_step_matcher("parse")
 def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
     context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_HUB_CUSTOMER",
-                                     ["CUSTOMER_PK BINARY(16) PRIMARY KEY", "CUSTOMERKEY VARCHAR(38)", "LOADDATE DATE",
+                                     ["CUSTOMER_PK BINARY(16) PRIMARY KEY",
+                                      "CUSTOMERKEY VARCHAR(38)",
+                                      "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
 
 
