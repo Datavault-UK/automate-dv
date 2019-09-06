@@ -1,5 +1,7 @@
 {%- macro prefix(columns, prefix_str) -%}
 
+{{ log(columns) }}
+
 {%- if columns is iterable -%}
 
     {#- If only single string provided -#}
