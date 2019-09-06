@@ -1,4 +1,4 @@
-{%- macro union(src_table, src_cols, src_pk, src_nk, src_source, src_ldts, tgt_pk, hash_model) -%}
+{%- macro union(src_table, src_cols, src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model) -%}
     SELECT DISTINCT {{ src_cols }},
            lag({{ src_source }}, 1)
            over(partition by {{ src_pk[0] }}
@@ -8,8 +8,8 @@
         SELECT DISTINCT {{ snow_vault.prefix([
         src_pk[loop.index0],
         src_nk[loop.index0],
-        src_source,
-        src_ldts], 'a') }}
+        src_ldts,
+        src_source], 'a') }}
         FROM {{ hash_model }} AS a
         {% if is_incremental() -%}
         LEFT JOIN {{ this }} AS c

@@ -1,10 +1,10 @@
-{{config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature')}}
+{{config(materialized='incremental', schema='test_vlt', enabled=false, tags='feature')}}
 
 SELECT
                 CAST(PART_PK AS BINARY(16)) AS PART_PK,
                 CAST(PARTKEY AS NUMBER(38,0)) AS PARTKEY,
-                CAST(SOURCE AS VARCHAR(4)) AS SOURCE,
-                CAST(LOADDATE AS DATE) AS LOADDATE
+                CAST(LOADDATE AS DATE) AS LOADDATE,
+                CAST(SOURCE AS VARCHAR(4)) AS SOURCE
  FROM (
     SELECT DISTINCT PART_PK, PARTKEY, LOADDATE, SOURCE,
            lag(SOURCE, 1)
