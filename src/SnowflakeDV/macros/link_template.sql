@@ -1,11 +1,10 @@
-{% macro link_template(link_columns, stg_columns, link_pk) %}
+{% macro link_template(src_table, src_cols, src_pk, src_fk, src_ldts, src_source, tgt_pk, tgt_fk, tgt_ldts, tgt_source, hash_model) %}
 
-select
- {{link_columns}}
-from (
-select distinct
- {{stg_columns}},
- lag(b.LOADDATE, 1) over(partition by {{link_pk}} order by b.LOADDATE) as FIRST_SEEN
-from
+SELECT {{ snow_vault.cast([tgt_pk, tgt_fk, tgt_ldts, tgt_source]) }}
+ FROM (
+    {{ snow_vault.union(src_table, src_cols, src_pk, src_nk, src_ldts, src_source,
+      tgt_pk|last, hash_model) }}
+ AS b)
+AS stg
 
 {% endmacro %}

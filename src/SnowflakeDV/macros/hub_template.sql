@@ -7,4 +7,5 @@ SELECT {{ snow_vault.cast([tgt_pk, tgt_nk, tgt_source, tgt_ldts]) }}
  AS b)
 AS stg
 WHERE FIRST_SOURCE IS NULL
+
 {%- endmacro -%}
