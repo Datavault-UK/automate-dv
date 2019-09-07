@@ -1,13 +1,13 @@
 {%- macro union(src_table, src_cols, src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model) -%}
     SELECT DISTINCT {{ src_cols }},
-           lag({{ src_source }}, 1)
-           over(partition by {{ src_pk[0] }}
-           order by {{ src_pk[0] }}) as FIRST_SOURCE
+           LAG({{ src_source }}, 1)
+           OVER(PARTITION by {{ src_pk[0] }}
+           ORDER BY {{ src_pk[0] }}) AS FIRST_SOURCE
     FROM (
         {%- for src in src_table -%}
         SELECT DISTINCT {{ snow_vault.prefix([
         src_pk[loop.index0],
-        src_nk[loop.index0],
+        src_nk,
         src_ldts,
         src_source], 'a') }}
         FROM {{ hash_model }} AS a

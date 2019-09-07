@@ -14,7 +14,13 @@
         {#- For each column in the given list, prefix with given prefix_str -#}
         {%- for column in columns -%}
 
-        {{prefix_str}}.{{column.strip()}}
+            {%- if column is string -%}
+                {{prefix_str}}.{{column.strip()}}
+
+            {#- Recurse if containing further nested lists -#}
+            {%- elif column is iterable -%}
+                {{ snow_vault.prefix(column, prefix_str)}}
+            {%- endif -%}
 
         {%- if not loop.last -%} , {% endif %}
 

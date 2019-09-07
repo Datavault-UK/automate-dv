@@ -21,10 +21,18 @@
             {%- elif column is string -%}
                 {{column}}
 
-            {#- Output String if single-item list -#}
+
             {%- else -%}
 
-                {{column|first}}
+                {#- Output String if single-item list -#}
+                {%- if column|length == 1 -%}
+                    {{column|first}}
+
+                {#- Recurse if containing further nested lists -#}
+                {%- elif column is iterable -%}
+                    {{ snow_vault.cast(column)}}
+
+                {%- endif -%}
 
             {%- endif -%}
 
