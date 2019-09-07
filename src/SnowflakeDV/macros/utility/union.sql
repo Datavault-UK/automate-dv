@@ -4,7 +4,7 @@
            OVER(PARTITION by {{ src_pk[0] }}
            ORDER BY {{ src_pk[0] }}) AS FIRST_SOURCE
     FROM (
-        {%- for src in src_table -%}
+        {% for src in src_table -%}
         SELECT DISTINCT {{ snow_vault.prefix([
         src_pk[loop.index0],
         src_nk,
