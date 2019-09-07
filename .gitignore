@@ -4,8 +4,13 @@
 tests/features/helpers/credentials\.json
 
 src/snowflakeDemo/target/
+ExternalTest/target/
 
 *.log
 
 src/snowflakeDemo/logs/
 /src/SnowflakeDV/models/feature_sql_files/old/
+
+
+
+/ExternalTest/logs/
