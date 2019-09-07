@@ -170,6 +170,10 @@ def step_impl(context):
 
     table_df['PART_PK'] = table_df['PART_PK'].str.upper()
 
+    # Ignore SOURCE column as this will change with every run
+    table_df.drop(['SOURCE'], 1, inplace=True)
+    result_df.drop(['SOURCE'], 1, inplace=True)
+
     if result_df.equals(table_df):
         assert True
     else:
