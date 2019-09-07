@@ -1,4 +1,4 @@
-{{ config(materialized='table', schema='STG', tags=['static', 'incremental'], enabled=true) }}
+{{ config(materialized='table', schema='STG', tags=['static', 'incremental'], enabled=false) }}
 
 select
 {{ snow_vault.md5_binary('SUPPLIERKEY', 'SUPP_PK') }},
