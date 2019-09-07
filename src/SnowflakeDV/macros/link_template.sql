@@ -2,7 +2,7 @@
 
 SELECT {{ snow_vault.cast([tgt_pk, tgt_fk, tgt_ldts, tgt_source]) }}
  FROM (
-    {{ snow_vault.union(src_table, src_cols, src_pk, src_nk, src_ldts, src_source,
+    {{ snow_vault.union(src_table, src_cols, src_pk, src_fk, src_ldts, src_source,
       tgt_pk|last, hash_model) }}
  AS b)
 AS stg
