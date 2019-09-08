@@ -20,3 +20,4 @@ SELECT
         )
  AS b)
 AS stg
+WHERE FIRST_SOURCE IS NULL
