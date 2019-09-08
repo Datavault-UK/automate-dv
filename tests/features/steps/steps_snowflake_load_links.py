@@ -59,13 +59,24 @@ def step_impl(context):
 @step("only distinct records from the STG_CUSTOMER are loaded into the link")
 @step("only the first seen distinct records are loaded into the link")
 def step_impl(context):
-    table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.get_table_data("DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_CUSTOMER_NATION"),
-                          dtype=str)
-    table = table_df.to_dict(orient="list")
-    results = result_df.to_dict(orient='list')
+    sql = "SELECT CAST(CUSTOMER_NATION_PK AS VARCHAR(32)) AS CUSTOMER_NATION_PK, " \
+          "CAST(CUSTOMER_PK AS VARCHAR(32)) AS CUSTOMER_PK, " \
+          "CAST(NATION_PK AS VARCHAR(32)) AS NATION_PK, " \
+          "LOADDATE, SOURCE " \
+          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_CUSTOMER_NATION " \
+          "ORDER BY CUSTOMER_NATION_PK"
 
-    if list(table.values()).sort() == list(results.values()).sort():  # result_df.equals(table_df):
+    table_df = context.testdata.context_table_to_df(context.table)
+    result_df = DataFrame(context.testdata.general_sql_statement_to_df(sql), dtype=str)
+
+    table_df['CUSTOMER_NATION_PK'] = table_df['CUSTOMER_NATION_PK'].str.upper()
+    table_df['CUSTOMER_PK'] = table_df['CUSTOMER_PK'].str.upper()
+    table_df['NATION_PK'] = table_df['NATION_PK'].str.upper()
+
+    table_df.sort_values('CUSTOMER_NATION_PK', inplace=True)
+    table_df.reset_index(drop=True, inplace=True)
+
+    if table_df.equals(result_df):
         assert True
     else:
         assert False
