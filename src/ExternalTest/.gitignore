@@ -1,3 +1,4 @@
 /dbt_modules/
 /logs
 /target
+/dbt_modules/snow_vault/
