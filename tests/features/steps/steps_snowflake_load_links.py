@@ -104,7 +104,7 @@ def step_impl(context):
 
 # Only the first instance of a record is loaded into the link table for the history
 
-@step("I have unchanged records but with different loaddates in the STG_CUSTOMER table")
+@step("I have unchanged records but with different sources in the STG_CUSTOMER table")
 def step_impl(context):
     context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "STG_CUSTOMER",
                                      ["CUSTOMER_PK BINARY(16)", "NATION_PK BINARY(16)", "CUSTOMER_NATION_PK BINARY(16)",
