@@ -7,7 +7,7 @@ SELECT {{ snow_vault.cast([tgt_pk, tgt_fk, tgt_source, tgt_ldts]) }}
  AS b)
 AS stg
 {% if is_incremental() -%}
-WHERE stg.{{ tgt_pk|last }} NOT IN (SELECT tgt_pk|last FROM {{ this }})
+WHERE stg.{{ tgt_pk|last }} NOT IN (SELECT {{ tgt_pk|last }} FROM {{ this }})
 AND FIRST_SOURCE IS NULL
 {%- endif -%}
 {% endmacro %}
