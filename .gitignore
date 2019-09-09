@@ -4,10 +4,9 @@
 tests/features/helpers/credentials\.json
 
 src/snowflakeDemo/target/
-src/ExternalTest/target/
 
 target/
 dbt_modules/
 logs/
-/src/ExternalTest/target/
-/src/ExternalTest/dbt_modules/
+
+
