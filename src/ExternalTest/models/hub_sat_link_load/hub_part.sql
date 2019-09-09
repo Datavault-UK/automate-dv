@@ -16,7 +16,7 @@
 {%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                       -%}
 {%- set tgt_source = ['SOURCE', 'VARCHAR(4)', 'SOURCE']                   -%}
 
-{%- set hash_model = ref('stg_part_hashed')                               -%}
+{%- set hash_model = ref('stg_orders_hashed')                                -%}
 
 {{ snow_vault.hub_template(src_table, src_cols, src_pk, src_nk, src_ldts, src_source,
                            tgt_pk, tgt_nk, tgt_ldts, tgt_source, hash_model) }}
