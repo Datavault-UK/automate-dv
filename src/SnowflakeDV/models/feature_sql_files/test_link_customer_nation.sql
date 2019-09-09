@@ -20,4 +20,7 @@ SELECT
         )
  AS b)
 AS stg
-WHERE FIRST_SOURCE IS NULL
+{% if is_incremental() -%}
+WHERE stg.CUSTOMER_NATION_PK NOT IN (SELECT CUSTOMER_NATION_PK FROM {{ this }})
+AND FIRST_SOURCE IS NULL
+{%- endif -%}
