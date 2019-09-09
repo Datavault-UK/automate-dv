@@ -10,3 +10,4 @@ dbt_modules/
 logs/
 
 
+/src/ExternalTest/dbt_modules/
