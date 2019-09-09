@@ -4,7 +4,7 @@
                      'SRC_TEST_STG.STG_PARTSUPP',
                      'SRC_TEST_STG.STG_LINEITEM']
                                                                           -%}
-{%- set src_cols = 'PART_PK, PARTKEY, LOADDATE, SOURCE'                   -%}
+{%- set src_cols = ['PART_PK', 'PARTKEY', 'LOADDATE', 'SOURCE']           -%}
 
 {%- set src_pk = ['PART_PK', 'PART_PK', 'PART_PK']                        -%}
 {%- set src_nk = ['PARTKEY', 'PARTKEY', 'PARTKEY']                        -%}

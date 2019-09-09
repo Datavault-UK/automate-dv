@@ -1,5 +1,5 @@
 {%- macro union(src_table, src_cols, src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model) -%}
-    SELECT DISTINCT {{ src_cols }},
+    SELECT DISTINCT {{ src_cols|join(", ") }},
            LAG({{ src_source }}, 1)
            OVER(PARTITION by {{ src_pk[0] }}
            ORDER BY {{ src_pk[0] }}) AS FIRST_SOURCE

@@ -1,7 +1,8 @@
-{{config(materialized='incremental', schema ='VLT', enabled=true, tags=['static', 'incremental'])}}
+{{config(materialized='incremental', schema ='VLT', enabled=false, tags=['static', 'incremental'])}}
 
 {%- set src_table = ['src_stg.v_stg_orders']                                                    -%}
-{%- set src_cols = 'LINK_CUSTOMER_NATION_PK, CUSTOMER_PK, CUSTOMER_NATION_PK, LOADDATE, SOURCE' -%}
+{%- set src_cols = ['LINK_CUSTOMER_NATION_PK', 'CUSTOMER_PK', 'CUSTOMER_NATION_PK',
+                    'LOADDATE', 'SOURCE']                                                       -%}
 {%- set src_pk = ['LINK_CUSTOMER_NATION_PK']                                                    -%}
 {%- set src_fk = ['CUSTOMER_PK', 'CUSTOMER_NATION_PK']                                          -%}
 {%- set src_ldts = 'LOADDATE'                                                                   -%}

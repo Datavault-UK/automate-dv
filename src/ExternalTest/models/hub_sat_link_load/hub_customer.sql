@@ -1,7 +1,7 @@
 {{config(materialized='incremental', schema='VLT', enabled=false, tags=['static', 'incremental'])}}
 
 {%- set src_table = ['src_stg.v_stg_orders']                              -%}
-{%- set src_cols = 'CUSTOMER_PK, CUSTOMERKEY, SOURCE, LOADDATE'           -%}
+{%- set src_cols = ['CUSTOMER_PK', 'CUSTOMERKEY', 'SOURCE', 'LOADDATE']   -%}
 {%- set src_pk = ['CUSTOMER_PK']                                          -%}
 {%- set src_nk = ['CUSTOMERKEY']                                          -%}
 {%- set src_ldts = 'LOADDATE'                                             -%}

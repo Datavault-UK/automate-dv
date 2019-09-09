@@ -13,25 +13,21 @@
 
         {%- for column in columns -%}
 
-            {#- If triple has been provided [COLUMN, CAST_TYPE, ALIAS] -#}
-            {% if column|length == 3 %}
-                CAST({{ column[0] }} AS {{ column[1] }}) AS {{ column[2] }}
-
             {#- Output String if just a string -#}
-            {%- elif column is string -%}
+            {%- if column is string -%}
                 {{column}}
 
+            {#- Recurse if a list of lists (i.e. multi-column key) -#}
+            {%- elif column|first is iterable and column|first is not string -%}
 
+                {{ snow_vault.cast(column) }}
+
+            {#- Otherwise it is a standard list -#}
             {%- else -%}
 
-                {#- Output String if single-item list -#}
-                {%- if column|length == 1 -%}
-                    {{column|first}}
-
-                {#- Recurse if containing further nested lists -#}
-                {%- elif column is iterable -%}
-                    {{ snow_vault.cast(column)}}
-
+                {#- Make sure it is a triple -#}
+                {%- if column|length == 3 %}
+                CAST({{ column[0] }} AS {{ column[1] }}) AS {{ column[2] }}
                 {%- endif -%}
 
             {%- endif -%}
