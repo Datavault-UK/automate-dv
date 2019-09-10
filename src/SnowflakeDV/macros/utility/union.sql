@@ -1,6 +1,6 @@
 {%- macro union(src_table, src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, hash_model) -%}
 
- {% set letters='abcdefghijklmnopqrstuvwxyz' %}
+ {%- set letters='abcdefghijklmnopqrstuvwxyz' -%}
 
     SELECT DISTINCT {{ tgt_cols|join(", ") }},
            LAG({{ src_source }}, 1)
