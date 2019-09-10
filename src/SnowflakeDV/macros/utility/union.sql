@@ -4,8 +4,8 @@
 
     SELECT DISTINCT {{ src_cols|join(", ") }},
            LAG({{ src_source }}, 1)
-           OVER(PARTITION by {{ src_pk[0] }}
-           ORDER BY {{ src_pk[0] }}) AS FIRST_SOURCE
+           OVER(PARTITION by {{ src_cols[0] }}
+           ORDER BY {{ src_cols[0] }}) AS FIRST_SOURCE
     FROM (
         {%- for src in src_table -%}
 
