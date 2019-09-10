@@ -1,8 +1,6 @@
 {{config(materialized='incremental', schema ='VLT', enabled=true, tags=['static', 'incremental'])}}
 
-{%- set src_table = ['SRC_VLT.HUB_PARTS',
-                     'SRC_VLT.HUB_SUPPLIER',
-                     'SRC_VLT.HUB_LINEITEM']
+{%- set src_table = ['SRC_STG.STG_ORDERS_HASHED']
                                                                                       -%}
 {%- set hash_model = ref('stg_orders_hashed')                                         -%}
 
@@ -10,10 +8,7 @@
                     'PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK',
                     'LOADDATE', 'SOURCE']                                             -%}
 
-{%- set src_pk = ['INVENTORY_ALLOCATION_PK',
-                  'INVENTORY_ALLOCATION_PK',
-                  'INVENTORY_ALLOCATION_PK']                                                      -%}
-
+{%- set src_pk = ['INVENTORY_ALLOCATION_PK']                                          -%}
 {%- set src_fk = ['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK']                            -%}
 {%- set src_source = 'SOURCE'                                                         -%}
 {%- set src_ldts = 'LOADDATE'                                                         -%}
