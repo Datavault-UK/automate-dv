@@ -1,12 +1,20 @@
-{{config(materialized='incremental', schema ='VLT', enabled=true, tags=['static', 'incremental'])}}
+{{config(materialized='incremental', schema ='VLT', enabled=false, tags=['static', 'incremental'])}}
 
-{%- set src_table = ['SRC_STG.STG_ORDERS_HASHED']                                     -%}
+{%- set src_table = ['SRC_TEST_STG.STG_LINEITEM',
+                     'SRC_TEST_STG.STG_PART',
+                     'SRC_TEST_STG.STG_PARTSUPP']
+                                                                                      -%}
+{%- set hash_model = [ref('stg_orders_hashed'),
+                      ref('stg_orders_hashed'),
+                      ref('stg_orders_hashed')]                                       -%}
 
-{%- set hash_model = [ref('stg_orders_hashed') ]                                      -%}
+{%- set src_pk = ['INVENTORY_ALLOCATION_PK',
+                  'INVENTORY_ALLOCATION_PK',
+                  'INVENTORY_ALLOCATION_PK']                                          -%}
 
-
-{%- set src_pk = ['INVENTORY_ALLOCATION_PK']                                          -%}
-{%- set src_fk = [['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK']]                          -%}
+{%- set src_fk = [['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK'],
+                  ['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK'],
+                  ['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK']]                          -%}
 {%- set src_source = 'SOURCE'                                                         -%}
 {%- set src_ldts = 'LOADDATE'                                                         -%}
 
@@ -15,6 +23,7 @@
                     'LOADDATE', 'SOURCE']                                             -%}
 
 {%- set tgt_pk = ['INVENTORY_ALLOCATION_PK', 'BINARY(16)', 'INVENTORY_ALLOCATION_PK'] -%}
+
 {%- set tgt_fk = [['PART_PK', 'BINARY(16)', 'PART_PK'],
                   ['SUPPLIER_PK', 'BINARY(16)', 'SUPPLIER_PK'],
                   ['LINEITEM_PK', 'BINARY(16)', 'LINEITEM_PK']]                       -%}
