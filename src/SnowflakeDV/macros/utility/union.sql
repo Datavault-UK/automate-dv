@@ -1,11 +1,11 @@
-{%- macro union(src_table, src_cols, src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model) -%}
+{%- macro union(src_table, src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, hash_model) -%}
 
  {% set letters='abcdefghijklmnopqrstuvwxyz' %}
 
-    SELECT DISTINCT {{ src_cols|join(", ") }},
+    SELECT DISTINCT {{ tgt_cols|join(", ") }},
            LAG({{ src_source }}, 1)
-           OVER(PARTITION by {{ src_cols[0] }}
-           ORDER BY {{ src_cols[0] }}) AS FIRST_SOURCE
+           OVER(PARTITION by {{ tgt_cols[0] }}
+           ORDER BY {{ tgt_cols[0] }}) AS FIRST_SOURCE
     FROM (
         {%- for src in src_table -%}
 
@@ -13,13 +13,13 @@
 
         SELECT DISTINCT {{ snow_vault.prefix([
         src_pk[loop.index0],
-        src_nk,
+        src_nk[loop.index0],
         src_ldts,
         src_source], letter ) }}
         {% if hash_model is none -%}
         FROM {{ src[loop.index0] }} AS {{ letter }}
         {% else -%}
-        FROM {{ hash_model }} AS {{ letter }}
+        FROM {{ hash_model[loop.index0] }} AS {{ letter }}
         {%- endif %}
         {% if is_incremental() -%}
         LEFT JOIN {{ this }} AS tgt_{{ letter }}
