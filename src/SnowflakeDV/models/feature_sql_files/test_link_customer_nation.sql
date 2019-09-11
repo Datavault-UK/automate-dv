@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='TEST_VLT', enabled=false, tags='feature')}}
+{{config(materialized='incremental', schema='TEST_VLT', enabled=true, tags='feature')}}
 
 SELECT
                 CAST(CUSTOMER_NATION_PK AS BINARY(16)) AS CUSTOMER_NATION_PK,
@@ -13,7 +13,7 @@ SELECT
            ORDER BY CUSTOMER_NATION_PK) AS FIRST_SOURCE
     FROM (
         SELECT DISTINCT a.CUSTOMER_NATION_PK, a.CUSTOMER_PK, a.NATION_PK, a.LOADDATE, a.SOURCE
-        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER AS a
+        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER_NATION AS a
         LEFT JOIN DV_PROTOTYPE_DB.SRC_TEST_VLT.test_link_customer_nation AS c
         ON a.CUSTOMER_NATION_PK = c.CUSTOMER_NATION_PK
         AND c.CUSTOMER_NATION_PK IS NULL

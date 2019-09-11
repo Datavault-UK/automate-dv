@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema ='VLT', enabled=true, tags=['static', 'incremental'])}}
+{{config(materialized='incremental', schema ='VLT', enabled=false, tags=['static', 'incremental'])}}
 
 {%- set src_table = ['SRC_STG.STG_ORDERS_HASHED']                                     -%}
 

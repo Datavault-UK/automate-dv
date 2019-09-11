@@ -1,1 +1,0 @@
-{{config(materialized='incremental', schema='test_vlt', enabled=false, tags='feature')}}
