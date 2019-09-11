@@ -1,11 +1,13 @@
-{% macro sat_template(sat_columns, stg_columns, sat_pk) %}
+{%- macro sat_template(src_table, src_pk, src_fk, src_ldts, src_source, tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source, hash_model) -%}
 
-select
- {{sat_columns}}
-from (
-select distinct
- {{stg_columns}},
- lead(b.LOADDATE, 1) over(partition by b.{{sat_pk}} order by b.LOADDATE) as LATEST
-from
-
+SELECT {{ snow_vault.cast([tgt_pk, tgt_fk, tgt_ldts, tgt_source]) }}
+ FROM (
+    {{ snow_vault.union(src_table, src_pk, src_fk, src_ldts, src_source,
+       tgt_cols, tgt_pk|last, hash_model) }}
+ AS b)
+AS stg
+{% if is_incremental() -%}
+WHERE stg.{{ tgt_pk|last }} NOT IN (SELECT {{ tgt_pk|last }} FROM {{ this }})
+AND FIRST_SOURCE IS NULL
+{%- endif -%}
 {% endmacro %}

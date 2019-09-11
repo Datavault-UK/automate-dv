@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='TEST_VLT', enabled=true, tags='feature')}}
+{{config(materialized='incremental', schema='TEST_VLT', enabled=false, tags='feature')}}
 
 SELECT
                 CAST(CUSTOMER_NATION_PK AS BINARY(16)) AS CUSTOMER_NATION_PK,
