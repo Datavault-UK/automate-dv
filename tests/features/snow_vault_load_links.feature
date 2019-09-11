@@ -10,7 +10,7 @@ Feature: Loads Links
 # 09.07.19 CF  1.1     Updated to test the sql used by dbt.
 # =============================================================================
 
-  Scenario: Distinct history of data linking two hubs is loaded into a link table
+  Scenario: [SINGLE-SOURCE] Distinct history of data linking two hubs is loaded into a link table
     Given I have a HUB_CUSTOMER table
       | CUSTOMER_PK | CUSTOMERKEY | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -39,7 +39,7 @@ Feature: Loads Links
       | md5('1003**4')     | md5('1003') | md5('4')  | 1993-01-01 | TPCH   |
       | md5('1004**9')     | md5('1004') | md5('9')  | 1993-01-01 | TPCH   |
 
-  Scenario: Unchanged records in stage are not loaded into the link with pre-existing data
+  Scenario: [SINGLE-SOURCE] Unchanged records in stage are not loaded into the link with pre-existing data
     Given I have a HUB_CUSTOMER table
       | CUSTOMER_PK | CUSTOMERKEY | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -72,7 +72,7 @@ Feature: Loads Links
       | md5('1004**9')     | md5('1004') | md5('9')  | 1993-01-01 | TPCH   |
 
 
-  Scenario: Only the first instance of a record is loaded into the link table for the history
+  Scenario: [SINGLE-SOURCE] Only the first instance of a record is loaded into the link table for the history
     Given I have a HUB_CUSTOMER table
       | CUSTOMER_PK | CUSTOMERKEY | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -102,7 +102,7 @@ Feature: Loads Links
       | md5('1003**4')     | md5('1003') | md5('4')  | 1993-01-01 | TPC1   |
       | md5('1004**9')     | md5('1004') | md5('9')  | 1993-01-01 | TPC1   |
 
-  Scenario: Distinct history of data linking two hubs is loaded into a link table from a union
+  Scenario: [UNION] Distinct history of data linking two hubs is loaded into a link table from a union
     Given I have a HUB_LINEITEM table
       | LINEITEM_PK | LINENUMBER | LOADDATE   | SOURCE |
       | md5('7')    | 7          | 1992-01-08 | TPCH   |
@@ -149,7 +149,7 @@ Feature: Loads Links
       | md5('1004**9**9')       | md5('1004') | md5('9')    | md5('9')    | 1992-01-08 | TPCH   |
 
 
-  Scenario: Unchanged records in stage are not loaded into the link with pre-existing data from a union
+  Scenario: [UNION] Unchanged records in stage are not loaded into the link with pre-existing data from a union
     Given I have a HUB_LINEITEM table
       | LINEITEM_PK | LINENUMBER | LOADDATE   | SOURCE |
       | md5('7')    | 7          | 1992-01-08 | TPCH   |
@@ -198,7 +198,7 @@ Feature: Loads Links
       | md5('1003**4**4')       | md5('1003') | md5('4')    | md5('4')    | 1992-01-08 | TPCH   |
       | md5('1004**9**9')       | md5('1004') | md5('9')    | md5('9')    | 1992-01-08 | TPCH   |
 
-  Scenario: Only the first instance of a record is loaded into the link table for the history from a union
+  Scenario: [UNION] Only the first instance of a record is loaded into the link table for the history from a union
     Given I have a HUB_LINEITEM table
       | LINEITEM_PK | LINENUMBER | LOADDATE   | SOURCE |
       | md5('7')    | 7          | 1992-01-08 | LINE   |

@@ -11,7 +11,7 @@ Feature: Loads Hubs
 # 09.07.19 CF  1.1     Updated to test the sql used by dbt.
 # =============================================================================
 
-  Scenario: Distinct history of data from the stage is loaded into an empty hub
+  Scenario: [SINGLE-SOURCE] Distinct history of data from the stage is loaded into an empty hub
     Given there is an empty TEST_HUB_CUSTOMER table
     And there are records in the STG_CUSTOMER table
       | CUSTOMER_PK | NATION_PK | CUSTOMER_NATION_PK | HASHDIFF                      | CUSTOMERKEY | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_NATIONKEY | LOADDATE   | EFFECTIVE_FROM | SOURCE |
@@ -28,7 +28,7 @@ Feature: Loads Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  Scenario: Unchanged records in stage are not loaded into the hub with pre-existing data
+  Scenario: [SINGLE-SOURCE] Unchanged records in stage are not loaded into the hub with pre-existing data
     Given there are records in the HUB_CUSTOMER table
       | CUSTOMER_PK | CUSTOMERKEY | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -48,7 +48,7 @@ Feature: Loads Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  Scenario: Only one instance of a record is loaded into the hub table for the history with multiple sources
+  Scenario: [SINGLE-SOURCE] Only one instance of a record is loaded into the hub table for the history with multiple sources
     Given there is an empty TEST_HUB_CUSTOMER table
     And there are records in the STG_CUSTOMER table
       | CUSTOMER_PK | NATION_PK | CUSTOMER_NATION_PK | HASHDIFF                      | CUSTOMERKEY | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_NATIONKEY | LOADDATE   | EFFECTIVE_FROM | SOURCE |
@@ -66,7 +66,7 @@ Feature: Loads Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPC1   |
       | md5('1004') | 1004        | 1993-01-01 | TPC1   |
 
-  Scenario: Distinct history of data from a union of stage tables is loaded into an empty HUB_PART
+  Scenario: [UNION] Distinct history of data from a union of stage tables is loaded into an empty HUB_PART
     Given there is an empty TEST_HUB_PART table
     And there are records in the STG_PART table
       | PART_PK     | PARTKEY | NAME   | TYPE     | SIZE | RETAILPRICE | LOADDATE   | EFFECTIVE_FROM | SOURCE |
@@ -98,7 +98,7 @@ Feature: Loads Hubs
       | md5('1004') | 1004    | 1993-01-01 | TPC1   |
       | md5('1005') | 1005    | 1993-01-01 | TPC1   |
 
-  Scenario: Unchanged records in stage are not loaded into the union hub with pre-existing data
+  Scenario: [UNION] Unchanged records in stage are not loaded into the union hub with pre-existing data
     Given there are records in the HUB_PART table
       | PART_PK     | PARTKEY | LOADDATE   | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | TPC1   |
@@ -135,7 +135,7 @@ Feature: Loads Hubs
       | md5('1005') | 1005    | 1993-01-01 | TPC1   |
       | md5('1006') | 1006    | 1993-01-01 | TPC1   |
 
-  Scenario: Only one instance of a record is loaded into the union hub table for the history with multiple sources
+  Scenario: [UNION] Only one instance of a record is loaded into the union hub table for the history with multiple sources
     Given there are records in the HUB_PART table
       | PART_PK     | PARTKEY | LOADDATE   | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | TPC1   |
