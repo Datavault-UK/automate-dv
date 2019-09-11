@@ -77,6 +77,7 @@ def step_impl(context):
     bindings.compare_ct_to_db_table_customer(context, "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER", True)
 
 
+# Union Tests
 # Distinct history of data from a union of stage tables is loaded into an empty HUB_PART
 
 @given("there is an empty TEST_HUB_PART table")
