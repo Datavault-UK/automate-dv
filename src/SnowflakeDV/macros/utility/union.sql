@@ -7,14 +7,15 @@
 
         {%- set letter = letters[loop.index0] -%}
 
-        SELECT DISTINCT {{ snow_vault.prefix([
-        src_pk,
-        src_nk,
-        src_ldts,
-        src_source], letter ) }}
+        SELECT DISTINCT
+        {% if src_table|length <= 1 -%}
+            {{- snow_vault.prefix([src_pk, src_nk, src_ldts, src_source], letter) -}}
+        {% else %}
+            {{- snow_vault.prefix([src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source], letter) -}}
+        {% endif %}
         {% if hash_model is none -%}
         FROM {{ src }} AS {{ letter }}
-        {% else -%}
+        {%- else -%}
         FROM {{ hash_model[loop.index0] }} AS {{ letter }}
         {%- endif %}
         {%- if is_incremental() %}

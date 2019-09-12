@@ -1,18 +1,14 @@
 {%- macro prefix(columns, prefix_str) -%}
 
 {%- for column in columns -%}
-        {{ log("Outside: " ~ column, true) }}
 
-    {%- if column.children -%}
-
-        {{ log("Inside: " ~ column, true) }}
-        {{ loop(column.children) }}
-
+    {% if column is iterable and column is not string %}
+        {{- snow_vault.prefix(column, prefix_str) -}}
     {%- else -%}
-
-        {{ log("else: " ~ column, true) }}
-
+        {{ prefix_str}}.{{column.strip() }}
     {%- endif -%}
+
+    {%- if not loop.last -%} , {% endif %}
 
 {%- endfor -%}
 
