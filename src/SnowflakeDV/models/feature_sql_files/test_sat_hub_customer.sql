@@ -1,44 +1,30 @@
-{{config(materialized='incremental', schema='TEST_VLT', enabled=true, tags='feature')}}
+{{- config(materialized='incremental', schema='TEST_VLT', enabled=false, tags='feature') -}}
 
-select
-  stg.HASHDIFF,
-  stg.CUSTOMER_PK,
-  stg.CUSTOMER_NAME,
-  stg.CUSTOMER_PHONE,
-  stg.LOADDATE,
-  stg.EFFECTIVE_FROM,
-  stg.SOURCE
-from (
-select distinct
-  b.HASHDIFF,
-  b.CUSTOMER_PK,
-  b.CUSTOMER_NAME,
-  b.CUSTOMER_PHONE,
-  b.LOADDATE,
-  lead(b.LOADDATE, 1) over(partition by b.HASHDIFF order by b.LOADDATE) as LATEST,
-  b.EFFECTIVE_FROM,
-  b.SOURCE
-from
-
-{% if is_incremental() %}
-
-(
-select
-  a.HASHDIFF,
-  a.CUSTOMER_PK,
-  a.CUSTOMER_NAME,
-  a.CUSTOMER_PHONE,
-  a.LOADDATE,
-  a.EFFECTIVE_FROM,
-  a.SOURCE
-from DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER as a
-left join {{this}} as c on a.HASHDIFF=c.HASHDIFF and c.HASHDIFF is null
-) as b) as stg
-where stg.HASHDIFF not in (select HASHDIFF from {{this}}) and stg.LATEST is null
-
-{% else %}
-
-DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER as b) as stg
-where stg.LATEST is null
-
-{% endif %}
+SELECT
+                CAST(HASHDIFF AS BINARY(16)) AS HASHDIFF,
+                CAST(CUSTOMER_PK AS BINARY(16)) AS CUSTOMER_PK,
+                CAST(CUSTOMER_NAME AS VARCHAR(25)) AS CUSTOMER_NAME,
+                CAST(CUSTOMER_PHONE AS VARCHAR(15)) AS CUSTOMER_PHONE,
+                CAST(LOADDATE AS DATE) AS LOADDATE,
+                CAST(EFFECTIVE_FROM AS DATE) AS EFFECTIVE_FROM,
+                CAST(SOURCE AS VARCHAR(4)) AS SOURCE
+ FROM (
+      SELECT DISTINCT HASHDIFF, CUSTOMER_PK, CUSTOMER_NAME, CUSTOMER_PHONE, LOADDATE, EFFECTIVE_FROM, SOURCE,
+           LEAD(EFFECTIVE_FROM, 1)
+           OVER(PARTITION by HASHDIFF
+           ORDER BY EFFECTIVE_FROM) AS LAST_SEEN
+    FROM (SELECT DISTINCT
+        a.HASHDIFF, a.CUSTOMER_PK, a.CUSTOMER_NAME, a.CUSTOMER_PHONE, a.LOADDATE, a.EFFECTIVE_FROM, a.SOURCE
+        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_CUSTOMER AS a
+        {% if is_incremental() -%}
+        LEFT JOIN {{ this }} AS tgt_a
+        ON a.HASHDIFF = tgt_a.HASHDIFF
+        AND tgt_a.HASHDIFF IS NULL
+        {%- endif -%}
+        )
+ AS b)
+AS stg
+{% if is_incremental() -%}
+WHERE stg.HASHDIFF NOT IN (SELECT HASHDIFF FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_sat_hub_customer)
+AND LAST_SEEN IS NULL
+{%- endif -%}

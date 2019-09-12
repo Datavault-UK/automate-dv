@@ -1,4 +1,4 @@
-{%- macro union(src_table, src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model) -%}
+{%- macro union(src_table, src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model, src_eff=none, src_hash=none) -%}
 
  {%- set letters='abcdefghijklmnopqrstuvwxyz' -%}
 
@@ -9,9 +9,9 @@
 
         SELECT DISTINCT
         {% if src_table|length <= 1 -%}
-            {{- snow_vault.prefix([src_pk, src_nk, src_ldts, src_source], letter) -}}
+            {{- snow_vault.prefix([src_hash if src_hash, src_pk, src_nk, src_ldts, src_eff if src_eff, src_source], letter) -}}
         {% else %}
-            {{- snow_vault.prefix([src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source], letter) -}}
+            {{- snow_vault.prefix([src_hash[loop.index0] if src_hash, src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_eff if src_eff, src_source], letter) -}}
         {% endif %}
         {% if hash_model is none -%}
         FROM {{ src }} AS {{ letter }}
