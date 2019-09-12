@@ -8,8 +8,8 @@
         {%- set letter = letters[loop.index0] -%}
 
         SELECT DISTINCT {{ snow_vault.prefix([
-        src_pk[loop.index0],
-        src_nk[loop.index0],
+        src_pk,
+        src_nk,
         src_ldts,
         src_source], letter ) }}
         {% if hash_model is none -%}

@@ -1,32 +1,19 @@
 {%- macro prefix(columns, prefix_str) -%}
 
-{{ log(columns) }}
+{%- for column in columns -%}
+        {{ log("Outside: " ~ column, true) }}
 
-{%- if columns is iterable -%}
+    {%- if column.children -%}
 
-    {#- If only single string provided -#}
-    {%- if columns is string -%}
-
-        {{prefix_str}}.{{columns.strip()}}
+        {{ log("Inside: " ~ column, true) }}
+        {{ loop(column.children) }}
 
     {%- else -%}
 
-        {#- For each column in the given list, prefix with given prefix_str -#}
-        {%- for column in columns -%}
-
-            {%- if column is string -%}
-                {{prefix_str}}.{{column.strip()}}
-
-            {#- Recurse if containing further nested lists -#}
-            {%- elif column is iterable -%}
-                {{ snow_vault.prefix(column, prefix_str)}}
-            {%- endif -%}
-
-        {%- if not loop.last -%} , {% endif %}
-
-        {%- endfor -%}
+        {{ log("else: " ~ column, true) }}
 
     {%- endif -%}
 
-{%- endif -%}
+{%- endfor -%}
+
 {%- endmacro -%}

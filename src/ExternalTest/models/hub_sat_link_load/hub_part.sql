@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'incremental'])}}
+{{config(materialized='incremental', schema='VLT', enabled=false, tags=['static', 'incremental'])}}
 
 {%- set src_table = ['SRC_TEST_STG.STG_PART',
                      'SRC_TEST_STG.STG_PARTSUPP',
