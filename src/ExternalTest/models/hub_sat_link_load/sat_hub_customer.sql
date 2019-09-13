@@ -1,8 +1,8 @@
 {{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'incremental'])}}
 
 {%- set src_table = ['src_stg.v_stg_orders']                              -%}
-{%- set src_pk = ['CUSTOMER_PK']                                          -%}
-{%- set src_hash = ['CUSTOMER_HASHDIFF']                                  -%}
+{%- set src_pk = 'CUSTOMER_PK'                                          -%}
+{%- set src_hash = 'CUSTOMER_HASHDIFF'                                  -%}
 
 {%- set src_nk = ['CUSTOMER_NAME', 'CUSTOMER_ADDRESS',
                   'CUSTOMER_PHONE', 'CUSTOMER_ACCBAL',
@@ -33,7 +33,7 @@
 {%- set tgt_eff = ['EFFECTIVE_FROM', 'DATE', 'EFFECTIVE_FROM']            -%}
 {%- set tgt_source = ['SOURCE', 'VARCHAR(4)', 'SOURCE']                   -%}
 
-{%- set hash_model = [ref('stg_orders_hashed')]                           -%}
+{%- set hash_model = ref('stg_orders_hashed')                           -%}
 
 {{ snow_vault.sat_template(src_table, src_pk, src_hash, src_nk, src_ldts, src_eff, src_source,
                            tgt_cols, tgt_pk, tgt_hash, tgt_nk, tgt_ldts, tgt_eff, tgt_source,

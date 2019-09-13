@@ -7,28 +7,28 @@ SELECT
                 CAST(SOURCE AS VARCHAR(4)) AS SOURCE
  FROM (
     SELECT DISTINCT PART_PK, PARTKEY, LOADDATE, SOURCE,
-           lag(SOURCE, 1)
-           over(partition by PART_PK
-           order by PART_PK) as FIRST_SOURCE
+           LAG(SOURCE, 1)
+           OVER(PARTITION BY PART_PK
+           ORDER BY PART_PK) AS FIRST_SOURCE
     FROM (
         SELECT DISTINCT a.PART_PK, a.PARTKEY, a.SOURCE, a.LOADDATE
         FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_LINEITEM AS a
-        LEFT JOIN {{ this }} AS c
-        ON a.PART_PK = c.PART_PK
-        AND c.PART_PK IS NULL
+        LEFT JOIN {{ this }} AS tgt_a
+        ON a.PART_PK = tgt_a.PART_PK
+        AND tgt_a.PART_PK IS NULL
         UNION
         SELECT DISTINCT a.PART_PK, a.PARTKEY, a.SOURCE, a.LOADDATE
-        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_PART AS a
-        LEFT JOIN {{ this }} AS c
-        ON a.PART_PK = c.PART_PK
-        AND c.PART_PK IS NULL
+        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_PART AS b
+        LEFT JOIN {{ this }} AS tgt_b
+        ON b.PART_PK = tgt_b.PART_PK
+        AND tgt_b.PART_PK IS NULL
         UNION
         SELECT DISTINCT a.PART_PK, a.PARTKEY, a.SOURCE, a.LOADDATE
-        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_PARTSUPP AS a
-        LEFT JOIN {{ this }} AS c
-        ON a.PART_PK = c.PART_PK
-        AND c.PART_PK IS NULL
+        FROM DV_PROTOTYPE_DB.SRC_TEST_STG.STG_PARTSUPP AS c
+        LEFT JOIN {{ this }} AS tgt_c
+        ON c.PART_PK = tgt_c.PART_PK
+        AND tgt_c.PART_PK IS NULL
         )
- AS b)
+ AS src)
 AS stg
 WHERE FIRST_SOURCE IS NULL
