@@ -11,7 +11,7 @@ SELECT {{ snow_vault.cast([tgt_hash, tgt_pk, tgt_fk, tgt_ldts, tgt_eff, tgt_sour
  AS b)
 AS stg
 {% if is_incremental() -%}
-WHERE stg.{{ tgt_hash|last }} NOT IN (SELECT {{ tgt_hash|last }} FROM {{ this }})
+WHERE stg.{{ tgt_hash|first }} NOT IN (SELECT {{ tgt_hash|last }} FROM {{ this }} AS {{ tgt_hash|first }})
 AND LAST_SEEN IS NULL
 {%- endif -%}
 {% endmacro %}

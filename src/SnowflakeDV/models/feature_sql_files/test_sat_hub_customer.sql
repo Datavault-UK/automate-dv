@@ -1,4 +1,4 @@
-{{- config(materialized='incremental', schema='TEST_VLT', enabled=false, tags='feature') -}}
+{{- config(materialized='incremental', schema='TEST_VLT', enabled=true, tags='feature') -}}
 
 SELECT
                 CAST(HASHDIFF AS BINARY(16)) AS HASHDIFF,

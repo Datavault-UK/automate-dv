@@ -55,6 +55,9 @@ def step_impl(context):
     table_df['HASHDIFF'] = table_df['HASHDIFF'].str.upper()
     table_df['CUSTOMER_PK'] = table_df['CUSTOMER_PK'].str.upper()
 
+    table_df.sort_values('CUSTOMER_NAME', inplace=True)
+    table_df.reset_index(drop=True, inplace=True)
+
     if result_df.equals(table_df):
         assert True
     else:
@@ -63,17 +66,17 @@ def step_impl(context):
 
 # Unchanged records are not loaded into the satellite
 
-@step("I have a SAT_HUB_CUSTOMER satellite with pre-existing data")
-def step_impl(context):
+@step("I have a {table_name} satellite with pre-existing data")
+def step_impl(context, table_name):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_SAT_HUB_CUSTOMER",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", table_name,
                                      ["HASHDIFF BINARY(16) PRIMARY KEY",
                                       ("CUSTOMER_PK BINARY(16) FOREIGN KEY REFERENCES "
                                        "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER(CUSTOMER_PK)"),
                                       "CUSTOMER_NAME VARCHAR(25)", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
                                       "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"], materialise="table")
 
-    context.testdata.insert_data_from_ct(context.table, "TEST_SAT_HUB_CUSTOMER", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, table_name, "SRC_TEST_VLT")
 
 
 @step("I run the dbt day satellite load sql")
