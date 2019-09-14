@@ -1,4 +1,4 @@
-{{config(materialized='incremental', schema ='VLT', enabled=false, tags=['static', 'incremental'])}}
+{{config(materialized='incremental', schema ='VLT', enabled=true, tags=['static', 'incremental'])}}
 
 {%- set src_table = ['src_stg.v_stg_orders']                                                    -%}
 

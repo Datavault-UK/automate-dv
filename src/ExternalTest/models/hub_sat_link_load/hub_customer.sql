@@ -1,6 +1,5 @@
-{{config(materialized='incremental', schema='VLT', enabled=false, tags=['static', 'incremental'])}}
+{{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'incremental'])}}
 
-{%- set src_table = ['src_stg.v_stg_orders']                              -%}
 {%- set src_pk = ['CUSTOMER_PK']                                          -%}
 {%- set src_nk = ['CUSTOMERKEY']                                          -%}
 {%- set src_ldts = 'LOADDATE'                                             -%}
@@ -12,10 +11,12 @@
 {%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                       -%}
 {%- set tgt_source = ['SOURCE', 'VARCHAR(4)', 'SOURCE']                   -%}
 
+{%- set src_table = ['src_stg.v_stg_orders']                              -%}
 {%- set hash_model = [ref('stg_orders_hashed')]                           -%}
 
-{{ snow_vault.hub_template(src_table, src_pk, src_nk, src_ldts, src_source,
-                           tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source, hash_model) }}
+{{ snow_vault.hub_template(src_pk, src_nk, src_ldts, src_source,
+                           tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                           src_table, hash_model) }}
 
 
 
