@@ -10,15 +10,14 @@
 
  {%- set letters='abcdefghijklmnopqrstuvwxyz' -%}
 
-      {%- for src in src_table %}
-
+      {%- for src in src_table -%}
       {%- set letter = letters[loop.index0] %}
       {{ snow_vault.single(src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source,
                             tgt_pk,
                             src_table[loop.index0] or none, hash_model[loop.index0] or none,
                             letter,
                             union=true) -}}
-      {%- if not loop.last %}
+      {% if not loop.last %}
       UNION
       {%- endif -%}
       {%- endfor -%}{%- if is_incremental() -%}){%- endif -%}

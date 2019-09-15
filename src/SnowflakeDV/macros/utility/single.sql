@@ -7,7 +7,7 @@
       OVER(PARTITION by {{ letter }}.{{ tgt_pk }}
       ORDER BY {{ letter }}.{{ tgt_pk }}) AS FIRST_SOURCE
       {%- endif -%}
-      {%- if hash_model -%}
+      {%- if hash_model %}
       FROM {{ hash_model }} AS {{ letter }}
       {%- else %}
       FROM {{ src_table }} AS {{ letter }}
