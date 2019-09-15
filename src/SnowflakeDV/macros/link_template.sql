@@ -8,7 +8,7 @@ SELECT {{ snow_vault.cast([tgt_pk, tgt_fk, tgt_ldts, tgt_source]) }}
            OVER(PARTITION by {{ tgt_pk[0] }}
            ORDER BY {{ tgt_pk[0] }}) AS FIRST_SOURCE
     {{ snow_vault.create_source(src_table, src_pk, src_fk, src_ldts, src_source,
-      tgt_pk|last, hash_model) }} AS src
+                                tgt_cols, tgt_pk|last, hash_model) }} AS src
 ) AS stg
 {% if is_incremental() -%}
 WHERE stg.{{ tgt_pk|last }} NOT IN (SELECT {{ tgt_pk|last }} FROM {{ this }})

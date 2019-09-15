@@ -6,7 +6,8 @@
 
 {%- set src_fk = [['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK'],
                   ['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK'],
-                  ['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK']]                          -%}
+                  ['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK']]
+                                          -%}
 {%- set src_source = 'SOURCE'                                                         -%}
 {%- set src_ldts = 'LOADDATE'                                                         -%}
 
