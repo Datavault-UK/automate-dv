@@ -1,9 +1,9 @@
 {%- macro sat_template(src_pk, src_hash, src_fk, src_ldts, src_eff, src_source,
                        tgt_cols, tgt_pk, tgt_hash, tgt_fk, tgt_ldts, tgt_eff, tgt_source, src_table, hash_model) -%}
 
-SELECT {{ snow_vault.cast([tgt_hash, tgt_pk, tgt_fk, tgt_ldts, tgt_eff, tgt_source]) }}
+SELECT DISTINCT {{ snow_vault.cast([tgt_hash, tgt_pk, tgt_fk, tgt_ldts, tgt_eff, tgt_source]) }}
  FROM (
-      SELECT DISTINCT {{ snow_vault.prefix(tgt_cols, 'a') }},
+      SELECT {{ snow_vault.prefix(tgt_cols, 'a') }},
         LEAD({{ snow_vault.prefix([src_eff], 'a') }}, 1)
         OVER(PARTITION by {{ snow_vault.prefix([tgt_pk|first], 'a') }}
         ORDER BY {{ snow_vault.prefix([src_eff], 'a') }}) AS LAST_SEEN

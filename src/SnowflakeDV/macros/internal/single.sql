@@ -2,7 +2,7 @@
                  src_table=none, hash_model=none, letter='a',
                  union=false) -%}
 
-      SELECT DISTINCT {{ snow_vault.prefix([src_pk, src_nk, src_ldts, src_source], letter) -}}
+      SELECT {{ snow_vault.prefix([src_pk, src_nk, src_ldts, src_source], letter) -}}
       {% if not union %}
       ,LAG({{ letter }}.{{ src_source }}, 1)
       OVER(PARTITION by {{ snow_vault.prefix([tgt_pk], letter) }}
