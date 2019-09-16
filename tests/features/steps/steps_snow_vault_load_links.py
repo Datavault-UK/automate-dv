@@ -173,11 +173,11 @@ def step_impl(context):
     context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_LINK_INVENTORY_ALLOCATION",
                                      ["INVENTORY_ALLOCATION_PK BINARY(16) PRIMARY KEY UNIQUE",
                                       ("PART_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_PARTS_INVENTORY(PART_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_PARTS(PART_PK)"),
                                       ("SUPPLIER_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_SUPPLIER_INVENTORY(SUPPLIER_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_SUPPLIER(SUPPLIER_PK)"),
                                       ("LINEITEM_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_LINEITEM_INVENTORY(LINEITEM_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_LINEITEM(LINEITEM_PK)"),
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
 
 

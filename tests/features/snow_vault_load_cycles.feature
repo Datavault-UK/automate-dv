@@ -43,25 +43,21 @@ Feature: Load cycles
     And the vault is loaded for day 4
     Then we expect the TEST_HUB_CUSTOMER table to contain
       | CUSTOMER_PK | CUSTOMER_ID | SOURCE | LOAD_DATE  |
-      | md5('1001') | 1001        | *      | 04/05/2019 |
-      | md5('1002') | 1002        | *      | 04/05/2019 |
+      | md5('1001') | 1001        | *      | 2019-05-04 |
+      | md5('1002') | 1002        | *      | 2019-05-04 |
     And we expect the TEST_HUB_BOOKING table to contain
-      | CUSTOMER_PK | CUSTOMER_ID | SOURCE | LOAD_DATE  |
-      | md5('1001') | 1001        | *      | 04/05/2019 |
-      | md5('1002') | 1002        | *      | 04/05/2019 |
+      | BOOKING_PK  | BOOKING_REF | SOURCE | LOAD_DATE  |
+      | md5('1001') | 1001        | *      | 2019-05-04 |
+      | md5('1002') | 1002        | *      | 2019-05-04 |
     And we expect the TEST_LINK_CUSTOMER_BOOKING table to contain
-      | CUSTOMER_PK | CUSTOMER_ID | SOURCE | LOAD_DATE  |
-      | md5('1001') | 1001        | *      | 04/05/2019 |
-      | md5('1002') | 1002        | *      | 04/05/2019 |
+      | CUSTOMER_BOOKING_PK | CUSTOMER_PK | BOOKING_PK | SOURCE | LOAD_DATE  |
+      | md5('1001')         | 1001        | 1001       | *      | 2019-05-04 |
+      | md5('1002')         | 1002        | 1002       | *      | 2019-05-04 |
     And we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain
-      | CUSTOMER_PK | CUSTOMER_ID | SOURCE | LOAD_DATE  |
-      | md5('1001') | 1001        | *      | 04/05/2019 |
-      | md5('1002') | 1002        | *      | 04/05/2019 |
+      | customer_pk | load_date  | source | hashdiff                        | effective_from | name   | dob        |
+      | md5('1001') | 04/05/2019 | *      | md5('2000-01-01**1001**ALBERT') | 2019-05-03     | Albert | 2000-01-01 |
+      | md5('1002') | 04/05/2019 | *      | md5('2001-04-03**1002**BETH')   | 2019-05-03     | Beth   | 2001-04-03 |
     And we expect the TEST_SAT_BOOK_CUSTOMER_DETAILS table to contain
-      | CUSTOMER_PK | CUSTOMER_ID | SOURCE | LOAD_DATE  |
-      | md5('1001') | 1001        | *      | 04/05/2019 |
-      | md5('1002') | 1002        | *      | 04/05/2019 |
+      | BOOKING_PK | LOAD_DATE | EFFECTIVE_FROM | SOURCE | HASHDIFF | PRICE | DEPARTURE_DATE | DESTINATION |
     And we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain
-      | CUSTOMER_PK | CUSTOMER_ID | SOURCE | LOAD_DATE  |
-      | md5('1001') | 1001        | *      | 04/05/2019 |
-      | md5('1002') | 1002        | *      | 04/05/2019 |
+      | CUSTOMER_PK | LOAD_DATE | SOURCE | HASHDIFF | EFFECTIVE_FROM | PHONE | NATIONALITY |
