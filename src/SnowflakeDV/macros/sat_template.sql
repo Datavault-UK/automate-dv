@@ -1,5 +1,5 @@
-{%- macro sat_template(src_table, src_pk, src_hash, src_fk, src_ldts, src_eff, src_source,
-                       tgt_cols, tgt_pk, tgt_hash, tgt_fk, tgt_ldts, tgt_eff, tgt_source, hash_model) -%}
+{%- macro sat_template(src_pk, src_hash, src_fk, src_ldts, src_eff, src_source,
+                       tgt_cols, tgt_pk, tgt_hash, tgt_fk, tgt_ldts, tgt_eff, tgt_source, src_table, hash_model) -%}
 
 SELECT {{ snow_vault.cast([tgt_hash, tgt_pk, tgt_fk, tgt_ldts, tgt_eff, tgt_source]) }}
  FROM (

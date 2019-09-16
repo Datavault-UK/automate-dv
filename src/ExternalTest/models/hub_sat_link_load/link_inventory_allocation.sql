@@ -1,10 +1,5 @@
 {{config(materialized='incremental', schema ='VLT', enabled=true, tags=['static', 'incremental'])}}
 
-{%- set src_table = ['SRC_STG.STG_ORDERS_HASHED']                                     -%}
-
-{%- set hash_model = [ref('stg_orders_hashed') ]                                      -%}
-
-
 {%- set src_pk = ['INVENTORY_ALLOCATION_PK']                                          -%}
 {%- set src_fk = [['PART_PK', 'SUPPLIER_PK', 'LINEITEM_PK']]                          -%}
 {%- set src_source = 'SOURCE'                                                         -%}
@@ -22,5 +17,7 @@
 {%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                                   -%}
 {%- set tgt_source = ['SOURCE', 'VARCHAR(4)', 'SOURCE']                               -%}
 
-{{ snow_vault.link_template(src_table, src_pk, src_fk, src_ldts, src_source,
-                           tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source, hash_model) }}
+{%- set hash_model = [ref('stg_orders_hashed') ]                                      -%}
+
+{{ snow_vault.link_template(src_pk, src_fk, src_ldts, src_source,
+                           tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source, src_table, hash_model) }}
