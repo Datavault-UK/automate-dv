@@ -1,6 +1,6 @@
 @test_data
 @clean_data
-Feature: Loads Hubs
+Feature: Load Hubs
 # =============================================================================
 # CHANGE HISTORY
 # ==============

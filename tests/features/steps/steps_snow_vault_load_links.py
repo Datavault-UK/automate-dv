@@ -14,39 +14,39 @@ use_step_matcher("parse")
 @given("I have a HUB_CUSTOMER table")
 def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_HUB_CUSTOMER",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_customer",
                                      ["CUSTOMER_PK BINARY(16) PRIMARY KEY", "CUSTOMERKEY VARCHAR(38)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "TEST_HUB_CUSTOMER", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "test_hub_customer", "SRC_TEST_VLT")
 
 
 @step("I have a HUB_NATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_HUB_NATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_nation",
                                      ["NATION_PK BINARY(16) PRIMARY KEY", "CUSTOMER_NATIONKEY VARCHAR(38)",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "TEST_HUB_NATION", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "test_hub_nation", "SRC_TEST_VLT")
 
 
 @step("I have an empty LINK_CUSTOMER_NATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_LINK_CUSTOMER_NATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_link_customer_nation",
                                      ["CUSTOMER_NATION_PK BINARY(16) PRIMARY KEY UNIQUE",
                                       ("CUSTOMER_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER(CUSTOMER_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer(CUSTOMER_PK)"),
                                       ("NATION_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_NATION(NATION_PK)"), "LOADDATE DATE",
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_nation(NATION_PK)"), "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
 
 
 @step("I have data in the STG_CUSTOMER_NATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "STG_CUSTOMER_NATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_customer_nation",
                                      ["CUSTOMER_PK BINARY(16)", "NATION_PK BINARY(16)", "CUSTOMER_NATION_PK BINARY(16)",
                                       "HASHDIFF VARCHAR(32)", "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
                                       "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER_NATION", "SRC_TEST_STG")
+    context.testdata.insert_data_from_ct(context.table, "stg_customer_nation", "SRC_TEST_STG")
 
 
 @step("I run the dbt load to the link")
@@ -63,7 +63,7 @@ def step_impl(context):
           "CAST(CUSTOMER_PK AS VARCHAR(32)) AS CUSTOMER_PK, " \
           "CAST(NATION_PK AS VARCHAR(32)) AS NATION_PK, " \
           "LOADDATE, SOURCE " \
-          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_CUSTOMER_NATION " \
+          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_link_customer_nation " \
           "ORDER BY CUSTOMER_NATION_PK"
 
     table_df = context.testdata.context_table_to_df(context.table)
@@ -86,14 +86,14 @@ def step_impl(context):
 
 @step("there are records in the LINK_CUSTOMER_NATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_LINK_CUSTOMER_NATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_link_customer_nation",
                                      ["CUSTOMER_NATION_PK BINARY(16) PRIMARY KEY ",
                                       ("CUSTOMER_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_CUSTOMER(CUSTOMER_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer(CUSTOMER_PK)"),
                                       ("NATION_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_NATION(NATION_PK)"), "LOADDATE DATE",
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_nation(NATION_PK)"), "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "TEST_LINK_CUSTOMER_NATION", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "test_link_customer_nation", "SRC_TEST_VLT")
 
 
 @step("I run the dbt day load to the link")
@@ -106,12 +106,12 @@ def step_impl(context):
 
 @step("I have unchanged records but with different sources in the STG_CUSTOMER_NATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "STG_CUSTOMER_NATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_customer_nation",
                                      ["CUSTOMER_PK BINARY(16)", "NATION_PK BINARY(16)", "CUSTOMER_NATION_PK BINARY(16)",
                                       "HASHDIFF BINARY(16)", "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
                                       "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "STG_CUSTOMER_NATION", "SRC_TEST_STG")
+    context.testdata.insert_data_from_ct(context.table, "stg_customer_nation", "SRC_TEST_STG")
 
 
 # Union Tests
@@ -119,65 +119,65 @@ def step_impl(context):
 
 @step("I have a HUB_LINEITEM table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_HUB_LINEITEM",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_lineitem",
                                      ["LINEITEM_PK BINARY(16) PRIMARY KEY", "LINENUMBER VARCHAR(38)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "TEST_HUB_LINEITEM", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "test_hub_lineitem", "SRC_TEST_VLT")
 
 
 @step("I have a HUB_PARTS table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_HUB_PARTS",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_parts",
                                      ["PART_PK BINARY(16) PRIMARY KEY", "PARTKEY VARCHAR(38)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "TEST_HUB_PARTS", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "test_hub_parts", "SRC_TEST_VLT")
 
 
 @step("I have a HUB_SUPPLIER table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_HUB_SUPPLIER",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_supplier",
                                      ["SUPPLIER_PK BINARY(16) PRIMARY KEY", "SUPPLIERKEY VARCHAR(38)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "TEST_HUB_SUPPLIER", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "test_hub_supplier", "SRC_TEST_VLT")
 
 
 @step("I have a STG_LINEITEM table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "STG_LINEITEM",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_lineitem",
                                      ["INVENTORY_ALLOCATION_PK BINARY(16) PRIMARY KEY", "LINEITEM_PK BINARY(16)",
                                       "LINENUMBER VARCHAR(38)", "SUPPLIER_PK BINARY(16)", "PART_PK BINARY(16)",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "STG_LINEITEM", "SRC_TEST_STG")
+    context.testdata.insert_data_from_ct(context.table, "stg_lineitem", "SRC_TEST_STG")
 
 
 @step("I have a STG_PARTS table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "STG_PARTS",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_parts",
                                      ["INVENTORY_ALLOCATION_PK BINARY(16) PRIMARY KEY", "PART_PK BINARY(16)",
                                       "PARTKEY VARCHAR(38)", "LINEITEM_PK BINARY(16)", "SUPPLIER_PK BINARY(16)",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "STG_PARTS", "SRC_TEST_STG")
+    context.testdata.insert_data_from_ct(context.table, "stg_parts", "SRC_TEST_STG")
 
 
 @step("I have a STG_SUPPLIER table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "STG_SUPPLIER",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_supplier",
                                      ["INVENTORY_ALLOCATION_PK BINARY(16) PRIMARY KEY", "SUPPLIER_PK BINARY(16)",
                                       "SUPPLIERKEY VARCHAR(38)", "PART_PK BINARY(16)", "LINEITEM_PK BINARY(16)",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "STG_SUPPLIER", "SRC_TEST_STG")
+    context.testdata.insert_data_from_ct(context.table, "stg_supplier", "SRC_TEST_STG")
 
 
 @step("I have an empty LINK_INVENTORY_ALLOCATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_LINK_INVENTORY_ALLOCATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_link_inventory_allocation",
                                      ["INVENTORY_ALLOCATION_PK BINARY(16) PRIMARY KEY UNIQUE",
                                       ("PART_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_PARTS(PART_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_parts(PART_PK)"),
                                       ("SUPPLIER_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_SUPPLIER(SUPPLIER_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_supplier(SUPPLIER_PK)"),
                                       ("LINEITEM_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_LINEITEM(LINEITEM_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_lineitem(LINEITEM_PK)"),
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
 
 
@@ -194,7 +194,7 @@ def step_impl(context):
           "CAST(SUPPLIER_PK AS VARCHAR(32)) AS SUPPLIER_PK, " \
           "CAST(LINEITEM_PK AS VARCHAR(32)) AS LINEITEM_PK, " \
           "LOADDATE, SOURCE " \
-          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_INVENTORY_ALLOCATION " \
+          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_link_inventory_allocation " \
           "ORDER BY INVENTORY_ALLOCATION_PK"
 
     table_df = context.testdata.context_table_to_df(context.table)
@@ -218,16 +218,16 @@ def step_impl(context):
 
 @step("there are records in the LINK_INVENTORY_ALLOCATION table")
 def step_impl(context):
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "TEST_LINK_INVENTORY_ALLOCATION",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_link_inventory_allocation",
                                      ["INVENTORY_ALLOCATION_PK BINARY(16) PRIMARY KEY UNIQUE",
                                       ("PART_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_PARTS_INVENTORY(PART_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_parts(PART_PK)"),
                                       ("SUPPLIER_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_SUPPLIER_INVENTORY(SUPPLIER_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_supplier(SUPPLIER_PK)"),
                                       ("LINEITEM_PK BINARY(16) FOREIGN KEY REFERENCES "
-                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_HUB_LINEITEM_INVENTORY(LINEITEM_PK)"),
+                                       "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_lineitem(LINEITEM_PK)"),
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "LINK_INVENTORY_ALLOCATION", "SRC_TEST_VLT")
+    context.testdata.insert_data_from_ct(context.table, "link_inventory_allocation", "SRC_TEST_VLT")
 
 
 # Only the first instance of a record is loaded into the link table for the history from a union
@@ -239,7 +239,7 @@ def step_impl(context):
           "CAST(SUPPLIER_PK AS VARCHAR(32)) AS SUPPLIER_PK, " \
           "CAST(LINEITEM_PK AS VARCHAR(32)) AS LINEITEM_PK, " \
           "LOADDATE, SOURCE " \
-          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_LINK_INVENTORY_ALLOCATION " \
+          "FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_link_inventory_allocation " \
           "ORDER BY INVENTORY_ALLOCATION_PK"
 
     table_df = context.testdata.context_table_to_df(context.table)

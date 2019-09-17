@@ -41,4 +41,6 @@ AS stg
 {% if is_incremental() -%}
 WHERE stg.INVENTORY_ALLOCATION_PK NOT IN (SELECT INVENTORY_ALLOCATION_PK FROM {{ this }})
 AND FIRST_SOURCE IS NULL
+{% else -%}
+WHERE FIRST_SOURCE IS NULL
 {%- endif -%}

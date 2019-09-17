@@ -15,5 +15,9 @@ FROM (
       ON a.CUSTOMER_PK = tgt_a.CUSTOMER_PK
       AND tgt_a.CUSTOMER_PK IS NULL
  ) AS stg
+{% if is_incremental() -%}
 WHERE stg.CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM DV_PROTOTYPE_DB.SRC_VLT.hub_customer)
 AND FIRST_SOURCE IS NULL
+{% else -%}
+WHERE FIRST_SOURCE IS NULL
+{%- endif -%}

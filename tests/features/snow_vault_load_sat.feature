@@ -1,5 +1,5 @@
 @test_data
-Feature: Load Satellites For Hubs
+Feature: Load Satellites
 # =============================================================================
 # CHANGE HISTORY
 # ==============

@@ -1,5 +1,5 @@
 @test_data
-Feature: Loads Links
+Feature: Load Links
 # =============================================================================
 # CHANGE HISTORY
 # ==============

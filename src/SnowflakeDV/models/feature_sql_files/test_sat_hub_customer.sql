@@ -19,5 +19,9 @@ FROM (
     ON a.HASHDIFF = tgt_a.HASHDIFF
     AND tgt_a.HASHDIFF IS NULL
     ) as src
+{% if is_incremental() -%}
 WHERE src.HASHDIFF NOT IN (SELECT HASHDIFF FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_sat_hub_customer)
 AND LAST_SEEN IS NULL
+{% else -%}
+WHERE LAST_SEEN IS NULL
+{%- endif -%}

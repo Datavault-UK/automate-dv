@@ -19,4 +19,6 @@ FROM (
 {% if is_incremental() -%}
 WHERE stg.CUSTOMER_NATION_PK NOT IN (SELECT CUSTOMER_NATION_PK FROM {{ this }})
 AND FIRST_SOURCE IS NULL
+{% else -%}
+WHERE FIRST_SOURCE IS NULL
 {%- endif -%}

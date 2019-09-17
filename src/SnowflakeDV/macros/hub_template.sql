@@ -10,6 +10,8 @@ FROM (
 {% if is_incremental() -%}
 WHERE stg.{{ tgt_pk|last }} NOT IN (SELECT {{ tgt_pk|last }} FROM {{ this }})
 AND FIRST_SOURCE IS NULL
+{% else %}
+WHERE FIRST_SOURCE IS NULL
 {%- endif -%}
 
 {%- endmacro -%}
