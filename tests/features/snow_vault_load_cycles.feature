@@ -14,10 +14,12 @@ Feature: Loading through multiple tables and cycles from source to vault
     Given there is an empty TEST_STG_CUSTOMER table
     When the TEST_STG_CUSTOMER table has data inserted into it for day 1
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  |
-      | 1001        | Albert        | 01/01/2000   | 2019-05-03     | 2019-05-04 |
-      | 1002        | Beth          | 03/04/2001   | 2019-05-03     | 2019-05-04 |
+      | 1001        | Albert        | 1990-02-03   | 2019-05-03     | 2019-05-04 |
+      | 1002        | Beth          | 1995-08-07   | 2019-05-03     | 2019-05-04 |
     And the TEST_STG_BOOKING table has data inserted into it for day 1
-      | BOOKING_REF | CUSTOMER_ID | PRICE | DEPARTURE_DATE | DESTINATION | PHONE | NATIONALITY |
+      | BOOKING_REF | CUSTOMER_ID | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY |
+      | 10034       | 1001        | 100.00 | 2019-09-17     | LON         | 17-214-233-1214 | BRITISH     |
+      | 10035       | 1002        | 80.00  | 2019-09-16     | AMS         | 17-214-200-1214 | DUTCH       |
     And the vault is loaded for day 1
     When the TEST_STG_CUSTOMER table has data inserted into it for day 2
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE | EFFECTIVE_FROM |
