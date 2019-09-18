@@ -1,4 +1,4 @@
-{%- macro derived_cols(pairs) -%}
+{%- macro add_columns(pairs) -%}
 {% for pair in pairs -%}
 
     {{ snow_vault.create_col(pair[0], pair[1]) }}
