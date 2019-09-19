@@ -1,6 +1,5 @@
 {%- macro single(src_pk, src_nk, src_ldts, src_source, tgt_pk,
-                 src_table=none, hash_model=none, letter='a',
-                 union=false) -%}
+                 hash_model, letter='a', union=false) -%}
 
       SELECT {{ snow_vault.prefix([src_pk, src_nk, src_ldts, src_source], letter) -}}
       {% if not union %}

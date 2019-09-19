@@ -1,11 +1,12 @@
 {{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature') -}}
 
-{%- set cur_date = 'CURRENT_DATE'-%}
+{%- set cur_date = "TO_DATE('2019-05-04')" -%}
 
 {{ snow_vault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                           (['CUSTOMER_ID', 'CUSTOMER_DOB', 'CUSTOMER_NAME'], 'CUSTOMER_HASHDIFF')]) -}},
+                           (['CUSTOMER_ID', 'CUSTOMER_NAME', 'CUSTOMER_DOB'], 'CUST_CUSTOMER_HASHDIFF')]) -}},
 
-{{ snow_vault.add_columns([('CUSTOMER_DOB', 'CUSTOMER_DOB'),
+{{ snow_vault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),
+                           ('CUSTOMER_DOB', 'CUSTOMER_DOB'),
                            ('CUSTOMER_NAME', 'CUSTOMER_NAME'),
                            (cur_date, 'EFFECTIVE_FROM')]) }},
 

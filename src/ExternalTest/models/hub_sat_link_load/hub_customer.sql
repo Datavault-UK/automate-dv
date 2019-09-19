@@ -1,11 +1,12 @@
 {{config(materialized='incremental', schema='VLT', enabled=true, tags=['static', 'incremental'])}}
 
-{%- set src_pk = ['CUSTOMER_PK']                                          -%}
-{%- set src_nk = ['CUSTOMERKEY']                                          -%}
+{%- set src_pk = 'CUSTOMER_PK'                                            -%}
+{%- set src_nk = 'CUSTOMER_ID'                                            -%}
 {%- set src_ldts = 'LOADDATE'                                             -%}
 {%- set src_source = 'SOURCE'                                             -%}
 
 {%- set tgt_cols = ['CUSTOMER_PK', 'CUSTOMERKEY', 'SOURCE', 'LOADDATE']   -%}
+
 {%- set tgt_pk = ['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_PK']             -%}
 {%- set tgt_nk = ['CUSTOMERKEY', 'NUMBER(38,0)', 'CUSTOMERKEY']           -%}
 {%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                       -%}
