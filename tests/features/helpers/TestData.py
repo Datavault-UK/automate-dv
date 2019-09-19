@@ -3,6 +3,7 @@ import re
 from hashlib import md5
 
 import pandas as pd
+from pandas import DataFrame
 import snowflake.connector as sf
 import sqlalchemy as sa
 from numpy import NaN
@@ -35,7 +36,7 @@ class TestData:
 
         return credentials
 
-    def context_table_to_df(self, table):
+    def context_table_to_df(self, table, ignore_columns=None, order_by=None):
 
         table_df = pd.DataFrame(columns=table.headings, data=table.rows, dtype=str)
 
@@ -45,7 +46,23 @@ class TestData:
 
         table_df = table_df.replace("<null>", NaN)
 
+        if ignore_columns:
+            table_df.drop(ignore_columns, 1, inplace=True)
+
+        if order_by:
+            table_df.sort_values(order_by, inplace=True)
+            table_df.reset_index(drop=True, inplace=True)
+
+        cols = list(table_df.columns)
+        cols.sort()
+        table_df = table_df[cols]
+
         return table_df
+
+    @staticmethod
+    def compare_dataframes(first_frame, second_frame):
+
+        return first_frame.equals(second_frame)
 
     @staticmethod
     def df_to_dict(df, orient='dict'):
@@ -75,7 +92,7 @@ class TestData:
 
                     hashed_item = md5(new_item[0].encode('utf-8')).hexdigest()
 
-                    value[index] = hashed_item
+                    value[index] = hashed_item.upper()
 
         return value
 
@@ -150,14 +167,91 @@ class TestData:
                 for ret in cur:
                     print(ret)
 
-    def get_table_data(self, table_name):
+    def get_table_data(self, *, database, full_table_name, binary_columns=None,
+                       ignore_columns=None, order_by=None) -> pd.DataFrame:
+        """
+        Gets the provided table's data as a Dataframe
+            :param database: The name of the database containing the required table
+            :type database: str
+            :param full_table_name: Name of the table to query, including DB and schema
+            :type full_table_name: str
+            :param binary_columns: A list of columns to be converted from BINARY to VARCHAR (hash columns)
+            :type binary_columns: list
+            :param connection: A connection object for the target database
+            :return: Dataframe containing the data for the provided table
+        """
 
-        sql = "SELECT * FROM {}".format(table_name)
+        sql = "SELECT {} FROM {}"
+
+        if binary_columns:
+
+            columns = self.create_hash_casts(binary_columns)
+        else:
+            columns = "*"
+
+        table_name = full_table_name.split(".")[2]
+        other_cols = self.get_column_list_for_table(database, table_name)
+
+        diff = list(set(binary_columns).symmetric_difference(set(other_cols)))
+        columns = columns + ", " + ", ".join(diff)
+
+        sql = sql.format(columns, full_table_name)
 
         result = pd.read_sql_query(sql, self.engine)
         result.columns = map(str.upper, result.columns)
 
-        return result
+        if ignore_columns:
+            result.drop(ignore_columns, 1, inplace=True)
+
+        if order_by:
+            result.sort_values(order_by, inplace=True)
+            result.reset_index(drop=True, inplace=True)
+
+        cols = list(result.columns)
+        cols.sort()
+        result = result[cols]
+
+        return DataFrame(result, dtype=str)
+
+    @staticmethod
+    def create_hash_casts(columns) -> str:
+        """
+        Creates a SQL string with provided columns cast to VARCHAR(32)
+        :param columns: A list of columns to be surrounded with casts
+        :type columns: list
+        :return: A string of generated casts
+        """
+
+        cast = "CAST({} AS VARCHAR(32)) AS {}"
+
+        generated_sql = []
+
+        for column in columns:
+
+            column = column.upper()
+
+            generated_sql.append(cast.format(column, column))
+
+        return ", ".join(generated_sql)
+
+    def get_column_list_for_table(self, schema, table_name) -> list:
+        """
+        Gets a list of columns contained in the table with the given table name, from the given
+        schema
+        :param schema: Name of the schema
+        :type schema: str
+        :param table_name: Name of the table
+        :type table_name: str
+        :param connection: Connection object to use
+        :type connection: Connector
+        :return: A list of column names
+        """
+
+        sql = "SELECT COLUMN_NAME FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{}'".format(schema, table_name.upper())
+
+        result = pd.read_sql_query(sql, self.engine)
+
+        return list(result['column_name'])
 
     # TODO: Make this more generic (e.g. Run a SQL statement)
     def get_hub_table_data(self, select, table_name):
