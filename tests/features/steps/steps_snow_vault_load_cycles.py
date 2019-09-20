@@ -21,8 +21,9 @@ def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
     context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "test_stg_booking",
                                      ["BOOKING_REF NUMBER(38,0)", "CUSTOMER_ID VARCHAR(38)", "BOOKING_DATE DATE",
-                                      "PRICE DOUBLE", "DEPARTURE_DATE DATE", "DESTINATION VARCHAR(3)", "PHONE VARCHAR(15)",
-                                      "NATIONALITY VARCHAR(30)", "LOADDATE DATE"], materialise="table")
+                                      "PRICE DOUBLE", "DEPARTURE_DATE DATE", "DESTINATION VARCHAR(3)",
+                                      "PHONE VARCHAR(15)", "NATIONALITY VARCHAR(30)", "LOADDATE DATE"],
+                                     materialise="table")
 
 
 # ============ Load empty tables ================
@@ -52,8 +53,9 @@ def step_impl(context, day_number):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
     context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "test_stg_booking",
                                      ["BOOKING_REF NUMBER(38,0)", "CUSTOMER_ID VARCHAR(38)", "BOOKING_DATE DATE",
-                                      "PRICE DOUBLE", "DEPARTURE_DATE DATE", "DESTINATION VARCHAR(3)", "PHONE VARCHAR(15)",
-                                      "NATIONALITY VARCHAR(30)", "LOADDATE DATE"], materialise="table")
+                                      "PRICE DOUBLE", "DEPARTURE_DATE DATE", "DESTINATION VARCHAR(3)",
+                                      "PHONE VARCHAR(15)", "NATIONALITY VARCHAR(30)", "LOADDATE DATE"],
+                                     materialise="table")
     context.testdata.insert_data_from_ct(context.table, "test_stg_booking", "SRC_TEST_STG")
 
 
