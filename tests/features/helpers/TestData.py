@@ -46,16 +46,16 @@ class TestData:
 
         table_df = table_df.replace("<null>", NaN)
 
+        cols = list(table_df.columns)
+        cols.sort()
+        table_df = table_df[cols]
+
         if ignore_columns:
             table_df.drop(ignore_columns, 1, inplace=True)
 
         if order_by:
             table_df.sort_values(order_by, inplace=True)
             table_df.reset_index(drop=True, inplace=True)
-
-        cols = list(table_df.columns)
-        cols.sort()
-        table_df = table_df[cols]
 
         return table_df
 
@@ -177,7 +177,6 @@ class TestData:
             :type full_table_name: str
             :param binary_columns: A list of columns to be converted from BINARY to VARCHAR (hash columns)
             :type binary_columns: list
-            :param connection: A connection object for the target database
             :return: Dataframe containing the data for the provided table
         """
 
@@ -200,16 +199,16 @@ class TestData:
         result = pd.read_sql_query(sql, self.engine)
         result.columns = map(str.upper, result.columns)
 
+        cols = list(result.columns)
+        cols.sort()
+        result = result[cols]
+
         if ignore_columns:
             result.drop(ignore_columns, 1, inplace=True)
 
         if order_by:
             result.sort_values(order_by, inplace=True)
             result.reset_index(drop=True, inplace=True)
-
-        cols = list(result.columns)
-        cols.sort()
-        result = result[cols]
 
         return DataFrame(result, dtype=str)
 
@@ -242,8 +241,6 @@ class TestData:
         :type schema: str
         :param table_name: Name of the table
         :type table_name: str
-        :param connection: Connection object to use
-        :type connection: Connector
         :return: A list of column names
         """
 

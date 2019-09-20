@@ -13,8 +13,8 @@ SELECT DISTINCT {{ snow_vault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts,
         FROM {{ hash_model }} AS a
         {%- if is_incremental() %}
         LEFT JOIN {{ this }} AS tgt_a
-        ON a.{{ src_pk }} = tgt_a.{{ tgt_pk|last }}
-        AND tgt_a.{{ tgt_pk|last }} IS NULL
+        ON a.{{ src_hashdiff }} = tgt_a.{{ tgt_hashdiff|last }}
+        AND tgt_a.{{ tgt_hashdiff|last }} IS NULL
         {%- endif %}
  ) AS src
 {% if is_incremental() -%}

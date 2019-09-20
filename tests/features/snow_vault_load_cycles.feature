@@ -16,49 +16,161 @@ Feature: Loading through multiple tables and cycles from source to vault
     And the vault is empty
     When the TEST_STG_CUSTOMER table has data inserted into it for day 1
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   |
-      | 1001        | Albert        | 1990-02-03   | 2019-05-03     | 2019-05-04 |
-      | 1002        | Beth          | 1995-08-07   | 2019-05-03     | 2019-05-04 |
+      | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 |
+      | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 |
     And the TEST_STG_BOOKING table has data inserted into it for day 1
-      | BOOKING_REF | CUSTOMER_ID | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY |
-      | 10034       | 1001        | 100.0 | 2019-09-17     | LON         | 17-214-233-1214 | BRITISH     |
-      | 10035       | 1002        | 80.0  | 2019-09-16     | AMS         | 17-214-200-1214 | DUTCH       |
-    And the vault is loaded for day 1
-#    When the TEST_STG_CUSTOMER table has data inserted into it for day 2
-#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE | EFFECTIVE_FROM |
-#    And the TEST_STG_BOOKING table has data inserted into it for day 2
-#      | BOOKING_REF | CUSTOMER_ID | PRICE | DEPARTURE_DATE | DESTINATION | PHONE | NATIONALITY |
-#    And the vault is loaded for day 2
-#    When the TEST_STG_CUSTOMER table has data inserted into it for day 3
-#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE | EFFECTIVE_FROM |
-#    And the TEST_STG_BOOKING table has data inserted into it for day 3
-#      | BOOKING_REF | CUSTOMER_ID | PRICE | DEPARTURE_DATE | DESTINATION | PHONE | NATIONALITY |
-#    And the vault is loaded for day 3
-#    When the TEST_STG_CUSTOMER table has data inserted into it for day 4
-#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE | EFFECTIVE_FROM |
-#    And the TEST_STG_BOOKING table has data inserted into it for day 4
-#      | BOOKING_REF | CUSTOMER_ID | PRICE | DEPARTURE_DATE | DESTINATION | PHONE | NATIONALITY |
-#    And the vault is loaded for day 4
+      | BOOKING_REF | CUSTOMER_ID | BOOKING_DATE | PRICE | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOADDATE   |
+      | 10034       | 1001        | 2019-05-03   | 100.0 | 2019-09-17     | GBR         | 17-214-233-1214 | BRITISH     | 2019-05-04 |
+      | 10035       | 1002        | 2019-05-03   | 80.0  | 2019-09-16     | NLD         | 17-214-200-1214 | DUTCH       | 2019-05-04 |
+    Given the vault is loaded for day 1
+
+    When the TEST_STG_CUSTOMER table has data inserted into it for day 2
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   |
+      | 1003        | Charley       | 1990-02-03   | 2019-05-05     | 2019-05-05 |
+      | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 |
+    And the TEST_STG_BOOKING table has data inserted into it for day 2
+      | BOOKING_REF | CUSTOMER_ID | BOOKING_DATE | PRICE | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOADDATE   |
+      | 10036       | 1003        | 2019-05-04   | 70.0  | 2019-09-13     | AUS         | 17-214-555-1214 | AUSTRALIAN  | 2019-05-05 |
+      | 10037       | 1004        | 2019-05-04   | 810.0 | 2019-09-18     | DEU         | 17-214-123-1214 | GERMAN      | 2019-05-05 |
+    And the vault is loaded for day 2
+
+    When the TEST_STG_CUSTOMER table has data inserted into it for day 3
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   |
+      | 1003        | Michael       | 1990-02-03   | 2019-05-06     | 2019-05-06 |
+      | 1005        | Kevin         | 2001-07-23   | 2019-05-06     | 2019-05-06 |
+      | 1006        | Chris         | 1960-01-01   | 2019-05-06     | 2019-05-06 |
+    And the TEST_STG_BOOKING table has data inserted into it for day 3
+      | BOOKING_REF | CUSTOMER_ID | BOOKING_DATE | PRICE | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOADDATE   |
+      | 10038       | 1005        | 2019-05-05   | 216.5 | 2019-09-19     | ITA         | 17-214-456-1214 | BRITISH     | 2019-05-06 |
+      | 10039       | 1006        | 2019-05-05   | 111.1 | 2019-09-20     | NOR         | 17-214-789-1214 | RUSSIAN     | 2019-05-06 |
+    And the vault is loaded for day 3
+
+    When the TEST_STG_CUSTOMER table has data inserted into it for day 4
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   |
+      | 1007        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-07 |
+      | 1008        | Wilhemina     | 1998-11-07   | 2019-05-04     | 2019-05-07 |
+      | 1009        | Perry         | 2006-09-13   | 2019-05-04     | 2019-05-07 |
+      | 1010        | Ronna         | 1991-03-21   | 2019-05-04     | 2019-05-07 |
+      | 1011        | Annamae       | 1978-06-16   | 2019-05-04     | 2019-05-07 |
+      | 1012        | Gregorio      | 2004-08-11   | 2019-05-04     | 2019-05-07 |
+      | 1013        | Rochel        | 2003-02-27   | 2019-05-04     | 2019-05-07 |
+      | 1014        | Shayne        | 1999-01-31   | 2019-05-04     | 2019-05-07 |
+      | 1015        | Fabiola       | 1985-04-02   | 2019-05-04     | 2019-05-07 |
+    And the TEST_STG_BOOKING table has data inserted into it for day 4
+      | BOOKING_REF | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOADDATE   |
+      | 10039       | 1006        | 2019-05-05   | 111.1  | 2019-09-20     | AUS         | 17-214-789-1214 | RUSSIAN     | 2019-05-07 |
+      | 10040       | 1007        | 2019-05-06   | 832.84 | 2019-09-28     | CHN         | 17-214-577-1215 | TURKISH     | 2019-05-07 |
+      | 10041       | 1008        | 2019-05-06   | 947.79 | 2019-10-08     | LUX         | 17-214-577-1216 | UAE         | 2019-05-07 |
+      | 10042       | 1019        | 2019-05-06   | 58.24  | 2019-10-21     | IDN         | 17-214-577-1217 | BOLIVIAN    | 2019-05-07 |
+      | 10043       | 1010        | 2019-05-06   | 393.18 | 2019-10-25     | CYM         | 17-214-577-1218 | POLISH      | 2019-05-07 |
+      | 10044       | 1011        | 2019-05-06   | 139.30 | 2019-11-03     | SPM         | 17-214-577-1219 | HUNGARIAN   | 2019-05-07 |
+      | 10045       | 1012        | 2019-05-06   | 724.63 | 2019-11-07     | LBR         | 17-214-577-1220 | ECUADORIAN  | 2019-05-07 |
+      | 10046       | 1013        | 2019-05-06   | 295.81 | 2019-11-14     | SEN         | 17-214-577-1221 | INDONESIAN  | 2019-05-07 |
+      | 10047       | 1014        | 2019-05-06   | 259.99 | 2019-12-22     | HMD         | 17-214-577-1222 | ANGOLAN     | 2019-05-07 |
+      | 10048       | 1015        | 2019-05-06   | 219.99 | 2019-10-16     | JAM         | 17-214-577-1223 | TAIWANESE   | 2019-05-07 |
+    And the vault is loaded for day 4
+
     Then we expect the TEST_HUB_CUSTOMER table to contain
       | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 2019-05-04 | *      |
       | md5('1002') | 1002        | 2019-05-04 | *      |
-    And we expect the TEST_HUB_BOOKING table to contain
+      | md5('1003') | 1003        | 2019-05-05 | *      |
+      | md5('1004') | 1004        | 2019-05-05 | *      |
+      | md5('1005') | 1005        | 2019-05-06 | *      |
+      | md5('1006') | 1006        | 2019-05-06 | *      |
+      | md5('1007') | 1007        | 2019-05-07 | *      |
+      | md5('1008') | 1008        | 2019-05-07 | *      |
+      | md5('1009') | 1009        | 2019-05-07 | *      |
+      | md5('1010') | 1010        | 2019-05-07 | *      |
+      | md5('1011') | 1011        | 2019-05-07 | *      |
+      | md5('1012') | 1012        | 2019-05-07 | *      |
+      | md5('1013') | 1013        | 2019-05-07 | *      |
+      | md5('1014') | 1014        | 2019-05-07 | *      |
+      | md5('1015') | 1015        | 2019-05-07 | *      |
+    Then we expect the TEST_HUB_BOOKING table to contain
       | BOOKING_PK   | BOOKING_REF | LOADDATE   | SOURCE |
       | md5('10034') | 10034       | 2019-05-04 | *      |
       | md5('10035') | 10035       | 2019-05-04 | *      |
-    And we expect the TEST_LINK_CUSTOMER_BOOKING table to contain
-      | CUSTOMER_BOOKING_PK  | CUSTOMER_PK | BOOKING_PK   | LOADDATE   | SOURCE      |
-      | md5('1001\|\|10034') | md5('1001') | md5('10034') | 2019-05-04 | STG_BOOKING |
-      | md5('1002\|\|10035') | md5('1002') | md5('10035') | 2019-05-04 | STG_BOOKING |
-    And we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain
-      | CUSTOMER_PK | HASHDIFF                            | NAME   | DOB        | EFFECTIVE_FROM | LOADDATE   | SOURCE |
-      | md5('1001') | md5('1001\|\|ALBERT\|\|1990-02-03') | Albert | 1990-02-03 | 2019-05-04     | 2019-05-04 | *      |
-      | md5('1002') | md5('1002\|\|BETH\|\|1995-08-07')   | Beth   | 1995-08-07 | 2019-05-04     | 2019-05-04 | *      |
-    And we expect the TEST_SAT_BOOK_CUSTOMER_DETAILS table to contain
-      | BOOKING_PK   | HASHDIFF                                 | PRICE | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOADDATE   | SOURCE |
-      | md5('10034') | md5('10034\|\|100\|\|2019-09-17\|\|LON') | 100.0   | 2019-09-17     | LON         | 2019-05-04     | 2019-05-04 | *      |
-      | md5('10035') | md5('10035\|\|80\|\|2019-09-16\|\|AMS')  | 80.0    | 2019-09-16     | AMS         | 2019-05-04     | 2019-05-04 | *      |
-    And we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain
-      | CUSTOMER_PK | HASHDIFF                                  | PHONE           | NATIONALITY | EFFECTIVE_FROM | LOADDATE   | SOURCE |
-      | md5('1001') | md5('1001\|\|17-214-233-1214\|\|BRITISH') | 17-214-233-1214 | BRITISH     | 2019-05-04     | 2019-05-04 | *      |
-      | md5('1002') | md5('1002\|\|17-214-200-1214\|\|DUTCH')   | 17-214-200-1214 | DUTCH       | 2019-05-04     | 2019-05-04 | *      |
+      | md5('10036') | 10036       | 2019-05-05 | *      |
+      | md5('10037') | 10037       | 2019-05-05 | *      |
+      | md5('10038') | 10038       | 2019-05-06 | *      |
+      | md5('10039') | 10039       | 2019-05-06 | *      |
+      | md5('10040') | 10040       | 2019-05-07 | *      |
+      | md5('10041') | 10041       | 2019-05-07 | *      |
+      | md5('10042') | 10042       | 2019-05-07 | *      |
+      | md5('10043') | 10043       | 2019-05-07 | *      |
+      | md5('10044') | 10044       | 2019-05-07 | *      |
+      | md5('10045') | 10045       | 2019-05-07 | *      |
+      | md5('10046') | 10046       | 2019-05-07 | *      |
+      | md5('10047') | 10047       | 2019-05-07 | *      |
+      | md5('10048') | 10048       | 2019-05-07 | *      |
+    Then we expect the TEST_LINK_CUSTOMER_BOOKING table to contain
+      | CUSTOMER_BOOKING_PK  | CUSTOMER_PK | BOOKING_PK   | LOADDATE   | SOURCE |
+      | md5('1001\|\|10034') | md5('1001') | md5('10034') | 2019-05-04 | *      |
+      | md5('1002\|\|10035') | md5('1002') | md5('10035') | 2019-05-04 | *      |
+      | md5('1003\|\|10036') | md5('1003') | md5('10036') | 2019-05-05 | *      |
+      | md5('1004\|\|10037') | md5('1004') | md5('10037') | 2019-05-05 | *      |
+      | md5('1005\|\|10038') | md5('1005') | md5('10038') | 2019-05-06 | *      |
+      | md5('1006\|\|10039') | md5('1006') | md5('10039') | 2019-05-06 | *      |
+      | md5('1007\|\|10040') | md5('1007') | md5('10040') | 2019-05-07 | *      |
+      | md5('1008\|\|10041') | md5('1008') | md5('10041') | 2019-05-07 | *      |
+      | md5('1009\|\|10042') | md5('1009') | md5('10042') | 2019-05-07 | *      |
+      | md5('1010\|\|10043') | md5('1010') | md5('10043') | 2019-05-07 | *      |
+      | md5('1011\|\|10044') | md5('1011') | md5('10044') | 2019-05-07 | *      |
+      | md5('1012\|\|10045') | md5('1012') | md5('10045') | 2019-05-07 | *      |
+      | md5('1013\|\|10046') | md5('1013') | md5('10046') | 2019-05-07 | *      |
+      | md5('1014\|\|10047') | md5('1014') | md5('10047') | 2019-05-07 | *      |
+      | md5('1015\|\|10048') | md5('1015') | md5('10048') | 2019-05-07 | *      |
+    Then we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain
+      | CUSTOMER_PK | HASHDIFF                               | NAME      | DOB        | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | md5('1001') | md5('1001\|\|ALBERT\|\|1990-02-03')    | Albert    | 1990-02-03 | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1002') | md5('1002\|\|BETH\|\|1995-08-07')      | Beth      | 1995-08-07 | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1003') | md5('1003\|\|CHARLEY\|\|1990-02-03')   | Charley   | 1990-02-03 | 2019-05-04     | 2019-05-05 | *      |
+      | md5('1003') | md5('1003\|\|MICHAEL\|\|1990-02-03')   | Michael   | 1990-02-03 | 2019-05-04     | 2019-05-05 | *      |
+      | md5('1004') | md5('1004\|\|DAVID\|\|1992-01-30')     | David     | 1992-01-30 | 2019-05-04     | 2019-05-06 | *      |
+      | md5('1005') | md5('1005\|\|KEVIN\|\|2001-07-23')     | Kevin     | 2001-07-23 | 2019-05-04     | 2019-05-06 | *      |
+      | md5('1006') | md5('1006\|\|CHRIS\|\|1960-01-01')     | Chris     | 1960-01-01 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1007') | md5('1007\|\|ALBERT\|\|1990-02-03')    | Albert    | 1990-02-03 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1008') | md5('1008\|\|WILHEMINA\|\|1998-11-07') | Wilhemina | 1998-11-07 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1009') | md5('1009\|\|PERRY\|\|2006-09-13')     | Perry     | 2006-09-13 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1010') | md5('1010\|\|RONNA\|\|1991-03-21')     | Ronna     | 1991-03-21 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1011') | md5('1011\|\|ANNAMAE\|\|1978-06-16')   | Annamae   | 1978-06-16 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1012') | md5('1012\|\|GREGORIO\|\|2004-08-11')  | Gregorio  | 2004-08-11 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1013') | md5('1013\|\|ROCHEL\|\|2003-02-27')    | Rochel    | 2003-02-27 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1014') | md5('1014\|\|SHAYNE\|\|1999-01-31')    | Shayne    | 1999-01-31 | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1015') | md5('1015\|\|FABIOLA\|\|1985-04-02')   | Fabiola   | 1985-04-02 | 2019-05-04     | 2019-05-07 | *      |
+    Then we expect the TEST_SAT_BOOK_CUSTOMER_DETAILS table to contain
+      | BOOKING_PK   | HASHDIFF                                    | PRICE  | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | md5('10034') | md5('10034\|\|100\|\|2019-09-17\|\|GBR')    | 100.0  | 2019-09-17     | GBR         | 2019-05-04     | 2019-05-04 | *      |
+      | md5('10035') | md5('10035\|\|80\|\|2019-09-16\|\|NLD')     | 80.0   | 2019-09-16     | NLD         | 2019-05-04     | 2019-05-04 | *      |
+      | md5('10036') | md5('10036\|\|70\|\|2019-09-13\|\|AUS')     | 70.0   | 2019-09-13     | AUS         | 2019-05-04     | 2019-05-05 | *      |
+      | md5('10037') | md5('10037\|\|810\|\|2019-09-18\|\|DEU')    | 810.0  | 2019-09-18     | DEU         | 2019-05-04     | 2019-05-05 | *      |
+      | md5('10038') | md5('10038\|\|216.5\|\|2019-09-19\|\|ITA')  | 216.5  | 2019-09-19     | ITA         | 2019-05-04     | 2019-05-06 | *      |
+      | md5('10039') | md5('10039\|\|111.1\|\|2019-09-20\|\|NOR')  | 111.1  | 2019-09-20     | NOR         | 2019-05-04     | 2019-05-06 | *      |
+      | md5('10039') | md5('10039\|\|111.1\|\|2019-09-20\|\|GBR')  | 111.1  | 2019-09-20     | GBR         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10040') | md5('10040\|\|661.28\|\|2019-09-22\|\|GUM') | 661.28 | 2019-09-22     | GUM         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10041') | md5('10041\|\|832.84\|\|2019-09-28\|\|CHN') | 832.84 | 2019-09-28     | CHN         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10042') | md5('10042\|\|947.79\|\|2019-10-08\|\|LUX') | 947.79 | 2019-10-08     | LUX         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10043') | md5('10043\|\|58.24\|\|2019-10-21\|\|IDN')  | 58.24  | 2019-10-21     | IDN         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10044') | md5('10044\|\|393.18\|\|2019-10-25\|\|CYM') | 393.18 | 2019-10-25     | CYM         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10045') | md5('10045\|\|139.30\|\|2019-11-03\|\|SPM') | 139.30 | 2019-11-03     | SPM         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10046') | md5('10046\|\|724.63\|\|2019-11-07\|\|LBR') | 724.63 | 2019-11-07     | LBR         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10047') | md5('10047\|\|295.81\|\|2019-11-14\|\|SEN') | 295.81 | 2019-11-14     | SEN         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('10048') | md5('10048\|\|219.99\|\|2019-10-16\|\|JAM') | 219.99 | 2019-10-16     | JAM         | 2019-05-04     | 2019-05-07 | *      |
+    Then we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain
+      | CUSTOMER_PK | HASHDIFF                                     | PHONE           | NATIONALITY | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | md5('1001') | md5('1001\|\|17-214-233-1214\|\|BRITISH')    | 17-214-233-1214 | BRITISH     | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1002') | md5('1002\|\|17-214-200-1214\|\|DUTCH')      | 17-214-200-1214 | DUTCH       | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1003') | md5('1003\|\|17-214-555-1214\|\|AUSTRALIAN') | 17-214-555-1214 | AUSTRALIAN  | 2019-05-04     | 2019-05-05 | *      |
+      | md5('1004') | md5('1004\|\|17-214-123-1214\|\|GERMAN')     | 17-214-123-1214 | GERMAN      | 2019-05-04     | 2019-05-05 | *      |
+      | md5('1005') | md5('1005\|\|17-214-456-1214\|\|BRITISH')    | 17-214-456-1214 | BRITISH     | 2019-05-04     | 2019-05-06 | *      |
+      | md5('1006') | md5('1006\|\|17-214-789-1214\|\|RUSSIAN')    | 17-214-789-1214 | RUSSIAN     | 2019-05-04     | 2019-05-06 | *      |
+      | md5('1007') | md5('1007\|\|17-214-577-1215\|\|TURKISH')    | 17-214-577-1215 | TURKISH     | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1008') | md5('1008\|\|17-214-577-1216\|\|UAE')        | 17-214-577-1216 | UAE         | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1009') | md5('1009\|\|17-214-577-1217\|\|BOLIVIAN')   | 17-214-577-1217 | BOLIVIAN    | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1010') | md5('1010\|\|17-214-577-1218\|\|POLISH')     | 17-214-577-1218 | POLISH      | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1011') | md5('1011\|\|17-214-577-1219\|\|HUNGARIAN')  | 17-214-577-1219 | HUNGARIAN   | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1012') | md5('1012\|\|17-214-577-1220\|\|ECUADORIAN') | 17-214-577-1220 | ECUADORIAN  | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1013') | md5('1013\|\|17-214-577-1221\|\|INDONESIAN') | 17-214-577-1221 | INDONESIAN  | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1014') | md5('1014\|\|17-214-577-1222\|\|ANGOLAN')    | 17-214-577-1222 | ANGOLAN     | 2019-05-04     | 2019-05-07 | *      |
+      | md5('1015') | md5('1015\|\|17-214-577-1223\|\|TAIWANESE')  | 17-214-577-1223 | TAIWANESE   | 2019-05-04     | 2019-05-07 | *      |
