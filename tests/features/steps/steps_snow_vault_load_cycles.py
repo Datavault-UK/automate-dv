@@ -1,9 +1,11 @@
-from behave import *
 import os
+
+from behave import *
+
 from definitions import DBT_ROOT
-from pandas import DataFrame
 
 use_step_matcher("parse")
+
 
 # ============== Create Staging =================
 
@@ -34,6 +36,7 @@ def step_impl(context):
     os.chdir(DBT_ROOT)
 
     os.system("dbt run --full-refresh --models snow_vault.features.load_cycles.*")
+
 
 # ================ Data inserts =================
 
@@ -71,15 +74,11 @@ def step_impl(context, day_number):
 
 @then("we expect the TEST_HUB_CUSTOMER table to contain")
 def step_impl(context):
-
-    table_df = context.testdata.context_table_to_df(context.table,
-                                                    ignore_columns=['SOURCE'],
-                                                    order_by='CUSTOMER_PK')
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='CUSTOMER_PK')
 
     result_df = context.testdata.get_table_data(database="DV_PROTOTYPE_DB",
                                                 full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer",
-                                                binary_columns=['CUSTOMER_PK'],
-                                                ignore_columns=['SOURCE'],
+                                                binary_columns=['CUSTOMER_PK'], ignore_columns=['SOURCE'],
                                                 order_by='CUSTOMER_PK')
 
     assert context.testdata.compare_dataframes(table_df, result_df)
@@ -87,15 +86,11 @@ def step_impl(context):
 
 @step("we expect the TEST_HUB_BOOKING table to contain")
 def step_impl(context):
-
-    table_df = context.testdata.context_table_to_df(context.table,
-                                                    ignore_columns=['SOURCE'],
-                                                    order_by='BOOKING_PK')
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='BOOKING_PK')
 
     result_df = context.testdata.get_table_data(database="DV_PROTOTYPE_DB",
                                                 full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_booking",
-                                                binary_columns=['BOOKING_PK'],
-                                                ignore_columns=['SOURCE'],
+                                                binary_columns=['BOOKING_PK'], ignore_columns=['SOURCE'],
                                                 order_by='BOOKING_PK')
 
     assert context.testdata.compare_dataframes(table_df, result_df)
@@ -103,33 +98,26 @@ def step_impl(context):
 
 @step("we expect the TEST_LINK_CUSTOMER_BOOKING table to contain")
 def step_impl(context):
-
-    table_df = context.testdata.context_table_to_df(context.table,
-                                                    ignore_columns=['SOURCE'],
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                     order_by='CUSTOMER_BOOKING_PK')
 
     result_df = context.testdata.get_table_data(database="DV_PROTOTYPE_DB",
                                                 full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT."
                                                                 "test_link_customer_booking",
                                                 binary_columns=['CUSTOMER_BOOKING_PK', 'CUSTOMER_PK', 'BOOKING_PK'],
-                                                ignore_columns=['SOURCE'],
-                                                order_by='CUSTOMER_BOOKING_PK')
+                                                ignore_columns=['SOURCE'], order_by='CUSTOMER_BOOKING_PK')
 
     assert context.testdata.compare_dataframes(table_df, result_df)
 
 
 @step("we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain")
 def step_impl(context):
-
-    table_df = context.testdata.context_table_to_df(context.table,
-                                                    ignore_columns=['SOURCE'],
-                                                    order_by='CUSTOMER_PK')
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='CUSTOMER_PK')
 
     result_df = context.testdata.get_table_data(database="DV_PROTOTYPE_DB",
                                                 full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT."
                                                                 "test_sat_cust_customer_details",
-                                                binary_columns=['CUSTOMER_PK', 'HASHDIFF'],
-                                                ignore_columns=['SOURCE'],
+                                                binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'],
                                                 order_by='CUSTOMER_PK')
 
     assert context.testdata.compare_dataframes(table_df, result_df)
@@ -137,16 +125,12 @@ def step_impl(context):
 
 @step("we expect the TEST_SAT_BOOK_CUSTOMER_DETAILS table to contain")
 def step_impl(context):
-
-    table_df = context.testdata.context_table_to_df(context.table,
-                                                    ignore_columns=['SOURCE'],
-                                                    order_by='BOOKING_PK')
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='BOOKING_PK')
 
     result_df = context.testdata.get_table_data(database="DV_PROTOTYPE_DB",
                                                 full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT."
                                                                 "test_sat_book_customer_details",
-                                                binary_columns=['BOOKING_PK', 'HASHDIFF'],
-                                                ignore_columns=['SOURCE'],
+                                                binary_columns=['BOOKING_PK', 'HASHDIFF'], ignore_columns=['SOURCE'],
                                                 order_by='BOOKING_PK')
 
     assert context.testdata.compare_dataframes(table_df, result_df)
@@ -154,16 +138,12 @@ def step_impl(context):
 
 @step("we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain")
 def step_impl(context):
-
-    table_df = context.testdata.context_table_to_df(context.table,
-                                                    ignore_columns=['SOURCE'],
-                                                    order_by='CUSTOMER_PK')
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='CUSTOMER_PK')
 
     result_df = context.testdata.get_table_data(database="DV_PROTOTYPE_DB",
                                                 full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT."
                                                                 "test_sat_book_booking_details",
-                                                binary_columns=['CUSTOMER_PK', 'HASHDIFF'],
-                                                ignore_columns=['SOURCE'],
+                                                binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'],
                                                 order_by='CUSTOMER_PK')
 
     assert context.testdata.compare_dataframes(table_df, result_df)
