@@ -46,18 +46,7 @@ class TestData:
 
         table_df = table_df.replace("<null>", NaN)
 
-        cols = list(table_df.columns)
-        cols.sort()
-        table_df = table_df[cols]
-
-        if ignore_columns:
-            table_df.drop(ignore_columns, 1, inplace=True)
-
-        if order_by:
-            table_df.sort_values(order_by, inplace=True)
-            table_df.reset_index(drop=True, inplace=True)
-
-        return table_df
+        return self.format_dataframe(df=table_df, ignore_columns=ignore_columns, order_by=order_by)
 
     @staticmethod
     def compare_dataframes(first_frame, second_frame):
@@ -167,29 +156,26 @@ class TestData:
                 for ret in cur:
                     print(ret)
 
-    def get_table_data(self, *, database, full_table_name, binary_columns=None,
+    def get_table_data(self, *, full_table_name, binary_columns=None,
                        ignore_columns=None, order_by=None) -> pd.DataFrame:
         """
-        Gets the provided table's data as a Dataframe
-            :param database: The name of the database containing the required table
-            :type database: str
+        Gets the provided table's data as a DataFrame
             :param full_table_name: Name of the table to query, including DB and schema
             :type full_table_name: str
             :param binary_columns: A list of columns to be converted from BINARY to VARCHAR (hash columns)
             :type binary_columns: list
-            :return: Dataframe containing the data for the provided table
+            :param ignore_columns: A list of columns to be dropped
+            :type ignore_columns: list
+            :param order_by: The column to sort by
+            :type order_by: str
+            :return: DataFrame containing the data for the provided table name
         """
 
         sql = "SELECT {} FROM {}"
 
-        if binary_columns:
-
-            columns = self.create_hash_casts(binary_columns)
-        else:
-            columns = "*"
-
-        table_name = full_table_name.split(".")[2]
-        other_cols = self.get_column_list_for_table(database, table_name)
+        columns = self.create_hash_casts(binary_columns) if binary_columns else "*"
+        other_cols = self.get_column_list_for_table(schema=full_table_name.split(".")[0],
+                                                    table_name=full_table_name.split(".")[2])
 
         diff = list(set(binary_columns).symmetric_difference(set(other_cols)))
         columns = columns + ", " + ", ".join(diff)
@@ -199,9 +185,14 @@ class TestData:
         result = DataFrame(pd.read_sql_query(sql, self.engine), dtype=str)
         result.columns = map(str.upper, result.columns)
 
-        cols = list(result.columns)
+        return self.format_dataframe(df=result, ignore_columns=ignore_columns, order_by=order_by)
+
+    @staticmethod
+    def format_dataframe(*, df, ignore_columns=None, order_by=None):
+
+        cols = list(df.columns)
         cols.sort()
-        result = result[cols]
+        result = df[cols]
 
         if ignore_columns:
             result.drop(ignore_columns, 1, inplace=True)
@@ -210,7 +201,7 @@ class TestData:
             result.sort_values(order_by, inplace=True)
             result.reset_index(drop=True, inplace=True)
 
-        return result
+        return df
 
     @staticmethod
     def create_hash_casts(columns) -> str:
@@ -233,7 +224,7 @@ class TestData:
 
         return ", ".join(generated_sql)
 
-    def get_column_list_for_table(self, schema, table_name) -> list:
+    def get_column_list_for_table(self, *, schema, table_name) -> list:
         """
         Gets a list of columns contained in the table with the given table name, from the given
         schema
@@ -244,7 +235,8 @@ class TestData:
         :return: A list of column names
         """
 
-        sql = "SELECT COLUMN_NAME FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = '{}'".format(schema, table_name.upper())
+        sql = "SELECT COLUMN_NAME FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = " \
+              "'{}'".format(schema, table_name.upper())
 
         result = pd.read_sql_query(sql, self.engine)
 
