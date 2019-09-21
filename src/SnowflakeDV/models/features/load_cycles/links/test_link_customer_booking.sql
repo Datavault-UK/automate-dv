@@ -12,7 +12,7 @@
                   [src_fk[1], 'BINARY(16)', src_fk[1]]]                   -%}
 
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                           -%}
-{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]               -%}
+{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]              -%}
 
 {%- set hash_model = [ref('test_stg_booking_hashed')]                     -%}
 

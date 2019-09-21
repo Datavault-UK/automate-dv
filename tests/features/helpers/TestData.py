@@ -196,7 +196,7 @@ class TestData:
 
         sql = sql.format(columns, full_table_name)
 
-        result = pd.read_sql_query(sql, self.engine)
+        result = DataFrame(pd.read_sql_query(sql, self.engine), dtype=str)
         result.columns = map(str.upper, result.columns)
 
         cols = list(result.columns)
@@ -210,7 +210,7 @@ class TestData:
             result.sort_values(order_by, inplace=True)
             result.reset_index(drop=True, inplace=True)
 
-        return DataFrame(result, dtype=str)
+        return result
 
     @staticmethod
     def create_hash_casts(columns) -> str:
