@@ -1,6 +1,6 @@
 {{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature') -}}
 
-{%- set src_pk = 'CUSTOMER_PK'                                                    -%}
+{%- set src_pk = 'BOOKING_PK'                                                    -%}
 {%- set src_hashdiff = 'BOOK_BOOKING_HASHDIFF'                                    -%}
 {%- set src_payload = ['PRICE', 'BOOKING_DATE', 'DEPARTURE_DATE', 'DESTINATION']  -%}
 

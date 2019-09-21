@@ -174,6 +174,7 @@ class TestData:
         sql = "SELECT {} FROM {}"
 
         columns = self.create_hash_casts(binary_columns) if binary_columns else "*"
+
         other_cols = self.get_column_list_for_table(schema=full_table_name.split(".")[0],
                                                     table_name=full_table_name.split(".")[2])
 
@@ -192,14 +193,14 @@ class TestData:
 
         cols = list(df.columns)
         cols.sort()
-        result = df[cols]
+        df = df[cols]
 
         if ignore_columns:
-            result.drop(ignore_columns, 1, inplace=True)
+            df.drop(ignore_columns, 1, inplace=True)
 
         if order_by:
-            result.sort_values(order_by, inplace=True)
-            result.reset_index(drop=True, inplace=True)
+            df.sort_values(order_by, inplace=True)
+            df.reset_index(drop=True, inplace=True)
 
         return df
 

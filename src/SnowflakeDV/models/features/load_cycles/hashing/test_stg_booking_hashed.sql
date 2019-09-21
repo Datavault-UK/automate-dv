@@ -17,9 +17,3 @@
                            ('LOADDATE', 'EFFECTIVE_FROM')]) }},
 
 {{- snow_vault.staging_footer(source='STG_BOOKING', source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_booking') }}
-
-
-
-
-
-
