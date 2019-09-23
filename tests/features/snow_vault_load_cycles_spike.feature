@@ -20,6 +20,7 @@ Feature: Loading data into a satellite with changing payloads
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 |
+      | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 |
       | 1002        | Jack          | 1995-08-07   | 2019-05-04     | 2019-05-04 |
     And the TEST_STG_BOOKING table has data inserted into it for day 1
       | BOOKING_REF | CUSTOMER_ID | BOOKING_DATE | PRICE | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOADDATE   |
