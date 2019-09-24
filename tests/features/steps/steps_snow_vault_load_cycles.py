@@ -113,12 +113,13 @@ def step_impl(context):
 
 @step("we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain")
 def step_impl(context):
-    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='CUSTOMER_PK')
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'],
+                                                    order_by=['NAME', 'LOADDATE'])
 
     result_df = context.testdata.get_table_data(full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT."
                                                                 "test_sat_cust_customer_details",
                                                 binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'],
-                                                order_by='CUSTOMER_PK')
+                                                order_by=['NAME', 'LOADDATE'])
 
     assert context.testdata.compare_dataframes(table_df, result_df)
 
