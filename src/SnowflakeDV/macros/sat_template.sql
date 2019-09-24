@@ -4,8 +4,8 @@
                        tgt_eff, tgt_ldts, tgt_source,
                        src_table, hash_model) -%}
 
-SELECT e.CUSTOMER_PK, e.CUST_CUSTOMER_HASHDIFF AS HASHDIFF, e.CUSTOMER_NAME AS NAME, e.CUSTOMER_DOB AS DOB, e.EFFECTIVE_FROM, e.LOADDATE, e.SOURCE
-FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_STG_CUSTOMER_HASHED AS e
+SELECT {{ snow_vault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
+FROM {{ hash_model }} AS e
 LEFT JOIN (
     SELECT d.CUSTOMER_PK, d.HASHDIFF, d.NAME, d.DOB, d.EFFECTIVE_FROM, d.LOADDATE, d.SOURCE
     FROM (
@@ -13,8 +13,8 @@ LEFT JOIN (
           CASE WHEN RANK() OVER (PARTITION BY c.CUSTOMER_PK ORDER BY c.LOADDATE DESC) = 1 THEN 'Y' ELSE 'N' END CURR_FLG
           FROM (
             SELECT a.CUSTOMER_PK, a.HASHDIFF, a.NAME, a.DOB, a.EFFECTIVE_FROM, a.LOADDATE, a.SOURCE
-            FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_SAT_CUST_CUSTOMER_DETAILS as a
-            JOIN DV_PROTOTYPE_DB.SRC_TEST_VLT.TEST_STG_CUSTOMER_HASHED as b
+            FROM {{ this }} as a
+            JOIN {{ hash_model }} as b
             ON a.CUSTOMER_PK = b.CUSTOMER_PK
           ) as c
     ) AS d

@@ -1,7 +1,7 @@
 {{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature') -}}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                                      -%}
-{%- set src_hashdiff = 'CUST_CUSTOMER_HASHDIFF'                                                          -%}
+{%- set src_hashdiff = 'CUST_CUSTOMER_HASHDIFF'                                                     -%}
 {%- set src_payload = ['CUSTOMER_DOB', 'CUSTOMER_NAME']                                             -%}
 
 {%- set src_eff = 'EFFECTIVE_FROM'                                                                  -%}
