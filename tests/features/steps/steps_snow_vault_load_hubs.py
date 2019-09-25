@@ -10,172 +10,109 @@ use_step_matcher("parse")
 
 
 # Distinct history of data from the stage is loaded into an empty hub
-
-
-@given("there is an empty TEST_HUB_CUSTOMER table")
-def step_impl(context):
-    context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_customer",
-                                     ["CUSTOMER_PK BINARY(16) PRIMARY KEY", "CUSTOMERKEY VARCHAR(38)", "LOADDATE DATE",
-                                      "SOURCE VARCHAR(4)"], materialise="table")
-
-
-@step("there are records in the STG_CUSTOMER table")
-def step_impl(context):
-    context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_customer",
-                                     ["CUSTOMER_PK BINARY(16)", "NATION_PK BINARY(16)", "CUSTOMER_NATION_PK BINARY(16)",
-                                      "HASHDIFF BINARY(16)", "CUSTOMERKEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
-                                      "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_NATIONKEY NUMBER(38,0)",
-                                      "SOURCE VARCHAR(4)", "LOADDATE DATE", "EFFECTIVE_FROM DATE"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "stg_customer", "SRC_TEST_STG")
-
-
-@step("I run the dbt hub load sql script")
-def step_impl(context):
-    os.chdir(DBT_ROOT)
-    os.system("dbt run --full-refresh --models test_hub_customer")
-
-
-@step("only distinct records from STG_CUSTOMER are inserted into HUB_CUSTOMER")
-def step_impl(context):
-    bindings.compare_ct_to_db_table_customer(context, "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer", True)
-
-
 # Unchanged records in stage are not loaded into the hub with pre-existing data
-
-@given("there are records in the HUB_CUSTOMER table")
-def step_impl(context):
-    context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_customer",
-                                     ["CUSTOMER_PK BINARY(16) PRIMARY KEY", "CUSTOMERKEY VARCHAR(38)", "LOADDATE DATE",
-                                      "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "test_hub_customer", "SRC_TEST_VLT")
-
-
-@step("only different or unchanged records are loaded into HUB_CUSTOMER")
-def step_impl(context):
-    sql = "SELECT CAST(CUSTOMER_PK AS VARCHAR(32)) AS CUSTOMER_PK, " \
-          "CUSTOMERKEY, LOADDATE, SOURCE FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer " \
-          "AS hub ORDER BY hub.CUSTOMERKEY;"
-
-    table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.general_sql_statement_to_df(sql), dtype=str)
-
-    table_df['CUSTOMER_PK'] = table_df['CUSTOMER_PK'].str.upper()
-
-    if result_df.equals(table_df):
-        assert True
-    else:
-        assert False
-
-
 # Only one instance of a record is loaded into the hub table for the history with multiple sources
 
-@step("only the first instance of a distinct record is loaded into HUB_CUSTOMER")
+@step("there are records in the TEST_STG_CUSTOMER table")
 def step_impl(context):
-    bindings.compare_ct_to_db_table_customer(context, "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer", True)
+    context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "test_stg_customer_hubs",
+                                     ["CUSTOMER_ID VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)", "CUSTOMER_DOB DATE",
+                                      "LOADDATE DATE", "SOURCE VARCHAR(4)", ], materialise="table")
+    context.testdata.insert_data_from_ct(context.table, "test_stg_customer_hubs", "SRC_TEST_STG")
+
+
+@given("there are records in the TEST_HUB_CUSTOMER table")
+def step_impl(context):
+    context.testdata.insert_data_from_ct(context.table, "test_stg_customer_hubs", "SRC_TEST_VLT")
+
+
+@step("I run a fresh dbt hub load")
+def step_impl(context):
+    os.chdir(DBT_ROOT)
+
+    os.system("dbt run --full-refresh --models +test_hub_customer_hubs")
+
+
+@step("I load the TEST_HUB_CUSTOMER table")
+def step_impl(context):
+    os.chdir(DBT_ROOT)
+
+    os.system("dbt run --models +test_hub_customer_hubs")
+
+
+@step("only distinct records from TEST_STG_CUSTOMER are inserted into TEST_HUB_CUSTOMER")
+@step("only different or unchanged records are loaded into TEST_HUB_CUSTOMER")
+@step("only the first instance of a distinct record is loaded into TEST_HUB_CUSTOMER")
+def step_impl(context):
+    table_df = context.testdata.context_table_to_df(context.table)
+
+    result_df = context.testdata.get_table_data(full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_customer_hubs",
+                                                binary_columns=['CUSTOMER_PK'], order_by='CUSTOMER_ID')
+
+    assert context.testdata.compare_dataframes(table_df, result_df)
 
 
 # Union Tests
 # Distinct history of data from a union of stage tables is loaded into an empty HUB_PART
 
-@given("there is an empty TEST_HUB_PART table")
-def step_impl(context):
-    context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_part",
-                                     ["PART_PK BINARY(16)", "PARTKEY VARCHAR(38)", "SOURCE VARCHAR(4)",
-                                      "LOADDATE DATE"], materialise="table")
 
-
-@step("there are records in the STG_PART table")
+@step("there are records in the TEST_STG_PARTS table")
 def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_part",
-                                     ["PART_PK BINARY(16)", "PARTKEY VARCHAR(38)", "NAME VARCHAR(60)",
-                                      "TYPE VARCHAR(10)", "SIZE VARCHAR(5)", "RETAILPRICE DOUBLE", "LOADDATE DATE",
-                                      "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "stg_part", "SRC_TEST_STG")
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "test_stg_parts",
+                                     ["PART_ID VARCHAR(38)", "PART_NAME VARCHAR(60)", "PART_TYPE VARCHAR(10)",
+                                      "PART_SIZE VARCHAR(5)", "PART_RETAILPRICE DOUBLE", "LOADDATE DATE",
+                                      "SOURCE VARCHAR(4)"], materialise="table")
+    context.testdata.insert_data_from_ct(context.table, "test_stg_parts", "SRC_TEST_STG")
 
 
-@step("there are records in the STG_PARTSUPP table")
+@step("there are records in the TEST_STG_SUPPLIER table")
 def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_partsupp",
-                                     ["PART_PK BINARY(16)", "SUPP_PK BINARY(16)", "PARTKEY VARCHAR(38)", "AVAILQTY INT",
-                                      "SUPPLYCOST DOUBLE", "LOADDATE DATE", "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"],
-                                     materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "stg_partsupp", "SRC_TEST_STG")
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "test_stg_supplier",
+                                     ["PART_ID VARCHAR(38)", "SUPPLIER_ID VARCHAR(38)", "AVAILQTY INT",
+                                      "SUPPLYCOST DOUBLE", "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
+    context.testdata.insert_data_from_ct(context.table, "test_stg_supplier", "SRC_TEST_STG")
 
 
-@step("there are records in the STG_LINEITEM table")
+@step("there are records in the TEST_STG_LINEITEM table")
 def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "stg_lineitem",
-                                     ["ORDER_PK BINARY(16)", "PART_PK BINARY(16)", "SUPP_PK BINARY(16)",
-                                      "PARTKEY VARCHAR(38)", "LINENUMBER NUMBER(38)", "QUANTITY INT",
-                                      "EXTENDED_PRICE DOUBLE", "DISCOUNT DOUBLE", "LOADDATE DATE",
-                                      "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "stg_lineitem", "SRC_TEST_STG")
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_STG", "test_stg_lineitem",
+                                     ["ORDER_ID VARCHAR(38)", "PART_ID VARCHAR(38)", "SUPPLIER_ID VARCHAR(38)",
+                                      "LINENUMBER NUMBER(38)", "QUANTITY INT", "EXTENDED_PRICE DOUBLE",
+                                      "DISCOUNT DOUBLE", "LOADDATE DATE", "SOURCE VARCHAR(4)"], materialise="table")
+    context.testdata.insert_data_from_ct(context.table, "test_stg_lineitem", "SRC_TEST_STG")
 
 
-@step("I run the dbt hub load sql script with unions")
+@step("I run the dbt hub load with unions")
 def step_impl(context):
     os.chdir(DBT_ROOT)
-    os.system("dbt run --full-refresh --models test_hub_part")
+
+    os.system("dbt run --full-refresh --models +test_hub_parts")
 
 
-@step("only distinct records from the union are inserted into HUB_PART")
+@step("only different or unchanged records are loaded into TEST_HUB_PARTS")
+@step("only distinct records from the union are inserted into TEST_HUB_PARTS")
+@step("only the first instance of a distinct record is loaded into TEST_HUB_PARTS")
 def step_impl(context):
-    bindings.compare_ct_to_db_table_part(context, "DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_part", True)
+    table_df = context.testdata.context_table_to_df(context.table, ignore_columns=['SOURCE'])
+
+    result_df = context.testdata.get_table_data(full_table_name="DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_parts",
+                                                binary_columns=['PART_PK'], order_by='PART_ID',
+                                                ignore_columns=['SOURCE'])
+
+    assert context.testdata.compare_dataframes(table_df, result_df)
 
 
 # Unchanged records in stage are not loaded into the union hub with pre-existing data
 
-@given("there are records in the HUB_PART table")
+
+@given("there are records in the TEST_HUB_PARTS table")
 def step_impl(context):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_VLT")
-    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_part",
-                                     ["PART_PK BINARY(16)", "PARTKEY VARCHAR(38)", "SOURCE VARCHAR(4)",
+    context.testdata.drop_and_create("DV_PROTOTYPE_DB", "SRC_TEST_VLT", "test_hub_parts",
+                                     ["PART_PK BINARY(16)", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)",
                                       "LOADDATE DATE"], materialise="table")
-    context.testdata.insert_data_from_ct(context.table, "test_hub_part", "SRC_TEST_VLT")
-
-
-@step("only different or unchanged records are loaded into HUB_PART")
-def step_impl(context):
-    sql = "SELECT CAST(PART_PK AS VARCHAR(32)) AS PART_PK, " \
-          "PARTKEY, LOADDATE, SOURCE FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_part " \
-          "AS hub ORDER BY hub.PARTKEY;"
-
-    table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.general_sql_statement_to_df(sql), dtype=str)
-
-    table_df['PART_PK'] = table_df['PART_PK'].str.upper()
-
-    if result_df.equals(table_df):
-        assert True
-    else:
-        assert False
-
-
-# Only one instance of a record is loaded into the union hub table for the history with multiple sources
-
-@step("only the first instance of a distinct record is loaded into HUB_PART")
-def step_impl(context):
-    sql = "SELECT CAST(PART_PK AS VARCHAR(32)) AS PART_PK, " \
-          "PARTKEY, LOADDATE, SOURCE FROM DV_PROTOTYPE_DB.SRC_TEST_VLT.test_hub_part " \
-          "AS hub ORDER BY hub.PARTKEY;"
-
-    table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.general_sql_statement_to_df(sql), dtype=str)
-
-    table_df['PART_PK'] = table_df['PART_PK'].str.upper()
-
-    # Ignore SOURCE column as this will change with every run
-    table_df.drop(['SOURCE'], 1, inplace=True)
-    result_df.drop(['SOURCE'], 1, inplace=True)
-
-    if result_df.equals(table_df):
-        assert True
-    else:
-        assert False
+    context.testdata.insert_data_from_ct(context.table, "test_hub_parts", "SRC_TEST_VLT")

@@ -2,3 +2,5 @@
 
 tests/features/helpers/credentials\.json
 src/SnowflakeDV/__pycache__/
+
+tests/features/__pycache__/
