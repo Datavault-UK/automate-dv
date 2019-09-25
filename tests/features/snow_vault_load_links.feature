@@ -75,21 +75,24 @@ Feature: Load Links
       | 1005        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CUST   |
     And there are records in the TEST_STG_CRM_CUSTOMER table
       | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
-      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
-      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
     And there are records in the LINK_CUSTOMER_NATION table
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CUST   |
-      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CUST   |
-      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1992-12-31 | CUST   |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1992-12-31 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1992-12-31 | CUST   |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1992-12-31 | CRM    |
     When I run a dbt link load
     Then only the first seen distinct records are loaded into the link
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | *      |
-      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | *      |
-      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | *      |
-      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | *      |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1992-12-31 | CUST   |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1992-12-31 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CUST   |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1992-12-31 | CUST   |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1992-12-31 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |

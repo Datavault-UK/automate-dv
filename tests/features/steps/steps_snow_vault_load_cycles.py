@@ -40,7 +40,6 @@ def step_impl(context):
 
 # ================ Data inserts =================
 
-
 @when('the TEST_STG_CUSTOMER table has data inserted into it for day {day_number}')
 def step_impl(context, day_number):
     context.testdata.create_schema("DV_PROTOTYPE_DB", "SRC_TEST_STG")
