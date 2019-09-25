@@ -37,6 +37,6 @@
 
 {%- set hash_model = ref('stg_orders_hashed')                                      -%}
 
-{{ snow_vault.sat_template(src_pk, src_hash, src_nk, src_ldts, src_eff, src_source,
+{{ dbtvault.sat_template(src_pk, src_hash, src_nk, src_ldts, src_eff, src_source,
                            tgt_cols, tgt_pk, tgt_hash, tgt_nk, tgt_ldts, tgt_eff, tgt_source,
                            src_table, hash_model) }}

@@ -1,7 +1,7 @@
-name: 'snow_vault'
+name: 'dbtvault'
 version: '1.0'
 
-profile: 'snow_vault'
+profile: 'dbtvault'
 
 source-paths: ["models"]
 analysis-paths: ["analysis"] 

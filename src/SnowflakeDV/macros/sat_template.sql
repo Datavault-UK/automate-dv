@@ -5,27 +5,27 @@
                        tgt_eff, tgt_ldts, tgt_source,
                        src_table, hash_model) -%}
 
-SELECT {{ snow_vault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
+SELECT {{ dbtvault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
 FROM {{ hash_model }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (
-    SELECT {{ snow_vault.prefix(tgt_cols, 'd') }}
+    SELECT {{ dbtvault.prefix(tgt_cols, 'd') }}
     FROM (
-          SELECT {{ snow_vault.prefix(tgt_cols, 'c') }},
+          SELECT {{ dbtvault.prefix(tgt_cols, 'c') }},
           CASE WHEN RANK()
-          OVER (PARTITION BY {{ snow_vault.prefix([tgt_pk|last], 'c') }}
-          ORDER BY {{ snow_vault.prefix([tgt_ldts|last], 'c') }} DESC) = 1
+          OVER (PARTITION BY {{ dbtvault.prefix([tgt_pk|last], 'c') }}
+          ORDER BY {{ dbtvault.prefix([tgt_ldts|last], 'c') }} DESC) = 1
           THEN 'Y' ELSE 'N' END CURR_FLG
           FROM (
-            SELECT {{ snow_vault.prefix(tgt_cols, 'a') }}
+            SELECT {{ dbtvault.prefix(tgt_cols, 'a') }}
             FROM {{ this }} as a
             JOIN {{ hash_model }} as b
-            ON {{ snow_vault.prefix([tgt_pk|last], 'a') }} = {{ snow_vault.prefix([src_pk], 'b') }}
+            ON {{ dbtvault.prefix([tgt_pk|last], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
           ) as c
     ) AS d
 WHERE d.CURR_FLG = 'Y') AS src
-ON {{ snow_vault.prefix([tgt_hashdiff|last], 'src') }} = {{ snow_vault.prefix([src_hashdiff], 'e') }}
-WHERE {{ snow_vault.prefix([tgt_hashdiff|last], 'src') }} IS NULL
+ON {{ dbtvault.prefix([tgt_hashdiff|last], 'src') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
+WHERE {{ dbtvault.prefix([tgt_hashdiff|last], 'src') }} IS NULL
 {%- endif -%}
 
 {% endmacro %}

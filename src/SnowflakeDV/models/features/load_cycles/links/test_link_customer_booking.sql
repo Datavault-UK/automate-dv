@@ -16,6 +16,6 @@
 
 {%- set hash_model = [ref('test_stg_booking_hashed')]                     -%}
 
-{{ snow_vault.link_template(src_pk, src_fk, src_ldts, src_source,
+{{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
                            tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                            hash_model) }}

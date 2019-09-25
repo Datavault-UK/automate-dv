@@ -35,7 +35,7 @@ def step_impl(context):
 def step_impl(context):
     os.chdir(DBT_ROOT)
 
-    os.system("dbt run --full-refresh --models snow_vault.features.load_cycles.*")
+    os.system("dbt run --full-refresh --models dbtvault.features.load_cycles.*")
 
 
 # ================ Data inserts =================
@@ -66,7 +66,7 @@ def step_impl(context, day_number):
 def step_impl(context, day_number):
     os.chdir(DBT_ROOT)
 
-    os.system("dbt run --models snow_vault.features.load_cycles.*")
+    os.system("dbt run --models dbtvault.features.load_cycles.*")
 
 
 # ============== Check loaded data ==============

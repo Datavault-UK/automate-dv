@@ -16,7 +16,7 @@
                      'SRC_TEST_STG.STG_LINEITEM']
                                                                           -%}
 
-{{ snow_vault.hub_template(src_pk, src_nk, src_ldts, src_source,
+{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
                            tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                            src_table, hash_model) }}
 
