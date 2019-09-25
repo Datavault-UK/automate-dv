@@ -19,5 +19,5 @@
 
 {%- set hash_model = [ref('stg_orders_hashed') ]                                      -%}
 
-{{ snow_vault.link_template(src_pk, src_fk, src_ldts, src_source,
+{{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
                            tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source, src_table, hash_model) }}

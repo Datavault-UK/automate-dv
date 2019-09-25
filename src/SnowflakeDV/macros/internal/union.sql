@@ -14,7 +14,7 @@
 
       {%- for src in range(iterations) -%}
       {%- set letter = letters[loop.index0] %}
-      {{ snow_vault.single(src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source,
+      {{ dbtvault.single(src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source,
                             tgt_pk,
                             hash_model[loop.index0],
                             letter,

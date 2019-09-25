@@ -1,6 +1,6 @@
 {{- config(materialized='table', schema='STG', tags=['static', 'incremental'], enabled=true) -}}
 
-{{ snow_vault.gen_hashing([('ORDERKEY', 'ORDER_PK'),
+{{ dbtvault.gen_hashing([('ORDERKEY', 'ORDER_PK'),
                            ('PARTKEY', 'PART_PK'),
                            ('SUPPLIERKEY', 'SUPPLIER_PK'),
                            ('LINENUMBER', 'LINEITEM_PK'),
@@ -19,8 +19,8 @@
                            (['CUSTOMER_NATIONKEY', 'CUSTOMER_REGIONKEY'], 'CUSTOMER_NATION_REGION_PK'),
                            (['CUSTOMER_REGION_COMMENT', 'CUSTOMER_REGION_NAME'], 'CUSTOMER_REGION_HASHDIFF')]) -}},
 
-{{- snow_vault.derived_cols([('CURRENT_TIME', 'NOW')])}}
+{{- dbtvault.derived_cols([('CURRENT_TIME', 'NOW')])}}
 
-{{- snow_vault.staging_footer(var('date'), var('date'), 'TPCH', 'DV_PROTOTYPE_DB.SRC_STG.V_SRC_STG_ORDERS') }}
+{{- dbtvault.staging_footer(var('date'), var('date'), 'TPCH', 'DV_PROTOTYPE_DB.SRC_STG.V_SRC_STG_ORDERS') }}
 
 

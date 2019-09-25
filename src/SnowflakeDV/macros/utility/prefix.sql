@@ -3,7 +3,7 @@
 {%- for column in columns -%}
 
     {% if column is iterable and column is not string %}
-        {{- snow_vault.prefix(column, prefix_str) -}}
+        {{- dbtvault.prefix(column, prefix_str) -}}
     {%- else -%}
         {{- prefix_str}}.{{column.strip() -}}
     {%- endif -%}

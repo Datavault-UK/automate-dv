@@ -14,7 +14,7 @@
 
 {%- set hash_model = [ref('test_stg_customer_hashed')]                    -%}
 
-{{ snow_vault.hub_template(src_pk, src_nk, src_ldts, src_source,
+{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
                            tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                            hash_model) }}
 
