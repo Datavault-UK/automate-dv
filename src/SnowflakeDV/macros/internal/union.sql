@@ -1,12 +1,10 @@
 {%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, hash_model) -%}
 
-    {%- if is_incremental() -%}
     SELECT {{ tgt_cols|join(", ") }},
     LAG({{ src_source }}, 1)
     OVER(PARTITION by {{ tgt_pk }}
     ORDER BY {{ tgt_pk }}) AS FIRST_SOURCE
     FROM (
-    {%- endif -%}
 
  {%- set letters='abcdefghijklmnopqrstuvwxyz' -%}
 
@@ -22,5 +20,5 @@
       {% if not loop.last %}
       UNION
       {%- endif -%}
-      {%- endfor -%}{%- if is_incremental() -%}){%- endif -%}
+      {%- endfor -%})
 {%- endmacro -%}

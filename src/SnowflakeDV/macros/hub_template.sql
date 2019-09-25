@@ -13,9 +13,7 @@ FROM (
 WHERE stg.{{ tgt_pk|last }} NOT IN (SELECT {{ tgt_pk|last }} FROM {{ this }})
 AND stg.FIRST_SOURCE IS NULL
 {%- else -%}
-{%- if not union -%}
 WHERE stg.FIRST_SOURCE IS NULL
-{%- endif -%}
 {%- endif -%}
 
 {%- endmacro -%}
