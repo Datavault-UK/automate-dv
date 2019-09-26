@@ -1,7 +1,6 @@
 {{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature')                  -}}
 
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                         (['CUSTOMER_ID', 'CUSTOMER_NAME', 'CUSTOMER_DOB'], 'CUSTOMER_HASHDIFF')]) -}},
+{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')]) -}},
 
 {{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),
                          ('CUSTOMER_DOB', 'CUSTOMER_DOB'),

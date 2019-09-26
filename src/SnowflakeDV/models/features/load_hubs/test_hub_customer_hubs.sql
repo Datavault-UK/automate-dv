@@ -8,7 +8,7 @@
 {%- set tgt_cols = [src_pk, src_nk, src_ldts, src_source]                               -%}
 
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                         -%}
-{%- set tgt_nk = [src_nk, 'NUMBER(38,0)', src_nk]                                       -%}
+{%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                       -%}
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                         -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                            -%}
 
