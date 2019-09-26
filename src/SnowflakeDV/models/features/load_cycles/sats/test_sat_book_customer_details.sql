@@ -1,4 +1,4 @@
-{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature') -}}
+{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature')             -}}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                                      -%}
 {%- set src_hashdiff = 'BOOK_CUSTOMER_HASHDIFF'                                                     -%}

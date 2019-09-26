@@ -1,4 +1,4 @@
-{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature') -}}
+{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature')            -}}
 
 {%- set src_pk = 'BOOKING_PK'                                                                      -%}
 {%- set src_hashdiff = 'BOOK_BOOKING_HASHDIFF'                                                     -%}

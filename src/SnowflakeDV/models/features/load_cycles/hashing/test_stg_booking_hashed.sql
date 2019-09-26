@@ -1,4 +1,4 @@
-{{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature') -}}
+{{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature')                                               -}}
 
 {{ dbtvault.gen_hashing([('BOOKING_REF', 'BOOKING_PK'),
                          ('CUSTOMER_ID', 'CUSTOMER_PK'),
@@ -15,6 +15,6 @@
                          ('PHONE', 'PHONE'),
                          ('NATIONALITY', 'NATIONALITY'),
                          ('LOADDATE', 'LOADDATE'),
-                         ('BOOKING_DATE', 'EFFECTIVE_FROM')]) }}
+                         ('BOOKING_DATE', 'EFFECTIVE_FROM')])                                                                    }}
 
-{{- dbtvault.staging_footer(source='STG_BOOKING', source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_booking') }}
+{{- dbtvault.staging_footer(source='STG_BOOKING', source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_booking')                  }}
