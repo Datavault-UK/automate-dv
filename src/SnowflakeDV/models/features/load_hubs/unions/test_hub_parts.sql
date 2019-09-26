@@ -19,6 +19,6 @@
 
 
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                           tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                           hash_model)                                                   }}
+                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                         hash_model)                                                     }}
 
