@@ -5,7 +5,7 @@
                        tgt_eff, tgt_ldts, tgt_source,
                        src_table, hash_model) -%}
 
-SELECT {{ dbtvault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
+SELECT DISTINCT {{ dbtvault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
 FROM {{ hash_model }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (

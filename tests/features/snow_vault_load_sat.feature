@@ -71,22 +71,22 @@ Feature: Load Satellites
       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
 
 
-#  Scenario: If there are duplicate records in the history only the latest is loaded
-#    Given I have an empty TEST_SAT_CUSTOMER satellite
-#    And the TEST_STG_CUSTOMER table has data inserted into it
-#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-01 | *      |
-#      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-02 | *      |
-#      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
-#      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
-#      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-#    When I run the dbt sat load
-#    Then only the latest records are loaded into the satellite
-#      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
-#      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-02 | 1993-01-02     | *      |
-#      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
-#      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
-#      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+  Scenario: If there are duplicate records in the history only the latest is loaded
+    Given I have an empty TEST_SAT_CUSTOMER satellite
+    And the TEST_STG_CUSTOMER table has data inserted into it
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-02 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-02 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
+    When I run the dbt sat load
+    Then only the latest records are loaded into the satellite
+      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
+      | md5('1001\|\|ALICE\|\|17-214-233-1219\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1219 | 1997-04-24 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-02 | 1993-01-02     | *      |
 
 
   Scenario: Duplicates over several load cycles
