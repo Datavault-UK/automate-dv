@@ -2,7 +2,7 @@
 
 {{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK'),
                          ('NATION_ID', 'NATION_PK'),
-                         (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])              }},
+                         (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])                }},
 
 {{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),
                          ('LOADDATE', 'LOADDATE'),

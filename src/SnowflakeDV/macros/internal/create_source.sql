@@ -1,13 +1,13 @@
 {%- macro create_source(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk,
-                        hash_model) -%}
+                        source, is_union) -%}
 
-    {%- if hash_model|length == 1 -%}
+    {%- if not is_union -%}
 
-        {{- dbtvault.single(src_pk, src_nk, src_ldts, src_source, tgt_pk, hash_model[0], 'a', false) -}}
+        {{- dbtvault.single(src_pk, src_nk, src_ldts, src_source, tgt_pk, source[0], 'a') -}}
 
-    {%- elif hash_model|length > 1 -%}
+    {%- else -%}
 
-        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, hash_model) -}}
+        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, source) -}}
 
     {%- endif -%}
 
