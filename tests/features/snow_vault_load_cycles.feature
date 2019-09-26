@@ -26,6 +26,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | BOOKING_REF | CUSTOMER_ID | BOOKING_DATE | PRICE | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOADDATE   |
       | 10034       | 1001        | 2019-05-03   | 100.0 | 2019-09-17     | GBR         | 17-214-233-1214 | BRITISH     | 2019-05-04 |
       | 10035       | 1002        | 2019-05-03   | 80.0  | 2019-09-16     | NLD         | 17-214-200-1214 | DUTCH       | 2019-05-04 |
+      | 10070       | 1040        | 2019-05-03   | 90.0  | 2019-09-15     | ZIM         | 17-214-200-4040 | CHINESE     | 2019-05-04 |
     And the vault is loaded for day 1
 
     # ================ DAY 2 ===================
@@ -99,6 +100,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1013') | 1013        | 2019-05-07 | *      |
       | md5('1014') | 1014        | 2019-05-07 | *      |
       | md5('1015') | 1015        | 2019-05-07 | *      |
+      | md5('1040') | 1040        | 2019-05-04 | *      |
     Then we expect the TEST_HUB_BOOKING table to contain
       | BOOKING_PK   | BOOKING_REF | LOADDATE   | SOURCE |
       | md5('10034') | 10034       | 2019-05-04 | *      |
@@ -116,6 +118,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('10046') | 10046       | 2019-05-07 | *      |
       | md5('10047') | 10047       | 2019-05-07 | *      |
       | md5('10048') | 10048       | 2019-05-07 | *      |
+      | md5('10070') | 10070       | 2019-05-04 | *      |
     Then we expect the TEST_LINK_CUSTOMER_BOOKING table to contain
       | CUSTOMER_BOOKING_PK  | CUSTOMER_PK | BOOKING_PK   | LOADDATE   | SOURCE |
       | md5('1001\|\|10034') | md5('1001') | md5('10034') | 2019-05-04 | *      |
@@ -133,6 +136,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1013\|\|10046') | md5('1013') | md5('10046') | 2019-05-07 | *      |
       | md5('1014\|\|10047') | md5('1014') | md5('10047') | 2019-05-07 | *      |
       | md5('1015\|\|10048') | md5('1015') | md5('10048') | 2019-05-07 | *      |
+      | md5('1040\|\|10070') | md5('1040') | md5('10070') | 2019-05-04 | *      |
     Then we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain
       | CUSTOMER_PK | HASHDIFF                               | NAME      | DOB        | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|1990-02-03')    | Albert    | 1990-02-03 | 2019-05-04     | 2019-05-04 | *      |
@@ -173,6 +177,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1013') | md5('1013\|\|INDONESIAN\|\|17-214-577-1221') | 17-214-577-1221 | INDONESIAN  | 2019-05-06     | 2019-05-07 | *      |
       | md5('1014') | md5('1014\|\|ANGOLAN\|\|17-214-577-1222')    | 17-214-577-1222 | ANGOLAN     | 2019-05-06     | 2019-05-07 | *      |
       | md5('1015') | md5('1015\|\|TAIWANESE\|\|17-214-577-1223')  | 17-214-577-1223 | TAIWANESE   | 2019-05-06     | 2019-05-07 | *      |
+      | md5('1040') | md5('1040\|\|CHINESE\|\|17-214-200-4040')    | 17-214-200-4040 | CHINESE     | 2019-05-03     | 2019-05-04 | *      |
     Then we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain
       | BOOKING_PK   | HASHDIFF                                                  | PRICE  | BOOKING_DATE | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | md5('10034') | md5('10034\|\|2019-05-03\|\|2019-09-17\|\|100\|\|GBR')    | 100.0  | 2019-05-03   | 2019-09-17     | GBR         | 2019-05-03     | 2019-05-04 | *      |
@@ -191,3 +196,4 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('10046') | md5('10046\|\|2019-05-06\|\|2019-11-14\|\|295.81\|\|SEN') | 295.81 | 2019-05-06   | 2019-11-14     | SEN         | 2019-05-06     | 2019-05-07 | *      |
       | md5('10047') | md5('10047\|\|2019-05-06\|\|2019-12-22\|\|259.99\|\|HMD') | 259.99 | 2019-05-06   | 2019-12-22     | HMD         | 2019-05-06     | 2019-05-07 | *      |
       | md5('10048') | md5('10048\|\|2019-05-06\|\|2019-10-16\|\|219.99\|\|JAM') | 219.99 | 2019-05-06   | 2019-10-16     | JAM         | 2019-05-06     | 2019-05-07 | *      |
+      | md5('10070') | md5('10070\|\|2019-05-03\|\|2019-09-15\|\|90\|\|ZIM')     | 90.0   | 2019-05-03   | 2019-09-15     | ZIM         | 2019-05-03     | 2019-05-04 | *      |
