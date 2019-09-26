@@ -8,14 +8,39 @@ Feature: Load Satellites
 # -------- --- ------- --------------------------------------------------------
 # 24.06.19 CF  1.0     First release.
 # 09.07.19 CF  1.1     Updated to test the sql used by dbt.
+# 24.09.19 NS  1.2     Reviewed and refactored.
 # =============================================================================
 
-  Scenario: Distinct history of data is loaded into a satellite table
+# -----------------------------------------------------------------------------
+# Test load into an empty satellite, first load.
+# -----------------------------------------------------------------------------
+  Scenario: Load data into an empty satellite.
     Given the TEST_STG_CUSTOMER table has data inserted into it
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    When I run a fresh dbt sat load
+    Then the SAT_CUSTOMER_DETAILS table should contain
+      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
+      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+
+
+  Scenario: Load duplicated data into an empty satellite.
+    Given the TEST_STG_CUSTOMER table has data inserted into it
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     When I run a fresh dbt sat load
     Then records are inserted into the satellite
@@ -26,70 +51,58 @@ Feature: Load Satellites
       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
 
 
-  Scenario: Unchanged records are not loaded into the satellite
-    Given I have a TEST_SAT_CUSTOMER satellite with pre-existing data
-      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
-      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
-    And the TEST_STG_CUSTOMER table has data inserted into it
+# -----------------------------------------------------------------------------
+# Test load into a populated satellite.
+# -----------------------------------------------------------------------------
+  Scenario: Load data into a populated satellite where all records load.
+    Given the TEST_STG_CUSTOMER table has data inserted into it
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    When I run the dbt sat load
-    Then any unchanged records are not loaded into the satellite
-      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
-      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
-
-
-  Scenario: Changed records are added to the satellite
-    Given I have a TEST_SAT_CUSTOMER satellite with pre-existing data
-      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
-      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
-    And the TEST_STG_CUSTOMER table has data inserted into it
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-02 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    When I run the dbt sat load
-    Then any unchanged records are not loaded into the satellite
+      | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
+    And the SAT_CUSTOMER_DETAILS table has already got data
+      | HASHDIFF                                              | CUSTOMER_PK | NAME    | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
+      | md5('1004\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice   | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1006\|\|FRIDA\|\|17-214-233-1217\|\|2018-04-13') | md5('1004') | Frida   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+    When I run a dbt load
+    Then the SAT_CUSTOMER_DETAILS table should contain
       | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
-      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1001\|\|ALICE\|\|17-214-233-1219\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1219 | 1997-04-24 | 1993-01-02 | 1993-01-02     | *      |
-      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
-      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
-
-
-  Scenario: If there are duplicate records in the history only the latest is loaded
-    Given I have an empty TEST_SAT_CUSTOMER satellite
-    And the TEST_STG_CUSTOMER table has data inserted into it
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-02 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1219 | 1993-01-02 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    When I run the dbt sat load
-    Then only the latest records are loaded into the satellite
-      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
-      | md5('1001\|\|ALICE\|\|17-214-233-1219\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1219 | 1997-04-24 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-02 | 1993-01-02     | *      |
       | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-02 | 1993-01-02     | *      |
       | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-02 | 1993-01-02     | *      |
-      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1005\|\|ERIC\|\|17-214-233-1217\|\|2018-04-13')  | md5('1005') | Eric  | 17-214-233-1217 | 2018-04-13 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1006\|\|FRIDA\|\|17-214-233-1217\|\|2018-04-13') | md5('1006') | Frida | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+
+  Scenario: Load data into a populated satellite where some records overlap.
+    Given the TEST_STG_CUSTOMER table has data inserted into it
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
+      | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
+    And the SAT_CUSTOMER_DETAILS table has already got data
+      | HASHDIFF                                              | CUSTOMER_PK | NAME    | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
+      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob     | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad    | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1004\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice   | 17-214-233-1214 | 1997-04-24 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1006\|\|FRIDA\|\|17-214-233-1217\|\|2018-04-13') | md5('1004') | Frida   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+    When I run a dbt load
+    Then the SAT_CUSTOMER_DETAILS table should contain
+      | HASHDIFF                                              | CUSTOMER_PK | NAME  | PHONE           | DOB        | LOADDATE   | EFFECTIVE_FROM | SOURCE |
+      | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|1997-04-24') | md5('1001') | Alice | 17-214-233-1214 | 1997-04-24 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1002\|\|BOB\|\|17-214-233-1215\|\|2006-04-17')   | md5('1002') | Bob   | 17-214-233-1215 | 2006-04-17 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|2013-02-04')  | md5('1003') | Chad  | 17-214-233-1216 | 2013-02-04 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1004\|\|DOM\|\|17-214-233-1217\|\|2018-04-13')   | md5('1004') | Dom   | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
+      | md5('1005\|\|ERIC\|\|17-214-233-1217\|\|2018-04-13')  | md5('1005') | Eric  | 17-214-233-1217 | 2018-04-13 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1006\|\|FRIDA\|\|17-214-233-1217\|\|2018-04-13') | md5('1006') | Frida | 17-214-233-1217 | 2018-04-13 | 1993-01-01 | 1993-01-01     | *      |
 
 
-  Scenario: Duplicates over several load cycles
+# -----------------------------------------------------------------------------
+# Test data load over several cyles
+# -----------------------------------------------------------------------------
+  Scenario: Satellite load over several cycles
     Given there is an empty TEST_STG_CUSTOMER table
     And the TEST_SAT_CUST_CUSTOMER table is empty
 
