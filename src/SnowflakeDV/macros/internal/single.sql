@@ -7,7 +7,9 @@
       {%- else %}
       FROM {{ src_table }} AS {{ letter }}
       {%- endif %}
+      {%- if is_incremental() -%}
       LEFT JOIN {{ this }} AS tgt_{{ letter }}
       ON {{ dbtvault.prefix([src_pk], letter) }} = tgt_{{ dbtvault.prefix([tgt_pk], letter) }}
       WHERE tgt_{{ dbtvault.prefix([tgt_pk], letter) }} IS NULL
+      {%- endif -%}
 {%- endmacro -%}
