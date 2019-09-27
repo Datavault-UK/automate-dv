@@ -4,6 +4,8 @@
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
+
 # dbtvault by [Data-Vault](https://www.data-vault.co.uk)
 
 dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses.
