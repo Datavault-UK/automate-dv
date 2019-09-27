@@ -15,14 +15,3 @@ def column_count(context, database, schema, table, num_columns):
         return False
 
 
-def compare_ct_to_db_table(context, table_path):
-    """
-    Compares the context table to the table that exists on the database.
-    """
-    table_df = context.testdata.context_table_to_df(context.table)
-    result_df = DataFrame(context.testdata.get_table_data(table_path), dtype=str)
-
-    if result_df.equals(table_df):
-        assert True
-    else:
-        assert False

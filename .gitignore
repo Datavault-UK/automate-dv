@@ -1,10 +1,6 @@
-
 \.idea/
 
 tests/features/helpers/credentials\.json
+src/SnowflakeDV/__pycache__/
 
-src/snowflakeDemo/target/
-
-*.log
-
-src/snowflakeDemo/logs/
+tests/features/__pycache__/
