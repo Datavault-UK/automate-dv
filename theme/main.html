@@ -10,24 +10,12 @@
     <div class="nav-cube">
         <a href="{{ config.site_url | default(nav.homepage.url, true) | url }}"
         title="{{ config.site_name }}">
-            <img src="../assets/images/logo.png" alt="dbtvault">
+            <img src="{{ config.theme.banner | url }}" alt="dbtvault">
         </a>
     </div>
     <div class="md-sidebar__scrollwrap">
       <div class="md-sidebar__inner">
         {% include "partials/nav.html" %}
-      </div>
-    </div>
-  </div>
-{% endif %}
-
-<!-- Table of contents -->
-{% if page.toc %}
-  <div class="md-sidebar md-sidebar--secondary"
-      data-md-component="toc">
-    <div class="md-sidebar__scrollwrap">
-      <div class="md-sidebar__inner">
-        {% include "partials/toc.html" %}
       </div>
     </div>
   </div>
