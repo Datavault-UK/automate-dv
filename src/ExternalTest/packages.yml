@@ -1,3 +1,4 @@
 packages:
 
-  - local: ../SnowflakeDV/
+  - git: "https://github.com/Datavault-UK/dbtvault"
+    revision: v0.1-pre

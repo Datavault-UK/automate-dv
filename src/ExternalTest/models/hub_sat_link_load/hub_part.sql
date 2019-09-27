@@ -11,14 +11,14 @@
 {%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                       -%}
 {%- set tgt_source = ['SOURCE', 'VARCHAR(4)', 'SOURCE']                   -%}
 
-{%- set src_table = ['SRC_TEST_STG.STG_PART',
+{%- set source = ['SRC_TEST_STG.STG_PART',
                      'SRC_TEST_STG.STG_PARTSUPP',
                      'SRC_TEST_STG.STG_LINEITEM']
                                                                           -%}
 
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                           tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                           src_table, hash_model) }}
+                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                         source) }}
 
 
 

@@ -35,8 +35,11 @@
 
 {%- set src_table = ['src_stg.v_stg_orders']                                       -%}
 
-{%- set hash_model = ref('stg_orders_hashed')                                      -%}
+{%- set source = ref('stg_orders_hashed')                                          -%}
 
-{{ dbtvault.sat_template(src_pk, src_hash, src_nk, src_ldts, src_eff, src_source,
-                           tgt_cols, tgt_pk, tgt_hash, tgt_nk, tgt_ldts, tgt_eff, tgt_source,
-                           src_table, hash_model) }}
+{{ dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
+                         src_eff, src_ldts, src_source,
+                         tgt_cols,
+                         tgt_pk, tgt_hashdiff, tgt_payload,
+                         tgt_eff, tgt_ldts, tgt_source,
+                         src_table, source)                                         }}
