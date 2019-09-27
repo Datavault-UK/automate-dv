@@ -4,7 +4,6 @@
 
 dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses.
 
-
 ## Currently supported databases:
 
 - [SnowFlake](https://www.snowflake.com/about/)
@@ -17,6 +16,7 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
+    revision: v0.1-pre
 ```
 And run 
 ```dbt deps```
