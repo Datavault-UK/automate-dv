@@ -3,6 +3,7 @@ theme:
     name: 'material'
     custom_dir: 'theme'
     logo: 'assets/images/logo.png'
+    banner: 'assets/images/docs-banner.png'
     favicon: 'assets/images/favicon.ico'
     palette:
       primary: 'black'
