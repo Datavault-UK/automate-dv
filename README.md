@@ -10,7 +10,7 @@ dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses.
 
 ## Currently supported databases:
 
-- [SnowFlake](https://www.snowflake.com/about/)
+- [snowflake](https://www.snowflake.com/about/)
 
 ## Installation
 
