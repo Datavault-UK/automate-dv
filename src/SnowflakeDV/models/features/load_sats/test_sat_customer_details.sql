@@ -20,7 +20,7 @@
 {%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                                                     -%}
 {%- set tgt_source = ['SOURCE', 'VARCHAR(15)', 'SOURCE']                                                -%}
 
-{%- set source = [ref('test_stg_customer_hashed_sats')]                                                 -%}
+{%- set source = [ref('test_stg_customer_details_hashed')]                                              -%}
 
 {{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
                           src_eff, src_ldts, src_source,

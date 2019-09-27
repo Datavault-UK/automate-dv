@@ -12,6 +12,6 @@
                           ('LOADDATE', 'LOADDATE'),
                           ('SOURCE', 'SOURCE')])                                                 }}
 
-{{- dbtvault.staging_footer(source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_customer_sats')  }}
+{{- dbtvault.staging_footer(source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_customer_details')  }}
 
 

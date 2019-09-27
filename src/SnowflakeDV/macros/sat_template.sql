@@ -6,7 +6,7 @@
                        src_table, source) -%}
 
 SELECT DISTINCT {{ dbtvault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
-FROM {{ source }} AS e
+FROM {{ source[0] }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (
     SELECT {{ dbtvault.prefix(tgt_cols, 'd') }}
@@ -19,7 +19,7 @@ LEFT JOIN (
           FROM (
             SELECT {{ dbtvault.prefix(tgt_cols, 'a') }}
             FROM {{ this }} as a
-            JOIN {{ source }} as b
+            JOIN {{ source[0] }} as b
             ON {{ dbtvault.prefix([tgt_pk|last], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
           ) as c
     ) AS d
