@@ -6,6 +6,7 @@ Add the following to your ```packages.yml```:
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
+    revision: v0.1-pre
 ```
 And run 
 ```dbt deps```
