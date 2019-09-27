@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+<!-- Navigation -->
+{% block site_nav %}
+
+<!-- Main navigation -->
+{% if nav %}
+  <div class="md-sidebar md-sidebar--primary"
+      data-md-component="navigation">
+    <div class="nav-cube">
+        <a href="{{ config.site_url | default(nav.homepage.url, true) | url }}"
+        title="{{ config.site_name }}">
+            <img src="../assets/images/logo.png" alt="dbtvault">
+        </a>
+    </div>
+    <div class="md-sidebar__scrollwrap">
+      <div class="md-sidebar__inner">
+        {% include "partials/nav.html" %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Table of contents -->
+{% if page.toc %}
+  <div class="md-sidebar md-sidebar--secondary"
+      data-md-component="toc">
+    <div class="md-sidebar__scrollwrap">
+      <div class="md-sidebar__inner">
+        {% include "partials/toc.html" %}
+      </div>
+    </div>
+  </div>
+{% endif %}
+{% endblock %}
