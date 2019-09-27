@@ -1,0 +1,12 @@
+/* Additional CSS to add styling to the navigation menu cube
+and remove edit button */
+
+.nav-cube img {
+    width: 110px;
+    padding: 0 .6rem;
+    margin-bottom: 20px;
+}
+
+.md-content__icon {
+    display: none;
+}

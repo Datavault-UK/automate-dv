@@ -1,15 +1,16 @@
 site_name: dbtvault
 theme:
-    name: material
-    logo: 'images/logo.png'
-    favicon: 'images/favicon.ico'
+    name: 'material'
+    custom_dir: 'theme'
+    logo: 'assets/images/logo.png'
+    favicon: 'assets/images/favicon.ico'
     palette:
       primary: 'black'
       accent: 'indigo'
     highlightjs: true
     hljs_languages:
       - yaml
-      -
+
 repo_name: 'Datavault-UK/dbtvault'
 repo_url: 'https://github.com/Datavault-UK/dbtvault'
 
@@ -27,3 +28,6 @@ extra:
       link: 'https://www.linkedin.com/company/business-thinking-limited'
     - type: 'facebook'
       link: 'https://www.facebook.com/DataVaultUK/'
+
+extra_css:
+  - 'stylesheets/cube.css'
