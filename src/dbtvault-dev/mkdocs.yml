@@ -18,6 +18,10 @@ repo_url: 'https://github.com/Datavault-UK/dbtvault'
 nav:
   - Home: 'index.md'
   - Getting Started: 'gettingstarted.md'
+  - Table types:
+      - Hubs: 'table-types/hubs.md'
+      - Links: 'table-types/links.md'
+      - Satellites: 'table-types/satellites.md'
 
 extra:
   social:
