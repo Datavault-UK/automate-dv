@@ -1,0 +1,34 @@
+site_name: dbtvault
+theme:
+    name: 'material'
+    custom_dir: 'theme'
+    logo: 'assets/images/logo.png'
+    banner: 'assets/images/docs-banner.png'
+    favicon: 'assets/images/favicon.ico'
+    palette:
+      primary: 'black'
+      accent: 'indigo'
+    highlightjs: true
+    hljs_languages:
+      - yaml
+
+repo_name: 'Datavault-UK/dbtvault'
+repo_url: 'https://github.com/Datavault-UK/dbtvault'
+
+nav:
+  - Home: 'index.md'
+  - Getting Started: 'gettingstarted.md'
+
+extra:
+  social:
+    - type: 'github'
+      link: 'https://github.com/Datavault-UK/'
+    - type: 'twitter'
+      link: 'https://twitter.com/datavault_uk'
+    - type: 'linkedin'
+      link: 'https://www.linkedin.com/company/business-thinking-limited'
+    - type: 'facebook'
+      link: 'https://www.facebook.com/DataVaultUK/'
+
+extra_css:
+  - 'stylesheets/cube.css'
