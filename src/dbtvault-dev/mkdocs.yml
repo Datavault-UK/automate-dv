@@ -9,8 +9,6 @@ theme:
       primary: 'black'
       accent: 'indigo'
     highlightjs: true
-    hljs_languages:
-      - yaml
 
 repo_name: 'Datavault-UK/dbtvault'
 repo_url: 'https://github.com/Datavault-UK/dbtvault'
@@ -18,6 +16,7 @@ repo_url: 'https://github.com/Datavault-UK/dbtvault'
 nav:
   - Home: 'index.md'
   - Getting Started: 'gettingstarted.md'
+  - Macros: 'macros.md'
   - Table types:
       - Hubs: 'table-types/hubs.md'
       - Links: 'table-types/links.md'
@@ -25,6 +24,8 @@ nav:
 
 extra:
   social:
+    - type: 'globe'
+      link: 'www.data-vault.co.uk'
     - type: 'github'
       link: 'https://github.com/Datavault-UK/'
     - type: 'twitter'
@@ -33,6 +34,10 @@ extra:
       link: 'https://www.linkedin.com/company/business-thinking-limited'
     - type: 'facebook'
       link: 'https://www.facebook.com/DataVaultUK/'
+
+markdown_extensions:
+  - codehilite
+  - admonition
 
 extra_css:
   - 'stylesheets/cube.css'
