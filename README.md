@@ -18,6 +18,7 @@ dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses.
 
 Add the following to your ```packages.yml```
 
+
 ```bash
 packages:
 
@@ -25,8 +26,6 @@ packages:
 ```
 And run 
 ```dbt deps```
-
-[Read more on package installation](https://docs.getdbt.com/docs/package-management)
 
 ## Usage
 

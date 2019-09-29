@@ -1,3 +1,9 @@
+# Prerequisites 
+
+!!! note
+    These requirements are subject to change as we improve the package.
+
+
 # Installation 
 
 Add the following to your ```packages.yml```:
