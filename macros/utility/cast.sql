@@ -14,10 +14,10 @@
 
             {#- Output String if just a string -#}
             {%- if column is string -%}
-                {%- if prefix -%}
-                {{ dbtvault.prefix([column], prefix) }}
-                {%- else -%}
-                {{column}}
+                {% if prefix %}
+                    {{ dbtvault.prefix([column], prefix) }}
+                {%- else %}
+                    {{ column }}
                 {%- endif -%}
 
             {#- Recurse if a list of lists (i.e. multi-column key) -#}
