@@ -14,7 +14,9 @@ ___
 ### gen_hashing
 
 !!! warning
-    This macro ***should not be*** used for any kind of password obfuscation or security purposes, the intended use is for creating checksum-like fields only. 
+    This macro ***should not be*** used for cryptographic purposes
+    
+    The intended use is for creating checksum-like fields only, so that a record change can be detected. 
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
     
@@ -179,9 +181,12 @@ ___
 ### md5_binary
 
 !!! warning
-    This macro ***should not be*** used for any kind of password obfuscation or security purposes, the intended use is for creating checksum-like fields only. 
+    This macro ***should not be*** used for cryptographic purposes
+    
+    The intended use is for creating checksum-like fields only, so that a record change can be detected. 
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
+    
 A macro for generating hashing SQL for columns:
 ```sql 
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
