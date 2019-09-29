@@ -11,6 +11,51 @@ Utility macros are helper macros for use in models. These macros are used extens
 
 ___
 
+### gen_hashing
+
+!!! warning
+    This macro ***should not be*** used for any kind of password obfuscation or security purposes, the intended use is for creating checksum-like fields only. 
+    
+    [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
+    
+!!! seealso 
+    [md5_binary](#md5_binary)
+    
+A macro for generating multiple lines of hashing SQL for columns:
+```sql 
+CAST(MD5_BINARY(UPPER(TRIM(CAST(column1 AS VARCHAR)))) AS BINARY(16)) AS alias1,
+CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
+```
+
+#### Parameters
+
+| Parameter        |  Description                                   | Required?                                                |
+| ---------------- | ---------------------------------------------- | -------------------------------------------------------- |
+| pairs            | A pair: (column, alias)                       | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: columns   | Single column string or list of columns       | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: alias     | A string                                      | <i class="md-icon" style="color: green">check_circle</i> |
+
+
+#### Usage
+
+```yaml
+{{ dbtvault.gen_hashing([('CUSTOMERKEY', 'CUSTOMER_PK'),
+                         (['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF')]) }}
+```
+
+#### Output
+
+```mysql
+CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
+CAST(MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+                       IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+                       IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+                       IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
+                       AS BINARY(16)) AS HASHDIFF
+```
+
+___
+
 ### add_columns
 
 A simple macro for generating sequences of the following SQL:
@@ -50,6 +95,38 @@ SOURCE AS SOURCE
 
 ___
 
+### staging_footer
+
+A macro used in creating source/hashing models to complete a staging layer model.
+
+```mysql 
+,LOADDATE AS LOADDATE,'SOURCE' AS SOURCE FROM DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_lineitem
+```
+
+#### Parameters
+
+| Parameter     | Description                               | Required?                                                |
+| ------------- | ----------------------------------------- | -------------------------------------------------------- |
+| loaddate      | Name for loaddate column                  | <i class="md-icon" alt="No" style="color: red">clear</i> |
+| source        | Source column value for each record       | <i class="md-icon" alt="No" style="color: red">clear</i> |
+| source_table  | Fully qualified table name                | <i class="md-icon" style="color: green">check_circle</i> | 
+
+#### Usage
+
+```yaml
+{{- dbtvault.staging_footer('LOADDATE', 
+                            'SOURCE', 
+                            source_table='MYDATABASE.MYSCHEMA.MYTABLE')  }}
+```
+
+#### Output
+
+```mysql 
+,LOADDATE AS LOADDATE,'SOURCE' AS SOURCE FROM MYDATABASE.MYSCHEMA.MYTABLE
+```
+
+___
+
 ### cast
 
 A macro for generating cast sequences:
@@ -62,7 +139,7 @@ CAST(prefix.column AS type) AS alias
 
 | Parameter        |  Description                  | Required?                                                |
 | ---------------- | ----------------------------- | -------------------------------------------------------- |
-| columns          |  Triples or strings | <i class="md-icon" style="color: green">check_circle</i> |
+| columns          |  Triples or strings           | <i class="md-icon" style="color: green">check_circle</i> |
 | prefix           |  A string                     | <i class="md-icon" style="color: red">clear</i>          |
 
 #### Usage
@@ -110,8 +187,10 @@ A macro for generating hashing SQL for columns:
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 ```
 
-- Accounts for null values
 - Can provide multiple columns as a list to create a concatenated hash
+- Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
+- ```'^^'``` Accounts for null values with a double caret
+- ```'||'``` Concatenates with a double pipe 
 
 #### Parameters
 
