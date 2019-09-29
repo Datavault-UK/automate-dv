@@ -9,6 +9,7 @@ They are used in the utility macros to process provided metadata and it should n
 
 Utility macros are helper macros for use in models. These macros are used extensively in the [table template](#table-templates) macros
 
+___
 
 ### add_columns
 
@@ -47,6 +48,7 @@ LOADDATE AS LOADDATE,
 SOURCE AS SOURCE
 ```
 
+___
 
 ### cast
 
@@ -95,6 +97,7 @@ CAST(stg.LOADDATE AS DATE) AS LOADDATE,
 CAST(stg.SOURCE AS VARCHAR(15)) AS SOURCE
 ```
 
+___
 
 ### md5_binary
 
@@ -137,6 +140,8 @@ CAST(MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), 
                        IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
                        AS BINARY(16)) AS HASHDIFF
 ```
+
+___
 
 ### prefix
 
