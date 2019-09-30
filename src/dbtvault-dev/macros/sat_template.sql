@@ -3,7 +3,7 @@
                        tgt_cols,
                        tgt_pk, tgt_hashdiff, tgt_payload,
                        tgt_eff, tgt_ldts, tgt_source,
-                       src_table, source) -%}
+                       source) -%}
 
 SELECT DISTINCT {{ dbtvault.cast([tgt_hashdiff, tgt_pk, tgt_payload, tgt_ldts, tgt_eff, tgt_source], 'e') }}
 FROM {{ source[0] }} AS e

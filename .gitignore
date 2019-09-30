@@ -4,3 +4,7 @@ tests/features/helpers/credentials\.json
 src/SnowflakeDV/__pycache__/
 
 tests/features/__pycache__/
+
+src/dbtvault-dev/logs/
+
+src/dbtvault-dev/target/
