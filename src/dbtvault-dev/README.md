@@ -8,7 +8,10 @@
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
-dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses.
+dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses; 
+
+powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
+
 
 ## Currently supported databases:
 
@@ -26,6 +29,8 @@ packages:
 ```
 And run 
 ```dbt deps```
+
+[Read more on package installation](https://docs.getdbt.com/docs/package-management)
 
 ## Usage
 
