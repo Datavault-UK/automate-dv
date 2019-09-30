@@ -57,8 +57,8 @@ You can get further information about the Data Vault 2.0 method from the followi
 
 ### Books (from Amazon)
 
-- Building a Scalable Data Warehouse with Data Vault 2.0, Dan Linstedt and Michael Olschimke
-- Better Data Modelling: An Introduction to Agile Data Engineering Using Data Vault 2.0, Kent Graziano
+- [Building a Scalable Data Warehouse with Data Vault 2.0, Dan Linstedt and Michael Olschimke](https://www.amazon.co.uk/Building-Scalable-Data-Warehouse-Vault-ebook/dp/B015KKYFGO/)
+- [Better Data Modelling: An Introduction to Agile Data Engineering Using Data Vault 2.0, Kent Graziano](https://www.amazon.co.uk/Better-Data-Modeling-Introduction-Engineering-ebook/dp/B018BREV1C)
 
 ### Blogs and Downloads
 
