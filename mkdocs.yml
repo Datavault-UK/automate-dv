@@ -44,6 +44,7 @@ markdown_extensions:
   - pymdownx.superfences
   - toc:
       permalink: true
+      toc-depth: 1-3
 
 extra_css:
   - 'stylesheets/cube.css'
