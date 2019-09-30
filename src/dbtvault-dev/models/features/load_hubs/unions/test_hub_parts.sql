@@ -13,12 +13,12 @@
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                            -%}
 
 {%- set source = [ref('test_stg_parts_hashed'),
-                      ref('test_stg_supplier_hashed'),
-                      ref('test_stg_lineitem_hashed')]                                  -%}
+                  ref('test_stg_supplier_hashed'),
+                  ref('test_stg_lineitem_hashed')]                                      -%}
 
 
 
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
                          tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                         source)                                                     }}
+                         source)                                                         }}
 
