@@ -44,8 +44,9 @@ markdown_extensions:
   - pymdownx.superfences
   - toc:
       permalink: true
+      toc_depth: 1-3
 
 extra_css:
   - 'stylesheets/cube.css'
 
-copyright: dbtvault and docs &copy; Datavault 2019 | dbt is a registered trademark of Fishtown Analytics
+copyright: Datavault 2019
