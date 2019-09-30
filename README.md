@@ -30,6 +30,8 @@ packages:
 And run 
 ```dbt deps```
 
+[Read more on package installation](https://docs.getdbt.com/docs/package-management)
+
 ## Usage
 
 1. Create a model for your hub, link or satellite
