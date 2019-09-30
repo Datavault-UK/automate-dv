@@ -48,4 +48,4 @@ markdown_extensions:
 extra_css:
   - 'stylesheets/cube.css'
 
-copyright: Datavault &copy; 2019
+copyright: dbtvault and docs &copy; Datavault 2019 | dbt is a registered trademark of Fishtown Analytics
