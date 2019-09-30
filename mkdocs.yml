@@ -1,7 +1,9 @@
 site_name: dbtvault
+site_author: Datavault
 theme:
     name: 'material'
     custom_dir: 'theme'
+    show_sidebar: true
     logo: 'assets/images/logo.png'
     banner: 'assets/images/docs-banner.png'
     favicon: 'assets/images/favicon.ico'
@@ -16,11 +18,12 @@ repo_url: 'https://github.com/Datavault-UK/dbtvault'
 nav:
   - Home: 'index.md'
   - Getting Started: 'gettingstarted.md'
-  - Macros: 'macros.md'
   - Table types:
       - Hubs: 'table-types/hubs.md'
       - Links: 'table-types/links.md'
       - Satellites: 'table-types/satellites.md'
+  - Macros: 'macros.md'
+  - Licence: 'LICENSE.md'
 
 extra:
   social:
@@ -38,6 +41,11 @@ extra:
 markdown_extensions:
   - codehilite
   - admonition
+  - pymdownx.superfences
+  - toc:
+      permalink: true
 
 extra_css:
   - 'stylesheets/cube.css'
+
+copyright: Datavault &copy; 2019
