@@ -22,7 +22,7 @@ We have our new model file, what now? Let's add the model header to the file:
 ```stg_customer_hashed.sql```
 ```sql
 
-{{- config(materialized='view', schema='my_schema', enabled=true, tags='staging') -}}
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
 
 ```
 
@@ -50,12 +50,12 @@ After adding the macro call, our model will now look something like this:
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
                                                                                      
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')])                        -}},
+{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')]) -}},
 
 ```
 
 !!! note
-    Make sure you add the trailing comma after the call.
+    Make sure you add the trailing comma after the call on line 3.
     
 ### Additional columns
 
@@ -103,18 +103,18 @@ After adding the footer, our completed model should now look like this:
 ```stg_customer_hashed.sql```
 ```sql
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging')    -}}
-                                                                                    
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')])                           -}},
-                                                                                    
-{{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),                            
-                         ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                          
-                         ('CUSTOMER_NAME', 'CUSTOMER_NAME'),                        
-                         ('LOADDATE', 'LOADDATE'),                                  
-                         ('LOADDATE', 'EFFECTIVE_FROM')])                            }}
-                                                                                    
-{{- dbtvault.staging_footer(source="STG_CUSTOMER",
-                            source_table='MYDATABASE.MYSCHEMA.stg_customer_hashed')  }} 
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
+                                                                                 
+{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')])                        -}},
+                                                                                 
+{{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),                         
+                         ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                       
+                         ('CUSTOMER_NAME', 'CUSTOMER_NAME'),                     
+                         ('LOADDATE', 'LOADDATE'),                               
+                         ('LOADDATE', 'EFFECTIVE_FROM')])                         }}
+                                                                                 
+{{- dbtvault.staging_footer(source="STG_CUSTOMER",                               
+                            source_table='MYDATABASE.MYSCHEMA.stg_customer')      }} 
 
 ``` 
 
@@ -124,7 +124,7 @@ After adding the footer, our completed model should now look like this:
     ```STG_CUSTOMER``` as its ```SOURCE```. 
     This will allow us to trace this data back to the source once it is loaded into our vault from our new staging layer. 
     
-    It is entirely optional, and if you already have a source column you can simply add it using 
+    It is entirely optional, and if you already have a source column in your raw vault you can simply add it using 
     [add_columns](macros.md#add_columns) instead.
 
 ### Running dbt
