@@ -1,3 +1,4 @@
+
 We must create an appropriate staging layer with all of the necessary information for our vault. 
 
 We assume a raw staging layer already exists, all we need to do here is create hashes of these columns 
@@ -5,9 +6,8 @@ for our Data Vault.
 
 This is where dbtvault comes in.
 
-### Create the staging model
 
-#### The model header
+### The model header
 
 First we create a new dbt model. If our source table is called 'stg_customer' 
 then we should name our additional layer 'stg_customer_hashed', although any sensible naming convention will work if 
@@ -33,7 +33,7 @@ our schema name:
 Usually we want hashing layers to be views, though they can also be tables depending on our needs.
 - The ```schema``` parameter is the name of the schema where this staging table will be created.
 
-#### Providing the metadata for hashing
+### Providing the metadata for hashing
 
 Now we get into the core component of staging: providing metadata. 
 This metadata is straightforward and consists of the column names we want to hash, and the alias for our new 
@@ -57,7 +57,7 @@ After adding the macro call, our model will now look something like this:
 !!! note
     Make sure you add the trailing comma after the call.
     
-#### Additional columns
+### Additional columns
 
 Our Data Vault will not just consist of hashes, so we will need to add some additional columns to our new staging layer, 
 containing concrete data.
@@ -85,7 +85,7 @@ those columns.
     In future releases, this step shouldn't be necessary, as dbtvault will automatically include
     the rest of the columns found in our staging table for us. 
     
-#### Adding the footer
+### Adding the footer
 
 Finally, we need to provide a fully qualified source table name for our new staging layer to get data from.
 In this example, this would be ```MYDATABASE.MYSCHEMA.stg_customer``` where ```MYDATABASE.MYSCHEMA``` is the 
@@ -127,7 +127,7 @@ After adding the footer, our completed model should now look like this:
     It is entirely optional, and if you already have a source column you can simply add it using 
     [add_columns](macros.md#add_columns) instead.
 
-#### Running dbt
+### Running dbt
 
 With our model complete, we can run dbt and have our new staging layer materialised as configured in the header:
 
@@ -143,7 +143,9 @@ And our table will look like this:
 | FED33392D3A48AA149A87A38B875BA4A | 1004         | 2018-04-13    | Dom            | 1993-01-01 | 1993-01-01     | STG_CUSTOMER |
 
 
-#### Next...
+### Next steps
 
 Now that we have implemented a new staging layer with all of the required fields and hashes, we can start loading our vault
 with hubs, links and satellites.
+
+Click next below!
