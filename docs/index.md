@@ -62,5 +62,5 @@ You can get further information about the Data Vault 2.0 method from the followi
 
 ### Blogs and Downloads
 
-- [What is Data Vault?](www.data-vault.co.uk/what-is-data-vault/)
+- [What is Data Vault?](https://www.data-vault.co.uk/what-is-data-vault/)
 - [Agile Modeling: Not an Option Anymore](https://www.vertabelo.com/blog/data-vault-series-agile-modeling-not-an-option-anymore/)

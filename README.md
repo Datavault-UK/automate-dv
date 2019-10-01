@@ -37,6 +37,7 @@ And run
 1. Create a model for your hub, link or satellite
 2. Set your metadata and hash model parameters
 4. Call the appropriate template macro
+
 ```bash
 {{- config(...)                                                           -}}
 
