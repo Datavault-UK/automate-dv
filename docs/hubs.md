@@ -181,5 +181,3 @@ And our table will look like this:
 ### Next steps
 
 We have now created a staging layer and a hub. Next we will look at Links, which are created in a similar way.
-
-Click next below!
