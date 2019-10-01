@@ -7,11 +7,11 @@ for our Data Vault.
 This is where dbtvault comes in.
 
 
-### The model header
+### Creating the model header
 
-First we create a new dbt model. If our source table is called 'stg_customer' 
-then we should name our additional layer 'stg_customer_hashed', although any sensible naming convention will work if 
-kept consistent. In this case, we would create a new file 'stg_customer_hashed.sql' in our models folder.
+First we create a new dbt model. If our source table is called ```stg_customer``` 
+then we should name our additional layer ```stg_customer_hashed```, although any sensible naming convention will work if 
+kept consistent. In this case, we would create a new file ```stg_customer_hashed.sql``` in our models folder.
 
 It is important to note that this additional layer will not necessarily be mapped to only a single table 
 in our Data Vault, as it may be required to map one staging table to multiple hubs, links or satellites; just keep this
@@ -33,7 +33,7 @@ our schema name:
 Usually we want hashing layers to be views, though they can also be tables depending on our needs.
 - The ```schema``` parameter is the name of the schema where this staging table will be created.
 
-### Providing the metadata for hashing
+### Adding the metadata
 
 Now we get into the core component of staging: providing metadata. 
 This metadata is straightforward and consists of the column names we want to hash, and the alias for our new 
