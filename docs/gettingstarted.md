@@ -4,7 +4,8 @@ This dbtvault package is very much a work in progress – we’ll up the version
 
 We know that it deserves new features, that the code base can be tidied up and the SQL better tuned. Rest assured we’re working on it for future releases – our roadmap contains information on what’s coming.
  
-If you spot anything you’d like to bring to our attention, have a request for new features, have spotted an improvement we could make, or want to tell us about a typo, then please don’t hesitate to let us know. 
+If you spot anything you’d like to bring to our attention, have a request for new features, have spotted an improvement we could make, or want to tell us about a typo, 
+then please don’t hesitate to let us know via [Github](https://github.com/Datavault-UK/dbtvault/issues). 
 
 We’d rather know you are making active use of this package than hearing nothing from all of you out there! 
 
@@ -28,4 +29,4 @@ packages:
 And run 
 ```dbt deps```
 
-[Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
+###### [Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
