@@ -147,5 +147,3 @@ And our table will look like this:
 
 Now that we have implemented a new staging layer with all of the required fields and hashes, we can start loading our vault
 with hubs, links and satellites.
-
-Click next below!
