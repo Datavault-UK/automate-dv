@@ -20,6 +20,9 @@ nav:
   - Getting Started: 'gettingstarted.md'
   - Loading the vault:
       - Staging: 'staging.md'
+      - Hubs: 'hubs.md'
+      - Links: 'links.md'
+      - Satellites: 'satellites.md'
   - Macros: 'macros.md'
   - Licence: 'LICENSE.md'
 
@@ -37,7 +40,8 @@ extra:
       link: 'https://www.facebook.com/DataVaultUK/'
 
 markdown_extensions:
-  - codehilite
+  - codehilite:
+      linenums: true
   - admonition
   - pymdownx.superfences
   - pymdownx.emoji
@@ -48,4 +52,4 @@ markdown_extensions:
 extra_css:
   - 'stylesheets/cube.css'
 
-copyright: dbtvault and docs &copy; Datavault 2019 | dbt is a registered trademark of Fishtown Analytics
+copyright: dbtvault and documentation &copy; Business Thinking trading as Datavault 2019 - Data Vault 2.0 is a registered trademark of Dan Linstedt - dbt is a registered trademark of Fishtown Analytics
