@@ -10,7 +10,7 @@ In general, they consist of 4 columns:
 
 4. The source for the record. (i.e. ```STG_CUSTOMER``` from the [previous section](staging.md#adding-the-footer))
 
-### Creating model header
+### Creating the model header
 
 Create a new dbt model as before. We'll call this one 'hub_customer'. 
 
@@ -41,15 +41,15 @@ Let's look at the metadata we need to provide to the [hub_template](macros.md#hu
 Using our knowledge of what columns we need in our  ```hub_customer``` table, we can identify which columns in our
 staging layer we will need:
 
-1. We need a primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created is a perfect fit.
-2. We also need the natural key itself, ```CUSTOMER_ID``` which we added using the [add_columns](macros.md#add_columns) macro.
-3. A load date timestamp is needed, which we also added to the staging layer as ```LOADDATE``` 
-4. We also added a ```SOURCE``` column.
+1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created is a perfect fit.
+2. The natural key itself, ```CUSTOMER_ID``` which we added using the [add_columns](macros.md#add_columns) macro.
+3. A load date timestamp, which we also added to the staging layer as ```LOADDATE``` 
+4. A ```SOURCE``` column.
 
 We can now add this metadata to the model:
 
 ```hub_customer.sql```
-```sql
+```sql hl_lines="3 4 5 6"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
@@ -66,7 +66,7 @@ provide the metadata it requires. We can define which source columns map to the 
 define a column type at the same time:
 
 ```hub_customer.sql```
-```sql 
+```sql hl_lines="8 10 11 12 13"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
@@ -112,7 +112,7 @@ dbt ensures dependencies are honoured when defining the source using a reference
 
 ```hub_customer.sql```
 
-```sql 
+```sql hl_lines="15"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
                                                                                     
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
@@ -136,7 +136,7 @@ Now we bring it all together and call the [hub_template](macros.md#hub_template)
 
 ```hub_customer.sql```                                                                 
                                                                                        
-```sql                                                                                 
+```sql hl_lines="17 18 19"                                                                                
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
                                                                                        
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}

@@ -52,7 +52,7 @@ Later versions will extend the range of table types that the package handles. We
 If you are going to use the dbtvault package for your Data Vault 2.0 project, then we expect you to have some prior knowledge about the Data Vault 2.0 method.
 
 
-## How Can You Get Up to Speed on Data Vault 2.0?
+## How Can I Get Up to Speed on Data Vault 2.0?
 You can get further information about the Data Vault 2.0 method from the following resources:
 
 ### Books (from Amazon)
