@@ -390,7 +390,7 @@ ___
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
     
-!!! seealso 
+!!! seealso "See Also"
     [md5_binary](#md5_binary)
     
 A macro for generating multiple lines of hashing SQL for columns:
