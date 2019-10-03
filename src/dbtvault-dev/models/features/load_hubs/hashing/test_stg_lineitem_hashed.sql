@@ -1,6 +1,6 @@
 {{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature')          -}}
 
-{{ dbtvault.gen_hashing([('ORDER_ID', 'ORDER_PK'),
+{{ dbtvault.multi_hash([('ORDER_ID', 'ORDER_PK'),
                          ('PART_ID', 'PART_PK'),
                          ('SUPPLIER_ID', 'SUPPLIER_PK'),
                          ('LINENUMBER', 'LINEITEM_PK')])                                   -}},

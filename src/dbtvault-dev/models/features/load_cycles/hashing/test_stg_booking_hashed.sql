@@ -1,6 +1,6 @@
 {{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature')                                               -}}
 
-{{ dbtvault.gen_hashing([('BOOKING_REF', 'BOOKING_PK'),
+{{ dbtvault.multi_hash([('BOOKING_REF', 'BOOKING_PK'),
                          ('CUSTOMER_ID', 'CUSTOMER_PK'),
                          (['CUSTOMER_ID', 'BOOKING_REF'],'CUSTOMER_BOOKING_PK'),
                          (['CUSTOMER_ID', 'NATIONALITY', 'PHONE'], 'BOOK_CUSTOMER_HASHDIFF'),
