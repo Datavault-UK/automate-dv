@@ -12,6 +12,10 @@ dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses;
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
+## Sign up for early-bird announcements 
+
+[SIGN UP](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
+before anyone else!
 
 ## Currently supported databases:
 
@@ -51,7 +55,7 @@ And run
 ```
 
 ## Contributing
-Please open an issue first to discuss what you would like to change.
+[View our contribution guidelines](CONTRIBUTING.md)
 
 ## License
 [Apache 2.0](LICENSE.md)
