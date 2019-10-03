@@ -381,7 +381,7 @@ ___
 These macros are intended for use in the staging layer 
 ___
 
-### gen_hashing
+### multi_hash
 
 !!! warning
     This macro ***should not be*** used for cryptographic purposes.
@@ -391,7 +391,7 @@ ___
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
     
 !!! seealso "See Also"
-    [md5_binary](#md5_binary)
+    [hash](#hash)
     
 A macro for generating multiple lines of hashing SQL for columns:
 ```sql 
@@ -411,7 +411,7 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
 #### Usage
 
 ```yaml
-{{ dbtvault.gen_hashing([('CUSTOMERKEY', 'CUSTOMER_PK'),
+{{ dbtvault.multi_hash([('CUSTOMERKEY', 'CUSTOMER_PK'),
                          (['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF')]) }}
 ```
 
@@ -556,7 +556,7 @@ CAST(stg.SOURCE AS VARCHAR(15)) AS SOURCE
 
 ___
 
-### md5_binary
+### hash
 
 !!! warning
     This macro ***should not be*** used for cryptographic purposes
@@ -585,12 +585,12 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 #### Usage
 
 ```yaml
-{{ dbtvault.md5_binary('CUSTOMERKEY', 'CUSTOMER_PK') }},
-{{ dbtvault.md5_binary(['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF') }}
+{{ dbtvault.hash('CUSTOMERKEY', 'CUSTOMER_PK') }},
+{{ dbtvault.hash(['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF') }}
 ```
 
 !!! tip
-    [gen_hashing](#gen_hashing) may be used to simplify the hashing process and generate multiple hashes with one macro.
+    [multi_hash](#multi_hash) may be used to simplify the hashing process and generate multiple hashes with one macro.
 
 #### Output
 

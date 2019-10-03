@@ -46,7 +46,7 @@ add the following lines if ```stg_customer``` contains a ```NATION_ID``` column:
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
                                                                                  
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK'),
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                          (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
                          ('NATION_ID', 'NATION_PK')])                            -}},
                                                                                  

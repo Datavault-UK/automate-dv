@@ -12,7 +12,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro md5_binary(columns, alias) -%}
+{%- macro hash(columns, alias) -%}
 
 {%- if columns is string -%}
 

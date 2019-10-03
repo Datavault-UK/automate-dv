@@ -39,7 +39,7 @@ Now we get into the core component of staging: providing metadata.
 This metadata is straightforward and consists of the column names we want to hash, and the alias for our new 
 column containing the hash representation.
 
-We need to call the [gen_hashing](macros.md#gen_hashing) macro and provide the appropriate parameters. This macro takes
+We need to call the [multi_hash](macros.md#multi_hash) macro and provide the appropriate parameters. This macro takes
 our provided column names and generates all of the necessary SQL for us. More on how to use this macro is 
 provided in the link above.
 
@@ -50,7 +50,7 @@ After adding the macro call, our model will now look something like this:
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
                                                                                      
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')]) -}},
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK')]) -}},
 
 ```
 
@@ -71,7 +71,7 @@ those columns.
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
                                                                                      
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')])                        -}},
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK')])                        -}},
                                                                                      
 {{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),                             
                          ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                           
@@ -105,7 +105,7 @@ After adding the footer, our completed model should now look like this:
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
                                                                                  
-{{ dbtvault.gen_hashing([('CUSTOMER_ID', 'CUSTOMER_PK')])                        -}},
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK')])                        -}},
                                                                                  
 {{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),                         
                          ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                       
