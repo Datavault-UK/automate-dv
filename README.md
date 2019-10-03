@@ -12,11 +12,6 @@ dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses;
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
-## Sign up for early-bird announcements 
-
-[SIGN UP](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
-before anyone else!
-
 ## Currently supported databases:
 
 - [snowflake](https://www.snowflake.com/about/)
@@ -53,6 +48,11 @@ And run
                          tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                          source)                                           }}
 ```
+
+## Sign up for early-bird announcements 
+
+[SIGN UP](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
+before anyone else!
 
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)
