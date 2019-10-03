@@ -4,23 +4,26 @@ In general, they consist of 4 columns:
 
 1. A primary key (or surrogate key) which is usually a hashed representation of the natural key (also known as the business key).
 
-2. The natural key itself. This is usually a formal identification for the record such as a customer ID or order number.
+2. The natural key itself. This is usually a formal identification for the record such as a customer ID or 
+order number (can be multi-column).
 
 3. The load date or load date timestamp. This identifies when the record was first loaded into the vault.
 
-4. The source for the record. (i.e. ```STG_CUSTOMER``` from the [previous section](staging.md#adding-the-footer))
+4. The source for the record. (i.e. ```1``` from the [previous section](staging.md#adding-the-footer))
 
 ### Creating the model header
 
 Create a new dbt model as before. We'll call this one 'hub_customer'. 
 
-The following header will be appropriate, but feel free to customise it to your needs:
+The following header is what we use, but feel free to customise it to your needs:
 
 ```hub_customer.sql```
 ```sql
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
 
 ```
+
+Hubs are always incremental, as we load and add new records to the existing data set.
 
 An incremental materialisation will optimize our load in cases where the target table (in this case, ```hub_customer```)
 already exists and already contains data. This is very important for tables containing a lot of data, where every ounce 
@@ -38,12 +41,13 @@ Let's look at the metadata we need to provide to the [hub_template](macros.md#hu
 
 #### Source columns
 
-Using our knowledge of what columns we need in our  ```hub_customer``` table, we can identify which columns in our
-staging layer we will need:
+Using our knowledge of what columns we need in our  ```hub_customer``` table, we can identify columns in our
+staging layer which map to them:
 
-1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created is a perfect fit.
+1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created earlier in the [staging](staging.md) section 
+is a perfect fit.
 2. The natural key itself, ```CUSTOMER_ID``` which we added using the [add_columns](macros.md#add_columns) macro.
-3. A load date timestamp, which we also added to the staging layer as ```LOADDATE``` 
+3. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 4. A ```SOURCE``` column.
 
 We can now add this metadata to the model:
@@ -62,7 +66,7 @@ We can now add this metadata to the model:
 #### Target columns
 
 Now we can define the target column mapping. The [hub_template](macros.md#hub_template) does a lot of work for us if we
-provide the metadata it requires. We can define which source columns map to the required target columns and also 
+provide the metadata it requires. We can define which source columns map to the required target columns and
 define a column type at the same time:
 
 ```hub_customer.sql```
@@ -80,25 +84,27 @@ define a column type at the same time:
 {%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                    -%}
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
-
 ```
 
 With these 5 additional lines, we have now informed the macro how to transform our source data:
 
-- On line 8, we have written the 4 columns we worked out earlier to define exactly what source columns
-we are using and what order we want them in. We have used the variable references to avoid writing the columns again.
-- On the remaining lines we have provided our mapping from source to target. We don't want to change the names of the
-columns, so we have used the source column reference on both sides.
-- We have provided a type in the mapping so that the type is explicitly defined. 
+- On line 8, we have written the 4 columns we worked out earlier to define what source columns
+we are using and what order we want them in. We have used the variable names to avoid writing the columns again.
+- On the remaining lines we have provided our mapping from source to target. In this particular scenario we aren't
+renaming the columns, so we have used the source column reference on both sides. If you need to rename the columns 
+however, this feature allows you to do so.
+- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but we
+will simplify this for scenarios where we want the data type or column name to remain unchanged in future releases.
 
 !!! info
-    There is nothing to stop you entering incorrect type mappings in this step, so please ensure they are correct.
+    There is nothing to stop you entering invalid type mappings in this step (i.e. trying to cast an invalid date format to a date),
+    so please ensure they are correct.
     You will soon find out, however, as dbt will issue a warning to you. No harm done, but save time by providing 
     accurate metadata!
     
 
 !!! question "Why is ```tgt_cols``` needed?"
-    In future releases, we hope to eliminate the need to duplicate the source columns as shown on line 8. 
+    In future releases, we will eliminate the need to duplicate the source columns as shown on line 8. 
     
     For now, this is a necessary evil. 
 
@@ -127,7 +133,7 @@ dbt ensures dependencies are honoured when defining the source using a reference
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
                                                                                     
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
+{%- set source = [ref('stg_orders_hashed')]                                         -%}
 ```
 
 ### Invoking the template 
@@ -166,16 +172,17 @@ With our model complete, we can run dbt to create our ```hub_customer``` hub.
 
 !!! tip
     The '+' in the command above will cause dbt to also compile and run all parent dependencies for the model we are 
-    running, in this case, it will re-create the staging layer from the ```stg_customer_hashed``` model if needed.
-
+    running, in this case, it will re-create the staging layer from the ```stg_customer_hashed``` model if needed. 
+    dbt will also create our hub if it doesn't already exist.
+    
 And our table will look like this:
 
-| CUSTOMER_PK                      | CUSTOMER_ID  | LOADDATE   | SOURCE       |
-| -------------------------------- | ------------ | ---------- | ------------ |
-| B8C37E33DEFDE51CF91E1E03E51657DA | 1001         | 1993-01-01 | STG_CUSTOMER |
-|               .                  | .            | .          | .            |
-|               .                  | .            | .          | .            |
-| FED33392D3A48AA149A87A38B875BA4A | 1004         | 1993-01-01 | STG_CUSTOMER |
+| CUSTOMER_PK  | CUSTOMER_ID  | LOADDATE   | SOURCE       |
+| ------------ | ------------ | ---------- | ------------ |
+| B8C37E...    | 1001         | 1993-01-01 | 1            |
+| .            | .            | .          | .            |
+| .            | .            | .          | .            |
+| FED333...    | 1004         | 1993-01-01 | 1            |
 
 
 ### Next steps

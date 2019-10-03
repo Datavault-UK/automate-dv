@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Table Macros:
     - [Hub](macros.md#hub_template)
     - [Link](macros.md#link_template)
-    - [Satellites](macros.md#sat_template)
+    - [Satellite](macros.md#sat_template)
 
 - Supporting Macros:
     - [cast](macros.md#cast)
@@ -22,6 +22,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - [multi_hash](macros.md#multi_hash) (renamed from gen_hashing)
     - [staging_footer](macros.md#staging_footer) 
 
-### Documentatiom
+### Documentation
    
 - Numerous changes leading up to Version 1.0 release

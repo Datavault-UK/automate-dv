@@ -13,18 +13,17 @@ Happy Data Vaulting! :smile:
 
 ## Prerequisites 
 
-!!! note
-    These requirements are subject to change as we improve the package.
-
 1. Some prior knowledge of Data Vault 2.0 architecture. Have a look at
 [How can I get up to speed on Data Vault 2.0?](index.md#how-can-i-get-up-to-speed-on-data-vault-20)
 
 2. A Snowflake account, trial or otherwise. [Sign up for a free 30-day trial here](https://trial.snowflake.com/ab/)
 
-2. We assume you already have a raw staging layer.
+3. You must have downloaded and installed dbt, and [set up a project](https://docs.getdbt.com/docs/dbt-projects).
 
-3. Our macros assume that you are only loading from one set of load dates in a single load cycle. We will be removing this
-   restriction in future versions.
+4. We assume you already have a raw staging layer.
+
+5. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. Your staging layer
+contains data for one ```load_datetime``` value only). **We will be removing this restriction in future releases**.
 
 ## Installation 
 
