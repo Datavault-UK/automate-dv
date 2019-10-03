@@ -1,8 +1,7 @@
-Links are another fundamental components in a Data Vault. 
+Links are another fundamental component in a Data Vault. 
 
-Links model an association or link, between two business keys. 
-
-They are similar to [hubs](hubs.md) in structure but contain one additional column, which is simply an additional business key.
+Links model an association or link, between two business keys. They commonly hold business transactions or structural 
+information.
 
 !!! note
     Due to the similarities between links and hubs, most of this page will be familiar if you have already read the
@@ -10,17 +9,18 @@ They are similar to [hubs](hubs.md) in structure but contain one additional colu
 
 Our links will contain:
 
-1. A primary key. This is a concatenation of the two foreign keys below, hashed.
-2. A foreign key holding the business key for one source table.
-3. Another foreign key holding they business key from an associated source table. 
-4. The load date or load date timestamp.
-5. The source for the record
+1. A primary key. For links, we take the natural keys (prior to hashing) represented by the foreign key columns below 
+and create a hash on a concatenation of them. 
+2. Foreign keys holding the primary key for each hub referenced in the link (2 or more depending on the number of hubs 
+referenced) 
+3. The load date or load date timestamp.
+4. The source for the record
 
 ### Creating the model header
 
-Create another dbt model. We'll call this one 'link_customer_nation'. 
+Create another empty dbt model. We'll call this one 'link_customer_nation'. 
 
-The following header will be appropriate, but feel free to customise it to your needs:
+The following header is what we use, but feel free to customise it to your needs:
 
 ```link_customer_nation.sql```
 ```sql
@@ -28,58 +28,21 @@ The following header will be appropriate, but feel free to customise it to your 
 
 ```
 
-### Getting required columns
-
-In the [staging](staging.md) walk-through, we added all the columns we needed for creating our hub.
-To create our link, we will now need to add some additional columns to our staging layer. 
-
-An individual source table should contain all of the necessary columns to create links, as raw staging
-tables often contain multiple associations between keys (that's why we're creating links!).
-
-Because of this, we can simply add some additional pairs to the [add_columns](macros.md#add_columns) macro call. 
-
-In this scenario we will be creating a link to model the association between a customer and their nation, so we 
-add the following lines if ```stg_customer``` contains a ```NATION_ID``` column:
-
-```stg_customer_hashed.sql```
-```sql hl_lines="4 5 7"
-
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
-                                                                                 
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                         (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                         ('NATION_ID', 'NATION_PK')])                            -}},
-                                                                                 
-{{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'), 
-                         ('NATION_ID', 'NATION_ID'),                        
-                         ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                       
-                         ('CUSTOMER_NAME', 'CUSTOMER_NAME'),                     
-                         ('LOADDATE', 'LOADDATE'),                               
-                         ('LOADDATE', 'EFFECTIVE_FROM')])                         }}
-                                                                                 
-{{- dbtvault.staging_footer(source="STG_CUSTOMER",                               
-                            source_table='MYDATABASE.MYSCHEMA.stg_customer')      }} 
-
-``` 
-
-!!! note
-    We can rename the staging layer to ```stg_customer_nation_hashed.sql``` if we want to keep
-    consistent naming standards, just make sure the reference is updated wherever it is used.
-
 ### Adding the metadata
 
 Now we need to provide some metadata to the [link_template](macros.md#link_template) macro.
 
 #### Source columns
 
-Using our knowledge of what columns we need in our  ```hub_customer``` table, we can identify which columns in our
-staging layer we will need:
+Using our knowledge of what columns we need in our  ```link_customer_nation``` table, we can identify columns in our
+staging layer which map to them:
 
-1. A primary key, which is a combination of the two foreign keys: ```CUSTOMER_NATION_PK``` from our modified staging layer.
-2. ```CUSTOMER_ID``` which is one of our foreign keys
-3. ```NATION_ID``` the second foreign key.
-3. A load date timestamp, which is in the staging layer as ```LOADDATE``` 
-4. A ```SOURCE``` column.
+1. A primary key, which is a combination of the two natural keys: In this case ```CUSTOMER_NATION_PK``` 
+which we added in our staging layer.
+2. ```CUSTOMER_ID``` which is one of our natural keys (We'll use the hashed column, ```CUSTOMER_PK```).
+3. ```NATION_ID``` the second natural key (We'll use the hashed column, ```NATION_PK```).
+4. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
+5. A ```SOURCE``` column.
 
 We can now add this metadata to the model:
 
@@ -95,7 +58,8 @@ We can now add this metadata to the model:
 ```
 
 !!! note 
-    We are using ```src_fk```, a list of the foreign keys. This is instead of ```src_nk``` when building the hubs.
+    We are using ```src_fk```, a list of the foreign keys. This is instead of the ```src_nk``` 
+    we used when building the hubs. We must use square brackets when defining a list.
 
 #### Target columns
 
@@ -121,17 +85,35 @@ define a column type at the same time:
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                             -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                                -%}
 
-```        
+```      
 
-!!! note
-    The column name strings on lines 8 and 11 could easily be replaced with references to 
-    the ```src_pk``` and ```src_fk``` variables, these are just written in full for clarity. 
-     
+With these 5 additional lines, we have now informed the macro how to transform our source data:
+
+- On line 8, we have written the 5 columns we worked out earlier to define what source columns
+we are using and what order we want them in. The column name strings on lines 8 and 11 could easily be replaced with 
+references to the ```src_pk``` and ```src_fk``` variables, these are just written in full for clarity. 
+
+- On the remaining lines we have provided our mapping from source to target. Observe that we are
+renaming the foreign key column so that they have an ```FK``` suffix.
+
+- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but we
+will simplify this for scenarios where we want the data type or column name to remain unchanged in future releases.
+
+!!! info
+    There is nothing to stop you entering invalid type mappings in this step (i.e. trying to cast an invalid date format to a date),
+    so please ensure they are correct.
+    You will soon find out, however, as dbt will issue a warning to you. No harm done, but save time by providing 
+    accurate metadata!
+    
+!!! question "Why is ```tgt_cols``` needed?"
+    In future releases, we will eliminate the need to duplicate the source columns as shown on line 8. 
+    
+    For now, this is a necessary evil.   
 
 #### Source table
 
 The last piece of metadata we need is the source table. As we did with the hubs, we can reference
-the staging layer model we made earlier:
+the staging layer model we made earlier, as this contains all the columns we need for the link:
 
 ```link_customer_nation.sql```
 
@@ -152,7 +134,7 @@ the staging layer model we made earlier:
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                             -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                                -%}
                                                                                     
-{%- set source = [ref('stg_customer_nation_hashed')]                                        -%}
+{%- set source = [ref('stg_orders_hashed')]                                                 -%}
 ```
 
 ### Invoking the template 
@@ -177,7 +159,7 @@ Now we bring it all together and call the [link_template](macros.md#link_templat
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                             -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                                -%}
                                                                                     
-{%- set source = [ref('stg_customer_nation_hashed')]                                        -%}
+{%- set source = [ref('stg_orders_hashed')]                                                 -%}
 
 {{  dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
                            tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
@@ -193,12 +175,12 @@ With our model complete, we can run dbt to create our ```link_customer_nation```
 
 And our table will look like this:
 
-| CUSTOMER_NATION_PK               | CUSTOMER_ID  | NATION_ID    | LOADDATE   | SOURCE       |
-| -------------------------------- | ------------ | ------------ | ---------- | ------------ |
-| 72A160C6CDBF0EDC9D4B4398796C9B42 | 1001         | 10001        | 1993-01-01 | STG_CUSTOMER |
-|               .                  | .            | .            | .          | .            |
-|               .                  | .            | .            | .          | .            |
-| 1CE6A9D2688B0DB0893E46BEDECBF1E3 | 1004         | 10004        | 1993-01-01 | STG_CUSTOMER |
+| CUSTOMER_NATION_PK | CUSTOMER_FK  | NATION_FK    | LOADDATE   | SOURCE       |
+| ------------------ | ------------ | ------------ | ---------- | ------------ |
+| 72A160...          | B8C37E...    | D89F3A...    | 1993-01-01 | 1            |
+| .                  | .            | .            | .          | .            |
+| .                  | .            | .            | .          | .            |
+| 1CE6A9...          | FED333...    | D78382...    | 1993-01-01 | 1            |
 
 
 ### Next steps
