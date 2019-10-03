@@ -26,6 +26,8 @@ nav:
       - Satellites: 'satellites.md'
   - Macros: 'macros.md'
   - Demonstration: 'demonstration.md'
+  - Roadmap: 'roadmap.md'
+  - Changelog: 'changelog.md'
   - Licence: 'LICENSE.md'
 
 extra:
