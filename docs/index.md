@@ -10,6 +10,13 @@ dbtvault is a dbt package that implements a Data Vault 2.0 Data Warehouse on a S
 
 dbt is designed for ease of use in data engineering: for when you need to develop a data pipeline. It is a single executable that can run on your desktop or a VM in your network, it is developed in Python, and is free to download and use.
 
+!!! tip
+    #### Sign up for early-bird announcements 
+
+    [Sign up](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
+    before anyone else!
+
+
 ## What is Data Vault 2.0?
 Data Vault 2.0 is an Agile method used to deliver a highly scalable enterprise Data Warehouse. 
 
