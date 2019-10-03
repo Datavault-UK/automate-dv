@@ -8,7 +8,7 @@
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
-dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses; 
+dbtvault is a dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on a Snowflake database;
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
