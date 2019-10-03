@@ -17,8 +17,8 @@ Happy Data Vaulting!
 ## Issue guidelines
 
 ### If it's a bug
-We've tested the package rigorously, but if you think you've found a bug please provide the following so we can fix it
-as quickly as possible:
+We've tested the package rigorously, but if you think you've found a bug please provide the following 
+at a minimum (or use the issue templates) so we can fix it as quickly as possible:
 
 - The version of dbtvault being used (as we're still in pre-release, this can be omitted)
 - Steps to reproduce the issue
