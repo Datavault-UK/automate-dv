@@ -31,7 +31,7 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision 0.1pre # Latest stable version
+    revision: v0.1-pre # Latest stable version
 ```
 And run 
 ```dbt deps```
