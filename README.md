@@ -21,11 +21,13 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown A
 Add the following to your ```packages.yml```
 
 
-```bash
+```yaml
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
+    revision: 0.1pre
 ```
+
 And run 
 ```dbt deps```
 
