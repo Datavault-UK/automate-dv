@@ -12,9 +12,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, source) -%}
+{%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -%}
 
-    SELECT {{ tgt_cols|join(", ") }}{% if is_incremental() or union -%},
+    SELECT {{ [src_pk[0], src_nk[0], src_ldts, src_source]|join(", ") }}{% if is_incremental() or union -%},
     LAG({{ src_source }}, 1)
     OVER(PARTITION by {{ tgt_pk }}
     ORDER BY {{ tgt_pk }}) AS FIRST_SOURCE

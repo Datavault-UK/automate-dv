@@ -12,7 +12,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro create_source(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk,
+{%- macro create_source(src_pk, src_nk, src_ldts, src_source, tgt_pk,
                         source, is_union) -%}
 
     {%- if not is_union -%}
@@ -21,7 +21,7 @@
 
     {%- else -%}
 
-        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, source) -}}
+        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -}}
 
     {%- endif -%}
 
