@@ -1,5 +1,6 @@
 site_name: dbtvault
 site_author: Datavault
+site_dir: 'site'
 theme:
     name: 'material'
     custom_dir: 'theme'
@@ -24,6 +25,9 @@ nav:
       - Links: 'links.md'
       - Satellites: 'satellites.md'
   - Macros: 'macros.md'
+  - Demonstration: 'demonstration.md'
+  - Roadmap: 'roadmap.md'
+  - Changelog: 'changelog.md'
   - Licence: 'LICENSE.md'
 
 extra:

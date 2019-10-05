@@ -4,14 +4,15 @@
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
+latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
+
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.1-pre)](https://dbtvault.readthedocs.io/en/v0.1-pre/?badge=v0.1-pre)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
-dbtvault is a DBT package for creating Data Vault 2.0 compliant Data Warehouses; 
+dbtvault is a dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on a Snowflake database;
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
-
 
 ## Currently supported databases:
 
@@ -22,10 +23,11 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown A
 Add the following to your ```packages.yml```
 
 
-```bash
+```yaml
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
+    revision: v0.1-pre # Latest stable version
 ```
 And run 
 ```dbt deps```
@@ -35,8 +37,8 @@ And run
 ## Usage
 
 1. Create a model for your hub, link or satellite
-2. Set your metadata and hash model parameters
-4. Call the appropriate template macro
+2. Provide metadata
+3. Call the appropriate template macro
 
 ```bash
 {{- config(...)                                                           -}}
@@ -50,8 +52,13 @@ And run
                          source)                                           }}
 ```
 
+## Sign up for early-bird announcements 
+
+[SIGN UP](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
+before anyone else!
+
 ## Contributing
-Please open an issue first to discuss what you would like to change.
+[View our contribution guidelines](CONTRIBUTING.md)
 
 ## License
 [Apache 2.0](LICENSE.md)

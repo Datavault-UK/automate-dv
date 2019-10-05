@@ -138,6 +138,12 @@ In the example above we have have:
     
 ### Adding the footer
 
+!!! success "New"
+    The ```staging_footer``` macro has been renamed to ```from``` and is now much simpler.
+    If you're looking for the ability to add constants for ```source``` and ```loaddate``` 
+    you can now use the improved [add_columns](macros.md#add_columns) macro.
+    
+
 Now we just need to provide the variable we created earlier, as a parameter to the ```from```
 macro.
 
