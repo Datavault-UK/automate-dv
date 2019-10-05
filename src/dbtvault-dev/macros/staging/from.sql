@@ -12,8 +12,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro create_col(column, alias) -%}
+{%- macro from(source_table) -%}
 
-{{ column }} AS {{ alias }}
+FROM {{ source_table }}
 
 {%- endmacro -%}

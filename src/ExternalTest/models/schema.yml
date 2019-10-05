@@ -1,0 +1,19 @@
+version: 2
+
+sources:
+  - name: test
+    database: DV_PROTOTYPE_DB
+    schema: SRC_TEST_STG
+    tables:
+      - name: lineitem
+        identifier: TEST_STG_LINEITEM
+      - name: parts
+        identifier: TEST_STG_PARTS
+      - name: supplier
+        identifier: TEST_STG_SUPPLIER
+  - name: stage
+    database: DV_PROTOTYPE_DB
+    schema: SRC_STG
+    tables:
+      - name: orders_hashed
+        identifier: V_SRC_STG_ORDERS

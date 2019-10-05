@@ -20,5 +20,5 @@
 {%- set source = [ref('stg_orders_hashed') ]                                                     -%}
 
 {{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                          tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
+                          tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                           source)                                                                 }}
