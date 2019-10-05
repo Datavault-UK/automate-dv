@@ -10,7 +10,7 @@ Creates a hub with provided metadata.
 
 ```mysql 
 dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,          
-                      tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                      tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                       source)                                        
 ```
 
@@ -22,7 +22,6 @@ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
 | src_nk        | Source natural key column                           | String               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_cols      | Complete list of all source columns (pre-aliasing)  | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_pk        | Target primary key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_nk        | Target natural key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_ldts      | Target loaddate timestamp column                    | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
@@ -40,9 +39,7 @@ hub_customer.sql:
 {%- set src_pk = 'CUSTOMER_PK'                                                          -%}
 {%- set src_nk = 'CUSTOMER_ID'                                                          -%}
 {%- set src_ldts = 'LOADDATE'                                                           -%}
-{%- set src_source = 'SOURCE'                                                           -%}
-                                                                                           
-{%- set tgt_cols = [src_pk, src_nk, src_ldts, src_source]                               -%}
+{%- set src_source = 'SOURCE'                                                           -%}                                                                                         
                                                                                            
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                         -%}
 {%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                        -%}
@@ -52,7 +49,7 @@ hub_customer.sql:
 {%- set source = [ref('stg_customer_hashed')]                                           -%}
                                                                                            
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,                             
-                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,                   
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,                   
                          source)                                                         }}
 ```
 
@@ -67,8 +64,6 @@ hub_parts.sql:
 {%- set src_ldts = 'LOADDATE'                                                           -%}
 {%- set src_source = 'SOURCE'                                                           -%}
 
-{%- set tgt_cols = [src_pk[0], src_nk[0], src_ldts, src_source]                         -%}
-
 {%- set tgt_pk = [src_pk[0], 'BINARY(16)', src_pk[0]]                                   -%}
 {%- set tgt_nk = [src_nk[0], 'NUMBER(38,0)', src_nk[0]]                                 -%}
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                         -%}
@@ -80,7 +75,7 @@ hub_parts.sql:
 
 
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                          source)                                                         }}
 ```
 
@@ -137,7 +132,7 @@ Creates a link with provided metadata.
 
 ```mysql 
 dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,          
-                       tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
+                       tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                        source)                                        
 ```
 
@@ -149,7 +144,6 @@ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
 | src_fk        | Source foreign key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_cols      | Complete list of all source columns (pre-aliasing)  | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_pk        | Target primary key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_fk        | Target foreign key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_ldts      | Target loaddate timestamp column                    | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
@@ -169,9 +163,6 @@ link_customer_nation.sql:
 {%- set src_ldts = 'LOADDATE'                                                               -%}
 {%- set src_source = 'SOURCE'                                                               -%}
 
-{%- set tgt_cols = ['CUSTOMER_NATION_PK', 'CUSTOMER_PK', 'NATION_PK', 
-                    src_ldts, src_source]                                                   -%}
-
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                             -%}
 {%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
                   ['NATION_PK', 'BINARY(16)', 'NATION_FK']]                                 -%}
@@ -182,7 +173,7 @@ link_customer_nation.sql:
 {%- set source = [ref('stg_crm_customer_hashed')]                                           -%}
 
 {{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                          tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
+                          tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                           source)                                                            }}
 ```
 
@@ -200,9 +191,6 @@ link_customer_nation_union.sql:
 {%- set src_ldts = 'LOADDATE'                                                               -%}
 {%- set src_source = 'SOURCE'                                                               -%}
 
-{%- set tgt_cols = ['CUSTOMER_NATION_PK', 'CUSTOMER_PK', 'NATION_PK', 
-                    src_ldts, src_source]                                                   -%}
-
 {%- set tgt_pk = [src_pk[0], 'BINARY(16)', src_pk[0]]                                       -%}
 {%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
                   ['NATION_PK', 'BINARY(16)', 'NATION_FK']]                                 -%}
@@ -215,7 +203,7 @@ link_customer_nation_union.sql:
                   ref('stg_web_customer_hashed')]                                           -%}
 
 {{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                          tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
+                          tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                           source)                                                            }}
 ```
 
@@ -275,7 +263,7 @@ Creates a satellite with provided metadata.
 ```mysql 
 dbtvault.sat_template(src_pk, src_hashdiff, src_payload,          
                       src_eff, src_ldts, src_source,              
-                      tgt_cols, tgt_pk, tgt_hashdiff, tgt_payload,
+                      tgt_pk, tgt_hashdiff, tgt_payload,
                       tgt_eff, tgt_ldts, tgt_source,              
                       src_table, source)                          
 ```
@@ -290,7 +278,6 @@ dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
 | src_eff       | Source effective from column                        | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_cols      | Complete list of all source columns (pre-aliasing)  | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_pk        | Target primary key column                           | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_hashdiff  | Target hashdiff column                              | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | tgt_payload   | Target payload column                               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
@@ -316,8 +303,6 @@ sat_customer_details.sql:
 {%- set src_ldts = 'LOADDATE'                                                                           -%}
 {%- set src_source = 'SOURCE'                                                                           -%}
                                                                                                            
-{%- set tgt_cols = [src_pk, 'HASHDIFF', 'NAME', 'DOB', 'PHONE', 'EFFECTIVE_FROM', 'LOADDATE', 'SOURCE'] -%}
-                                                                                                           
 {%- set tgt_pk = [src_pk , 'BINARY(16)', src_pk]                                                        -%} 
 
 {%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                                       -%} 
@@ -334,7 +319,7 @@ sat_customer_details.sql:
                                                                                                            
 {{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,                                               
                           src_eff, src_ldts, src_source,                                                   
-                          tgt_cols, tgt_pk, tgt_hashdiff, tgt_payload,                                     
+                          tgt_pk, tgt_hashdiff, tgt_payload,                                     
                           tgt_eff, tgt_ldts, tgt_source,                                                   
                           source)                                                                        }}
 ```
@@ -390,7 +375,7 @@ ___
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
     
-!!! seealso 
+!!! seealso "See Also"
     [hash](#hash)
     
 A macro for generating multiple lines of hashing SQL for columns:
@@ -419,11 +404,12 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
 
 ```mysql
 CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
-CAST(MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
-                       IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
-                       IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
-                       IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
-                       AS BINARY(16)) AS HASHDIFF
+
+CAST(MD5_BINARY(CONCAT(
+    IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+    IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS HASHDIFF
 ```
 
 ___
@@ -439,18 +425,20 @@ column AS alias
 
 | Parameter     | Description                         | Type           | Required?                                                          |
 | ------------- | ----------------------------------- | -------------- | ------------------------------------------------------------------ |
+| source_table  | A source reference                  | Source         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | pairs         | Collection of (column, alias) pairs | List of tuples | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
 ```yaml
-{{ dbtvault.add_columns([('PARTKEY', 'PART_ID'),
+{{ dbtvault.add_columns(source('MYSOURCE', 'MYTABLE'),
+                        [('PARTKEY', 'PART_ID'),
                          ('PART_NAME', 'NAME'),
                          ('PART_TYPE', 'TYPE'),
                          ('PART_SIZE', 'SIZE'),
                          ('PART_RETAILPRICE', 'RETAILPRICE'),
                          ('LOADDATE', 'LOADDATE'),
-                         ('SOURCE', 'SOURCE')])                }}
+                         ('!STG_CUSTOMER', 'SOURCE')])                }}
 ```
 
 #### Output
@@ -462,39 +450,63 @@ PART_TYPE AS TYPE,
 PART_SIZE AS SIZE, 
 PART_RETAILPRICE AS RETAILPRICE, 
 LOADDATE AS LOADDATE, 
-SOURCE AS SOURCE
+'STG_CUSTOMER' AS SOURCE
 ```
 
+#### Notes
+
+##### Adding constants
+With the ```add_columns``` macro, you may provide constants. 
+These are additional 'calculated' columns created from hard-coded values.
+To achieve this, simply provide the constant with a ```!``` in front of the desired constant,
+and the macro will do the rest. See line 8 above, and the output it gives.
+
+
+##### Getting columns from the source
+The ```add_columns``` macro will automatically select all columns from the provided source reference.
+If you need to override any of these columns and provide different values, for example a different ```SOURCE``` 
+or ```LOADDATE``` column value, then you may. If you provide columns in the ```pairs``` parameter, then they will 
+automatically take precedence over any columns coming from the source. 
+
+Database functions may be used, for example ```CURRENT_DATE()```, to set the current date as the value of a column, as in the
+example below:
+
+```sql
+{{ dbtvault.add_columns(source_table,
+                        [('!TPCH', 'SOURCE'),
+                         ('CURRENT_DATE()', 'EFFECTIVE_FROM')])                              }}
+```
+
+    
 ___
 
-### staging_footer
+### from
 
 Used in creating source/hashing models to complete a staging layer model.
 
 ```mysql 
-,LOADDATE AS LOADDATE,'SOURCE' AS SOURCE FROM DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_lineitem
+FROM MYDATABASE.MYSCHEMA.MYTABLE
 ```
+
+!!! info
+    Sources need to be set up in dbt. [Read More](https://docs.getdbt.com/docs/using-sources)
 
 #### Parameters
 
 | Parameter     | Description                               | Type   | Required?                                                |
 | ------------- | ----------------------------------------- | ------ | -------------------------------------------------------- |
-| loaddate      | Name for loaddate column                  | String | <i class="md-icon" alt="No" style="color: red">clear</i> |
-| source        | Source column value for each record       | String | <i class="md-icon" alt="No" style="color: red">clear</i> |
-| source_table  | Fully qualified table name                | String | <i class="md-icon" style="color: green">check_circle</i> | 
+| source_table  | A source reference                        | Source | <i class="md-icon" style="color: green">check_circle</i> | 
 
 #### Usage
 
 ```yaml
-{{- dbtvault.staging_footer('LOADDATE', 
-                            'SOURCE', 
-                            source_table='MYDATABASE.MYSCHEMA.MYTABLE')  }}
+{{ dbtvault.from( source('MYSOURCE', 'MYTABLE') ) }}
 ```
 
 #### Output
 
 ```mysql 
-,LOADDATE AS LOADDATE,'SOURCE' AS SOURCE FROM MYDATABASE.MYSCHEMA.MYTABLE
+FROM MYDATABASE.MYSCHEMA.MYTABLE
 ```
 
 ___
