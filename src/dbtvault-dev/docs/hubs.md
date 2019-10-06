@@ -144,12 +144,12 @@ Now we bring it all together and call the [hub_template](macros.md#hub_template)
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
                                                                                        
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
+{%- set source = [ref('stg_orders_hashed')]                                         -%}
                                                                                        
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,                         
                          tgt_pk, tgt_nk, tgt_ldts, tgt_source,               
                          source)                                                     }}
-```                                                                                    
+```
 
 ### Running dbt
 
@@ -158,8 +158,8 @@ With our model complete, we can run dbt to create our ```hub_customer``` hub.
 ```dbt run --models +hub_customer```
 
 !!! tip
-    The '+' in the command above will cause dbt to also compile and run all parent dependencies for the model we are 
-    running, in this case, it will re-create the staging layer from the ```stg_customer_hashed``` model if needed. 
+    Using the '+' in the command above will get dbt to compile and run all parent dependencies for the model we are 
+    running, in this case, it will re-create the staging layer from the ```stg_orders_hashed``` model if needed. 
     dbt will also create our hub if it doesn't already exist.
     
 And our table will look like this:
