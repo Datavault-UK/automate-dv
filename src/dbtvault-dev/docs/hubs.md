@@ -13,7 +13,7 @@ order number (can be multi-column).
 
 ### Creating the model header
 
-Create a new dbt model as before. We'll call this one 'hub_customer'. 
+Create a new dbt model as before. We'll call this one ```hub_customer```. 
 
 The following header is what we use, but feel free to customise it to your needs:
 
@@ -90,8 +90,8 @@ With these 4 additional lines, we have now informed the macro how to transform o
 renaming the columns, so we have used the source column reference on both sides. If you need to rename the columns 
 however, this feature allows you to do so.
 
-- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but we
-will simplify this for scenarios where we want the data type or column name to remain unchanged in future releases.
+- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but 
+in future releases we will simplify this for scenarios where we want the data type or column name to remain unchanged.
 
 !!! info
     There is nothing to stop you entering invalid type mappings in this step (i.e. trying to cast an invalid date format to a date),
@@ -125,6 +125,10 @@ dbt ensures dependencies are honoured when defining the source using a reference
 {%- set source = [ref('stg_orders_hashed')]                                         -%}
 ```
 
+!!! note
+    Make sure you surround the ref call with square brackets, as shown in the snippet
+    above.
+    
 ### Invoking the template 
 
 Now we bring it all together and call the [hub_template](macros.md#hub_template) macro:
