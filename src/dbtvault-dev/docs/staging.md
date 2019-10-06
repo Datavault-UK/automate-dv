@@ -92,16 +92,23 @@ The latter two pairs will be used later when creating [links](links.md).
     
 ### Additional columns
 
-We now add the column names we want to bring forward/feed from the raw staging table into the raw vault.
-We list them by name, and provide an alias (how we want to name them in the raw vault tables). You will also
-have another opportunity to rename these columns later when creating the raw vault tables.
-
-We will need to add some additional columns to our staging layer, containing 'constants' implied by the context of the 
-staging data. For example, we may add a source table code value, or the the load date, or some other constant needed in
-the primary key. Load dates and sources are also handled in the next section, as you have a choice of techniques.
-
 With the [add_columns](macros.md#add_columns) macro, we can provide a list of columns and any corresponding aliases for 
 those columns.
+
+We now add the column names we want to bring forward/feed from the raw staging table into the raw vault.
+To include all columns which exist in the source table, we provide the ```source_table``` variable we created earlier.
+
+We will also need to add some additional columns to our staging layer, containing 'constants' implied by the context of the 
+staging data. For example, we may add a source table code value, or the the load date, or some other constant needed in
+the primary key.
+
+We can also override any columns coming in from the source, with different data. We may want to do this if a source 
+column already exists in the raw stage and the values aren't appropriate.
+ 
+We provide the constant by adding a ```!``` to the data and alias them with the same name as the column we want to 
+override. You will have another opportunity to rename these columns, as well as cast them to different data types
+later when creating the raw vault tables. We can also use this method to create any new columns which do not already 
+exist in the source.
 
 
 ```stg_orders_hashed.sql```

@@ -18,7 +18,7 @@ referenced)
 
 ### Creating the model header
 
-Create another empty dbt model. We'll call this one 'link_customer_nation'. 
+Create another empty dbt model. We'll call this one ```link_customer_nation```. 
 
 The following header is what we use, but feel free to customise it to your needs:
 
@@ -123,6 +123,10 @@ the staging layer model we made earlier, as this contains all the columns we nee
                                                                                     
 {%- set source = [ref('stg_orders_hashed')]                                                 -%}
 ```
+
+!!! note
+    Make sure you surround the ref call with square brackets, as shown in the snippet
+    above.
 
 ### Invoking the template 
 
