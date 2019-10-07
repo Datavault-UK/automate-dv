@@ -104,7 +104,7 @@ SELECT DISTINCT
                     CAST(stg.LOADDATE AS DATE) AS LOADDATE,
                     CAST(stg.SOURCE AS VARCHAR(15)) AS SOURCE
 FROM (
-    SELECT PART_PK, PART_ID, LOADDATE, SOURCE,
+    SELECT src.PART_PK, src.PART_ID, src.LOADDATE, src.SOURCE,
     LAG(SOURCE, 1)
     OVER(PARTITION by PART_PK
     ORDER BY PART_PK) AS FIRST_SOURCE
@@ -116,7 +116,8 @@ FROM (
       FROM MYDATABASE.MYSCHEMA.stg_supplier_hashed AS b
       UNION
       SELECT c.PART_PK, c.PART_ID, c.LOADDATE, c.SOURCE
-      FROM MYDATABASE.MYSCHEMA.stg_lineitem_hashed AS c)
+      FROM MYDATABASE.MYSCHEMA.stg_lineitem_hashed AS c
+      ) as src
 ) AS stg
 LEFT JOIN MYDATABASE.MYSCHEMA.hub_parts AS tgt
 ON stg.PART_PK = tgt.PART_PK
@@ -234,7 +235,7 @@ SELECT DISTINCT
                     CAST(stg.LOADDATE AS DATE) AS LOADDATE,
                     CAST(stg.SOURCE AS VARCHAR(15)) AS SOURCE
 FROM (
-    SELECT CUSTOMER_NATION_PK, CUSTOMER_PK, NATION_PK, LOADDATE, SOURCE,
+    SELECT src.CUSTOMER_NATION_PK, src.CUSTOMER_PK, src.NATION_PK, src.LOADDATE, src.SOURCE,
     LAG(SOURCE, 1)
     OVER(PARTITION by CUSTOMER_NATION_PK
     ORDER BY CUSTOMER_NATION_PK) AS FIRST_SOURCE
@@ -246,7 +247,8 @@ FROM (
       FROM MYDATABASE.MYSCHEMA.stg_crm_customer_hashed AS b
       UNION
       SELECT c.CUSTOMER_NATION_PK, c.CUSTOMER_PK, c.NATION_PK, c.LOADDATE, c.SOURCE
-      FROM MYDATABASE.MYSCHEMA.stg_web_customer_hashed AS c)
+      FROM MYDATABASE.MYSCHEMA.stg_web_customer_hashed AS c
+      ) AS src
 ) AS stg
 LEFT JOIN MYDATABASE.MYSCHEMA.link_customer_nation_union AS tgt
 ON stg.CUSTOMER_NATION_PK = tgt.CUSTOMER_NATION_PK
@@ -363,7 +365,7 @@ ___
 ## Staging Macros
 ######(macros/staging)
 
-These macros are intended for use in the staging layer 
+These macros are intended for use in the staging layer.
 ___
 
 ### multi_hash
@@ -397,7 +399,7 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
 
 ```yaml
 {{ dbtvault.multi_hash([('CUSTOMERKEY', 'CUSTOMER_PK'),
-                         (['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF')]) }}
+                        (['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF')]) }}
 ```
 
 #### Output
@@ -412,6 +414,9 @@ CAST(MD5_BINARY(CONCAT(
     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS HASHDIFF
 ```
 
+!!! success "Column sorting"
+    You do not need to worry about providing the columns in any particular order; Provided columns are alpha-sorted automatically, as per best practises.
+
 ___
 
 ### add_columns
@@ -423,33 +428,27 @@ column AS alias
 
 #### Parameters
 
-| Parameter     | Description                         | Type           | Required?                                                          |
-| ------------- | ----------------------------------- | -------------- | ------------------------------------------------------------------ |
-| source_table  | A source reference                  | Source         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| pairs         | Collection of (column, alias) pairs | List of tuples | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| Parameter     | Description                         | Type           | Required?                                       |
+| ------------- | ----------------------------------- | -------------- | ----------------------------------------------- |
+| source_table  | A source reference                  | Source         | <i class="md-icon" style="color: red">clear</i> |
+| pairs         | List of (column, alias) pairs       | List of tuples | <i class="md-icon" style="color: red">clear</i> |
+
+!!! note
+    At least one of the above parameters must be provided, both may be provided if required.  
 
 #### Usage
 
 ```yaml
 {{ dbtvault.add_columns(source('MYSOURCE', 'MYTABLE'),
-                        [('PARTKEY', 'PART_ID'),
-                         ('PART_NAME', 'NAME'),
-                         ('PART_TYPE', 'TYPE'),
-                         ('PART_SIZE', 'SIZE'),
-                         ('PART_RETAILPRICE', 'RETAILPRICE'),
-                         ('LOADDATE', 'LOADDATE'),
+                        [('CURRENT_DATE()', 'EFFECTIVE_FROM'),
                          ('!STG_CUSTOMER', 'SOURCE')])                }}
 ```
 
 #### Output
 
 ```mysql 
-PARTKEY AS PART_ID, 
-PART_NAME AS NAME, 
-PART_TYPE AS TYPE, 
-PART_SIZE AS SIZE, 
-PART_RETAILPRICE AS RETAILPRICE, 
-LOADDATE AS LOADDATE, 
+<All columns from MYTABLE>,
+CURRENT_DATE() AS EFFECTIVE_FROM,
 'STG_CUSTOMER' AS SOURCE
 ```
 
@@ -459,7 +458,7 @@ LOADDATE AS LOADDATE,
 With the ```add_columns``` macro, you may provide constants. 
 These are additional 'calculated' columns created from hard-coded values.
 To achieve this, simply provide the constant with a ```!``` in front of the desired constant,
-and the macro will do the rest. See line 8 above, and the output it gives.
+and the macro will do the rest. See line 3 above, and the output it gives.
 
 
 ##### Getting columns from the source
@@ -571,7 +570,7 @@ ___
 ### hash
 
 !!! warning
-    This macro ***should not be*** used for cryptographic purposes
+    This macro ***should not be*** used for cryptographic purposes.
     
     The intended use is for creating checksum-like fields only, so that a record change can be detected. 
     
@@ -583,6 +582,7 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 ```
 
 - Can provide multiple columns as a list to create a concatenated hash
+- When multiple columns are provided, they are alpha-sorted automatically.
 - Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
 - ```'^^'``` Accounts for null values with a double caret
 - ```'||'``` Concatenates with a double pipe 
