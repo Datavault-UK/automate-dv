@@ -4,7 +4,9 @@
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
+latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
+
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2-pre)](https://dbtvault.readthedocs.io/en/v0.2-pre/?badge=v0.2-pre)test)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
@@ -25,7 +27,7 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: 0.1pre
+    revision: 0.2pre
 ```
 
 And run 
