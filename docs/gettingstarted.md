@@ -63,7 +63,7 @@ Add the following to your ```packages.yml```:
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: 0.1pre
+    revision: v0.2.1-pre
 ```
 
 And run 
