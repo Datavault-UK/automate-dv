@@ -12,7 +12,7 @@ by submitting an issue using the below guidelines
 
 We’d rather know you are making active use of this package than hearing nothing from all of you out there!
 
-Happy Data Vaulting!
+Happy Data Vaulting! :smile:
 
 ## Issue guidelines
 
