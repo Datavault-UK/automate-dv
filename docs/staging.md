@@ -48,6 +48,10 @@ Usually we want hashing layers to be views.
 Next we will create a variable which holds a reference to the raw source table, since we will need to refer to it a few times
 in our model.
 
+!!! note
+    If you have not yet set up sources in your dbt configuration please refer [here](gettingstarted.md#setting-up-sources).
+
+
 ```stg_orders_hashed.sql```
 ```sql hl_lines="3"
 
@@ -55,8 +59,6 @@ in our model.
 
 {%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
 ```
-
-For more information on the ```source``` macro, please refer [here](gettingstarted.md#setting-up-sources)
 
 ### Adding the metadata
 

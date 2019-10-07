@@ -27,8 +27,6 @@ Happy Data Vaulting! :smile:
 6. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. Your staging layer
 contains data for one ```load_datetime``` value only). **We will be removing this restriction in future releases**.
 
-
-
 ## Setting up sources
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
@@ -73,3 +71,13 @@ And run
 
 [Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
 
+
+## Final note before we start
+
+The documentation is written in the context of a simple example, showing a step by step progression towards
+loading a Data Vault 2.0 Data Warehouse. We have documented everything you need to know, but as all use cases will vary, 
+you will need to adapt this to your own needs and requirements.
+
+If you need any more detail or require specific guidance, do not hesitate to 
+[submit an issue](https://github.com/Datavault-UK/dbtvault/issues). 
+We may be able to improve the package based on your feedback, and this will benefit the whole community!
