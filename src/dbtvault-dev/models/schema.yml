@@ -9,3 +9,21 @@ sources:
       identifier: test_stg_booking
       - name: stg_customer
       identifier: test_stg_customer
+      - name: stg_customer_hubs
+      identifier: test_stg_customer_hubs
+      - name: stg_customer_links
+      identifier: test_stg_customer_links
+      - name: stg_crm_customer
+      identifier: test_stg_crm_customer
+      - name: stg_sap_customer
+      identifier: test_stg_sap_customer
+      - name: stg_web_customer
+      identifier: test_stg_web_customer
+      - name: stg_customer_details
+      identifier: test_stg_customer_details
+      - name: stg_supplier
+      identifier: test_stg_supplier
+      - name: stg_parts
+      identifier: test_stg_parts
+      - name: stg_lineitem
+      identifier: test_stg_lineitem
