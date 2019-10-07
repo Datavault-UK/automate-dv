@@ -12,16 +12,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro create_source(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk,
+{%- macro create_source(src_pk, src_nk, src_ldts, src_source,
+                        tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                         source, is_union) -%}
 
     {%- if not is_union -%}
 
-        {{- dbtvault.single(src_pk, src_nk, src_ldts, src_source, tgt_pk, source[0], 'a') -}}
+        {{- dbtvault.single(src_pk, src_nk, src_ldts, src_source, source[0], 'a') -}}
 
     {%- else -%}
 
-        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, source) -}}
+        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -}}
 
     {%- endif -%}
 
