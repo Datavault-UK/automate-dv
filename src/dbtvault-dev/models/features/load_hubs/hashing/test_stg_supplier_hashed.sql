@@ -1,14 +1,16 @@
-{{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature')          -}}
+{{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature') -}}
 
-{{ dbtvault.multi_hash([('PART_ID', 'PART_PK'),
-                         ('SUPPLIER_ID', 'SUPPLIER_PK')])                                  -}},
+{%- set source_table = source('test', 'stg_supplier')                             -%}
 
-{{ dbtvault.add_columns([('PART_ID', 'PART_ID'),
-                         ('AVAILQTY', 'AVAILQTY'),
-                         ('SUPPLYCOST ', 'SUPPLYCOST '),
-                         ('LOADDATE', 'LOADDATE'),
-                         ('SOURCE', 'SOURCE')])                                             }}
+{{ dbtvault.multi_hash([('ORDER_ID', 'ORDER_PK'),
+                         ('PART_ID', 'PART_PK'),
+                         ('SUPPLIER_ID', 'SUPPLIER_PK'),
+                         ('LINENUMBER', 'LINEITEM_PK')])                          -}},
 
-{{- dbtvault.from(source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_supplier')  }}
+{{ dbtvault.add_columns(source_table, [])                                          }}
+
+{{- dbtvault.from(source_table)                                                    }}
+
+
 
 
