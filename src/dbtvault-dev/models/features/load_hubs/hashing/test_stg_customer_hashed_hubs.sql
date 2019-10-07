@@ -7,7 +7,7 @@
 {{ dbtvault.add_columns(source_table,
                         [('LOADDATE', 'EFFECTIVE_FROM')])                          }}
 
-{{- dbtvault.from(source_table)                                                    }}
+{{ dbtvault.from(source_table)                                                     }}
 
 
 

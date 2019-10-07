@@ -6,7 +6,7 @@
                          ('NATION_KEY', 'NATION_PK'),
                          (['CUSTOMER_REF', 'NATION_KEY'], 'CUSTOMER_NATION_PK')])  }},
 
-{{ dbtvault.add_columns(source_table, [])                                          }}
+{{ dbtvault.add_columns(source_table)                                              }}
 
 {{- dbtvault.from(source_table)                                                    }}
 

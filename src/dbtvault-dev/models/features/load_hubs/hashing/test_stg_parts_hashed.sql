@@ -2,14 +2,11 @@
 
 {%- set source_table = source('test', 'stg_parts')                                -%}
 
-{{ dbtvault.multi_hash([('ORDER_ID', 'ORDER_PK'),
-                         ('PART_ID', 'PART_PK'),
-                         ('SUPPLIER_ID', 'SUPPLIER_PK'),
-                         ('LINENUMBER', 'LINEITEM_PK')])                          -}},
+{{ dbtvault.multi_hash([('PART_ID', 'PART_PK')])                                  -}},
 
-{{ dbtvault.add_columns(source_table, [])                                          }}
+{{ dbtvault.add_columns(source_table)                                              }}
 
-{{- dbtvault.from(source_table)                                                    }}
+{{ dbtvault.from(source_table)                                                     }}
 
 
 

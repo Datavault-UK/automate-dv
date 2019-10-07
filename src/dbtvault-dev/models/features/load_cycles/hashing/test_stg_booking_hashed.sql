@@ -12,4 +12,4 @@
                         [('!STG_BOOKING', 'SOURCE'),
                          ('BOOKING_DATE', 'EFFECTIVE_FROM')])                                                                    }}
 
-{{- dbtvault.from(source_table)                                                                                                  }}
+{{ dbtvault.from(source_table)                                                                                                   }}
