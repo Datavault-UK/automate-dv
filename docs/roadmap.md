@@ -33,10 +33,15 @@ Release 1 will include:
 - prefix
 
 #### Planned improvements
-- Easier staging: we're planning to reduce the steps and metadata required
-- Removal of the need to add columns which already exist in raw staging,
-and making it so ```add_columns``` is only required for calculated columns or other user-defined additions.
-- Removal of the ```tgt_cols``` parameter in the table templates, as this is duplication of metadata.
+
+- Make providing aliases and types optional when defining target metadata in table template macros.
+
+!!! success "New in v0.2-pre:"
+    - Removed the need to add columns which already exist in raw staging.
+    [add_columns](macros.md#add_columns) is now only requires entry of metadata for calculated columns or other user-defined additions.
+    - Removed of the ```tgt_cols``` parameter in the table templates, as this was duplication of metadata.
+    - Hashing now alpha-sorts columns automatically.
+
 ## Release 2.0
 
 #### Tables

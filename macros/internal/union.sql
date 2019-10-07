@@ -12,12 +12,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_cols, tgt_pk, source) -%}
+{%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -%}
 
-    SELECT {{ tgt_cols|join(", ") }}{% if is_incremental() or union -%},
+    SELECT {{ dbtvault.prefix([src_pk[0], src_nk[0], src_ldts, src_source], 'src')}}{% if is_incremental() or union -%},
     LAG({{ src_source }}, 1)
-    OVER(PARTITION by {{ tgt_pk }}
-    ORDER BY {{ tgt_pk }}) AS FIRST_SOURCE
+    OVER(PARTITION by {{ tgt_pk | last }}
+    ORDER BY {{ tgt_pk | last }}) AS FIRST_SOURCE
     {%- endif %}
     FROM (
 
@@ -28,9 +28,10 @@
       {%- for src in range(iterations) -%}
       {%- set letter = letters[loop.index0] %}
       {{ dbtvault.single(src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source,
-                         tgt_pk, source[loop.index0], letter) -}}
+                         source[loop.index0], letter) -}}
       {% if not loop.last %}
       UNION
       {%- endif -%}
-      {%- endfor -%})
+      {%- endfor %}
+      ) AS src
 {%- endmacro -%}

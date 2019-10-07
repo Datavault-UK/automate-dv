@@ -18,7 +18,7 @@ referenced)
 
 ### Creating the model header
 
-Create another empty dbt model. We'll call this one 'link_customer_nation'. 
+Create another empty dbt model. We'll call this one ```link_customer_nation```. 
 
 The following header is what we use, but feel free to customise it to your needs:
 
@@ -68,15 +68,13 @@ provide the metadata it requires. We can define which source columns map to the 
 define a column type at the same time:
 
 ```link_customer_nation.sql```
-```sql hl_lines="8 10 11 12 14 15"
+```sql hl_lines="8 9 10 11 12 13"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='link')        -}}
                                                                                                
 {%- set src_pk = 'CUSTOMER_NATION_PK'                                                       -%}
 {%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                                               -%}
 {%- set src_ldts = 'LOADDATE'                                                               -%}
 {%- set src_source = 'SOURCE'                                                               -%}
-
-{%- set tgt_cols = ['CUSTOMER_NATION_PK', 'CUSTOMER_PK', 'NATION_PK', src_ldts, src_source] -%}
 
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                             -%}
 {%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
@@ -87,13 +85,9 @@ define a column type at the same time:
 
 ```      
 
-With these 5 additional lines, we have now informed the macro how to transform our source data:
+With these 4 additional lines, we have now informed the macro how to transform our source data:
 
-- On line 8, we have written the 5 columns we worked out earlier to define what source columns
-we are using and what order we want them in. The column name strings on lines 8 and 11 could easily be replaced with 
-references to the ```src_pk``` and ```src_fk``` variables, these are just written in full for clarity. 
-
-- On the remaining lines we have provided our mapping from source to target. Observe that we are
+- We have provided our mapping from source to target. Observe that we are
 renaming the foreign key column so that they have an ```FK``` suffix.
 
 - We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but we
@@ -104,11 +98,6 @@ will simplify this for scenarios where we want the data type or column name to r
     so please ensure they are correct.
     You will soon find out, however, as dbt will issue a warning to you. No harm done, but save time by providing 
     accurate metadata!
-    
-!!! question "Why is ```tgt_cols``` needed?"
-    In future releases, we will eliminate the need to duplicate the source columns as shown on line 8. 
-    
-    For now, this is a necessary evil.   
 
 #### Source table
 
@@ -117,15 +106,13 @@ the staging layer model we made earlier, as this contains all the columns we nee
 
 ```link_customer_nation.sql```
 
-```sql hl_lines="17"
+```sql hl_lines="15"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='link')        -}}
                                                                                                
 {%- set src_pk = 'CUSTOMER_NATION_PK'                                                       -%}
 {%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                                               -%}
 {%- set src_ldts = 'LOADDATE'                                                               -%}
 {%- set src_source = 'SOURCE'                                                               -%}
-
-{%- set tgt_cols = ['CUSTOMER_NATION_PK', 'CUSTOMER_PK', 'NATION_PK', src_ldts, src_source] -%}
 
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                             -%}
 {%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
@@ -137,20 +124,22 @@ the staging layer model we made earlier, as this contains all the columns we nee
 {%- set source = [ref('stg_orders_hashed')]                                                 -%}
 ```
 
+!!! note
+    Make sure you surround the ref call with square brackets, as shown in the snippet
+    above.
+
 ### Invoking the template 
 
 Now we bring it all together and call the [link_template](macros.md#link_template) macro:
 
 ```link_customer_nation.sql```
-```sql hl_lines="19 20 21"
+```sql hl_lines="17 18 19"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='link')        -}}
                                                                                                
 {%- set src_pk = 'CUSTOMER_NATION_PK'                                                       -%}
 {%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                                               -%}
 {%- set src_ldts = 'LOADDATE'                                                               -%}
 {%- set src_source = 'SOURCE'                                                               -%}
-
-{%- set tgt_cols = ['CUSTOMER_NATION_PK', 'CUSTOMER_PK', 'NATION_PK', src_ldts, src_source] -%}
 
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                             -%}
 {%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
@@ -162,7 +151,7 @@ Now we bring it all together and call the [link_template](macros.md#link_templat
 {%- set source = [ref('stg_orders_hashed')]                                                 -%}
 
 {{  dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                           tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
+                           tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                            source)                                                           }}
 
 ```

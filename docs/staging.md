@@ -1,4 +1,3 @@
-
 ![alt text](./assets/images/staging.png "Staging from a raw table to the raw vault")
 
 The dbtvault package assumes you've already loaded a Snowflake database staging table with raw data 
@@ -11,6 +10,12 @@ There are a few conditions that need to be met for the dbtvault package to work:
 
 The raw staging table needs to be pre processed to add extra columns of data to make it ready to load to the raw vault.
 Specifically, we need to add primary key hashes, hashdiffs, and any implied fixed-value columns (see the diagram).
+
+!!! info
+    - Hashing of primary keys is optional in Snowflake
+    - Natural keys alone can be used
+    - We've implemented hashing as the only option, for now
+    - A non-hashed version will be added in future releases
 
 ### Creating the model header
 
@@ -38,6 +43,21 @@ our schema name:
 Usually we want hashing layers to be views.
 - The ```schema``` parameter is the name of the schema where this staging table will be created.
 
+### Setting the source table
+
+Next we will create a variable which holds a reference to the raw source table, since we will need to refer to it a few times
+in our model.
+
+```stg_orders_hashed.sql```
+```sql hl_lines="3"
+
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
+
+{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+```
+
+
+
 ### Adding the metadata
 
 Now we get into the core component of staging: the metadata. 
@@ -51,9 +71,11 @@ provided in the link above.
 After adding the macro call, our model will now look something like this:
 
 ```stg_orders_hashed.sql```
-```sql hl_lines="3 4 5"
+```sql hl_lines="5 6 7"
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+
+{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
                                                                                      
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                         ('NATION_ID', 'NATION_PK'),
@@ -61,7 +83,7 @@ After adding the macro call, our model will now look something like this:
 ```
 
 !!! note
-    Make sure you add the trailing comma after the call, at the end of line 5.
+    Make sure you add the trailing comma after the call, at the end of line 7.
     
 This call will:
 
@@ -76,88 +98,88 @@ The latter two pairs will be used later when creating [links](links.md).
     
 ### Additional columns
 
-We now add the column names we want to bring forward/feed from the raw staging table into the raw vault.
-We list them by name, and provide an alias (how we want to name them in the raw vault tables). You will also
-have another opportunity to rename these columns later when creating the raw vault tables.
-
-We will need to add some additional columns to our staging layer, containing 'constants' implied by the context of the 
-staging data. For example, we may add a source table code value, or the the load date, or some other constant needed in
-the primary key. Load dates and sources are also handled in the next section, as you have a choice of techniques.
-
 With the [add_columns](macros.md#add_columns) macro, we can provide a list of columns and any corresponding aliases for 
 those columns.
 
+We now add the column names we want to bring forward/feed from the raw staging table into the raw vault.
+To include all columns which exist in the source table, we provide the ```source_table``` variable we created earlier.
+
+We will also need to add some additional columns to our staging layer, containing 'constants' implied by the context of the 
+staging data. For example, we may add a source table code value, or the the load date, or some other constant needed in
+the primary key.
+
+We can also override any columns coming in from the source, with different data. We may want to do this if a source 
+column already exists in the raw stage and the values aren't appropriate.
+ 
+We provide the constant by adding a ```!``` to the data and alias them with the same name as the column we want to 
+override. You will have another opportunity to rename these columns, as well as cast them to different data types
+later when creating the raw vault tables. We can also use this method to create any new columns which do not already 
+exist in the source.
+
 
 ```stg_orders_hashed.sql```
-```sql hl_lines="7 8 9 10 11 12"
+```sql hl_lines="9 10 11"
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+
+{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
                                                                                      
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                         ('NATION_ID', 'NATION_PK'),
                         (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},
 
-{{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'), 
-                         ('NATION_ID', 'NATION_ID'),                        
-                         ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                       
-                         ('CUSTOMER_NAME', 'CUSTOMER_NAME'),                     
-                         ('LOADDATE', 'LOADDATE'),                               
+{{ dbtvault.add_columns(source_table,
+                        [('!1', 'SOURCE'),
                          ('LOADDATE', 'EFFECTIVE_FROM')])                         }}
 
 ```
 
-!!! note 
-    In future releases, this step won't be necessary for adding columns which already exist in the raw stage,
-    as dbtvault will automatically include the rest of the columns found in our staging table for us. 
+!!! success "New"
+    We are now no longer required to provide columns which already exist in the source table,
+    as providing the ```source_table``` parameter in ```add_columns``` will now bring in all the columns
+    for us. 
     
-In the example above we have have a header, have defined some hashing to create primary keys, and added 6 columns: 
-5 from the raw stage table, and an added value (```EFFECTIVE_FROM```).
+    
+In the example above we have have:
+
+- Added a header (line 1).
+- Set the source_table variable to our raw staging table (line 3).
+- Defined some hashing to create primary keys (lines 5-7).
+- Brought in all of the raw staging table's columns (line 9).
+- Added a ```SOURCE``` column with the constant value ```1``` (line 10).
+- Added an ```EFFECTIVE_FROM``` column which uses the ```LOADDATE``` value as its value (line 11).
     
 ### Adding the footer
 
-Finally, we need to provide a fully qualified source table name for our staging layer SQL to get data from.
-In this example, this would be ```MYDATABASE.MYSCHEMA.stg_customer``` where ```MYDATABASE.MYSCHEMA``` is the 
-database and schema in your Snowflake database where your raw staging table resides.
+!!! success "New"
+    The ```staging_footer``` macro has been renamed to ```from``` and is now much simpler.
+    If you're looking for the ability to add constants for ```source``` and ```loaddate```, 
+    you can now use the improved [add_columns](macros.md#add_columns) macro.
+    
 
-The [staging_footer](macros.md#staging_footer) macro generates the SQL using the metadata.
-
-As explained in the [documentation](macros.md#staging_footer), this macro also has ```loaddate``` and ```source``` parameters. 
-These are to simplify the creation of ```SOURCE``` and ```LOADDATE``` columns.
- The parameters can be omitted in favour of adding them via the [add_columns](macros.md#add_columns) macro, 
- as showcased in the snippet above with ```LOADDATE```. 
+Now we just need to provide the variable we created earlier, as a parameter to the [from](macros.md#from)
+macro.
 
 After adding the footer, our completed model should now look like this:
 
-
 ```stg_orders_hashed.sql```
-```sql hl_lines="14 15"
+```sql hl_lines="13"
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
-                                                                                 
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),                                
-                        ('NATION_ID', 'NATION_PK'),                                    
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},  
-                                                                                 
-{{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'), 
-                         ('NATION_ID', 'NATION_ID'),                        
-                         ('CUSTOMER_DOB', 'CUSTOMER_DOB'),                       
-                         ('CUSTOMER_NAME', 'CUSTOMER_NAME'),                     
-                         ('LOADDATE', 'LOADDATE'),                               
-                         ('LOADDATE', 'EFFECTIVE_FROM')])                         }}
-                                                                                 
-{{- dbtvault.staging_footer(source="1",                               
-                            source_table='MYDATABASE.MYSCHEMA.stg_customer')      }} 
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+
+{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+                                                                                     
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
+                        ('NATION_ID', 'NATION_PK'),
+                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},
+
+{{ dbtvault.add_columns(source_table,
+                        [('LOADDATE', 'EFFECTIVE_FROM'),
+                         ('!1', 'SOURCE')])                                       }}
+
+{{ dbtvault.from(source_table)                                                    }}
 
 ``` 
-
-!!! tip
-    In the call to [staging_footer](macros.md#staging_footer) we have provided ```1``` as the value for the 
-    ```source``` parameter, this will give every record in our new staging layer the value 
-    ```1``` as its ```SOURCE```. This is a code which can be used to find the source in a lookup table.
-    This will allow us to trace this data back to the source once it is loaded into our vault from our new staging layer. 
-    
-    It is entirely optional, and if you already have a source column in your raw staging, you can simply add it using 
-    [add_columns](macros.md#add_columns) instead.
 
 This model is now ready to run to create a view with all the added data/columns needed to load the raw vault.
 
@@ -169,18 +191,12 @@ With our model complete, we can run dbt and have our new staging layer materiali
 
 And our table will look like this:
 
-| CUSTOMER_PK  | NATION_PK    | CUSTOMER_NATION_PK  | CUSTOMER_ID  | NATION_ID    | CUSTOMER_DOB  | CUSTOMER_NAME  | LOADDATE   | EFFECTIVE_FROM | SOURCE       |
-| ------------ | ------------ | ------------        | ------------ | ------------ | ------------- | -------------- | ---------- | -------------- | ------------ |
-| B8C37E...    | D89F3A...    | 72A160...           | 1001         | 10001        | 1997-04-24    | Alice          | 1993-01-01 | 1993-01-01     | 1            |
-| .            | .            | .                   | .            | .            | .             | .              | .          | .              | .            |
-| .            | .            | .                   | .            | .            | .             | .              | .          | .              | .            |
-| FED333...    | D78382...    | 1CE6A9...           | 1004         | 10004        | 2018-04-13    | Dom            | 1993-01-01 | 1993-01-01     | 1            |
-
-!!! info
-    - Hashing of primary keys is optional in Snowflake
-    - Natural keys alone can be used
-    - We've implemented hashing as the only option, for now
-    - A non-hashed version will be added in future releases
+| CUSTOMER_PK  | NATION_PK    | CUSTOMER_NATION_PK  | (source table columns) | EFFECTIVE_FROM | SOURCE       |
+| ------------ | ------------ | ------------------- | ---------------------- | -------------- | ------------ |
+| B8C37E...    | D89F3A...    | 72A160...           | .                      | 1993-01-01     | 1            |
+| .            | .            | .                   | .                      | .              | .            |
+| .            | .            | .                   | .                      | .              | .            |
+| FED333...    | D78382...    | 1CE6A9...           | .                      | 1993-01-01     | 1            |
 
 ### Next steps
 

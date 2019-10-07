@@ -13,7 +13,7 @@ order number (can be multi-column).
 
 ### Creating the model header
 
-Create a new dbt model as before. We'll call this one 'hub_customer'. 
+Create a new dbt model as before. We'll call this one ```hub_customer```. 
 
 The following header is what we use, but feel free to customise it to your needs:
 
@@ -70,7 +70,7 @@ provide the metadata it requires. We can define which source columns map to the 
 define a column type at the same time:
 
 ```hub_customer.sql```
-```sql hl_lines="8 10 11 12 13"
+```sql hl_lines="8 9 10 11"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
@@ -78,35 +78,26 @@ define a column type at the same time:
 {%- set src_ldts = 'LOADDATE'                                                       -%}
 {%- set src_source = 'SOURCE'                                                       -%}
 
-{%- set tgt_cols = [src_pk, src_nk, src_ldts, src_source]                           -%}
-
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                     -%}
 {%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                    -%}
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
 ```
 
-With these 5 additional lines, we have now informed the macro how to transform our source data:
+With these 4 additional lines, we have now informed the macro how to transform our source data:
 
-- On line 8, we have written the 4 columns we worked out earlier to define what source columns
-we are using and what order we want them in. We have used the variable names to avoid writing the columns again.
-- On the remaining lines we have provided our mapping from source to target. In this particular scenario we aren't
+- We have provided our mapping from source to target. In this particular scenario we aren't
 renaming the columns, so we have used the source column reference on both sides. If you need to rename the columns 
 however, this feature allows you to do so.
-- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but we
-will simplify this for scenarios where we want the data type or column name to remain unchanged in future releases.
+
+- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but 
+in future releases we will simplify this for scenarios where we want the data type or column name to remain unchanged.
 
 !!! info
     There is nothing to stop you entering invalid type mappings in this step (i.e. trying to cast an invalid date format to a date),
     so please ensure they are correct.
     You will soon find out, however, as dbt will issue a warning to you. No harm done, but save time by providing 
     accurate metadata!
-    
-
-!!! question "Why is ```tgt_cols``` needed?"
-    In future releases, we will eliminate the need to duplicate the source columns as shown on line 8. 
-    
-    For now, this is a necessary evil. 
 
 #### Source table
 
@@ -118,15 +109,13 @@ dbt ensures dependencies are honoured when defining the source using a reference
 
 ```hub_customer.sql```
 
-```sql hl_lines="15"
+```sql hl_lines="13"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
                                                                                     
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
 {%- set src_nk = 'CUSTOMER_ID'                                                      -%}
 {%- set src_ldts = 'LOADDATE'                                                       -%}
 {%- set src_source = 'SOURCE'                                                       -%}
-                                                                                    
-{%- set tgt_cols = [src_pk, src_nk, src_ldts, src_source]                           -%}
                                                                                     
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                     -%}
 {%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                    -%}
@@ -136,13 +125,17 @@ dbt ensures dependencies are honoured when defining the source using a reference
 {%- set source = [ref('stg_orders_hashed')]                                         -%}
 ```
 
+!!! note
+    Make sure you surround the ref call with square brackets, as shown in the snippet
+    above.
+    
 ### Invoking the template 
 
 Now we bring it all together and call the [hub_template](macros.md#hub_template) macro:
 
 ```hub_customer.sql```                                                                 
                                                                                        
-```sql hl_lines="17 18 19"                                                                                
+```sql hl_lines="15 16 17"                                                                                
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
                                                                                        
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
@@ -150,19 +143,17 @@ Now we bring it all together and call the [hub_template](macros.md#hub_template)
 {%- set src_ldts = 'LOADDATE'                                                       -%}
 {%- set src_source = 'SOURCE'                                                       -%}
                                                                                        
-{%- set tgt_cols = [src_pk, src_nk, src_ldts, src_source]                           -%}
-                                                                                       
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                     -%}
 {%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                    -%}
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
                                                                                        
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
+{%- set source = [ref('stg_orders_hashed')]                                         -%}
                                                                                        
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,                         
-                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,               
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,               
                          source)                                                     }}
-```                                                                                    
+```
 
 ### Running dbt
 
@@ -171,8 +162,8 @@ With our model complete, we can run dbt to create our ```hub_customer``` hub.
 ```dbt run --models +hub_customer```
 
 !!! tip
-    The '+' in the command above will cause dbt to also compile and run all parent dependencies for the model we are 
-    running, in this case, it will re-create the staging layer from the ```stg_customer_hashed``` model if needed. 
+    Using the '+' in the command above will get dbt to compile and run all parent dependencies for the model we are 
+    running, in this case, it will re-create the staging layer from the ```stg_orders_hashed``` model if needed. 
     dbt will also create our hub if it doesn't already exist.
     
 And our table will look like this:
