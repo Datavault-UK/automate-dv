@@ -1,15 +1,15 @@
 {{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature')                                -}}
 
+{%- set source_table = source('test', 'stg_customer')                                                            -%}
+
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                          (['CUSTOMER_ID', 'CUSTOMER_NAME', 'CUSTOMER_DOB'], 'CUST_CUSTOMER_HASHDIFF')])          -}},
 
-{{ dbtvault.add_columns([('CUSTOMER_ID', 'CUSTOMER_ID'),
-                         ('CUSTOMER_DOB', 'CUSTOMER_DOB'),
-                         ('CUSTOMER_NAME', 'CUSTOMER_NAME'),
-                         ('LOADDATE', 'LOADDATE'),
+{{ dbtvault.add_columns(source_table,
+                        [('!STG_CUSTOMER', 'SOURCE'),
                          ('LOADDATE', 'EFFECTIVE_FROM')])                                                         }}
 
-{{- dbtvault.staging_footer(source='STG_CUSTOMER', source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_customer') }}
+{{- dbtvault.from(source_table) }}
 
 
 

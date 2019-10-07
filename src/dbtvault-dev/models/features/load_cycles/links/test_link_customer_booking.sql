@@ -5,8 +5,6 @@
 {%- set src_ldts = 'LOADDATE'                                                           -%}
 {%- set src_source = 'SOURCE'                                                           -%}
 
-{%- set tgt_cols = [src_pk, src_fk[0], src_fk[1], src_ldts, src_source]                 -%}
-
 {%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                         -%}
 {%- set tgt_fk = [[src_fk[0], 'BINARY(16)', src_fk[0]],
                   [src_fk[1], 'BINARY(16)', src_fk[1]]]                                 -%}
@@ -17,5 +15,5 @@
 {%- set source = [ref('test_stg_booking_hashed')]                                       -%}
 
 {{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                          tgt_cols, tgt_pk, tgt_fk, tgt_ldts, tgt_source,
+                          tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                           source)                                                        }}

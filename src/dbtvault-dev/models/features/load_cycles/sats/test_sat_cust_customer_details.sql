@@ -8,8 +8,6 @@
 {%- set src_ldts = 'LOADDATE'                                                                         -%}
 {%- set src_source = 'SOURCE'                                                                         -%}
 
-{%- set tgt_cols = ['CUSTOMER_PK', 'HASHDIFF', 'DOB', 'NAME', 'EFFECTIVE_FROM', 'LOADDATE', 'SOURCE'] -%}
-
 {%- set tgt_pk = [ src_pk , 'BINARY(16)', 'CUSTOMER_PK']                                              -%}
 {%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                                     -%}
 {%- set tgt_payload = [[ src_payload[0] , 'DATE', 'DOB'], [ src_payload[1], 'VARCHAR(60)', 'NAME']]   -%}
@@ -22,7 +20,7 @@
 
 {{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
                           src_eff, src_ldts, src_source,
-                          tgt_cols, tgt_pk, tgt_hashdiff, tgt_payload,
+                          tgt_pk, tgt_hashdiff, tgt_payload,
                           tgt_eff, tgt_ldts, tgt_source,
                           source)                                                                      }}
 

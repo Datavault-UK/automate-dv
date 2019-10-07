@@ -9,7 +9,7 @@
                          ('SOURCE', 'SOURCE'),
                          ('LOADDATE', 'EFFECTIVE_FROM')])                                           }}
 
-{{- dbtvault.staging_footer(source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_customer_hubs')     }}
+{{- dbtvault.from(source_table='DV_PROTOTYPE_DB.SRC_TEST_STG.test_stg_customer_hubs')     }}
 
 
 
