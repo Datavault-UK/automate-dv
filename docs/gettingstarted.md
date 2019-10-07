@@ -20,10 +20,42 @@ Happy Data Vaulting! :smile:
 
 3. You must have downloaded and installed dbt, and [set up a project](https://docs.getdbt.com/docs/dbt-projects).
 
-4. We assume you already have a raw staging layer.
+4. Sources should be set up in dbt [(see below)](#setting-up-sources).
 
-5. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. Your staging layer
+5. We assume you already have a raw staging layer.
+
+6. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. Your staging layer
 contains data for one ```load_datetime``` value only). **We will be removing this restriction in future releases**.
+
+
+
+## Setting up sources
+
+We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
+data much easier, cleaner and more modular. The main advantage of this is that sources will be included in 
+dbt dependency graphs
+
+We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
+however this feature is documented extensively in dbts own documentation, 
+so please [read here](https://docs.getdbt.com/docs/using-sources).
+
+After reading the above documentation, we recommend you place the ```schema.yml``` file you create for your sources, 
+in the root of your ```models``` folder, however you can place it where needed for your specific project.
+
+```schema.yml```
+
+```yaml
+version: 2
+
+sources:
+  - name: MYSOURCE
+    database: MYDATABASE
+    schema: MYSCHEMA
+    tables:
+      - name: stg_customer
+        identifier: table_1
+      - name: ...
+```
 
 ## Installation 
 
@@ -37,4 +69,5 @@ packages:
 And run 
 ```dbt deps```
 
-###### [Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
+[Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
+

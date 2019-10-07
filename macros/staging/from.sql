@@ -12,8 +12,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro staging_footer(loaddate, source, source_table) -%}
-{%- if source or loaddate -%}, {%- endif -%}
-{%- if loaddate -%} {{ loaddate }} AS LOADDATE, {%- endif -%} {%- if source -%} '{{ source }}' AS SOURCE {%- endif %} FROM {{ source_table }}
+{% macro from(source_table) %}
+
+FROM {{ source_table }}
 
 {%- endmacro -%}
