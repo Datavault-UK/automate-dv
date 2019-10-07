@@ -56,7 +56,7 @@ in our model.
 {%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
 ```
 
-
+For more information on the ```source``` macro, please refer [here](gettingstarted.md#setting-up-sources)
 
 ### Adding the metadata
 
