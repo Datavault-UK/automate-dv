@@ -11,6 +11,12 @@ There are a few conditions that need to be met for the dbtvault package to work:
 The raw staging table needs to be pre processed to add extra columns of data to make it ready to load to the raw vault.
 Specifically, we need to add primary key hashes, hashdiffs, and any implied fixed-value columns (see the diagram).
 
+!!! info
+    - Hashing of primary keys is optional in Snowflake
+    - Natural keys alone can be used
+    - We've implemented hashing as the only option, for now
+    - A non-hashed version will be added in future releases
+
 ### Creating the model header
 
 First we create a new dbt model. Our source table is called ```stg_customer``` 
@@ -191,12 +197,6 @@ And our table will look like this:
 | .            | .            | .                   | .                      | .              | .            |
 | .            | .            | .                   | .                      | .              | .            |
 | FED333...    | D78382...    | 1CE6A9...           | .                      | 1993-01-01     | 1            |
-
-!!! info
-    - Hashing of primary keys is optional in Snowflake
-    - Natural keys alone can be used
-    - We've implemented hashing as the only option, for now
-    - A non-hashed version will be added in future releases
 
 ### Next steps
 
