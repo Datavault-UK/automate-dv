@@ -14,6 +14,11 @@
 -#}
 {%- macro hash(columns, alias) -%}
 
+{#- Alpha sort columns before hashing -#}
+{%- if columns is iterable and columns is not string -%}
+{%- set columns = columns|sort -%}
+{%- endif -%}
+
 {%- if columns is string %}
     CAST(MD5_BINARY(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS BINARY(16)) AS {{alias}}
 

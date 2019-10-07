@@ -139,6 +139,72 @@ Feature: Load Hubs
       | md5('1005') | 1005    | 1993-01-01 | *      |
       | md5('1006') | 1006    | 1993-01-01 | *      |
 
+    Scenario: [UNION] Union three staging tables to feed an empty hub over two cycles.
+    Given there are records in the TEST_HUB_PARTS table
+      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | md5('1001') | 1001    | 1993-01-01 | *      |
+      | md5('1002') | 1002    | 1993-01-01 | *      |
+    And there are records in the TEST_STG_PARTS table
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
+      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | PART   |
+      | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-02 | PART   |
+      | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-02 | PART   |
+      | 1005    | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
+    And there are records in the TEST_STG_SUPPLIER table
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
+      | 1002    | 1           | 2        | 120.00     | 1993-01-02 | SUPP   |
+      | 1003    | 1           | 1        | 29.87      | 1993-01-02 | SUPP   |
+      | 1004    | 6           | 3        | 101.40     | 1993-01-02 | SUPP   |
+      | 1005    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
+      | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
+    And there are records in the TEST_STG_LINEITEM table
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
+      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-02 | LINE   |
+      | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-02 | LINE   |
+      | 10002    | 1002    | 11          | 1          | 2        | 10.00          | 1.00     | 1993-01-02 | LINE   |
+      | 10003    | 1003    | 11          | 1          | 1        | 290.87         | 2.00     | 1993-01-02 | LINE   |
+      | 10003    | 1004    | 1           | 2          | 1        | 290.87         | 2.00     | 1993-01-02 | LINE   |
+      | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
+      | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
+      | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
+    And I load the TEST_HUB_PARTS table
+    And there are records in the TEST_STG_PARTS table
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-03 | PART   |
+      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-03 | PART   |
+      | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-03 | PART   |
+      | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-03 | PART   |
+      | 1005    | Cover     | other     | L         | 1.50             | 1993-01-03 | PART   |
+    And there are records in the TEST_STG_SUPPLIER table
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | 1001    | 9           | 5        | 68.00      | 1993-01-03 | SUPP   |
+      | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
+      | 1002    | 1           | 13       | 110.00     | 1993-01-03 | SUPP   |
+      | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
+      | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
+    And there are records in the TEST_STG_LINEITEM table
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | 10007    | 1007    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-03 | LINE   |
+      | 10007    | 1007    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-03 | LINE   |
+      | 10008    | 1008    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-03 | LINE   |
+      | 10008    | 1008    | 11          | 1          | 2        | 10.00          | 1.00     | 1993-01-03 | LINE   |
+      | 10009    | 1009    | 11          | 1          | 1        | 290.87         | 2.00     | 1993-01-03 | LINE   |
+    When I load the TEST_HUB_PARTS table
+    Then the TEST_HUB_PARTS table should contain
+      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | md5('1001') | 1001    | 1993-01-01 | *      |
+      | md5('1002') | 1002    | 1993-01-01 | *      |
+      | md5('1003') | 1003    | 1993-01-02 | *      |
+      | md5('1004') | 1004    | 1993-01-02 | *      |
+      | md5('1005') | 1005    | 1993-01-02 | *      |
+      | md5('1006') | 1006    | 1993-01-02 | *      |
+      | md5('1007') | 1007    | 1993-01-03 | *      |
+      | md5('1008') | 1008    | 1993-01-03 | *      |
+      | md5('1009') | 1009    | 1993-01-03 | *      |
+
 # -----------------------------------------------------------------------------
 # Test union of different staging tables to insert records into a hub with
 # existing records.
@@ -183,4 +249,3 @@ Feature: Load Hubs
       | md5('1004') | 1004    | 1993-01-02 | *      |
       | md5('1005') | 1005    | 1993-01-02 | *      |
       | md5('1006') | 1006    | 1993-01-02 | *      |
-

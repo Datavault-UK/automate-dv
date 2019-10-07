@@ -12,11 +12,14 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro add_columns(source, pairs) -%}
+{%- macro add_columns(source, pairs=[]) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
+
+{%- if source is defined and source is not none -%}
 {%- set cols = adapter.get_columns_in_relation(source) -%}
+{%- endif %}
 
 {#- Add aliases of provided pairs to excludes and full SQL to includes -#}
 {%- for pair in pairs -%}
@@ -29,12 +32,14 @@
     {%- endif %}
 {%- endfor -%}
 
+{%- if source is defined and source is not none -%}
 {#- Add all columns from source table -#}
 {%- for col in cols -%}
     {%- if col.column not in exclude_columns -%}
         {%- set _ = include_columns.append(col.column) -%}
     {%- endif -%}
 {%- endfor -%}
+{%- endif %}
 
 {#- Print out all columns in includes -#}
 {%- for col in include_columns %}
