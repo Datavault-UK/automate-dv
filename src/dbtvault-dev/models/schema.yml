@@ -1,0 +1,11 @@
+version: 2
+
+sources:
+  - name: test
+    database: DV_PROTOTYPE_DB
+    schema: SRC_TEST_STG
+    tables:
+      - name: stg_booking
+      identifier: test_stg_booking
+      - name: stg_customer
+      identifier: test_stg_customer
