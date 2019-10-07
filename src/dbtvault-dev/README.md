@@ -1,4 +1,4 @@
-**CURRENTLY IN PRE-RELEASE, STAY TUNED FOR AN OFFICAL ANNOUNCEMENT AND FULL DOCUMENTATION**
+**CURRENTLY IN PRE-RELEASE, WE ARE CONTINUALLY ADDING FEATURES AND IMPROVING DOCUMENTATION**
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
@@ -6,7 +6,7 @@
 
 latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 
-stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.1-pre)](https://dbtvault.readthedocs.io/en/v0.1-pre/?badge=v0.1-pre)
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.1-pre)](https://dbtvault.readthedocs.io/en/v0.2.1-pre/?badge=v0.2.1-pre)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
@@ -27,7 +27,7 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.1-pre # Latest stable version
+    revision: v0.2.1-pre # Latest stable version
 ```
 And run 
 ```dbt deps```
@@ -48,7 +48,7 @@ And run
 {%- set source = ...                                                      -%}
 
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                          source)                                           }}
 ```
 

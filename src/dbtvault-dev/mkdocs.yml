@@ -28,12 +28,13 @@ nav:
   - Demonstration: 'demonstration.md'
   - Roadmap: 'roadmap.md'
   - Changelog: 'changelog.md'
+  - Contributing: 'contributing.md'
   - Licence: 'LICENSE.md'
 
 extra:
   social:
     - type: 'globe'
-      link: 'www.data-vault.co.uk'
+      link: 'https://www.data-vault.co.uk'
     - type: 'github'
       link: 'https://github.com/Datavault-UK/'
     - type: 'twitter'
