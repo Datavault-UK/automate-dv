@@ -1,4 +1,4 @@
-**CURRENTLY IN PRE-RELEASE, STAY TUNED FOR AN OFFICAL ANNOUNCEMENT AND FULL DOCUMENTATION**
+**CURRENTLY IN PRE-RELEASE, WE ARE CONTINUALLY ADDING FEATURES AND IMPROVING DOCUMENTATION**
 
 <p align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
@@ -49,7 +49,7 @@ And run
 {%- set source = ...                                                      -%}
 
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                         tgt_cols, tgt_pk, tgt_nk, tgt_ldts, tgt_source,
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,
                          source)                                           }}
 ```
 
