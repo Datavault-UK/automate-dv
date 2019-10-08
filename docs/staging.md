@@ -20,16 +20,12 @@ Specifically, we need to add primary key hashes, hashdiffs, and any implied fixe
 ### Creating the model header
 
 First we create a new dbt model. Our source table is called ```stg_customer``` 
-and we should name our additional layer ```stg_orders_hashed```, although any sensible naming convention will work if 
-kept consistent. In this case, we create a new file ```stg_orders_hashed.sql``` in our models folder.
-
-!!! info
-    We are using the name ```stg_orders_hashed``` for reasons that will become clear as we progress through the guide.
-    Our hubs, links and satellites will require more than just customer data, and so ```orders``` makes more sense.
+so we should name our additional layer ```stg_customer_hashed```, although any sensible naming convention will work if 
+kept consistent. In this case, we create a new file ```stg_customer_hashed.sql``` in our models folder.
 
 Let's start by adding the model header to the file:
 
-```stg_orders_hashed.sql```
+```stg_customer_hashed.sql```
 ```sql
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
@@ -52,7 +48,7 @@ in our model.
     If you have not yet set up sources in your dbt configuration please refer [here](gettingstarted.md#setting-up-sources).
 
 
-```stg_orders_hashed.sql```
+```stg_customer_hashed.sql```
 ```sql hl_lines="3"
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}}
@@ -74,20 +70,22 @@ provided in the link above.
 
 After adding the macro call, our model will now look something like this:
 
-```stg_orders_hashed.sql```
-```sql hl_lines="5 6 7"
+```stg_customer_hashed.sql```
+```sql hl_lines="5 6 7 8 9"
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging')    -}} 
 
-{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+{%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                         ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},
+                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 'CUSTOMER_HASHDIFF')]) -}},
 ```
 
 !!! note
-    Make sure you add the trailing comma after the call, at the end of line 7.
+    Make sure you add the trailing comma after the call, at the end of line 9.
     
 This call will:
 
@@ -97,8 +95,11 @@ value.
 value.
 - Concatenate the values in the ```CUSTOMER_ID``` and ```NATION_ID``` columns and hash them, creating a new
 column called ```CUSTOMER_NATION_PK``` containing the hash of the combination of the values.
+- Concatenate the values in the ```CUSTOMER_ID```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
+columns and hash them, creating a new column called ```CUSTOMER_NATION_PK``` containing the hash of the 
+combination of the values.
 
-The latter two pairs will be used later when creating [links](links.md).
+The latter three pairs will be used later when creating [links](links.md) and [satellites](satellites.md).
     
 ### Additional columns
 
@@ -121,20 +122,22 @@ later when creating the raw vault tables. We can also use this method to create 
 exist in the source.
 
 
-```stg_orders_hashed.sql```
-```sql hl_lines="9 10 11"
+```stg_customer_hashed.sql```
+```sql hl_lines="11 12 13"
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging')    -}} 
 
-{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+{%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                         ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},
+                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 'CUSTOMER_HASHDIFF')]) -}},
 
 {{ dbtvault.add_columns(source_table,
                         [('!1', 'SOURCE'),
-                         ('LOADDATE', 'EFFECTIVE_FROM')])                         }}
+                         ('LOADDATE', 'EFFECTIVE_FROM')])                            }}
 
 ```
 
@@ -166,7 +169,7 @@ macro.
 
 After adding the footer, our completed model should now look like this:
 
-```stg_orders_hashed.sql```
+```stg_customer_hashed.sql```
 ```sql hl_lines="13"
 
 {{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
@@ -191,16 +194,16 @@ This model is now ready to run to create a view with all the added data/columns 
 
 With our model complete, we can run dbt and have our new staging layer materialised as configured in the header:
 
-```dbt run --models stg_orders_hashed```
+```dbt run --models stg_customer_hashed```
 
 And our table will look like this:
 
-| CUSTOMER_PK  | NATION_PK    | CUSTOMER_NATION_PK  | (source table columns) | EFFECTIVE_FROM | SOURCE       |
-| ------------ | ------------ | ------------------- | ---------------------- | -------------- | ------------ |
-| B8C37E...    | D89F3A...    | 72A160...           | .                      | 1993-01-01     | 1            |
-| .            | .            | .                   | .                      | .              | .            |
-| .            | .            | .                   | .                      | .              | .            |
-| FED333...    | D78382...    | 1CE6A9...           | .                      | 1993-01-01     | 1            |
+| CUSTOMER_PK  | NATION_PK    | CUSTOMER_NATION_PK  | CUSTOMER_HASHDIFF   | (source table columns) | EFFECTIVE_FROM | SOURCE       |
+| ------------ | ------------ | ------------------- | ------------------- | ---------------------- | -------------- | ------------ |
+| B8C37E...    | D89F3A...    | 72A160...           | .                   | .                      | 1993-01-01     | 1            |
+| .            | .            | .                   | .                   | .                      | .              | .            |
+| .            | .            | .                   | .                   | .                      | .              | .            |
+| FED333...    | D78382...    | 1CE6A9...           | .                   | .                      | 1993-01-01     | 1            |
 
 ### Next steps
 
