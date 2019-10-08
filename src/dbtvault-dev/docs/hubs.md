@@ -122,7 +122,7 @@ dbt ensures dependencies are honoured when defining the source using a reference
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
                                                                                     
-{%- set source = [ref('stg_orders_hashed')]                                         -%}
+{%- set source = [ref('stg_customer_hashed')]                                       -%}
 ```
 
 !!! note
@@ -133,8 +133,7 @@ dbt ensures dependencies are honoured when defining the source using a reference
 
 Now we bring it all together and call the [hub_template](macros.md#hub_template) macro:
 
-```hub_customer.sql```                                                                 
-                                                                                       
+```hub_customer.sql```                                                                                                                                                      
 ```sql hl_lines="15 16 17"                                                                                
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
                                                                                        
@@ -148,7 +147,7 @@ Now we bring it all together and call the [hub_template](macros.md#hub_template)
 {%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                     -%}
 {%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                        -%}
                                                                                        
-{%- set source = [ref('stg_orders_hashed')]                                         -%}
+{%- set source = [ref('stg_customer_hashed')]                                       -%}
                                                                                        
 {{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,                         
                          tgt_pk, tgt_nk, tgt_ldts, tgt_source,               
@@ -163,7 +162,7 @@ With our model complete, we can run dbt to create our ```hub_customer``` hub.
 
 !!! tip
     Using the '+' in the command above will get dbt to compile and run all parent dependencies for the model we are 
-    running, in this case, it will re-create the staging layer from the ```stg_orders_hashed``` model if needed. 
+    running, in this case, it will re-create the staging layer from the ```stg_customer_hashed``` model if needed. 
     dbt will also create our hub if it doesn't already exist.
     
 And our table will look like this:
@@ -175,6 +174,53 @@ And our table will look like this:
 | .            | .            | .          | .            |
 | FED333...    | 1004         | 1993-01-01 | 1            |
 
+### Loading from multiple sources to form a union-based hub
+
+In some cases, we may need to create a hub via a union, instead of a single source as we have seen so far.
+This may be because:
+
+- Another raw staging table holds some records which our single source does not, and the tables share 
+a key. 
+- We have multiple source-systems containing different versions or parts of the data which we need to combine. 
+
+We know this data can and should be combined because these records have a shared key. 
+We can union the tables on that key, and create a hub containing a complete record set.
+
+We'll need to create a [staging model](staging.md) for each of the sources involved, 
+and provide them as a list of references to the source parameter as shown below.
+
+!!! note
+    If your primary key and natural key columns have different names across the different
+    tables, they will need to be aliased to the same name in the respective staging layers 
+    via the [add_columns](macros.md#add_columns) macro. In future releases we will add
+    the ability to alias the columns at this stage in the hub model itself too.
+
+
+This procedure requires additional metadata in our ```hub_customer``` model, 
+and the [hub_template](macros.md#hub_template) will handle the rest:
+
+```hub_customer.sql```
+```sql    
+{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags=['hub', 'union']) -}}
+                                                                                 
+{%- set src_pk = ['CUSTOMER_PK', 'CUSTOMER_PK', 'CUSTOMER_PK']                                 -%}
+{%- set src_nk = ['CUSTOMER_ID', 'CUSTOMER_ID', 'CUSTOMER_ID']                                 -%}
+{%- set src_ldts = 'LOADDATE'                                                                  -%}
+{%- set src_source = 'SOURCE'                                                                  -%}
+                                                                                               
+{%- set tgt_pk = [src_pk[0], 'BINARY(16)', src_pk[0]]                                          -%}
+{%- set tgt_nk = [src_nk[0], 'NUMBER(38,0)', src_nk[0]]                                        -%}
+{%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                                -%}
+{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                                   -%}
+                                                                                               
+{%- set source = [ref('stg_sap_customer_hashed'),                                              
+                  ref('stg_crm_customer_hashed'),                                              
+                  ref('stg_web_customer_hashed')]                                              -%}
+                                                                                               
+{{ dbtvault.hub_template(src_pk, src_fk, src_ldts, src_source,                                 
+                         tgt_pk, tgt_fk, tgt_ldts, tgt_source,                                 
+                         source)                                                                }}
+```
 
 ### Next steps
 
