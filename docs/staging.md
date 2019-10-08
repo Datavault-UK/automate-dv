@@ -71,17 +71,18 @@ provided in the link above.
 After adding the macro call, our model will now look something like this:
 
 ```stg_customer_hashed.sql```
-```sql hl_lines="5 6 7 8 9"
+```sql hl_lines="5 6 7 8 9 10"
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging')    -}} 
-
-{%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
-                                                                                     
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                        ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
-                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 'CUSTOMER_HASHDIFF')]) -}},
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+                                                                                 
+{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+                                                                                   
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),                           
+                        ('NATION_ID', 'NATION_PK'),                               
+                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),     
+                        (['CUSTOMER_ID', 'CUSTOMER_NAME',                         
+                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'],                      
+                         'CUSTOMER_HASHDIFF', true)])                            -}},
 ```
 
 !!! note
@@ -97,7 +98,7 @@ value.
 column called ```CUSTOMER_NATION_PK``` containing the hash of the combination of the values.
 - Concatenate the values in the ```CUSTOMER_ID```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
 columns and hash them, creating a new column called ```CUSTOMER_NATION_PK``` containing the hash of the 
-combination of the values.
+combination of the values. The ```true``` parameter should be provided so that the columns are alpha-sorted. 
 
 The latter three pairs will be used later when creating [links](links.md) and [satellites](satellites.md).
     
