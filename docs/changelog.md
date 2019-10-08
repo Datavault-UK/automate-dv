@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.2.3-pre] - 2019-10-08
+
+### Macros
+
+- Updated [hash](macros.md#hash) and [multi-hash](macros.md#multi_hash)
+    - [hash](macros.md#hash) now accepts a third parameter, ```sort```
+    which will alpha-sort provided columns when set to true.
+    - [multi-hash](macros.md#multi_hash) updated to take advantage of
+    the the [hash](macros.md#hash) functionality.
+
+### Documentation
+
+- Updated [hash](macros.md#hash) and [multi-hash](macros.md#multi_hash) according to new changes.
+
 ## [v0.2.2-pre]  - 2019-10-08
 
 ### Documentation
