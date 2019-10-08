@@ -388,18 +388,20 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
 
 #### Parameters
 
-| Parameter        |  Description                                   | Type   | Required?                                                |
-| ---------------- | ---------------------------------------------- | ------ | -------------------------------------------------------- |
-| pairs            | (column, alias) pair                           | Tuple  | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: columns   | Single column string or list of columns        | String | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: alias     | The alias for the column                       | String | <i class="md-icon" style="color: green">check_circle</i> |
+| Parameter        |  Description                                    | Type     | Required?                                                |
+| ---------------- | ----------------------------------------------  | -------- | -------------------------------------------------------- |
+| pairs            | (column, alias) pair                            | Tuple    | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: columns   | Single column string or list of columns         | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: alias     | The alias for the column                        | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: sort      | Will alpha sort columns if true, default false. | Boolean  | <i class="md-icon" style="color: red">clear</i>          |
 
 
 #### Usage
 
 ```yaml
 {{ dbtvault.multi_hash([('CUSTOMERKEY', 'CUSTOMER_PK'),
-                        (['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF')]) }}
+                        (['CUSTOMERKEY', 'NAME', 'PHONE', 'DOB'], 
+                         'HASHDIFF', true)])                        }}
 ```
 
 #### Output
@@ -415,7 +417,8 @@ CAST(MD5_BINARY(CONCAT(
 ```
 
 !!! success "Column sorting"
-    You do not need to worry about providing the columns in any particular order; Provided columns are alpha-sorted automatically, as per best practises.
+    You do not need to worry about providing the columns in any particular order as long as you set the 
+    ```sort``` flag to true when creating hashdiffs.
 
 ___
 
@@ -582,23 +585,25 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 ```
 
 - Can provide multiple columns as a list to create a concatenated hash
-- When multiple columns are provided, they are alpha-sorted automatically.
+- Hashdiffs should be alpha sorted using the ```sort``` flag.
 - Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
 - ```'^^'``` Accounts for null values with a double caret
 - ```'||'``` Concatenates with a double pipe 
 
 #### Parameters
 
-| Parameter        |  Description                                   | Type        | Required?                                                |
-| ---------------- | ---------------------------------------------- | ----------- | -------------------------------------------------------- |
-| columns          |  Columns to hash on                            | String/List | <i class="md-icon" style="color: green">check_circle</i> |
-| alias            |  The name to give the hashed column            | String      | <i class="md-icon" style="color: green">check_circle</i> |
+| Parameter        |  Description                                     | Type        | Required?                                                |
+| ---------------- | -----------------------------------------------  | ----------- | -------------------------------------------------------- |
+| columns          |  Columns to hash on                              | String/List | <i class="md-icon" style="color: green">check_circle</i> |
+| alias            |  The name to give the hashed column              | String      | <i class="md-icon" style="color: green">check_circle</i> |
+| sort             |  Will alpha sort columns if true, default false. | Boolean     | <i class="md-icon" style="color: red">clear</i>          |
+                                
 
 #### Usage
 
 ```yaml
 {{ dbtvault.hash('CUSTOMERKEY', 'CUSTOMER_PK') }},
-{{ dbtvault.hash(['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF') }}
+{{ dbtvault.hash(['CUSTOMERKEY', 'PHONE', 'DOB', 'NAME'], 'HASHDIFF', true) }}
 ```
 
 !!! tip
