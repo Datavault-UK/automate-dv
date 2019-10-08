@@ -1,3 +1,5 @@
+# Getting started with dbtvault
+
 ## Intoduction
 
 This dbtvault package is very much a work in progress – we’ll up the version number to 1.0 when we’re satisfied it works out in the wild.
