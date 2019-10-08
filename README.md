@@ -6,7 +6,7 @@
 
 latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 
-stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.1-pre)](https://dbtvault.readthedocs.io/en/v0.2.1-pre/?badge=v0.2.1-pre)
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.2-pre)](https://dbtvault.readthedocs.io/en/v0.2.2-pre/?badge=v0.2.2-pre)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
