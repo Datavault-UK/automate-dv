@@ -12,10 +12,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro hash(columns, alias) -%}
+{%- macro hash(columns, alias, sort=false) -%}
 
 {#- Alpha sort columns before hashing -#}
-{%- if columns is iterable and columns is not string -%}
+{%- if sort and columns is iterable and columns is not string -%}
 {%- set columns = columns|sort -%}
 {%- endif -%}
 
