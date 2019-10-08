@@ -70,7 +70,7 @@ And run
 [Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
 
 
-## Final note before we start
+## A note on the documentation
 
 The documentation is written in the context of a simple example, showing a step by step progression towards
 loading a Data Vault 2.0 Data Warehouse. We have documented everything you need to know, but as all use cases will vary, 
