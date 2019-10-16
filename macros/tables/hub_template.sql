@@ -25,7 +25,7 @@ FROM (
 ) AS stg
 {% if is_incremental() or is_union -%}
 LEFT JOIN {{ this }} AS tgt
-ON {{ dbtvault.prefix([tgt_pk|last], 'stg') }} = {{ dbtvault.prefix([tgt_pk|last], 'tgt') }}
+ON {{ dbtvault.prefix([tgt_pk|first], 'stg') }} = {{ dbtvault.prefix([tgt_pk|last], 'tgt') }}
 WHERE {{ dbtvault.prefix([tgt_pk|last], 'tgt') }} IS NULL
 {%- if is_union %}
 AND stg.FIRST_SOURCE IS NULL
