@@ -6,11 +6,18 @@
 
 latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 
-stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.2-pre)](https://dbtvault.readthedocs.io/en/v0.2.2-pre/?badge=v0.2.2-pre)
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.4-pre)](https://dbtvault.readthedocs.io/en/v0.2.4-pre/?badge=v0.2.4-pre)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
-dbtvault is a dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on a Snowflake database;
+Build your own Data Vault data warehouse! dbtvault is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on a Snowflake database.
+
+What does dbtvault offer?
+- productivity gains, fewer errors
+- multi-threaded execution of the generated SQL
+- your data modeller can generate most of the ETL code directly from their mapping metadata
+- your ETL developers can focus on the 5% of the SQL code that is different
+- dbt generates documentation and data flow diagrams
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
@@ -27,7 +34,7 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.2.2-pre # Latest stable version
+    revision: v0.2.4-pre # Latest stable version
 ```
 
 And run 
