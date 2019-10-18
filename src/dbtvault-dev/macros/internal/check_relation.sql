@@ -12,33 +12,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro get_tgt_cols(tgt_cols) -%}
+{%- macro check_relation(obj) -%}
 
-{%- set col_list = [] -%}
-
-{%- if tgt_cols is iterable -%}
-
-    {%- for col_set in tgt_cols -%}
-
-        {#- If a triple -#}
-        {%- if col_set | first is string -%}
-
-            {%- set _ = col_list.append(col_set|last) -%}
-
-        {#- If list of lists -#}
-        {%- elif col_set is iterable and col_set is not string -%}
-
-            {%- for cols in col_set -%}
-
-                {%- set _ = col_list.append(cols|last) -%}
-
-            {%- endfor -%}
-
-        {%- endif -%}
-
-    {%- endfor -%}
+{%- if not (obj is mapping and obj.get('metadata', {}).get('type', '').endswith('Relation')) -%}
+    {{ return(false) }}
+{%- else -%}
+    {{ return(true) }}
 {%- endif -%}
-
-{{ return(col_list) }}
 
 {%- endmacro -%}
