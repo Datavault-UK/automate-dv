@@ -56,8 +56,6 @@ in our model.
 {%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
 ```
 
-
-
 ### Adding the metadata
 
 Now we get into the core component of staging: the metadata. 
@@ -71,17 +69,18 @@ provided in the link above.
 After adding the macro call, our model will now look something like this:
 
 ```stg_customer_hashed.sql```
-```sql hl_lines="5 6 7 8 9"
+```sql hl_lines="5 6 7 8 9 10"
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging')    -}} 
-
-{%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
-                                                                                     
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                        ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
-                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 'CUSTOMER_HASHDIFF')]) -}},
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+                                                                                 
+{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+                                                                                   
+{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),                           
+                        ('NATION_ID', 'NATION_PK'),                               
+                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),     
+                        (['CUSTOMER_ID', 'CUSTOMER_NAME',                         
+                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'],                      
+                         'CUSTOMER_HASHDIFF', true)])                            -}},
 ```
 
 !!! note
@@ -97,7 +96,7 @@ value.
 column called ```CUSTOMER_NATION_PK``` containing the hash of the combination of the values.
 - Concatenate the values in the ```CUSTOMER_ID```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
 columns and hash them, creating a new column called ```CUSTOMER_NATION_PK``` containing the hash of the 
-combination of the values.
+combination of the values. The ```true``` parameter should be provided so that the columns are alpha-sorted. 
 
 The latter three pairs will be used later when creating [links](links.md) and [satellites](satellites.md).
     
@@ -133,7 +132,8 @@ exist in the source.
                         ('NATION_ID', 'NATION_PK'),
                         (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
                         (['CUSTOMER_ID', 'CUSTOMER_NAME',
-                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 'CUSTOMER_HASHDIFF')]) -}},
+                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 
+                          'CUSTOMER_HASHDIFF', true)]) -}},
 
 {{ dbtvault.add_columns(source_table,
                         [('!1', 'SOURCE'),
@@ -141,12 +141,6 @@ exist in the source.
 
 ```
 
-!!! success "New"
-    We are now no longer required to provide columns which already exist in the source table,
-    as providing the ```source_table``` parameter in ```add_columns``` will now bring in all the columns
-    for us. 
-    
-    
 In the example above we have have:
 
 - Added a header (line 1).
@@ -158,33 +152,30 @@ In the example above we have have:
     
 ### Adding the footer
 
-!!! success "New"
-    The ```staging_footer``` macro has been renamed to ```from``` and is now much simpler.
-    If you're looking for the ability to add constants for ```source``` and ```loaddate```, 
-    you can now use the improved [add_columns](macros.md#add_columns) macro.
-    
-
 Now we just need to provide the variable we created earlier, as a parameter to the [from](macros.md#from)
 macro.
 
 After adding the footer, our completed model should now look like this:
 
 ```stg_customer_hashed.sql```
-```sql hl_lines="13"
+```sql hl_lines="16"
 
-{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging') -}} 
+{{- config(materialized='view', schema='MYSCHEMA', enabled=true, tags='staging')    -}} 
 
-{%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
+{%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
                         ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},
+                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+                          'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 
+                          'CUSTOMER_HASHDIFF', true)]) -}},
 
 {{ dbtvault.add_columns(source_table,
-                        [('LOADDATE', 'EFFECTIVE_FROM'),
-                         ('!1', 'SOURCE')])                                       }}
+                        [('!1', 'SOURCE'),
+                         ('LOADDATE', 'EFFECTIVE_FROM')])                            }}
 
-{{ dbtvault.from(source_table)                                                    }}
+{{ dbtvault.from(source_table)                                                       }}
 
 ``` 
 

@@ -1,5 +1,3 @@
-# Getting started with dbtvault
-
 ## Intoduction
 
 This dbtvault package is very much a work in progress – we’ll up the version number to 1.0 when we’re satisfied it works out in the wild.
@@ -29,6 +27,8 @@ Happy Data Vaulting! :smile:
 6. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. Your staging layer
 contains data for one ```load_datetime``` value only). **We will be removing this restriction in future releases**.
 
+7. You should read our [best practises](bestpractises.md) guidance, this is coming up next.
+
 ## Setting up sources
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
@@ -36,11 +36,10 @@ data much easier, cleaner and more modular. The main advantage of this is that s
 dbt dependency graphs
 
 We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
-however this feature is documented extensively in dbts own documentation, 
-so please [read here](https://docs.getdbt.com/docs/using-sources).
+however this feature is documented extensively in [the documentation for dbt itself](https://docs.getdbt.com/docs/using-sources).
 
 After reading the above documentation, we recommend you place the ```schema.yml``` file you create for your sources, 
-in the root of your ```models``` folder, however you can place it where needed for your specific project.
+in the root of your ```models``` folder, however you can place it where needed for your specific project and models.
 
 ```schema.yml```
 
@@ -70,14 +69,3 @@ And run
 ```dbt deps```
 
 [Read more on package installation (from dbt)](https://docs.getdbt.com/docs/package-management)
-
-
-## A note on the documentation
-
-The documentation is written in the context of a simple example, showing a step by step progression towards
-loading a Data Vault 2.0 Data Warehouse. We have documented everything you need to know, but as all use cases will vary, 
-you will need to adapt this to your own needs and requirements.
-
-If you need any more detail or require specific guidance, do not hesitate to 
-[submit an issue](https://github.com/Datavault-UK/dbtvault/issues). 
-We may be able to improve the package based on your feedback, and this will benefit the whole community!

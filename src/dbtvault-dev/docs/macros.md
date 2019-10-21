@@ -2,6 +2,30 @@
 ######(macros/tables)
 
 These macros form the core of the package and can be called in your models to build the tables for your Data Vault.
+
+#### Using a source reference for the target metadata
+
+As of release 0.3, you may now use a reference as a target metadata value, to streamline metadata entry.
+
+In the usage examples for the table template macros in this section, you will see ```source``` provided as the values for some 
+of the target metadata variables. ```source``` has been declared as a variable at the top of the models, and holds a 
+reference to the source table we are loading from. This is shorthand for retaining the name and data types of the columns as they were
+provided in the ```src``` variables. You may wish to alias the columns or change their data types in specific 
+circumstances, which is possible by providing a triple in the form of a list. 
+
+Both approaches are shown in the snippet below:
+
+```mysql
+{%- set tgt_pk = source                                         -%}
+{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'], 
+                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]     -%}
+```
+
+
+!!! note
+    If only aliasing and **not** changing data types, we suggest using the [add_columns](#add_columns) macro. 
+    
+    This aliasing approach is much simpler and processed in the staging layer instead. 
 ___
 
 ### hub_template
@@ -9,74 +33,73 @@ ___
 Creates a hub with provided metadata.
 
 ```mysql 
-dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,          
+dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
                       tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                      source)                                        
+                      source)                              
 ```
 
 #### Parameters
 
-| Parameter     | Description                                         | Type (Single-Source) | Type (Union)         | Required?                                                          |
-| ------------- | --------------------------------------------------- | -------------------- | -------------------- | ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_nk        | Source natural key column                           | String               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_pk        | Target primary key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_nk        | Target natural key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_source    | Name of the column which will contain the source ID | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source        | Staging model reference or table name               | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-
+| Parameter     | Description                                         | Type (Single-Source) | Type (Union)    | Required?                                                          |
+| ------------- | --------------------------------------------------- | -------------------- | --------------- | ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_nk        | Target natural key column                           | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List                 | List            | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+                                                                                                                    
 #### Usage
 
 ``` yaml tab="Single-Source"
 
-hub_customer.sql:
+-- hub_customer.sql:
 
-{{- config(...)                                                                         -}}
-                                                                                           
-{%- set src_pk = 'CUSTOMER_PK'                                                          -%}
-{%- set src_nk = 'CUSTOMER_ID'                                                          -%}
-{%- set src_ldts = 'LOADDATE'                                                           -%}
-{%- set src_source = 'SOURCE'                                                           -%}                                                                                         
-                                                                                           
-{%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                         -%}
-{%- set tgt_nk = [src_nk, 'VARCHAR(38)', src_nk]                                        -%}
-{%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                         -%}
-{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                            -%}
-                                                                                           
-{%- set source = [ref('stg_customer_hashed')]                                           -%}
-                                                                                           
-{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,                             
-                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,                   
-                         source)                                                         }}
+{{- config(...)                                                -}}
+                                                               
+{%- set source = [ref('stg_customer_hashed')]                  -%}
+                                                                 .
+{%- set src_pk = 'CUSTOMER_PK'                                 -%}
+{%- set src_nk = 'CUSTOMER_ID'                                 -%}
+{%- set src_ldts = 'LOADDATE'                                  -%}
+{%- set src_source = 'SOURCE'                                  -%}
+                                                                  
+{%- set tgt_pk = source                                        -%}
+{%- set tgt_nk = source                                        -%}
+{%- set tgt_ldts = source                                      -%}
+{%- set tgt_source = source                                    -%}
+                                                                  
+{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,    
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,    
+                         source)                                }}
 ```
 
 ``` yaml tab="Union"
 
-hub_parts.sql:
+-- hub_parts.sql:
 
-{{- config(...)                                                                         -}}
+{{- config(...)                                                -}}
 
-{%- set src_pk = ['PART_PK', 'PART_PK', 'PART_PK']                                      -%}
-{%- set src_nk = ['PART_ID', 'PART_ID', 'PART_ID']                                      -%}
-{%- set src_ldts = 'LOADDATE'                                                           -%}
-{%- set src_source = 'SOURCE'                                                           -%}
+{%- set source = [ref('stg_parts_hashed'),                        
+                  ref('stg_supplier_hashed'),                     
+                  ref('stg_lineitem_hashed')]                  -%}
 
-{%- set tgt_pk = [src_pk[0], 'BINARY(16)', src_pk[0]]                                   -%}
-{%- set tgt_nk = [src_nk[0], 'NUMBER(38,0)', src_nk[0]]                                 -%}
-{%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                         -%}
-{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                            -%}
-
-{%- set source = [ref('stg_parts_hashed'),
-                  ref('stg_supplier_hashed'),
-                  ref('stg_lineitem_hashed')]                                           -%}
-
-
-{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                         source)                                                         }}
+{%- set src_pk = 'PART_PK'                                     -%}
+{%- set src_nk = 'PART_ID'                                     -%}
+{%- set src_ldts = 'LOADDATE'                                  -%}
+{%- set src_source = 'SOURCE'                                  -%}
+                                                               
+{%- set tgt_pk = source                                        -%}
+{%- set tgt_nk = source                                        -%}
+{%- set tgt_ldts = source                                      -%}
+{%- set tgt_source = source                                    -%}
+                                                                  
+{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,    
+                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,    
+                         source)                                }}
 ```
 
 
@@ -132,80 +155,77 @@ ___
 Creates a link with provided metadata.
 
 ```mysql 
-dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,          
+dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
                        tgt_pk, tgt_fk, tgt_ldts, tgt_source,
-                       source)                                        
+                       source)                              
 ```
 
 #### Parameters
 
 | Parameter     | Description                                         | Type (Single-Source) | Type (Union)         | Required?                                                          |
 | ------------- | --------------------------------------------------- | ---------------------| ---------------------| ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_fk        | Source foreign key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_pk        | Target primary key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_fk        | Target foreign key column                           | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_source    | Name of the column which will contain the source ID | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_fk        | Target foreign key column                           | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | source        | Staging model reference or table name               | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
 ``` yaml tab="Single-Source"
 
-link_customer_nation.sql:
-
-{{- config(...)                                                                             -}}
-
-{%- set src_pk = 'CUSTOMER_NATION_PK'                                                       -%}
-{%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                                               -%}
-{%- set src_ldts = 'LOADDATE'                                                               -%}
-{%- set src_source = 'SOURCE'                                                               -%}
-
-{%- set tgt_pk = [src_pk, 'BINARY(16)', src_pk]                                             -%}
-{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
-                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]                                 -%}
-
-{%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                             -%}
-{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                                -%}
-
-{%- set source = [ref('stg_crm_customer_hashed')]                                           -%}
-
-{{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                          tgt_pk, tgt_fk, tgt_ldts, tgt_source,
-                          source)                                                            }}
-```
+-- link_customer_nation.sql:
+                                                                
+{{- config(...)                                                 -}}
+                                                                
+{%- set source = [ref('stg_crm_customer_hashed')]               -%}
+                                                                
+{%- set src_pk = 'CUSTOMER_NATION_PK'                           -%}
+{%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                   -%}
+{%- set src_ldts = 'LOADDATE'                                   -%}
+{%- set src_source = 'SOURCE'                                   -%}
+                                                                
+{%- set tgt_pk = source                                         -%}
+{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'], 
+                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]     -%}
+                                                                
+{%- set tgt_ldts = source                                       -%}
+{%- set tgt_source = source                                     -%}
+                                                                
+{{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source, 
+                          tgt_pk, tgt_fk, tgt_ldts, tgt_source, 
+                          source)                                }}
+```                                                             
 
 ``` yaml tab="Union"
 
-link_customer_nation_union.sql:  
+-- link_customer_nation_union.sql:  
 
-{{- config(...)                                                                             -}}
-
-{%- set src_pk = ['CUSTOMER_NATION_PK', 'CUSTOMER_NATION_PK', 'CUSTOMER_NATION_PK']         -%}
-
-{%- set src_fk = [['CUSTOMER_PK', 'NATION_PK'], ['CUSTOMER_PK', 'NATION_PK'],
-                  ['CUSTOMER_PK', 'NATION_PK']]                                             -%}
-
-{%- set src_ldts = 'LOADDATE'                                                               -%}
-{%- set src_source = 'SOURCE'                                                               -%}
-
-{%- set tgt_pk = [src_pk[0], 'BINARY(16)', src_pk[0]]                                       -%}
-{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'],
-                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]                                 -%}
-
-{%- set tgt_ldts = [src_ldts, 'DATE', src_ldts]                                             -%}
-{%- set tgt_source = [src_source, 'VARCHAR(15)', src_source]                                -%}
+{{- config(...)                                                 -}}
 
 {%- set source = [ref('stg_sap_customer_hashed'),
                   ref('stg_crm_customer_hashed'),
-                  ref('stg_web_customer_hashed')]                                           -%}
+                  ref('stg_web_customer_hashed')]               -%}
 
-{{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
-                          tgt_pk, tgt_fk, tgt_ldts, tgt_source,
-                          source)                                                            }}
+{%- set src_pk = 'CUSTOMER_NATION_PK'                           -%}
+{%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                   -%}
+{%- set src_ldts = 'LOADDATE'                                   -%}
+{%- set src_source = 'SOURCE'                                   -%}
+
+{%- set tgt_pk = source                                         -%}
+{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'], 
+                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]     -%}
+                                                                
+{%- set tgt_ldts = source                                       -%}
+{%- set tgt_source = source                                     -%}
+                                                                
+{{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source, 
+                          tgt_pk, tgt_fk, tgt_ldts, tgt_source, 
+                          source)                                }}
 ```
 
 
@@ -263,67 +283,67 @@ ___
 Creates a satellite with provided metadata.
 
 ```mysql 
-dbtvault.sat_template(src_pk, src_hashdiff, src_payload,          
-                      src_eff, src_ldts, src_source,              
+dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
+                      src_eff, src_ldts, src_source,    
                       tgt_pk, tgt_hashdiff, tgt_payload,
-                      tgt_eff, tgt_ldts, tgt_source,              
-                      src_table, source)                          
+                      tgt_eff, tgt_ldts, tgt_source,    
+                      source)                          
 ```
 
 #### Parameters
 
-| Parameter     | Description                                         | Type                 | Required?                                                          |
-| ------------- | --------------------------------------------------- | ---------------------| ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_hashdiff  | Source hashdiff column                              | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_payload   | Source payload column(s)                            | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_eff       | Source effective from column                        | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_ldts      | Source loaddate timestamp column                    | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_source    | Name of the column containing the source ID         | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_pk        | Target primary key column                           | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_hashdiff  | Target hashdiff column                              | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_payload   | Target payload column                               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_eff       | Target effective from column                        | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| tgt_source    | Name of the column which will contain the source ID | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source        | Staging model reference or table name               | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| Parameter     | Description                                         | Type           | Required?                                                          |
+| ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_hashdiff  | Target hashdiff column                              | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_payload   | Target payload column                               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_eff       | Target effective from column                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
 
 ``` yaml
 
-sat_customer_details.sql:  
+-- sat_customer_details.sql:  
 
-{{- config(...)                                                                                         -}}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                                          -%}
-{%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                                              -%}
-{%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE']                               -%}
-                                                                                                           
-{%- set src_eff = 'EFFECTIVE_FROM'                                                                      -%}
-{%- set src_ldts = 'LOADDATE'                                                                           -%}
-{%- set src_source = 'SOURCE'                                                                           -%}
-                                                                                                           
-{%- set tgt_pk = [src_pk , 'BINARY(16)', src_pk]                                                        -%} 
-
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                                       -%} 
-
-{%- set tgt_payload = [[ src_payload[0], 'VARCHAR(60)', 'NAME'],                                           
-                       [ src_payload[1], 'DATE', 'DOB'],                                                   
-                       [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                                       -%}
-                                                                                                           
-{%- set tgt_eff = ['EFFECTIVE_FROM', 'DATE', 'EFFECTIVE_FROM']                                          -%}
-{%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                                                     -%}
-{%- set tgt_source = ['SOURCE', 'VARCHAR(15)', 'SOURCE']                                                -%}
-                                                                                                           
-{%- set source = [ref('stg_customer_details_hashed')]                                                   -%}
-                                                                                                           
-{{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,                                               
-                          src_eff, src_ldts, src_source,                                                   
-                          tgt_pk, tgt_hashdiff, tgt_payload,                                     
-                          tgt_eff, tgt_ldts, tgt_source,                                                   
-                          source)                                                                        }}
+{{- config(...)                                                           -}}
+                                                                          
+{%- set source = [ref('stg_customer_details_hashed')]                     -%}
+                                                                          
+{%- set src_pk = 'CUSTOMER_PK'                                            -%}
+{%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                -%}
+{%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE'] -%}
+                                                                             
+{%- set src_eff = 'EFFECTIVE_FROM'                                        -%}
+{%- set src_ldts = 'LOADDATE'                                             -%}
+{%- set src_source = 'SOURCE'                                             -%}
+                                                                             
+{%- set tgt_pk = source                                                   -%}
+                                                                          
+{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']         -%}
+                                                                          
+{%- set tgt_payload = [[src_payload[0], 'VARCHAR(60)', 'NAME'],             
+                       [src_payload[1], 'DATE', 'DOB'],                     
+                       [src_payload[2], 'VARCHAR(15)', 'PHONE']]          -%}
+                                                                             
+{%- set tgt_eff = source                                                  -%}
+{%- set tgt_ldts = source                                                 -%}
+{%- set tgt_source = source                                               -%}
+                                                                             
+{{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,                 
+                          src_eff, src_ldts, src_source,                     
+                          tgt_pk, tgt_hashdiff, tgt_payload,              
+                          tgt_eff, tgt_ldts, tgt_source,                     
+                          source)                                          }}
 ```
 
 
@@ -388,18 +408,20 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
 
 #### Parameters
 
-| Parameter        |  Description                                   | Type   | Required?                                                |
-| ---------------- | ---------------------------------------------- | ------ | -------------------------------------------------------- |
-| pairs            | (column, alias) pair                           | Tuple  | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: columns   | Single column string or list of columns        | String | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: alias     | The alias for the column                       | String | <i class="md-icon" style="color: green">check_circle</i> |
+| Parameter        |  Description                                    | Type     | Required?                                                |
+| ---------------- | ----------------------------------------------  | -------- | -------------------------------------------------------- |
+| pairs            | (column, alias) pair                            | Tuple    | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: columns   | Single column string or list of columns         | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: alias     | The alias for the column                        | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: sort      | Will alpha sort columns if true, default false. | Boolean  | <i class="md-icon" style="color: red">clear</i>          |
 
 
 #### Usage
 
 ```yaml
 {{ dbtvault.multi_hash([('CUSTOMERKEY', 'CUSTOMER_PK'),
-                        (['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF')]) }}
+                        (['CUSTOMERKEY', 'NAME', 'PHONE', 'DOB'], 
+                         'HASHDIFF', true)])                        }}
 ```
 
 #### Output
@@ -415,7 +437,8 @@ CAST(MD5_BINARY(CONCAT(
 ```
 
 !!! success "Column sorting"
-    You do not need to worry about providing the columns in any particular order; Provided columns are alpha-sorted automatically, as per best practises.
+    You do not need to worry about providing the columns in any particular order, as long as you set the 
+    ```sort``` flag to true when creating hashdiffs.
 
 ___
 
@@ -441,7 +464,8 @@ column AS alias
 ```yaml
 {{ dbtvault.add_columns(source('MYSOURCE', 'MYTABLE'),
                         [('CURRENT_DATE()', 'EFFECTIVE_FROM'),
-                         ('!STG_CUSTOMER', 'SOURCE')])                }}
+                         ('!STG_CUSTOMER', 'SOURCE'),
+                         ('OLD_CUSTOMER_PK', 'CUSTOMER_PK'])                }}
 ```
 
 #### Output
@@ -449,34 +473,39 @@ column AS alias
 ```mysql 
 <All columns from MYTABLE>,
 CURRENT_DATE() AS EFFECTIVE_FROM,
-'STG_CUSTOMER' AS SOURCE
+'STG_CUSTOMER' AS SOURCE,
+OLD_CUSTOMER_PK AS CUSTOMER_PK
 ```
 
-#### Notes
+#### Specific usage notes
+
+##### Getting columns from the source
+The ```add_columns``` macro will automatically select all columns from the optional  ```source_table``` reference, 
+if provided.
+
+##### Overring source columns
+
+You may wish to override some of the source columns with different values. To replace the  ```SOURCE``` 
+or ```LOADDATE``` column value, for example, then you must provide the column name 
+that you wish to override as the alias in the pair. 
+
+##### Functions
+
+Database functions may be used, for example ```CURRENT_DATE()```, to set the current date as the value of a column, as on
+```line 2``` of the usage example.
 
 ##### Adding constants
 With the ```add_columns``` macro, you may provide constants. 
 These are additional 'calculated' columns created from hard-coded values.
 To achieve this, simply provide the constant with a ```!``` in front of the desired constant,
-and the macro will do the rest. See line 3 above, and the output it gives.
+and the macro will do the rest. See ```line 3``` of the usage example above, and the output it gives.
 
+##### Aliasing columns
 
-##### Getting columns from the source
-The ```add_columns``` macro will automatically select all columns from the provided source reference.
-If you need to override any of these columns and provide different values, for example a different ```SOURCE``` 
-or ```LOADDATE``` column value, then you may. If you provide columns in the ```pairs``` parameter, then they will 
-automatically take precedence over any columns coming from the source. 
+As of release 0.3, columns must now be aliased prior to loading, in the staging layer. This can be done by providing the
+column name you wish to alias as the first argument in a pair, and providing the alias for that column as the second argument.
+This process can be observed on ```line 4``` of the usage example above.
 
-Database functions may be used, for example ```CURRENT_DATE()```, to set the current date as the value of a column, as in the
-example below:
-
-```sql
-{{ dbtvault.add_columns(source_table,
-                        [('!TPCH', 'SOURCE'),
-                         ('CURRENT_DATE()', 'EFFECTIVE_FROM')])                              }}
-```
-
-    
 ___
 
 ### from
@@ -582,23 +611,25 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 ```
 
 - Can provide multiple columns as a list to create a concatenated hash
-- When multiple columns are provided, they are alpha-sorted automatically.
+- Hashdiffs should be alpha sorted using the ```sort``` flag.
 - Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
 - ```'^^'``` Accounts for null values with a double caret
 - ```'||'``` Concatenates with a double pipe 
 
 #### Parameters
 
-| Parameter        |  Description                                   | Type        | Required?                                                |
-| ---------------- | ---------------------------------------------- | ----------- | -------------------------------------------------------- |
-| columns          |  Columns to hash on                            | String/List | <i class="md-icon" style="color: green">check_circle</i> |
-| alias            |  The name to give the hashed column            | String      | <i class="md-icon" style="color: green">check_circle</i> |
+| Parameter        |  Description                                     | Type        | Required?                                                |
+| ---------------- | -----------------------------------------------  | ----------- | -------------------------------------------------------- |
+| columns          |  Columns to hash on                              | String/List | <i class="md-icon" style="color: green">check_circle</i> |
+| alias            |  The name to give the hashed column              | String      | <i class="md-icon" style="color: green">check_circle</i> |
+| sort             |  Will alpha sort columns if true, default false. | Boolean     | <i class="md-icon" style="color: red">clear</i>          |
+                                
 
 #### Usage
 
 ```yaml
 {{ dbtvault.hash('CUSTOMERKEY', 'CUSTOMER_PK') }},
-{{ dbtvault.hash(['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'HASHDIFF') }}
+{{ dbtvault.hash(['CUSTOMERKEY', 'PHONE', 'DOB', 'NAME'], 'HASHDIFF', true) }}
 ```
 
 !!! tip
