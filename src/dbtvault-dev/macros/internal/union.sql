@@ -14,7 +14,7 @@
 -#}
 {%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -%}
 
-    SELECT {{ dbtvault.prefix([src_pk[0], src_nk[0], src_ldts, src_source], 'src')}}{% if is_incremental() or union -%},
+    SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], 'src')}}{% if is_incremental() or union -%},
     LAG({{ src_source }}, 1)
     OVER(PARTITION by {{ tgt_pk | last }}
     ORDER BY {{ tgt_pk | last }}) AS FIRST_SOURCE
@@ -27,7 +27,7 @@
 
       {%- for src in range(iterations) -%}
       {%- set letter = letters[loop.index0] %}
-      {{ dbtvault.single(src_pk[loop.index0], src_nk[loop.index0], src_ldts, src_source,
+      {{ dbtvault.single(src_pk, src_nk, src_ldts, src_source,
                          source[loop.index0], letter) -}}
       {% if not loop.last %}
       UNION
