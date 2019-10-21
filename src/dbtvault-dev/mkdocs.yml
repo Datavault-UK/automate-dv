@@ -18,9 +18,7 @@ repo_url: 'https://github.com/Datavault-UK/dbtvault'
 
 nav:
   - Home: 'index.md'
-  - Getting started:
-    - With Data Vault: 'datavaultproject.md'
-    - With dbtvault: 'gettingstarted.md'
+  - Getting Started: 'gettingstarted.md'
   - Best Practises: 'bestpractises.md'
   - Loading the vault:
       - Staging: 'staging.md'

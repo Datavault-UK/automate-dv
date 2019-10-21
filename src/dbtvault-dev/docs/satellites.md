@@ -44,8 +44,29 @@ of optimisation counts.
 
 Let's look at the metadata we need to provide to the [sat_template](macros.md#sat_template) macro.
 
+#### Source table
+
+The first piece of metadata we need is the source table. This step is easy, as in this example we created the 
+new staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
+dbt ensures dependencies are honoured when defining the source using a reference in this way.
+
+[Read more about the ref function](https://docs.getdbt.com/docs/ref)f)
+
+```sat_customer_details.sql```
+```sql hl_lines="3"
+{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
+
+{%- set source = [ref('stg_customer_hashed')]                                       -%}
+```
+
+!!! note
+    Make sure you surround the ref call with square brackets, as shown in the snippet
+    above.
+    
+
 #### Source columns
 
+Next, we define the columns which we would like to bring from the source.
 Using our knowledge of what columns we need in our ```sat_customer_details``` table, we can identify columns in our
 staging layer which map to them:
 
@@ -61,8 +82,10 @@ raw staging layer via an [add_columns](macros.md#add_columns) macro call.
 We can now add this metadata to the model:
 
 ```sat_customer_details.sql```
-```sql hl_lines="3 4 5 7 8 9"
+```sql hl_lines="5 6 7 9 10 11"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
+
+{%- set source = [ref('stg_customer_hashed')]                                       -%}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
 {%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
@@ -80,8 +103,10 @@ provide the metadata it requires. We can define which source columns map to the 
 define a column type at the same time:
 
 ```sat_customer_details.sql```
-```sql hl_lines="11 12 13 14 15 17 18 19"
+```sql hl_lines="13 14 15 16 17 19 20 21"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
+
+{%- set source = [ref('stg_customer_hashed')]                                       -%}
 
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
 {%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
@@ -91,16 +116,15 @@ define a column type at the same time:
 {%- set src_ldts = 'LOADDATE'                                                       -%}
 {%- set src_source = 'SOURCE'                                                       -%}
 
-{%- set tgt_pk = [src_pk , 'BINARY(16)', src_pk]                                                        -%}
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                                       -%}
+{%- set tgt_pk = source                                                             -%}
+{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
 {%- set tgt_payload = [[ src_payload[0], 'VARCHAR(60)', 'NAME'],
                        [ src_payload[1], 'DATE', 'DOB'],
-                       [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                                       -%}
+                       [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
 
-{%- set tgt_eff = ['EFFECTIVE_FROM', 'DATE', 'EFFECTIVE_FROM']                                          -%}
-{%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                                                     -%}
-{%- set tgt_source = ['SOURCE', 'VARCHAR(15)', 'SOURCE']                                                -%}
-
+{%- set tgt_eff = source                                                            -%}
+{%- set tgt_ldts = source                                                           -%}
+{%- set tgt_source =  source                                                        -%}
 ```
 
 With these 6 additional lines, we have now informed the macro how to transform our source data:
@@ -109,8 +133,9 @@ With these 6 additional lines, we have now informed the macro how to transform o
 We are removing the ```CUSTOMER``` prefix, as this satellite is specifically for customer details and it's
 superfluous. Renaming will always depend on your specific project and context, however.
 
-- We have provided a type in the mapping so that the type is explicitly defined. For now, this is not optional, but 
-in future releases we will simplify this for scenarios where we want the data type or column name to remain unchanged.
+- For the rest of the ```tgt``` metadata, we do not wish to rename columns or change
+any data types, so we are simply using the ```source``` reference as shorthand for keeping the columns the same as
+the source.
 
 !!! info
     There is nothing to stop you entering invalid type mappings in this step (i.e. trying to cast an invalid date format to a date),
@@ -118,44 +143,6 @@ in future releases we will simplify this for scenarios where we want the data ty
     You will soon find out, however, as dbt will issue a warning to you. No harm done, but save time by providing 
     accurate metadata!
 
-#### Source table
-
-The last piece of metadata we need is the source table. This step is easy, as in this example we created the 
-new staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
-dbt ensures dependencies are honoured when defining the source using a reference in this way.
-
-[Read more about the ref function](https://docs.getdbt.com/docs/ref)
-
-```sat_customer_details.sql```
-```sql hl_lines="21"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
-{%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE']           -%}
-
-{%- set src_eff = 'EFFECTIVE_FROM'                                                  -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
-
-{%- set tgt_pk = [src_pk , 'BINARY(16)', src_pk]                                    -%}
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
-{%- set tgt_payload = [[ src_payload[0], 'VARCHAR(60)', 'NAME'],
-                       [ src_payload[1], 'DATE', 'DOB'],
-                       [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
-
-{%- set tgt_eff = ['EFFECTIVE_FROM', 'DATE', 'EFFECTIVE_FROM']                      -%}
-{%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                                 -%}
-{%- set tgt_source = ['SOURCE', 'VARCHAR(15)', 'SOURCE']                            -%}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-```
-
-!!! note
-    Make sure you surround the ref call with square brackets, as shown in the snippet
-    above.
-    
 ### Invoking the template 
 
 Now we bring it all together and call the [sat_template](macros.md#sat_template) macro:
@@ -164,6 +151,8 @@ Now we bring it all together and call the [sat_template](macros.md#sat_template)
 ```sql hl_lines="23 24 25 26 27"
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
 
+{%- set source = [ref('stg_customer_hashed')]                                       -%}
+
 {%- set src_pk = 'CUSTOMER_PK'                                                      -%}
 {%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
 {%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE']           -%}
@@ -172,17 +161,15 @@ Now we bring it all together and call the [sat_template](macros.md#sat_template)
 {%- set src_ldts = 'LOADDATE'                                                       -%}
 {%- set src_source = 'SOURCE'                                                       -%}
 
-{%- set tgt_pk = [src_pk , 'BINARY(16)', src_pk]                                    -%}
+{%- set tgt_pk = source                                                             -%}
 {%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
 {%- set tgt_payload = [[ src_payload[0], 'VARCHAR(60)', 'NAME'],
                        [ src_payload[1], 'DATE', 'DOB'],
                        [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
 
-{%- set tgt_eff = ['EFFECTIVE_FROM', 'DATE', 'EFFECTIVE_FROM']                      -%}
-{%- set tgt_ldts = ['LOADDATE', 'DATE', 'LOADDATE']                                 -%}
-{%- set tgt_source = ['SOURCE', 'VARCHAR(15)', 'SOURCE']                            -%}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
+{%- set tgt_eff = source                                                            -%}
+{%- set tgt_ldts = source                                                           -%}
+{%- set tgt_source =  source                                                        -%}
 
 {{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
                           src_eff, src_ldts, src_source,
