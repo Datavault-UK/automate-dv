@@ -105,4 +105,4 @@ the new and improved features.
 
 ### Documentation
    
-- Numerous changes leading up to Version 1.0 release
+- Numerous changes for version 0.1 release
