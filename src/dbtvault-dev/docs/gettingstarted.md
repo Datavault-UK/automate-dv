@@ -24,21 +24,21 @@ Happy Data Vaulting! :smile:
 
 5. We assume you already have a raw staging layer.
 
-6. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. Your staging layer
+6. Our macros assume that you are only loading from one set of load dates in a single load cycle (i.e. your staging layer
 contains data for one ```load_datetime``` value only). **We will be removing this restriction in future releases**.
 
-7. You should read our [best practises](bestpractises.md) guidance, this is coming up next.
+7. You should read our [best practices](bestpractices.md) guidance.
 
 ## Setting up sources
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
-data much easier, cleaner and more modular. The main advantage of this is that sources will be included in 
-dbt dependency graphs
+data much easier, cleaner and more modular. The main advantage of this is that sources are then included in 
+dbt dependency graphs.
 
 We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
 however this feature is documented extensively in [the documentation for dbt itself](https://docs.getdbt.com/docs/using-sources).
 
-After reading the above documentation, we recommend you place the ```schema.yml``` file you create for your sources, 
+After reading the above documentation, we recommend that you place the ```schema.yml``` file you create for your sources, 
 in the root of your ```models``` folder, however you can place it where needed for your specific project and models.
 
 ```schema.yml```
@@ -51,8 +51,8 @@ sources:
     database: MYDATABASE
     schema: MYSCHEMA
     tables:
-      - name: stg_customer
-        identifier: table_1
+      - name: stg_customer # alias
+        identifier: stg_customer_hashed # table name
       - name: ...
 ```
 

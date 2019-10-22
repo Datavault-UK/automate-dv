@@ -13,7 +13,9 @@ After you have done this, follow the below steps:
 - Provide the source reference to the view as the source parameter in the [from](macros.md#from) 
 macro when building your [staging](staging.md) model .
 
-For the next load you then can re-create the view with a different load date and run dbt again.
+For the next load you then can re-create the view with a different load date and run dbt again, or alternatively 
+manage a 'water-level' table which tracks the last load date for each source, and is incremented each load cycle.
+Do a join to the table to soft-select the next load date.
 
 ## Source
 
@@ -37,7 +39,8 @@ Best practises for hashing include:
 staging tables 
 
 !!! note
-    Some tables may use different column names, so we cannot sort this for you.
+    Some tables may use different column names for primary key components, so we cannot sort this for 
+    you as we do with hashdiffs.
 
 - For **links**, columns must be sorted by the primary key of the hub and arranged alphabetically by the hub name. 
 The order must also be the same as each hub. 
