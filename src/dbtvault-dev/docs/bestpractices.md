@@ -39,7 +39,7 @@ Best practises for hashing include:
 staging tables 
 
 !!! note
-    Some tables may use different column names for primary key components, so we cannot sort this for 
+    Some tables may use different column names for primary key components, so we cannot sort the columns for 
     you as we do with hashdiffs.
 
 - For **links**, columns must be sorted by the primary key of the hub and arranged alphabetically by the hub name. 
