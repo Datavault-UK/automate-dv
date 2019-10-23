@@ -22,7 +22,7 @@ nav:
   - Best Practices: 'bestpractices.md'
   - Walkthrough:
     - Introduction: 'introduction.md'
-    - Examining our source: 'tpch.md'
+    - Examining the source: 'tpch.md'
     - Project setup: 'setup.md'
     - Creating the raw stage: 'rawstage.md'
     - Loading the vault:
