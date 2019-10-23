@@ -20,13 +20,17 @@ nav:
   - Home: 'index.md'
   - Getting Started: 'gettingstarted.md'
   - Best Practices: 'bestpractices.md'
-  - Loading the vault:
-      - Staging: 'staging.md'
-      - Hubs: 'hubs.md'
-      - Links: 'links.md'
-      - Satellites: 'satellites.md'
+  - Walkthrough:
+    - Introduction: 'introduction.md'
+    - Examining our source: 'tpch.md'
+    - Project setup: 'setup.md'
+    - Creating the raw stage: 'rawstage.md'
+    - Loading the vault:
+        - Staging: 'staging.md'
+        - Hubs: 'hubs.md'
+        - Links: 'links.md'
+        - Satellites: 'satellites.md'
   - Macros: 'macros.md'
-  - Demonstration: 'demonstration.md'
   - Roadmap: 'roadmap.md'
   - Changelog: 'changelog.md'
   - Contributing: 'contributing.md'
