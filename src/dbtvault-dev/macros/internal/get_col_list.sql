@@ -14,6 +14,7 @@
 -#}
 {%- macro get_col_list(tgt_cols) -%}
 
+
 {%- set col_list = [] -%}
 
 {%- if tgt_cols is iterable -%}
