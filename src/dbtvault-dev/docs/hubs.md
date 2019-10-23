@@ -1,6 +1,6 @@
 Hubs are one of the core building blocks of a Data Vault. 
 
-In general, they consist of 4 columns: 
+In general, they consist of 4 columns, but may have more: 
 
 1. A primary key (or surrogate key) which is usually a hashed representation of the natural key (also known as the business key).
 
@@ -9,7 +9,8 @@ order number (can be multi-column).
 
 3. The load date or load date timestamp. This identifies when the record was first loaded into the vault.
 
-4. The source for the record. (i.e. ```1``` from the [previous section](staging.md#adding-the-footer))
+4. The source for the record, a code identifying where the data comes from. 
+(i.e. ```1``` from the [previous section](staging.md#adding-the-footer), which is the code fo stg_customer)
 
 ### Creating the model header
 
@@ -23,11 +24,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 ```
 
-Hubs are always incremental, as we load and add new records to the existing data set.
-
-An incremental materialisation will optimize our load in cases where the target table (in this case, ```hub_customer```)
-already exists and already contains data. This is very important for tables containing a lot of data, where every ounce 
-of optimisation counts. 
+Hubs are always incremental, as we load and add new records to the existing data set. 
 
 [Read more about incremental models](https://docs.getdbt.com/docs/configuring-incremental-models)
 
