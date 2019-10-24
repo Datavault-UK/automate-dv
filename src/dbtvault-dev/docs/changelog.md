@@ -4,17 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.3-pre] - Unreleased
+## [v0.3-pre] - 2019-10-24
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3-pre)](https://dbtvault.readthedocs.io/en/v0.3-pre/?badge=v0.3-pre)
 
 ### Improvements
 
-- We've now removed the need to hard-code types in the tgt metadata when creating tables.
+- We've removed the need to specify full mappings in the ```tgt``` metadata when creating table models.
 Users may now provide a table reference instead, as a shorthand way to keep the column name 
-and date type the same as the source, [see the documentation](macros.md#using-a-source-reference-for-the-target-metadata) for more details.
+and date type the same as the source, [read the docs](macros.md#using-a-source-reference-for-the-target-metadata) for more details.
 The option to provide a mapping is still available.
 
+- The check for whether a load is a union load or not is now more reliable.
+
+### Documentation
+
+- Updated code samples and explanations according to new functionality
+- Various clarifications added and errors fixed
 
 ## [v0.2.4-pre] - 2019-10-17
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.4-pre)](https://dbtvault.readthedocs.io/en/v0.2.4-pre/?badge=v0.2.4-pre)
 
 ### Bug Fixes
 
@@ -23,6 +31,7 @@ causing subsequent loads after the initial load, to fail.
 
 
 ## [v0.2.3-pre] - 2019-10-08
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.3-pre)](https://dbtvault.readthedocs.io/en/v0.2.3-pre/?badge=v0.2.3-pre)
 
 ### Macros
 
@@ -37,6 +46,7 @@ causing subsequent loads after the initial load, to fail.
 - Updated [hash](macros.md#hash) and [multi-hash](macros.md#multi_hash) according to new changes.
 
 ## [v0.2.2-pre]  - 2019-10-08
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.2-pre)](https://dbtvault.readthedocs.io/en/v0.2.2-pre/?badge=v0.2.2-pre)
 
 ### Documentation
 
@@ -46,6 +56,7 @@ causing subsequent loads after the initial load, to fail.
 - Renamed ```stg_orders_hashed``` back to ```stg_customers_hashed```
 
 ## [v0.2.1-pre] - 2019-10-07
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2.1-pre)](https://dbtvault.readthedocs.io/en/v0.2.1-pre/?badge=v0.2.1-pre)
 
 ### Documentation
 
@@ -55,6 +66,7 @@ causing subsequent loads after the initial load, to fail.
     - Corrected version in dbt_project.yml
 
 ## [v0.2-pre] - 2019-10-07
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.2-pre)](https://dbtvault.readthedocs.io/en/v0.2-pre/?badge=v0.2-pre)
 
 [Feedback is welcome!](https://github.com/Datavault-UK/dbtvault/issues)
  
@@ -86,7 +98,10 @@ the new and improved features.
           per best practises. 
 
 ## [v0.1-pre] - 2019-09 / 2019-10
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.1-pre)](https://dbtvault.readthedocs.io/en/v0.1-pre/?badge=v0.1-pre)
+
 ### Added
+
 
 - Table Macros:
     - [Hub](macros.md#hub_template)

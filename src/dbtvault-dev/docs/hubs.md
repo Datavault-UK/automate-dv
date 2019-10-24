@@ -29,8 +29,8 @@ Hubs are always incremental, as we load and add new records to the existing data
 [Read more about incremental models](https://docs.getdbt.com/docs/configuring-incremental-models)
 
 !!! note "Dont worry!" 
-    The [hub_template](macros.md#hub_template) will deal with the filtering of records and ensuring all of the Data Vault
-    2.0 standards are upheld when loading into the hub from the source. We won't need to worry about unwanted duplicates.
+    The [hub_template](macros.md#hub_template) deals with the Data Vault
+    2.0 standards when loading into the hub from the source. We won't need to worry about unwanted duplicates.
     
 ### Adding the metadata
 
@@ -62,9 +62,9 @@ Next, we define the columns which we would like to bring from the source.
 Using our knowledge of what columns we need in our  ```hub_customer``` table, we can identify columns in our
 staging layer which map to them:
 
-1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created earlier in the [staging](staging.md) section 
-is a perfect fit.
-2. The natural key itself, ```CUSTOMER_ID``` which we added using the [add_columns](macros.md#add_columns) macro.
+1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created earlier in the [staging](staging.md) 
+section will be used for ```hub_customer```.
+2. The natural key, ```CUSTOMER_ID``` which we added using the [add_columns](macros.md#add_columns) macro.
 3. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 4. A ```SOURCE``` column.
 
@@ -109,8 +109,9 @@ With these 4 additional lines, we have provided our mapping from source to targe
 
 In this particular scenario we aren't renaming the columns or changing the data type, 
 so we have used the source reference as a shorthand for keeping the 
-same name and datatype as the source columns. This can be achieved by providing triples
-instead of the reference, [see the documentation](macros.md#using-a-source-reference-for-the-target-metadata) 
+same name and datatype as the source columns. If you want to rename columns or change their type, 
+this can be achieved by providing triples instead of the reference, 
+[see the documentation](macros.md#using-a-source-reference-for-the-target-metadata) 
 for more details.
 
 ### Invoking the template 
@@ -161,16 +162,14 @@ And our table will look like this:
 ### Loading from multiple sources to form a union-based hub
 
 In some cases, we may need to create a hub via a union, instead of a single source as we have seen so far.
-This may be because:
+This may be because we have multiple source staging tables, each of which contains a natural key of the hub. 
+This would require multiple feeds into one table: dbt prefers one feed, 
+so we union the different feeds into one source before performing the insert via dbt. 
 
-- Another raw staging table holds some records which our single source does not, and the tables share 
-a key. 
-- We have multiple source-systems containing different versions or parts of the data which we need to combine. 
-
-We know this data can and should be combined because these records have a shared key. 
+So, this data can and should be combined because these records have a shared key. 
 We can union the tables on that key, and create a hub containing a complete record set.
 
-We'll need to create a [staging model](staging.md) for each of the sources involved, 
+We'll need to have a [staging model](staging.md) for each of the sources involved, 
 and provide them as a list of references to the source parameter as shown below.
 
 !!! note
@@ -182,7 +181,7 @@ This procedure only requires additional source references in the source list
 metadata of our ```hub_customer``` model, the [hub_template](macros.md#hub_template) will handle the rest:
 
 ```hub_customer.sql```
-```sql    
+```sql hl_lines="3 4 5"      
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags=['hub', 'union']) -}}
 
 {%- set source = [ref('stg_sap_customer_hashed'),                                              
