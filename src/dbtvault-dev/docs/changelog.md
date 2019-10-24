@@ -19,6 +19,7 @@ The option to provide a mapping is still available.
 ### Documentation
 
 - Updated code samples and explanations according to new functionality
+- Added a best practises page
 - Various clarifications added and errors fixed
 
 ## [v0.2.4-pre] - 2019-10-17
