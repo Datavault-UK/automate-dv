@@ -1,9 +1,8 @@
-With each release we will be adding more Data Vault 2.0 tables and helpful macros.
+With each release we will be adding more Data Vault 2.0 table templates, helpful macros and productivity enhancements.
 We hope to tailor new features to the requirements of our community, making the package 
 the best and most useful it can be.
 
-We will be releasing changes incrementally rather than jumping from Release 0.1 to Release 0.2 and beyond, so you can reap 
-the benefits as soon as features are developed.
+We will be releasing changes incrementally, so you can reap the benefits as soon as features are developed.
 
 #### Contribute to dbtvault
 
@@ -14,8 +13,7 @@ the benefits as soon as features are developed.
 
 These features are currently planned for the near-future.
 
-### Tables
-
+- Full Snowflake TPC-H Demonstration to supplement the documentation 
 - Transactional Links (Also known as non-historised links)
 
 ## Future releases
@@ -26,6 +24,8 @@ In future releases, we hope to include the following:
 
 - Multi-active satellites
 - Effectivity satellites
+- Status tracking satellites
 - Point-in-Time tables (also know as PITs)
-- Bridges
+- Bridge tables
+- Reference Tables
 - And more!
