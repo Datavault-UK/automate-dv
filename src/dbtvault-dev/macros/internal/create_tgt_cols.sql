@@ -72,6 +72,10 @@
                 {%- if src_col in column_names -%}
                     {%- set col_type = columns | selectattr('name', "equalto", src_col) | map(attribute='data_type') | list -%}
                     {%- set _ = src_col_list.append([src_col, col_type[0], src_col]) -%}
+                {%- else -%}
+
+                    {{ exceptions.raise_compiler_error("Source column '" ~ src_col ~ "' not present in '" ~ source[0].table ~ "' check your source table configuration.") }}
+
                 {%- endif -%}
             {%- endfor -%}
         {%- else -%}
