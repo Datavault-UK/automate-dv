@@ -32,5 +32,5 @@ please feel free to submit ideas and thoughts!
 Create a post with as much detail as possible; We'll be happy to reply and work with you.
 
 ## Pull requests
-If you've developed something which we can add via a pull request, we'd prefer that you submit an issue first
-so that we can discuss the changes.
+If you've developed something which we can add via a pull request, we're more than happy to consider it, but we'd
+like to discuss the changes first.
