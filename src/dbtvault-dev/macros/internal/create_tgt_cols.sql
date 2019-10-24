@@ -82,7 +82,7 @@
         {%- if src_col_list | length > 1 -%}
             {%- set _ = tgt_cols_output.update({col: src_col_list}) -%}
         {%- else -%}
-            {%- set _ = tgt_cols_output.update({col: src_col_list[0]}) -%}Zz
+            {%- set _ = tgt_cols_output.update({col: src_col_list[0]}) -%}
         {%- endif -%}
     {%- else -%}
         {%- set _ = tgt_cols_output.update({col: tgt_col}) -%}
