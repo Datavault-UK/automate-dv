@@ -64,30 +64,31 @@
     {%- set src_cols = tgt_cols_dict[col][0] -%}
     {%- set tgt_col = tgt_cols_dict[col][1] -%}
     {%- set is_relation = tgt_cols_dict[col][2] -%}
-    {%- set src_col_list = [] -%}
+    {%- set tgt_col_list = [] -%}
 
     {%- if is_relation -%}
+
+        {#- Add column triples to list -#}
         {%- if src_cols is iterable and src_cols is not string -%}
             {%- for src_col in src_cols -%}
                 {%- if src_col in column_names -%}
-                    {%- set col_type = columns | selectattr('name', "equalto", src_col) | map(attribute='data_type') | list -%}
-                    {%- set _ = src_col_list.append([src_col, col_type[0], src_col]) -%}
-                {%- else -%}
+                    {%- set col_type = columns | selectattr('name', "equalto", src_col) | map(attribute='data_type') | list | default(" ", true) -%}
 
-                    {{ exceptions.raise_compiler_error("Source column '" ~ src_col ~ "' not present in '" ~ source[0].table ~ "' check your source table configuration.") }}
-
+                    {%- set _ = tgt_col_list.append([src_col, col_type[0], src_col]) -%}
                 {%- endif -%}
             {%- endfor -%}
         {%- else -%}
-            {%- set col_type = columns | selectattr('name', "equalto", src_cols) | map(attribute='data_type') | list -%}
-            {%- set _ = src_col_list.append([src_cols, col_type[0], src_cols]) -%}
+            {%- set col_type = columns | selectattr('name', "equalto", src_cols) | map(attribute='data_type' ) | list | default(" ", true) -%}
+
+            {%- set _ = tgt_col_list.append([src_cols, col_type[0], src_cols]) -%}
         {%- endif -%}
 
-        {%- if src_col_list | length > 1 -%}
-            {%- set _ = tgt_cols_output.update({col: src_col_list}) -%}
+        {%- if tgt_col_list | length > 1 -%}
+            {%- set _ = tgt_cols_output.update({col: tgt_col_list}) -%}
         {%- else -%}
-            {%- set _ = tgt_cols_output.update({col: src_col_list[0]}) -%}
+            {%- set _ = tgt_cols_output.update({col: tgt_col_list[0]}) -%}
         {%- endif -%}
+
     {%- else -%}
         {%- set _ = tgt_cols_output.update({col: tgt_col}) -%}
     {%- endif -%}
