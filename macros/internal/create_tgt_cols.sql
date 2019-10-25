@@ -59,6 +59,8 @@
 {%- set columns = adapter.get_columns_in_relation(source[0]) -%}
 {%- set column_names = columns | map(attribute='name') | list -%}
 
+{{ dbtvault.validate_columns(src_cols_list, column_names, source[0]) }}
+
 {%- for col in tgt_cols_dict -%}
 
     {%- set src_cols = tgt_cols_dict[col][0] -%}
