@@ -4,7 +4,7 @@
 
 latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 
-stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3-pre)](https://dbtvault.readthedocs.io/en/v0.3-pre/?badge=v0.3-pre)
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3.1-pre)](https://dbtvault.readthedocs.io/en/v0.3.1-pre/?badge=v0.3.1-pre)
 
 [past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
 
@@ -34,7 +34,7 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.3-pre # Latest stable version
+    revision: v0.3.1-pre # Latest stable version
 ```
 And run 
 ```dbt deps```
