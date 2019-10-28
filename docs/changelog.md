@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.3.2-pre] - 2019-10-28
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3.2-pre)](https://dbtvault.readthedocs.io/en/v0.3.2-pre/?badge=v0.3.2-pre)
+
+### Bug Fixes
+
+- Fixed a bug where the logic for performing a base-load (loading for the first time) on a union-based hub or link was incorrect, causing a load failure.
+
+### Documentation
+
+- Various corrections and clarifications on the macros page.
+
 ## [v0.3.1-pre] - 2019-10-25
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3.1-pre)](https://dbtvault.readthedocs.io/en/v0.3.1-pre/?badge=v0.3.1-pre)
 
