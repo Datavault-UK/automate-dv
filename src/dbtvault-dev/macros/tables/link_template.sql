@@ -33,12 +33,18 @@ FROM (
                               tgt_pk, tgt_fk, tgt_ldts, tgt_source,
                               source, is_union) }}
 ) AS stg
-{% if is_incremental() or is_union -%}
+{# If incremental union or single #}
+{%- if is_incremental() -%}
 LEFT JOIN {{ this }} AS tgt
 ON {{ dbtvault.prefix([tgt_pk|first], 'stg') }} = {{ dbtvault.prefix([tgt_pk|last], 'tgt') }}
 WHERE {{ dbtvault.prefix([tgt_pk|last], 'tgt') }} IS NULL
-{%- if is_union %}
+{# If an incremental and union load -#}
+{% if is_union -%}
 AND stg.FIRST_SOURCE IS NULL
 {%- endif -%}
+{%- endif -%}
+{# If a union base-load #}
+{%- if is_union and not is_incremental() -%}
+WHERE stg.FIRST_SOURCE IS NULL
 {%- endif -%}
 {%- endmacro -%}

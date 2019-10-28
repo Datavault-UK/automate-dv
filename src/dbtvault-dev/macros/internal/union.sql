@@ -14,11 +14,10 @@
 -#}
 {%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -%}
 
-    SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], 'src')}}{% if is_incremental() or union -%},
+    SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], 'src')}},
     LAG({{ src_source }}, 1)
     OVER(PARTITION by {{ tgt_pk | last }}
     ORDER BY {{ tgt_pk | last }}) AS FIRST_SOURCE
-    {%- endif %}
     FROM (
 
  {%- set letters='abcdefghijklmnopqrstuvwxyz' -%}

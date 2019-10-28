@@ -11,6 +11,7 @@ use_step_matcher("parse")
 
 
 @step("I load the TEST_HUB_CUSTOMER table")
+@step("I load the TEST_HUB_CUSTOMER_HUBS table")
 def step_impl(context):
     os.chdir(DBT_ROOT)
 
@@ -22,6 +23,19 @@ def step_impl(context):
     os.chdir(DBT_ROOT)
 
     os.system("dbt run --models +test_hub_parts")
+
+# BASE-LOAD STEPS
+
+
+@step("a {table_name} table does not exist")
+def step_impl(context, table_name):
+
+    context.testdata.drop_table("DV_PROTOTYPE_DB", "SRC_TEST_VLT", table_name,
+                                materialise="table")
+
+    is_exist = context.testdata.check_exists(db="DV_PROTOTYPE_DB", schema="SRC_TEST_VLT", table_name=table_name)
+
+    assert is_exist is False
 
 
 # SINGLE-SOURCE STEPS

@@ -243,6 +243,17 @@ class TestData:
 
         return list(result['column_name'])
 
+    def check_exists(self, *, db, schema, table_name) -> bool:
+
+        sql = "SELECT TABLE_NAME FROM {}.INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = " \
+              "'{}' " \
+              "AND TABLE_SCHEMA = '{}'"\
+            .format(db, table_name.upper(), schema)
+
+        result = pd.read_sql_query(sql, self.engine)
+
+        return True if list(result['table_name']) else False
+
     # TODO: Make this more generic (e.g. Run a SQL statement)
     def get_hub_table_data(self, select, table_name):
 
