@@ -1,26 +1,44 @@
 ## Table templates 
 ######(macros/tables)
 
-These macros form the core of the package and can be called in your models to build the tables for your Data Vault.
+These macros form the core of the package and can be called in your models to build the different types of tables needed
+for your Data Vault.
 
+### Metadata notes
 #### Using a source reference for the target metadata
 
-As of release 0.3, you may now use a reference as a target metadata value, to streamline metadata entry.
+!!! note
+    As of release 0.3, you may now use a source reference as a target metadata value, to streamline metadata entry. 
+    Read below!
 
-In the usage examples for the table template macros in this section, you will see ```source``` provided as the values for some 
-of the target metadata variables. ```source``` has been declared as a variable at the top of the models, and holds a 
-reference to the source table we are loading from. This is shorthand for retaining the name and data types of the columns as they were
-provided in the ```src``` variables. You may wish to alias the columns or change their data types in specific 
-circumstances, which is possible by providing a triple in the form of a list. 
+In the usage examples for the table template macros in this section, you will see ```source``` provided as the values
+for some of the target metadata variables. ```source``` has been declared as a variable at the top of the models, 
+and holds a reference to the source table we are loading from. This is shorthand for retaining the name and data types 
+of the columns as they are provided in the ```src``` variables. You may wish to alias the columns or change their data 
+types in specific circumstances, which is possible by providing an additional parameter as a list of triples: 
+``` (source column name, data type to cast to, target column name)```.
 
 Both approaches are shown in the snippet below:
 
 ```mysql
+{%- set src_pk = 'CUSTOMER_NATION_PK'                           -%}
+{%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                   -%}
+{%- ...other src metadata...                                    -%}
+
 {%- set tgt_pk = source                                         -%}
 {%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'], 
                   ['NATION_PK', 'BINARY(16)', 'NATION_FK']]     -%}
 ```
 
+Here, we are keeping the ```tgt_pk``` (the target table's primary key) the same as the primary key identified in the
+source (```src_pk```).
+Behind the scenes, the macro will get the datatype of the column provided in the ```src_pk``` variable and generate a 
+mapping for us. If the ```src_pk``` column does not exist, an appropriate exception will be raised.
+
+Alternatively we have provided a manual mapping for the ```tgt_fk``` (the target table's foreign key). 
+
+*For further details and examples on both methods, refer to the usage examples 
+and snippets in the table template documentation below (both Single-Source and Union).*
 
 !!! note
     If only aliasing and **not** changing data types, we suggest using the [add_columns](#add_columns) macro. 
@@ -30,7 +48,7 @@ ___
 
 ### hub_template
 
-Creates a hub with provided metadata.
+Generates sql to build a hub table using the provided metadata.
 
 ```mysql 
 dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
@@ -152,7 +170,7 @@ ___
 
 ### link_template
 
-Creates a link with provided metadata.
+Generates sql to build a link table using the provided metadata.
 
 ```mysql 
 dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
@@ -228,7 +246,6 @@ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
                           source)                                }}
 ```
 
-
 #### Output
 
 ```mysql tab="Single-Source"
@@ -280,7 +297,7 @@ ___
 
 ### sat_template
 
-Creates a satellite with provided metadata.
+Generates sql to build a satellite table using the provided metadata.
 
 ```mysql 
 dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
@@ -398,9 +415,10 @@ ___
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
     
 !!! seealso "See Also"
-    [hash](#hash)
+    - [hash](#hash)
+    - [Hashing best practises and why we hash](bestpractices.md#hashing)
     
-A macro for generating multiple lines of hashing SQL for columns:
+This macro will generate SQL hashing sequences for one or more columns as below:
 ```sql 
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column1 AS VARCHAR)))) AS BINARY(16)) AS alias1,
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
@@ -437,9 +455,9 @@ CAST(MD5_BINARY(CONCAT(
 ```
 
 !!! success "Column sorting"
-    You do not need to worry about providing the columns in any particular order, as long as you set the 
-    ```sort``` flag to true when creating hashdiffs.
-
+    If you wish to sort columns in alphabetical order as per [best practices](bestpractices.md#hashing),
+    you do not need to worry about doing this manually, just set the 
+    ```sort``` flag to true when creating hashdiffs as per the above example.
 ___
 
 ### add_columns
@@ -483,16 +501,21 @@ OLD_CUSTOMER_PK AS CUSTOMER_PK
 The ```add_columns``` macro will automatically select all columns from the optional  ```source_table``` reference, 
 if provided.
 
-##### Overring source columns
+##### Overriding source columns
 
 You may wish to override some of the source columns with different values. To replace the  ```SOURCE``` 
 or ```LOADDATE``` column value, for example, then you must provide the column name 
 that you wish to override as the alias in the pair. 
 
+!!! note
+    The macro will not actually override (delete or replace) any of the source columns, but simply add new columns
+    using the provided column as a basis.
+
 ##### Functions
 
-Database functions may be used, for example ```CURRENT_DATE()```, to set the current date as the value of a column, as on
-```line 2``` of the usage example.
+Database functions may be used, for example ```CURRENT_DATE()``` to set the current date as the value of a column, as on
+```line 2``` of the usage example. Any function supported by the database is valid, for example ```LPAD()```, which pads
+a column with leading zeroes.
 
 ##### Adding constants
 With the ```add_columns``` macro, you may provide constants. 
@@ -502,9 +525,11 @@ and the macro will do the rest. See ```line 3``` of the usage example above, and
 
 ##### Aliasing columns
 
-As of release 0.3, columns must now be aliased prior to loading, in the staging layer. This can be done by providing the
+As of release 0.3, columns should now be aliased in the staging layer prior to loading. This can be achieved by providing the
 column name you wish to alias as the first argument in a pair, and providing the alias for that column as the second argument.
-This process can be observed on ```line 4``` of the usage example above.
+This can be observed on ```line 4``` of the usage example above. Aliasing can still be carried out using a 
+manual mapping (shown in the [table template](#table-templates) section examples) but this is less concise for aliasing 
+purposes.
 
 ___
 
@@ -517,7 +542,7 @@ FROM MYDATABASE.MYSCHEMA.MYTABLE
 ```
 
 !!! info
-    Sources need to be set up in dbt. [Read More](https://docs.getdbt.com/docs/using-sources)
+    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/docs/using-sources)
 
 #### Parameters
 
@@ -604,6 +629,10 @@ ___
     The intended use is for creating checksum-like fields only, so that a record change can be detected. 
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
+
+!!! seealso "See Also"
+    - [multi-hash](#multi_hash)
+    - [Hashing best practises and why we hash](bestpractices.md#hashing)
     
 A macro for generating hashing SQL for columns:
 ```sql 
@@ -611,7 +640,8 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 ```
 
 - Can provide multiple columns as a list to create a concatenated hash
-- Hashdiffs should be alpha sorted using the ```sort``` flag.
+- Columns are sorted alphabetically (by alias) if you set the ```sort``` flag to true.
+- Generally, you should alpha sort hashdiffs using the ```sort``` flag.
 - Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
 - ```'^^'``` Accounts for null values with a double caret
 - ```'||'``` Concatenates with a double pipe 
