@@ -1,7 +1,7 @@
 behave==1.2.6
 click==6.7
 configobj==5.0.6
-dbt==0.14.0
+dbt==0.14.3
 Flask==1.0.2
 Flask-SQLAlchemy==2.2
 future==0.16.0
