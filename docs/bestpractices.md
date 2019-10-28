@@ -31,16 +31,53 @@ If there is already a source in the raw staging layer, you may keep this or over
 
 ## Hashing
 
-Best practises for hashing include:
+!!! seealso "See Also"
+    - [hash](#hash)
+    - [multi-hash](macros.md#multi_hash)
+    
+### The drawbacks of using MD5
 
-- Alpha sorting hashdiff columns. dbtvault does this for us, so no worries! Refer to the [multi-hash](macros.md#multi_hash) docs for how to do this
+We are using md5 to calculate the hash in the macros above. If your table contains more than a few billion rows, 
+then there is a chance of a clash: where two different values generate the same hash value 
+(see [Collision vulnerabilities](https://en.wikipedia.org/wiki/MD5#Collision_vulnerabilities)). 
+
+For this reason, it **should not be** used for cryptographic purposes either.
+
+In future releases of dbtvault, we will allow you to change the algorithm that is used (e.g. to SHA-256) to reduce the 
+chance of a clash (at the expense of more processing and a larger column), or switch off hashing entirely. 
+
+### Why do we hash?
+
+Data Vault uses hashing for two different purposes.
+
+#### Primary Key Hashing
+
+A hash of the primary key. This creates a surrogate key, but it is calculated consistently across the database:
+as it is a single column, same data type, it supports the use of pattern-based loading.
+
+#### Hashdiffs
+
+Used to finger-print the payload of a satellite (similar to a checksum) so it is easier to detect if there has been a 
+change in payload, to trigger the load of a new satellite record. This simplifies the SQL as otherwise we'd have to 
+compare each column in turn and handle nulls to see if a change had occured. 
+
+Hashing is sensitive to column ordering. You can ask the macro to sort the columns alphabetically for you 
+(as per best practices), or switch this off and let your order take precedence (by setting the sort parameter 
+to true or false accordingly). Columns are sorted by their alias.
+
+### Hashing best practices
+
+Best practices for hashing include:
+
+- Alpha sorting hashdiff columns. As mentioned, dbtvault can do this for us, so no worries! 
+Refer to the [multi-hash](macros.md#multi_hash) docs for details on how to do this.
 
 - Ensure all **hub** columns used to calculate a primary key hash are presented in the same order across all
 staging tables 
 
 !!! note
-    Some tables may use different column names for primary key components, so we cannot sort the columns for 
-    you as we do with hashdiffs.
+    Some tables may use different column names for primary key components, so you generally **should not** use 
+    the sorting functionality for primary keys.
 
 - For **links**, columns must be sorted by the primary key of the hub and arranged alphabetically by the hub name. 
 The order must also be the same as each hub. 
