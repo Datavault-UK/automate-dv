@@ -1,4 +1,6 @@
-Satellites compliment hubs and links, providing more concrete data and temporal attributes.
+Satellites contain point-in-time payload data related to their parent hub or link records. 
+Each hub or link record may have one or more child satellite records, allowing us to record changes in 
+the data as they happen. 
 
 They will usually consist of the following columns:
 
@@ -12,14 +14,20 @@ the hashdiff will change as a result of the payload changing.
 a name, a date of birth, nationality, age, gender or more. The payload will contain some or all of the
 concrete data for an entity, depending on the purpose of the satellite. 
 
-4. An effectivity date. Usually called ```EFFECTIVE_FROM```, this column is the key temporal attribute of a 
-satellite record. The main purpose of this column is to record that a record is valid at a specific point in time.
+4. An effectivity date. Usually called ```EFFECTIVE_FROM```, this column is the business effective date of a 
+satellite record. It records that a record is valid from a specific point in time.
 If a customer changes their name, then the record with their 'old' name should no longer be valid, and it will no longer 
-have the most recent ```EFFECTIVE_FROM```.
+have the most recent ```EFFECTIVE_FROM``` value. 
 
 5. The load date or load date timestamp. This identifies when the record was first loaded into the vault.
 
 6. The source for the record.
+
+!!! note
+    ```LOADDATE``` is the time the record is loaded into the database. ```EFFECTIVE_FROM``` is different and may hold a 
+    different value, especially if there is a batch processing delay between when a business event happens and the 
+    record arriving in the database for load. Having both dates allows us to ask the questions 'what did we know when' 
+    and 'what happened when' using the ```LOADDATE``` and ```EFFECTIVE_FROM``` date accordingly. 
 
 ### Creating the model header
 
@@ -33,10 +41,6 @@ The following header is what we use, but feel free to customise it to your needs
 ```
 
 Satellites are always incremental, as we load and add new records to the existing data set.
-
-An incremental materialisation will optimize our load in cases where the target table (in this case, ```sat_customer_details```)
-already exists and already contains data. This is very important for tables containing a lot of data, where every ounce 
-of optimisation counts. 
 
 [Read more about incremental models](https://docs.getdbt.com/docs/configuring-incremental-models)
 
@@ -70,8 +74,8 @@ Next, we define the columns which we would like to bring from the source.
 Using our knowledge of what columns we need in our ```sat_customer_details``` table, we can identify columns in our
 staging layer which map to them:
 
-1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created earlier in the [staging](staging.md) section 
-is a perfect fit.
+1. The primary key of the parent hub or link table,  which is a hashed natural key. 
+The ```CUSTOMER_PK``` we created earlier in the [staging](staging.md) section will be used for ```sat_customer_details```.
 2. A hashdiff. We created ```CUSTOMER_HASHDIFF``` in [staging](staging.md) earlier, which we will use here.
 3. Some payload columns: ```CUSTOMER_NAME```, ```CUSTOMER_DOB```, ```CUSTOMER_PHONE``` which should be present in the 
 raw staging layer via an [add_columns](macros.md#add_columns) macro call.
@@ -117,10 +121,10 @@ define a column type at the same time:
 {%- set src_source = 'SOURCE'                                                       -%}
 
 {%- set tgt_pk = source                                                             -%}
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
-{%- set tgt_payload = [[ src_payload[0], 'VARCHAR(60)', 'NAME'],
-                       [ src_payload[1], 'DATE', 'DOB'],
-                       [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
+{%- set tgt_hashdiff = [src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
+{%- set tgt_payload = [[src_payload[0], 'VARCHAR(60)', 'NAME'],
+                       [src_payload[1], 'DATE', 'DOB'],
+                       [src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
 
 {%- set tgt_eff = source                                                            -%}
 {%- set tgt_ldts = source                                                           -%}
