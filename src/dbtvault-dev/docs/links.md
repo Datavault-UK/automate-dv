@@ -4,7 +4,7 @@ Links model an association or link, between two business keys. They commonly hol
 information.
 
 !!! note
-    Due to the similarities between links and hubs, most of this page will be familiar if you have already read the
+    Due to the similarities in the load logic between links and hubs, most of this page will be familiar if you have already read the
     [hubs](hubs.md) page.
 
 Our links will contain:
@@ -34,8 +34,8 @@ Now we need to provide some metadata to the [link_template](macros.md#link_templ
 
 #### Source table
 
-The first piece of metadata we need is the source table. This step is easy, as in this example we created the 
-new staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
+The first piece of metadata we need is the source table. This step is easy, as we created the 
+staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
 dbt ensures dependencies are honoured when defining the source using a reference in this way.
 
 [Read more about the ref function](https://docs.getdbt.com/docs/ref)
@@ -60,8 +60,8 @@ staging layer which map to them:
 
 1. A primary key, which is a combination of the two natural keys: In this case ```CUSTOMER_NATION_PK``` 
 which we added in our staging layer.
-2. ```CUSTOMER_ID``` which is one of our natural keys (We'll use the hashed column, ```CUSTOMER_PK```).
-3. ```NATION_ID``` the second natural key (We'll use the hashed column, ```NATION_PK```).
+2. ```CUSTOMER_ID``` which is one of our natural keys (we'll use the hashed column, ```CUSTOMER_PK```).
+3. ```NATION_ID``` the second natural key (we'll use the hashed column, ```NATION_PK```).
 4. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 5. A ```SOURCE``` column.
 
@@ -111,7 +111,8 @@ provide the metadata it requires:
 
 With these 4 additional lines, we have provided our mapping from source to target:
 
-- Observe that we are renaming the foreign key columns so that they have an ```FK``` suffix.
+- Observe that we are renaming the foreign key columns so that they have an ```FK``` suffix. 
+It's up to you: you could keep the ```PK``` suffix, use ```FK``` or something else. 
 
 - For the rest of the ```tgt``` metadata, we do not wish to rename columns or change
 any data types, so we are simply using the ```source``` reference as shorthand for keeping the columns the same as
@@ -168,17 +169,15 @@ And our table will look like this:
 
 ### Loading from multiple sources to form a union-based link
 
-In some cases, we may need to create a hub via a union, instead of a single source as we have seen so far.
-This may be because:
+In some cases, we may need to create a link via a union, instead of a single source as we have seen so far.
+This may be because we have multiple source staging tables, each of which contains a natural key of the link. 
+This would require multiple feeds into one table: dbt prefers one feed, 
+so we union the different feeds into one source before performing the insert via dbt. 
 
-- Another raw staging table holds some records which our single source does not, and the tables share 
-a key. 
-- We have multiple source-systems containing different versions or parts of the data which we need to combine. 
+So, this data can and should be combined because these records have a shared key. 
+We can union the tables on that key, and create a link containing a complete record set.
 
-We know this data can and should be combined because these records have a shared key. 
-We can union the tables on that key, and create a hub containing a complete record set.
-
-We'll need to create a [staging model](staging.md) for each of the sources involved, 
+We'll need to have a [staging model](staging.md) for each of the sources involved, 
 and provide them as a list of references to the source parameter as shown below.
 
 !!! note
@@ -187,10 +186,10 @@ and provide them as a list of references to the source parameter as shown below.
     via the [add_columns](macros.md#add_columns) macro.
 
 This procedure only requires additional source references in the source list
-metadata of our ```link_customer_nation``` model, and the [link_template](macros.md#link_template) will handle the rest:
+metadata of our ```link_customer_nation``` model, the [link_template](macros.md#link_template) will handle the rest:
 
 ```link_customer_nation.sql```
-```sql    
+```sql hl_lines="3 4 5"   
 {{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags=['link', 'union']) -}}
 
 {%- set source = [ref('stg_sap_customer_hashed'),                                    
