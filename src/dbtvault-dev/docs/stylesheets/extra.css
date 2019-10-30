@@ -1,0 +1,37 @@
+/* Additional CSS to add styling to the navigation menu cube
+and remove edit button */
+
+.nav-cube img {
+    width: 90%;
+    padding: 0 .6rem;
+    margin-bottom: 20px;
+}
+
+.md-content__icon {
+    display: none;
+}
+
+/* Style buttons */
+.btn {
+  background-color: #91569D;
+  border: none;
+  color: white;
+  padding: 12px 30px;
+  cursor: pointer;
+  font-size: 20px;
+
+}
+
+.btn i, a.btn {
+    color: white;
+}
+
+a.btn {
+    margin-top: 20px;
+    display: inline-block;
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: #7B4B87;
+}

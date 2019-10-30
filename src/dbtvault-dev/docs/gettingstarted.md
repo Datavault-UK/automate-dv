@@ -32,11 +32,10 @@ contains data for one ```load_datetime``` value only). **We will be removing thi
 ## Setting up sources
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
-data much easier, cleaner and more modular. The main advantage of this is that sources are then included in 
-dbt dependency graphs.
+data much easier, cleaner and more modular.
 
 We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
-however this feature is documented extensively in [the documentation for dbt itself](https://docs.getdbt.com/docs/using-sources).
+however this feature is documented extensively in [the documentation for dbt](https://docs.getdbt.com/docs/using-sources).
 
 After reading the above documentation, we recommend that you place the ```schema.yml``` file you create for your sources, 
 in the root of your ```models``` folder, however you can place it where needed for your specific project and models.
