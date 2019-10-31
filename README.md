@@ -21,6 +21,13 @@ What does dbtvault offer?
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
+## Worked example project
+
+Get started quickly with our worked example
+
+[read the docs](https://dbtvault.readthedocs.io/en/latest/workedexample/)
+[Repository](https://github.com/Datavault-UK/snowflakeDemo)
+
 ## Currently supported databases:
 
 - [snowflake](https://www.snowflake.com/about/)
