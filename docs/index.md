@@ -22,7 +22,6 @@ dbtvault package for the Data Vault specific steps.
     [Sign up](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
     before anyone else!
 
-
 ## What is Data Vault 2.0?
 Data Vault 2.0 is an Agile method that can be used to deliver a highly scalable enterprise Data Warehouse. 
 

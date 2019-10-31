@@ -2,14 +2,14 @@ We advise you follow these best practises when using dbtvault.
 
 ## Staging
 
-Currently, we are only supporting one load date per load, as per the [prerequisites](gettingstarted.md#prerequisites).
+Currently, we are only supporting one load date per load, as per the [prerequisites](walkthrough.md#prerequisites).
 
 Until a future release solves this limitation, we suggest that if the raw staging layer has a mix of load dates, 
 create a view on it and filter by the load date column to ensure only a single load date value is present.
 
 After you have done this, follow the below steps: 
 
-- Add a reference to the view in your [sources](gettingstarted.md#setting-up-sources).
+- Add a reference to the view in your [sources](walkthrough.md#setting-up-sources).
 - Provide the source reference to the view as the source parameter in the [from](macros.md#from) 
 macro when building your [staging](staging.md) model .
 
