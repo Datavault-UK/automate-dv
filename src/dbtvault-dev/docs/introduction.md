@@ -1,6 +1,12 @@
 # Introduction
+
+!!! info
+    The intent behind this demonstration is to give you a more in-depth understanding of how to use 
+    dbt and dbtvault in a realistic environment. For a quick guide on how to create your
+    own Data Vault using dbtvault, with a simplified example, take a look at our [quick start](gettingstarted.md) guide.
+
 In this section we teach you how to use dbtvault by example. We take you through developing a 
-Data Vault 2.0 Data Warehouse based on the Snowflake TPC-H dataset, step-by-step using pre-written models.
+Data Vault 2.0 Data Warehouse based on the Snowflake TPC-H dataset, step-by-step using pre-written dbtvault models.
 
 We will:
 
@@ -9,6 +15,7 @@ We will:
 - create a raw staging layer.
 - process the raw staging layer.
 - create a Data Vault with hubs, links and satellites using dbtvault.
+
 
 ## Pre-requisites
 
@@ -22,20 +29,8 @@ be the only necessary requirements you will need to get started with the example
     production warehouses. Whilst there shouldn't be any risk that the demo affects any unrelated data outside of the 
     scope of this project, you may use a corporate account or existing personal account at your own risk, 
     
-- An [installation of dbt](https://docs.getdbt.com/docs/installation).
+- A Python 3.x installation.
 
 !!! note
     We have provided a complete ```requirements.txt``` to install with ```pip install -r requirements.txt```
-    as a quick start method. This comes with the download in the next section below,
-
-## Downloading
-
-The first step is to download the latest Snowflake example project from the repository.
-
-Using the button below, find the latest release and download the zip file, listed under assets.
-
-<a href="https://github.com/Datavault-UK/snowflakeDemo/releases" class="btn">
-<i class="fa fa-download"></i> View Downloads
-</a>
-
-Once downloaded, unzip the project.
+    as a quick start method. This comes with the download in the next section below. This includes dbt.
