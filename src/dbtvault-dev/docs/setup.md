@@ -66,8 +66,12 @@ Key points:
 
 - You must also create a ```DV_PROTOTYPE_DB``` database and ```DV_PROTOTYPE_WH``` warehouse.
 
-- Your ```DV_PROTOTYPE_WH``` warehouse should be X-Small in size and have a low auto-suspend, as we will
+
+
+- Your ```DV_PROTOTYPE_WH``` warehouse should be X-Small in size and have a 5 minute auto-suspend, as we will
 not be coming close to the limits of what Snowflake can process.
+
+
 
 - The role can be anything as long as it has full rights to the above schema and database, so we suggest the
 default ```SYSADMIN```.
@@ -76,13 +80,17 @@ default ```SYSADMIN```.
 many models are processed in parallel. In our experience, 4 is a reasonable amount and the full system is created in a 
 reasonable time-frame, however, you may run with as many threads as required. 
 
+![alt text](./assets/images/database.png "Creating a database in snowflake")
+![alt text](./assets/images/warehouse.png "Creating a warehouse in snowflake")
+
 ## The project file
 
 The ```dbt_project.yml``` file provided with the project is mostly standard. The main additions are the
 settings for the models and the ```vars```.
 
 ```dbt_project.yml```
-```yaml
+```yaml 
+
 models:
   snowflakeDemo:
     load:
@@ -106,7 +114,7 @@ models:
 Here we are specifying that models in the ```load``` directory should be loaded in to the ```VLT```
 schema, and models in the sub-directories ```stage``` and ```source``` should have their own schemas, 
 ```STG``` and ```SRC``` respectively. We have also specified that they are all enabled, as well
-as their materializations. Many of these attributes are also provided in the files themselves and take
+as their materialization. Many of these attributes are also provided in the files themselves and take
 precedence over these settings anyway, this is just a design choice. 
 
 #### vars

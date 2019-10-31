@@ -23,7 +23,7 @@ We also need to ensure column names align with target hub or link tables.
     
 ## Creating the model
 
-To prepare our raw staging layer for loading the vault, we can create a dbt model and call dbtvault staging macros with 
+To prepare our raw staging layer for loading the vault, we create a dbt model and call dbtvault staging macros with 
 provided metadata. 
 
 Our model will consist of:

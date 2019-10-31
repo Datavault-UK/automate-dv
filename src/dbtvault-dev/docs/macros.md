@@ -508,8 +508,8 @@ or ```LOADDATE``` column value, for example, then you must provide the column na
 that you wish to override as the alias in the pair. 
 
 !!! note
-    The macro will not actually override (delete or replace) any of the source columns, but simply add new columns
-    using the provided column as a basis.
+    If a provided column name is the same as a source column name, the provided
+    column will take precedence over the source column, and the original source column will not be selected. 
 
 ##### Functions
 
