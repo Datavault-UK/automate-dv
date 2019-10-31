@@ -11,7 +11,7 @@ that could be used to help build the Data Vault and create an accurate simulatio
 The below diagram describes the TPC-H system.
 
 ![alt text](./assets/images/tpch.png "ERD for the TPC-H dataset")
-(source: [TPC Benchmark H Standard Specification](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.17.1.pdf)
+(source: [TPC Benchmark H Standard Specification](http://www.tpc.org/tpc_documents_current_versions/pdf/tpc-h_v2.17.1.pdf))
 
 
 ### Date fields

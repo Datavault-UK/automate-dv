@@ -19,13 +19,13 @@ repo_url: 'https://github.com/Datavault-UK/dbtvault'
 nav:
   - Home: 'index.md'
   - Walk-through guide:
-      - Getting Started: 'gettingstarted.md'
+      - Getting Started: 'walkthrough.md'
       - Staging: 'staging.md'
       - Hubs: 'hubs.md'
       - Links: 'links.md'
       - Satellites: 'satellites.md'
   - Worked example:
-    - Introduction: 'introduction.md'
+    - Getting Started: 'workedexample.md'
     - Project setup: 'setup.md'
     - Profiling TPC-H: 'sourceprofile.md'
     - Creating the stage layers: 'stagingdemo.md'

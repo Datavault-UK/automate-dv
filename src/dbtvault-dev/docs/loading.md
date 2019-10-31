@@ -16,9 +16,13 @@ order number (can be multi-column).
 4. The source for the record, a code identifying where the data comes from. 
 (i.e. ```1``` from the [previous section](staging.md#adding-the-footer), which is the code fo stg_customer)
 
-To compile and load the hubs, run the following command:
+### Loading Hubs
+
+To compile and load the provided hub models, run the following command:
 
 ```dbt run --models tag:hub```
+
+This will run all models with the hub tag.
 
 ## Links
 
@@ -36,9 +40,13 @@ referenced)
 3. The load date or load date timestamp.
 4. The source for the record
 
-To compile and load the links, run the following command:
+### Loading Links
+
+To compile and load the provided link models, run the following command:
 
 ```dbt run --models tag:link```
+
+This will run all models with the link tag.
 
 ## Satellites
 
@@ -73,6 +81,68 @@ have the most recent ```EFFECTIVE_FROM``` value.
     record arriving in the database for load. Having both dates allows us to ask the questions 'what did we know when' 
     and 'what happened when' using the ```LOADDATE``` and ```EFFECTIVE_FROM``` date accordingly.
 
-To compile and load the satellites, run the following command:
+### Loading Satellites
+
+To compile and load the provided satellite models, run the following command:
 
 ```dbt run --models tag:satellite``` 
+
+This will run all models with the satellite tag.
+
+## Loading the full system
+
+Each of the commands above load a particular type of table, however, we may want to do a full system load.
+
+To do this, run the command below:
+
+```dbt run --models load.*``` 
+
+This will run all models in the load directory, which is where all of the provided models are located.
+
+## Loading the next day-feed
+
+Now that we have loaded all records for the date ```1992-01-08```, we can increment the date to load the next day.
+
+Return to the ```dbt_project.yml``` file and change the date to ```1992-01-09```:
+
+```dbt_project.yml```
+```yaml hl_lines="16"
+models:
+  snowflakeDemo:
+    load:
+      schema: "VLT"
+      enabled: true
+      materialized: incremental
+      stage:
+        schema: "STG"
+        enabled: true
+        materialized: view
+      raw:
+        schema: "RAW"
+        enabled: true
+        materialized: incremental
+  vars:
+    date: TO_DATE('1992-01-09')
+```
+
+And run:
+
+```dbt run --models load.*``` 
+
+This will load the next day-feed into the system.
+
+## Next steps
+
+Now that you have a taste for how dbtvault and Data Vault works, you may be itching to implement Data Vault in
+a production system.
+
+There are a range of skills you need to learn, but this is the same for all Data Warehouse architectures.
+
+We understand that it's a daunting process, but not to worry! 
+
+We can can shortcut your adoption process with Data Vault training, coaching and advice so that you can develop a 
+practical Data Vault demonstration to impress your stakeholders. 
+
+<a href="https://www.data-vault.co.uk/dbtvault/" class="btn">
+<i class="fa fa-info-circle"></i> Find out more
+</a>
