@@ -1,15 +1,18 @@
-## Intoduction
+## Introduction
 
-This dbtvault package is very much a work in progress – we’ll up the version number to 1.0 when we’re satisfied it works out in the wild.
+!!! info
+    This walk-through intends to give you a detailed understanding of how to use 
+    dbtvault and the provided macros to develop a Data Vault Data Warehouse from the ground up. 
+    If you're looking to quickly experiment and learn using pre-written models, 
+    take a look at our [worked example](workedexample.md).
 
-We know that it deserves new features, that the code base can be tidied up and the SQL better tuned. Rest assured we’re working on it for future releases – [our roadmap contains information on what’s coming](roadmap.md).
- 
-If you spot anything you’d like to bring to our attention, have a request for new features, have spotted an improvement we could make, or want to tell us about a typo, 
-then please don’t hesitate to let us know via [Github](https://github.com/Datavault-UK/dbtvault/issues). 
+In this section we teach you how to use dbtvault step-by-step, explaining the use of macros and the
+different components of the Data Vault in detail.
 
-We’d rather know you are making active use of this package than hearing nothing from all of you out there! 
+We will:
 
-Happy Data Vaulting! :smile:
+- process a raw staging layer.
+- create a Data Vault with hubs, links and satellites using dbtvault.
 
 ## Prerequisites 
 
@@ -32,11 +35,10 @@ contains data for one ```load_datetime``` value only). **We will be removing thi
 ## Setting up sources
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
-data much easier, cleaner and more modular. The main advantage of this is that sources are then included in 
-dbt dependency graphs.
+data much easier, cleaner and more modular.
 
 We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
-however this feature is documented extensively in [the documentation for dbt itself](https://docs.getdbt.com/docs/using-sources).
+however this feature is documented extensively in [the documentation for dbt](https://docs.getdbt.com/docs/using-sources).
 
 After reading the above documentation, we recommend that you place the ```schema.yml``` file you create for your sources, 
 in the root of your ```models``` folder, however you can place it where needed for your specific project and models.
