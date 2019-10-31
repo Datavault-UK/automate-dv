@@ -23,7 +23,7 @@ We also need to ensure column names align with target hub or link tables.
     
 ## Creating the model
 
-To prepare our raw staging layer for loading the vault, we can create a dbt model and call dbtvault staging macros with 
+To prepare our raw staging layer for loading the vault, we create a dbt model and call dbtvault staging macros with 
 provided metadata. 
 
 Our model will consist of:
@@ -74,7 +74,7 @@ in our model.
 {%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
 ```
 
-### Adding the metadata
+### Generating hashes from metadata
 
 Now we get into the core component of staging: the metadata. 
 The metadata consists of the column names we want to use in our hash, to use as primary keys in our data vault or to use as 

@@ -4,7 +4,7 @@ In general, they consist of 4 columns, but may have more:
 
 1. A primary key (or surrogate key) which is usually a hashed representation of the natural key (also known as the business key).
 
-2. The natural key itself. This is usually a formal identification for the record such as a customer ID or 
+2. The natural key. This is usually a formal identification for the record such as a customer ID or 
 order number (can be multi-column).
 
 3. The load date or load date timestamp. This identifies when the record was first loaded into the vault.
