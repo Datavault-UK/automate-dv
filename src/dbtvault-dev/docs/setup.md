@@ -1,6 +1,37 @@
-## Setting up a connection profile
+## Download the demonstration project
 
-In the dbt project file (```dbt_project.yml```) the expected profile is named ```snowflake-demo```.
+Assuming you already have a python environment installed, the next step is to download the latest 
+demonstration project from the repository.
+
+Using the button below, find the latest release and download the zip file, listed under assets.
+
+<a href="https://github.com/Datavault-UK/snowflakeDemo/releases" class="btn">
+<i class="fa fa-download"></i> View Downloads
+</a>
+
+Once downloaded, unzip the project.
+
+## Installing requirements
+
+Once you have downloaded the project, install all of the requirements from the provided ```requirements.txt``` file.
+First make sure the ```requirements.txt``` file is in your current working directory, then run:
+
+```pip install -r requirements.txt```
+
+This will install dbt and all of its dependencies, ready for 
+development with dbt.
+
+## Install dbtvault
+
+Next, we need to install dbtvault. 
+dbtvault has already been added to the ```packages.yml``` file provided with the example project, so all you need to do 
+is run the following command:
+ 
+```dbt deps```
+
+## Setting up dbtvault with Snowflake
+
+In the provided dbt project file (```dbt_project.yml```) the profile is named ```snowflake-demo```.
 In your dbt profiles, you must create a connection with this name and provide the snowflake
 account details so that dbt can connect to your Snowflake databases. 
 
@@ -81,9 +112,4 @@ precedence over these settings anyway, this is just a design choice.
 #### vars
 
 To simulate day-feeds, we use a variable we have named ```date``` which is used in the ```SRC``` models to
-load for a specific date.
-
-## Install dbtvault
-
-Next, we need to run the command ```dbt deps``` to install dbtvault. 
-dbtvault has already been added to the ```packages.yml``` file provided with the example project.
+load for a specific date. This is described in more detail in the [Profiling TPC-H](sourceprofile.md) section.

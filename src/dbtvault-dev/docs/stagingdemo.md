@@ -1,6 +1,6 @@
 ![alt text](./assets/images/staging.png "Staging from a raw table to the raw vault")
 
-In the example project, we are staging in two steps.
+We have two staging layers, as shown in the diagram above.
 
 ## The raw staging layer
 
@@ -16,6 +16,7 @@ for a single day-feed. The day-feed will load data from the day given in the ```
 
 The ```raw_inventory``` model feeds the static inventory from TPC-H. As this data does not contain any dates,
 we do not need to do any additional date processing or use the ```date``` var as we did for the raw orders data.
+The inventory consists of the ```PARTSUPP```, ```SUPPLIER```, ```PART``` and ```LINEITEM``` tables.
 
 ## Building the raw staging layer
 
@@ -113,18 +114,19 @@ staging models. If we provide a ```!``` in the string value, it will create a co
 (minus the ```!```) as its value in every row. This is very useful when defining a source,
 as you may want to force it to a certain value for auditing purposes. 
 
-
 ## From
 
 This is a simple convenience macro which generates SQL in the form ```FROM <source_table>```.
 
 ## The hashed staging models
 
-### v_stg_orders
+### v_stg_orders and v_stg_inventory
 
-The ```v_stg_orders``` model uses the raw layer's ```raw_models``` model as a source.
+The ```v_stg_orders``` and ```v_stg_inventory``` models use the raw layer's ```raw_orders``` and ```raw_inventory``` 
+models as sources, respectively. Both are created as views on the raw staging layer, as they are intended as
+transformations on the data which already exists.
 
-### v_stg_inventory
+Eeach view adds a number of primary keys, hashdiffs and additional constants for use in the raw vault.
 
 ## Building the hashed staging layer
 
