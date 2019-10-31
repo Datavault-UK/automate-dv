@@ -1,8 +1,9 @@
 import json
 import os
+from glob import  glob
 from datetime import date, timedelta
-
-from definitions import TESTS_ROOT, DBT_ROOT
+from pathlib import Path
+from definitions import TESTS_ROOT, DBT_ROOT, DEMO_ROOT
 from perftest.TestData import TestData
 
 
@@ -30,6 +31,16 @@ def read_results():
     return json_data['results']
 
 
+def get_models(path) -> list:
+    """
+    Get all model names, to test.
+        :param path: Root path to model directory
+        :return: List of path strings
+    """
+
+    return [Path(y).stem for x in os.walk(path) for y in glob(os.path.join(x[0], '*.sql'))]
+
+
 td = TestData("{}/features/helpers/credentials.json".format(TESTS_ROOT))
 
 # Configure dates
@@ -41,8 +52,9 @@ date_range = [(start_date + timedelta(days=d)).isoformat() for d in range(delta.
 
 # Metadata
 
-model_names = ["hub_customer_p", 'link_customer_nation_p', 'sat_customer_details_p', 'sat_order_customer_details_p',
-               'sat_order_orders_details_p']
+model_path = "{}/models/load".format(DEMO_ROOT)
+
+model_names = get_models(model_path)
 
 source_system = "SF10"
 
@@ -101,37 +113,12 @@ join_distinct_count_since_start = "SELECT COUNT(DISTINCT b.{key}) AS COUNT " \
                                   "OR a.L_COMMITDATE BETWEEN TO_DATE('{start}') AND TO_DATE('{day}') " \
                                   "OR a.L_RECEIPTDATE BETWEEN TO_DATE('{start}') AND TO_DATE('{day}')"
 
-count_source = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.SRC.SOURCE_SYSTEM"
+count_source = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_RAW.RAW_ORDERS"
 
-count_hash = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.SRC_STG.V_STG_ORDERS_HASHED_P"
+count_hash = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_STG.V_STG_ORDERS"
 
-count_target = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.SRC_VLT.{}"
+count_target = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_VLT.{}"
 
-# Configure target tables
-
-hub_cols = ["CUSTOMER_PK BINARY(16)", "CUSTOMER_ID NUMBER(38,0)", "LOADDATE DATE", "SOURCE VARCHAR(4)"]
-
-link_cols = ["CUSTOMER_NATION_PK BINARY(16)", "CUSTOMER_FK BINARY(16)", "NATION_FK BINARY(16)", "LOADDATE DATE",
-             "SOURCE VARCHAR(4)"]
-
-sat_cd_cols = ["CUSTOMER_PK BINARY(16)", "HASHDIFF BINARY(16)", "NAME VARCHAR(25)", "PHONE VARCHAR(15)",
-               "ADDRESS VARCHAR(40)", "EFFECTIVE_FROM DATE", "LOADDATE DATE", "SOURCE VARCHAR(4)"]
-
-sat_oc_cols = ["CUSTOMER_PK BINARY(16)", "HASHDIFF BINARY(16)", "CUSTOMER_NATION_NAME VARCHAR(25)",
-               "CUSTOMER_NAME VARCHAR(25)", "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_ADDRESS VARCHAR(40)",
-               "EFFECTIVE_FROM DATE", "LOADDATE DATE", "SOURCE VARCHAR(4)"]
-
-sat_od_cols = ["ORDER_PK BINARY(16)", "HASHDIFF BINARY(16)", "ORDERDATE DATE", "ORDERPRIORITY VARCHAR(15)",
-               "TOTALPRICE NUMBER(12,2)", "CLERK VARCHAR(15)", "ORDERSTATUS VARCHAR(1)", "LOADDATE DATE",
-               "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"]
-
-# Clear tables before running
-
-td.drop_and_create("DV_PROTOTYPE_DB", "SRC_VLT", 'HUB_CUSTOMER_P', hub_cols)
-td.drop_and_create("DV_PROTOTYPE_DB", "SRC_VLT", 'LINK_CUSTOMER_NATION_P', link_cols)
-td.drop_and_create("DV_PROTOTYPE_DB", "SRC_VLT", 'SAT_CUSTOMER_DETAILS_P', sat_cd_cols)
-td.drop_and_create("DV_PROTOTYPE_DB", "SRC_VLT", 'SAT_ORDER_CUSTOMER_DETAILS_P', sat_oc_cols)
-td.drop_and_create("DV_PROTOTYPE_DB", "SRC_VLT", 'SAT_ORDER_ORDERS_DETAILS_P', sat_od_cols)
 
 # Start load
 
@@ -145,7 +132,7 @@ for model_name in model_names:
         load_str = 'Load_' + str(load_num)
 
         # Drop source_system
-        td.drop_table("DV_PROTOTYPE_DB", "SRC", "SOURCE_SYSTEM", materialise="table")
+        td.drop_table("DV_PROTOTYPE_DB", "DEMO_RAW", "RAW_ORDERS", materialise="view")
 
         # Count unique records for day from first load to current load
         sql = join_distinct_count_since_start.format(db=db, schema=schema, table=table,

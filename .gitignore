@@ -8,3 +8,7 @@ tests/features/__pycache__/
 src/dbtvault-dev/logs/
 
 src/dbtvault-dev/target/
+
+src/dbtvault-dev/__pycache__/
+
+src/dbtvault-dev/perftest/__pycache__/
