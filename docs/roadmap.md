@@ -13,7 +13,6 @@ We will be releasing changes incrementally, so you can reap the benefits as soon
 
 These features are currently planned for the near-future.
 
-- Full Snowflake TPC-H Demonstration to supplement the documentation 
 - Transactional Links (Also known as non-historised links)
 
 ## Future releases
