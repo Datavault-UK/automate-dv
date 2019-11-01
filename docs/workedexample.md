@@ -17,7 +17,6 @@ We will:
 - process the raw staging layer.
 - create a Data Vault with hubs, links and satellites using dbtvault and pre-written models.
 
-
 ## Pre-requisites
 
 These pre-requisites are separate from those found on the [getting started](walkthrough.md) page and will 
@@ -37,4 +36,25 @@ be the only necessary requirements you will need to get started with the example
 
 !!! note
     We have provided a complete ```requirements.txt``` to install with ```pip install -r requirements.txt```
-    as a quick way of getting your Python environment set up. This file includes dbt and comes with the download in the next section. 
+    as a quick way of getting your Python environment set up. This file includes dbt and comes with the download in the 
+    next section.
+
+## Performance note
+
+Please be aware that table structures are simulated from the TPCH-H dataset. The TPC-H dataset is a static view of data. 
+
+Only a subset of the data contains dates which allows us to simulate daily feeds. The ```v_stg_orders``` orders view is 
+filtered by date, unfortunately the ```v_stg_inventory``` view cannot be filtered by date, so it ends up being a feed of 
+the entire contents of the view each cycle. 
+
+This means that inventory related hubs links and satellites are populated once during the initial load cycle with 
+everything and later cycles insert 0 new records in their left outer joins. 
+
+As the dataset increases in size, e.g if you run with a larger TPC-H dataset (100, 1000 etc.) then be aware you are 
+processing the entire inventory dataset each cycle, which results in unrepresentative load cycle times.
+
+Unfortunately it's the nature of the dataset, it will not be that way for other datasets. We will look at additonal 
+datasets in the future! 
+
+If you are feeling adventurous you may disable the inventory feed (```raw_inventory``` and child models) to see a more 
+accurate representation of performance. 
