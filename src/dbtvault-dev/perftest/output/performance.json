@@ -1,0 +1,230 @@
+{
+    "db": "SNOWFLAKE_SAMPLE_DATA",
+    "schema": "TPCH_SF10",
+    "table": "ORDERS",
+    "start": "1992-01-08",
+    "end": "1992-01-12",
+    "hub_supplier": {
+        "Load_1": {
+            "tpch_unique_records_to_date": 7699,
+            "tpch_unique_records_to_load_today": 7699,
+            "tpch_total_load_since_start": 26150,
+            "time_taken": 6.19,
+            "dbt_records_loaded_today": 1,
+            "raw_stage_count_total": 24627,
+            "orders_hash_layer_count_total": 24627,
+            "target_count_after_load": 100000
+        },
+        "Load_2": {
+            "tpch_unique_records_to_date": 15541,
+            "tpch_unique_records_to_load_today": 8204,
+            "tpch_total_load_since_start": 53423,
+            "time_taken": 8.9,
+            "dbt_records_loaded_today": 0,
+            "raw_stage_count_total": 25661,
+            "orders_hash_layer_count_total": 25661,
+            "target_count_after_load": 100000
+        },
+        "Load_3": {
+            "tpch_unique_records_to_date": 23107,
+            "tpch_unique_records_to_load_today": 8353,
+            "tpch_total_load_since_start": 80092,
+            "time_taken": 9.19,
+            "dbt_records_loaded_today": 0,
+            "raw_stage_count_total": 25142,
+            "orders_hash_layer_count_total": 25142,
+            "target_count_after_load": 100000
+        },
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "hub_customer": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "hub_part": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "hub_order": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "hub_region": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "hub_lineitem": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "hub_nation": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_supplier_nation": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_lineitem_order": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_customer_order": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_inventory_allocation": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_inventory": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_nation_region": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "link_customer_nation": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_inv_supplier": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_order_orders": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_inv_inventory": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_order_cust_region_details": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_inv_parts": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_order_cust_nation_details": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_order_lineitem": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_order_customer": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_inv_supp_region_details": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "sat_inv_supp_nation_details": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "raw_orders": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "raw_inventory": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "v_stg_orders": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    },
+    "v_stg_inventory": {
+        "Load_1": {},
+        "Load_2": {},
+        "Load_3": {},
+        "Load_4": {},
+        "Load_5": {}
+    }
+}
