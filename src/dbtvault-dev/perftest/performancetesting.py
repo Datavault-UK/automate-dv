@@ -25,7 +25,7 @@ def read_results():
     """
     Get the results file output by dbt and return
     """
-    json_file = open(DBT_ROOT / 'target/run_results.json')
+    json_file = open(DEMO_ROOT / 'target/run_results.json')
     json_data = json.loads(json_file.read())
 
     return json_data['results']
@@ -55,6 +55,8 @@ date_range = [(start_date + timedelta(days=d)).isoformat() for d in range(delta.
 model_path = "{}/models/load".format(DEMO_ROOT)
 
 model_names = get_models(model_path)
+
+#model_names = ['sat_order_lineitem']
 
 source_system = "SF10"
 
@@ -115,10 +117,16 @@ join_distinct_count_since_start = "SELECT COUNT(DISTINCT b.{key}) AS COUNT " \
 
 count_source = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_RAW.RAW_ORDERS"
 
-count_hash = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_STG.V_STG_ORDERS"
+count_hash_orders = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_STG.V_STG_ORDERS"
+count_hash_inv = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_STG.V_STG_INVENTORY"
 
 count_target = "SELECT COUNT(*) AS COUNT FROM DV_PROTOTYPE_DB.DEMO_VLT.{}"
 
+# Clear schemas
+
+td.drop_schema("DV_PROTOTYPE_DB", "DEMO_RAW")
+td.drop_schema("DV_PROTOTYPE_DB", "DEMO_VLT")
+td.drop_schema("DV_PROTOTYPE_DB", "DEMO_STG")
 
 # Start load
 
@@ -132,7 +140,8 @@ for model_name in model_names:
         load_str = 'Load_' + str(load_num)
 
         # Drop source_system
-        td.drop_table("DV_PROTOTYPE_DB", "DEMO_RAW", "RAW_ORDERS", materialise="view")
+        if count > 0:
+            td.drop_table("DV_PROTOTYPE_DB", "DEMO_RAW", "RAW_ORDERS", materialise="view")
 
         # Count unique records for day from first load to current load
         sql = join_distinct_count_since_start.format(db=db, schema=schema, table=table,
@@ -153,11 +162,13 @@ for model_name in model_names:
         results[model_name][load_str]['tpch_total_load_since_start'] = to_load
 
         # Run dbt
-        os.chdir(DBT_ROOT)
+        os.chdir(DEMO_ROOT)
 
-        os.system('dbt run --vars "{{\\"date\\": \\"TO_DATE(\'{}\')\\", \\"src\\": \\"{}\\"}}" --models +{}'.format(day,
-                                                                                                                    source_system,
-                                                                                                                    model_name))
+        dbt_command = 'dbt run --vars "{{\\"date\\": \\"TO_DATE(\'{}\')\\"}}" --models +{}'.format(day,
+                                                                                                   model_name)
+
+        os.system(dbt_command)
+
         # Get results
         run_results = read_results()
 
@@ -177,8 +188,11 @@ for model_name in model_names:
         results[model_name][load_str]['raw_stage_count_total'] = source_record_count
 
         # Count records in hashing layer
-        hash_record_count = int(td.general_sql_statement_to_df(count_hash)['COUNT'][0])
-        results[model_name][load_str]['hash_layer_count_total'] = hash_record_count
+        hash_record_count_orders = int(td.general_sql_statement_to_df(count_hash_orders)['COUNT'][0])
+        results[model_name][load_str]['orders_hash_layer_count_total'] = hash_record_count_orders
+
+        # hash_record_count_inv = int(td.general_sql_statement_to_df(count_hash_inv)['COUNT'][0])
+        # results[model_name][load_str]['inv_hash_layer_count_total'] = hash_record_count_inv
 
         # Count records in target
         sql = count_target.format(model_name)

@@ -102,6 +102,19 @@ class TestData:
 
         self.create_table(database, schema, table_name, columns, materialise)
 
+    def drop_schema(self, database, schema):
+
+        sql = "DROP SCHEMA IF EXISTS {}.{}"
+
+        execute_sql = sql.format(database, schema)
+
+        connection = self.engine.connect()
+
+        try:
+            connection.execute(execute_sql)
+        finally:
+            connection.close()
+
     def drop_table(self, database, schema, table_name, materialise):
 
         if materialise.lower() == "view":
@@ -156,8 +169,8 @@ class TestData:
                 for ret in cur:
                     print(ret)
 
-    def get_table_data(self, *, full_table_name, binary_columns=None,
-                       ignore_columns=None, order_by=None) -> pd.DataFrame:
+    def get_table_data(self, *, full_table_name, binary_columns=None, ignore_columns=None,
+                       order_by=None) -> pd.DataFrame:
         """
         Gets the provided table's data as a DataFrame
             :param full_table_name: Name of the table to query, including DB and schema
