@@ -63,7 +63,7 @@ in our model.
 !!! note
     On line 3 below we are using a dbt source. 
     
-    If you have not yet set up sources in your dbt configuration please refer to [setting up sources](gettingstarted.md#setting-up-sources).
+    If you have not yet set up sources in your dbt configuration please refer to [setting up sources](walkthrough.md#setting-up-sources).
 
 
 ```stg_customer_hashed.sql```
