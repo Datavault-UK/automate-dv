@@ -1,11 +1,11 @@
 import json
 import re
 from hashlib import md5
-
+from vaultBase.connector import Connector
+from vaultBase.logger import Logger
+from vaultBase.cliParse import CLIParse
 import pandas as pd
 from pandas import DataFrame
-import snowflake.connector as sf
-import sqlalchemy as sa
 from numpy import NaN
 
 
@@ -14,18 +14,14 @@ class TestData:
 
     def __init__(self, path):
         self.credentials = self.get_credentials(path)
-        self.connection = sf.connect(user=self.credentials["user"], password=self.credentials["password"],
-                                     account=self.credentials["account_name"], warehouse=self.credentials["warehouse"],
-                                     database=self.credentials["database"], schema=self.credentials["schema"])
-        self.con_string = ("snowflake://{user}:{password}@{account}/"
-                           "{database}/{schema}?warehouse={warehouse}?"
-                           "role={role}").format(user=self.credentials['user'], password=self.credentials['password'],
-                                                 account=self.credentials['account_name'],
-                                                 schema=self.credentials['schema'],
-                                                 database=self.credentials['database'],
-                                                 warehouse=self.credentials['warehouse'], role=self.credentials['role'])
-        self.engine = sa.create_engine(self.con_string)
-        self.cur = self.connection.cursor()
+
+        program_name = "testData"
+
+        cli_args = CLIParse("Used for testing data I/O.", program_name)
+
+        my_log = Logger(program_name, cli_args)
+
+        self.connection = Connector(my_log, self.credentials)
 
     @staticmethod
     def get_credentials(path):
@@ -65,7 +61,7 @@ class TestData:
 
         table_df = table_df.replace("<null>", NaN)
 
-        table_df.to_sql(name=table_name, schema=schema, con=self.engine, index=False, if_exists='append')
+        table_df.to_sql(name=table_name, schema=schema, con=self.connection.get_engine(), index=False, if_exists='append')
 
     def calc_md5(self, value):
 
@@ -89,12 +85,7 @@ class TestData:
 
         sql = "CREATE SCHEMA IF NOT EXISTS {}.{}".format(database, schema)
 
-        connection = self.engine.connect()
-
-        try:
-            connection.execute(sql)
-        finally:
-            connection.close()
+        self.connection.execute(sql)
 
     def drop_and_create(self, database, schema, table_name, columns, materialise="table"):
 
@@ -114,12 +105,7 @@ class TestData:
 
         execute_sql = sql.format(database + "." + schema + "." + table_name)
 
-        connection = self.engine.connect()
-
-        try:
-            connection.execute(execute_sql)
-        finally:
-            connection.close()
+        self.connection.execute(execute_sql)
 
     def create_table(self, database, schema, table_name, columns, materialise, ref_table=None):
 
@@ -135,26 +121,14 @@ class TestData:
 
             execute_sql = sql.format(database + "." + schema + "." + table_name, ", ".join(columns))
 
-        connection = self.engine.connect()
-
-        try:
-            connection.execute(execute_sql)
-        finally:
-            connection.close()
+        self.connection.execute(execute_sql)
 
     def general_sql_statement_to_df(self, query):
 
-        result_df = pd.read_sql(query, self.engine)
+        result_df = pd.read_sql(query, self.connection.get_engine())
         result_df.columns = map(str.upper, result_df.columns)
 
         return result_df
-
-    def execute_sql_from_file(self, filepath):
-
-        with open(filepath, 'r', encoding='utf-8') as f:
-            for cur in self.connection.execute_stream(f):
-                for ret in cur:
-                    print(ret)
 
     def get_table_data(self, *, full_table_name, binary_columns=None,
                        ignore_columns=None, order_by=None) -> pd.DataFrame:
@@ -183,7 +157,7 @@ class TestData:
 
         sql = sql.format(columns, full_table_name)
 
-        result = DataFrame(pd.read_sql_query(sql, self.engine), dtype=str)
+        result = DataFrame(pd.read_sql_query(sql, self.connection.get_engine()), dtype=str)
         result.columns = map(str.upper, result.columns)
 
         return self.format_dataframe(df=result, ignore_columns=ignore_columns, order_by=order_by)
@@ -239,7 +213,7 @@ class TestData:
         sql = "SELECT COLUMN_NAME FROM {}.INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = " \
               "'{}'".format(schema, table_name.upper())
 
-        result = pd.read_sql_query(sql, self.engine)
+        result = pd.read_sql_query(sql, self.connection.get_engine())
 
         return list(result['column_name'])
 
@@ -250,7 +224,7 @@ class TestData:
               "AND TABLE_SCHEMA = '{}'"\
             .format(db, table_name.upper(), schema)
 
-        result = pd.read_sql_query(sql, self.engine)
+        result = pd.read_sql_query(sql, self.connection.get_engine())
 
         return True if list(result['table_name']) else False
 
@@ -259,12 +233,6 @@ class TestData:
 
         sql = "{} FROM {}".format(select, table_name)
 
-        result = pd.read_sql_query(sql, self.engine)
+        result = pd.read_sql_query(sql, self.connection.get_engine())
 
         return result
-
-    def close_connection(self):
-
-        self.engine.connect().close()
-
-        self.engine.dispose()
