@@ -1,9 +1,11 @@
-from helpers.TestData import TestData
+from vaultBase.testing.dbTestUtils import DBTestUtils
+
 from definitions import TESTS_ROOT
 
 
+# TODO: Fully integrate DBUtils
 def before_scenario(context, scenario):
-    context.testdata = TestData("{}/features/helpers/credentials.json".format(TESTS_ROOT))
+    context.dbutils = DBTestUtils()
 
 
 def after_scenario(context, scenario):
