@@ -2,8 +2,8 @@ version: 2
 
 sources:
   - name: test
-    database: DV_PROTOTYPE_DB
-    schema: SRC_TEST_STG
+    database: DV_TEST_DB
+    schema: STG
     tables:
       - name: stg_booking
         identifier: test_stg_booking
