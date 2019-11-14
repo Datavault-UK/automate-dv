@@ -34,6 +34,6 @@ def before_all(context):
 
     # Reset Test DB
 
-    connector.execute("DROP DATABASE IF NOT EXISTS DV_TEST_DB")
+    connector.execute("DROP DATABASE IF EXISTS DV_TEST_DB")
 
     connector.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
