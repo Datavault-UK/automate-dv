@@ -1,4 +1,4 @@
-{{- config(materialized='table', schema='vlt', enabled=true, tags='load_cyles')                                            -}}
+{{- config(materialized='table', schema='vlt', enabled=true, tags='load_cycles')                                            -}}
 
 {%- set source_table = source('test', 'stg_booking')                                                                            -%}
 
