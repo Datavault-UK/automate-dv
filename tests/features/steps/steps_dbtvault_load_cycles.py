@@ -1,9 +1,9 @@
-from steps.step_vars import *
 import os
 
 from behave import *
 
 from definitions import TESTS_DBT_ROOT
+from steps.step_vars import *
 
 use_step_matcher("parse")
 
@@ -77,7 +77,7 @@ def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                    binary_columns=['CUSTOMER_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_hub_customer",
+    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + "." + VLT_SCHEMA + ".test_hub_customer",
                                                binary_columns=['CUSTOMER_PK'], ignore_columns=['SOURCE'],
                                                order_by='CUSTOMER_ID', connection=context.connection)
 
@@ -89,7 +89,7 @@ def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                    binary_columns=['BOOKING_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_hub_booking",
+    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + "." + VLT_SCHEMA + ".test_hub_booking",
                                                binary_columns=['BOOKING_PK'], ignore_columns=['SOURCE'],
                                                order_by='BOOKING_REF', connection=context.connection)
 

@@ -1,4 +1,4 @@
-{{- config(materialized='table', schema='test_vlt', enabled=true, tags='feature') -}}
+{{- config(materialized='table', schema='stg', enabled=true, tags='load_links') -}}
 
 {%- set source_table = source('test', 'stg_customer_links')                       -%}
 
