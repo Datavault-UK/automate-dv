@@ -1,0 +1,7 @@
+packages:
+
+  #Live
+  #- git: "https://github.com/Datavault-UK/dbtvault"
+
+  #Dev
+  - local: "../../src/dbtvault-dev/"

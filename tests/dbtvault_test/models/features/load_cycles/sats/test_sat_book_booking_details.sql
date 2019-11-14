@@ -1,4 +1,4 @@
-{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature') -}}
+{{- config(materialized='incremental', schema='vlt', enabled=true, tags='load_cyles') -}}
 
 {%- set source = [ref('test_stg_booking_hashed')]                                       -%}
 

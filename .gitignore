@@ -12,3 +12,5 @@ src/dbtvault-dev/target/
 src/dbtvault-dev/__pycache__/
 
 src/dbtvault-dev/perftest/__pycache__/
+
+tests/features/steps/__pycache__/
