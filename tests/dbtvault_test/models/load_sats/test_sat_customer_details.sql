@@ -1,4 +1,4 @@
-{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='feature') -}}
+{{- config(materialized='incremental', schema='vlt', enabled=true, tags='load_sats') -}}
 
 {%- set source = [ref('test_stg_customer_details_hashed')]                              -%}
 
