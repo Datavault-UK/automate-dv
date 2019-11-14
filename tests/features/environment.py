@@ -10,8 +10,6 @@ from vaultBase.testing.dbTestUtils import DBTestUtils
 
 from definitions import FEATURES_ROOT
 
-CONNECTOR = ""
-
 
 def before_all(context):
     config_path = FEATURES_ROOT / 'config'
@@ -30,12 +28,12 @@ def before_all(context):
     logger = Logger("dbtvault-test", cli_args)
     config = ConfigReader(logger, cli_args)
 
-    CONNECTOR = Connector(logger, config.credentials)
+    connector = Connector(logger, config.credentials)
 
     context.connection = Connector(logger, config.credentials)
 
-    CONNECTOR.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
+    # Reset Test DB
 
+    connector.execute("DROP DATABASE IF NOT EXISTS DV_TEST_DB")
 
-def after_all(context):
-    CONNECTOR.execute("DROP DATABASE IF NOT EXISTS DV_TEST_DB")
+    connector.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
