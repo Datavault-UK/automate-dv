@@ -10,8 +10,10 @@ from vaultBase.testing.dbTestUtils import DBTestUtils
 
 from definitions import FEATURES_ROOT
 
+CONNECTOR = ""
 
-def before_scenario(context, scenario):
+
+def before_all(context):
     config_path = FEATURES_ROOT / 'config'
     credentials_path = FEATURES_ROOT / 'config' / 'credentials.json'
 
@@ -28,4 +30,12 @@ def before_scenario(context, scenario):
     logger = Logger("dbtvault-test", cli_args)
     config = ConfigReader(logger, cli_args)
 
+    CONNECTOR = Connector(logger, config.credentials)
+
     context.connection = Connector(logger, config.credentials)
+
+    CONNECTOR.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
+
+
+def after_all(context):
+    CONNECTOR.execute("DROP DATABASE IF NOT EXISTS DV_TEST_DB")

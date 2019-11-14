@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: test
     database: DV_TEST_DB
-    schema: STG
+    schema: TEST_STG
     tables:
       - name: stg_booking
         identifier: test_stg_booking
