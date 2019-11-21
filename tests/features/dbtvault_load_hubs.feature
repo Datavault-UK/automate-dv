@@ -1,5 +1,3 @@
-@test_data
-@clean_data
 Feature: Load Hubs
 # =============================================================================
 # CHANGE HISTORY
