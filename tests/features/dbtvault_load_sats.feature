@@ -1,4 +1,3 @@
-@test_data
 Feature: Load Satellites
 # =============================================================================
 # CHANGE HISTORY

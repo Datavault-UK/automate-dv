@@ -1,5 +1,3 @@
-@test_data
-@clean_data
 Feature: Loading through multiple tables and cycles from source to vault
 # =============================================================================
 # CHANGE HISTORY

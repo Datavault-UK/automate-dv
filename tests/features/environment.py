@@ -12,6 +12,10 @@ from definitions import FEATURES_ROOT
 
 
 def before_all(context):
+    """
+    Set up the full test environment and add objects to the context for use in steps
+    """
+
     config_path = FEATURES_ROOT / 'config'
     credentials_path = FEATURES_ROOT / 'config' / 'credentials.json'
 
@@ -30,10 +34,14 @@ def before_all(context):
 
     connector = Connector(logger, config.credentials)
 
-    context.connection = Connector(logger, config.credentials)
+    context.connection = connector
 
-    # Reset Test DB
 
-    connector.execute("DROP DATABASE IF EXISTS DV_TEST_DB")
+def before_feature(context, feature):
+    """
+    Re-create the database before every feature
+    """
 
-    connector.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
+    context.connection.execute("DROP DATABASE IF EXISTS DV_TEST_DB")
+
+    context.connection.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
