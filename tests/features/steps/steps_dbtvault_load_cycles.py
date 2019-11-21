@@ -3,7 +3,7 @@ import os
 from behave import *
 
 from definitions import TESTS_DBT_ROOT
-from steps.step_vars import *
+from steps.step_vars import DATABASE, STG_SCHEMA, VLT_SCHEMA
 
 use_step_matcher("parse")
 
@@ -77,7 +77,7 @@ def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                    binary_columns=['CUSTOMER_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + "." + VLT_SCHEMA + ".test_hub_customer",
+    result_df = context.dbutils.get_table_data(full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_hub_customer"),
                                                binary_columns=['CUSTOMER_PK'], ignore_columns=['SOURCE'],
                                                order_by='CUSTOMER_ID', connection=context.connection)
 
@@ -89,7 +89,7 @@ def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                    binary_columns=['BOOKING_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + "." + VLT_SCHEMA + ".test_hub_booking",
+    result_df = context.dbutils.get_table_data(full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_hub_booking"),
                                                binary_columns=['BOOKING_PK'], ignore_columns=['SOURCE'],
                                                order_by='BOOKING_REF', connection=context.connection)
 
@@ -102,7 +102,7 @@ def step_impl(context):
                                                    binary_columns=['CUSTOMER_BOOKING_PK', 'CUSTOMER_PK', 'BOOKING_PK'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_booking",
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_link_customer_booking"),
         binary_columns=['CUSTOMER_BOOKING_PK', 'CUSTOMER_PK', 'BOOKING_PK'], ignore_columns=['SOURCE'],
         order_by='BOOKING_PK', connection=context.connection)
 
@@ -116,7 +116,7 @@ def step_impl(context):
                                                    binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_sat_cust_customer_details",
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_cust_customer_details"),
         binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by=['NAME', 'LOADDATE'],
         connection=context.connection)
 
@@ -129,7 +129,7 @@ def step_impl(context):
                                                    binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_sat_book_customer_details",
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_customer_details"),
         binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by='CUSTOMER_PK',
         connection=context.connection)
 
@@ -142,7 +142,7 @@ def step_impl(context):
                                                    binary_columns=['BOOKING_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_sat_book_booking_details",
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_booking_details"),
         binary_columns=['BOOKING_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by='BOOKING_PK',
         connection=context.connection)
 
