@@ -34,11 +34,12 @@
 SELECT DISTINCT {{ dbtvault.cast([tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source], 'stg') }}
 FROM (
       SELECT {{ dbtvault.prefix([src_pk, src_fk, src_payload, src_eff,
-                                 src_ldts, src_ldts, src_source], 'stg') }}
+                                 src_ldts, src_source], 'stg') }}
       FROM {{ source[0] }} AS stg
 ) AS stg
+{% if is_incremental() -%}
 LEFT JOIN {{ this }} AS tgt
 ON {{ dbtvault.prefix([tgt_pk|first], 'stg') }} = {{ dbtvault.prefix([tgt_pk|last], 'tgt') }}
 WHERE {{ dbtvault.prefix([tgt_pk|last], 'tgt') }} IS NULL
-
+{%- endif -%}
 {%- endmacro -%}
