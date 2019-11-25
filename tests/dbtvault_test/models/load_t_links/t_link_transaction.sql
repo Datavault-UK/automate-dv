@@ -1,6 +1,6 @@
 {{- config(materialized='incremental', schema='vlt', enabled=true, tags='t_link') -}}
 
-{%- set source = [ref('test_t_link_transaction_hashed')] -%}
+{%- set source = [ref('t_link_transaction_hashed')] -%}
 
 {%- set src_pk = 'TRANSACTION_PK' -%}
 {%- set src_fk = 'CUSTOMER_PK' -%}

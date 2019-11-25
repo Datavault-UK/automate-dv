@@ -28,4 +28,4 @@ sources:
       - name: stg_lineitem
         identifier: test_stg_lineitem
       - name: stg_transaction
-        identifier: test_stg_transaction
+        identifier: stg_transaction
