@@ -1,9 +1,9 @@
-{{- config(materialized='incremental', schema='test_vlt', enabled=true, tags='t_link') -}}
+{{- config(materialized='incremental', schema='vlt', enabled=true, tags='t_link') -}}
 
-{%- set source = '' -%}
+{%- set source = [ref('test_t_link_transaction_hashed')] -%}
 
 {%- set src_pk = 'TRANSACTION_PK' -%}
-{%- set src_fk = 'ACCOUNT_PK' -%}
+{%- set src_fk = 'CUSTOMER_PK' -%}
 {%- set src_payload = ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT'] -%}
 {%- set src_eff = 'EFFECTIVE_FROM' -%}
 {%- set src_ldts = 'LOADDATE' -%}
