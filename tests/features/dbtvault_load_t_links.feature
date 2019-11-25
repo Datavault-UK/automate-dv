@@ -31,7 +31,7 @@ we follow the rules and concatenate account no and tx no
   Scenario load empty transactional link
     Given an empty TLINK_TRANSACTION table
     And a populated STG_TRANSACTION table
-      | ACCOUNT_NO | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   |
+      | CUSTOMER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   |
       | 1234       | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  |
       | 1234       | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   |
       | 1234       | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  |
@@ -41,7 +41,7 @@ we follow the rules and concatenate account no and tx no
       | 1237       | 12345684           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 3567.34  |
     When I load the vault
     Then the TLINK_TRANSACTION_TABLE should be
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
@@ -56,7 +56,7 @@ we follow the rules and concatenate account no and tx no
 # ------------------------------------------------------------------------------
   Scenario load populated transactional link
     Given a populated TLINK_TRANSACTION table
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
@@ -65,7 +65,7 @@ we follow the rules and concatenate account no and tx no
       | md5('1236\|\|12345683') | md5('1236') | 12345683           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 236.55   | 19-09-2019     |
       | md5('1237\|\|12345684') | md5('1237') | 12345684           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 3567.34  | 19-09-2019     |
     And a populated STG_TRANSACTION table
-      | ACCOUNT_NO | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   |
+      | CUSTOMER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   |
       | 1234       | 12345685           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 3478.50  |
       | 1234       | 12345686           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 10.00    |
       | 1235       | 12345687           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 1734.65  |
@@ -75,7 +75,7 @@ we follow the rules and concatenate account no and tx no
       | 1238       | 12345691           | 20-09-2019       | 22-09-2019 | SAP    | CR   | 4578.34  |
     When I load the vault
     Then the TLINK_TRANSACTION_TABLE should be
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
@@ -97,7 +97,7 @@ we follow the rules and concatenate account no and tx no
 # ------------------------------------------------------------------------------
   Scenario erroneous duplicate load of transactional link
     Given a populated TLINK_TRANSACTION table
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
@@ -113,7 +113,7 @@ we follow the rules and concatenate account no and tx no
       | md5('1238\|\|12345690') | md5('1238') | 12345690           | 20-09-2019       | 22-09-2019 | SAP    | CR   | 6823.55  | 20-09-2019     |
       | md5('1238\|\|12345691') | md5('1238') | 12345691           | 20-09-2019       | 22-09-2019 | SAP    | CR   | 4578.34  | 20-09-2019     |
     And a populated STG_TRANSACTION table
-      | ACCOUNT_NO | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   |
+      | CUSTOMER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   |
       | 1234       | 12345685           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 3478.50  |
       | 1234       | 12345686           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 10.00    |
       | 1235       | 12345687           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 1734.65  |
@@ -123,7 +123,7 @@ we follow the rules and concatenate account no and tx no
       | 1238       | 12345691           | 20-09-2019       | 22-09-2019 | SAP    | CR   | 4578.34  |
     When I load the vault
     Then the TLINK_TRANSACTION_TABLE should be
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
@@ -144,7 +144,7 @@ we follow the rules and concatenate account no and tx no
 # ------------------------------------------------------------------------------
   Scenario load populated transactional link
     Given a populated TLINK_TRANSACTION table
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
@@ -153,7 +153,7 @@ we follow the rules and concatenate account no and tx no
       | md5('1236\|\|12345683') | md5('1236') | 12345683           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 236.55   | 19-09-2019     |
       | md5('1237\|\|12345684') | md5('1237') | 12345684           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 3567.34  | 19-09-2019     |
     And a populated STG_TRANSACTION table
-      | ACCOUNT_NO | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   |
+      | CUSTOMER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   |
       | 1234       | 12345685           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 3478.50  |
       | 1234       | 12345686           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 10.00    |
       | 1235       | 12345687           | 20-09-2019       | 22-09-2019 | SAP    | DR   | 1734.65  |
@@ -163,7 +163,7 @@ we follow the rules and concatenate account no and tx no
       | 1238       | 12345691           | 20-09-2019       | 22-09-2019 | SAP    | CR   | 4578.34  |
     When I load the vault
     And the STG_TRANSACTION table is loaded
-      | ACCOUNT_NO | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   |
+      | CUSTOMER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   |
       | 1234       | 12345692           | 21-09-2019       | 23-09-2019 | SAP    | CR   | 234.56   |
       | 1234       | 12345693           | 21-09-2019       | 23-09-2019 | SAP    | DR   | 30.00    |
       | 1236       | 12345694           | 21-09-2019       | 23-09-2019 | SAP    | CR   | 456.65   |
@@ -173,7 +173,7 @@ we follow the rules and concatenate account no and tx no
       | 1239       | 12345698           | 21-09-2019       | 23-09-2019 | SAP    | CR   | 4567.87  |
     And I load the vault
     Then the TLINK_TRANSACTION_TABLE should be
-      | TRANSACTION_PK          | ACCOUNT_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOAD_DATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
+      | TRANSACTION_PK          | CUSTOMER_PK  | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE  | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2340.50  | 19-09-2019     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 19-09-2019       | 21-09-2019 | SAP    | CR   | 123.40   | 19-09-2019     |
       | md5('1234\|\|12345680') | md5('1234') | 12345680           | 19-09-2019       | 21-09-2019 | SAP    | DR   | 2546.23  | 19-09-2019     |
