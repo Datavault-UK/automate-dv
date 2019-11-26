@@ -11,19 +11,18 @@ use_step_matcher("parse")
 # LOAD STEPS
 
 
-@step("I load the TEST_HUB_CUSTOMER table")
-@step("I load the TEST_HUB_CUSTOMER_HUBS table")
-def step_impl(context):
+@step("I load the {model_name} table")
+def step_impl(context, model_name):
     os.chdir(TESTS_DBT_ROOT)
 
-    os.system("dbt run --models +test_hub_customer_hubs")
+    os.system("dbt run --models +{}".format(model_name.lower()))
 
 
-@step("I load the TEST_HUB_PARTS table")
-def step_impl(context):
+@step("I load the {model_name} table using SHA")
+def step_impl(context, model_name):
     os.chdir(TESTS_DBT_ROOT)
 
-    os.system("dbt run --models +test_hub_parts")
+    os.system('dbt run --vars "{{\\"hash\\": \\"SHA\\"}}" --models +{}'.format(model_name.lower()))
 
 
 # BASE-LOAD STEPS
@@ -57,7 +56,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_customer_hubs",
-                                    ["CUSTOMER_PK BINARY(16)", "CUSTOMER_ID VARCHAR(38)", "LOADDATE DATE",
+                                    ["CUSTOMER_PK BINARY", "CUSTOMER_ID VARCHAR(38)", "LOADDATE DATE",
                                      "SOURCE VARCHAR(4)", ], connection=context.connection)
     context.dbutils.insert_data_from_ct(context.table, "test_hub_customer_hubs", VLT_SCHEMA, context.connection)
 
@@ -66,7 +65,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_customer_hubs",
-                                    ["CUSTOMER_PK BINARY(16)", "CUSTOMER_ID VARCHAR(38)", "LOADDATE DATE",
+                                    ["CUSTOMER_PK BINARY", "CUSTOMER_ID VARCHAR(38)", "LOADDATE DATE",
                                      "SOURCE VARCHAR(4)"], context.connection)
 
 
@@ -119,7 +118,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_parts",
-                                    ["PART_PK BINARY(16)", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)", "LOADDATE DATE"],
+                                    ["PART_PK BINARY", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)", "LOADDATE DATE"],
                                     connection=context.connection)
 
 
@@ -127,7 +126,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_parts",
-                                    ["PART_PK BINARY(16)", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)", "LOADDATE DATE"],
+                                    ["PART_PK BINARY", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)", "LOADDATE DATE"],
                                     connection=context.connection)
     context.dbutils.insert_data_from_ct(context.table, "test_hub_parts", VLT_SCHEMA, context.connection)
 

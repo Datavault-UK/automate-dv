@@ -13,3 +13,7 @@ target-path: "target"
 clean-targets:
     - "target"
     - "dbt_modules"
+
+models:
+  vars:
+    hash: MD5

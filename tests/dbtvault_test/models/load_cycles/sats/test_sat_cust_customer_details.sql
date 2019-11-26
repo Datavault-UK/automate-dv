@@ -11,7 +11,7 @@
 {%- set src_source = 'SOURCE'                                                                         -%}
 
 {%- set tgt_pk = source                                                                               -%}
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                                     -%}
+{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY', 'HASHDIFF']                                         -%}
 {%- set tgt_payload = [[ src_payload[0] , 'DATE', 'DOB'], [ src_payload[1], 'VARCHAR(60)', 'NAME']]   -%}
 
 {%- set tgt_eff = source                                                                              -%}
