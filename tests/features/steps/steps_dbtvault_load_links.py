@@ -1,28 +1,8 @@
-import os
-
 from behave import *
 
-from definitions import TESTS_DBT_ROOT
 from steps.step_vars import *
 
 use_step_matcher("parse")
-
-
-# LOAD STEPS
-
-
-@step("I load the TEST_LINK_CUSTOMER_NATION table")
-def step_impl(context):
-    os.chdir(TESTS_DBT_ROOT)
-
-    os.system("dbt run --models +test_link_customer_nation")
-
-
-@step("I load the TEST_LINK_CUSTOMER_NATION_UNION table")
-def step_impl(context):
-    os.chdir(TESTS_DBT_ROOT)
-
-    os.system("dbt run --models +test_link_customer_nation_union")
 
 
 # SINGLE-SOURCE STEPS
@@ -41,7 +21,7 @@ def step_impl(context):
 @step("I have an empty LINK_CUSTOMER_NATION table")
 def step_impl(context):
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation",
-                                    ["CUSTOMER_NATION_PK BINARY(16)", "CUSTOMER_FK BINARY(16)", "NATION_FK BINARY(16)",
+                                    ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
 
@@ -49,7 +29,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation",
-                                    ["CUSTOMER_NATION_PK BINARY(16)", "CUSTOMER_FK BINARY(16)", "NATION_FK BINARY(16)",
+                                    ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
     context.dbutils.insert_data_from_ct(context.table, "test_link_customer_nation", VLT_SCHEMA, context.connection)
@@ -75,7 +55,7 @@ def step_impl(context):
 @step("I have an empty LINK_CUSTOMER_NATION_UNION table")
 def step_impl(context):
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_union",
-                                    ["CUSTOMER_NATION_PK BINARY(16)", "CUSTOMER_FK BINARY(16)", "NATION_FK BINARY(16)",
+                                    ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
 
@@ -113,7 +93,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_union",
-                                    ["CUSTOMER_NATION_PK BINARY(16)", "CUSTOMER_FK BINARY(16)", "NATION_FK BINARY(16)",
+                                    ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
     context.dbutils.insert_data_from_ct(context.table, "test_link_customer_nation_union", VLT_SCHEMA,

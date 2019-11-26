@@ -8,15 +8,6 @@ from steps.step_vars import *
 use_step_matcher("parse")
 
 
-# LOAD STEPS
-
-
-@step("I load the TEST_SAT_CUSTOMER_DETAILS table")
-def step_impl(context):
-    os.chdir(TESTS_DBT_ROOT)
-    os.system("dbt run --models +test_sat_customer_details")
-
-
 # MAIN STEPS
 
 
@@ -34,18 +25,18 @@ def step_impl(context):
 @given("I have an empty TEST_SAT_CUSTOMER_DETAILS table")
 def step_impl(context):
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_sat_customer_details",
-                                    ["HASHDIFF BINARY(16)", "CUSTOMER_PK BINARY(16)", "NAME VARCHAR(60)",
-                                     "PHONE VARCHAR(15)", "DOB DATE", "LOADDATE DATE", "EFFECTIVE_FROM DATE",
-                                     "SOURCE VARCHAR(4)"], connection=context.connection)
+                                    ["HASHDIFF BINARY", "CUSTOMER_PK BINARY", "NAME VARCHAR(60)", "PHONE VARCHAR(15)",
+                                     "DOB DATE", "LOADDATE DATE", "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"],
+                                    connection=context.connection)
 
 
 @given("there are records in the TEST_SAT_CUSTOMER_DETAILS table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_sat_customer_details",
-                                    ["HASHDIFF BINARY(16)", "CUSTOMER_PK BINARY(16)", "NAME VARCHAR(60)",
-                                     "PHONE VARCHAR(15)", "DOB DATE", "LOADDATE DATE", "EFFECTIVE_FROM DATE",
-                                     "SOURCE VARCHAR(4)"], connection=context.connection)
+                                    ["HASHDIFF BINARY", "CUSTOMER_PK BINARY", "NAME VARCHAR(60)", "PHONE VARCHAR(15)",
+                                     "DOB DATE", "LOADDATE DATE", "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"],
+                                    connection=context.connection)
 
     context.dbutils.insert_data_from_ct(context.table, "test_sat_customer_details", VLT_SCHEMA, context.connection)
 
@@ -65,16 +56,24 @@ def step_impl(context):
 
 # CYCLE SCENARIO STEPS
 
-@given("I have an empty TEST_SAT_CUST_CUSTOMER table")
+@given("I have an empty TEST_SAT_CUST_CUSTOMER_DETAILS table")
 def step_impl(context):
+    context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_sat_cust_customer_details",
-                                    ["CUSTOMER_PK BINARY(16)", "HASHDIFF BINARY(16)", "NAME VARCHAR(60)", "DOB DATE",
+                                    ["CUSTOMER_PK BINARY", "HASHDIFF BINARY", "NAME VARCHAR(60)", "DOB DATE",
                                      "EFFECTIVE_FROM DATE", "LOADDATE DATE", "SOURCE VARCHAR(4)"],
                                     connection=context.connection)
 
 
-@step('the TEST_SAT_CUST_CUSTOMER is loaded for day {day_number}')
+@step('the TEST_SAT_CUST_CUSTOMER_DETAILS is loaded for day {day_number}')
 def step_impl(context, day_number):
     os.chdir(TESTS_DBT_ROOT)
 
     os.system("dbt run --models +test_sat_cust_customer_details")
+
+
+@step('the {model_name} table is loaded for day {day_number} using SHA hashing')
+def step_impl(context, model_name, day_number):
+    os.chdir(TESTS_DBT_ROOT)
+
+    os.system('dbt run --full-refresh --vars "{{\\"hash\\": \\"SHA\\"}}" --models +{}'.format(model_name.lower()))

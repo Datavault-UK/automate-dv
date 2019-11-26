@@ -1,30 +1,17 @@
-import os
-
 from behave import *
 
-from definitions import TESTS_DBT_ROOT
 from steps.step_vars import *
 
 use_step_matcher("parse")
 
-
-# LOAD STEPS
-
-
-@when("I load the TLINK_TRANSACTION table")
-def step_impl(context):
-    os.chdir(TESTS_DBT_ROOT)
-    os.system("dbt run --models +t_link_transaction")
-
-
 # MAIN STEPS
 
 
-@given("I have an empty TLINK_TRANSACTION table")
+@given("I have an empty T_LINK_TRANSACTION table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "t_link_transaction",
-                                    ["TRANSACTION_PK BINARY(16)", "CUSTOMER_PK BINARY(16)",
+                                    ["TRANSACTION_PK BINARY", "CUSTOMER_PK BINARY",
                                      "TRANSACTION_NUMBER NUMBER(38,0)", "TRANSACTION_DATE DATE", "LOADDATE DATE",
                                      "SOURCE VARCHAR(3)", "TYPE VARCHAR(2)", "AMOUNT NUMBER(38,2)",
                                      "EFFECTIVE_FROM DATE", ], connection=context.connection)
@@ -41,7 +28,7 @@ def step_impl(context):
     context.dbutils.insert_data_from_ct(context.table, "stg_transaction", STG_SCHEMA, context.connection)
 
 
-@then("the TLINK_TRANSACTION table should contain")
+@then("the T_LINK_TRANSACTION table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns='SOURCE',
                                                    binary_columns=['TRANSACTION_PK', 'CUSTOMER_PK'])
@@ -60,7 +47,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "t_link_transaction",
-                                    ["TRANSACTION_PK BINARY(16)", "CUSTOMER_PK BINARY(16)",
+                                    ["TRANSACTION_PK BINARY", "CUSTOMER_PK BINARY",
                                      "TRANSACTION_NUMBER NUMBER(38,0)", "TRANSACTION_DATE DATE", "LOADDATE DATE",
                                      "SOURCE VARCHAR(3)", "TYPE VARCHAR(2)", "AMOUNT NUMBER(38,2)",
                                      "EFFECTIVE_FROM DATE", ], connection=context.connection)
