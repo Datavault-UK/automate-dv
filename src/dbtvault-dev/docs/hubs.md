@@ -26,7 +26,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 Hubs are always incremental, as we load and add new records to the existing data set. 
 
-[Read more about incremental models](https://docs.getdbt.com/docs/configuring-incremental-models)
+[Read more about incremental models](https://docs.getdbt.com/v0.14.0/docs/configuring-incremental-models)
 
 !!! note "Dont worry!" 
     The [hub_template](macros.md#hub_template) deals with the Data Vault
@@ -39,10 +39,10 @@ Let's look at the metadata we need to provide to the [hub_template](macros.md#hu
 #### Source table
 
 The first piece of metadata we need is the source table. This step is easy, as in this example we created the 
-new staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
+staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
 dbt ensures dependencies are honoured when defining the source using a reference in this way.
 
-[Read more about the ref function](https://docs.getdbt.com/docs/ref)
+[Read more about the ref function](https://docs.getdbt.com/v0.14.0/docs/ref)
 
 ```hub_customer.sql```
 

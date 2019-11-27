@@ -36,7 +36,7 @@ In your dbt profiles, you must create a connection with this name and provide th
 account details so that dbt can connect to your Snowflake databases. 
 
 dbt provides their own documentation on how to configure profiles, so we suggest reading that
-[here](https://docs.getdbt.com/docs/configure-your-profile).
+[here](https://docs.getdbt.com/v0.14.0/docs/configure-your-profile).
 
 A sample profile configuration is provided below which will get you started:
 
