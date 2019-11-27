@@ -31,7 +31,7 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown A
 
 ## Worked example project
 
-Get started quickly with our worked example:
+Learn quickly with our worked example:
 
 - [Read the docs](https://dbtvault.readthedocs.io/en/latest/workedexample/)
 
