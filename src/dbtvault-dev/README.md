@@ -1,10 +1,18 @@
+<p align="left">
+  <img src="https://user-images.githubusercontent.com/25080503/69713956-6249de80-10fd-11ea-8120-413db42d50ac.png">
+  <p> There will be a live demonstration of dbtvault at the next UK Data Vault User Group on Tuesday, December 3, 2019 @ 6pm in LONDON.
+    
+  <a href="https://www.meetup.com/UK-Data-Vault-User-Group/events/266604902/">Sign up for FREE now! </a>
+  </p>
+</p>
+
 <p align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
 latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 
-stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3.2-pre)](https://dbtvault.readthedocs.io/en/v0.3.2-pre/?badge=v0.3.2-pre)
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4)](https://dbtvault.readthedocs.io/en/v0.4/?badge=v0.4)
 
 [past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
 
@@ -21,14 +29,13 @@ What does dbtvault offer?
 
 powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
-## Demonstration project available
+## Worked example project
 
-We have created an example dbt project using dbtvault and Snowflake to showcase the package.
+Get started quickly with our worked example:
 
-[Get the demonstration project](https://github.com/Datavault-UK/snowflakeDemo)
+- [Read the docs](https://dbtvault.readthedocs.io/en/latest/workedexample/)
 
-We've also added a [step by step guide](https://dbtvault.readthedocs.io/en/latest/introduction/) 
-for the example project to the dbtvault docs.
+- [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
 ## Currently supported databases:
 
@@ -36,6 +43,7 @@ for the example project to the dbtvault docs.
 
 ## Installation
 
+Ensure you are using dbt 0.14 (0.15 support will be added soon!)
 Add the following to your ```packages.yml```
 
 
@@ -43,12 +51,12 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.3.2-pre # Latest stable version
+    revision: v0.4 # Latest stable version
 ```
 And run 
 ```dbt deps```
 
-[Read more on package installation](https://docs.getdbt.com/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/v0.14.0/docs/package-management)
 
 ## Usage
 

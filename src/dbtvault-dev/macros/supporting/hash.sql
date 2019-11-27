@@ -14,18 +14,19 @@
 -#}
 {%- macro hash(columns, alias, sort=false) -%}
 
+{%- set hash = var('hash', 'MD5') -%}
+
 {#- Select hashing algorithm -#}
-{%- if var('hash') == 'MD5' -%}
+{%- if hash == 'MD5' -%}
     {%- set hash_alg = 'MD5_BINARY' -%}
     {%- set hash_size = 16 -%}
-{%- elif var('hash') == 'SHA' -%}
+{%- elif hash == 'SHA' -%}
     {%- set hash_alg = 'SHA2_BINARY' -%}
     {%- set hash_size = 32 -%}
 {%- else -%}
     {%- set hash_alg = 'MD5_BINARY' -%}
     {%- set hash_size = 32 -%}
 {%- endif -%}
-
 
 {#- Alpha sort columns before hashing -#}
 {%- if sort and columns is iterable and columns is not string -%}

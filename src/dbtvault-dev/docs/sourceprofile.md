@@ -53,6 +53,25 @@ Next we looked at the relationship between customers and orders. We wanted to ch
 We did this by doing a left outer join on the ```ORDERS``` table, with the ```CUSTOMER``` table and discovered that several
 customers exist without orders.
 
+#### Transactions
+
+To create transactional links in the demonstration project, we needed to simulate transactions, as there are no suitable
+or explicit transaction records present in the dataset. There are implied transactions however, as customers place orders.
+To simulate a concrete transactions, we created a raw staging layer as a view, called 
+```raw_transactions``` and used the following fields:
+
+- Customer key
+- Order key 
+- Order date
+- Total price, aliased as Amount, to mean the order is paid off in full. 
+- Type, a generated column, using a random selection between ```CR``` or ```DR``` to mean a debit or credit to the customer.
+- Transaction Date. A calculated column which is takes the order date and adds 20 days, to mean a customer paid 20 days 
+after their order was made.
+- Transaction number. A calculated column created by concatenating the Order key, Customer key and order date and padding the 
+result with 0s to ensure the number is 24 digits long.  
+
+The ```ORDERS``` and ```CUSTOMER``` tables are then joined (left outer) to simulate transactions on customer orders.
+
 ### Conclusions
 
 To create a source feed simulation with the static data (shown by the logical pattern in the date fields), we can use
@@ -69,7 +88,10 @@ to the ```LINEITEM``` table.
 The relationship between customers and orders tells us that customers without an order will not be loaded into the Data 
 Vault, as we are using the ```ORDERDATE``` for day-feed simulation.
 
-Now that we have profiled the data, we cna make more informed decisions when mapping the source system to the Data Vault
+This also means that we can simulate transactions by using the implication that a customer makes a payment on an order
+some time after the order has been made. 
+
+Now that we have profiled the data, we can make more informed decisions when mapping the source system to the Data Vault
 architecture. 
 
 
