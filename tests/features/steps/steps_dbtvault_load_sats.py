@@ -76,4 +76,4 @@ def step_impl(context, day_number):
 def step_impl(context, model_name, day_number):
     os.chdir(TESTS_DBT_ROOT)
 
-    os.system('dbt run --full-refresh --vars "{{\\"hash\\": \\"SHA\\"}}" --models +{}'.format(model_name.lower()))
+    os.system('dbt run --vars "{{\\"hash\\": \\"SHA\\"}}" --models +{}'.format(model_name.lower()))
