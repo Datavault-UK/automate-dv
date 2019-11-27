@@ -54,7 +54,6 @@ everything and later cycles insert 0 new records in their left outer joins.
 As the dataset increases in size, e.g if you run with a larger TPC-H dataset (100, 1000 etc.) then be aware you are 
 processing the entire inventory dataset each cycle, which results in unrepresentative load cycle times.
 
-Fortunately it's just the nature of this dataset and it will not necessarily be the same for other data sets. 
-
-If you are feeling adventurous you may disable the inventory feed (```raw_inventory``` and child models) to see a more 
-accurate representation of performance. 
+We have minimised the impact of this by adding a join in the raw inventory table on the raw orders table to ensure only 
+inventory items which are included in orders are fed into raw staging. The outcome is the same, but it significantly 
+optimises the loading process and thereby reduces load time.
