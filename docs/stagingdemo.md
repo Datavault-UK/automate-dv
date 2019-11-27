@@ -18,6 +18,13 @@ The ```raw_inventory``` model feeds the static inventory from TPC-H. As this dat
 we do not need to do any additional date processing or use the ```date``` var as we did for the raw orders data.
 The inventory consists of the ```PARTSUPP```, ```SUPPLIER```, ```PART``` and ```LINEITEM``` tables.
 
+### raw_transactions
+
+The ```raw_inventory``` simulates transactions so that we can create transactional links. It does this by
+making a number of calculations on orders made by customers and creating transaction records.
+
+[Read more](sourceprofile.md#transactions)
+
 ## Building the raw staging layer
 
 To build this layer with dbtvault, run the below command:
@@ -30,14 +37,17 @@ two raw staging layer models, so this will compile and run both models.
 The dbt output should give something like this:
 
 ```shell
-16:11:33 | Concurrency: 4 threads (target='dev')
-16:11:33 | 
-16:11:33 | 1 of 2 START incremental model DEMO_RAW.raw_inventory................ [RUN]
-16:11:33 | 2 of 2 START incremental model DEMO_RAW.raw_orders................... [RUN]
-16:12:05 | 2 of 2 OK created incremental model DEMO_RAW.raw_orders.............. [SUCCESS 24627 in 32.46s]
-16:12:43 | 1 of 2 OK created incremental model DEMO_RAW.raw_inventory........... [SUCCESS 8000000 in 69.54s]
-16:12:43 | 
-16:12:43 | Finished running 2 incremental models in 81.39s.
+14:18:17 | Concurrency: 4 threads (target='dev')
+14:18:17 | 
+14:18:17 | 1 of 3 START view model DEMO_RAW.raw_inventory....................... [RUN]
+14:18:17 | 2 of 3 START view model DEMO_RAW.raw_orders.......................... [RUN]
+14:18:17 | 3 of 3 START view model DEMO_RAW.raw_transactions.................... [RUN]
+14:18:19 | 3 of 3 OK created view model DEMO_RAW.raw_transactions............... [SUCCESS 1 in 1.49s]
+14:18:19 | 1 of 3 OK created view model DEMO_RAW.raw_inventory.................. [SUCCESS 1 in 1.71s]
+14:18:20 | 2 of 3 OK created view model DEMO_RAW.raw_orders..................... [SUCCESS 1 in 2.06s]
+14:18:20 | 
+14:18:20 | Finished running 3 view models in 8.10s.
+
 ```
 
 ## The hashed staging layer
@@ -126,7 +136,13 @@ The ```v_stg_orders``` and ```v_stg_inventory``` models use the raw layer's ```r
 models as sources, respectively. Both are created as views on the raw staging layer, as they are intended as
 transformations on the data which already exists.
 
-Eeach view adds a number of primary keys, hashdiffs and additional constants for use in the raw vault.
+Each view adds a number of primary keys, hashdiffs and additional constants for use in the raw vault.
+
+### v_stg_transactions
+
+The ```v_stg_transactions``` model uses the raw layer's ```raw_transactions``` model as its source.
+For the load date, we add a day to the ```TRANSACTION_DATE``` to simulate the fact we are loading the data in the date 
+after the transaction was made.
 
 ## Building the hashed staging layer
 
@@ -140,12 +156,14 @@ two hashed staging layer models, so this will compile and run both models.
 The dbt output should give something like this:
 
 ```shell
-16:23:13 | Concurrency: 4 threads (target='dev')
-16:23:13 | 
-16:23:13 | 1 of 2 START view model DEMO_STG.v_stg_inventory..................... [RUN]
-16:23:14 | 2 of 2 START view model DEMO_STG.v_stg_orders........................ [RUN]
-16:23:19 | 1 of 2 OK created view model DEMO_STG.v_stg_inventory................ [SUCCESS 1 in 5.10s]
-16:23:20 | 2 of 2 OK created view model DEMO_STG.v_stg_orders................... [SUCCESS 1 in 5.10s]
-16:23:20 | 
-16:23:20 | Finished running 2 view models in 13.27s.
+14:19:17 | Concurrency: 4 threads (target='dev')
+14:19:17 | 
+14:19:17 | 1 of 3 START view model DEMO_STG.v_stg_inventory..................... [RUN]
+14:19:17 | 2 of 3 START view model DEMO_STG.v_stg_orders........................ [RUN]
+14:19:17 | 3 of 3 START view model DEMO_STG.v_stg_transactions.................. [RUN]
+14:19:19 | 3 of 3 OK created view model DEMO_STG.v_stg_transactions............. [SUCCESS 1 in 1.99s]
+14:19:20 | 2 of 3 OK created view model DEMO_STG.v_stg_orders................... [SUCCESS 1 in 2.52s]
+14:19:20 | 1 of 3 OK created view model DEMO_STG.v_stg_inventory................ [SUCCESS 1 in 2.59s]
+14:19:20 | 
+14:19:20 | Finished running 3 view models in 7.98s.
 ```

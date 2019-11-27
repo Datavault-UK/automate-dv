@@ -15,7 +15,7 @@ We will:
 - examine and profile the TPCH dataset to explore how we can map it to the Data Vault architecture.
 - create a raw staging layer.
 - process the raw staging layer.
-- create a Data Vault with hubs, links and satellites using dbtvault and pre-written models.
+- create a Data Vault with hubs, links, satellites and transactional links using dbtvault and pre-written models.
 
 ## Pre-requisites
 
@@ -31,8 +31,9 @@ be the only necessary requirements you will need to get started with the example
 
 !!! warning
     We suggest a trial account so that you have full privileges and assurance that the demo is isolated from any
-    production warehouses. Whilst there shouldn't be any risk that the demo affects any unrelated data outside of the 
-    scope of this project, you may use a corporate account or existing personal account at your own risk, 
+    production warehouses. Whilst there is no risk that the demo affects any unrelated data outside of the 
+    scope of this project, you will incur compute costs. 
+    You may use a corporate account or existing personal account at your own risk.
 
 !!! note
     We have provided a complete ```requirements.txt``` to install with ```pip install -r requirements.txt```
@@ -41,20 +42,18 @@ be the only necessary requirements you will need to get started with the example
 
 ## Performance note
 
-Please be aware that table structures are simulated from the TPCH-H dataset. The TPC-H dataset is a static view of data. 
+Please be aware that table structures are simulated from the TPC-H dataset. The TPC-H dataset is a static view of data. 
 
 Only a subset of the data contains dates which allows us to simulate daily feeds. The ```v_stg_orders``` orders view is 
 filtered by date, unfortunately the ```v_stg_inventory``` view cannot be filtered by date, so it ends up being a feed of 
 the entire contents of the view each cycle. 
 
-This means that inventory related hubs links and satellites are populated once during the initial load cycle with 
+This means that inventory related hubs, links and satellites are populated once during the initial load cycle with 
 everything and later cycles insert 0 new records in their left outer joins. 
 
 As the dataset increases in size, e.g if you run with a larger TPC-H dataset (100, 1000 etc.) then be aware you are 
 processing the entire inventory dataset each cycle, which results in unrepresentative load cycle times.
 
-Unfortunately it's the nature of the dataset, it will not be that way for other datasets. We will look at additonal 
-datasets in the future! 
-
-If you are feeling adventurous you may disable the inventory feed (```raw_inventory``` and child models) to see a more 
-accurate representation of performance. 
+We have minimised the impact of this by adding a join in the raw inventory table on the raw orders table to ensure only 
+inventory items which are included in orders are fed into raw staging. The outcome is the same, but it significantly 
+optimises the loading process and thereby reduces load time.

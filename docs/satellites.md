@@ -42,7 +42,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 Satellites are always incremental, as we load and add new records to the existing data set.
 
-[Read more about incremental models](https://docs.getdbt.com/docs/configuring-incremental-models)
+[Read more about incremental models](https://docs.getdbt.com/v0.14.0/docs/configuring-incremental-models)
 
 ### Adding the metadata
 
@@ -51,10 +51,10 @@ Let's look at the metadata we need to provide to the [sat_template](macros.md#sa
 #### Source table
 
 The first piece of metadata we need is the source table. This step is easy, as in this example we created the 
-new staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
+staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
 dbt ensures dependencies are honoured when defining the source using a reference in this way.
 
-[Read more about the ref function](https://docs.getdbt.com/docs/ref)
+[Read more about the ref function](https://docs.getdbt.com/v0.14.0/docs/ref)
 
 ```sat_customer_details.sql```
 ```sql hl_lines="3"
@@ -201,6 +201,4 @@ And our table will look like this:
 
 ### Next steps
 
-We have now created a staging layer and a hub, link and satellite. We'll be bringing new
-table structures in future releases. We'll also be releasing material which demonstrates these examples in a live 
-environment soon!
+We have now created a staging layer and a hub, link and satellite. Next we will ook at transactional links.

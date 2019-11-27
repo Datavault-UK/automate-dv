@@ -13,7 +13,7 @@ We will be releasing changes incrementally, so you can reap the benefits as soon
 
 These features are currently planned for the near-future.
 
-- Transactional Links (Also known as non-historised links)
+- Effectivity satellites
 
 ## Future releases
 
@@ -22,9 +22,9 @@ In future releases, we hope to include the following:
 ### Tables
 
 - Multi-active satellites
-- Effectivity satellites
 - Status tracking satellites
 - Point-in-Time tables (also know as PITs)
 - Bridge tables
 - Reference Tables
+- Mart loading helpers
 - And more!

@@ -8,7 +8,7 @@ We know that it deserves new features, that the code base can be tidied up and t
 Rest assured we’re working on it for future releases – [our roadmap contains information on what’s coming](roadmap.md).
  
 If you spot anything you’d like to bring to our attention, have a request for new features, have spotted an improvement we could make, 
-or want to tell us about a typo, then please don’t hesitate to let us know via [Github](https://github.com/Datavault-UK/dbtvault/issues). 
+or want to tell us about a typo or bug, then please don’t hesitate to let us know via [Github](https://github.com/Datavault-UK/dbtvault/issues). 
 
 We’d rather know you are making active use of this package than hearing nothing from all of you out there! 
 
@@ -20,6 +20,7 @@ Happy Data Vaulting! :smile:
 We've tested the package rigorously, but if you think you've found a bug please provide the following 
 at a minimum (or use the issue templates) so we can fix it as quickly as possible:
 
+- The version of dbt being used
 - The version of dbtvault being used.
 - Steps to reproduce the issue
 - Any error messages or dbt log files which can give more detail of the problem
