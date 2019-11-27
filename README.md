@@ -60,7 +60,7 @@ And run
 
 ## Usage
 
-1. Create a model for your hub, link or satellite
+1. Create a model for your table.
 2. Provide metadata
 3. Call the appropriate template macro
 
