@@ -14,22 +14,36 @@
 -#}
 {%- macro hash(columns, alias, sort=false) -%}
 
+{%- set hash = var('hash', 'MD5') -%}
+
+{#- Select hashing algorithm -#}
+{%- if hash == 'MD5' -%}
+    {%- set hash_alg = 'MD5_BINARY' -%}
+    {%- set hash_size = 16 -%}
+{%- elif hash == 'SHA' -%}
+    {%- set hash_alg = 'SHA2_BINARY' -%}
+    {%- set hash_size = 32 -%}
+{%- else -%}
+    {%- set hash_alg = 'MD5_BINARY' -%}
+    {%- set hash_size = 32 -%}
+{%- endif -%}
+
 {#- Alpha sort columns before hashing -#}
 {%- if sort and columns is iterable and columns is not string -%}
 {%- set columns = columns|sort -%}
 {%- endif -%}
 
 {%- if columns is string %}
-    CAST(MD5_BINARY(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS BINARY(16)) AS {{alias}}
+    CAST({{- hash_alg -}}(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS BINARY({{- hash_size -}})) AS {{alias}}
 
 {%- else %}
 
-    CAST(MD5_BINARY(CONCAT(
+    CAST({{- hash_alg -}}(CONCAT(
 {%- for column in columns[:-1] %}
-        IFNULL(UPPER(TRIM(CAST({{column}} AS VARCHAR))), '^^'), '||',
+        IFNULL(UPPER(TRIM(CAST({{- column }} AS VARCHAR))), '^^'), '||',
 
 {%- if loop.last %}
-        IFNULL(UPPER(TRIM(CAST({{columns[-1]}} AS VARCHAR))), '^^') )) AS BINARY(16)) AS {{alias}}
+        IFNULL(UPPER(TRIM(CAST({{columns[-1]}} AS VARCHAR))), '^^') )) AS BINARY({{- hash_size -}})) AS {{alias}}
 {%- endif    -%}
 {%- endfor   -%}
 {%- endif    -%}
