@@ -12,7 +12,7 @@
 
 latest [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 
-stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3.3-pre)](https://dbtvault.readthedocs.io/en/v0.3.3-pre/?badge=v0.3.3-pre)
+stable [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4)](https://dbtvault.readthedocs.io/en/v0.4/?badge=v0.4)
 
 [past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
 
@@ -43,6 +43,7 @@ Get started quickly with our worked example:
 
 ## Installation
 
+Ensure you are using dbt 0.14 (0.15 support will be added soon!)
 Add the following to your ```packages.yml```
 
 
@@ -50,12 +51,12 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.3.3-pre # Latest stable version
+    revision: v0.4 # Latest stable version
 ```
 And run 
 ```dbt deps```
 
-[Read more on package installation](https://docs.getdbt.com/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/v0.14.0/docs/package-management)
 
 ## Usage
 

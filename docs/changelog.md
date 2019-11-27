@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.4] - 2019-11-27
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4)](https://dbtvault.readthedocs.io/en/v0.4-pre/?badge=v0.4)
+
+### Added
+
+- Table Macros:
+    - [Transactional Links](macros.md#t_link_template)
+
+### Improved
+
+- Hashing:
+    - You may now choose between ```MD5``` and ```SHA-256``` hashing with a simple yaml configuration
+    [Learn how!](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
+    
+### Worked example
+
+- Transactional Links
+    - Added a transactional link model using a simulated transaction feed.
+    
+### Documentation
+
+- Updated macros, best practices, roadmap, and other pages to account for new features
+- Updated worked example documentation
+- Replaced all dbt documentation links with links to the 0.14 documentation as dbtvault
+is using dbt 0.14 currently (we will be updating to 0.15 soon!)
+- Minor corrections
+
 ## [v0.3.3-pre] - 2019-10-31
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.3.3-pre)](https://dbtvault.readthedocs.io/en/v0.3.3-pre/?badge=v0.3.3-pre)
 
@@ -130,7 +157,6 @@ the new and improved features.
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.1-pre)](https://dbtvault.readthedocs.io/en/v0.1-pre/?badge=v0.1-pre)
 
 ### Added
-
 
 - Table Macros:
     - [Hub](macros.md#hub_template)

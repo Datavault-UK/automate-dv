@@ -43,8 +43,9 @@ then there is a chance of a clash: where two different values generate the same 
 
 For this reason, it **should not be** used for cryptographic purposes either.
 
-In future releases of dbtvault, we will allow you to change the algorithm that is used (e.g. to SHA-256) to reduce the 
-chance of a clash (at the expense of more processing and a larger column), or switch off hashing entirely. 
+!!! success 
+    
+    You may now choose between MD5 and SHA-256 in dbtvault, [read below](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault).
 
 ### Why do we hash?
 
@@ -81,3 +82,44 @@ staging tables
 
 - For **links**, columns must be sorted by the primary key of the hub and arranged alphabetically by the hub name. 
 The order must also be the same as each hub. 
+
+### Choosing a hashing algorithm in dbtvault
+
+With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. ```SHA-256``` was added
+to dbtvault as an option for users who wish to reduce the hashing collision rates in larger data sets.
+
+!!! note
+
+    If a hashing algorithm configuration is missing or invalid, dbtvault will use ```MD5``` by default. 
+
+Configuring the hashing algorithm which will be used by dbtvault is simple: simply add a variable to your 
+```dbt_project.yml``` as follows:
+
+```dbt_project.yml```
+```yaml
+
+name: 'my_project'
+version: '1'
+
+profile: 'my_project'
+
+source-paths: ["models"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_modules"
+
+models:
+  vars:
+    hash: SHA # or MD5
+```
+
+It is possible to configure a hashing algorithm on a model-by-model basis using the hierarchical structure of the ```yaml``` file.
+We recommend you keep the hashing algorithm consistent across all tables, however, as per best practise.
+
+Read the [dbt documentation](https://docs.getdbt.com/v0.14.0/docs/var) for further information on variable scoping.

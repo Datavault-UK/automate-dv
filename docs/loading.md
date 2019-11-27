@@ -29,11 +29,11 @@ This will run all models with the hub tag.
 Links are another fundamental component in a Data Vault. 
 
 Links model an association or link, between two business keys. They commonly hold business transactions or structural 
-information.
+information. A link specifically contains the structural information.
 
 Our links will contain:
 
-1. A primary key. For links, we take the natural keys (prior to hashing) represented by the foreign key columns below 
+1. A primary key. For links, we take the natural keys (prior to hashing) represented by the foreign key columns
 and create a hash on a concatenation of them. 
 2. Foreign keys holding the primary key for each hub referenced in the link (2 or more depending on the number of hubs 
 referenced) 
@@ -88,6 +88,32 @@ To compile and load the provided satellite models, run the following command:
 ```dbt run --models tag:satellite``` 
 
 This will run all models with the satellite tag.
+
+## Transactional Links
+
+Transactional Links are used to model transactions between entities in a Data Vault. 
+
+Links model an association or link, between two business keys. They commonly hold business transactions or structural 
+information. A transactional link specifically contains the business transactions.
+
+Our transactional links will contain:
+
+1. A primary key. For transactional links, we use the transaction number. If this is not already present in the dataset
+then we create this by concatenating the foreign keys and hashing them. 
+2. Foreign keys holding the primary key for each hub referenced in the transactional link (2 or more depending on the number of hubs 
+referenced) 
+3. A payload. This will be data about the transaction itself e.g. the amount, type, date or non-hashed transaction number.
+4. An ```EFFECTIVE_FROM``` date. This will usually be the date of the transaction.
+5. The load date or load date timestamp.
+6. The source for the record
+
+### Loading transactional links
+
+To compile and load the provided t_link models, run the following command:
+
+```dbt run --models tag:t_link```
+
+This will run all models with the t_link tag.
 
 ## Loading the full system
 

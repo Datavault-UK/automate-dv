@@ -7,10 +7,6 @@ for your Data Vault.
 ### Metadata notes
 #### Using a source reference for the target metadata
 
-!!! note
-    As of release 0.3, you may now use a source reference as a target metadata value, to streamline metadata entry. 
-    Read below!
-
 In the usage examples for the table template macros in this section, you will see ```source``` provided as the values
 for some of the target metadata variables. ```source``` has been declared as a variable at the top of the models, 
 and holds a reference to the source table we are loading from. This is shorthand for retaining the name and data types 
@@ -399,6 +395,88 @@ WHERE src.HASHDIFF IS NULL
 
 ___
 
+### t_link_template
+
+Generates sql to build a transactional link table using the provided metadata.
+
+```mysql 
+dbtvault.t_link_template(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source,
+                         tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source,
+                         source)                  
+```
+
+#### Parameters
+
+| Parameter     | Description                                         | Type           | Required?                                                          |
+| ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_fk        | Target hashdiff column                              | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_payload   | Target foreign key column(s)                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_eff       | Target effective from column                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+
+#### Usage
+
+
+``` yaml
+
+-- t_link_transactions.sql:  
+
+{{- config(...)                                                                        -}}
+
+{%- set source = [ref('stg_transactions_hashed')]                                      -%}
+
+{%- set src_pk = 'TRANSACTION_PK'                                                      -%}
+{%- set src_fk = ['CUSTOMER_FK', 'ORDER_FK']                                           -%}
+{%- set src_payload = ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT']     -%}
+{%- set src_eff = 'EFFECTIVE_FROM'                                                     -%}
+{%- set src_ldts = 'LOADDATE'                                                          -%}
+{%- set src_source = 'SOURCE'                                                          -%}
+
+{%- set tgt_pk = source                                                                -%}
+{%- set tgt_fk = source                                                                -%}
+{%- set tgt_payload = source                                                           -%}
+{%- set tgt_eff = source                                                               -%}
+{%- set tgt_ldts = source                                                              -%}
+{%- set tgt_source = source                                                            -%}
+
+{{ dbtvault.t_link_template(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source,
+                            tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source,
+                            source)                                                     }}
+```
+
+#### Output
+
+```mysql 
+SELECT DISTINCT 
+                    CAST(stg.TRANSACTION_PK AS BINARY) AS TRANSACTION_PK,
+                    CAST(stg.CUSTOMER_FK AS BINARY) AS CUSTOMER_FK,
+                    CAST(stg.ORDER_FK AS BINARY) AS ORDER_FK,
+                    CAST(stg.TRANSACTION_NUMBER AS NUMBER(38,0)) AS TRANSACTION_NUMBER,
+                    CAST(stg.TRANSACTION_DATE AS DATE) AS TRANSACTION_DATE,
+                    CAST(stg.TYPE AS VARCHAR) AS TYPE,
+                    CAST(stg.AMOUNT AS NUMBER(12,2)) AS AMOUNT,
+                    CAST(stg.EFFECTIVE_FROM AS DATE) AS EFFECTIVE_FROM,
+                    CAST(stg.LOADDATE AS DATE) AS LOADDATE,
+                    CAST(stg.SOURCE AS VARCHAR) AS SOURCE
+FROM (
+      SELECT stg.TRANSACTION_PK, stg.CUSTOMER_FK, stg.ORDER_FK, stg.TRANSACTION_NUMBER, stg.TRANSACTION_DATE, stg.TYPE, stg.AMOUNT, stg.EFFECTIVE_FROM, stg.LOADDATE, stg.SOURCE
+      FROM MYDATABASE.MYSCHEMA.stg_transactions_hashed AS stg
+) AS stg
+LEFT JOIN MYDATABASE.MYSCHEMA.t_link_transactions AS tgt
+ON stg.TRANSACTION_PK = tgt.TRANSACTION_PK
+WHERE tgt.TRANSACTION_PK IS NULL
+```
+___
+
 ## Staging Macros
 ######(macros/staging)
 
@@ -410,18 +488,26 @@ ___
 !!! warning
     This macro ***should not be*** used for cryptographic purposes.
     
-    The intended use is for creating checksum-like fields only, so that a record change can be detected. 
+    The intended use is for creating checksum-like values only, so that we may compare records accurately. 
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
     
 !!! seealso "See Also"
     - [hash](#hash)
     - [Hashing best practises and why we hash](bestpractices.md#hashing)
+    - With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. 
+    [Learn how](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
     
 This macro will generate SQL hashing sequences for one or more columns as below:
-```sql 
+
+```sql tab='MD5'
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column1 AS VARCHAR)))) AS BINARY(16)) AS alias1,
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
+```
+
+```sql tab='SHA'
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(column1 AS VARCHAR)))) AS BINARY(32)) AS alias1,
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(32)) AS alias2
 ```
 
 #### Parameters
@@ -444,14 +530,24 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
 
 #### Output
 
-```mysql
+```mysql tab='MD5'
 CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
 
 CAST(MD5_BINARY(CONCAT(
-    IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
-    IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
-    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
-    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS HASHDIFF
+     IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS HASHDIFF
+```
+
+```mysql tab='SHA'
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(32)) AS CUSTOMER_PK,
+
+CAST(SHA2_BINARY(CONCAT(
+     IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(32)) AS HASHDIFF
 ```
 
 !!! success "Column sorting"
@@ -542,7 +638,7 @@ FROM MYDATABASE.MYSCHEMA.MYTABLE
 ```
 
 !!! info
-    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/docs/using-sources)
+    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/v0.14.0/docs/using-sources)
 
 #### Parameters
 
@@ -626,17 +722,24 @@ ___
 !!! warning
     This macro ***should not be*** used for cryptographic purposes.
     
-    The intended use is for creating checksum-like fields only, so that a record change can be detected. 
+    The intended use is for creating checksum-like values only, so that we may compare records accurately.
     
     [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
 
 !!! seealso "See Also"
     - [multi-hash](#multi_hash)
     - [Hashing best practises and why we hash](bestpractices.md#hashing)
+    - With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. 
+    [Learn how](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
     
 A macro for generating hashing SQL for columns:
-```sql 
+
+```sql tab='MD5'
 CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
+```
+
+```sql tab='SHA'
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(32)) AS alias
 ```
 
 - Can provide multiple columns as a list to create a concatenated hash
@@ -667,13 +770,22 @@ CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
 
 #### Output
 
-```mysql
+```mysql tab = 'MD5'
 CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
 CAST(MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
                        IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
                        IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
                        IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
                        AS BINARY(16)) AS HASHDIFF
+```
+
+```mysql tab='SHA'
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(32)) AS CUSTOMER_PK,
+CAST(SHA2_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+                        IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+                        IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+                        IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
+                        AS BINARY(32)) AS HASHDIFF
 ```
 
 ___
