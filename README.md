@@ -1,5 +1,4 @@
 <p align="left">
-  <img src="https://user-images.githubusercontent.com/25080503/69713956-6249de80-10fd-11ea-8120-413db42d50ac.png">
   <p> Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
   
   <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
