@@ -1,8 +1,8 @@
 <p align="left">
   <img src="https://user-images.githubusercontent.com/25080503/69713956-6249de80-10fd-11ea-8120-413db42d50ac.png">
-  <p> There will be a live demonstration of dbtvault at the next UK Data Vault User Group on Tuesday, December 3, 2019 @ 6pm in LONDON.
-    
-  <a href="https://www.meetup.com/UK-Data-Vault-User-Group/events/266604902/">Sign up for FREE now! </a>
+  <p> Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
+  
+  <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
   </p>
 </p>
 
