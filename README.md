@@ -1,4 +1,5 @@
 <p align="left">
+  <h3> News </h3>
   <p> Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
   
   <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
