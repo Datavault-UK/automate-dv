@@ -1,7 +1,6 @@
 <p align="left">
   <h3> News </h3>
    1. We now have a slack channel, use the button below to join :)
-   [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
    2. Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
   
   <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
