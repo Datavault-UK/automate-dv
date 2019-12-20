@@ -1,11 +1,11 @@
 <p align="left">
   <h3> News </h3>
-   1. We now have a slack channel, use the button below to join :)
-   2. Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
-  
-  <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
 </p>
 
+ * We now have a slack channel, use the button below to join
+ * Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
+  <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
+  
 <p align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
