@@ -1,9 +1,10 @@
 <p align="left">
   <h3> News </h3>
-  <p> Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
+   1. We now have a slack channel, we'll be adding proper channels and github integration soon. 
+      It's early days so bear with us!
+   2. Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
   
   <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
-  </p>
 </p>
 
 <p align="center">
@@ -11,6 +12,8 @@
 </p>
 
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4)](https://dbtvault.readthedocs.io/en/v0.4/?badge=v0.4)
+
+[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 [past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
 
