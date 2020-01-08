@@ -38,7 +38,7 @@ The first piece of metadata we need is the source table. This step is easy, as w
 staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
 dbt ensures dependencies are honoured when defining the source using a reference in this way.
 
-[Read more about the ref function](https://docs.getdbt.com/v0.14.0/docs/ref)
+[Read more about the ref function](https://docs.getdbt.com/v0.15.0/docs/ref)
 
 ```link_customer_nation.sql```
 
