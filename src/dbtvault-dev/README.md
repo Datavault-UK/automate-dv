@@ -43,7 +43,6 @@ Get started quickly with our worked example:
 
 ## Installation
 
-Ensure you are using dbt 0.14 (0.15 support will be added soon!)
 Add the following to your ```packages.yml```
 
 
