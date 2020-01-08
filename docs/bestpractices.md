@@ -122,4 +122,4 @@ models:
 It is possible to configure a hashing algorithm on a model-by-model basis using the hierarchical structure of the ```yaml``` file.
 We recommend you keep the hashing algorithm consistent across all tables, however, as per best practise.
 
-Read the [dbt documentation](https://docs.getdbt.com/v0.14.0/docs/var) for further information on variable scoping.
+Read the [dbt documentation](https://docs.getdbt.com/v0.15.0/docs/var) for further information on variable scoping.

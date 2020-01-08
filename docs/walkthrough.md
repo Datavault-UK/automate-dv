@@ -21,8 +21,8 @@ We will:
 
 2. A Snowflake account, trial or otherwise. [Sign up for a free 30-day trial here](https://trial.snowflake.com/ab/)
 
-3. You must have downloaded and installed dbt 0.14(0.15 support will be added soon!), 
-and [set up a project](https://docs.getdbt.com/v0.14.0/docs/dbt-projects).
+3. You must have downloaded and installed dbt 0.15, 
+and [set up a project](https://docs.getdbt.com/v0.15.0/docs/dbt-projects).
 
 4. Sources should be set up in dbt [(see below)](#setting-up-sources).
 
@@ -39,7 +39,7 @@ We will be using the ```source``` feature of dbt extensively throughout the docu
 data much easier, cleaner and more modular.
 
 We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
-however this feature is documented extensively in [the documentation for dbt](https://docs.getdbt.com/v0.14.0/docs/using-sources).
+however this feature is documented extensively in [the documentation for dbt](https://docs.getdbt.com/v0.15.0/docs/using-sources).
 
 After reading the above documentation, we recommend that you place the ```schema.yml``` file you create for your sources, 
 in the root of your ```models``` folder, however you can place it where needed for your specific project and models.
@@ -73,4 +73,4 @@ packages:
 And run 
 ```dbt deps```
 
-[Read more on package installation (from dbt)](https://docs.getdbt.com/v0.14.0/docs/package-management)
+[Read more on package installation (from dbt)](https://docs.getdbt.com/v0.15.0/docs/package-management)

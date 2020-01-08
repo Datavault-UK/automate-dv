@@ -1,5 +1,6 @@
 name: 'dbtvault'
-version: '0.4'
+version: '0.4.1'
+require-dbt-version: [">=0.14.0", "<=0.15.0"]
 
 profile: 'dbtvault'
 

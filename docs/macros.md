@@ -638,7 +638,7 @@ FROM MYDATABASE.MYSCHEMA.MYTABLE
 ```
 
 !!! info
-    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/v0.14.0/docs/using-sources)
+    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/v0.15.0/docs/using-sources)
 
 #### Parameters
 

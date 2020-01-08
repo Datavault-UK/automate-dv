@@ -42,7 +42,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 Satellites are always incremental, as we load and add new records to the existing data set.
 
-[Read more about incremental models](https://docs.getdbt.com/v0.14.0/docs/configuring-incremental-models)
+[Read more about incremental models](https://docs.getdbt.com/v0.15.0/docs/configuring-incremental-models)
 
 ### Adding the metadata
 
@@ -54,7 +54,7 @@ The first piece of metadata we need is the source table. This step is easy, as i
 staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
 dbt ensures dependencies are honoured when defining the source using a reference in this way.
 
-[Read more about the ref function](https://docs.getdbt.com/v0.14.0/docs/ref)
+[Read more about the ref function](https://docs.getdbt.com/v0.15.0/docs/ref)
 
 ```sat_customer_details.sql```
 ```sql hl_lines="3"

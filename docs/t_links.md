@@ -38,7 +38,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 Transactional links are always incremental, as we load and add new records to the existing data set.
 
-[Read more about incremental models](https://docs.getdbt.com/v0.14.0/docs/configuring-incremental-models)
+[Read more about incremental models](https://docs.getdbt.com/v0.15.0/docs/configuring-incremental-models)
 
 ### Adding the metadata
 
@@ -64,7 +64,7 @@ Assuming you have a raw source table with these required columns, we can create 
 using a dbt model, (let's call it ```stg_transactions_hashed.sql```) and use it for the source table
 reference. dbt ensures dependencies are honoured when defining the source using a reference in this way.
 
-[Read more about the ref function](https://docs.getdbt.com/v0.14.0/docs/ref)
+[Read more about the ref function](https://docs.getdbt.com/v0.15.0/docs/ref)
 
 ```t_link_transactions.sql```
 ```sql hl_lines="3"
