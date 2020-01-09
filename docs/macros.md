@@ -75,7 +75,7 @@ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
 {{- config(...)                                                -}}
                                                                
 {%- set source = [ref('stg_customer_hashed')]                  -%}
-                                                                 .
+                                                                  
 {%- set src_pk = 'CUSTOMER_PK'                                 -%}
 {%- set src_nk = 'CUSTOMER_ID'                                 -%}
 {%- set src_ldts = 'LOADDATE'                                  -%}
