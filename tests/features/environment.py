@@ -9,6 +9,7 @@ from vaultBase.testing.configGenerator import ConfigGenerator
 from vaultBase.testing.dbTestUtils import DBTestUtils
 
 from definitions import FEATURES_ROOT
+from steps.step_vars import DATABASE
 
 
 def before_all(context):
@@ -42,6 +43,6 @@ def before_feature(context, feature):
     Re-create the database before every feature
     """
 
-    context.connection.execute("DROP DATABASE IF EXISTS DV_TEST_DB")
+    context.connection.execute("DROP DATABASE IF EXISTS {}".format(DATABASE))
 
-    context.connection.execute("CREATE DATABASE IF NOT EXISTS DV_TEST_DB")
+    context.connection.execute("CREATE DATABASE IF NOT EXISTS {}".format(DATABASE))

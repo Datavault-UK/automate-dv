@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: test
-    database: DV_TEST_DB
+    database: DBT_VAULT
     schema: TEST_STG
     tables:
       - name: stg_booking
