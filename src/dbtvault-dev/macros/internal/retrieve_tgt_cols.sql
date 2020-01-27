@@ -12,16 +12,16 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro create_tgt_cols() -%}
+{%- macro retrieve_tgt_cols() -%}
 
-{%- set tgt_pk = kwargs['tgt_pk']|default(None, true) -%}
-{%- set tgt_nk = kwargs['tgt_nk']|default(None, true) -%}
+{%- set tgt_pk = [ ref(kwargs['tgt_pk']|default(None, true)) ] -%}
+{%- set tgt_nk = [ ref(kwargs['tgt_nk']|default(None, true))] -%}
 {%- set tgt_fk = kwargs['tgt_fk']|default(None, true) -%}
 {%- set tgt_payload = kwargs['tgt_payload']|default(None, true) -%}
 {%- set tgt_hashdiff = kwargs['tgt_hashdiff']|default(None, true) -%}
 {%- set tgt_eff = kwargs['tgt_eff']|default(None, true) -%}
-{%- set tgt_ldts = kwargs['tgt_ldts']|default(None, true)  -%}
-{%- set tgt_source = kwargs['tgt_source']|default(None, true) -%}
+{%- set tgt_ldts = [ ref(kwargs['tgt_ldts']|default(None, true)) ] -%}
+{%- set tgt_source = [ ref(kwargs['tgt_source']|default(None, true)) ] -%}
 
 {%- set src_pk = kwargs['src_pk']|default(None, true) -%}
 {%- set src_nk = kwargs['src_nk']|default(None, true) -%}
