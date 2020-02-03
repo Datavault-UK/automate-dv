@@ -14,7 +14,8 @@
 -#}
 {%- macro single(src_pk, src_nk, src_ldts, src_source,
                  source, letter='a') -%}
-      {{ log('reached', true) }}
+
       SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], letter) }}
       FROM {{ source }} AS {{ letter }}
+
 {%- endmacro -%}
