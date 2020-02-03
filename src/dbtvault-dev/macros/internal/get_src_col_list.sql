@@ -12,7 +12,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro get_col_list(tgt_cols) -%}
+{%- macro get_src_col_list(tgt_cols) -%}
 
 
 {%- set col_list = [] -%}
@@ -25,17 +25,12 @@
 
             {%- set _ = col_list.append(columns) -%}
 
-        {#- If a triple -#}
-        {%- elif columns | first is string -%}
-
-            {%- set _ = col_list.append(columns|last) -%}
-
         {#- If list of lists -#}
         {%- elif columns is iterable and columns is not string -%}
 
             {%- for cols in columns -%}
 
-                {%- set _ = col_list.append(cols|last) -%}
+                {%- set _ = col_list.append(cols) -%}
 
             {%- endfor -%}
         {%- endif -%}
