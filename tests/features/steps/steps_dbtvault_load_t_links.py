@@ -1,7 +1,5 @@
 from behave import *
 
-from steps.step_vars import *
-
 use_step_matcher("parse")
 
 # MAIN STEPS

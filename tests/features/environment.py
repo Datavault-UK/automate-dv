@@ -17,7 +17,7 @@ def before_all(context):
     Set up the full test environment and add objects to the context for use in steps
     """
 
-    config_path = FEATURES_ROOT / 'config'
+    config_path = FEATURES_ROOT/ 'config'
     credentials_path = FEATURES_ROOT / 'config' / 'credentials.json'
 
     context.dbutils = DBTestUtils()
