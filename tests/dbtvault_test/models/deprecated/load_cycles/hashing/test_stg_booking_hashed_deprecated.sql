@@ -1,4 +1,4 @@
-{{- config(materialized='table', schema='vlt', enabled=true, tags=['load_cycles', 'deprecated'])                                            -}}
+{{- config(materialized='table', schema='vlt', enabled=true, tags=['load_cycles_deprecated', 'deprecated'])                                            -}}
 
 {%- set source_table = source('test_deprecated', 'stg_booking_deprecated')                                                                            -%}
 

@@ -3,7 +3,7 @@ import os
 from behave import *
 
 from definitions import TESTS_DBT_ROOT
-from steps.step_vars import DATABASE, STG_SCHEMA, VLT_SCHEMA
+from steps.step_vars import *
 
 use_step_matcher("parse")
 
@@ -14,7 +14,7 @@ use_step_matcher("parse")
 @given("there is an empty TEST_STG_CUSTOMER table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_customer",
+    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_customer_{}".format(MODE.lower()),
                                     ["CUSTOMER_ID VARCHAR(38)", "CUSTOMER_NAME VARCHAR(60)", "CUSTOMER_DOB DATE",
                                      "LOADDATE DATE", "EFFECTIVE_FROM DATE"], connection=context.connection)
 
@@ -22,7 +22,7 @@ def step_impl(context):
 @step("there is an empty TEST_STG_BOOKING table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_booking",
+    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_booking_{}".format(MODE.lower()),
                                     ["BOOKING_REF NUMBER(38,0)", "CUSTOMER_ID VARCHAR(38)", "BOOKING_DATE DATE",
                                      "PRICE DOUBLE", "DEPARTURE_DATE DATE", "DESTINATION VARCHAR(3)",
                                      "PHONE VARCHAR(15)", "NATIONALITY VARCHAR(30)", "LOADDATE DATE"],
@@ -36,7 +36,7 @@ def step_impl(context):
 def step_impl(context):
     os.chdir(TESTS_DBT_ROOT)
 
-    os.system("dbt run --full-refresh --models tag:load_cycles")
+    os.system("dbt run --full-refresh --models tag:load_cycles_{}".format(MODE.lower()))
 
 
 # ================ Data inserts =================
@@ -44,29 +44,31 @@ def step_impl(context):
 @when('the TEST_STG_CUSTOMER table has data inserted into it for day {day_number}')
 def step_impl(context, day_number):
     context.dbutils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_customer",
+    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_customer_{}".format(MODE.lower()),
                                     ["CUSTOMER_ID VARCHAR(38)", "CUSTOMER_NAME VARCHAR(60)", "CUSTOMER_DOB DATE",
                                      "LOADDATE DATE", "EFFECTIVE_FROM DATE"], connection=context.connection)
 
-    context.dbutils.insert_data_from_ct(context.table, "test_stg_customer", STG_SCHEMA, connection=context.connection)
+    context.dbutils.insert_data_from_ct(context.table, "test_stg_customer_{}".format(MODE.lower()), STG_SCHEMA,
+                                        connection=context.connection)
 
 
 @step('the TEST_STG_BOOKING table has data inserted into it for day {day_number}')
 def step_impl(context, day_number):
     context.dbutils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_booking",
+    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_booking_{}".format(MODE.lower()),
                                     ["BOOKING_REF NUMBER(38,0)", "CUSTOMER_ID VARCHAR(38)", "BOOKING_DATE DATE",
                                      "PRICE DOUBLE", "DEPARTURE_DATE DATE", "DESTINATION VARCHAR(3)",
                                      "PHONE VARCHAR(15)", "NATIONALITY VARCHAR(30)", "LOADDATE DATE"],
                                     connection=context.connection)
-    context.dbutils.insert_data_from_ct(context.table, "test_stg_booking", STG_SCHEMA, connection=context.connection)
+    context.dbutils.insert_data_from_ct(context.table, "test_stg_booking_{}".format(MODE.lower()), STG_SCHEMA,
+                                        connection=context.connection)
 
 
 @step('the vault is loaded for day {day_number}')
 def step_impl(context, day_number):
     os.chdir(TESTS_DBT_ROOT)
 
-    os.system("dbt run --models tag:load_cycles")
+    os.system("dbt run --models tag:load_cycles_{}".format(MODE.lower()))
 
 
 # ============== Check loaded data ==============
@@ -77,7 +79,8 @@ def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                    binary_columns=['CUSTOMER_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_hub_customer"),
+    result_df = context.dbutils.get_table_data(full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA,
+                                                                                 "test_hub_customer_{}".format(MODE.lower())),
                                                binary_columns=['CUSTOMER_PK'], ignore_columns=['SOURCE'],
                                                order_by='CUSTOMER_ID', connection=context.connection)
 
@@ -89,7 +92,8 @@ def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
                                                    binary_columns=['BOOKING_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_hub_booking"),
+    result_df = context.dbutils.get_table_data(full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA,
+                                                                                 "test_hub_booking_{}".format(MODE.lower())),
                                                binary_columns=['BOOKING_PK'], ignore_columns=['SOURCE'],
                                                order_by='BOOKING_REF', connection=context.connection)
 
@@ -102,7 +106,7 @@ def step_impl(context):
                                                    binary_columns=['CUSTOMER_BOOKING_PK', 'CUSTOMER_PK', 'BOOKING_PK'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_link_customer_booking"),
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_link_customer_booking_{}".format(MODE.lower())),
         binary_columns=['CUSTOMER_BOOKING_PK', 'CUSTOMER_PK', 'BOOKING_PK'], ignore_columns=['SOURCE'],
         order_by='BOOKING_PK', connection=context.connection)
 
@@ -116,7 +120,7 @@ def step_impl(context):
                                                    binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_cust_customer_details"),
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_cust_customer_details_{}".format(MODE.lower())),
         binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by=['NAME', 'LOADDATE'],
         connection=context.connection)
 
@@ -129,7 +133,7 @@ def step_impl(context):
                                                    binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_customer_details"),
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_customer_details_{}".format(MODE.lower())),
         binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by='CUSTOMER_PK',
         connection=context.connection)
 
@@ -142,7 +146,7 @@ def step_impl(context):
                                                    binary_columns=['BOOKING_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
-        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_booking_details"),
+        full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_booking_details_{}".format(MODE.lower())),
         binary_columns=['BOOKING_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by='BOOKING_PK',
         connection=context.connection)
 

@@ -28,14 +28,14 @@
         {#- If a triple -#}
         {%- elif columns | first is string -%}
 
-            {%- set _ = col_list.append(columns) -%}
+            {%- set _ = col_list.append(columns|last) -%}
 
         {#- If list of lists -#}
         {%- elif columns is iterable and columns is not string -%}
 
             {%- for cols in columns -%}
 
-                {%- set _ = col_list.append(cols) -%}
+                {%- set _ = col_list.append(cols|last) -%}
 
             {%- endfor -%}
         {%- endif -%}

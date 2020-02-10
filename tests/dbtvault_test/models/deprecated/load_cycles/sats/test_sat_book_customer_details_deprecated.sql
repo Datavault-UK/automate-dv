@@ -1,4 +1,4 @@
-{{- config(materialized='incremental', schema='vlt', enabled=true, tags=['load_cycles', 'deprecated']) -}}
+{{- config(materialized='incremental', schema='vlt', enabled=true, tags=['load_cycles_deprecated', 'deprecated']) -}}
 
 {%- set source = [ref('test_stg_booking_hashed_deprecated')]                                       -%}
 
