@@ -27,7 +27,7 @@
     {%- set source_col = dbtvault.source_columns(src_pk, src_fk, src_ldts, src_source,
                                                  multi_source, is_union) -%}
 
-    {{- return(source_col) -}}
+    {{- return([source_col, is_union]) -}}
 
 {%- else -%}
 
@@ -36,7 +36,7 @@
     {%- set source_col = dbtvault.source_columns(src_pk, src_fk, src_ldts, src_source,
                                                  source, is_union) -%}
 
-    {{- return(source_col) -}}
+    {{- return([source_col, is_union]) -}}
 
 {%- endif -%}
 

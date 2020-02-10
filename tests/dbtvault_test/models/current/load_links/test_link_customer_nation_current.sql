@@ -1,6 +1,6 @@
 {{- config(materialized='incremental', schema='vlt', enabled=true, tags=['load_links', 'current'])     -}}
 
-{%- set source = [ref('test_stg_crm_customer_hashed_links_current')]                                -%}
+{#- {%- set source = [ref('test_stg_crm_customer_hashed_links_current')]                                -%}
 
 {%- set src_pk = 'CUSTOMER_NATION_PK'                                                       -%}
 {%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                                               -%}
@@ -16,4 +16,7 @@
 
 {{ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
                           tgt_pk, tgt_fk, tgt_ldts, tgt_source,
-                          source)                                                            }}
+                          source)                                                            }} -#}
+
+{{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
+                 var('src_source'), var('source')) }}

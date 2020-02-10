@@ -3,7 +3,9 @@
 {%- set source_table = source('test_current', 'stg_customer_links_current')                       -%}
 
 {{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
+                        ('CUSTOMER_ID', 'CUSTOMER_FK'),
                          ('NATION_ID', 'NATION_PK'),
+                         ('NATION_ID', 'NATION_FK'),
                          (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK')])   -}},
 
 {{ dbtvault.add_columns(source_table)                                              }}

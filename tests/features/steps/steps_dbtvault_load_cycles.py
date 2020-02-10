@@ -116,12 +116,12 @@ def step_impl(context):
 @step("we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'],
-                                                   order_by=['NAME', 'LOADDATE'],
-                                                   binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
+                                                   order_by=['CUSTOMER_NAME', 'LOADDATE'],
+                                                   binary_columns=['CUSTOMER_PK', 'CUSTOMER_HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
         full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_cust_customer_details_{}".format(MODE.lower())),
-        binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by=['NAME', 'LOADDATE'],
+        binary_columns=['CUSTOMER_PK', 'CUSTOMER_HASHDIFF'], ignore_columns=['SOURCE'], order_by=['CUSTOMER_NAME', 'LOADDATE'],
         connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
@@ -130,11 +130,11 @@ def step_impl(context):
 @step("we expect the TEST_SAT_BOOK_CUSTOMER_DETAILS table to contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='CUSTOMER_PK',
-                                                   binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
+                                                   binary_columns=['CUSTOMER_PK', 'BOOK_CUSTOMER_HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
         full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_customer_details_{}".format(MODE.lower())),
-        binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by='CUSTOMER_PK',
+        binary_columns=['CUSTOMER_PK', 'BOOK_CUSTOMER_HASHDIFF'], ignore_columns=['SOURCE'], order_by='CUSTOMER_PK',
         connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
@@ -143,11 +143,11 @@ def step_impl(context):
 @step("we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'], order_by='BOOKING_PK',
-                                                   binary_columns=['BOOKING_PK', 'HASHDIFF'])
+                                                   binary_columns=['BOOKING_PK', 'BOOK_BOOKING_HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
         full_table_name="{}.{}.{}".format(DATABASE, VLT_SCHEMA, "test_sat_book_booking_details_{}".format(MODE.lower())),
-        binary_columns=['BOOKING_PK', 'HASHDIFF'], ignore_columns=['SOURCE'], order_by='BOOKING_PK',
+        binary_columns=['BOOKING_PK', 'BOOK_BOOKING_HASHDIFF'], ignore_columns=['SOURCE'], order_by='BOOKING_PK',
         connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
