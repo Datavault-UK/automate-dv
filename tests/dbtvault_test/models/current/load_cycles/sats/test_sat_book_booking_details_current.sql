@@ -1,6 +1,6 @@
 {{- config(materialized='incremental', schema='vlt', enabled=true, tags=['load_cycles_current', 'current']) -}}
 
-{%- set source = [ref('test_stg_booking_hashed_current')]                                       -%}
+{#- {%- set source = [ref('test_stg_booking_hashed_current')]                                       -%}
 
 {%- set src_pk = 'BOOKING_PK'                                                           -%}
 {%- set src_hashdiff = 'BOOK_BOOKING_HASHDIFF'                                          -%}
@@ -22,7 +22,11 @@
                           src_eff, src_ldts, src_source,
                           tgt_pk, tgt_hashdiff, tgt_payload,
                           tgt_eff, tgt_ldts, tgt_source,
-                          source)                                                        }}
+                          source)                                                        }} -#}
+
+{{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
+                var('src_eff'), var('src_ldts'), var('src_source'),
+                var('source')) }}
 
 
 

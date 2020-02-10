@@ -1,6 +1,6 @@
 {{- config(materialized='incremental', schema='vlt', enabled=true, tags=['load_tlinks', 'current']) -}}
 
-{%- set source = [ref('t_link_transaction_hashed_current')] -%}
+{#- {%- set source = [ref('t_link_transaction_hashed_current')] -%}
 
 {%- set src_pk = 'TRANSACTION_PK' -%}
 {%- set src_fk = 'CUSTOMER_PK' -%}
@@ -18,4 +18,7 @@
 
 {{ dbtvault.t_link_template(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source,
                             tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source,
-                            source) }}
+                            source) }} -#}
+
+{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
+                   var('src_ldts'), var('src_source'), var('source')) }}
