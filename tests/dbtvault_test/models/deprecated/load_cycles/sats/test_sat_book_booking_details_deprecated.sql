@@ -11,7 +11,7 @@
 {%- set src_source = 'SOURCE'                                                           -%}
 
 {%- set tgt_pk = source                                                                 -%}
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY', 'HASHDIFF']                           -%}
+{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY', 'BOOK_BOOKING_HASHDIFF']              -%}
 {%- set tgt_payload = source                                                            -%}
 
 {%- set tgt_eff = source                                                                -%}

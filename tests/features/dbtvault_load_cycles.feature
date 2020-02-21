@@ -6,6 +6,8 @@ Feature: Loading through multiple tables and cycles from source to vault
 # Date     Who Version Details
 # -------- --- ------- --------------------------------------------------------
 # 16.09.19 AH  1.0     First release.
+# 21.02.20 CF  1.1     Changes to some column names to adjust for testing
+#                      the current and deprecated versions.
 # =============================================================================
 
   Scenario: Test several load cycles
