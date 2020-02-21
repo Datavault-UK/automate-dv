@@ -17,10 +17,10 @@ Our package runs inside the dbt environment, so you can use dbt to run other par
 dbtvault package for the Data Vault specific steps.
 
 !!! tip
-    #### Sign up for early-bird announcements 
+    #### Sign up for early-bird announcements or join our Slack 
 
-    [Sign up](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
-    before anyone else!
+    [![Sign up](https://img.shields.io/badge/Email-Sign--up-blue)](https://www.data-vault.co.uk/dbtvault/)
+    [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 ## What is Data Vault 2.0?
 Data Vault 2.0 is an Agile method that can be used to deliver a highly scalable enterprise Data Warehouse. 
@@ -63,6 +63,7 @@ dbt works with the dbtvault package to:
 - Execute all generated SQL statements as a complete set.
 - Execute data load in parallel up to a user-defined number of parallel threads.
 - Generate data flow diagrams showing data lineage.
+- Automatically build a documentation website.
 
 ## You Do Need Some Prior Knowledge About the Data Vault 2.0 Method
 If you are going to use the dbtvault package for your Data Vault 2.0 project, then we expect you to have some prior 

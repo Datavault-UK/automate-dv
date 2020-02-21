@@ -3,6 +3,8 @@
 The dbtvault package assumes you've already loaded a Snowflake database staging table with raw data 
 from a source system or feed (the 'raw staging layer').
 
+### Pre-conditions
+
 There are a few conditions that need to be met for the dbtvault package to work:
 
 - All records are for the same ```load_datetime```
@@ -10,6 +12,8 @@ There are a few conditions that need to be met for the dbtvault package to work:
 
 Instead of truncating and loading, you may also build a view over the table to filter out the right records and load 
 from the view.
+
+### Let's Begin
 
 The raw staging table needs to be pre-processed to add extra columns of data to make it ready to load to the raw vault.
 Specifically, we need to add primary key hashes, hashdiffs, and any implied fixed-value columns (see the diagram).
@@ -127,15 +131,14 @@ We now add the column names we want to bring forward/feed from the raw staging t
 To include all columns which exist in the source table, we provide the ```source_table``` variable we created earlier.
 
 We will also need to add some additional columns to our staging layer, containing 'constants' implied by the context of the 
-staging data. For example, we may add a source table code value, or the the load date, or some other constant needed in
+staging data. For example, we can add a source table code value for audit purposes, the load date, or some other constant needed in
 the primary key.
 
 We can also override any columns coming in from the source, with different data. We may want to do this if a source 
 column already exists in the raw stage and the values aren't appropriate.
  
-We provide the constant by adding an ```!``` to the data and alias them with the same name as the column we want to 
-override. You will have another opportunity to rename these columns, as well as cast them to different data types
-later when creating the raw vault tables. We can also use this method to create any new columns which do not already 
+We provide a constant by adding an ```!``` to the data and alias them with the same name as the column we want to 
+override. We can also use this method to create any new columns which do not already 
 exist in the source.
 
 
