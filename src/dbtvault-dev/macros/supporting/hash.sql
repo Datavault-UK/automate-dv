@@ -25,7 +25,7 @@
     {%- set hash_size = 32 -%}
 {%- else -%}
     {%- set hash_alg = 'MD5_BINARY' -%}
-    {%- set hash_size = 32 -%}
+    {%- set hash_size = 16 -%}
 {%- endif -%}
 
 {#- Alpha sort columns before hashing -#}
@@ -34,7 +34,7 @@
 {%- endif -%}
 
 {%- if columns is string %}
-    CAST({{- hash_alg -}}(UPPER(TRIM(CAST({{columns}} AS VARCHAR)))) AS BINARY({{- hash_size -}})) AS {{alias}}
+    CAST({{- hash_alg -}}(IFNULL((UPPER(TRIM(CAST({{columns}} AS VARCHAR)))), '^^')) AS BINARY({{- hash_size -}})) AS {{alias}}
 
 {%- else %}
 

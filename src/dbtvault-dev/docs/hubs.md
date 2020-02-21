@@ -20,8 +20,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 ```hub_customer.sql```
 ```sql
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
-
+{{- config(materialized='incremental', schema='MYSCHEMA', tags='hub') -}}
 ```
 
 Hubs are always incremental, as we load and add new records to the existing data set. 
@@ -29,115 +28,79 @@ Hubs are always incremental, as we load and add new records to the existing data
 [Read more about incremental models](https://docs.getdbt.com/v0.15.0/docs/configuring-incremental-models)
 
 !!! note "Dont worry!" 
-    The [hub_template](macros.md#hub_template) deals with the Data Vault
+    The [hub](macros.md#hub) deals with the Data Vault
     2.0 standards when loading into the hub from the source. We won't need to worry about unwanted duplicates.
     
 ### Adding the metadata
 
-Let's look at the metadata we need to provide to the [hub_template](macros.md#hub_template) macro.
+Let's look at the metadata we need to provide to the [hub](macros.md#hub) macro.
+
+!!! tip "New in v0.5"
+    As of v0.5, metadata must be provided in the ```dbt_project.yml```. Please refer to our [metadata](metadata.md) page.
+
+!!! warning "hub_template deprecated"
+    For previous versions prior to 0.5, please use the [hub_template](macros.md#hub_template) macro. 
+    
 
 #### Source table
 
 The first piece of metadata we need is the source table. This step is easy, as in this example we created the 
-staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
-dbt ensures dependencies are honoured when defining the source using a reference in this way.
+staging layer ourselves. All we need to do is provide the name of stage table as a string in our metadata as follows.
 
-[Read more about the ref function](https://docs.getdbt.com/v0.15.0/docs/ref)
+```dbt_project.yml```
 
-```hub_customer.sql```
-
-```sql hl_lines="3"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
+```yaml
+hub_customer:
+          vars:
+            source: 'v_stg_orders'
+            ...
 ```
-
-!!! note
-    Make sure you surround the ref call with square brackets, as shown in the snippet
-    above.
 
 #### Source columns
 
 Next, we define the columns which we would like to bring from the source.
 Using our knowledge of what columns we need in our  ```hub_customer``` table, we can identify columns in our
-staging layer which map to them:
+staging layer which we will then use to form our hub:
 
 1. A primary key, which is a hashed natural key. The ```CUSTOMER_PK``` we created earlier in the [staging](staging.md) 
 section will be used for ```hub_customer```.
-2. The natural key, ```CUSTOMER_ID``` which we added using the [add_columns](macros.md#add_columns) macro.
+2. The natural key, ```CUSTOMER_KEY``` which we added using the [add_columns](macros.md#add_columns) macro.
 3. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 4. A ```SOURCE``` column.
 
 We can now add this metadata to the model:
 
-```hub_customer.sql```
-```sql hl_lines="5 6 7 8"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
+```dbt_project.yml```
 
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_nk = 'CUSTOMER_ID'                                                      -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
-
+```yaml hl_lines="4 5 6 7"
+hub_customer:
+          vars:
+            source: 'v_stg_orders'
+            src_pk: 'CUSTOMER_PK'
+            src_nk: 'CUSTOMER_KEY'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
 ```
 
-#### Target columns
-
-Now we can define the target column mapping. The [hub_template](macros.md#hub_template) does a lot of work for us if we
-provide the metadata it requires.
-
-```hub_customer.sql```
-```sql hl_lines="10 11 12 13"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_nk = 'CUSTOMER_ID'                                                      -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
-                                                                           
-{%- set tgt_pk = source                                                             -%}
-{%- set tgt_nk = source                                                             -%}
-{%- set tgt_ldts = source                                                           -%}
-{%- set tgt_source = source                                                         -%}
-```
-
-With these 4 additional lines, we have provided our mapping from source to target. 
-
-In this particular scenario we aren't renaming the columns or changing the data type, 
-so we have used the source reference as a shorthand for keeping the 
-same name and datatype as the source columns. If you want to rename columns or change their type, 
-this can be achieved by providing triples instead of the reference, 
-[see the documentation](macros.md#using-a-source-reference-for-the-target-metadata) 
-for more details.
+!!! note "New in v0.5"
+    Notice something missing? You no longer need to specify target columns in your metadata! All required columns 
+    including constants, aliases, and functions must be handled using the [add_columns](macros.md#add_columns) macro
+    in the staging layer.  
 
 ### Invoking the template 
 
-Now we bring it all together and call the [hub_template](macros.md#hub_template) macro:
+Now all that is needed is to create your hub:
 
 ```hub_customer.sql```                                                                 
-```sql hl_lines="15 16 17"                                                             
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='hub') -}}
+```sql hl_lines="3 4"                                                             
+{{- config(materialized='incremental', schema='MYSCHEMA', tags='hub') -}}
 
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_nk = 'CUSTOMER_ID'                                                      -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
-                                                                           
-{%- set tgt_pk = source                                                             -%}
-{%- set tgt_nk = source                                                             -%}
-{%- set tgt_ldts = source                                                           -%}
-{%- set tgt_source = source                                                         -%}
-                                                                                       
-{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,                         
-                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,               
-                         source)                                                     }}
+{{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
+                var('src_source'), var('source'))                      }}
 ```
+
+Here we have added a call to the [hub](macros.md#hub) macro, referencing our variables declared in the 
+```dbt_project.yml```.
 
 ### Running dbt
 
