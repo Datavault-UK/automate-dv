@@ -8,6 +8,8 @@ Feature: Load Satellites
 # 24.06.19 CF  1.0     First release.
 # 09.07.19 CF  1.1     Updated to test the sql used by dbt.
 # 24.09.19 NS  1.2     Reviewed and refactored.
+# 21.02.20 CF  1.3     Changes to some column names to adjust for testing
+#                      the current and deprecated versions.
 # =============================================================================
 
 # -----------------------------------------------------------------------------
