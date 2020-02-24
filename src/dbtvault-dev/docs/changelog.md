@@ -16,6 +16,7 @@ Read [Migrating from v0.4](migrating.md) for more information.
 
 - Target column metadata mappings are no longer required.
 - Manual column mapping using triples to provide data-types and aliases (messy and bad practice).
+- Removed copyright notice from generated tables (we are open source, duh!)
 
 ### Fixed
 
