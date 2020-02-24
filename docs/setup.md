@@ -85,8 +85,8 @@ reasonable time-frame, however, you may run with as many threads as required.
 
 ## The project file
 
-The ```dbt_project.yml``` file provided with the project is mostly standard. The main additions are the
-settings for the models and the ```vars```.
+As of v0.5, the ```dbt_project.yml``` file is now used as a metadata store. Below is an example file showing the
+metadata for a single instance of each of the current table types. 
 
 ```dbt_project.yml```
 ```yaml 
@@ -105,6 +105,64 @@ models:
         schema: "RAW"
         enabled: true
         materialized: incremental
+      hubs:
+        enabled: true
+        hub_customer:
+          vars:
+            source: 'v_stg_orders'
+            src_pk: 'CUSTOMER_PK'
+            src_nk: 'CUSTOMER_KEY'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+        ...
+      links:
+        enabled: true
+        link_customer_nation:
+          vars:
+            source: 'v_stg_orders'
+            src_pk: 'LINK_CUSTOMER_NATION_PK'
+            src_fk:
+              - 'CUSTOMER_PK'
+              - 'NATION_PK'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+        ...
+      sats:
+        enabled: true
+        sat_order_customer_details:
+          vars:
+            source: 'v_stg_orders'
+            src_pk: 'CUSTOMER_PK'
+            src_hashdiff: 'CUSTOMER_HASHDIFF'
+            src_payload:
+              - 'NAME'
+              - 'ADDRESS'
+              - 'PHONE'
+              - 'ACCBAL'
+              - 'MKTSEGMENT'
+              - 'COMMENT'
+            src_eff: 'EFFECTIVE_FROM'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+        ...
+      t_links:
+        enabled: true
+        t_link_transactions:
+          vars:
+            source: 'v_stg_transactions'
+            src_pk: 'TRANSACTION_PK'
+            src_fk:
+              - 'CUSTOMER_FK'
+              - 'ORDER_FK'
+            src_payload:
+              - 'TRANSACTION_NUMBER'
+              - 'TRANSACTION_DATE'
+              - 'TYPE'
+              - 'AMOUNT'
+            src_eff: 'EFFECTIVE_FROM'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+        ...
   vars:
     date: TO_DATE('1992-01-08')
 ```
@@ -117,7 +175,14 @@ schema, and models in the sub-directories ```stage``` and ```source``` should ha
 as their materialization. Many of these attributes are also provided in the files themselves and take
 precedence over these settings anyway, this is just a design choice. 
 
-#### vars
+#### table metadata
 
+The table metadata is now provided, as of v0.5, in the ```dbt_project.yml``` file as seen in the above example. 
+For each of your table models you must specify the metadata using the correct hierarchy. The metadata provided here is
+for the ```hub_customer.sql```, ```link_customer_nation.sql```, and ```sat_order_customer_details.sql``` models.
+
+#### global vars
+
+On line 73, we have vars that will apply to all models. 
 To simulate day-feeds, we use a variable we have named ```date``` which is used in the ```SRC``` models to
 load for a specific date. This is described in more detail in the [Profiling TPC-H](sourceprofile.md) section.

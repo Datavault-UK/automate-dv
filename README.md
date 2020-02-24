@@ -51,6 +51,7 @@ packages:
   - git: "https://github.com/Datavault-UK/dbtvault"
     revision: v0.4.1 # Latest stable version
 ```
+
 And run 
 ```dbt deps```
 
