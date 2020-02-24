@@ -62,10 +62,10 @@ For this step, ensure you have the following columns present in the source table
 
 Assuming you have a raw source table with these required columns, we can create a hashed staging table
 using a dbt model, (let's call it ```stg_transactions_hashed.sql```) and this is the table we reference in the 
-```dbt_project``` file as a string.
+```dbt_project.yml``` file as a string.
 
 ```dbt_project.yml```
-```yaml hl_lines="3"
+```yaml
 t_link_transactions:
           vars:
             source: 'stg_transactions_hashed'

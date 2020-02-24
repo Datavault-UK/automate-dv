@@ -46,7 +46,7 @@ Satellites are always incremental, as we load and add new records to the existin
 
 ### Adding the metadata
 
-Let's look at the metadata we need to provide to the [sat](macros.md#sat) macro via the ````dbt_project```.
+Let's look at the metadata we need to provide to the [sat](macros.md#sat) macro via the ```dbt_project.yml``` file.
 
 #### Source table
 
@@ -55,7 +55,7 @@ staging layer ourselves.  All we need to do is provide the name of stage table a
 as follows.
 
 ```dbt_project.yml```
-```yaml hl_lines="3"
+```yaml
 sat_customer_details:
           vars:
             source: 'stg_customer_hashed'
@@ -104,7 +104,7 @@ Now we bring it all together and call the [sat](macros.md#sat_) macro:
 
 {{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
                 var('src_eff'), var('src_ldts'), var('src_source'),
-                var('source'))                                          }}
+                var('source'))                                               }}
 ```
 
 ### Running dbt
@@ -125,4 +125,4 @@ And our table will look like this:
 
 ### Next steps
 
-We have now created a staging layer and a hub, link and satellite. Next we will look at transactional links.
+We have now created a staging layer and a hub, link and satellite. Next we will look at [transactional links](t_links.md).

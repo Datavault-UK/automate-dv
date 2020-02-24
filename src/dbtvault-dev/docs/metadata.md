@@ -2,11 +2,11 @@ As of v0.5, metadata is provided to the models through the ```dbt_project.yml```
 the models themselves. This keeps the metadata all in one place and simplifies the use of dbtvault.
 
 !!! note
-    Target table metadata is no longer required, only the metadata regarding the source is. 
+    In v0.5, only source column metadata is necessary, we have removed target column metadata.  
 
-#### Declaring sources in v0.5
+#### Declaring sources
 
-There is no longer the need to state the source using the ```ref``` macro, the new [macros](macros.md) do this all for
+Since v0.5, there is no longer the need to state the source using the ```ref``` macro, the new [macros](macros.md) do this all for
 you. For single source models, just state the name of the source as a string. 
 For the case of union models, just state the sources as a list of strings. Examples of both of these can be seen below:
 
@@ -26,12 +26,13 @@ hub_nation:
 
 #### Hubs
 
-The only metadata needed to build a hub is that of the source (since in the staging you must assign all aliases
-and data-types required). The parameters that the [hub](macros.md#hub) macro accept are:
+Only the source metadata is needed to build a hub, as column types and names are retained are retained in the target 
+table. The parameters that the [hub](macros.md#hub) macro accept are:
 
 | Parameter    | Description                                              | 
 | -------------| ---------------------------------------------------------| 
-| source       | The staging table that feeds the hub. This can be single source or a union, details on how to do this are seen above.  | 
+| source       | The staging table that feeds the hub. This can be a single source or a union.  | 
+| src_pk       | The column to use for the primary key (should be hashed) |
 | src_nk       | The natural key column that the primary key is based on. | 
 | src_ldts     | The loaddate timestamp column of the record.             |
 | src_source   | The source column of the record.                         |
@@ -55,8 +56,9 @@ The link metadata is very similar to the hub metadata. The parameters that the [
 
 | Parameter    | Description                                              | 
 | -------------| ---------------------------------------------------------| 
-| source       | The staging table that feeds the link. This can be single source or a union, details on this are seen above. | 
-| src_fk       | The foreign key columns that the make up the primary link key. This must be enter as a list of strings. | 
+| source       | The staging table that feeds the link. This can be single source or a union. | 
+| src_pk       | The column to use for the primary key (should be hashed) |
+| src_fk       | The foreign key columns that the make up the primary link key. This must be entered as a list of strings. | 
 | src_ldts     | The loaddate timestamp column of the record.             |
 | src_source   | The source column of the record.                         |
 
@@ -85,10 +87,10 @@ accepts is:
 | source       | The staging table that feeds the satellite (only single sources are used for satellites). |               | 
 | src_pk       | The primary key column of the table the satellite hangs off.        | 
 | src_hashdiff | The hashdiff column of the satellite's payload.                     |
-| src_payload  | The columns that make up and payload of the satellite and are used in the hashdiff. The columns must be entered as a list of strings. |
-| src_eff      | The effective date column.                                          |
+| src_payload  | The columns that make up the payload of the satellite and are used in the hashdiff. The columns must be entered as a list of strings. |
+| src_eff      | The effective from date column.                                          |
 | src_ldts     | The loaddate timestamp column of the record.                        |
-| src_source   |The source column of the record.                                     |
+| src_source   | The source column of the record.                                     |
 
 An example of the metadata structure for a satellite is:
 
@@ -113,7 +115,7 @@ sat_order_customer_details:
 
 #### Transactional links (non-historized links)
 
-Regarding the metadata for transactional links, the [t_link](macros.md#t_link) macro accepts the following parameters:
+The [t_link](macros.md#t_link) macro accepts the following parameters:
 
 | Parameter    | Description                                                         | 
 | -------------| ------------------------------------------------------------------- | 
@@ -121,7 +123,7 @@ Regarding the metadata for transactional links, the [t_link](macros.md#t_link) m
 | src_pk       | The primary key column of the transactional link.                   | 
 | src_fk       | The foreign key columns that the make up the primary link key. This must be enter as a list of strings |
 | src_payload  | The columns that make up and payload of the transactional link. The columns must be entered as a list of strings. |
-| src_eff      | The effective date column.                                          |
+| src_eff      | The effective from date column.                                          |
 | src_ldts     | The loaddate timestamp column of the record.                        |
 | src_source   |The source column of the record.                                     |
 
@@ -147,7 +149,7 @@ t_link_transactions:
 #### The problem with metadata
 
 As metadata is stored in the ```dbt_project.yml```, you can probably foresee the file getting very large for bigger 
-projects. To help to manage large amounts of metadata, we recommend the use of external paid-for tools such as WhereScape, 
+projects. To help manage large amounts of metadata, we recommend the use of external licence-based tools such as WhereScape, 
 Matillion, and erwin Data Modeller. We have future plans to improve metadata handling but in the meantime 
 any feedback or ideas are welcome.    
 ___

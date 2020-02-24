@@ -25,7 +25,7 @@ We also need to ensure column names align with target hub or link tables.
     
     We've implemented hashing as the only option for now, though a non-hashed version will be added in future releases.
     
-## Creating the model
+## Creating the stage model
 
 To prepare our raw staging layer for loading the vault, we create a dbt model and call dbtvault staging macros with 
 provided metadata. 

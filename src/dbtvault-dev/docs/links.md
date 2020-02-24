@@ -35,12 +35,12 @@ Now we need to provide some metadata to the [link](macros.md#link) macro.
 #### Source table
 
 The first piece of metadata we need is the source table. This step is easy, as we created the 
-staging layer ourselves. All we need to do is provide a the name of the staging layer in the ```dbt_project``` 
-and dbt will do the rest for us.
+staging layer ourselves. All we need to do is provide the name of the staging layer in the ```dbt_project.yml``` file 
+and dbtvault will do the rest for us.
 
 ```dbt_project.yml```
 
-```yaml hl_lines="3"
+```yaml
 link_customer_nation:
           vars:
             source: 'stg_customer_hashed'
@@ -60,7 +60,7 @@ which we added in our staging layer.
 4. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 5. A ```SOURCE``` column.
 
-We can now add this metadata to the ```dbt_project```:
+We can now add this metadata to the ```dbt_project.yml``` file:
 
 ```dbt_project.yml```
 ```yaml  hl_lines="4 5 6 7 8 9"
@@ -77,7 +77,7 @@ link_customer_nation:
 
 !!! note 
     We are using ```src_fk```, a list of the foreign keys. This is instead of the ```src_nk``` 
-    we used when building the hubs. These columns must be given in this list format in the ```dbt_project```
+    we used when building the hubs. These columns must be given in this list format in the ```dbt_project.yml``` file
     for the links.
     
 ### Invoking the template 
@@ -89,7 +89,7 @@ Now we bring it all together and call the [link](macros.md#link_) macro:
 {{- config(materialized='incremental', schema='MYSCHEMA', tags='link') -}}
 
 {{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
-                 var('src_source'), var('source'))                 }}
+                 var('src_source'), var('source'))                      }}
 
 ```
 
@@ -119,14 +119,16 @@ So, this data can and should be combined because these records have a shared key
 We can union the tables on that key, and create a link containing a complete record set.
 
 We'll need to have a [staging model](staging.md) for each of the sources involved, 
-and provide them as a list of strings in the ```dbt_project``` file as shown below.
+and provide them as a list of strings in the ```dbt_project.yml``` file as shown below.
 
 !!! note
     If your primary key and natural key columns have different names across the different
     tables, they will need to be aliased to the same name in the respective staging layers 
     via the [add_columns](macros.md#add_columns) macro.
 
-The link model will look exactly the same as creating a single source, the [link](macros.md#link) will handle the rest:
+The union link model will look exactly the same as creating a single source link model. To create a union you need to 
+provide a list of sources rather than a single source in the metadata, the [link](macros.md#link) macro 
+will handle the rest. 
 
 ```dbt_project.yml```
 ```yaml hl_lines="3 4 5"   
@@ -145,6 +147,6 @@ link_nation_region:
 
 ### Next steps
 
-We have now created a staging layer, a hub and a link. Next we will look at satellites. 
+We have now created a staging layer, a hub and a link. Next we will look at [satellites](satellites.md). 
 These are a little more complicated, but don't worry, the [sat](macros.md#sat) macro will handle that for 
 us! 

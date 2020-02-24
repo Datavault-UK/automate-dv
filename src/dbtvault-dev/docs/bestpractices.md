@@ -17,7 +17,17 @@ For the next load you then can re-create the view with a different load date and
 manage a 'water-level' table which tracks the last load date for each source, and is incremented each load cycle.
 Do a join to the table to soft-select the next load date.
 
-## Source
+#### Staging columns after v0.5
+
+With the removal of target column mappings the staging layer must include all columns which are required in the 
+raw vault. This means you will need to use the [add_columns](macros.md#add_columns) macro to add function, alias, and
+constant based columns. You will also need to use the [multi_hash](macros.md#multi_hash) macro to add all hashed 
+columns.
+
+This is an opinionated design feature which dramatically simplifies the mapping of data into 
+the raw vault. This means that everything is derived from the staging layer. 
+
+## Record source table code
 
 We suggest you use a code. This can be anything that makes sense for your particular context, though usually an
 integer or alpha-numeric value works well. The code is often used to look-up the full table name in a table.
