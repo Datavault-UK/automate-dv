@@ -28,3 +28,8 @@ In future releases, we hope to include the following:
 - Reference Tables
 - Mart loading helpers
 - And more!
+
+### Additional features
+
+- Auditing 
+- Logging

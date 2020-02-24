@@ -18,6 +18,7 @@ repo_url: 'https://github.com/Datavault-UK/dbtvault'
 
 nav:
   - Home: 'index.md'
+  - Metadata: 'metadata.md'
   - Walk-through guide:
       - Getting Started: 'walkthrough.md'
       - Staging: 'staging.md'
@@ -32,6 +33,7 @@ nav:
     - Creating the stage layers: 'stagingdemo.md'
     - Loading the vault: 'loading.md'
   - Macros: 'macros.md'
+  - Migration from v0.4 to v0.5: 'migrating.md'
   - Best Practices: 'bestpractices.md'
   - Roadmap: 'roadmap.md'
   - Changelog: 'changelog.md'
@@ -50,6 +52,8 @@ extra:
       link: 'https://www.linkedin.com/company/business-thinking-limited'
     - type: 'facebook'
       link: 'https://www.facebook.com/DataVaultUK/'
+  version: 0.5
+  req_dbt_version: 0.15.x
 
 markdown_extensions:
   - codehilite:
@@ -61,11 +65,15 @@ markdown_extensions:
       permalink: true
       toc_depth: 1-3
 
-#plugins:
-#  - search
-#  - pdf-export
+plugins:
+  - search
+#  - markdownextradata: {}
+#  - pdf-export:
+#      combined: true
+
+
 
 extra_css:
   - 'stylesheets/extra.css'
 
-copyright: dbtvault and documentation &copy; Business Thinking trading as Datavault 2019 - Data Vault 2.0 is a registered trademark of Dan Linstedt - dbt is a registered trademark of Fishtown Analytics
+copyright: dbtvault and documentation &copy; Business Thinking trading as Datavault 2020 - Data Vault 2.0 is a registered trademark of Dan Linstedt - dbt is a registered trademark of Fishtown Analytics
