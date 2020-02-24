@@ -12,14 +12,37 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro validate_columns(select_columns, source_columns, source_relation) -%}
+{%- macro get_col_list(tgt_cols) -%}
 
-{%- if source_columns -%}
-    {%- for col in select_columns -%}
-        {%- if col not in source_columns -%}
-            {{ exceptions.raise_compiler_error("Column '" ~ col ~ "' not present in source '" ~ source_relation.table ~ "', either incorrect source or incorrect source column name.") }}
+
+{%- set col_list = [] -%}
+
+{%- if tgt_cols is iterable -%}
+
+    {%- for columns in tgt_cols -%}
+
+        {%- if columns is string -%}
+
+            {%- set _ = col_list.append(columns) -%}
+
+        {#- If a triple -#}
+        {%- elif columns | first is string -%}
+
+            {%- set _ = col_list.append(columns|last) -%}
+
+        {#- If list of lists -#}
+        {%- elif columns is iterable and columns is not string -%}
+
+            {%- for cols in columns -%}
+
+                {%- set _ = col_list.append(cols|last) -%}
+
+            {%- endfor -%}
         {%- endif -%}
+
     {%- endfor -%}
 {%- endif -%}
+
+{{ return(col_list) }}
 
 {%- endmacro -%}

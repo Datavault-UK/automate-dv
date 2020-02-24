@@ -12,10 +12,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro single(src_pk, src_nk, src_ldts, src_source,
-                 source, letter='a') -%}
+{%- macro source_columns(src_pk, src_nk, src_ldts, src_source,
+                        source, is_union) -%}
 
-      SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], letter) }}
-      FROM {{ source }} AS {{ letter }}
+    {%- if not is_union -%}
+
+        {{- dbtvault.single(src_pk, src_nk, src_ldts, src_source, source[0], 'a') -}}
+
+    {%- else -%}
+
+        {{- dbtvault.new_union(src_pk, src_nk, src_ldts, src_source, src_pk, source) -}}
+
+    {%- endif -%}
 
 {%- endmacro -%}
