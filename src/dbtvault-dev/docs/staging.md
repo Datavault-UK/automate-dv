@@ -97,10 +97,10 @@ After adding the macro call, our model will now look something like this:
                                                                                  
 {%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
                                                                                    
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),                           
-                        ('NATION_ID', 'NATION_PK'),                               
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),     
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',                         
+{{ dbtvault.multi_hash([('CUSTOMER_KEY', 'CUSTOMER_PK'),                           
+                        ('NATION_KEY', 'NATION_PK'),                               
+                        (['CUSTOMER_KEY', 'NATION_KEY'], 'CUSTOMER_NATION_PK'),     
+                        (['CUSTOMER_KEY', 'CUSTOMER_NAME',                         
                           'CUSTOMER_PHONE', 'CUSTOMER_DOB'],                      
                          'CUSTOMER_HASHDIFF', true)])                            -}},
 ```
@@ -110,13 +110,13 @@ After adding the macro call, our model will now look something like this:
     
 This call will:
 
-- Hash the ```CUSTOMER_ID``` column, and create a new column called ```CUSTOMER_PK``` containing the hash 
+- Hash the ```CUSTOMER_KEY``` column, and create a new column called ```CUSTOMER_PK``` containing the hash 
 value.
-- Hash the ```NATION_ID``` column, and create a new column called ```NATION_PK``` containing the hash 
+- Hash the ```NATION_KEY``` column, and create a new column called ```NATION_PK``` containing the hash 
 value.
-- Concatenate the values in the ```CUSTOMER_ID``` and ```NATION_ID``` columns and hash them in the order supplied, creating a new
+- Concatenate the values in the ```CUSTOMER_KEY``` and ```NATION_KEY``` columns and hash them in the order supplied, creating a new
 column called ```CUSTOMER_NATION_PK``` containing the hash of the combination of the values.
-- Concatenate the values in the ```CUSTOMER_ID```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
+- Concatenate the values in the ```CUSTOMER_KEY```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
 columns and hash them, creating a new column called ```CUSTOMER_NATION_PK``` containing the hash of the 
 combination of the values. The ```true``` parameter should be provided so that the columns are alpha-sorted. 
 
@@ -149,10 +149,10 @@ exist in the source.
 
 {%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                        ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+{{ dbtvault.multi_hash([('CUSTOMER_KEY', 'CUSTOMER_PK'),
+                        ('NATION_KEY', 'NATION_PK'),
+                        (['CUSTOMER_KEY', 'NATION_KEY'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_KEY', 'CUSTOMER_NAME',
                           'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 
                           'CUSTOMER_HASHDIFF', true)]) -}},
 
@@ -185,10 +185,10 @@ After adding the footer, our completed model should now look like this:
 
 {%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                        ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+{{ dbtvault.multi_hash([('CUSTOMER_KEY', 'CUSTOMER_PK'),
+                        ('NATION_KEY', 'NATION_PK'),
+                        (['CUSTOMER_KEY', 'NATION_KEY'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_KEY', 'CUSTOMER_NAME',
                           'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 
                           'CUSTOMER_HASHDIFF', true)]) -}},
 

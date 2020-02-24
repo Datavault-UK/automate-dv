@@ -33,6 +33,7 @@ nav:
     - Creating the stage layers: 'stagingdemo.md'
     - Loading the vault: 'loading.md'
   - Macros: 'macros.md'
+  - Migration from v0.4 to v0.5: 'migrating.md'
   - Best Practices: 'bestpractices.md'
   - Roadmap: 'roadmap.md'
   - Changelog: 'changelog.md'
@@ -75,4 +76,4 @@ plugins:
 extra_css:
   - 'stylesheets/extra.css'
 
-copyright: dbtvault and documentation &copy; Business Thinking trading as Datavault 2019 - Data Vault 2.0 is a registered trademark of Dan Linstedt - dbt is a registered trademark of Fishtown Analytics
+copyright: dbtvault and documentation &copy; Business Thinking trading as Datavault 2020 - Data Vault 2.0 is a registered trademark of Dan Linstedt - dbt is a registered trademark of Fishtown Analytics

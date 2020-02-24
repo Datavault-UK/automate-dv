@@ -33,7 +33,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 ```t_link_transactions.sql```
 ```sql
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='t_link') -}}
+{{- config(materialized='incremental', schema='MYSCHEMA', tags='t_link') -}}
 ```
 
 Transactional links are always incremental, as we load and add new records to the existing data set.
@@ -42,7 +42,7 @@ Transactional links are always incremental, as we load and add new records to th
 
 ### Adding the metadata
 
-Let's look at the metadata we need to provide to the [t_link_template](macros.md#t_link_template) macro.
+Let's look at the metadata we need to provide to the [t_link](macros.md#t_link) macro.
 
 #### Source table
 
@@ -61,100 +61,52 @@ For this step, ensure you have the following columns present in the source table
 6. A source
 
 Assuming you have a raw source table with these required columns, we can create a hashed staging table
-using a dbt model, (let's call it ```stg_transactions_hashed.sql```) and use it for the source table
-reference. dbt ensures dependencies are honoured when defining the source using a reference in this way.
+using a dbt model, (let's call it ```stg_transactions_hashed.sql```) and this is the table we reference in the 
+```dbt_project``` file as a string.
 
-[Read more about the ref function](https://docs.getdbt.com/v0.15.0/docs/ref)
-
-```t_link_transactions.sql```
-```sql hl_lines="3"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='t_link') -}}
-
-{%- set source = [ref('stg_transactions_hashed')]                                      -%}
-```
-
-!!! note
-    Make sure you surround the ref call with square brackets, as shown in the snippet
-    above.
-    
+```dbt_project.yml```
+```yaml hl_lines="3"
+t_link_transactions:
+          vars:
+            source: 'stg_transactions_hashed'
+            ...
+```   
 
 #### Source columns
 
 Next, we define the columns which we would like to bring from the source.
 We can use the columns we identified in the ```Source table``` section, above. 
 
-```t_link_transactions.sql```
-```sql hl_lines="5 6 7 8 9 10"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='t_link') -}}
-
-{%- set source = [ref('stg_transactions_hashed')]                                      -%}
-
-{%- set src_pk = 'TRANSACTION_PK'                                                      -%}
-{%- set src_fk = ['CUSTOMER_FK', 'ORDER_FK']                                           -%}
-{%- set src_payload = ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT']     -%}
-{%- set src_eff = 'EFFECTIVE_FROM'                                                     -%}
-{%- set src_ldts = 'LOADDATE'                                                          -%}
-{%- set src_source = 'SOURCE'                                                          -%}
+```dbt_project.yml```
+```yaml hl_lines="4 5 6 7 8 9 10 11 12 13 14 15"
+t_link_transactions:
+          vars:
+            source: 'stg_transactions_hashed'
+            src_pk: 'TRANSACTION_PK'
+            src_fk:
+              - 'CUSTOMER_FK'
+              - 'ORDER_FK'
+            src_payload:
+              - 'TRANSACTION_NUMBER'
+              - 'TRANSACTION_DATE'
+              - 'TYPE'
+              - 'AMOUNT'
+            src_eff: 'EFFECTIVE_FROM'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
 ```                                
-
-#### Target columns
-
-Now we can define the target column mapping. The [t_link_template](macros.md#t_link_template) does a lot of work for us if we
-provide the metadata it requires.
-
-```t_link_transactions.sql```
-```sql hl_lines="12 13 14 15 16 17"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='t_link') -}}
-
-{%- set source = [ref('stg_transactions_hashed')]                                      -%}
-
-{%- set src_pk = 'TRANSACTION_PK'                                                      -%}
-{%- set src_fk = ['CUSTOMER_FK', 'ORDER_FK']                                           -%}
-{%- set src_payload = ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT']     -%}
-{%- set src_eff = 'EFFECTIVE_FROM'                                                     -%}
-{%- set src_ldts = 'LOADDATE'                                                          -%}
-{%- set src_source = 'SOURCE'                                                          -%}
-
-{%- set tgt_pk = source                                                                -%}
-{%- set tgt_fk = source                                                                -%}
-{%- set tgt_payload = source                                                           -%}
-{%- set tgt_eff = source                                                               -%}
-{%- set tgt_ldts = source                                                              -%}
-{%- set tgt_source = source                                                            -%}
-```
-
-With these 6 additional lines, we have now informed the macro that we do not want to modify
-our source data, we are simply using the ```source``` reference as shorthand for keeping the columns the same as
-the source. In other tables in this walkthrough, notably [satellites](satellites.md#target-columns), we carried out 
-some manual mapping, but this isn't always necessary if we have all the columns we need in the staging layers. 
 
 ### Invoking the template 
 
-Now we bring it all together and call the [t_link_template](macros.md#t_link_template) macro:
+Now we bring it all together and call the [t_link](macros.md#t_link) macro:
 
 ```t_link_transactions.sql```
-```sql hl_lines="19 20 21"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='t_link') -}}
+```sql hl_lines="3 4 5"
+{{- config(materialized='incremental', schema='VLT', tags='t_link')  -}}
 
-{%- set source = [ref('stg_transactions_hashed')]                                      -%}
-
-{%- set src_pk = 'TRANSACTION_PK'                                                      -%}
-{%- set src_fk = ['CUSTOMER_FK', 'ORDER_FK']                                           -%}
-{%- set src_payload = ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT']     -%}
-{%- set src_eff = 'EFFECTIVE_FROM'                                                     -%}
-{%- set src_ldts = 'LOADDATE'                                                          -%}
-{%- set src_source = 'SOURCE'                                                          -%}
-
-{%- set tgt_pk = source                                                                -%}
-{%- set tgt_fk = source                                                                -%}
-{%- set tgt_payload = source                                                           -%}
-{%- set tgt_eff = source                                                               -%}
-{%- set tgt_ldts = source                                                              -%}
-{%- set tgt_source = source                                                            -%}
-
-{{ dbtvault.t_link_template(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source,
-                            tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source,
-                            source)                                                     }}
+{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), 
+                   var('src_eff'), var('src_ldts'), var('src_source'),
+                   var('source'))                                     }}
 ```
 
 ### Running dbt

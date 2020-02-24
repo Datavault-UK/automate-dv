@@ -37,7 +37,7 @@ The following header is what we use, but feel free to customise it to your needs
 
 ```sat_customer_details.sql```
 ```sql
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
+{{- config(materialized='incremental', schema='MYSCHEMA', tags='sat') -}}
 ```
 
 Satellites are always incremental, as we load and add new records to the existing data set.
@@ -46,28 +46,21 @@ Satellites are always incremental, as we load and add new records to the existin
 
 ### Adding the metadata
 
-Let's look at the metadata we need to provide to the [sat_template](macros.md#sat_template) macro.
+Let's look at the metadata we need to provide to the [sat](macros.md#sat) macro via the ````dbt_project```.
 
 #### Source table
 
 The first piece of metadata we need is the source table. This step is easy, as in this example we created the 
-staging layer ourselves. All we need to do is provide a reference to the model we created, and dbt will do the rest for us.
-dbt ensures dependencies are honoured when defining the source using a reference in this way.
+staging layer ourselves.  All we need to do is provide the name of stage table as a string in our metadata 
+as follows.
 
-[Read more about the ref function](https://docs.getdbt.com/v0.15.0/docs/ref)
-
-```sat_customer_details.sql```
-```sql hl_lines="3"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
+```dbt_project.yml```
+```yaml hl_lines="3"
+sat_customer_details:
+          vars:
+            source: 'stg_customer_hashed'
 ```
-
-!!! note
-    Make sure you surround the ref call with square brackets, as shown in the snippet
-    above.
     
-
 #### Source columns
 
 Next, we define the columns which we would like to bring from the source.
@@ -83,104 +76,35 @@ raw staging layer via an [add_columns](macros.md#add_columns) macro call.
 5. A load date timestamp, which is present in the staging layer as ```LOADDATE```. 
 6. A ```SOURCE``` column.
 
-We can now add this metadata to the model:
+We can now add this metadata to the ```dbt_project```:
 
-```sat_customer_details.sql```
-```sql hl_lines="5 6 7 9 10 11"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
-{%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE']           -%}
-
-{%- set src_eff = 'EFFECTIVE_FROM'                                                  -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
+```dbt_project.yml```
+```yaml hl_lines="4 5 6 7 8 9 10 11 12"
+sat_order_customer_details:
+          vars:
+            source: 'stg_customer_hashed'
+            src_pk: 'CUSTOMER_PK'
+            src_hashdiff: 'CUSTOMER_HASHDIFF'
+            src_payload:
+              - 'CUSTOMER_NAME'
+              - 'CUSTOMER_DOB'
+              - 'CUSTOMER_PHONE'
+            src_eff: 'EFFECTIVE_FROM'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
 ```
-
-#### Target columns
-
-Now we can define the target column mapping. The [sat_template](macros.md#sat_template) does a lot of work for us if we
-provide the metadata it requires. We can define which source columns map to the required target columns and
-define a column type at the same time:
-
-```sat_customer_details.sql```
-```sql hl_lines="13 14 15 16 17 19 20 21"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
-
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
-{%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE']           -%}
-
-{%- set src_eff = 'EFFECTIVE_FROM'                                                  -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
-
-{%- set tgt_pk = source                                                             -%}
-{%- set tgt_hashdiff = [src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
-{%- set tgt_payload = [[src_payload[0], 'VARCHAR(60)', 'NAME'],
-                       [src_payload[1], 'DATE', 'DOB'],
-                       [src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
-
-{%- set tgt_eff = source                                                            -%}
-{%- set tgt_ldts = source                                                           -%}
-{%- set tgt_source =  source                                                        -%}
-```
-
-With these 6 additional lines, we have now informed the macro how to transform our source data:
-
-- We have provided our mapping from source to target. We're renaming the payload columns and the hashdiff here.
-We are removing the ```CUSTOMER``` prefix, as this satellite is specifically for customer details and it's
-superfluous. Renaming will always depend on your specific project and context, however.
-
-- For the rest of the ```tgt``` metadata, we do not wish to rename columns or change
-any data types, so we are simply using the ```source``` reference as shorthand for keeping the columns the same as
-the source.
-
-!!! info
-    There is nothing to stop you entering invalid type mappings in this step (i.e. trying to cast an invalid date format to a date),
-    so please ensure they are correct.
-    You will soon find out, however, as dbt will issue a warning to you. No harm done, but save time by providing 
-    accurate metadata!
 
 ### Invoking the template 
 
-Now we bring it all together and call the [sat_template](macros.md#sat_template) macro:
+Now we bring it all together and call the [sat](macros.md#sat_) macro:
 
 ```sat_customer_details.sql```
-```sql hl_lines="23 24 25 26 27"
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags='sat') -}}
+```sql hl_lines="3 4 5"
+{{- config(materialized='incremental', schema='MYSCHEMA', tags='satellite') -}}
 
-{%- set source = [ref('stg_customer_hashed')]                                       -%}
-
-{%- set src_pk = 'CUSTOMER_PK'                                                      -%}
-{%- set src_hashdiff = 'CUSTOMER_HASHDIFF'                                          -%}
-{%- set src_payload = ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE']           -%}
-
-{%- set src_eff = 'EFFECTIVE_FROM'                                                  -%}
-{%- set src_ldts = 'LOADDATE'                                                       -%}
-{%- set src_source = 'SOURCE'                                                       -%}
-
-{%- set tgt_pk = source                                                             -%}
-{%- set tgt_hashdiff = [ src_hashdiff , 'BINARY(16)', 'HASHDIFF']                   -%}
-{%- set tgt_payload = [[ src_payload[0], 'VARCHAR(60)', 'NAME'],
-                       [ src_payload[1], 'DATE', 'DOB'],
-                       [ src_payload[2], 'VARCHAR(15)', 'PHONE']]                   -%}
-
-{%- set tgt_eff = source                                                            -%}
-{%- set tgt_ldts = source                                                           -%}
-{%- set tgt_source =  source                                                        -%}
-
-{{  dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
-                          src_eff, src_ldts, src_source,
-                          tgt_pk, tgt_hashdiff, tgt_payload,
-                          tgt_eff, tgt_ldts, tgt_source,
-                          source)                                                    }}
-
+{{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
+                var('src_eff'), var('src_ldts'), var('src_source'),
+                var('source'))                                          }}
 ```
 
 ### Running dbt
@@ -191,14 +115,14 @@ With our model complete, we can run dbt to create our ```sat_customer_details```
     
 And our table will look like this:
 
-| CUSTOMER_PK  | HASHDIFF     | NAME       | DOB          | PHONE           | EFFECTIVE_FROM | LOADDATE    | SOURCE |
-| ------------ | ------------ | ---------- | ------------ | --------------- | -------------- | ----------- | ------ |
-| B8C37E...    | 3C5984...    | Alice      | 1997-04-24   | 17-214-233-1214 | 1993-01-01     | 1993-01-01  | 1      |
-| .            | .            | .          | .            | .               | .              | .           | 1      |
-| .            | .            | .          | .            | .               | .              | .           | 1      |
-| FED333...    | D8CB1F...    | Dom        | 2018-04-13   | 17-214-233-1217 | 1993-01-01     | 1993-01-01  | 1      |
+| CUSTOMER_PK  | CUSTOMER_HASHDIFF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOADDATE    | SOURCE |
+| ------------ | ------------      | ----------    | ------------ | --------------- | -------------- | ----------- | ------ |
+| B8C37E...    | 3C5984...         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01     | 1993-01-01  | 1      |
+| .            | .                 | .             | .            | .               | .              | .           | 1      |
+| .            | .                 | .             | .            | .               | .              | .           | 1      |
+| FED333...    | D8CB1F...         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01     | 1993-01-01  | 1      |
 
 
 ### Next steps
 
-We have now created a staging layer and a hub, link and satellite. Next we will ook at transactional links.
+We have now created a staging layer and a hub, link and satellite. Next we will look at transactional links.
