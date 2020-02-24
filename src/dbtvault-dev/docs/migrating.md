@@ -1,6 +1,6 @@
 # Migrating from v0.4 to v0.5
 
-With the release of v0.5, we've moved metadata into vars on the ```dbt_project.yml``` file. Your old metadata would
+With the release of v0.5, we've moved metadata into vars in the ```dbt_project.yml``` file. Your old metadata would
 have looked something like this: 
 
 ```sql
@@ -25,13 +25,12 @@ have looked something like this:
 
 With v0.5, several things have changed:
 
- - The metadata is now specified in the ```dbt_project.yml``` file. Below can be seen how to structure this metadata in
+ - The metadata is now specified in the ```dbt_project.yml``` file. Below is how to structure this metadata in
 the ```dbt_project.yml``` file.
-- You no longer need to specific target table mapping, your target table columns
-will have to same as those from the stage meaning any aliasing or data-types must be specified and dealt with in the
-staging layer. 
+- You can no longer specify target column mappings, your target table columns
+will be derived from your source table metadata.
 
-The metadata is structure as follows:
+The metadata is structured as follows in the ```dbt_project.yml``` file:
 
 ```yaml
 hub_customer:

@@ -43,7 +43,7 @@ The dbtvault package generates and runs Data Vault ETL code from your metadata.
 
 Just like other dbt projects, you write a model for each ETL step. You provide the metadata for each model as declared 
 variables and include code to invoke a macro from the dbtvault package. 
-The macro does the rest of the work: it processes the metadata, generates Snowflake SQL and executes the load 
+The macro does the rest of the work: it processes the metadata, generates Snowflake SQL and then dbt executes the load 
 respecting any and all dependencies. 
 
 dbt even runs the load in parallel. As Data Vault 2.0 is designed for parallel load and Snowflake is highly performant, 

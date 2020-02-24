@@ -6,7 +6,7 @@ for your Data Vault.
 
 ### hub
 
-Generates sql to build a hub table using the provided metadata in the dbt_project.yml.
+Generates sql to build a hub table using the provided metadata in the ```dbt_project.yml```.
 
 ```jinja2
 {{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
@@ -21,7 +21,7 @@ Generates sql to build a hub table using the provided metadata in the dbt_projec
 | src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source        | Staging model reference or table name               | List                 | List            | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | String               | List (YAML)     | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
                                                                                                                     
 #### Usage
 
@@ -79,7 +79,7 @@ ___
 
 ### link
 
-Generates sql to build a link table using the provided metadata in the dbt_project.yml.
+Generates sql to build a link table using the provided metadata in the ```dbt_project.yml```.
 
 ```jinja2 
 {{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
@@ -91,10 +91,10 @@ Generates sql to build a link table using the provided metadata in the dbt_proje
 | Parameter     | Description                                         | Type (Single-Source) | Type (Union)         | Required?                                                          |
 | ------------- | --------------------------------------------------- | ---------------------| ---------------------| ------------------------------------------------------------------ |
 | src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_fk        | Source foreign key column(s)                        | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List (YAML)          | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source        | Staging model reference or table name               | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | String               | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -154,7 +154,7 @@ ___
 
 ### sat
 
-Generates sql to build a satellite table using the provided metadata in the dbt_project.yml.
+Generates sql to build a satellite table using the provided metadata in the ```dbt_project.yml```.
 
 ```jinja2
 {{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
@@ -168,11 +168,11 @@ Generates sql to build a satellite table using the provided metadata in the dbt_
 | ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
 | src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -229,8 +229,9 @@ ___
 Generates sql to build a transactional link table using the provided metadata in the dbt_project.yml.
 
 ```jinja2
-{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
-                   var('src_ldts'), var('src_source'), var('source')) }}               
+{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), 
+                   var('src_eff'), var('src_ldts'), var('src_source'), 
+                   var('source')) }}               
 ```
 
 #### Parameters
@@ -238,22 +239,23 @@ Generates sql to build a transactional link table using the provided metadata in
 | Parameter     | Description                                         | Type           | Required?                                                          |
 | ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
 | src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_fk        | Source foreign key column(s)                        | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
 
 ``` jinja2 
 
-{{- config(...)                                                                        -}}
+{{- config(...)                                                        -}}
 
-{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
-                   var('src_ldts'), var('src_source'), var('source'))                   }}
+{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'),
+                   var('src_eff'), var('src_ldts'), var('src_source'), 
+                   var('source'))                                       }}
 ```
 
 #### Example Output

@@ -39,7 +39,7 @@ Let's look at the metadata we need to provide to the [hub](macros.md#hub) macro.
     As of v0.5, metadata must be provided in the ```dbt_project.yml```. Please refer to our [metadata](metadata.md) page.
 
 !!! warning "hub_template deprecated"
-    For previous versions prior to 0.5, please use the [hub_template](macros.md#hub_template) macro. 
+    For previous versions prior to v0.5, please use the [hub_template](macros.md#hub_template) macro. 
     
 
 #### Source table
@@ -68,7 +68,7 @@ section will be used for ```hub_customer```.
 3. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 4. A ```SOURCE``` column.
 
-We can now add this metadata to the model:
+We can now add this metadata to the ```dbt_project.yml``` file:
 
 ```dbt_project.yml```
 
@@ -82,7 +82,7 @@ hub_customer:
             src_source: 'SOURCE'
 ```
 
-!!! note "New in v0.5"
+!!! tip "New in v0.5"
     Notice something missing? You no longer need to specify target columns in your metadata! All required columns 
     including constants, aliases, and functions must be handled using the [add_columns](macros.md#add_columns) macro
     in the staging layer.  
@@ -100,7 +100,7 @@ Now all that is needed is to create your hub:
 ```
 
 Here we have added a call to the [hub](macros.md#hub) macro, referencing our variables declared in the 
-```dbt_project.yml```.
+```dbt_project.yml``` file.
 
 ### Running dbt
 
@@ -133,15 +133,16 @@ So, this data can and should be combined because these records have a shared key
 We can union the tables on that key, and create a hub containing a complete record set.
 
 We'll need to have a [staging model](staging.md) for each of the sources involved, 
-and provide them as a list of strings in the ```dbt_project``` file as shown below.
+and provide them as a list of strings in the ```dbt_project.yml``` file as shown below.
 
 !!! note
     If your primary key and natural key columns have different names across the different
     tables, they will need to be aliased to the same name in the respective staging layers 
     via the [add_columns](macros.md#add_columns) macro.
 
-The hub model will look exactly the same as creating a single source, the [hub](macros.md#hub) macro will handle 
-the rest:
+The union hub model will look exactly the same as creating a single source hub model. To create a union you need to 
+provide a list of sources rather than a single source in the metadata, the [hub](macros.md#hub) macro 
+will handle the rest. 
 
 ```dbt_project.yml```
 ```yaml hl_lines="3 4 5"      
@@ -158,4 +159,4 @@ hub_nation:
 
 ### Next steps
 
-We have now created a staging layer and a hub. Next we will look at Links, which are created in a similar way.
+We have now created a staging layer and a hub. Next we will look at [links](links.md), which are created in a similar way.
