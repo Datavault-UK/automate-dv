@@ -11,7 +11,7 @@
 </p>
 
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4.1)](https://dbtvault.readthedocs.io/en/v0.4.1/?badge=v0.4.1)[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.5)](https://dbtvault.readthedocs.io/en/v0.5/?badge=v0.5)[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 [past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
 
@@ -49,13 +49,13 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.4.1 # Latest stable version
+    revision: v0.5 # Latest stable version
 ```
 
 And run 
 ```dbt deps```
 
-[Read more on package installation](https://docs.getdbt.com/v0.14.0/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/v0.15.0/docs/package-management)
 
 ## Usage
 
@@ -66,13 +66,8 @@ And run
 ```bash
 {{- config(...)                                                           -}}
 
-{%- set metadata = ...                                                    -%}
-
-{%- set source = ...                                                      -%}
-
-{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                         source)                                           }}
+{{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
+                var('src_source'), var('source'))                          }}
 ```
 
 ## Sign up for early-bird announcements 
