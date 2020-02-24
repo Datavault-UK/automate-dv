@@ -132,7 +132,7 @@ Now that we have loaded all records for the date ```1992-01-08```, we can increm
 Return to the ```dbt_project.yml``` file and change the date to ```1992-01-09```:
 
 ```dbt_project.yml```
-```yaml hl_lines="16"
+```yaml hl_lines="24"
 models:
   snowflakeDemo:
     load:
@@ -147,6 +147,14 @@ models:
         schema: "RAW"
         enabled: true
         materialized: incremental
+      hubs:
+        ...
+      links:
+        ...
+      sats:
+        ...
+      t_links:
+        ...
   vars:
     date: TO_DATE('1992-01-09')
 ```

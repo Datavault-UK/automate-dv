@@ -123,3 +123,6 @@ It is possible to configure a hashing algorithm on a model-by-model basis using 
 We recommend you keep the hashing algorithm consistent across all tables, however, as per best practise.
 
 Read the [dbt documentation](https://docs.getdbt.com/v0.15.0/docs/var) for further information on variable scoping.
+
+!!! warning
+    Stick with your chosen algorithm unless you can afford to full-refresh and you still have access to source data.

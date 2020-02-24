@@ -1,37 +1,153 @@
-### Metadata notes
-#### Using a source reference for the target metadata
-
-In the usage examples for the table template macros in this section, you will see ```source``` provided as the values
-for some of the target metadata variables. ```source``` has been declared as a variable at the top of the models, 
-and holds a reference to the source table we are loading from. This is shorthand for retaining the name and data types 
-of the columns as they are provided in the ```src``` variables. You may wish to alias the columns or change their data 
-types in specific circumstances, which is possible by providing an additional parameter as a list of triples: 
-``` (source column name, data type to cast to, target column name)```.
-
-Both approaches are shown in the snippet below:
-
-```mysql
-{%- set src_pk = 'CUSTOMER_NATION_PK'                           -%}
-{%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                   -%}
-{%- ...other src metadata...                                    -%}
-
-{%- set tgt_pk = source                                         -%}
-{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'], 
-                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]     -%}
-```
-
-Here, we are keeping the ```tgt_pk``` (the target table's primary key) the same as the primary key identified in the
-source (```src_pk```).
-Behind the scenes, the macro will get the datatype of the column provided in the ```src_pk``` variable and generate a 
-mapping for us. If the ```src_pk``` column does not exist, an appropriate exception will be raised.
-
-Alternatively we have provided a manual mapping for the ```tgt_fk``` (the target table's foreign key). 
-
-*For further details and examples on both methods, refer to the usage examples 
-and snippets in the table template documentation below (both Single-Source and Union).*
+As of v0.5, metadata is provided to the models through the ```dbt_project.yml``` file instead of being specified in
+the models themselves. This keeps the metadata all in one place and simplifies the use of dbtvault.
 
 !!! note
-    If only aliasing and **not** changing data types, we suggest using the [add_columns](#add_columns) macro. 
-    
-    This aliasing approach is much simpler and processed in the staging layer instead. 
+    Target table metadata is no longer required, only the metadata regarding the source is. 
+
+#### Declaring sources in v0.5
+
+There is no longer the need to state the source using the ```ref``` macro, the new [macros](macros.md) do this all for
+you. For single source models, just state the name of the source as a string. 
+For the case of union models, just state the sources as a list of strings. Examples of both of these can be seen below:
+
+```yaml tab="Single Source"
+hub_customer:
+    vars:
+      source: 'v_stg_orders'
+```
+
+```yaml tab="Union"
+hub_nation:
+    vars:
+      source:
+        - 'v_stg_orders'
+        - 'v_stg_inventory'
+```
+
+#### Hubs
+
+The only metadata needed to build a hub is that of the source (since in the staging you must assign all aliases
+and data-types required). The parameters that the [hub](macros.md#hub) macro accept are:
+
+| Parameter    | Description                                              | 
+| -------------| ---------------------------------------------------------| 
+| source       | The staging table that feeds the hub. This can be single source or a union, details on how to do this are seen above.  | 
+| src_nk       | The natural key column that the primary key is based on. | 
+| src_ldts     | The loaddate timestamp column of the record.             |
+| src_source   | The source column of the record.                         |
+
+An example of the metadata structure for a hub is:
+
+```dbt_project.yml```
+```yaml
+hub_customer:
+          vars:
+            source: 'stg_customer_hashed'
+            src_pk: 'CUSTOMER_PK'
+            src_nk: 'CUSTOMER_KEY'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+``` 
+
+#### Links
+
+The link metadata is very similar to the hub metadata. The parameters that the [link](macros.md#link) macro accept are:
+
+| Parameter    | Description                                              | 
+| -------------| ---------------------------------------------------------| 
+| source       | The staging table that feeds the link. This can be single source or a union, details on this are seen above. | 
+| src_fk       | The foreign key columns that the make up the primary link key. This must be enter as a list of strings. | 
+| src_ldts     | The loaddate timestamp column of the record.             |
+| src_source   | The source column of the record.                         |
+
+An example of the metadata structure for a link is:
+
+```dbt_project.yml```
+```yaml
+link_customer_nation:
+          vars:
+            source: 'v_stg_orders'
+            src_pk: 'LINK_CUSTOMER_NATION_PK'
+            src_fk:
+              - 'CUSTOMER_PK'
+              - 'NATION_PK'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+```
+
+#### Satellites
+
+The metadata for satellites are different from that of links and hubs. The parameters the [sat](macros.md#sat) macro 
+accepts is:
+
+| Parameter    | Description                                                         | 
+| -------------| ------------------------------------------------------------------- | 
+| source       | The staging table that feeds the satellite (only single sources are used for satellites). |               | 
+| src_pk       | The primary key column of the table the satellite hangs off.        | 
+| src_hashdiff | The hashdiff column of the satellite's payload.                     |
+| src_payload  | The columns that make up and payload of the satellite and are used in the hashdiff. The columns must be entered as a list of strings. |
+| src_eff      | The effective date column.                                          |
+| src_ldts     | The loaddate timestamp column of the record.                        |
+| src_source   |The source column of the record.                                     |
+
+An example of the metadata structure for a satellite is:
+
+```dbt_project.yml```
+```yaml
+sat_order_customer_details:
+          vars:
+            source: 'v_stg_orders'
+            src_pk: 'CUSTOMER_PK'
+            src_hashdiff: 'CUSTOMER_HASHDIFF'
+            src_payload:
+              - 'NAME'
+              - 'ADDRESS'
+              - 'PHONE'
+              - 'ACCBAL'
+              - 'MKTSEGMENT'
+              - 'COMMENT'
+            src_eff: 'EFFECTIVE_FROM'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+```
+
+#### Transactional links (non-historized links)
+
+Regarding the metadata for transactional links, the [t_link](macros.md#t_link) macro accepts the following parameters:
+
+| Parameter    | Description                                                         | 
+| -------------| ------------------------------------------------------------------- | 
+| source       | The staging table that feeds the transactional link (only single sources are used for transactional links). |   
+| src_pk       | The primary key column of the transactional link.                   | 
+| src_fk       | The foreign key columns that the make up the primary link key. This must be enter as a list of strings |
+| src_payload  | The columns that make up and payload of the transactional link. The columns must be entered as a list of strings. |
+| src_eff      | The effective date column.                                          |
+| src_ldts     | The loaddate timestamp column of the record.                        |
+| src_source   |The source column of the record.                                     |
+
+```dbt_project.yml```
+```yaml
+t_link_transactions:
+          vars:
+            source: 'v_stg_transactions'
+            src_pk: 'TRANSACTION_PK'
+            src_fk:
+              - 'CUSTOMER_FK'
+              - 'ORDER_FK'
+            src_payload:
+              - 'TRANSACTION_NUMBER'
+              - 'TRANSACTION_DATE'
+              - 'TYPE'
+              - 'AMOUNT'
+            src_eff: 'EFFECTIVE_FROM'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+```
+
+#### The problem with metadata
+
+As metadata is stored in the ```dbt_project.yml```, you can probably foresee the file getting very large for bigger 
+projects. To help to manage large amounts of metadata, we recommend the use of external paid-for tools such as WhereScape, 
+Matillion, and erwin Data Modeller. We have future plans to improve metadata handling but in the meantime 
+any feedback or ideas are welcome.    
 ___

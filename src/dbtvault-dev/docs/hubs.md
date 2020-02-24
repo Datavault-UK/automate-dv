@@ -52,7 +52,7 @@ staging layer ourselves. All we need to do is provide the name of stage table as
 ```yaml
 hub_customer:
           vars:
-            source: 'v_stg_orders'
+            source: 'stg_customer_hashed'
             ...
 ```
 
@@ -75,7 +75,7 @@ We can now add this metadata to the model:
 ```yaml hl_lines="4 5 6 7"
 hub_customer:
           vars:
-            source: 'v_stg_orders'
+            source: 'stg_customer_hashed'
             src_pk: 'CUSTOMER_PK'
             src_nk: 'CUSTOMER_KEY'
             src_ldts: 'LOADDATE'
@@ -115,7 +115,7 @@ With our model complete, we can run dbt to create our ```hub_customer``` hub.
     
 And our table will look like this:
 
-| CUSTOMER_PK  | CUSTOMER_ID  | LOADDATE   | SOURCE       |
+| CUSTOMER_PK  | CUSTOMER_KEY  | LOADDATE   | SOURCE       |
 | ------------ | ------------ | ---------- | ------------ |
 | B8C37E...    | 1001         | 1993-01-01 | 1            |
 | .            | .            | .          | .            |
@@ -133,37 +133,27 @@ So, this data can and should be combined because these records have a shared key
 We can union the tables on that key, and create a hub containing a complete record set.
 
 We'll need to have a [staging model](staging.md) for each of the sources involved, 
-and provide them as a list of references to the source parameter as shown below.
+and provide them as a list of strings in the ```dbt_project``` file as shown below.
 
 !!! note
     If your primary key and natural key columns have different names across the different
     tables, they will need to be aliased to the same name in the respective staging layers 
     via the [add_columns](macros.md#add_columns) macro.
 
-This procedure only requires additional source references in the source list
-metadata of our ```hub_customer``` model, the [hub_template](macros.md#hub_template) will handle the rest:
+The hub model will look exactly the same as creating a single source, the [hub](macros.md#hub) macro will handle 
+the rest:
 
-```hub_customer.sql```
-```sql hl_lines="3 4 5"      
-{{- config(materialized='incremental', schema='MYSCHEMA', enabled=true, tags=['hub', 'union']) -}}
-
-{%- set source = [ref('stg_sap_customer_hashed'),                                              
-                  ref('stg_crm_customer_hashed'),                                              
-                  ref('stg_web_customer_hashed')]                                              -%}
-                                                                                 
-{%- set src_pk = 'CUSTOMER_PK'                                                                 -%}
-{%- set src_nk = 'CUSTOMER_ID'                                                                 -%}
-{%- set src_ldts = 'LOADDATE'                                                                  -%}
-{%- set src_source = 'SOURCE'                                                                  -%}
-                                                                                               
-{%- set tgt_pk = source                                                                        -%}
-{%- set tgt_nk = source                                                                        -%}
-{%- set tgt_ldts = source                                                                      -%}
-{%- set tgt_source = source                                                                    -%}
-                                                                                               
-{{ dbtvault.hub_template(src_pk, src_fk, src_ldts, src_source,                                 
-                         tgt_pk, tgt_fk, tgt_ldts, tgt_source,                                 
-                         source)                                                                }}
+```dbt_project.yml```
+```yaml hl_lines="3 4 5"      
+hub_nation:
+          vars:
+            source:
+              - 'stg_customer_hashed'
+              - 'v_stg_inventory'
+            src_pk: 'NATION_PK'
+            src_nk: 'NATION_KEY'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
 ```
 
 ### Next steps

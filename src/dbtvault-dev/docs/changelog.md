@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.5] - 2020-02-24
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.5)](https://dbtvault.readthedocs.io/en/v0.5/?badge=v0.5)
+
+### Added
+
+- Metadata is now provided in the ```dbt_project.yml``` file. This means metadata can be managed in one place. 
+Read [Migrating from v0.4](migrating.md) for more information.
+
+### Removed
+
+- Target column metadata mappings are no longer required.
+- Manual column mapping using triples to provide data-types and aliases (messy and bad practice).
+
+### Fixed
+
+- Hashing a single column which contains a ```NULL``` value now works as intended (related to: [hash](macros.md#hash), 
+[multi_hash](macros.md#multi_hash), [staging](macros.md#staging-macros)).   
+
 ## [v0.4.1] - 2020-01-08
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4.1)](https://dbtvault.readthedocs.io/en/v0.4.1/?badge=v0.4.1)
 
