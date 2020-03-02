@@ -11,7 +11,6 @@ use_step_matcher("parse")
 
 # LOAD STEPS
 
-
 @step("I load the {model_name} table")
 def step_impl(context, model_name):
     os.chdir(TESTS_DBT_ROOT)

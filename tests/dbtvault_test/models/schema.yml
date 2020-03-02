@@ -57,3 +57,5 @@ sources:
         identifier: test_stg_lineitem_current
       - name: stg_transaction_current
         identifier: stg_transaction_current
+      - name: stg_eff_sat_current
+        identifier: test_stg_eff_sat_current
