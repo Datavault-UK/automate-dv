@@ -75,19 +75,19 @@ Feature: Effectivity Satellites
 
     Scenario: Empty Load
       Given an empty Link_Customer_Order
-      And an empty EFF_SAT_LINK_ORDER_CUSTOMER
-      And staging_data loaded on 10.01.2020
+      And an empty EFF_CUSTOMER_ORDER
+      And staging_data loaded on 2020-01-10
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-10 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
       | md5('2000\|\|BBB') | 2020-01-10 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-09     |
       | md5('3000\|\|CCC') | 2020-01-10 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-09     |
-      When I run a Load Cycle for 10.01.2020
+      When I run the first Load Cycle for 2020-01-10
       Then I expect the following LINK_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
-      And the following EFF_CUSTOMER_ORDER
+      And I expect the following EFF_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
       | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
       | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
@@ -95,171 +95,165 @@ Feature: Effectivity Satellites
 
 
     Scenario: Subsequent Load, No Effectivity Change
-      Given Link_Customer_Order
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 11.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 11.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 11.01.2020 | orders |
-      And Eff_Customer_Order
+      Given there is a LINK_CUSTOMER_ORDER table
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      And there is a EFF_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      And staging_data for 11.01.2020
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_PK | CUSTOMER_ID | ORDER_PK | ORDER_ID | EFFECTIVE_FROM |
-      | md5('1000\|\|AAA') | 11.01.2020 | orders | md5(1000)   | 1000        | md5(AAA) | AAA      | 10.01.2020     |
-      | md5('2000\|\|BBB') | 11.01.2020 | orders | md5(2000)   | 2000        | md5(BBB) | BBB      | 10.01.2020     |
-      | md5('3000\|\|CCC') | 11.01.2020 | orders | md5(3000)   | 3000        | md5(CCC) | CCC      | 10.01.2020     |
-      And mapping configuration from stage to vault
-      When I run a Load Cycle for 11.01.2020
-      Then I expect the following CUSTOMER_ORDER_LINK
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 10.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 10.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 10.01.2020 | orders |
-      And the following EFF_CUSTOMER_ORDER
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      And staging_data loaded on 2020-01-11
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
+      | md5('1000\|\|AAA') | 2020-01-11 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-10     |
+      | md5('2000\|\|BBB') | 2020-01-11 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-10     |
+      | md5('3000\|\|CCC') | 2020-01-11 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-10     |
+      When I run a Load Cycle for 2020-01-11
+      Then I expect the following LINK_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      And I expect the following EFF_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
 
 
     Scenario: Subsequent Load, New Link Added
-      Given Link_Customer_Order
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 11.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 11.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 11.01.2020 | orders |
-      And Eff_Customer_Order
+      Given there is a LINK_CUSTOMER_ORDER table
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      And there is a EFF_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      And staging_data for 11.01.2020
-       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_PK | CUSTOMER_ID | ORDER_PK | ORDER_ID | EFFECTIVE_FROM |
-       | md5('1000\|\|AAA') | 11.01.2020 | orders | md5(1000)   | 1000        | md5(AAA) | AAA      | 09.01.2020     |
-       | md5('2000\|\|BBB') | 11.01.2020 | orders | md5(2000)   | 2000        | md5(BBB) | BBB      | 09.01.2020     |
-       | md5('3000\|\|CCC') | 11.01.2020 | orders | md5(3000)   | 3000        | md5(CCC) | CCC      | 09.01.2020     |
-       | md5('4000\|\|DDD') | 11.01.2020 | orders | md5(4000)   | 4000        | md5(DDD) | DDD      | 10.01.2020     |
-       | md5('5000\|\|EEE') | 11.01.2020 | orders | md5(5000)   | 5000        | md5(EEE) | EEE      | 10.01.2020     |
-      And mapping configuration from stage to vault
-      When I run a Load Cycle for 11.01.2020
-      Then I expect the following CUSTOMER_ORDER_LINK
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 10.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 10.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 10.01.2020 | orders |
-      | md5('4000\|\|DDD') | md5(4000)   | md5(DDD) | 11.01.2020 | orders |
-      | md5('5000\|\|EEE') | md5(5000)   | md5(EEE) | 11.01.2020 | orders |
-      And the following EFF_CUSTOMER_ORDER
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      And staging_data loaded on 2020-01-11
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
+      | md5('1000\|\|AAA') | 2020-01-11 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
+      | md5('2000\|\|BBB') | 2020-01-11 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-09     |
+      | md5('3000\|\|CCC') | 2020-01-11 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-09     |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-10     |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | md5('5000') | 5000        | md5('EEE') | EEE      | 2020-01-10     |
+      When I run a Load Cycle for 2020-01-11
+      Then I expect the following LINK_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      And I expect the following EFF_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
 
 
     Scenario: Subsequent Load, Link is Changed
-      Given Link_Customer_Order
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 10.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 10.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 10.01.2020 | orders |
-      | md5('4000\|\|DDD') | md5(4000)   | md5(DDD) | 11.01.2020 | orders |
-      | md5('5000\|\|EEE') | md5(5000)   | md5(EEE) | 11.01.2020 | orders |
-      And Eff_Customer_Order
+      Given there is a LINK_CUSTOMER_ORDER table
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      And there is a EFF_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      And staging_data for 12.01.2020
-      | CUSTOMER_ORDER_PK  | LOADDATE   | Source | CUSTOMER_PK | CUSTOMER_ID | ORDER_PK | ORDER_ID | EFFECTIVE_FROM |
-      | md5('1000\|\|AAA') | 12.01.2020 | orders | md5(1000)   | 1000        | md5(AAA) | AAA      | 11.01.2020     |
-      | md5('2000\|\|BBB') | 12.01.2020 | orders | md5(2000)   | 2000        | md5(BBB) | BBB      | 11.01.2020     |
-      | md5('3000\|\|CCC') | 12.01.2020 | orders | md5(3000)   | 3000        | md5(CCC) | CCC      | 11.01.2020     |
-      | md5('4000\|\|FFF') | 12.01.2020 | orders | md5(4000)   | 4000        | md5(FFF) | FFF      | 11.01.2020     |
-      | md5('5000\|\|GGG') | 12.01.2020 | orders | md5(5000)   | 5000        | md5(GGG) | GGG      | 11.01.2020     |
-      And mapping configuration from stage to vault
-      When I run a Load Cycle for 12.01.2020
-      Then I expect the following CUSTOMER_ORDER_LINK
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 10.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 10.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 10.01.2020 | orders |
-      | md5('4000\|\|DDD') | md5(4000)   | md5(DDD) | 11.01.2020 | orders |
-      | md5('5000\|\|EEE') | md5(5000)   | md5(EEE) | 11.01.2020 | orders |
-      | md5('4000\|\|DDD') | md5(4000)   | md5(FFF) | 12.01.2020 | orders |
-      | md5('5000\|\|EEE') | md5(5000)   | md5(GGG) | 12.01.2020 | orders |
-      And the following EFF_CUSTOMER_ORDER
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      And staging_data loaded on 2020-01-12
+      | CUSTOMER_ORDER_PK  | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
+      | md5('1000\|\|AAA') | 2020-01-12 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-11     |
+      | md5('2000\|\|BBB') | 2020-01-12 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
+      | md5('3000\|\|CCC') | 2020-01-12 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-11     |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | md5('4000') | 4000        | md5('FFF') | FFF      | 2020-01-11     |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | md5('5000') | 5000        | md5('GGG') | GGG      | 2020-01-11     |
+      When I run a Load Cycle for 2020-01-12
+      Then I expect the following LINK_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
+      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      And I expect the following EFF_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 12.01.2020 | orders | 10.01.2020     | 11.01.2020   |
-      | md5('5000\|\|EEE') | 12.01.2020 | orders | 10.01.2020     | 11.01.2020   |
-      | md5('4000\|\|FFF') | 12.01.2020 | orders | 11.01.2020     | 31.12.9999   |
-      | md5('5000\|\|GGG') | 12.01.2020 | orders | 11.01.2020     | 31.12.9999   |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-11   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-11   |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
 
 
 
     Scenario: Subsequent 2 Loads, Link is Changed Back Again
-      Given Link_Customer_Order
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 10.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 10.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 10.01.2020 | orders |
-      | md5('4000\|\|DDD') | md5(4000)   | md5(DDD) | 11.01.2020 | orders |
-      | md5('4000\|\|FFF') | md5(4000)   | md5(FFF) | 12.01.2020 | orders |
-      | md5('5000\|\|EEE') | md5(5000)   | md5(EEE) | 11.01.2020 | orders |
-      | md5('5000\|\|GGG') | md5(5000)   | md5(GGG) | 12.01.2020 | orders |
-      And Eff_Customer_Order
+      Given there is a LINK_CUSTOMER_ORDER table
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      And there is a EFF_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 12.01.2020 | orders | 10.01.2020     | 11.01.2020   |
-      | md5('4000\|\|DDD') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('4000\|\|FFF') | 12.01.2020 | orders | 11.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 12.01.2020 | orders | 10.01.2020     | 11.01.2020   |
-      | md5('5000\|\|GGG') | 12.01.2020 | orders | 11.01.2020     | 31.12.9999   |
-      And staging_data for 13.01.2020
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_PK | CUSTOMER_ID | ORDER_PK | ORDER_ID | EFFECTIVE_FROM |
-      | md5('1000\|\|AAA') | 13.01.2020 | orders | md5(1000)   | 1000        | md5(AAA) | AAA      | 12.01.2020     |
-      | md5('2000\|\|BBB') | 13.01.2020 | orders | md5(2000)   | 2000        | md5(BBB) | BBB      | 12.01.2020     |
-      | md5('3000\|\|CCC') | 13.01.2020 | orders | md5(3000)   | 3000        | md5(CCC) | CCC      | 12.01.2020     |
-      | md5('4000\|\|DDD') | 13.01.2020 | orders | md5(4000)   | 4000        | md5(DDD) | DDD      | 12.01.2020     |
-      | md5('5000\|\|EEE') | 13.01.2020 | orders | md5(5000)   | 5000        | md5(EEE) | EEE      | 12.01.2020     |
-      And mapping configuration from stage to vault
-      When I run a Load Cycle for 13.01.2020
-      Then I expect the following CUSTOMER_ORDER_LINK
-      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK | LOADDATE   | SOURCE |
-      | md5('1000\|\|AAA') | md5(1000)   | md5(AAA) | 10.01.2020 | orders |
-      | md5('2000\|\|BBB') | md5(2000)   | md5(BBB) | 10.01.2020 | orders |
-      | md5('3000\|\|CCC') | md5(3000)   | md5(CCC) | 10.01.2020 | orders |
-      | md5('4000\|\|DDD') | md5(4000)   | md5(DDD) | 11.01.2020 | orders |
-      | md5('4000\|\|FFF') | md5(4000)   | md5(FFF) | 12.01.2020 | orders |
-      | md5('5000\|\|EEE') | md5(5000)   | md5(EEE) | 11.01.2020 | orders |
-      | md5('5000\|\|GGG') | md5(5000)   | md5(GGG) | 12.01.2020 | orders |
-      And the following EFF_CUSTOMER_ORDER
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      And staging_data loaded on 2020-01-13
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
+      | md5('1000\|\|AAA') | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-12     |
+      | md5('2000\|\|BBB') | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-12     |
+      | md5('3000\|\|CCC') | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-12     |
+      | md5('4000\|\|DDD') | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-12     |
+      | md5('5000\|\|EEE') | 2020-01-13 | orders | md5('5000') | 5000        | md5('EEE') | EEE      | 2020-01-12     |
+      When I run a Load Cycle for 2020-01-13
+      Then I expect the following LINK_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      And I expect the following EFF_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('2000\|\|BBB') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('3000\|\|CCC') | 10.01.2020 | orders | 09.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('4000\|\|DDD') | 12.01.2020 | orders | 10.01.2020     | 11.01.2020   |
-      | md5('4000\|\|FFF') | 12.01.2020 | orders | 11.01.2020     | 31.12.9999   |
-      | md5('4000\|\|FFF') | 13.01.2020 | orders | 11.01.2020     | 12.01.2020   |
-      | md5('4000\|\|DDD') | 13.01.2020 | orders | 12.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 11.01.2020 | orders | 10.01.2020     | 31.12.9999   |
-      | md5('5000\|\|EEE') | 12.01.2020 | orders | 10.01.2020     | 11.01.2020   |
-      | md5('5000\|\|GGG') | 12.01.2020 | orders | 11.01.2020     | 31.12.9999   |
-      | md5('5000\|\|GGG') | 13.01.2020 | orders | 11.01.2020     | 11.01.2020   |
-      | md5('5000\|\|EEE') | 13.01.2020 | orders | 12.01.2020     | 31.12.9999   |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      | md5('4000\|\|FFF') | 2020-01-13 | orders | 2020-01-11     | 2020-01-12   |
+      | md5('4000\|\|DDD') | 2020-01-13 | orders | 2020-01-12     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      | md5('5000\|\|GGG') | 2020-01-13 | orders | 2020-01-11     | 2020-01-11   |
+      | md5('5000\|\|EEE') | 2020-01-13 | orders | 2020-01-12     | 9999-12-31   |
 
 

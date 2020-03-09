@@ -4,6 +4,8 @@
 
 SELECT
 
-{{ dbtvault.add_columns(source_table)                                                      }}
+{{ dbtvault.add_columns(source_table)                                                      }},
+
+TO_DATE('9999-12-31') AS EFFECTIVE_TO
 
 {{ dbtvault.from(source_table)                                                             }}

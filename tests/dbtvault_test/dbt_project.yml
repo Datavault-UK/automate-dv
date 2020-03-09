@@ -160,12 +160,17 @@ models:
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
       load_eff_sats:
-        test_eff_sat_link_order_customer_current:
+        test_eff_customer_order_current:
           vars:
             source: 'test_stg_eff_sat_hashed_current'
+            link: 'test_link_customer_order_current'
             src_pk: 'CUSTOMER_ORDER_PK'
-            src_eff: 'EFFECTIVE_FROM'
+            src_dfk: 'ORDER_FK'
+            src_sfk: 'CUSTOMER_FK'
+            src_eff_from: 'EFFECTIVE_FROM'
+            src_eff_to: 'EFFECTIVE_TO'
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
   vars:
     hash: MD5
+    max_date: TO_DATE('9999-12-31')

@@ -67,11 +67,6 @@ markdown_extensions:
 
 plugins:
   - search
-#  - markdownextradata: {}
-#  - pdf-export:
-#      combined: true
-
-
 
 extra_css:
   - 'stylesheets/extra.css'
