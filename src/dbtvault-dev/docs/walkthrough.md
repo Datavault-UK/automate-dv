@@ -21,7 +21,7 @@ We will:
 
 2. A Snowflake account, trial or otherwise. [Sign up for a free 30-day trial here](https://trial.snowflake.com/ab/)
 
-3. You must have downloaded and installed dbt {{ config.extra.req_dbt_version }}, 
+3. You must have downloaded and installed dbt 0.15.2,
 and [set up a project](https://docs.getdbt.com/v0.15.0/docs/dbt-projects).
 
 4. Sources should be set up in dbt [(see below)](walkthrough.md#setting-up-sources).
