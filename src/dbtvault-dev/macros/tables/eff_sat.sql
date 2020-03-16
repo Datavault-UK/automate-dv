@@ -20,7 +20,7 @@ WITH
 c AS (SELECT DISTINCT
             {{ dbtvault.prefix(source_cols, 'a') }}
             FROM {{ this }} AS a
-            INNER JOIN {{ ref(source) }} AS b ON {{ dbtvault.prefix([src_dfk], 'a') }}={{ dbtvault.prefix([src_dfk], 'b') }}
+            INNER JOIN {{ ref(source) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
             )
 {# Find latest satellite for each pk in set c. -#}
 , d as (SELECT
@@ -32,13 +32,21 @@ c AS (SELECT DISTINCT
         FROM c)
 , p AS (
     SELECT
-      {{ dbtvault.prefix(source_cols, 'q') }},
-      {{ dbtvault.prefix([src_eff_from], 's') }} AS STG_EFFECTIVE_FROM
+      {{ dbtvault.prefix([src_pk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source], 'q') }},
+      {{ dbtvault.prefix([src_dfk], 'r') }}
     FROM {{ this }} AS q
     INNER JOIN {{ ref(link) }} AS r ON {{ dbtvault.prefix([src_pk], 'r') }}={{ dbtvault.prefix([src_pk], 'q') }}
     INNER JOIN {{ ref(source) }} AS s ON {{ dbtvault.prefix([src_dfk], 's') }}={{ dbtvault.prefix([src_dfk], 'r') }}
-    AND {{ dbtvault.prefix([src_sfk], 's') }}<>{{ dbtvault.prefix([src_sfk], 'r') }}
-     )
+    AND {{ dbtvault.prefix([src_sfk], 's') }}<>{{ dbtvault.prefix([src_sfk], 'r') }})
+, x AS (
+    SELECT
+      {{ dbtvault.prefix([src_pk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source, src_dfk], 'p') }},
+      CASE WHEN RANK()
+      OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'p') }}
+      ORDER BY {{ dbtvault.prefix([src_eff_from], 'p') }} DESC) = 1
+      THEN 'Y' ELSE 'N' END AS CURR_FLG
+    FROM p
+)
 
 SELECT DISTINCT
   {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'e') }},
@@ -55,9 +63,12 @@ ON {{ dbtvault.prefix([src_pk], 'eff') }}={{ dbtvault.prefix([src_pk], 'e') }}
 WHERE {{ dbtvault.prefix([src_pk], 'eff') }} IS NULL
 UNION
 SELECT
-  {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from, src_start_date], 't') }},
-  t.STG_EFFECTIVE_FROM AS {{ src_end_date }}
-FROM p AS t
+{{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'y') }},
+{{ dbtvault.prefix([src_eff_from], 'x') }} AS {{ src_start_date }},
+{{ dbtvault.prefix([src_eff_from], 'x') }} AS {{ src_end_date }}
+FROM x
+INNER JOIN {{ ref(source) }} AS y ON {{ dbtvault.prefix([src_dfk], 'y') }}={{ dbtvault.prefix([src_dfk], 'x') }}
+WHERE {{ dbtvault.prefix([src_end_date], 'x') }} = {{ max_date }} AND x.CURR_FLG='Y'
 {%- endif -%}
 
 {% endmacro %}
