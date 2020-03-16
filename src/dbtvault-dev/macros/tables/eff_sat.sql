@@ -10,9 +10,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro eff_sat(src_pk, src_dfk, src_sfk, src_ldts, src_eff_from, src_eff_to, src_source, link, source)-%}
+{%- macro eff_sat(src_pk, src_dfk, src_sfk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source, link, source)-%}
 
-{%- set source_cols = dbtvault.get_src_col_list([src_pk, src_ldts, src_eff_from, src_eff_to, src_source])-%}
+{%- set source_cols = dbtvault.get_src_col_list([src_pk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source])-%}
 {%- set max_date = "'" ~ '9999-12-31' ~ "'" -%}
 
 WITH
@@ -20,7 +20,7 @@ WITH
 c AS (SELECT DISTINCT
             {{ dbtvault.prefix(source_cols, 'a') }}
             FROM {{ this }} AS a
-            INNER JOIN {{ ref(source) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
+            INNER JOIN {{ ref(source) }} AS b ON {{ dbtvault.prefix([src_dfk], 'a') }}={{ dbtvault.prefix([src_dfk], 'b') }}
             )
 {# Find latest satellite for each pk in set c. -#}
 , d as (SELECT
@@ -31,35 +31,33 @@ c AS (SELECT DISTINCT
           THEN 'Y' ELSE 'N' END AS CURR_FLG
         FROM c)
 , p AS (
-  SELECT q.*, {{ dbtvault.prefix([src_dfk], 'r') }}
-  FROM {{ this }} AS q
-  INNER JOIN {{ ref(link) }} AS r ON {{ dbtvault.prefix([src_pk], 'r') }}={{ dbtvault.prefix([src_pk], 'q') }}
-  INNER JOIN {{ ref(source) }} AS s ON {{ dbtvault.prefix([src_dfk], 's') }}={{ dbtvault.prefix([src_dfk], 'r') }}
-  AND {{ dbtvault.prefix([src_sfk], 's') }}<>{{ dbtvault.prefix([src_sfk], 'r') }})
-, t as (
-  SELECT
-    p.*,
-    CASE WHEN RANK()
-    OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'p') }}
-    ORDER BY {{ dbtvault.prefix([src_eff_from], 'p') }} DESC) = 1
-    THEN 'Y' ELSE 'N' END AS CURR_FLG
-  FROM p)
+    SELECT
+      {{ dbtvault.prefix(source_cols, 'q') }},
+      {{ dbtvault.prefix([src_eff_from], 's') }} AS STG_EFFECTIVE_FROM
+    FROM {{ this }} AS q
+    INNER JOIN {{ ref(link) }} AS r ON {{ dbtvault.prefix([src_pk], 'r') }}={{ dbtvault.prefix([src_pk], 'q') }}
+    INNER JOIN {{ ref(source) }} AS s ON {{ dbtvault.prefix([src_dfk], 's') }}={{ dbtvault.prefix([src_dfk], 'r') }}
+    AND {{ dbtvault.prefix([src_sfk], 's') }}<>{{ dbtvault.prefix([src_sfk], 'r') }}
+     )
 
-SELECT DISTINCT {{ dbtvault.prefix(source_cols, 'e') }}
+SELECT DISTINCT
+  {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'e') }},
+  {{ dbtvault.prefix([src_eff_from], 'e') }} AS {{ src_start_date }},
+  {{ dbtvault.prefix([src_end_date], 'e') }}
 FROM {{ ref(source) }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (
     SELECT {{ dbtvault.prefix(source_cols, 'd')}}
     FROM d
-    WHERE d.CURR_FLG = 'Y' AND {{ dbtvault.prefix([src_eff_to], 'd') }}=TO_DATE({{ max_date }})
+    WHERE d.CURR_FLG = 'Y' AND {{ dbtvault.prefix([src_end_date], 'd') }}=TO_DATE({{ max_date }})
     ) AS eff
 ON {{ dbtvault.prefix([src_pk], 'eff') }}={{ dbtvault.prefix([src_pk], 'e') }}
 WHERE {{ dbtvault.prefix([src_pk], 'eff') }} IS NULL
 UNION
 SELECT
-  t.CUSTOMER_ORDER_PK, t.EFFECTIVE_FROM, u.LOADDATE, u.EFFECTIVE_FROM AS EFFECTIVE_TO, u.SOURCE
-FROM t
-INNER JOIN DBT_VAULT.TEST_STG.TEST_STG_EFF_SAT_HASHED_CURRENT AS u ON t.ORDER_FK=u.ORDER_FK
+  {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from, src_start_date], 't') }},
+  t.STG_EFFECTIVE_FROM AS {{ src_end_date }}
+FROM p AS t
 {%- endif -%}
 
 {% endmacro %}
