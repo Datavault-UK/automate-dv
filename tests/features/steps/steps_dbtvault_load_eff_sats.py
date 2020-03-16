@@ -21,7 +21,8 @@ def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_eff_customer_order_{}".format(MODE.lower()),
                                     ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
-                                     "EFFECTIVE_FROM DATE", "EFFECTIVE_TO DATE"], context.connection)
+                                     "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
+                                    context.connection)
 
 
 @step("I run the first Load Cycle for 2020-01-10")
@@ -49,7 +50,8 @@ def step_impl(context, table_name):
 
         context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_{}_{}".format(table_name.lower(), MODE.lower()),
                                         ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
-                                         "EFFECTIVE_FROM DATE", "EFFECTIVE_TO DATE"], context.connection)
+                                         "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
+                                        context.connection)
         context.dbutils.insert_data_from_ct(context.table, "test_{}_{}".format(table_name.lower(), MODE.lower()),
                                             VLT_SCHEMA, context.connection)
 

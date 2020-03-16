@@ -88,10 +88,10 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
       And I expect the following EFF_CUSTOMER_ORDER
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
 
 
     Scenario: Subsequent Load, No Effectivity Change
@@ -101,10 +101,10 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
       And there is a EFF_CUSTOMER_ORDER table
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       And staging_data loaded on 2020-01-11
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-11 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-10     |
@@ -117,10 +117,10 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
       And I expect the following EFF_CUSTOMER_ORDER
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
 
 
     Scenario: Subsequent Load, New Link Added
@@ -130,10 +130,10 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
       And there is a EFF_CUSTOMER_ORDER table
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       And staging_data loaded on 2020-01-11
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-11 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
@@ -150,12 +150,12 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
       And I expect the following EFF_CUSTOMER_ORDER
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
-      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
 
 
     Scenario: Subsequent Load, Link is Changed
@@ -167,12 +167,12 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
       And there is a EFF_CUSTOMER_ORDER table
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
-      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
       And staging_data loaded on 2020-01-12
       | CUSTOMER_ORDER_PK  | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-12 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-11     |
@@ -191,14 +191,16 @@ Feature: Effectivity Satellites
       | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
       | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
       And I expect the following EFF_CUSTOMER_ORDER
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-11   |
-      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-11   |
-      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
-      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 2020-01-11   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 2020-01-11   |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
 
 
 
@@ -212,17 +214,23 @@ Feature: Effectivity Satellites
       | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
       | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
       And there is a EFF_CUSTOMER_ORDER table
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
-      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
-      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
-      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
-      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
-      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10     | 2020-01-11   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-10     | 2020-01-11   |
+      | md5('7000\|\|JJJ') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('7000\|\|III') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('7000\|\|JJJ') | 2020-01-11 | orders | 2020-01-10     | 2020-01-09     | 2020-01-10   |
+      | md5('7000\|\|III') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10     | 2020-01-11   |
       And staging_data loaded on 2020-01-13
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-12     |
@@ -230,6 +238,8 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-12     |
       | md5('4000\|\|DDD') | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-12     |
       | md5('5000\|\|EEE') | 2020-01-13 | orders | md5('5000') | 5000        | md5('EEE') | EEE      | 2020-01-12     |
+      | md5('6000\|\|HHH') | 2020-01-13 | orders | md5('6000') | 6000        | md5('HHH') | HHH      | 2020-01-12     |
+      | md5('7000\|\|JJJ') | 2020-01-13 | orders | md5('7000') | 7000        | md5('JJJ') | JJJ      | 2020-01-12     |
       When I run a Load Cycle for 2020-01-13
       Then I expect the following LINK_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
@@ -240,20 +250,28 @@ Feature: Effectivity Satellites
       | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
       | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      | md5('6000\|\|HHH') | md5('6000') | md5('HHH') | 2020-01-13 | orders |
+      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
       And I expect the following EFF_CUSTOMER_ORDER
-      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | EFFECTIVE_TO |
-      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 9999-12-31   |
-      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
-      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
-      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
-      | md5('4000\|\|FFF') | 2020-01-13 | orders | 2020-01-11     | 2020-01-12   |
-      | md5('4000\|\|DDD') | 2020-01-13 | orders | 2020-01-12     | 9999-12-31   |
-      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 9999-12-31   |
-      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-11   |
-      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 9999-12-31   |
-      | md5('5000\|\|GGG') | 2020-01-13 | orders | 2020-01-11     | 2020-01-11   |
-      | md5('5000\|\|EEE') | 2020-01-13 | orders | 2020-01-12     | 9999-12-31   |
-
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-10     | 2020-01-10     | 2020-01-11   |
+      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+      | md5('4000\|\|FFF') | 2020-01-13 | orders | 2020-01-11     | 2020-01-11     | 2020-01-12   |
+      | md5('4000\|\|DDD') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-10     | 2020-01-11   |
+      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+      | md5('5000\|\|GGG') | 2020-01-13 | orders | 2020-01-11     | 2020-01-11     | 2020-01-11   |
+      | md5('5000\|\|EEE') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+      | md5('6000\|\|HHH') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+      | md5('7000\|\|JJJ') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('7000\|\|III') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      | md5('7000\|\|JJJ') | 2020-01-11 | orders | 2020-01-10     | 2020-01-09     | 2020-01-10   |
+      | md5('7000\|\|III') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10     | 2020-01-11   |
+      | md5('7000\|\|JJJ') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
 
