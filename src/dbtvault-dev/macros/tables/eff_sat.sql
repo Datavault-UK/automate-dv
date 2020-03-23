@@ -27,26 +27,32 @@ c AS (SELECT DISTINCT
           {{ dbtvault.prefix(source_cols, 'c') }},
           CASE WHEN RANK()
           OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
-          ORDER BY {{ dbtvault.prefix([src_eff_from], 'c') }} DESC) = 1
+          ORDER BY {{ dbtvault.prefix([src_end_date], 'c') }} ASC) = 1
           THEN 'Y' ELSE 'N' END AS CURR_FLG
         FROM c)
 , p AS (
-    SELECT
-      {{ dbtvault.prefix([src_pk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source], 'q') }},
-      {{ dbtvault.prefix([src_dfk], 'r') }}
-    FROM {{ this }} AS q
-    INNER JOIN {{ ref(link) }} AS r ON {{ dbtvault.prefix([src_pk], 'r') }}={{ dbtvault.prefix([src_pk], 'q') }}
-    INNER JOIN {{ ref(source) }} AS s ON {{ dbtvault.prefix([src_dfk], 's') }}={{ dbtvault.prefix([src_dfk], 'r') }}
-    AND {{ dbtvault.prefix([src_sfk], 's') }}<>{{ dbtvault.prefix([src_sfk], 'r') }})
-, x AS (
-    SELECT
-      {{ dbtvault.prefix([src_pk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source, src_dfk], 'p') }},
-      CASE WHEN RANK()
-      OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'p') }}
-      ORDER BY {{ dbtvault.prefix([src_eff_from], 'p') }} DESC) = 1
-      THEN 'Y' ELSE 'N' END AS CURR_FLG
-    FROM p
+    SELECT q.* FROM {{ ref(link) }} AS q
+    INNER JOIN {{ ref(source) }} AS r ON {{ dbtvault.prefix([src_dfk], 'q') }}={{ dbtvault.prefix([src_dfk], 'r') }}
 )
+, x AS (
+    SELECT p.*, {{ dbtvault.prefix([src_dfk], 's') }} AS STG_CUSTOMER_FK
+    FROM p
+    LEFT JOIN {{ ref(source) }} AS s ON {{ dbtvault.prefix([src_dfk], 'p') }}={{ dbtvault.prefix([src_dfk], 's') }}
+    AND {{ dbtvault.prefix([src_sfk], 'p') }}={{ dbtvault.prefix([src_sfk], 's') }}
+    WHERE ({{ dbtvault.prefix([src_dfk], 's') }} IS NULL AND {{ dbtvault.prefix([src_sfk], 's') }} IS NULL)
+)
+, y AS (
+  SELECT
+    {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from, src_start_date, src_end_date], 't') }},
+    {{ dbtvault.prefix(['STG_CUSTOMER_FK'], 'x') }},
+    {{ dbtvault.prefix([src_dfk], 'x')}},
+    CASE WHEN RANK()
+    OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 't') }}
+    ORDER BY {{ dbtvault.prefix([src_end_date], 't') }} ASC) = 1
+    THEN 'Y' ELSE 'N' END AS CURR_FLG
+  FROM x
+  INNER JOIN {{ this }} AS t ON {{ dbtvault.prefix([src_pk], 'x') }}={{ dbtvault.prefix([src_pk], 't') }}
+  )
 
 SELECT DISTINCT
   {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'e') }},
@@ -63,12 +69,14 @@ ON {{ dbtvault.prefix([src_pk], 'eff') }}={{ dbtvault.prefix([src_pk], 'e') }}
 WHERE {{ dbtvault.prefix([src_pk], 'eff') }} IS NULL
 UNION
 SELECT
-{{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'y') }},
-{{ dbtvault.prefix([src_eff_from], 'x') }} AS {{ src_start_date }},
-{{ dbtvault.prefix([src_eff_from], 'x') }} AS {{ src_end_date }}
-FROM x
-INNER JOIN {{ ref(source) }} AS y ON {{ dbtvault.prefix([src_dfk], 'y') }}={{ dbtvault.prefix([src_dfk], 'x') }}
-WHERE {{ dbtvault.prefix([src_end_date], 'x') }} = {{ max_date }} AND x.CURR_FLG='Y'
+  {{ dbtvault.prefix([src_pk], 'y') }},
+  {{ dbtvault.prefix([src_ldts], 'z') }},
+  {{ dbtvault.prefix([src_source, src_eff_from, src_start_date], 'y') }},
+  CASE WHEN y.STG_CUSTOMER_FK IS NULL
+  THEN {{ dbtvault.prefix([src_eff_from], 'z') }} ELSE {{ max_date }} END AS {{ src_end_date }}
+FROM y
+LEFT JOIN {{ ref(source) }} AS z ON {{ dbtvault.prefix([src_dfk], 'y') }}={{ dbtvault.prefix([src_dfk], 'z') }}
+WHERE y.CURR_FLG='Y' AND {{ dbtvault.prefix([src_end_date], 'y') }}={{ max_date }}
 {%- endif -%}
 
 {% endmacro %}

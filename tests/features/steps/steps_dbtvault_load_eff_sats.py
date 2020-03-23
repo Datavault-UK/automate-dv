@@ -91,12 +91,12 @@ def step_impl(context, table_name):
 
     elif 'eff' in table_name.lower():
 
-        table_df = context.dbutils.context_table_to_df(context.table, order_by='CUSTOMER_ORDER_PK',
+        table_df = context.dbutils.context_table_to_df(context.table, order_by=['CUSTOMER_ORDER_PK', 'LOADDATE'],
                                                        binary_columns=['CUSTOMER_ORDER_PK'])
 
         result_df = context.dbutils.get_table_data(
             full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_eff_customer_order_{}".format(MODE.lower()),
-            binary_columns=['CUSTOMER_ORDER_PK'], order_by='CUSTOMER_ORDER_PK',
+            binary_columns=['CUSTOMER_ORDER_PK'], order_by=['CUSTOMER_ORDER_PK', 'LOADDATE'],
             connection=context.connection)
 
         assert context.dbutils.compare_dataframes(table_df, result_df)
