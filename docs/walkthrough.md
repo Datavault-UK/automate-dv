@@ -21,7 +21,7 @@ We will:
 
 2. A Snowflake account, trial or otherwise. [Sign up for a free 30-day trial here](https://trial.snowflake.com/ab/)
 
-3. You must have downloaded and installed dbt 0.15.x, 
+3. You must have downloaded and installed dbt 0.15.2,
 and [set up a project](https://docs.getdbt.com/v0.15.0/docs/dbt-projects).
 
 4. Sources should be set up in dbt [(see below)](walkthrough.md#setting-up-sources).
@@ -33,7 +33,7 @@ contains data for one ```load_datetime``` value only). **We will be removing thi
 
 7. You should read our [best practices](bestpractices.md) guidance.
 
-## Setting up sources
+## Setting up sources (in dbt)
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
 data much easier, cleaner and more modular.

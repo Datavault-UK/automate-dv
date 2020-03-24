@@ -1,10 +1,12 @@
 As of v0.5, metadata is provided to the models through the ```dbt_project.yml``` file instead of being specified in
 the models themselves. This keeps the metadata all in one place and simplifies the use of dbtvault.
 
+For further detail of the below table templates, see: [table templates](macros.md#table-templates).
+
 !!! note
     In v0.5, only source column metadata is necessary, we have removed target column metadata.  
 
-#### Declaring sources
+#### Declaring sources (in the metadata)
 
 Since v0.5, there is no longer the need to state the source using the ```ref``` macro, the new [macros](macros.md) do this all for
 you. For single source models, just state the name of the source as a string. 
@@ -125,7 +127,7 @@ The [t_link](macros.md#t_link) macro accepts the following parameters:
 | src_payload  | The columns that make up and payload of the transactional link. The columns must be entered as a list of strings. |
 | src_eff      | The effective from date column.                                          |
 | src_ldts     | The loaddate timestamp column of the record.                        |
-| src_source   |The source column of the record.                                     |
+| src_source   | The source column of the record.                                     |
 
 ```dbt_project.yml```
 ```yaml
@@ -145,6 +147,10 @@ t_link_transactions:
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
 ```
+
+#### Effectivity satellites
+
+Documentation coming soon. Please refer to [eff_sat](macros.md#eff_sat) in the meantime.
 
 #### The problem with metadata
 
