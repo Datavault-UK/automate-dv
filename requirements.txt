@@ -1,7 +1,7 @@
 #  dbt
 urllib3==1.24.3
 requests==2.22.0
-dbt==0.15.2
+dbt==0.16.0
 # Docs
 mkdocs==1.1
 mkdocs-material==4.6.3
