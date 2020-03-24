@@ -4,8 +4,8 @@
 
 SELECT
 
-{{ dbtvault.add_columns(source_table)                                                      }},
+{{- dbtvault.add_columns(source_table,
+                        [("TO_DATE('9999-12-31')", 'END_DATETIME')])                      -}}
 
-TO_DATE('9999-12-31') AS END_DATETIME
 
 {{ dbtvault.from(source_table)                                                             }}
