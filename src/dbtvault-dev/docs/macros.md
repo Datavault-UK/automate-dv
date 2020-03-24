@@ -282,6 +282,48 @@ WHERE tgt.TRANSACTION_PK IS NULL
 ```
 ___
 
+### eff_sat
+
+!!! tip "Cutting edge release"
+    **This feature is currently unreleased. Whilst it has been fully tested, we recommend that you use it with care.**
+    
+    If you find any bugs or would like to recommend improvements or additions, please 
+    [submit an issue](https://github.com/Datavault-UK/dbtvault/issues).
+
+Generates sql to build a effectivity satellite table using the provided metadata in the dbt_project.yml.
+
+```jinja2
+{{ dbtvault.eff_sat(var('src_pk'), var('src_dfk'), var('src_sfk'), var('src_ldts'),
+                    var('src_eff_from'), var('src_start_date'), var('src_end_date'),
+                    var('src_source'), var('link'), var('source'))                    }}
+```
+
+#### Parameters
+
+| Parameter      | Description                                              | Type           | Required?                                                          |
+| -------------- | -------------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| src_pk         | Source primary key column                                | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_dfk        | Coming soon.                                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_sfk        | Coming soon.                                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts       | Source loaddate timestamp column                         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff_from   | Source effective from column                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_start_date | The date which a link record is open/closed from         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_end_date   | The date which a link record is open/closed to           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source     | Name of the column containing the source ID              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| link           | The link which this effectivity satellite is attached to | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source         | Staging model reference or table name                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |                                                  |                | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+
+
+#### Usage
+
+Coming soon.
+
+#### Example output
+
+Coming soon.
+
+___
+
 ## Staging Macros
 ######(macros/staging)
 

@@ -33,7 +33,7 @@ contains data for one ```load_datetime``` value only). **We will be removing thi
 
 7. You should read our [best practices](bestpractices.md) guidance.
 
-## Setting up sources
+## Setting up sources (in dbt)
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
 data much easier, cleaner and more modular.
