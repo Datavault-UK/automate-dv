@@ -72,8 +72,9 @@ And run
 
 ## Sign up for early-bird announcements 
 
-[SIGN UP](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
-before anyone else!
+[![Sign up](https://img.shields.io/badge/Email-Sign--up-blue)](https://www.data-vault.co.uk/dbtvault/)
+
+Get notified of new features and new releases before anyone else!
 
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)
