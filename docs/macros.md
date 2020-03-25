@@ -303,8 +303,8 @@ Generates sql to build a effectivity satellite table using the provided metadata
 | Parameter      | Description                                              | Type           | Required?                                                          |
 | -------------- | -------------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
 | src_pk         | Source primary key column                                | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_dfk        | Coming soon.                                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_sfk        | Coming soon.                                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_dfk        | Source driving foreign key                               | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_sfk        | Source secondary foreign key                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_ldts       | Source loaddate timestamp column                         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_eff_from   | Source effective from column                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 | src_start_date | The date which a link record is open/closed from         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
