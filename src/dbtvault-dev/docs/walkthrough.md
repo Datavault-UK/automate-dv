@@ -14,17 +14,17 @@ We will:
 - process a raw staging layer.
 - create a Data Vault with hubs, links and satellites using dbtvault.
 
-## Prerequisites 
+## Pre-requisites 
 
 1. Some prior knowledge of Data Vault 2.0 architecture. Have a look at
 [How can I get up to speed on Data Vault 2.0?](index.md#how-can-i-get-up-to-speed-on-data-vault-20)
 
 2. A Snowflake account, trial or otherwise. [Sign up for a free 30-day trial here](https://trial.snowflake.com/ab/)
 
-3. You must have downloaded and installed dbt 0.15, 
+3. You must have downloaded and installed dbt 0.15.2,
 and [set up a project](https://docs.getdbt.com/v0.15.0/docs/dbt-projects).
 
-4. Sources should be set up in dbt [(see below)](#setting-up-sources).
+4. Sources should be set up in dbt [(see below)](walkthrough.md#setting-up-sources).
 
 5. We assume you already have a raw staging layer.
 
@@ -33,7 +33,7 @@ contains data for one ```load_datetime``` value only). **We will be removing thi
 
 7. You should read our [best practices](bestpractices.md) guidance.
 
-## Setting up sources
+## Setting up sources (in dbt)
 
 We will be using the ```source``` feature of dbt extensively throughout the documentation to make access to source
 data much easier, cleaner and more modular.
@@ -41,8 +41,8 @@ data much easier, cleaner and more modular.
 We have provided an example below which shows a configuration similar to that used for the examples in our documentation, 
 however this feature is documented extensively in [the documentation for dbt](https://docs.getdbt.com/v0.15.0/docs/using-sources).
 
-After reading the above documentation, we recommend that you place the ```schema.yml``` file you create for your sources, 
-in the root of your ```models``` folder, however you can place it where needed for your specific project and models.
+We recommend that you place the ```schema.yml``` file you create for your sources, 
+in the root of your ```models``` folder, however you can place it wherever needed for your specific project and models.
 
 ```schema.yml```
 
@@ -67,7 +67,7 @@ Add the following to your ```packages.yml```:
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.4.1
+    revision: v0.5
 ```
 
 And run 

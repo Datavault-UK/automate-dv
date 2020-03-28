@@ -3,6 +3,8 @@
 The dbtvault package assumes you've already loaded a Snowflake database staging table with raw data 
 from a source system or feed (the 'raw staging layer').
 
+### Pre-conditions
+
 There are a few conditions that need to be met for the dbtvault package to work:
 
 - All records are for the same ```load_datetime```
@@ -10,6 +12,8 @@ There are a few conditions that need to be met for the dbtvault package to work:
 
 Instead of truncating and loading, you may also build a view over the table to filter out the right records and load 
 from the view.
+
+### Let's Begin
 
 The raw staging table needs to be pre-processed to add extra columns of data to make it ready to load to the raw vault.
 Specifically, we need to add primary key hashes, hashdiffs, and any implied fixed-value columns (see the diagram).
@@ -21,7 +25,7 @@ We also need to ensure column names align with target hub or link tables.
     
     We've implemented hashing as the only option for now, though a non-hashed version will be added in future releases.
     
-## Creating the model
+## Creating the stage model
 
 To prepare our raw staging layer for loading the vault, we create a dbt model and call dbtvault staging macros with 
 provided metadata. 
@@ -93,10 +97,10 @@ After adding the macro call, our model will now look something like this:
                                                                                  
 {%- set source_table = source('MYSOURCE', 'stg_customer')                        -%}
                                                                                    
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),                           
-                        ('NATION_ID', 'NATION_PK'),                               
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),     
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',                         
+{{ dbtvault.multi_hash([('CUSTOMER_KEY', 'CUSTOMER_PK'),                           
+                        ('NATION_KEY', 'NATION_PK'),                               
+                        (['CUSTOMER_KEY', 'NATION_KEY'], 'CUSTOMER_NATION_PK'),     
+                        (['CUSTOMER_KEY', 'CUSTOMER_NAME',                         
                           'CUSTOMER_PHONE', 'CUSTOMER_DOB'],                      
                          'CUSTOMER_HASHDIFF', true)])                            -}},
 ```
@@ -106,13 +110,13 @@ After adding the macro call, our model will now look something like this:
     
 This call will:
 
-- Hash the ```CUSTOMER_ID``` column, and create a new column called ```CUSTOMER_PK``` containing the hash 
+- Hash the ```CUSTOMER_KEY``` column, and create a new column called ```CUSTOMER_PK``` containing the hash 
 value.
-- Hash the ```NATION_ID``` column, and create a new column called ```NATION_PK``` containing the hash 
+- Hash the ```NATION_KEY``` column, and create a new column called ```NATION_PK``` containing the hash 
 value.
-- Concatenate the values in the ```CUSTOMER_ID``` and ```NATION_ID``` columns and hash them in the order supplied, creating a new
+- Concatenate the values in the ```CUSTOMER_KEY``` and ```NATION_KEY``` columns and hash them in the order supplied, creating a new
 column called ```CUSTOMER_NATION_PK``` containing the hash of the combination of the values.
-- Concatenate the values in the ```CUSTOMER_ID```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
+- Concatenate the values in the ```CUSTOMER_KEY```, ```CUSTOMER_NAME```, ```CUSTOMER_PHONE```, ```CUSTOMER_DOB``` 
 columns and hash them, creating a new column called ```CUSTOMER_NATION_PK``` containing the hash of the 
 combination of the values. The ```true``` parameter should be provided so that the columns are alpha-sorted. 
 
@@ -127,15 +131,14 @@ We now add the column names we want to bring forward/feed from the raw staging t
 To include all columns which exist in the source table, we provide the ```source_table``` variable we created earlier.
 
 We will also need to add some additional columns to our staging layer, containing 'constants' implied by the context of the 
-staging data. For example, we may add a source table code value, or the the load date, or some other constant needed in
+staging data. For example, we can add a source table code value for audit purposes, the load date, or some other constant needed in
 the primary key.
 
 We can also override any columns coming in from the source, with different data. We may want to do this if a source 
 column already exists in the raw stage and the values aren't appropriate.
  
-We provide the constant by adding an ```!``` to the data and alias them with the same name as the column we want to 
-override. You will have another opportunity to rename these columns, as well as cast them to different data types
-later when creating the raw vault tables. We can also use this method to create any new columns which do not already 
+We provide a constant by adding an ```!``` to the data and alias them with the same name as the column we want to 
+override. We can also use this method to create any new columns which do not already 
 exist in the source.
 
 
@@ -146,10 +149,10 @@ exist in the source.
 
 {%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                        ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+{{ dbtvault.multi_hash([('CUSTOMER_KEY', 'CUSTOMER_PK'),
+                        ('NATION_KEY', 'NATION_PK'),
+                        (['CUSTOMER_KEY', 'NATION_KEY'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_KEY', 'CUSTOMER_NAME',
                           'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 
                           'CUSTOMER_HASHDIFF', true)]) -}},
 
@@ -182,10 +185,10 @@ After adding the footer, our completed model should now look like this:
 
 {%- set source_table = source('MYSOURCE', 'stg_customer')                           -%}
                                                                                      
-{{ dbtvault.multi_hash([('CUSTOMER_ID', 'CUSTOMER_PK'),
-                        ('NATION_ID', 'NATION_PK'),
-                        (['CUSTOMER_ID', 'NATION_ID'], 'CUSTOMER_NATION_PK'),
-                        (['CUSTOMER_ID', 'CUSTOMER_NAME',
+{{ dbtvault.multi_hash([('CUSTOMER_KEY', 'CUSTOMER_PK'),
+                        ('NATION_KEY', 'NATION_PK'),
+                        (['CUSTOMER_KEY', 'NATION_KEY'], 'CUSTOMER_NATION_PK'),
+                        (['CUSTOMER_KEY', 'CUSTOMER_NAME',
                           'CUSTOMER_PHONE', 'CUSTOMER_DOB'], 
                           'CUSTOMER_HASHDIFF', true)]) -}},
 
