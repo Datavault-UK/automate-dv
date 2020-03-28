@@ -137,7 +137,9 @@ models:
           vars:
             source: 'test_stg_customer_details_hashed_current'
             src_pk: 'CUSTOMER_PK'
-            src_hashdiff: 'CUSTOMER_HASHDIFF'
+            src_hashdiff:
+              source_column: 'CUSTOMER_HASHDIFF'
+              alias: 'HASHDIFF'
             src_payload:
               - 'CUSTOMER_NAME'
               - 'CUSTOMER_DOB'
