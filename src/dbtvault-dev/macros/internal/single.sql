@@ -1,4 +1,4 @@
-{#- Copyright 2019 Business Thinking LTD. trading as Datavault
+{#- Copyright 2020 Business Thinking LTD. trading as Datavault
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -17,4 +17,5 @@
 
       SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], letter) }}
       FROM {{ source }} AS {{ letter }}
+
 {%- endmacro -%}

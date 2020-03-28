@@ -1,46 +1,692 @@
-## Table templates 
+## Table templates
 ######(macros/tables)
 
 These macros form the core of the package and can be called in your models to build the different types of tables needed
 for your Data Vault.
 
-### Metadata notes
-#### Using a source reference for the target metadata
+### hub
 
-In the usage examples for the table template macros in this section, you will see ```source``` provided as the values
-for some of the target metadata variables. ```source``` has been declared as a variable at the top of the models, 
-and holds a reference to the source table we are loading from. This is shorthand for retaining the name and data types 
-of the columns as they are provided in the ```src``` variables. You may wish to alias the columns or change their data 
-types in specific circumstances, which is possible by providing an additional parameter as a list of triples: 
-``` (source column name, data type to cast to, target column name)```.
+Generates sql to build a hub table using the provided metadata in the ```dbt_project.yml```.
 
-Both approaches are shown in the snippet below:
-
-```mysql
-{%- set src_pk = 'CUSTOMER_NATION_PK'                           -%}
-{%- set src_fk = ['CUSTOMER_PK', 'NATION_PK']                   -%}
-{%- ...other src metadata...                                    -%}
-
-{%- set tgt_pk = source                                         -%}
-{%- set tgt_fk = [['CUSTOMER_PK', 'BINARY(16)', 'CUSTOMER_FK'], 
-                  ['NATION_PK', 'BINARY(16)', 'NATION_FK']]     -%}
+```jinja2
+{{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
+                var('src_source'), var('source')) }}                            
 ```
 
-Here, we are keeping the ```tgt_pk``` (the target table's primary key) the same as the primary key identified in the
-source (```src_pk```).
-Behind the scenes, the macro will get the datatype of the column provided in the ```src_pk``` variable and generate a 
-mapping for us. If the ```src_pk``` column does not exist, an appropriate exception will be raised.
+#### Parameters
 
-Alternatively we have provided a manual mapping for the ```tgt_fk``` (the target table's foreign key). 
+| Parameter     | Description                                         | Type (Single-Source) | Type (Union)    | Required?                                                          |
+| ------------- | --------------------------------------------------- | -------------------- | --------------- | ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | String               | List (YAML)     | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+                                                                                                                    
+#### Usage
 
-*For further details and examples on both methods, refer to the usage examples 
-and snippets in the table template documentation below (both Single-Source and Union).*
+``` jinja2
+
+{{- config(...)                                                -}}
+
+{{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
+                var('src_source'), var('source'))               }}
+```
+
+#### Example Output
+
+```mysql tab='Single-Source'
+SELECT DISTINCT 
+                    stg.CUSTOMER_PK, 
+                    stg.CUSTOMER_KEY, 
+                    stg.LOADDATE, 
+                    stg.SOURCE
+FROM (
+    SELECT a.CUSTOMER_PK, a.CUSTOMER_KEY, a.LOADDATE, a.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_orders AS a
+) AS stg
+LEFT JOIN MYDATABASE.MYSCHEMA.hub_customer AS tgt
+ON stg.CUSTOMER_PK = tgt.CUSTOMER_PK
+WHERE tgt.CUSTOMER_PK IS NULL
+```
+
+```mysql tab='Union'
+SELECT DISTINCT 
+                    stg.PART_PK, 
+                    stg.PART_KEY, 
+                    stg.LOADDATE,
+                    stg.SOURCE
+FROM (
+    SELECT src.PART_PK, src.PART_KEY, src.LOADDATE, src.SOURCE,
+    LAG(SOURCE, 1)
+    OVER(PARTITION by PART_PK
+    ORDER BY PART_PK) AS FIRST_SOURCE
+    FROM (
+      SELECT a.PART_PK, a.PART_KEY, a.LOADDATE, a.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_orders AS a
+      UNION
+      SELECT b.PART_PK, b.PART_KEY, b.LOADDATE, b.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_inventory AS b
+      ) AS src
+) AS stg
+LEFT JOIN MYDATABASE.MYSCHEMA.hub_part AS tgt
+ON stg.PART_PK = tgt.PART_PK
+WHERE tgt.PART_PK IS NULL
+AND stg.FIRST_SOURCE IS NULL
+
+```
+___
+
+### link
+
+Generates sql to build a link table using the provided metadata in the ```dbt_project.yml```.
+
+```jinja2 
+{{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
+                 var('src_source'), var('source')) }}                            
+```
+
+#### Parameters
+
+| Parameter     | Description                                         | Type (Single-Source) | Type (Union)         | Required?                                                          |
+| ------------- | --------------------------------------------------- | ---------------------| ---------------------| ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List (YAML)          | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | String               | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+
+#### Usage
+
+``` jinja2
+
+{{- config(...)                                                 -}}
+                                                                
+{{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
+                 var('src_source'), var('source'))               }}
+```                                                             
+
+#### Example Output
+
+```mysql tab='Single-Source'
+SELECT DISTINCT 
+                    stg.LINK_CUSTOMER_NATION_PK,
+                    stg.CUSTOMER_PK,
+                    stg.NATION_PK,
+                    stg.LOADDATE,
+                    stg.SOURCE
+FROM (
+    SELECT a.LINK_CUSTOMER_NATION_PK, a.CUSTOMER_PK, a.NATION_PK, a.LOADDATE, a.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_orders AS a
+) AS stg
+LEFT JOIN MYDATABASE.MYSCHEMA.link_customer_nation AS tgt
+ON stg.LINK_CUSTOMER_NATION_PK = tgt.LINK_CUSTOMER_NATION_PK
+WHERE tgt.LINK_CUSTOMER_NATION_PK IS NULL
+```
+
+```mysql tab='Union'
+SELECT DISTINCT 
+                    stg.NATION_REGION_PK,
+                    stg.NATION_PK,
+                    stg.REGION_PK,
+                    stg.LOADDATE,
+                    stg.SOURCE
+FROM (
+    SELECT src.NATION_REGION_PK, src.NATION_PK, src.REGION_PK, src.LOADDATE, src.SOURCE,
+    LAG(SOURCE, 1)
+    OVER(PARTITION by NATION_REGION_PK
+    ORDER BY NATION_REGION_PK) AS FIRST_SOURCE
+    FROM (
+      SELECT a.NATION_REGION_PK, a.NATION_PK, a.REGION_PK, a.LOADDATE, a.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_orders AS a
+      UNION
+      SELECT b.NATION_REGION_PK, b.NATION_PK, b.REGION_PK, b.LOADDATE, b.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_inventory AS b
+      ) AS src
+) AS stg
+LEFT JOIN MYDATABASE.MYSCHEMA.link_nation_region AS tgt
+ON stg.NATION_REGION_PK = tgt.NATION_REGION_PK
+WHERE tgt.NATION_REGION_PK IS NULL
+AND stg.FIRST_SOURCE IS NULL
+```
+
+___
+
+### sat
+
+Generates sql to build a satellite table using the provided metadata in the ```dbt_project.yml```.
+
+```jinja2
+{{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
+                var('src_eff'), var('src_ldts'), var('src_source'),
+                var('source')) }}                          
+```
+
+#### Parameters
+
+| Parameter     | Description                                         | Type           | Required?                                                          |
+| ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+
+#### Usage
+
+
+``` jinja2
+
+{{- config(...)                                                           -}}
+                                                                          
+{{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
+                var('src_eff'), var('src_ldts'), var('src_source'),
+                var('source'))                                             }}
+```
+
+
+#### Example Output
+
+```mysql
+SELECT DISTINCT 
+                    e.CUSTOMER_PK,
+                    e.CUSTOMER_HASHDIFF,
+                    e.NAME,
+                    e.ADDRESS,
+                    e.PHONE,
+                    e.ACCBAL,
+                    e.MKTSEGMENT,
+                    e.COMMENT,
+                    e.EFFECTIVE_FROM,
+                    e.LOADDATE,
+                    e.SOURCE
+FROM MYDATABASE.MYSCHEMA.v_stg_orders AS e
+LEFT JOIN (
+    SELECT d.CUSTOMER_PK, d.CUSTOMER_HASHDIFF, d.NAME, d.ADDRESS, d.PHONE, d.ACCBAL, d.MKTSEGMENT, d.COMMENT, d.EFFECTIVE_FROM, d.LOADDATE, d.SOURCE
+    FROM (
+          SELECT c.CUSTOMER_PK, c.CUSTOMER_HASHDIFF, c.NAME, c.ADDRESS, c.PHONE, c.ACCBAL, c.MKTSEGMENT, c.COMMENT, c.EFFECTIVE_FROM, c.LOADDATE, c.SOURCE,
+          CASE WHEN RANK()
+          OVER (PARTITION BY c.CUSTOMER_PK
+          ORDER BY c.LOADDATE DESC) = 1
+          THEN 'Y' ELSE 'N' END CURR_FLG
+          FROM (
+            SELECT a.CUSTOMER_PK, a.CUSTOMER_HASHDIFF, a.NAME, a.ADDRESS, a.PHONE, a.ACCBAL, a.MKTSEGMENT, a.COMMENT, a.EFFECTIVE_FROM, a.LOADDATE, a.SOURCE
+            FROM MYDATABASE.MYSCHEMA.sat_order_customer_details as a
+            JOIN MYDATABASE.MYSCHEMA.v_stg_orders as b
+            ON a.CUSTOMER_PK = b.CUSTOMER_PK
+          ) as c
+    ) AS d
+WHERE d.CURR_FLG = 'Y') AS src
+ON src.CUSTOMER_HASHDIFF = e.CUSTOMER_HASHDIFF
+WHERE src.CUSTOMER_HASHDIFF IS NULL
+```
+___
+
+### t_link
+
+Generates sql to build a transactional link table using the provided metadata in the dbt_project.yml.
+
+```jinja2
+{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), 
+                   var('src_eff'), var('src_ldts'), var('src_source'), 
+                   var('source')) }}               
+```
+
+#### Parameters
+
+| Parameter     | Description                                         | Type           | Required?                                                          |
+| ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+
+#### Usage
+
+
+``` jinja2 
+
+{{- config(...)                                                        -}}
+
+{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'),
+                   var('src_eff'), var('src_ldts'), var('src_source'), 
+                   var('source'))                                       }}
+```
+
+#### Example Output
+
+```mysql
+SELECT DISTINCT 
+                    stg.TRANSACTION_PK,
+                    stg.CUSTOMER_FK,
+                    stg.ORDER_FK,
+                    stg.TRANSACTION_NUMBER,
+                    stg.TRANSACTION_DATE,
+                    stg.TYPE,
+                    stg.AMOUNT,
+                    stg.EFFECTIVE_FROM,
+                    stg.LOADDATE,
+                    stg.SOURCE
+FROM (
+      SELECT stg.TRANSACTION_PK, stg.CUSTOMER_FK, stg.ORDER_FK, stg.TRANSACTION_NUMBER, stg.TRANSACTION_DATE, stg.TYPE, stg.AMOUNT, stg.EFFECTIVE_FROM, stg.LOADDATE, stg.SOURCE
+      FROM MYDATABASE.MYSCHEMA.v_stg_transactions AS stg
+) AS stg
+LEFT JOIN MYDATABASE.MYSCHEMA.t_link_transactions AS tgt
+ON stg.TRANSACTION_PK = tgt.TRANSACTION_PK
+WHERE tgt.TRANSACTION_PK IS NULL
+```
+___
+
+### eff_sat
+
+!!! tip "Cutting edge release"
+    **This feature is currently unreleased. Whilst it has been fully tested, we recommend that you use it with care.**
+    
+    If you find any bugs or would like to recommend improvements or additions, please 
+    [submit an issue](https://github.com/Datavault-UK/dbtvault/issues).
+
+Generates sql to build a effectivity satellite table using the provided metadata in the dbt_project.yml.
+
+```jinja2
+{{ dbtvault.eff_sat(var('src_pk'), var('src_dfk'), var('src_sfk'), var('src_ldts'),
+                    var('src_eff_from'), var('src_start_date'), var('src_end_date'),
+                    var('src_source'), var('link'), var('source'))                    }}
+```
+
+#### Parameters
+
+| Parameter      | Description                                              | Type           | Required?                                                          |
+| -------------- | -------------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
+| src_pk         | Source primary key column                                | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_dfk        | Coming soon.                                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_sfk        | Coming soon.                                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts       | Source loaddate timestamp column                         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff_from   | Source effective from column                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_start_date | The date which a link record is open/closed from         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_end_date   | The date which a link record is open/closed to           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source     | Name of the column containing the source ID              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| link           | The link which this effectivity satellite is attached to | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source         | Staging model reference or table name                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |                                                  |                | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+
+
+#### Usage
+
+Coming soon.
+
+#### Example output
+
+Coming soon.
+
+___
+
+## Staging Macros
+######(macros/staging)
+
+These macros are intended for use in the staging layer.
+___
+
+### multi_hash
+
+!!! warning
+    This macro ***should not be*** used for cryptographic purposes.
+    
+    The intended use is for creating checksum-like values only, so that we may compare records accurately. 
+    
+    [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
+    
+!!! seealso "See Also"
+    - [hash](#hash)
+    - [Hashing best practises and why we hash](bestpractices.md#hashing)
+    - With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. 
+    [Learn how](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
+    
+This macro will generate SQL hashing sequences for one or more columns as below:
+
+```sql tab='MD5'
+CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(column1 AS VARCHAR)))), '^^')) AS BINARY(16)) AS alias1,
+CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(column1 AS VARCHAR)))), '^^')) AS BINARY(16)) AS alias2
+```
+
+```sql tab='SHA'
+CAST(SHA2_BINARY(IFNULL((UPPER(TRIM(CAST(column1 AS VARCHAR)))), '^^')) AS BINARY(32)) AS alias1, 
+CAST(SHA2_BINARY(IFNULL((UPPER(TRIM(CAST(column2 AS VARCHAR)))), '^^')) AS BINARY(32)) AS alias2
+```
+
+#### Parameters
+
+| Parameter        |  Description                                    | Type     | Required?                                                |
+| ---------------- | ----------------------------------------------  | -------- | -------------------------------------------------------- |
+| pairs            | (column, alias) pair                            | Tuple    | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: columns   | Single column string or list of columns         | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: alias     | The alias for the column                        | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: sort      | Will alpha sort columns if true, default false. | Boolean  | <i class="md-icon" style="color: red">clear</i>          |
+
+
+#### Usage
+
+```yaml
+{{ dbtvault.multi_hash([('CUSTOMERKEY', 'CUSTOMER_PK'),
+                        (['CUSTOMERKEY', 'NAME', 'PHONE', 'DOB'], 
+                         'HASHDIFF', true)])                        }}
+```
+
+#### Output
+
+```mysql tab='MD5'
+CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(column1 AS VARCHAR)))), '^^')) AS BINARY(16)) AS CUSTOMER_PK,
+
+CAST(MD5_BINARY(CONCAT(
+     IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS HASHDIFF
+```
+
+```mysql tab='SHA'
+CAST(SHA2_BINARY(IFNULL((UPPER(TRIM(CAST(column1 AS VARCHAR)))), '^^')) AS BINARY(32)) AS CUSTOMER_PK,
+
+CAST(SHA2_BINARY(CONCAT(
+     IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(32)) AS HASHDIFF
+```
+
+!!! success "Column sorting"
+    If you wish to sort columns in alphabetical order as per [best practices](bestpractices.md#hashing),
+    you do not need to worry about doing this manually, just set the 
+    ```sort``` flag to true when creating hashdiffs as per the above example.
+___
+
+### add_columns
+
+!!! note 
+    As of v0.5, column aliasing must be implemented using this macro. Manual type mappings in the raw vault are now
+    deprecated due to bad practice. 
+
+A simple macro for generating sequences of the following SQL:
+```mysql 
+column AS alias
+```
+
+#### Parameters
+
+| Parameter     | Description                         | Type           | Required?                                       |
+| ------------- | ----------------------------------- | -------------- | ----------------------------------------------- |
+| source_table  | A source reference                  | Source         | <i class="md-icon" style="color: red">clear</i> |
+| pairs         | List of (column, alias) pairs       | List of tuples | <i class="md-icon" style="color: red">clear</i> |
 
 !!! note
-    If only aliasing and **not** changing data types, we suggest using the [add_columns](#add_columns) macro. 
-    
-    This aliasing approach is much simpler and processed in the staging layer instead. 
+    At least one of the above parameters must be provided, both may be provided if required.  
+
+#### Usage
+
+```yaml
+{{ dbtvault.add_columns(source('MYSOURCE', 'MYTABLE'),
+                        [('CURRENT_DATE()', 'EFFECTIVE_FROM'),
+                         ('!STG_CUSTOMER', 'SOURCE'),
+                         ('OLD_CUSTOMER_PK', 'CUSTOMER_PK'])                }}
+```
+
+#### Output
+
+```mysql 
+<All columns from MYTABLE>,
+CURRENT_DATE() AS EFFECTIVE_FROM,
+'STG_CUSTOMER' AS SOURCE,
+OLD_CUSTOMER_PK AS CUSTOMER_PK
+```
+
+#### Specific usage notes
+
+##### Getting columns from the source
+The ```add_columns``` macro will automatically select all columns from the optional  ```source_table``` reference, 
+if provided.
+
+##### Overriding source columns
+
+You may wish to override some of the source columns with different values. To replace the  ```SOURCE``` 
+or ```LOADDATE``` column value, for example, then you must provide the column name 
+that you wish to override as the alias in the pair. 
+
+!!! note
+    If a provided column name is the same as a source column name, the provided
+    column will take precedence over the source column, and the original source column will not be selected. 
+
+##### Functions
+
+Database functions may be used, for example ```CURRENT_DATE()``` to set the current date as the value of a column, as on
+```line 2``` of the usage example. Any function supported by the database is valid, for example ```LPAD()```, which pads
+a column with leading zeroes.
+
+##### Adding constants
+With the ```add_columns``` macro, you may provide constants. 
+These are additional 'calculated' columns created from hard-coded values.
+To achieve this, simply provide the constant with a ```!``` in front of the desired constant,
+and the macro will do the rest. See ```line 3``` of the usage example above, and the output it gives.
+
+##### Aliasing columns
+
+As of release 0.3, columns should now be aliased in the staging layer prior to loading. This can be achieved by providing the
+column name you wish to alias as the first argument in a pair, and providing the alias for that column as the second argument.
+This can be observed on ```line 4``` of the usage example above. Aliasing can still be carried out using a 
+manual mapping (shown in the [table template](#table-templates) section examples) but this is less concise for aliasing 
+purposes.
+
 ___
+
+### from
+
+Used in creating source/hashing models to complete a staging layer model.
+
+```mysql 
+FROM MYDATABASE.MYSCHEMA.MYTABLE
+```
+
+!!! info
+    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/v0.15.0/docs/using-sources)
+
+#### Parameters
+
+| Parameter     | Description                               | Type   | Required?                                                |
+| ------------- | ----------------------------------------- | ------ | -------------------------------------------------------- |
+| source_table  | A source reference                        | Source | <i class="md-icon" style="color: green">check_circle</i> | 
+
+#### Usage
+
+```yaml
+{{ dbtvault.from( source('MYSOURCE', 'MYTABLE') ) }}
+```
+
+#### Output
+
+```mysql 
+FROM MYDATABASE.MYSCHEMA.MYTABLE
+```
+
+___
+
+## Supporting Macros
+######(macros/supporting)
+
+Supporting macros are helper functions for use in models. It should not be necessary to call these macros directly, however they 
+are used extensively in the [table templates](#table-templates). 
+
+___
+
+### cast
+
+A macro for generating cast sequences:
+
+```mysql
+CAST(prefix.column AS type) AS alias
+```
+
+#### Parameters
+
+| Parameter        |  Description                  | Required?                                                |
+| ---------------- | ----------------------------- | -------------------------------------------------------- |
+| columns          |  Triples or strings           | <i class="md-icon" style="color: green">check_circle</i> |
+| prefix           |  A string                     | <i class="md-icon" style="color: red">clear</i>          |
+
+#### Usage
+
+!!! note
+    As shown in the snippet below, columns must be provided as a list. 
+    The collection of items in this list can be any combination of:
+
+    - ```(column, type, alias) ``` 3-tuples 
+    - ```[column, type, alias] ``` 3-item lists
+    - ```'DOB'``` Single strings.
+
+```yaml
+
+{%- set tgt_pk = ['PART_PK', 'BINARY(16)', 'PART_PK']        -%}
+
+{{ dbtvault.cast([tgt_pk,
+                  'DOB',
+                  ('PART_PK', 'NUMBER(38,0)', 'PART_ID'),
+                  ('LOADDATE', 'DATE', 'LOADDATE'),
+                  ('SOURCE', 'VARCHAR(15)', 'SOURCE')], 
+                  'stg')                                      }}
+```
+
+#### Output
+
+```mysql
+CAST(stg.PART_PK AS BINARY(16)) AS PART_PK,
+stg.DOB,
+CAST(stg.PART_ID AS NUMBER(38,0)) AS PART_ID,
+CAST(stg.LOADDATE AS DATE) AS LOADDATE,
+CAST(stg.SOURCE AS VARCHAR(15)) AS SOURCE
+```
+
+___
+
+### hash
+
+!!! warning
+    This macro ***should not be*** used for cryptographic purposes.
+    
+    The intended use is for creating checksum-like values only, so that we may compare records accurately.
+    
+    [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
+
+!!! seealso "See Also"
+    - [multi-hash](#multi_hash)
+    - [Hashing best practises and why we hash](bestpractices.md#hashing)
+    - With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. 
+    [Learn how](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
+    
+A macro for generating hashing SQL for columns:
+
+```sql tab='MD5'
+CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
+```
+
+```sql tab='SHA'
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(32)) AS alias
+```
+
+- Can provide multiple columns as a list to create a concatenated hash
+- Columns are sorted alphabetically (by alias) if you set the ```sort``` flag to true.
+- Generally, you should alpha sort hashdiffs using the ```sort``` flag.
+- Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
+- ```'^^'``` Accounts for null values with a double caret
+- ```'||'``` Concatenates with a double pipe 
+
+#### Parameters
+
+| Parameter        |  Description                                     | Type        | Required?                                                |
+| ---------------- | -----------------------------------------------  | ----------- | -------------------------------------------------------- |
+| columns          |  Columns to hash on                              | String/List | <i class="md-icon" style="color: green">check_circle</i> |
+| alias            |  The name to give the hashed column              | String      | <i class="md-icon" style="color: green">check_circle</i> |
+| sort             |  Will alpha sort columns if true, default false. | Boolean     | <i class="md-icon" style="color: red">clear</i>          |
+                                
+
+#### Usage
+
+```yaml
+{{ dbtvault.hash('CUSTOMERKEY', 'CUSTOMER_PK') }},
+{{ dbtvault.hash(['CUSTOMERKEY', 'PHONE', 'DOB', 'NAME'], 'HASHDIFF', true) }}
+```
+
+!!! tip
+    [multi_hash](#multi_hash) may be used to simplify the hashing process and generate multiple hashes with one macro.
+
+#### Output
+
+```mysql tab='MD5'
+CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
+CAST(MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+                       IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+                       IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+                       IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
+                       AS BINARY(16)) AS HASHDIFF
+```
+
+```mysql tab='SHA'
+CAST(SHA2_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(32)) AS CUSTOMER_PK,
+CAST(SHA2_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
+                        IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
+                        IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
+                        IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
+                        AS BINARY(32)) AS HASHDIFF
+```
+
+___
+
+### prefix
+
+A macro for quickly prefixing a list of columns with a string:
+```mysql
+a.column1, a.column2, a.column3, a.column4
+```
+
+#### Parameters
+
+| Parameter        |  Description                  | Type   | Required?                                                |
+| ---------------- | ----------------------------- | ------ | -------------------------------------------------------- |
+| columns          |  A list of column names       | List   | <i class="md-icon" style="color: green">check_circle</i> |
+| prefix_str       |  The prefix for the columns   | String | <i class="md-icon" style="color: green">check_circle</i> |
+
+#### Usage
+
+```yaml
+{{ dbtvault.prefix(['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'a') }}
+{{ dbtvault.prefix(['CUSTOMERKEY'], 'a') 
+```
+
+!!! Note
+    Single columns must be provided as a 1-item list, as in the second example above.
+
+#### Output
+
+```mysql
+a.CUSTOMERKEY, a.DOB, a.NAME, a.PHONE
+a.CUSTOMERKEY
+```
+
+___
+
+## Internal and Internal Deprecated
+######(macros/internal)
+######(macros/internal_deprecated)
+
+Internal macros support the other macros provided in this package. 
+They are used to process provided metadata and should not be called directly. 
+
+## Table templates (deprecated)
+######(macros/tables_deprecated)
+
+!!! warning "Deprecated"
+    The macros in this section are now deprecated as of v0.5, in favour of more streamlined metadata declaration and
+    usability. We have also removed raw vault column aliasing as this was bad practice.  
 
 ### hub_template
 
@@ -476,355 +1122,3 @@ ON stg.TRANSACTION_PK = tgt.TRANSACTION_PK
 WHERE tgt.TRANSACTION_PK IS NULL
 ```
 ___
-
-## Staging Macros
-######(macros/staging)
-
-These macros are intended for use in the staging layer.
-___
-
-### multi_hash
-
-!!! warning
-    This macro ***should not be*** used for cryptographic purposes.
-    
-    The intended use is for creating checksum-like values only, so that we may compare records accurately. 
-    
-    [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
-    
-!!! seealso "See Also"
-    - [hash](#hash)
-    - [Hashing best practises and why we hash](bestpractices.md#hashing)
-    - With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. 
-    [Learn how](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
-    
-This macro will generate SQL hashing sequences for one or more columns as below:
-
-```sql tab='MD5'
-CAST(MD5_BINARY(UPPER(TRIM(CAST(column1 AS VARCHAR)))) AS BINARY(16)) AS alias1,
-CAST(MD5_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(16)) AS alias2
-```
-
-```sql tab='SHA'
-CAST(SHA2_BINARY(UPPER(TRIM(CAST(column1 AS VARCHAR)))) AS BINARY(32)) AS alias1,
-CAST(SHA2_BINARY(UPPER(TRIM(CAST(column2 AS VARCHAR)))) AS BINARY(32)) AS alias2
-```
-
-#### Parameters
-
-| Parameter        |  Description                                    | Type     | Required?                                                |
-| ---------------- | ----------------------------------------------  | -------- | -------------------------------------------------------- |
-| pairs            | (column, alias) pair                            | Tuple    | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: columns   | Single column string or list of columns         | String   | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: alias     | The alias for the column                        | String   | <i class="md-icon" style="color: green">check_circle</i> |
-| pairs: sort      | Will alpha sort columns if true, default false. | Boolean  | <i class="md-icon" style="color: red">clear</i>          |
-
-
-#### Usage
-
-```yaml
-{{ dbtvault.multi_hash([('CUSTOMERKEY', 'CUSTOMER_PK'),
-                        (['CUSTOMERKEY', 'NAME', 'PHONE', 'DOB'], 
-                         'HASHDIFF', true)])                        }}
-```
-
-#### Output
-
-```mysql tab='MD5'
-CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
-
-CAST(MD5_BINARY(CONCAT(
-     IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
-     IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
-     IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
-     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS HASHDIFF
-```
-
-```mysql tab='SHA'
-CAST(SHA2_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(32)) AS CUSTOMER_PK,
-
-CAST(SHA2_BINARY(CONCAT(
-     IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
-     IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
-     IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
-     IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(32)) AS HASHDIFF
-```
-
-!!! success "Column sorting"
-    If you wish to sort columns in alphabetical order as per [best practices](bestpractices.md#hashing),
-    you do not need to worry about doing this manually, just set the 
-    ```sort``` flag to true when creating hashdiffs as per the above example.
-___
-
-### add_columns
-
-A simple macro for generating sequences of the following SQL:
-```mysql 
-column AS alias
-```
-
-#### Parameters
-
-| Parameter     | Description                         | Type           | Required?                                       |
-| ------------- | ----------------------------------- | -------------- | ----------------------------------------------- |
-| source_table  | A source reference                  | Source         | <i class="md-icon" style="color: red">clear</i> |
-| pairs         | List of (column, alias) pairs       | List of tuples | <i class="md-icon" style="color: red">clear</i> |
-
-!!! note
-    At least one of the above parameters must be provided, both may be provided if required.  
-
-#### Usage
-
-```yaml
-{{ dbtvault.add_columns(source('MYSOURCE', 'MYTABLE'),
-                        [('CURRENT_DATE()', 'EFFECTIVE_FROM'),
-                         ('!STG_CUSTOMER', 'SOURCE'),
-                         ('OLD_CUSTOMER_PK', 'CUSTOMER_PK'])                }}
-```
-
-#### Output
-
-```mysql 
-<All columns from MYTABLE>,
-CURRENT_DATE() AS EFFECTIVE_FROM,
-'STG_CUSTOMER' AS SOURCE,
-OLD_CUSTOMER_PK AS CUSTOMER_PK
-```
-
-#### Specific usage notes
-
-##### Getting columns from the source
-The ```add_columns``` macro will automatically select all columns from the optional  ```source_table``` reference, 
-if provided.
-
-##### Overriding source columns
-
-You may wish to override some of the source columns with different values. To replace the  ```SOURCE``` 
-or ```LOADDATE``` column value, for example, then you must provide the column name 
-that you wish to override as the alias in the pair. 
-
-!!! note
-    If a provided column name is the same as a source column name, the provided
-    column will take precedence over the source column, and the original source column will not be selected. 
-
-##### Functions
-
-Database functions may be used, for example ```CURRENT_DATE()``` to set the current date as the value of a column, as on
-```line 2``` of the usage example. Any function supported by the database is valid, for example ```LPAD()```, which pads
-a column with leading zeroes.
-
-##### Adding constants
-With the ```add_columns``` macro, you may provide constants. 
-These are additional 'calculated' columns created from hard-coded values.
-To achieve this, simply provide the constant with a ```!``` in front of the desired constant,
-and the macro will do the rest. See ```line 3``` of the usage example above, and the output it gives.
-
-##### Aliasing columns
-
-As of release 0.3, columns should now be aliased in the staging layer prior to loading. This can be achieved by providing the
-column name you wish to alias as the first argument in a pair, and providing the alias for that column as the second argument.
-This can be observed on ```line 4``` of the usage example above. Aliasing can still be carried out using a 
-manual mapping (shown in the [table template](#table-templates) section examples) but this is less concise for aliasing 
-purposes.
-
-___
-
-### from
-
-Used in creating source/hashing models to complete a staging layer model.
-
-```mysql 
-FROM MYDATABASE.MYSCHEMA.MYTABLE
-```
-
-!!! info
-    Sources need to be set up in dbt to ensure this works. [Read More](https://docs.getdbt.com/v0.15.0/docs/using-sources)
-
-#### Parameters
-
-| Parameter     | Description                               | Type   | Required?                                                |
-| ------------- | ----------------------------------------- | ------ | -------------------------------------------------------- |
-| source_table  | A source reference                        | Source | <i class="md-icon" style="color: green">check_circle</i> | 
-
-#### Usage
-
-```yaml
-{{ dbtvault.from( source('MYSOURCE', 'MYTABLE') ) }}
-```
-
-#### Output
-
-```mysql 
-FROM MYDATABASE.MYSCHEMA.MYTABLE
-```
-
-___
-
-## Supporting Macros
-######(macros/supporting)
-
-Supporting macros are helper functions for use in models. It should not be necessary to call these macros directly, however they 
-are used extensively in the [table templates](#table-templates). 
-
-___
-
-### cast
-
-A macro for generating cast sequences:
-
-```mysql
-CAST(prefix.column AS type) AS alias
-```
-
-#### Parameters
-
-| Parameter        |  Description                  | Required?                                                |
-| ---------------- | ----------------------------- | -------------------------------------------------------- |
-| columns          |  Triples or strings           | <i class="md-icon" style="color: green">check_circle</i> |
-| prefix           |  A string                     | <i class="md-icon" style="color: red">clear</i>          |
-
-#### Usage
-
-!!! note
-    As shown in the snippet below, columns must be provided as a list. 
-    The collection of items in this list can be any combination of:
-
-    - ```(column, type, alias) ``` 3-tuples 
-    - ```[column, type, alias] ``` 3-item lists
-    - ```'DOB'``` Single strings.
-
-```yaml
-
-{%- set tgt_pk = ['PART_PK', 'BINARY(16)', 'PART_PK']        -%}
-
-{{ dbtvault.cast([tgt_pk,
-                  'DOB',
-                  ('PART_PK', 'NUMBER(38,0)', 'PART_ID'),
-                  ('LOADDATE', 'DATE', 'LOADDATE'),
-                  ('SOURCE', 'VARCHAR(15)', 'SOURCE')], 
-                  'stg')                                      }}
-```
-
-#### Output
-
-```mysql
-CAST(stg.PART_PK AS BINARY(16)) AS PART_PK,
-stg.DOB,
-CAST(stg.PART_ID AS NUMBER(38,0)) AS PART_ID,
-CAST(stg.LOADDATE AS DATE) AS LOADDATE,
-CAST(stg.SOURCE AS VARCHAR(15)) AS SOURCE
-```
-
-___
-
-### hash
-
-!!! warning
-    This macro ***should not be*** used for cryptographic purposes.
-    
-    The intended use is for creating checksum-like values only, so that we may compare records accurately.
-    
-    [Read More](https://www.md5online.org/blog/why-md5-is-not-safe/)
-
-!!! seealso "See Also"
-    - [multi-hash](#multi_hash)
-    - [Hashing best practises and why we hash](bestpractices.md#hashing)
-    - With the release of dbtvault 0.4, you may now choose between ```MD5``` and ```SHA-256``` hashing. 
-    [Learn how](bestpractices.md#choosing-a-hashing-algorithm-in-dbtvault)
-    
-A macro for generating hashing SQL for columns:
-
-```sql tab='MD5'
-CAST(MD5_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(16)) AS alias
-```
-
-```sql tab='SHA'
-CAST(SHA2_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(32)) AS alias
-```
-
-- Can provide multiple columns as a list to create a concatenated hash
-- Columns are sorted alphabetically (by alias) if you set the ```sort``` flag to true.
-- Generally, you should alpha sort hashdiffs using the ```sort``` flag.
-- Casts a column as ```VARCHAR```, transforms to ```UPPER``` case and trims whitespace
-- ```'^^'``` Accounts for null values with a double caret
-- ```'||'``` Concatenates with a double pipe 
-
-#### Parameters
-
-| Parameter        |  Description                                     | Type        | Required?                                                |
-| ---------------- | -----------------------------------------------  | ----------- | -------------------------------------------------------- |
-| columns          |  Columns to hash on                              | String/List | <i class="md-icon" style="color: green">check_circle</i> |
-| alias            |  The name to give the hashed column              | String      | <i class="md-icon" style="color: green">check_circle</i> |
-| sort             |  Will alpha sort columns if true, default false. | Boolean     | <i class="md-icon" style="color: red">clear</i>          |
-                                
-
-#### Usage
-
-```yaml
-{{ dbtvault.hash('CUSTOMERKEY', 'CUSTOMER_PK') }},
-{{ dbtvault.hash(['CUSTOMERKEY', 'PHONE', 'DOB', 'NAME'], 'HASHDIFF', true) }}
-```
-
-!!! tip
-    [multi_hash](#multi_hash) may be used to simplify the hashing process and generate multiple hashes with one macro.
-
-#### Output
-
-```mysql tab = 'MD5'
-CAST(MD5_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(16)) AS CUSTOMER_PK,
-CAST(MD5_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
-                       IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
-                       IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
-                       IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
-                       AS BINARY(16)) AS HASHDIFF
-```
-
-```mysql tab='SHA'
-CAST(SHA2_BINARY(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR)))) AS BINARY(32)) AS CUSTOMER_PK,
-CAST(SHA2_BINARY(CONCAT(IFNULL(UPPER(TRIM(CAST(CUSTOMERKEY AS VARCHAR))), '^^'), '||',
-                        IFNULL(UPPER(TRIM(CAST(DOB AS VARCHAR))), '^^'), '||',
-                        IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',
-                        IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) 
-                        AS BINARY(32)) AS HASHDIFF
-```
-
-___
-
-### prefix
-
-A macro for quickly prefixing a list of columns with a string:
-```mysql
-a.column1, a.column2, a.column3, a.column4
-```
-
-#### Parameters
-
-| Parameter        |  Description                  | Type   | Required?                                                |
-| ---------------- | ----------------------------- | ------ | -------------------------------------------------------- |
-| columns          |  A list of column names       | List   | <i class="md-icon" style="color: green">check_circle</i> |
-| prefix_str       |  The prefix for the columns   | String | <i class="md-icon" style="color: green">check_circle</i> |
-
-#### Usage
-
-```yaml
-{{ dbtvault.prefix(['CUSTOMERKEY', 'DOB', 'NAME', 'PHONE'], 'a') }}
-{{ dbtvault.prefix(['CUSTOMERKEY'], 'a') 
-```
-
-!!! Note
-    Single columns must be provided as a 1-item list, as in the second example above.
-
-#### Output
-
-```mysql
-a.CUSTOMERKEY, a.DOB, a.NAME, a.PHONE
-a.CUSTOMERKEY
-```
-
-___
-
-## Internal
-######(macros/internal)
-
-Internal macros support the other macros provided in this package. 
-They are used to process provided metadata and should not be called directly. 
