@@ -13,7 +13,6 @@ macro-paths: ["macros"]
 target-path: "target"
 clean-targets:
     - "target"
-    - "dbt_modules"
 
 models:
   dbtvault_test:
