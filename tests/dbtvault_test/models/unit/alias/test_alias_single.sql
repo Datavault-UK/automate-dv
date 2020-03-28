@@ -1,0 +1,1 @@
+{{ dbtvault.alias(var('column_pair'), var('prefix')) }}

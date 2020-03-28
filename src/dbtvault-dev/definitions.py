@@ -8,4 +8,5 @@ DBT_ROOT = PurePath(__file__).parent
 PROJECT_ROOT = PurePath(__file__).parents[2]
 TESTS_ROOT = Path("{}/tests".format(PROJECT_ROOT))
 TESTS_DBT_ROOT = Path("{}/tests/dbtvault_test".format(PROJECT_ROOT))
+COMPILED_TESTS_DBT_ROOT = Path("{}/tests/dbtvault_test/target/compiled/dbtvault_test/unit".format(PROJECT_ROOT))
 FEATURES_ROOT = TESTS_ROOT / 'features'
