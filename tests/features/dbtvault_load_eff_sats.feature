@@ -314,10 +314,41 @@ Feature: Effectivity Satellites
       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
       | md5('5000\|\|EEE') | 2020-01-13 | orders | 2020-01-10     | 2020-01-10     | 2020-01-12   |
 
-#    Scenario: If there is an open eff sat and a new stage where sfk is null, eff sat is closed.
-#      Given there is a LINK_CUSTOMER_ORDER table
-#      And there is a EFF_CUSTOMER_ORDER table
-#      And staging_data loaded on 2020-01-13
-#      When I run a Load Cycle for 2020-01-13
-#      Then I expect the following LINK_CUSTOMER_ORDER
-#      And I expect the following EFF_CUSTOMER_ORDER
+    Scenario: No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
+      Given there is a LINK_CUSTOMER_ORDER table
+       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      And there is a EFF_CUSTOMER_ORDER table
+       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+       | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+       | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+       | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+      And staging_data loaded on 2020-01-13
+       | CUSTOMER_ORDER_PK   | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
+       | md5('1000\|\|AAA')  | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-11     |
+       | md5('2000\|\|BBB')  | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
+       | md5('3000\|\|CCC')  | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-11     |
+       | md5('4000\|\|DDD')  | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-11     |
+       | md5('^^\|\|EEE')    | 2020-01-13 | orders | md5('^^')   | <null>      | md5('EEE') | EEE      | 2020-01-12     |
+      When I run a Load Cycle for 2020-01-13
+      Then I expect the following LINK_CUSTOMER_ORDER
+       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      And I expect the following EFF_CUSTOMER_ORDER
+       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+       | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+       | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+       | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
+

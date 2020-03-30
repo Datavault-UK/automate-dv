@@ -27,16 +27,27 @@ FROM (
 LEFT JOIN {{ this }} AS tgt
 ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'tgt') }}
 WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
-{% for fk in src_fk %}
-AND {{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check(var('hash')) }}
-{% endfor %}
-{# If an incremental and union load -#}
 {% if is_union -%}
 AND stg.FIRST_SOURCE IS NULL
 {%- endif -%}
-{%- endif -%}
-{# If a union base-load #}
-{%- if is_union and not is_incremental() -%}
+{%- for fk in src_fk %}
+AND {{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check(var('hash')) }}
+{% endfor %}
+{%- elif not is_incremental() -%}
+{% if is_union %}
 WHERE stg.FIRST_SOURCE IS NULL
+{%- for fk in src_fk %}
+AND {{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check(var('hash')) }}
+{% endfor %}
+{% else %}
+WHERE
+{%- for fk in src_fk %}
+{% if loop.index == src_fk|length %}
+{{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check(var('hash')) }}
+{% else %}
+{{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check(var('hash')) }} AND
+{% endif %}
+{% endfor %}
+{% endif %}
 {%- endif -%}
 {%- endmacro -%}

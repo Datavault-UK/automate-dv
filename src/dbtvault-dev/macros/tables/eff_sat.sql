@@ -68,6 +68,7 @@ LEFT JOIN (
 ON {{ dbtvault.prefix([src_pk], 'eff') }}={{ dbtvault.prefix([src_pk], 'e') }}
 WHERE {{ dbtvault.prefix([src_pk], 'eff') }} IS NULL
 AND {{ dbtvault.prefix([src_sfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
+AND {{ dbtvault.prefix([src_dfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 UNION
 SELECT
   {{ dbtvault.prefix([src_pk], 'y') }},
