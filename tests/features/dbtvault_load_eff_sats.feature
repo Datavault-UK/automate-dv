@@ -275,7 +275,7 @@ Feature: Effectivity Satellites
       | md5('7000\|\|III') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10     | 2020-01-11   |
       | md5('7000\|\|JJJ') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
       
-    Scenario: No New Eff Sat Added if Secondary Foreign Key is NULL
+    Scenario: No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed.
       Given there is a LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -296,15 +296,15 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB')  | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
       | md5('3000\|\|CCC')  | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-11     |
       | md5('4000\|\|DDD')  | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-11     |
-      | md5('5000\|\|^^')   | 2020-01-13 | orders | md5('5000') | 5000        | <null>     | <null>   | 2020-01-12     |
+      | md5('5000\|\|^^')   | 2020-01-13 | orders | md5('5000') | 5000        | md5('^^')  | <null>   | 2020-01-12     |
       When I run a Load Cycle for 2020-01-13
-#      Then I expect the following LINK_CUSTOMER_ORDER
-#      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
-#      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
-#      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
-#      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
-#      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
-#      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      Then I expect the following LINK_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
       And I expect the following EFF_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
       | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |

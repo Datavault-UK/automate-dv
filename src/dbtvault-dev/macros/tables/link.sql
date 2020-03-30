@@ -27,6 +27,9 @@ FROM (
 LEFT JOIN {{ this }} AS tgt
 ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'tgt') }}
 WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
+{% for fk in src_fk %}
+AND {{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check(var('hash')) }}
+{% endfor %}
 {# If an incremental and union load -#}
 {% if is_union -%}
 AND stg.FIRST_SOURCE IS NULL
