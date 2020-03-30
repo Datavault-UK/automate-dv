@@ -158,6 +158,35 @@ Feature: Load Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
+  Scenario: [SINGLE-SOURCE] Load a stage table where a foreign key is NULL, no link is inserted.
+    Given there are records in the TEST_STG_CRM_CUSTOMER table
+     | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+     | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+     | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+     | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+     | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+     | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+     | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+     | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+     | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+     | 1007         | <null>     | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And there are records in the LINK_CUSTOMER_NATION table
+     | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+     | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+     | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+     | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+     | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    When I load the TEST_LINK_CUSTOMER_NATION table
+    Then the LINK_CUSTOMER_NATION table should contain
+     | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+     | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+     | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+     | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+     | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+     | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+     | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
+     | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+
 
 # -----------------------------------------------------------------------------------------
 # Test union of different staging tables to insert records into links which don't yet exist
