@@ -10,33 +10,41 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro alias(source_column, prefix) -%}
+{%- macro alias(source_column, prefix='') -%}
 
-{%- if source_column is iterable and source_column is not string -%}
+{%- if (source_column is defined and source_column) -%}
 
-    {%- if source_column['source_column'] and source_column['alias'] -%}
+    {%- if source_column is iterable and source_column is not string -%}
 
-        {%- if prefix -%}
-            {{prefix}}.{{ source_column['source_column'] }} AS {{ source_column['alias'] }}
-        {%- else -%}
-            {{ source_column['source_column'] }} AS {{ source_column['alias'] }}
+        {%- if source_column['source_column'] and source_column['alias'] -%}
+
+            {%- if prefix -%}
+                {{prefix}}.{{ source_column['source_column'] }} AS {{ source_column['alias'] }}
+            {%- else -%}
+                {{ source_column['source_column'] }} AS {{ source_column['alias'] }}
+            {%- endif -%}
+
         {%- endif -%}
 
     {%- else -%}
 
-        {{ exceptions.raise_compiler_error("Invalid alias configuration:\nexpected format: {source_column: 'column', alias: 'column_alias'}\ngot: " ~ source_column) }}
+        {%- if prefix -%}
+
+        {{- dbtvault.prefix([source_column], prefix) -}}
+
+        {%- else -%}
+
+        {{ source_column }}
+
+        {%- endif -%}
 
     {%- endif -%}
 
 {%- else -%}
 
-    {%- if prefix -%}
+    {%- if execute -%}
 
-    {{dbtvault.prefix([source_column], prefix) }}
-
-    {%- else -%}
-
-    {{ source_column }}
+        {{ exceptions.raise_compiler_error("Invalid alias configuration:\nexpected format: {source_column: 'column', alias: 'column_alias'}\ngot: " ~ source_column) }}
 
     {%- endif -%}
 

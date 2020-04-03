@@ -10,12 +10,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro alias_all(columns) -%}
+{%- macro alias_all(columns, prefix) -%}
 
 {%- if columns is iterable and columns is not string -%}
 
     {%- for column in columns -%}
-        {{ dbtvault.alias(column) }}
+        {{ dbtvault.alias(column, prefix) }}
+        {%- if not loop.last -%} , {% endif -%}
     {%- endfor -%}
 
 {%- endif -%}
