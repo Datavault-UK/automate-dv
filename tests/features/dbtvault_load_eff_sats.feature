@@ -352,3 +352,53 @@ Feature: Effectivity Satellites
        | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
        | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
 
+    Scenario: Driving Key and Secondary Key are multipart keys.
+      Given there is data in LINK_CUSTOMER_ORDER_MULTIPART
+        | CUSTOMER_ORDER_PK                                | CUSTOMER_FK | NATION_FK  | ORDER_FK   | PRODUCT_FK    | ORGANISATION_FK  | LOADDATE   | SOURCE |
+        | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('DEU') | md5('AAA') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-12 | orders |
+        | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | md5('2000') | md5('GBR') | md5('BBB') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-13 | orders |
+        | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | md5('3000') | md5('AUS') | md5('CCC') | md5('SHOP')   | md5('BUSSTHINK') | 2020-01-13 | orders |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-13 | orders |
+        | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('EEE') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-13 | orders |
+        | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | md5('5000') | md5('SPA') | md5('FFF') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-13 | orders |
+      And there is data in EFF_CUSTOMER_ORDER_MULTIPART
+        | CUSTOMER_ORDER_PK                                | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+        | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+        | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 2020-01-13   |
+        | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | 2020-01-13 | orders | 2020-01-13     | 2020-01-13     | 9999-12-31   |
+        | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+      And the multipart staging_data loaded on 2020-01-14
+        | CUSTOMER_ORDER_PK                                | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | NATION_FK  | NATION_ID | PRODUCT_FK    | PRODUCT_GROUP | ORGANISATION_FK  | ORGANISATION_ID | EFFECTIVE_FROM |
+        | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | 2020-01-14 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | md5('DEU') | DEU       | md5('ONLINE') | ONLINE        | md5('DATAVAULT') | DATAVAULT       | 2020-01-11     |
+        | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | 2020-01-14 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | md5('GBR') | GBR       | md5('ONLINE') | ONLINE        | md5('DATAVAULT') | DATAVAULT       | 2020-01-12     |
+        | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | 2020-01-14 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | md5('AUS') | AUS       | md5('SHOP')   | SHOP          | md5('BUSSTHINK') | BUSSTHINK       | 2020-01-12     |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-14 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | md5('POL') | POL       | md5('ONLINE') | ONLINE        | md5('BUSSTHINK') | BUSSTHINK       | 2020-01-13     |
+        | md5('5000\|\|FRA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | 2020-01-14 | orders | md5('5000') | 5000        | md5('FFF') | FFF      | md5('FRA') | FRA       | md5('SHOP')   | SHOP          | md5('DATAVAULT') | DATAVAULT       | 2020-01-13     |
+        | md5('6000\|\|FRA\|\|GGG\|\|SHOP\|\|DATAVAULT')   | 2020-01-14 | orders | md5('6000') | 6000        | md5('GGG') | GGG      | md5('FRA') | FRA       | md5('SHOP')   | SHOP          | md5('DATAVAULT') | DATAVAULT       | 2020-01-13     |
+      When I run a multipart Load Cycle for 2020-01-14
+      Then I expect to see the following multipart LINK_CUSTOMER_ORDER_MULTIPART
+        | CUSTOMER_ORDER_PK                                | CUSTOMER_FK | NATION_FK  | ORDER_FK   | PRODUCT_FK    | ORGANISATION_FK  | LOADDATE   | SOURCE |
+        | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('DEU') | md5('AAA') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-12 | orders |
+        | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | md5('2000') | md5('GBR') | md5('BBB') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-13 | orders |
+        | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | md5('3000') | md5('AUS') | md5('CCC') | md5('SHOP')   | md5('BUSSTHINK') | 2020-01-13 | orders |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-13 | orders |
+        | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('EEE') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-13 | orders |
+        | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | md5('5000') | md5('SPA') | md5('FFF') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-13 | orders |
+        | md5('5000\|\|FRA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | md5('5000') | md5('FRA') | md5('FFF') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-13 | orders |
+        | md5('6000\|\|FRA\|\|GGG\|\|SHOP\|\|DATAVAULT')   | md5('6000') | md5('FRA') | md5('GGG') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-14 | orders |
+      And I expect to see the following multipart EFF_CUSTOMER_ORDER_MULTIPART
+        | CUSTOMER_ORDER_PK                                | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+        | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11     | 9999-12-31   |
+        | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 2020-01-13   |
+        | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | 2020-01-13 | orders | 2020-01-13     | 2020-01-13     | 9999-12-31   |
+        | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | 2020-01-14 | orders | 2020-01-13     | 2020-01-13     | 2020-01-13   |
+        | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-14 | orders | 2020-01-13     | 2020-01-13     | 9999-12-31   |
+        | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
+        | md5('5000\|\|FRA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | 2020-01-14 | orders | 2020-01-13     | 2020-01-13     | 9999-12-31   |
+        | md5('6000\|\|FRA\|\|GGG\|\|SHOP\|\|DATAVAULT')   | 2020-01-14 | orders | 2020-01-13     | 2020-01-13     | 9999-12-31   |
