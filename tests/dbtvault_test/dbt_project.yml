@@ -186,7 +186,7 @@ models:
             src_source: 'SOURCE'
         test_eff_customer_order_multipart_current:
           vars:
-            source: 'test_stg_eff_sat_current'
+            source: 'test_stg_eff_sat_hashed_current'
             link: 'test_link_customer_order_multipart_current'
             src_pk: 'CUSTOMER_ORDER_PK'
             src_dfk:
@@ -195,10 +195,11 @@ models:
             src_sfk:
               - 'ORDER_FK'
               - 'PRODUCT_FK'
-              - 'ORGANISTION_FK'
+              - 'ORGANISATION_FK'
             src_eff_from: 'EFFECTIVE_FROM'
             src_start_date: 'START_DATETIME'
             src_end_date: 'END_DATETIME'
+            src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
   vars:
     hash: MD5

@@ -153,7 +153,7 @@ def step_impl(context, table_name):
                                                        binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "NATION_FK",
                                                                        "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"])
         result_df = context.dbutils.get_table_data(
-            full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_order_{}".format(MODE.lower()),
+            full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_order_multipart_{}".format(MODE.lower()),
             binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "NATION_FK", "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"],
             order_by='CUSTOMER_ORDER_PK', connection=context.connection)
 
@@ -165,7 +165,7 @@ def step_impl(context, table_name):
                                                        binary_columns=['CUSTOMER_ORDER_PK'])
 
         result_df = context.dbutils.get_table_data(
-            full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_eff_customer_order_{}".format(MODE.lower()),
+            full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_eff_customer_order_multipart_{}".format(MODE.lower()),
             binary_columns=['CUSTOMER_ORDER_PK'], order_by=['CUSTOMER_ORDER_PK', 'LOADDATE'],
             connection=context.connection)
 
