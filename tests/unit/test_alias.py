@@ -18,17 +18,19 @@ class TestAliasMacro(TestCase):
 
         model = 'test_alias_single'
 
-        column = {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}
-
-        var_dict = {'source_column': column, 'prefix': 'c'}
+        var_dict = {
+            'source_column': {
+                "source_column": "CUSTOMER_HASHDIFF",
+                "alias": "HASHDIFF"},
+            'prefix': 'c'}
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
-
-        self.assertIn('Done', process_logs)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
         expected_sql = 'c.CUSTOMER_HASHDIFF AS HASHDIFF'
+
+        self.assertIn('Done', process_logs)
 
         self.assertEqual(actual_sql, expected_sql)
 
