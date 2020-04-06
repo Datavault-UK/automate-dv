@@ -33,51 +33,63 @@ c AS (SELECT DISTINCT
 , p AS (
     SELECT q.* FROM {{ ref(link) }} AS q
     INNER JOIN {{ ref(source) }} AS r ON
-    {% for dfk in src_dfk %}
+    {% for dfk in src_dfk if not src_dfk is string %}
     {% if loop.index  == src_dfk|length %}
     {{ dbtvault.prefix([dfk], 'q') }}={{ dbtvault.prefix([dfk], 'r') }}
     {% else %}
     {{ dbtvault.prefix([dfk], 'q') }}={{ dbtvault.prefix([dfk], 'r') }}
     AND
     {% endif %}
+    {% else %}
+    {{ dbtvault.prefix([src_dfk], 'q') }}={{ dbtvault.prefix([src_dfk], 'r') }}
     {% endfor %}
 )
 , x AS (
     SELECT p.*
-    {% for dfk in src_dfk %}
+    {% for dfk in src_dfk if not src_dfk is string %}
     , {{ dbtvault.prefix([dfk], 's') }} AS DFK_{{ loop.index }}
+    {% else %}
+    , {{ dbtvault.prefix([src_dfk], 's') }} AS DFK_1
     {% endfor %}
     FROM p
     LEFT JOIN {{ ref(source) }} AS s ON
-    {% for dfk in src_dfk %}
+    {% for dfk in src_dfk if not src_dfk is string %}
     {% if loop.index  == src_dfk|length %}
     {{ dbtvault.prefix([dfk], 'p') }}={{ dbtvault.prefix([dfk], 's') }}
     {% else %}
     {{ dbtvault.prefix([dfk], 'p') }}={{ dbtvault.prefix([dfk], 's') }}
     AND
     {% endif %}
+    {% else %}
+    {{ dbtvault.prefix([src_dfk], 'p') }}={{ dbtvault.prefix([src_dfk], 's') }}
     {% endfor %}
     AND
-    {% for sfk in src_sfk %}
+    {% for sfk in src_sfk if not src_sfk is string %}
     {% if loop.index  == src_sfk|length %}
     {{ dbtvault.prefix([sfk], 'p') }}={{ dbtvault.prefix([sfk], 's') }}
     {% else %}
     {{ dbtvault.prefix([sfk], 'p') }}={{ dbtvault.prefix([sfk], 's') }}
     AND
     {% endif %}
+    {% else %}
+    {{ dbtvault.prefix([src_sfk], 'p') }}={{ dbtvault.prefix([src_sfk], 's') }}
     {% endfor %}
     WHERE (
-    {% for dfk in src_dfk %}
+    {% for dfk in src_dfk if not src_dfk is string %}
     {{ dbtvault.prefix([dfk], 's') }} IS NULL
     AND
+    {% else %}
+    {{ dbtvault.prefix([src_dfk], 's') }} IS NULL AND
     {% endfor %}
-    {% for sfk in src_sfk %}
+    {% for sfk in src_sfk if not src_sfk is string %}
     {% if loop.index  == src_sfk|length %}
     {{ dbtvault.prefix([sfk], 's') }} IS NULL
     {% else %}
     {{ dbtvault.prefix([sfk], 's') }} IS NULL
     AND
     {% endif %}
+    {% else %}
+    {{ dbtvault.prefix([src_sfk], 's') }} IS NULL
     {% endfor %}
     )
 )
@@ -85,10 +97,12 @@ c AS (SELECT DISTINCT
   SELECT
     {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from, src_start_date, src_end_date], 't') }}
 
-    {% for dfk in src_dfk %}
+    {% for dfk in src_dfk if not src_dfk is string %}
     , {{ dbtvault.prefix(['DFK_'~loop.index ], 'x') }}
+    {% else %}
+    , {{ dbtvault.prefix(['DFK_1'], 'x') }}
     {% endfor %}
-    ,{{ dbtvault.prefix([src_dfk], 'x')}},
+    , {{ dbtvault.prefix([src_dfk], 'x')}},
     CASE WHEN RANK()
     OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 't') }}
     ORDER BY {{ dbtvault.prefix([src_end_date], 't') }} ASC) = 1
@@ -111,22 +125,26 @@ LEFT JOIN (
 ON {{ dbtvault.prefix([src_pk], 'eff') }}={{ dbtvault.prefix([src_pk], 'e') }}
 WHERE ({{ dbtvault.prefix([src_pk], 'eff') }} IS NULL
 AND
-{% for sfk in src_sfk %}
+{% for sfk in src_sfk if not src_sfk is string %}
 {% if loop.index  == src_sfk|length %}
 {{ dbtvault.prefix([sfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 {% else %}
 {{ dbtvault.prefix([sfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 AND
 {% endif %}
+{% else %}
+{{ dbtvault.prefix([src_sfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 {% endfor %}
 AND
-{% for dfk in src_dfk %}
+{% for dfk in src_dfk if not src_dfk is string %}
 {% if loop.index  == src_dfk|length %}
 {{ dbtvault.prefix([dfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 {% else %}
 {{ dbtvault.prefix([dfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 AND
 {% endif %}
+{% else %}
+{{ dbtvault.prefix([src_dfk], 'e') }}<>{{ dbtvault.hash_check(var('hash')) }}
 {% endfor %})
 UNION
 SELECT
@@ -134,23 +152,27 @@ SELECT
   {{ dbtvault.prefix([src_ldts], 'z') }},
   {{ dbtvault.prefix([src_source, src_eff_from, src_start_date], 'y') }},
   CASE WHEN
-  {% for dfk in src_dfk %}
+  {% for dfk in src_dfk if not src_dfk is string %}
   {% if loop.index == src_dfk|length %}
   y.DFK_{{loop.index|string}} IS NULL
   {% else %}
   y.DFK_{{loop.index|string}} IS NULL AND
   {% endif %}
+  {% else %}
+  y.DFK_1 IS NULL
   {% endfor %}
   THEN {{ dbtvault.prefix([src_eff_from], 'z') }} ELSE {{ max_date }} END AS {{ src_end_date }}
 FROM y
 LEFT JOIN {{ ref(source) }} AS z ON
-{% for dfk in src_dfk %}
+{% for dfk in src_dfk if not src_dfk is string %}
 {% if loop.index  == src_dfk|length %}
 {{ dbtvault.prefix([dfk], 'y') }}={{ dbtvault.prefix([dfk], 'z') }}
 {% else %}
 {{ dbtvault.prefix([dfk], 'y') }}={{ dbtvault.prefix([dfk], 'z') }}
 AND
 {% endif %}
+{% else %}
+{{ dbtvault.prefix([src_dfk], 'y') }}={{ dbtvault.prefix([src_dfk], 'z') }}
 {% endfor %}
 WHERE y.CURR_FLG='Y' AND {{ dbtvault.prefix([src_end_date], 'y') }}={{ max_date }}
 {%- endif -%}
