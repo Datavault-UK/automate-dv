@@ -16,8 +16,7 @@ class DBTTestUtils:
         # Setup logging
         self.logger = logging.getLogger('dbt')
 
-        if not self.logger.hasHandlers():
-
+        if not self.logger.handlers:
             ch = logging.StreamHandler()
             ch.setLevel(logging.DEBUG)
             formatter = logging.Formatter('(%(name)s) %(levelname)s: %(message)s')
