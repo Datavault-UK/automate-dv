@@ -1,8 +1,7 @@
 import os
 from unittest import TestCase
 
-from definitions import TESTS_DBT_ROOT
-from tests.unit.dbt_test_utils import DBTTestUtils
+from tests.unit.dbt_test_utils import *
 
 
 class TestAliasMacro(TestCase):
@@ -10,7 +9,7 @@ class TestAliasMacro(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
 
-        cls.dbt_test = DBTTestUtils()
+        cls.dbt_test = DBTTestUtils(model_directory='alias')
 
         os.chdir(TESTS_DBT_ROOT)
 

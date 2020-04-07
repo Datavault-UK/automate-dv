@@ -1,16 +1,15 @@
 import logging
-import os
-from subprocess import STDOUT, PIPE, Popen
 import shutil
+from subprocess import STDOUT, PIPE, Popen
 
 from definitions import TESTS_DBT_ROOT, COMPILED_TESTS_DBT_ROOT
 
 
 class DBTTestUtils:
 
-    def __init__(self):
+    def __init__(self, model_directory):
 
-        self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / 'alias'
+        self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
 
         logging.basicConfig(level=logging.INFO)
 
@@ -41,15 +40,16 @@ class DBTTestUtils:
 
         return lines
 
-    def run_model(self, *, model: str, model_vars=None) -> str:
+    def run_model(self, *, mode='compile', model: str, model_vars=None) -> str:
         """
-        Run a specific dbt model, with optionally provided variables.
+        Run or Compile a specific dbt model, with optionally provided variables.
 
+            :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
             :param model: Model name for dbt to run
             :param model_vars: variable dictionary to provide to dbt
             :return Log output of dbt run operation
         """
-        command = f"dbt compile --models {model}"
+        command = f"dbt {mode} --models {model}"
 
         if model_vars:
             command = f"{command} --vars '{model_vars}'"
@@ -87,4 +87,5 @@ class DBTTestUtils:
         """
 
         with open(self.compiled_model_path / f'{model}.sql') as f:
-            return f.readline()
+            file = f.readlines()
+            return "".join(file).strip()
