@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source) -%}
 
 {%- set source_cols = dbtvault.get_src_col_list([src_pk, src_fk, src_payload, src_eff, src_ldts, src_source])-%}

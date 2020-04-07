@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {% macro from(source_table) %}
 
 FROM {{ source_table }}

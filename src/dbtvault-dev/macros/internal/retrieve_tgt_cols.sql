@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro retrieve_tgt_cols() -%}
 
 {%- set tgt_pk = [ ref(kwargs['tgt_pk']|default(None, true)) ] -%}
