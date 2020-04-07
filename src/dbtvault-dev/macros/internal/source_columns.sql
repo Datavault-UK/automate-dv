@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro source_columns(src_pk, src_nk, src_ldts, src_source,
                         source, is_union) -%}
 

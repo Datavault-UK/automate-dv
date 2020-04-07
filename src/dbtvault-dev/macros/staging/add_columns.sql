@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro add_columns(source, pairs=[]) -%}
 
 {%- set exclude_columns = [] -%}

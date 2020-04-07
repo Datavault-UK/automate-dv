@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro check_relation(obj) -%}
 
 {%- if not (obj is mapping and obj.get('metadata', {}).get('type', '').endswith('Relation')) -%}

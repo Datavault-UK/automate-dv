@@ -10,8 +10,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro get_src_col_list(tgt_cols) -%}
 
+{%- macro get_src_col_list(tgt_cols) -%}
 
 {%- set col_list = [] -%}
 
