@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro validate_columns(select_columns, source_columns, source_relation) -%}
 
 {%- if source_columns -%}
