@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source, link, source)-%}
 
 {%- set source_cols = dbtvault.get_src_col_list([src_pk, src_ldts, src_eff_from, src_start_date, src_end_date, src_source])-%}

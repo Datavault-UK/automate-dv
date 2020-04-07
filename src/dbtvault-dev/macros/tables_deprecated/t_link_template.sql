@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro t_link_template(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source,
                           tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source,
                           source) -%}

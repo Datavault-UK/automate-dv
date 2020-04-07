@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro is_union(obj) -%}
 
 {%- if obj is iterable and obj is not string -%}
