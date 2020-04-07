@@ -1,6 +1,7 @@
 import logging
 import os
 from subprocess import STDOUT, PIPE, Popen
+import shutil
 
 from definitions import TESTS_DBT_ROOT, COMPILED_TESTS_DBT_ROOT
 
@@ -66,16 +67,16 @@ class DBTTestUtils:
 
         return "\n".join(output)
 
-    def clean_target(self):
+    @staticmethod
+    def clean_target():
         """
-        Run dbt clean.
+        Deletes content in target folder (compiled SQL)
+        Faster than running dbt clean.
         """
 
-        os.chdir(TESTS_DBT_ROOT)
+        target = TESTS_DBT_ROOT / 'target'
 
-        self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / 'alias'
-
-        os.system('dbt clean')
+        shutil.rmtree(target, ignore_errors=True)
 
     def retrieve_compiled_model(self, model: str):
         """
