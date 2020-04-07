@@ -131,6 +131,18 @@ models:
               - 'CUSTOMER_FK'
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
+        test_link_customer_order_multipart_current:
+          vars:
+            source: 'test_stg_eff_sat_hashed_current'
+            src_pk: 'CUSTOMER_ORDER_PK'
+            src_fk:
+              - 'CUSTOMER_FK'
+              - 'NATION_FK'
+              - 'ORDER_FK'
+              - 'PRODUCT_FK'
+              - 'ORGANISATION_FK'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
       load_sats:
         test_sat_customer_details_current:
           vars:
@@ -168,6 +180,23 @@ models:
             src_pk: 'CUSTOMER_ORDER_PK'
             src_dfk: 'CUSTOMER_FK'
             src_sfk: 'ORDER_FK'
+            src_eff_from: 'EFFECTIVE_FROM'
+            src_start_date: 'START_DATETIME'
+            src_end_date: 'END_DATETIME'
+            src_ldts: 'LOADDATE'
+            src_source: 'SOURCE'
+        test_eff_customer_order_multipart_current:
+          vars:
+            source: 'test_stg_eff_sat_hashed_current'
+            link: 'test_link_customer_order_multipart_current'
+            src_pk: 'CUSTOMER_ORDER_PK'
+            src_dfk:
+              - 'CUSTOMER_FK'
+              - 'NATION_FK'
+            src_sfk:
+              - 'ORDER_FK'
+              - 'PRODUCT_FK'
+              - 'ORGANISATION_FK'
             src_eff_from: 'EFFECTIVE_FROM'
             src_start_date: 'START_DATETIME'
             src_end_date: 'END_DATETIME'
