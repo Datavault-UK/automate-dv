@@ -67,17 +67,6 @@ class DBTTestUtils:
 
         return "\n".join(output)
 
-    @staticmethod
-    def clean_target():
-        """
-        Deletes content in target folder (compiled SQL)
-        Faster than running dbt clean.
-        """
-
-        target = TESTS_DBT_ROOT / 'target'
-
-        shutil.rmtree(target, ignore_errors=True)
-
     def retrieve_compiled_model(self, model: str):
         """
         Retrieve the compiled SQL for a specific dbt model
@@ -89,3 +78,14 @@ class DBTTestUtils:
         with open(self.compiled_model_path / f'{model}.sql') as f:
             file = f.readlines()
             return "".join(file).strip()
+
+    @staticmethod
+    def clean_target():
+        """
+        Deletes content in target folder (compiled SQL)
+        Faster than running dbt clean.
+        """
+
+        target = TESTS_DBT_ROOT / 'target'
+
+        shutil.rmtree(target, ignore_errors=True)
