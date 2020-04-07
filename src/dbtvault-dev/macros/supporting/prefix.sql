@@ -13,16 +13,35 @@
 
 {%- macro prefix(columns, prefix_str) -%}
 
-{%- for column in columns -%}
+    {{ log('this: ' ~ this, true)}}
+    {{ log('columns: ' ~ columns, true)}}
 
-    {% if column is iterable and column is not string %}
-        {{- dbtvault.prefix(column, prefix_str) -}}
-    {%- else -%}
-        {{- prefix_str}}.{{column.strip() -}}
-    {%- endif -%}
+    {%- for col in columns -%}
 
-    {%- if not loop.last -%} , {% endif %}
+        {%- if col is mapping -%}
 
-{%- endfor -%}
+            {{ log('col: ' ~ col, true)}}
+
+            {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+
+            {%- if not loop.last -%} , {% endif %}
+
+        {%- else -%}
+
+            {% if col is iterable and col is not string %}
+
+                {{- dbtvault.prefix(col, prefix_str) -}}
+
+            {%- else -%}
+
+                {{- prefix_str}}.{{col.strip() -}}
+
+            {%- endif -%}
+
+            {%- if not loop.last -%} , {% endif %}
+
+        {%- endif -%}
+
+    {%- endfor -%}
 
 {%- endmacro -%}

@@ -27,7 +27,7 @@ def step_impl(context):
 @given("I have an empty TEST_SAT_CUSTOMER_DETAILS table")
 def step_impl(context):
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_sat_customer_details_{}".format(MODE.lower()),
-                                    ["CUSTOMER_HASHDIFF BINARY", "CUSTOMER_PK BINARY", "CUSTOMER_NAME VARCHAR(60)",
+                                    ["HASHDIFF BINARY", "CUSTOMER_PK BINARY", "CUSTOMER_NAME VARCHAR(60)",
                                      "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_DOB DATE", "LOADDATE DATE",
                                      "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"],
                                     connection=context.connection)
@@ -37,7 +37,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_sat_customer_details_{}".format(MODE.lower()),
-                                    ["CUSTOMER_HASHDIFF BINARY", "CUSTOMER_PK BINARY", "CUSTOMER_NAME VARCHAR(60)",
+                                    ["HASHDIFF BINARY", "CUSTOMER_PK BINARY", "CUSTOMER_NAME VARCHAR(60)",
                                      "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_DOB DATE", "LOADDATE DATE",
                                      "EFFECTIVE_FROM DATE", "SOURCE VARCHAR(4)"],
                                     connection=context.connection)
@@ -49,11 +49,11 @@ def step_impl(context):
 @step("the TEST_SAT_CUSTOMER_DETAILS table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns='SOURCE',
-                                                   binary_columns=['CUSTOMER_PK', 'CUSTOMER_HASHDIFF'])
+                                                   binary_columns=['CUSTOMER_PK', 'HASHDIFF'])
 
     result_df = context.dbutils.get_table_data(
         full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_sat_customer_details_{}".format(MODE.lower()),
-        binary_columns=['CUSTOMER_PK', 'CUSTOMER_HASHDIFF'], ignore_columns='SOURCE', order_by='CUSTOMER_NAME',
+        binary_columns=['CUSTOMER_PK', 'HASHDIFF'], ignore_columns='SOURCE', order_by='CUSTOMER_NAME',
         connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
@@ -65,7 +65,7 @@ def step_impl(context):
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_sat_cust_customer_details_{}".format(MODE.lower()),
-                                    ["CUSTOMER_PK BINARY", "CUSTOMER_HASHDIFF BINARY", "CUSTOMER_NAME VARCHAR(60)",
+                                    ["CUSTOMER_PK BINARY", "HASHDIFF BINARY", "CUSTOMER_NAME VARCHAR(60)",
                                      "CUSTOMER_DOB DATE", "EFFECTIVE_FROM DATE", "LOADDATE DATE", "SOURCE VARCHAR(4)"],
                                     connection=context.connection)
 
