@@ -18,6 +18,8 @@ class TestAliasMacro(TestCase):
 
         self.dbt_test.clean_target()
 
+    # ALIAS
+
     def test_alias_single_correctly_generates_SQL(self):
 
         model = 'test_alias_single'
@@ -62,6 +64,8 @@ class TestAliasMacro(TestCase):
 
         self.assertIn('Invalid alias configuration:',
                       process_logs)
+
+    # ALIAS_ALL
 
     def test_alias_all_correctly_generates_SQL_for_full_alias_list_with_prefix(self):
 
