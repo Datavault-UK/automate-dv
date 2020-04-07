@@ -1,5 +1,7 @@
+import os
 from unittest import TestCase
 
+from definitions import TESTS_DBT_ROOT
 from tests.unit.dbt_test_utils import DBTTestUtils
 
 
@@ -9,6 +11,8 @@ class TestAliasMacro(TestCase):
     def setUpClass(cls) -> None:
 
         cls.dbt_test = DBTTestUtils()
+
+        os.chdir(TESTS_DBT_ROOT)
 
     def setUp(self) -> None:
 
