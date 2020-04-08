@@ -9,7 +9,9 @@ class TestHashCheckMacro(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
 
-        cls.dbt_test = DBTTestUtils(model_directory='hash_check')
+        macro_type = 'internal'
+
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/hash_check')
 
         os.chdir(TESTS_DBT_ROOT)
 

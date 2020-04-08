@@ -9,7 +9,9 @@ class TestPrefixMacro(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
 
-        cls.dbt_test = DBTTestUtils(model_directory='prefix')
+        macro_type = 'supporting'
+
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/prefix')
 
         os.chdir(TESTS_DBT_ROOT)
 
