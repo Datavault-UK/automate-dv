@@ -9,7 +9,9 @@ class TestAliasMacro(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
 
-        cls.dbt_test = DBTTestUtils(model_directory='alias')
+        macro_type = 'internal'
+
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/alias')
 
         os.chdir(TESTS_DBT_ROOT)
 

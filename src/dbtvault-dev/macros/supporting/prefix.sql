@@ -13,35 +13,42 @@
 
 {%- macro prefix(columns, prefix_str) -%}
 
-    {{ log('this: ' ~ this, true)}}
-    {{ log('columns: ' ~ columns, true)}}
+    {%- if (columns is defined and columns) and (prefix_str is defined and prefix_str) -%}
 
-    {%- for col in columns -%}
+        {%- for col in columns -%}
 
-        {%- if col is mapping -%}
+            {%- if col is mapping -%}
 
-            {{ log('col: ' ~ col, true)}}
+                {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
 
-            {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
-
-            {%- if not loop.last -%} , {% endif %}
-
-        {%- else -%}
-
-            {% if col is iterable and col is not string %}
-
-                {{- dbtvault.prefix(col, prefix_str) -}}
+                {%- if not loop.last -%} , {% endif %}
 
             {%- else -%}
 
-                {{- prefix_str}}.{{col.strip() -}}
+                {% if col is iterable and col is not string %}
+
+                    {{- dbtvault.prefix(col, prefix_str) -}}
+
+                {%- else -%}
+
+                    {{- prefix_str}}.{{col.strip() -}}
+
+                {%- endif -%}
+
+                {%- if not loop.last -%} , {% endif %}
 
             {%- endif -%}
 
-            {%- if not loop.last -%} , {% endif %}
+        {%- endfor -%}
+
+    {%- else -%}
+
+        {%- if execute -%}
+
+            {{ exceptions.raise_compiler_error("Invalid parameters provided to prefix macro. Expected: (columns [list/string], prefix_str [string]) got: (" ~ columns ~ ", " ~ prefix_str ~ ")") }}
 
         {%- endif -%}
 
-    {%- endfor -%}
+    {%- endif -%}
 
 {%- endmacro -%}
