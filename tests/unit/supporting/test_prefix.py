@@ -75,3 +75,44 @@ class TestPrefixMacro(TestCase):
 
         self.assertEqual(expected_sql, actual_sql)
 
+    def test_prefix_aliased_column_with_alias_target_as_source_is_successful(self):
+
+        model = 'test_prefix_alias_target'
+
+        columns = [{"source_column": "CUSTOMER_HASHDIFF",
+                    "alias": "HASHDIFF"},
+                   "CUSTOMER_PK",
+                   "LOADDATE"]
+
+        var_dict = {'columns': columns, 'prefix': 'c', 'alias_target': 'source'}
+
+        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        expected_sql = 'c.CUSTOMER_HASHDIFF, c.CUSTOMER_PK, c.LOADDATE'
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
+    def test_prefix_aliased_column_with_alias_target_as_target_is_successful(self):
+
+        model = 'test_prefix_alias_target'
+
+        columns = [{"source_column": "CUSTOMER_HASHDIFF",
+                    "alias": "HASHDIFF"},
+                   "CUSTOMER_PK",
+                   "LOADDATE"]
+
+        var_dict = {'columns': columns, 'prefix': 'c', 'alias_target': 'target'}
+
+        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        expected_sql = 'c.HASHDIFF, c.CUSTOMER_PK, c.LOADDATE'
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
