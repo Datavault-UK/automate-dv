@@ -22,15 +22,15 @@ SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
 FROM {{ ref(source) }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (
-    SELECT {{ dbtvault.prefix(source_cols, 'd') }}
+    SELECT {{ dbtvault.prefix(source_cols, 'd', alias_target='target') }}
     FROM (
-          SELECT {{ dbtvault.prefix(source_cols, 'c') }},
+          SELECT {{ dbtvault.prefix(source_cols, 'c', alias_target='target') }},
           CASE WHEN RANK()
           OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
           ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
           THEN 'Y' ELSE 'N' END CURR_FLG
           FROM (
-            SELECT {{ dbtvault.prefix(source_cols, 'a') }}
+            SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
             FROM {{ this }} as a
             JOIN {{ ref(source) }} as b
             ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}

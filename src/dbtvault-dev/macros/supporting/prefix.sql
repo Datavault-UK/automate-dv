@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro prefix(columns, prefix_str) -%}
+{%- macro prefix(columns, prefix_str, alias_target='source') -%}
 
     {%- if (columns is defined and columns) and (prefix_str is defined and prefix_str) -%}
 
@@ -19,7 +19,19 @@
 
             {%- if col is mapping -%}
 
-                {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+                {%- if alias_target == 'source' -%}
+
+                    {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+
+                {%- elif alias_target == 'target' -%}
+
+                    {{- dbtvault.prefix([col['alias']], prefix_str) -}}
+
+                {%- else -%}
+
+                    {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+
+                {%- endif -%}
 
                 {%- if not loop.last -%} , {% endif %}
 
