@@ -36,7 +36,7 @@ class TestHashCheckMacro(TestCase):
 
         self.assertIn('Done', process_logs)
 
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_check_with_sha_setting(self):
 
@@ -51,7 +51,7 @@ class TestHashCheckMacro(TestCase):
 
         self.assertIn('Done', process_logs)
 
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_check_with_default_setting(self):
 
@@ -63,4 +63,4 @@ class TestHashCheckMacro(TestCase):
 
         self.assertIn('Done', process_logs)
 
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)

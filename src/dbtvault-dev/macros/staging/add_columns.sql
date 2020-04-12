@@ -11,13 +11,13 @@
     limitations under the License.
 -#}
 
-{%- macro add_columns(source, pairs=[]) -%}
+{%- macro add_columns(source_table, pairs=[]) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
 
-{%- if source is defined and source is not none -%}
-{%- set cols = adapter.get_columns_in_relation(source) -%}
+{%- if source_table is defined and source_table is not none -%}
+{%- set cols = adapter.get_columns_in_relation(source_table) -%}
 {%- endif %}
 
 {#- Add aliases of provided pairs to excludes and full SQL to includes -#}
@@ -31,8 +31,8 @@
     {%- endif %}
 {%- endfor -%}
 
-{%- if source is defined and source is not none -%}
-{#- Add all columns from source table -#}
+{%- if source_table is defined and source_table is not none -%}
+{#- Add all columns from source_table table -#}
 {%- for col in cols -%}
     {%- if col.column not in exclude_columns -%}
         {%- set _ = include_columns.append(col.column) -%}

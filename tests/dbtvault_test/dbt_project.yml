@@ -18,6 +18,35 @@ models:
   dbtvault_test:
     current:
       load_cycles:
+        hashing:
+          test_stg_booking_hashed_current:
+            vars:
+              hashed_columns:
+                BOOKING_PK: BOOKING_REF
+                CUSTOMER_PK: CUSTOMER_ID
+                CUSTOMER_BOOKING_PK:
+                  - CUSTOMER_ID
+                  - BOOKING_REF
+                BOOK_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_ID
+                    - NATIONALITY
+                    - PHONE
+                BOOK_BOOKING_HASHDIFF:
+                  sort: true
+                  columns:
+                    - BOOKING_REF
+                    - BOOKING_DATE
+                    - DEPARTURE_DATE
+                    - PRICE
+                    - DESTINATION
+              added_columns:
+                source: include
+                columns:
+                  SOURCE: '!STG_BOOKING'
+                  EFFECTIVE_FROM: 'BOOKING_DATE'
+
         hubs:
           test_hub_booking_current:
             vars:
