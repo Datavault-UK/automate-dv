@@ -16,7 +16,7 @@
     {{ dbtvault.multi_hash(hashed_columns) -}},
 
     {%- if added_columns['source'] == 'include' -%}
-        {{ dbtvault.add_columns(source_table=source_table, pairs=added_columns['columns']) }}
+        {{ dbtvault.add_columns(source_table=source_table, columns=added_columns['columns']) }}
     {%- else -%}
         {{ dbtvault.add_columns(pairs=added_columns) }}
     {%- endif -%}

@@ -20,20 +20,20 @@ class TestAddColumnsMacro(TestCase):
 
     # ADD_COLUMNS
 
-    def test_add_columns_correctly_generates_SQL(self):
+    def test_add_columns_with_mapping_correctly_generates_SQL(self):
 
         model = 'test_add_columns'
 
         var_dict = {
             'source_table': 'add_columns_source',
-            'pairs': {"!STG_BOOKING": 'SOURCE', 'EFFECTIVE_FROM': 'LOADDATE'}
+            'columns': {"!STG_BOOKING": 'SOURCE', 'EFFECTIVE_FROM': 'LOADDATE'}
         }
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE, BOOKING_DATE AS EFFECTIVE_FROM"""
+        expected_sql = """'STG_BOOKING' AS SOURCE, EFFECTIVE_FROM AS LOADDATE"""
 
         self.assertIn('Done', process_logs)
 
