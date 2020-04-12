@@ -1,7 +1,7 @@
 import logging
 import shutil
 from subprocess import STDOUT, PIPE, Popen
-
+import yaml
 from definitions import TESTS_DBT_ROOT, COMPILED_TESTS_DBT_ROOT
 
 
@@ -53,7 +53,8 @@ class DBTTestUtils:
         command = f"dbt {mode} --models {model}"
 
         if model_vars:
-            command = f"{command} --vars '{model_vars}'"
+            yaml_str = str(model_vars).replace('\'', '"')
+            command = f"{command} --vars '{yaml_str}'"
 
         process = Popen(command,
                         shell=True,
