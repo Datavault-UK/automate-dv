@@ -97,13 +97,17 @@ eff_sat_customer_order:
 Now we bring it all together and call the [eff_sat](macros.md#eff_sat) macro:
 
 ```eff_sat_customer_order.sql```
-``` sql hl_lines="3 4 5"
+``` sql hl_lines="2 3 4 5"
 {{- config(materialized='incremental', schema='MYSCHEMA', tags='eff_sat')           -}}
-
+-- depends_on: {{ ref(var('link')) }}
 {{ dbtvault.eff_sat(var('src_pk'), var('src_dfk'), var('src_sfk'), var('src_ldts'),
                     var('src_eff_from'), var('src_start_date'), var('src_end_date'),
                     var('src_source'), var('link'), var('source'))                   }}
-```
+``` 
+
+!!! note
+    Unlike the other macros, line 2 of this example is required only for the effectivity satellite. For more info on 
+    this please see the [eff_sat](macros.md#eff_sat) macro documentation. 
 
 ### Running dbt
 
