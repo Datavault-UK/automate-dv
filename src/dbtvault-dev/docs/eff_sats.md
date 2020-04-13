@@ -10,7 +10,7 @@ and create a hash on a concatenation of them.
 3. Start date or date timestamp. This is the date from which the link record is currently the latest/active link.
 
 4. End date or date timestamp. This is the date that a link is made inactive. If it is an active link, a record will 
-contain a max date of ```9999-31-12```.  
+contain a max date of ```9999-12-31```.  
 
 5. The load date or load date timestamp.
 
@@ -66,7 +66,7 @@ secondary foreign key.
 5.```START_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record begins its
 activity.
 6. ```END_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record ends its
-activity and becomes inactive. Active link records will have a date equal to the max date ```9999-31-12```.
+activity and becomes inactive. Active link records will have a date equal to the max date ```9999-12-31```.
 7. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
 8. A ```SOURCE``` column. 
 
@@ -113,7 +113,13 @@ With our model complete, we can run dbt to create our ```eff_sat_customer_order`
 
 And our table will look like this:
 
-CREATE A TABLE
+| CUSTOMER_ORDER_PK | EFFECTIVE_FROM | START_DATETIME | END_DATETIME | LOADDATE   | SOURCE       |
+| ----------------- | -------------- | -------------- | ------------ | ---------- | ------------ |
+| 72A160...         | 1993-01-01     | 1993-01-01     | 9999-12-31   | 1993-01-01 | 1            |
+| .                 | .              | .              | .            | .          | .            |
+| .                 | .              | .              | .            | .          | .            |
+| 1CE6A9...         | 1993-01-01     | 1993-01-01     | 9999-12-31   | 1993-01-01 | 1            |
+
 
 ### Multi-part foreign keys
 
