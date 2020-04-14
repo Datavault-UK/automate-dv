@@ -79,7 +79,8 @@ class DBTTestUtils:
 
         with open(self.compiled_model_path / f'{model}.sql') as f:
             file = f.readlines()
-            return "".join(file).strip()
+
+            return "".join([line for line in file if '--' not in line]).strip()
 
     @staticmethod
     def clean_target():

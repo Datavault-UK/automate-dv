@@ -16,29 +16,42 @@
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
 
-    {%- if columns is mapping -%}
+{%- if source_table is defined and source_table is not none -%}
+{%- set source_table_cols = adapter.get_columns_in_relation(source_table) -%}
+{%- endif %}
 
-        {{ log('is a mapping', true) }}
+{%- if columns is mapping -%}
 
-        {#- Add aliases of provided pairs to excludes and full SQL to includes -#}
-        {%- for col in columns -%}
+    {#- Add aliases of provided columns to excludes and full SQL to includes -#}
+    {%- for col in columns -%}
 
-            {%- if col | first == "!" -%}
-                {%- set _ = include_columns.append("'" ~ col[1:] ~ "' AS " ~ columns[col]) -%}
-                {%- set _ = exclude_columns.append(columns[col]) -%}
-            {%- else -%}
-                {%- set _ = include_columns.append(col ~ " AS " ~ columns[col]) -%}
-                {%- set _ = exclude_columns.append(columns[col]) -%}
-            {%- endif %}
+        {%- if col | first == "!" -%}
+            {%- set _ = include_columns.append("'" ~ col[1:] ~ "' AS " ~ columns[col]) -%}
+            {%- set _ = exclude_columns.append(columns[col]) -%}
+        {%- else -%}
+            {%- set _ = include_columns.append(col ~ " AS " ~ columns[col]) -%}
+            {%- set _ = exclude_columns.append(columns[col]) -%}
+        {%- endif %}
 
-        {%- endfor -%}
+    {%- endfor -%}
 
-        {#- Print out all columns in includes -#}
-        {%- for col in include_columns -%}
-            {{ col -}}
-            {%- if not loop.last -%}, {% endif -%}
+    {#- Add all columns from source_table table -#}
+    {%- if source_table is defined and source_table is not none -%}
+
+        {%- for source_col in source_table_cols -%}
+            {%- if source_col.column not in exclude_columns -%}
+                {%- set _ = include_columns.append(source_col.column) -%}
+            {%- endif -%}
         {%- endfor -%}
 
     {%- endif %}
+
+    {#- Print out all columns in includes -#}
+    {%- for col in include_columns -%}
+        {{ col -}}
+        {%- if not loop.last -%}, {% endif -%}
+    {%- endfor -%}
+
+{%- endif %}
 
 {%- endmacro -%}
