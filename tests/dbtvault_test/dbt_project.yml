@@ -42,7 +42,7 @@ models:
                     - PRICE
                     - DESTINATION
               added_columns:
-                source: include
+                include_source: true
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'BOOKING_DATE'
