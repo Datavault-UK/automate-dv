@@ -1,6 +1,4 @@
-<p align="left">
-  <h3> News </h3>
-</p>
+### News
 
  * We now have a slack channel, use the button below to join
  * Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
