@@ -26,6 +26,7 @@ nav:
       - Links: 'links.md'
       - Satellites: 'satellites.md'
       - T-Links: 't_links.md'
+      - Effectivity Satellites: 'eff_sats.md'
   - Worked example:
     - Getting Started: 'workedexample.md'
     - Project setup: 'setup.md'

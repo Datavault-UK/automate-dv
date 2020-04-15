@@ -56,6 +56,7 @@ def step_impl(context):
 
 @step("I have an empty LINK_CUSTOMER_NATION_UNION table")
 def step_impl(context):
+    context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_union_{}".format(MODE.lower()),
                                     ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)

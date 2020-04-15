@@ -10,6 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+
 {%- macro sat(src_pk, src_hashdiff, src_payload,
               src_eff, src_ldts, src_source,
               source) -%}
