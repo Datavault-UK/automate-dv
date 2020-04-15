@@ -300,27 +300,181 @@ Generates sql to build a effectivity satellite table using the provided metadata
 
 #### Parameters
 
-| Parameter      | Description                                              | Type           | Required?                                                          |
-| -------------- | -------------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
-| src_pk         | Source primary key column                                | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_dfk        | Source driving foreign key                               | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_sfk        | Source secondary foreign key                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_ldts       | Source loaddate timestamp column                         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_eff_from   | Source effective from column                             | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_start_date | The date which a link record is open/closed from         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_end_date   | The date which a link record is open/closed to           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| src_source     | Name of the column containing the source ID              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| link           | The link which this effectivity satellite is attached to | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
-| source         | Staging model reference or table name                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |                                                  |                | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| Parameter      | Description                                              | Type (Single-part keys) | Type (Multi-part keys)  | Required?                                                          |
+| -------------- | -------------------------------------------------------- | ----------------------- | ----------------------- | ------------------------------------------------------------------ |
+| src_pk         | Source primary key column                                | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_dfk        | Source driving foreign key column                        | String                  | String/List (YAML)      | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_sfk        | Source secondary foreign key column                      | String                  | String/List (YAML)      | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts       | Source loaddate timestamp column                         | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff_from   | Source effective from column                             | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_start_date | The date which a link record is open/closed from         | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_end_date   | The date which a link record is open/closed to           | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source     | Name of the column containing the source ID              | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| link           | The link which this effectivity satellite is attached to | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source         | Staging model reference or table name                    | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |                                                  |                | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 
 #### Usage
 
-Coming soon.
+```mysql
+{{- config(...)                                                                     -}}
+-- depends_on: {{ ref(var('link')) }}
+{{ dbtvault.eff_sat(var('src_pk'), var('src_dfk'), var('src_sfk'), var('src_ldts'),
+                    var('src_eff_from'), var('src_start_date'), var('src_end_date'),
+                    var('src_source'), var('link'), var('source'))                   }}
+```
+
+!!! note
+    As you can see, currently for the usage of the eff_sat macro we have the extra line of code 
+    ```-- depends_on: {{ ref(var('link')) }}```. This is due to the structure of dependencies in dbt. Another method is 
+    being investigated but this fix currently passes all the our tests. 
 
 #### Example output
 
-Coming soon.
+Here are some example outputs for the incremental steps of effectivity satellite models. 
+
+```mysql tab='Single-part key' 
+WITH
+c AS (
+    SELECT DISTINCT
+        a.CUSTOMER_ORDER_PK, a.LOADDATE, a.EFFECTIVE_FROM, a.START_DATETIME, a.END_DATETIME, a.SOURCE
+        FROM DBT_VAULT.TEST_vlt.test_eff_customer_order_current AS a
+        INNER JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS b ON a.CUSTOMER_ORDER_PK=b.CUSTOMER_ORDER_PK
+      )
+, d as (
+    SELECT
+        c.CUSTOMER_ORDER_PK, c.LOADDATE, c.EFFECTIVE_FROM, c.START_DATETIME, c.END_DATETIME, c.SOURCE,
+        CASE WHEN RANK()
+        OVER (PARTITION BY c.CUSTOMER_ORDER_PK
+        ORDER BY c.END_DATETIME ASC) = 1
+        THEN 'Y' ELSE 'N' END AS CURR_FLG
+    FROM c
+       )
+, p AS (
+    SELECT q.* FROM DBT_VAULT.TEST_vlt.test_link_customer_order_current AS q
+    INNER JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS r ON q.CUSTOMER_FK=r.CUSTOMER_FK
+       )
+, x AS (
+    SELECT p.*
+        , s.CUSTOMER_FK AS DFK_1
+    FROM p
+    LEFT JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS s ON p.CUSTOMER_FK=s.CUSTOMER_FK
+    AND p.ORDER_FK=s.ORDER_FK
+    WHERE (s.CUSTOMER_FK IS NULL AND s.ORDER_FK IS NULL)
+       )
+, y AS (
+  SELECT
+    t.CUSTOMER_ORDER_PK, t.LOADDATE, t.SOURCE, t.EFFECTIVE_FROM, t.START_DATETIME, t.END_DATETIME
+    , x.DFK_1
+    , x.CUSTOMER_FK,
+    CASE WHEN RANK()
+    OVER (PARTITION BY t.CUSTOMER_ORDER_PK
+    ORDER BY t.END_DATETIME ASC) = 1
+    THEN 'Y' ELSE 'N' END AS CURR_FLG
+  FROM x
+  INNER JOIN DBT_VAULT.TEST_vlt.test_eff_customer_order_current AS t ON x.CUSTOMER_ORDER_PK=t.CUSTOMER_ORDER_PK
+  )
+
+SELECT DISTINCT
+  e.CUSTOMER_ORDER_PK, e.LOADDATE, e.SOURCE, e.EFFECTIVE_FROM,
+  e.EFFECTIVE_FROM AS START_DATETIME,
+  e.END_DATETIME
+FROM DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS e
+LEFT JOIN (
+    SELECT d.CUSTOMER_ORDER_PK, d.LOADDATE, d.EFFECTIVE_FROM, d.START_DATETIME, d.END_DATETIME, d.SOURCE
+    FROM d
+    WHERE d.CURR_FLG = 'Y' AND d.END_DATETIME=TO_DATE('9999-12-31')
+    ) AS eff
+ON eff.CUSTOMER_ORDER_PK=e.CUSTOMER_ORDER_PK
+WHERE (eff.CUSTOMER_ORDER_PK IS NULL
+AND e.ORDER_FK<>MD5_BINARY('^^') AND e.CUSTOMER_FK<>MD5_BINARY('^^'))
+UNION
+SELECT
+  y.CUSTOMER_ORDER_PK,
+  z.LOADDATE,
+  y.SOURCE, y.EFFECTIVE_FROM, y.START_DATETIME,
+  CASE WHEN
+  y.DFK_1 IS NULL
+  THEN z.EFFECTIVE_FROM ELSE '9999-12-31' END AS END_DATETIME
+FROM y
+LEFT JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS z ON y.CUSTOMER_FK=z.CUSTOMER_FK
+WHERE (y.CURR_FLG='Y' AND y.END_DATETIME='9999-12-31')
+
+```
+
+```mysql tab='Multi-part key'
+WITH
+c AS (
+    SELECT DISTINCT
+        a.CUSTOMER_ORDER_PK, a.LOADDATE, a.EFFECTIVE_FROM, a.START_DATETIME, a.END_DATETIME, a.SOURCE
+        FROM DBT_VAULT.TEST_vlt.test_eff_customer_order_multipart_current AS a
+        INNER JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS b ON a.CUSTOMER_ORDER_PK=b.CUSTOMER_ORDER_PK
+      )
+, d as (
+    SELECT
+        c.CUSTOMER_ORDER_PK, c.LOADDATE, c.EFFECTIVE_FROM, c.START_DATETIME, c.END_DATETIME, c.SOURCE,
+        CASE WHEN RANK()
+        OVER (PARTITION BY c.CUSTOMER_ORDER_PK
+        ORDER BY c.END_DATETIME ASC) = 1
+        THEN 'Y' ELSE 'N' END AS CURR_FLG
+    FROM c
+       )
+, p AS (
+    SELECT q.* FROM DBT_VAULT.TEST_vlt.test_link_customer_order_multipart_current AS q
+    INNER JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS r ON q.CUSTOMER_FK=r.CUSTOMER_FK
+    AND q.NATION_FK=r.NATION_FK
+       )
+, x AS (
+    SELECT p.*
+        , s.CUSTOMER_FK AS DFK_1
+        , s.NATION_FK AS DFK_2
+    FROM p
+    LEFT JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS s ON p.CUSTOMER_FK=s.CUSTOMER_FK AND p.NATION_FK=s.NATION_FK
+    AND p.ORDER_FK=s.ORDER_FK AND p.PRODUCT_FK=s.PRODUCT_FK AND p.ORGANISATION_FK=s.ORGANISATION_FK
+    WHERE (s.CUSTOMER_FK IS NULL AND s.NATION_FK IS NULL
+           AND s.ORDER_FK IS NULL AND s.PRODUCT_FK IS NULL AND s.ORGANISATION_FK IS NULL)
+       )
+, y AS (
+    SELECT
+        t.CUSTOMER_ORDER_PK, t.LOADDATE, t.SOURCE, t.EFFECTIVE_FROM, t.START_DATETIME, t.END_DATETIME
+        , x.DFK_1
+        , x.DFK_2
+        , x.CUSTOMER_FK
+        , x.NATION_FK,
+        CASE WHEN RANK()
+        OVER (PARTITION BY t.CUSTOMER_ORDER_PK
+        ORDER BY t.END_DATETIME ASC) = 1
+        THEN 'Y' ELSE 'N' END AS CURR_FLG
+    FROM x
+    INNER JOIN DBT_VAULT.TEST_vlt.test_eff_customer_order_multipart_current AS t ON x.CUSTOMER_ORDER_PK=t.CUSTOMER_ORDER_PK
+       )
+
+SELECT DISTINCT
+  e.CUSTOMER_ORDER_PK, e.LOADDATE, e.SOURCE, e.EFFECTIVE_FROM,
+  e.EFFECTIVE_FROM AS START_DATETIME,
+  e.END_DATETIME
+FROM DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS e
+LEFT JOIN (
+    SELECT d.CUSTOMER_ORDER_PK, d.LOADDATE, d.EFFECTIVE_FROM, d.START_DATETIME, d.END_DATETIME, d.SOURCE
+    FROM d
+    WHERE d.CURR_FLG = 'Y' AND d.END_DATETIME=TO_DATE('9999-12-31')
+    ) AS eff
+ON eff.CUSTOMER_ORDER_PK=e.CUSTOMER_ORDER_PK
+WHERE (eff.CUSTOMER_ORDER_PK IS NULL AND e.ORDER_FK<>MD5_BINARY('^^') AND e.PRODUCT_FK<>MD5_BINARY('^^')
+       AND e.ORGANISATION_FK<>MD5_BINARY('^^') AND e.CUSTOMER_FK<>MD5_BINARY('^^') AND e.NATION_FK<>MD5_BINARY('^^'))
+UNION
+SELECT
+  y.CUSTOMER_ORDER_PK,
+  z.LOADDATE,
+  y.SOURCE, y.EFFECTIVE_FROM, y.START_DATETIME,
+  CASE WHEN
+  y.DFK_1 IS NULL
+  AND y.DFK_2 IS NULL
+  THEN z.EFFECTIVE_FROM ELSE '9999-12-31' END AS END_DATETIME
+FROM y
+LEFT JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS z ON y.CUSTOMER_FK=z.CUSTOMER_FK AND y.NATION_FK=z.NATION_FK
+WHERE (y.CURR_FLG='Y' AND y.END_DATETIME='9999-12-31')
+```
 
 ___
 
