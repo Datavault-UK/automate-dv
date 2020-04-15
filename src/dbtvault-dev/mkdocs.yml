@@ -8,6 +8,8 @@ theme:
     logo: 'assets/images/logo.png'
     banner: 'assets/images/docs-banner.png'
     favicon: 'assets/images/favicon.ico'
+    features:
+      - tabs
     palette:
       primary: 'black'
       accent: 'indigo'
@@ -25,7 +27,7 @@ nav:
       - Hubs: 'hubs.md'
       - Links: 'links.md'
       - Satellites: 'satellites.md'
-      - T-Links: 't_links.md'
+      - Transactional Links: 't_links.md'
       - Effectivity Satellites: 'eff_sats.md'
   - Worked example:
     - Getting Started: 'workedexample.md'
@@ -34,10 +36,13 @@ nav:
     - Creating the stage layers: 'stagingdemo.md'
     - Loading the vault: 'loading.md'
   - Macros: 'macros.md'
-  - Migration from v0.4 to v0.5: 'migrating.md'
+  - Migration Guides:
+    - Migrating from v0.4 to v0.5: 'migrating_v0.4_v0.5.md'
   - Best Practices: 'bestpractices.md'
   - Roadmap: 'roadmap.md'
-  - Changelog: 'changelog.md'
+  - Changelog:
+    - Stable Releases: 'changelog.md'
+    - Beta Releases: 'changelog_beta.md'
   - Contributing: 'contributing.md'
   - Licence: 'LICENSE.md'
 
