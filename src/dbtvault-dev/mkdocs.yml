@@ -1,6 +1,9 @@
 site_name: dbtvault
 site_author: Datavault
 site_dir: 'site'
+repo_name: 'Datavault-UK/dbtvault'
+repo_url: 'https://github.com/Datavault-UK/dbtvault'
+
 theme:
     name: 'material'
     custom_dir: 'theme'
@@ -8,15 +11,11 @@ theme:
     logo: 'assets/images/logo.png'
     banner: 'assets/images/docs-banner.png'
     favicon: 'assets/images/favicon.ico'
-    features:
-      - tabs
     palette:
       primary: 'black'
       accent: 'indigo'
     highlightjs: true
 
-repo_name: 'Datavault-UK/dbtvault'
-repo_url: 'https://github.com/Datavault-UK/dbtvault'
 
 nav:
   - Home: 'index.md'
@@ -48,15 +47,15 @@ nav:
 
 extra:
   social:
-    - type: 'globe'
+    - icon: 'fontawesome/solid/globe'
       link: 'https://www.data-vault.co.uk'
-    - type: 'github'
+    - icon: 'fontawesome/brands/github'
       link: 'https://github.com/Datavault-UK/'
-    - type: 'twitter'
+    - icon: 'fontawesome/brands/twitter'
       link: 'https://twitter.com/datavault_uk'
-    - type: 'linkedin'
+    - icon: 'fontawesome/brands/linkedin'
       link: 'https://www.linkedin.com/company/business-thinking-limited'
-    - type: 'facebook'
+    - icon: 'fontawesome/brands/facebook'
       link: 'https://www.facebook.com/DataVaultUK/'
   version: 0.5
   req_dbt_version: 0.15.x
@@ -66,7 +65,9 @@ markdown_extensions:
       linenums: true
   - admonition
   - pymdownx.superfences
-  - pymdownx.emoji
+  - pymdownx.emoji:
+        emoji_index: !!python/name:materialx.emoji.twemoji
+        emoji_generator: !!python/name:materialx.emoji.to_svg
   - toc:
       permalink: true
       toc_depth: 1-3
