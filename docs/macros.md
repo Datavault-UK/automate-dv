@@ -316,7 +316,7 @@ Generates sql to build a effectivity satellite table using the provided metadata
 
 #### Usage
 
-```mysql
+``` jinja2
 {{- config(...)                                                                     -}}
 -- depends_on: {{ ref(var('link')) }}
 {{ dbtvault.eff_sat(var('src_pk'), var('src_dfk'), var('src_sfk'), var('src_ldts'),
@@ -333,7 +333,7 @@ Generates sql to build a effectivity satellite table using the provided metadata
 
 Here are some example outputs for the incremental steps of effectivity satellite models. 
 
-```mysql tab='Single-part key' 
+```mysql tab='Single-part key'
 WITH
 c AS (
     SELECT DISTINCT
@@ -399,7 +399,6 @@ SELECT
 FROM y
 LEFT JOIN DBT_VAULT.TEST_stg.test_stg_eff_sat_hashed_current AS z ON y.CUSTOMER_FK=z.CUSTOMER_FK
 WHERE (y.CURR_FLG='Y' AND y.END_DATETIME='9999-12-31')
-
 ```
 
 ```mysql tab='Multi-part key'

@@ -8,8 +8,6 @@ theme:
     logo: 'assets/images/logo.png'
     banner: 'assets/images/docs-banner.png'
     favicon: 'assets/images/favicon.ico'
-    features:
-      - tabs
     palette:
       primary: 'black'
       accent: 'indigo'
