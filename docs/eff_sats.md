@@ -1,3 +1,5 @@
+# Effectivity satellites
+
 Effectivity satellites are used on links to provide data on which links are currently active and those that are not.
 
 Effectivity satellites contain the following columns:
