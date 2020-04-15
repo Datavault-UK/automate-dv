@@ -1,15 +1,10 @@
-# Changelog
+# Changelog (Stable)
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [v0.6] - 2020-04-13
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.6)](https://dbtvault.readthedocs.io/en/v0.5/?badge=v0.6)
-
-### Added
-
-- The [eff_sat](macros.md#eff_sat) macro.
+[View Beta Releases](changelog_beta.md)
 
 ## [v0.5] - 2020-02-24
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.5)](https://dbtvault.readthedocs.io/en/v0.5/?badge=v0.5)
@@ -17,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Metadata is now provided in the ```dbt_project.yml``` file. This means metadata can be managed in one place. 
-Read [Migrating from v0.4](migrating.md) for more information.
+Read [Migrating from v0.4](migrating_v0.4_v0.5.md) for more information.
 
 ### Removed
 
