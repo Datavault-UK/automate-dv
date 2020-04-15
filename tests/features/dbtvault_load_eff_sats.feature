@@ -73,7 +73,27 @@ Feature: Effectivity Satellites
 
     ===========================================================================
 
-    Scenario: Empty Load
+    Scenario: Empty Load with an Effectivity Satellite that does not exist
+      Given an empty Link_Customer_Order
+      And a EFF_CUSTOMER_ORDER table does not exist
+      And staging_data loaded on 2020-01-10
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-09     |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-09     |
+      When I run the first Load Cycle for 2020-01-10
+      Then I expect the following LINK_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      And I expect the following EFF_CUSTOMER_ORDER
+      | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | EFFECTIVE_FROM | START_DATETIME | END_DATETIME |
+      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
+
+    Scenario: Empty Load with existing Effectivity Satellite
       Given an empty Link_Customer_Order
       And an empty EFF_CUSTOMER_ORDER
       And staging_data loaded on 2020-01-10
