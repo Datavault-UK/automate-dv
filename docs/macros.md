@@ -325,8 +325,8 @@ Generates sql to build a effectivity satellite table using the provided metadata
 ```
 
 !!! note
-    As you can see, currently for the usage of the eff_sat macro we have the extra line of code 
-    ```-- depends_on: {{ ref(var('link')) }}```. This is due to the structure of dependencies in dbt. Another method is 
+    Currently, we have the extra line of code 
+    ```-- depends_on: {{ ref(var('link')) }}```. This is due to the structure of dependencies in dbt. An alternative method is 
     being investigated but this fix currently passes all the our tests. 
 
 #### Example output

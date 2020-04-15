@@ -1,7 +1,7 @@
 # Migrating from v0.4 to v0.5
 
-With the release of v0.5, we've moved metadata into vars in the ```dbt_project.yml``` file. Your old metadata would
-have looked something like this: 
+With the release of v0.5, we moved the metadata into variables held in in the ```dbt_project.yml``` file.
+Your old metadata would have looked something like this: 
 
 ```sql
 {{- config(materialized='incremental', schema='vlt', enabled=true, tags='hubs')    -}}
@@ -50,6 +50,3 @@ The new example ```hub_customer.sql``` would then look like:
 {{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
                 var('src_source'), var('source'))                      }}
 ```
-
-!!! note
-    Please ensure that your ```dbt_project.yml``` file is formatted properly and contains the correct hierarchy.
