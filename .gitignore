@@ -1,6 +1,8 @@
 \.idea/
 
 tests/features/config/credentials.json
+tests/features/config/config.ini
+
 src/SnowflakeDV/__pycache__/
 
 tests/features/__pycache__/
