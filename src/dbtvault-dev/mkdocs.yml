@@ -1,6 +1,9 @@
 site_name: dbtvault
 site_author: Datavault
 site_dir: 'site'
+repo_name: 'Datavault-UK/dbtvault'
+repo_url: 'https://github.com/Datavault-UK/dbtvault'
+
 theme:
     name: 'material'
     custom_dir: 'theme'
@@ -13,8 +16,6 @@ theme:
       accent: 'indigo'
     highlightjs: true
 
-repo_name: 'Datavault-UK/dbtvault'
-repo_url: 'https://github.com/Datavault-UK/dbtvault'
 
 nav:
   - Home: 'index.md'
@@ -25,7 +26,8 @@ nav:
       - Hubs: 'hubs.md'
       - Links: 'links.md'
       - Satellites: 'satellites.md'
-      - T-Links: 't_links.md'
+      - Transactional Links: 't_links.md'
+      - Effectivity Satellites: 'eff_sats.md'
   - Worked example:
     - Getting Started: 'workedexample.md'
     - Project setup: 'setup.md'
@@ -33,24 +35,27 @@ nav:
     - Creating the stage layers: 'stagingdemo.md'
     - Loading the vault: 'loading.md'
   - Macros: 'macros.md'
-  - Migration from v0.4 to v0.5: 'migrating.md'
+  - Migration Guides:
+    - Migrating from v0.4 to v0.5: 'migrating_v0.4_v0.5.md'
   - Best Practices: 'bestpractices.md'
   - Roadmap: 'roadmap.md'
-  - Changelog: 'changelog.md'
+  - Changelog:
+    - Stable Releases: 'changelog.md'
+    - Beta Releases: 'changelog_beta.md'
   - Contributing: 'contributing.md'
   - Licence: 'LICENSE.md'
 
 extra:
   social:
-    - type: 'globe'
+    - icon: 'fontawesome/solid/globe'
       link: 'https://www.data-vault.co.uk'
-    - type: 'github'
+    - icon: 'fontawesome/brands/github'
       link: 'https://github.com/Datavault-UK/'
-    - type: 'twitter'
+    - icon: 'fontawesome/brands/twitter'
       link: 'https://twitter.com/datavault_uk'
-    - type: 'linkedin'
+    - icon: 'fontawesome/brands/linkedin'
       link: 'https://www.linkedin.com/company/business-thinking-limited'
-    - type: 'facebook'
+    - icon: 'fontawesome/brands/facebook'
       link: 'https://www.facebook.com/DataVaultUK/'
   version: 0.5
   req_dbt_version: 0.15.x

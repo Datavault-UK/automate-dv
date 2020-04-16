@@ -11,14 +11,16 @@
     limitations under the License.
 -#}
 
-{%- macro hash_check(hash) -%}
+{%- macro hash_check(col) -%}
 
-{%- if hash == 'MD5' %}
-MD5_BINARY('^^')
-{%- elif hash == 'SHA' %}
-SHA2_BINARY('^^')
-{%- else %}
-MD5_BINARY('^^')
+{%- set hash = var('hash', 'MD5') -%}
+
+{%- if hash == 'MD5' -%}
+MD5_BINARY({{ col }})
+{%- elif hash == 'SHA' -%}
+SHA2_BINARY({{ col }})
+{%- else -%}
+MD5_BINARY({{ col }})
 {% endif %}
 
 {% endmacro %}

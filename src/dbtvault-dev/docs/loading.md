@@ -115,6 +115,39 @@ To compile and load the provided t_link models, run the following command:
 
 This will run all models with the t_link tag.
 
+## Effectivity Satellites
+
+!!! note "Work in progress."
+    The [eff_sat](macros.md#eff_sat) macro is currently unreleased and we are working on providing a proper worked 
+    example to demonstrate this macro's full capabilities.
+
+An effectivity satellite is a type satellite that hangs off a link and records the effectivity of a link record with a 
+start and end date for the period of effectivity.
+
+Our effectivity satellite will contain:
+
+1. A primary key, which is a combination of the two natural keys: In this case ```CUSTOMER_ORDER_PK``` 
+which we added in our staging layer.
+2. ```CUSTOMER_FK``` which is one of the foreign keys in the link. This is the foreign key that is going to be used as the
+driving foreign key. 
+3. ```ORDER_FK``` which is the other foreign key in the link. This is the foreign key that is going to be used as the 
+secondary foreign key.
+4. ```EFFECTIVE_FROM``` which is the date in the staging table that states when a record becomes effective.
+5.```START_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record begins its
+activity.
+6. ```END_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record ends its
+activity and becomes inactive. Active link records will have a date equal to the max date ```9999-12-31```.
+7. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
+8. A ```SOURCE``` column. 
+
+### Loading effectivity satellites
+
+To compile and load the provided effectivity satellite models, run the following command:
+
+```dbt run --models tag:eff_sat```
+
+This will run all models with the eff_sat tag.
+
 ## Loading the full system
 
 Each of the commands above load a particular type of table, however, we may want to do a full system load.
