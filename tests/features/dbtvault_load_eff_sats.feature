@@ -53,7 +53,7 @@ Feature: Effectivity Satellites
             - We assume that if we have no information about a particular
               driving key in the stage table then we cannot take action, i.e.
               exclude any records where DRIVING KEYS are in the LINK but not in
-              the Stage (use an equi join).
+              the Stage (use an equi-join).
             - We've effectively found the list of satellites to update.
             - So insert new satellite records, where the new satellites copy
               across the old satellites effective_from dates, insert an proper
@@ -64,7 +64,7 @@ Feature: Effectivity Satellites
       HUB_CUSTOMER (customer_pk, source, ldts, customer_id)
       HUB_ORDER (order_pk, source, ldts, order_id)
       LINK_CUSTOMER_ORDER
-        (customer_order_pk, customer_fk, order_Fk, source, ltds)
+        (customer_order_pk, customer_fk, order_Fk, source, ldts)
       EFF_CUSTOMER_ORDER
         (customer_order_pk, ldts, source, hashdiff, eff_from, eff_to)
 
