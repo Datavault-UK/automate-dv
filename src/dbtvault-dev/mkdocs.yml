@@ -65,9 +65,7 @@ markdown_extensions:
       linenums: true
   - admonition
   - pymdownx.superfences
-  - pymdownx.emoji:
-        emoji_index: !!python/name:materialx.emoji.twemoji
-        emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.emoji
   - toc:
       permalink: true
       toc_depth: 1-3
