@@ -65,7 +65,7 @@ driving foreign key.
 3. ```ORDER_FK``` which is the other foreign key in the link. This is the foreign key that is going to be used as the 
 secondary foreign key.
 4. ```EFFECTIVE_FROM``` which is the date in the staging table that states when a record becomes effective.
-5.```START_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record begins its
+5. ```START_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record begins its
 activity.
 6. ```END_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record ends its
 activity and becomes inactive. Active link records will have a date equal to the max date ```9999-12-31```.

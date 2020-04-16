@@ -17,11 +17,11 @@ Generates sql to build a hub table using the provided metadata in the ```dbt_pro
 
 | Parameter     | Description                                         | Type (Single-Source) | Type (Union)    | Required?                                                                              |
 | ------------- | --------------------------------------------------- | -------------------- | --------------- | -------------------------------------------------------------------------------------- |
-| src_pk        | Source primary key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |                                  |
-| src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | String               | List (YAML)     | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |                                  |
+| src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | String               | List (YAML)     | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
                                                                                                                     
 #### Usage
 
@@ -90,11 +90,11 @@ Generates sql to build a link table using the provided metadata in the ```dbt_pr
 
 | Parameter     | Description                                         | Type (Single-Source) | Type (Union)         | Required?                                                          |
 | ------------- | --------------------------------------------------- | ---------------------| ---------------------| ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_fk        | Source foreign key column(s)                        | List (YAML)          | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | String               | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List (YAML)          | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | String               | List (YAML)          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -166,13 +166,13 @@ Generates sql to build a satellite table using the provided metadata in the ```d
 
 | Parameter     | Description                                         | Type           | Required?                                                          |
 | ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -238,13 +238,13 @@ Generates sql to build a transactional link table using the provided metadata in
 
 | Parameter     | Description                                         | Type           | Required?                                                          |
 | ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_fk        | Source foreign key column(s)                        | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List (YAML)    | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -302,16 +302,16 @@ Generates sql to build a effectivity satellite table using the provided metadata
 
 | Parameter      | Description                                              | Type (Single-part keys) | Type (Multi-part keys)  | Required?                                                          |
 | -------------- | -------------------------------------------------------- | ----------------------- | ----------------------- | ------------------------------------------------------------------ |
-| src_pk         | Source primary key column                                | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_dfk        | Source driving foreign key column                        | String                  | String/List (YAML)      | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_sfk        | Source secondary foreign key column                      | String                  | String/List (YAML)      | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts       | Source loaddate timestamp column                         | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_eff_from   | Source effective from column                             | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_start_date | The date which a link record is open/closed from         | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_end_date   | The date which a link record is open/closed to           | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source     | Name of the column containing the source ID              | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| link           | The link which this effectivity satellite is attached to | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source         | Staging model reference or table name                    | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |                                                  |                | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk         | Source primary key column                                | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_dfk        | Source driving foreign key column                        | String                  | String/List (YAML)      | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_sfk        | Source secondary foreign key column                      | String                  | String/List (YAML)      | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts       | Source loaddate timestamp column                         | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff_from   | Source effective from column                             | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_start_date | The date which a link record is open/closed from         | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_end_date   | The date which a link record is open/closed to           | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source     | Name of the column containing the source ID              | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| link           | The link which this effectivity satellite is attached to | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source         | Staging model reference or table name                    | String                  | String                  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |                                                  |                | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 
 #### Usage
@@ -514,9 +514,9 @@ CAST(SHA2_BINARY(IFNULL((UPPER(TRIM(CAST(column2 AS VARCHAR)))), '^^')) AS BINAR
 
 | Parameter        |  Description                                    | Type     | Required?                                                |
 | ---------------- | ----------------------------------------------  | -------- | -------------------------------------------------------- |
-| pairs            | (column, alias) pair                            | Tuple    | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
-| pairs: columns   | Single column string or list of columns         | String   | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
-| pairs: alias     | The alias for the column                        | String   | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
+| pairs            | (column, alias) pair                            | Tuple    | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: columns   | Single column string or list of columns         | String   | <i class="md-icon" style="color: green">check_circle</i> |
+| pairs: alias     | The alias for the column                        | String   | <i class="md-icon" style="color: green">check_circle</i> |
 | pairs: sort      | Will alpha sort columns if true, default false. | Boolean  | <i class="md-icon" style="color: red">clear</i>          |
 
 
@@ -648,7 +648,7 @@ FROM MYDATABASE.MYSCHEMA.MYTABLE
 
 | Parameter     | Description                               | Type   | Required?                                                |
 | ------------- | ----------------------------------------- | ------ | -------------------------------------------------------- |
-| source_table  | A source reference                        | Source | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> | 
+| source_table  | A source reference                        | Source | <i class="md-icon" style="color: green">check_circle</i> | 
 
 #### Usage
 
@@ -684,7 +684,7 @@ CAST(prefix.column AS type) AS alias
 
 | Parameter        |  Description                  | Required?                                                |
 | ---------------- | ----------------------------- | -------------------------------------------------------- |
-| columns          |  Triples or strings           | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
+| columns          |  Triples or strings           | <i class="md-icon" style="color: green">check_circle</i> |
 | prefix           |  A string                     | <i class="md-icon" style="color: red">clear</i>          |
 
 #### Usage
@@ -757,8 +757,8 @@ CAST(SHA2_BINARY(UPPER(TRIM(CAST(column AS VARCHAR)))) AS BINARY(32)) AS alias
 
 | Parameter        |  Description                                     | Type        | Required?                                                |
 | ---------------- | -----------------------------------------------  | ----------- | -------------------------------------------------------- |
-| columns          |  Columns to hash on                              | String/List | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
-| alias            |  The name to give the hashed column              | String      | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
+| columns          |  Columns to hash on                              | String/List | <i class="md-icon" style="color: green">check_circle</i> |
+| alias            |  The name to give the hashed column              | String      | <i class="md-icon" style="color: green">check_circle</i> |
 | sort             |  Will alpha sort columns if true, default false. | Boolean     | <i class="md-icon" style="color: red">clear</i>          |
                                 
 
@@ -805,8 +805,8 @@ a.column1, a.column2, a.column3, a.column4
 
 | Parameter        |  Description                  | Type   | Required?                                                |
 | ---------------- | ----------------------------- | ------ | -------------------------------------------------------- |
-| columns          |  A list of column names       | List   | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
-| prefix_str       |  The prefix for the columns   | String | <i class="md-icon" style="color: green">:fontawesome-solid-check-circle:</i> |
+| columns          |  A list of column names       | List   | <i class="md-icon" style="color: green">check_circle</i> |
+| prefix_str       |  The prefix for the columns   | String | <i class="md-icon" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -855,15 +855,15 @@ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
 
 | Parameter     | Description                                         | Type (Single-Source) | Type (Union)    | Required?                                                          |
 | ------------- | --------------------------------------------------- | -------------------- | --------------- | ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_pk        | Target primary key column                           | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_nk        | Target natural key column                           | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_source    | Name of the column which will contain the source ID | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | List                 | List            | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_nk        | Source natural key column                           | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String          | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_nk        | Target natural key column                           | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference       | List/Reference  | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List                 | List            | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
                                                                                                                     
 #### Usage
 
@@ -977,15 +977,15 @@ dbtvault.link_template(src_pk, src_fk, src_ldts, src_source,
 
 | Parameter     | Description                                         | Type (Single-Source) | Type (Union)         | Required?                                                          |
 | ------------- | --------------------------------------------------- | ---------------------| ---------------------| ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_fk        | Source foreign key column(s)                        | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_pk        | Target primary key column                           | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_fk        | Target foreign key column                           | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_source    | Name of the column which will contain the source ID | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String               | String               | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_fk        | Target foreign key column                           | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference       | List/Reference       | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List                 | List                 | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -1106,19 +1106,19 @@ dbtvault.sat_template(src_pk, src_hashdiff, src_payload,
 
 | Parameter     | Description                                         | Type           | Required?                                                          |
 | ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_pk        | Target primary key column                           | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_hashdiff  | Target hashdiff column                              | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_payload   | Target payload column                               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_eff       | Target effective from column                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_source    | Name of the column which will contain the source ID | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_hashdiff  | Source hashdiff column                              | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_hashdiff  | Target hashdiff column                              | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_payload   | Target payload column                               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_eff       | Target effective from column                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
@@ -1208,19 +1208,19 @@ dbtvault.t_link_template(src_pk, src_fk, src_payload, src_eff, src_ldts, src_sou
 
 | Parameter     | Description                                         | Type           | Required?                                                          |
 | ------------- | --------------------------------------------------- | -------------- | ------------------------------------------------------------------ |
-| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_fk        | Source foreign key column(s)                        | List           | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_pk        | Target primary key column                           | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_fk        | Target hashdiff column                              | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_payload   | Target foreign key column(s)                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_eff       | Target effective from column                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_ldts      | Target loaddate timestamp column                    | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| tgt_source    | Name of the column which will contain the source ID | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
-| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">:fontawesome-solid-check-circle:</i> |
+| src_pk        | Source primary key column                           | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_fk        | Source foreign key column(s)                        | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_payload   | Source payload column(s)                            | List           | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_eff       | Source effective from column                        | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_ldts      | Source loaddate timestamp column                    | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| src_source    | Name of the column containing the source ID         | String         | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_pk        | Target primary key column                           | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_fk        | Target hashdiff column                              | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_payload   | Target foreign key column(s)                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_eff       | Target effective from column                        | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_ldts      | Target loaddate timestamp column                    | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| tgt_source    | Name of the column which will contain the source ID | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
+| source        | Staging model reference or table name               | List/Reference | <i class="md-icon" alt="Yes" style="color: green">check_circle</i> |
 
 #### Usage
 
