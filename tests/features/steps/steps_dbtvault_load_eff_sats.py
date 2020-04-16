@@ -38,21 +38,28 @@ def step_impl(context, table_name):
 
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
 
+    table_name = f"test_{table_name.lower()}_{MODE.lower()}"
+
     if 'link' in table_name.lower():
 
-        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_{}_{}".format(table_name.lower(), MODE.lower()),
+        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, table_name,
                                         ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "ORDER_FK BINARY",
-                                         "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
-        context.dbutils.insert_data_from_ct(context.table, "test_{}_{}".format(table_name.lower(), MODE.lower()), VLT_SCHEMA,
+                                         "LOADDATE DATE", "SOURCE VARCHAR(6)"],
+                                        context.connection)
+        context.dbutils.insert_data_from_ct(context.table,
+                                            table_name,
+                                            VLT_SCHEMA,
                                             context.connection)
 
     elif 'eff' in table_name.lower():
-
-        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_{}_{}".format(table_name.lower(), MODE.lower()),
+        
+        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA,
+                                        table_name,
                                         ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
                                          "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
                                         context.connection)
-        context.dbutils.insert_data_from_ct(context.table, "test_{}_{}".format(table_name.lower(), MODE.lower()),
+        context.dbutils.insert_data_from_ct(context.table,
+                                            table_name,
                                             VLT_SCHEMA, context.connection)
 
 
@@ -60,22 +67,29 @@ def step_impl(context, table_name):
 def step_impl(context, table):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
 
+    table_name = f"test_{table.lower()}_{MODE.lower()}"
+
     if 'link' in table.lower():
-        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_{}_{}".format(table.lower(), MODE.lower()),
+
+        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, table_name,
                                         ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                          "ORDER_FK BINARY", "PRODUCT_FK BINARY", "ORGANISATION_FK BINARY",
                                          "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
-        context.dbutils.insert_data_from_ct(context.table, "test_{}_{}".format(table.lower(), MODE.lower()),
+        context.dbutils.insert_data_from_ct(context.table,
+                                            table_name,
                                             VLT_SCHEMA,
                                             context.connection)
 
     elif 'eff' in table.lower():
-        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_{}_{}".format(table.lower(), MODE.lower()),
+
+        context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, table_name,
                                         ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
                                          "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
                                         context.connection)
-        context.dbutils.insert_data_from_ct(context.table, "test_{}_{}".format(table.lower(), MODE.lower()),
-                                            VLT_SCHEMA, context.connection)
+        context.dbutils.insert_data_from_ct(context.table,
+                                            table_name,
+                                            VLT_SCHEMA,
+                                            context.connection)
 
 
 @step("staging_data loaded on {date}")
