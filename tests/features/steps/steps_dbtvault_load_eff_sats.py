@@ -29,7 +29,10 @@ def step_impl(context):
 def step_impl(context):
     os.chdir(TESTS_DBT_ROOT)
 
-    os.system("dbt run --full-refresh --models +test_link_customer_order_current +test_eff_customer_order_current")
+    link = 'test_link_customer_order_current'
+    eff = 'test_eff_customer_order_current'
+
+    os.system(f"dbt run --full-refresh --models +{link} +{eff}")
 
 
 # BASE LOADS
