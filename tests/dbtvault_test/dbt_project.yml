@@ -180,8 +180,8 @@ models:
             src_dfk: 'CUSTOMER_FK'
             src_sfk: 'ORDER_FK'
             src_eff_from: 'EFFECTIVE_FROM'
-            src_start_date: 'START_DATETIME'
-            src_end_date: 'END_DATETIME'
+            eff_start_date: 'START_DATETIME'
+            eff_end_date: 'END_DATETIME'
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
         test_eff_customer_order_multipart_current:
@@ -197,8 +197,8 @@ models:
               - 'PRODUCT_FK'
               - 'ORGANISATION_FK'
             src_eff_from: 'EFFECTIVE_FROM'
-            src_start_date: 'START_DATETIME'
-            src_end_date: 'END_DATETIME'
+            eff_start_date: 'START_DATETIME'
+            eff_end_date: 'END_DATETIME'
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
   vars:
