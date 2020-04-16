@@ -10,14 +10,14 @@ Feature: Effectivity Satellites
     - in the data vault we model this as a link - HUB_A, HUB_B, LINK_AB
     - the link has no from and to dates, it declares that there is a link
       between A and B for a reason, that's all
-    - so we create an Effectivty_satellite off LINK_AB
+    - so we create an Effectivity_satellite off LINK_AB
     - this contains information about the status of the LINK_AB
     - so we have 2 columns, effective_From, effective_to, plus a hashdiff (of
       these 2 columns), etc.
     - when the effectivity is created we set the effective_from date, and leave
       the effective_to empty (or set it to year 9999....)
 
-    - now imagine, the foreigh key link in table A changes for some reason,
+    - now imagine, the foreign key link in table A changes for some reason,
       pointing to another record in B
     - the foreign key column in the row changes to point to the new record,
       it no longer points to the old record
@@ -37,7 +37,7 @@ Feature: Effectivity Satellites
 
     - To make this work we need to:
         - Create the new link and effectivity satellite as usual
-        - union it with the recording of the effectivty end date on the old link
+        - union it with the recording of the effectivity end date on the old link
 
     - Regular load:
         - LINK record uses the regular load pattern, no changes needed there
@@ -45,7 +45,7 @@ Feature: Effectivity Satellites
             - This is a regular satellite load,
             - effective_from is set to the business date
             - effective_to is set to the constant '9999-12-31 23:23:59'
-    - EFFECTIVTY SATELLITE for the now ended link:
+    - EFFECTIVITY SATELLITE for the now ended link:
         - Find the records that are candidates for end-dating
             - Get the primary key for LINKS, where the list of DRIVING KEY
               / DRIVEN KEY pairs that are in the LINK table do not match the
