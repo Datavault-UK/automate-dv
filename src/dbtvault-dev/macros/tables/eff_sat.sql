@@ -75,7 +75,7 @@ c AS (SELECT DISTINCT
 SELECT DISTINCT
   {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'e') }},
   {{ dbtvault.prefix([src_eff_from], 'e') }} AS {{ src_start_date }},
-  {{ dbtvault.prefix([src_end_date], 'e') }}
+  TO_DATE({{ max_date }}) AS {{ src_end_date }}
 FROM {{ ref(source) }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (
@@ -105,7 +105,7 @@ SELECT
   {% else %}
   y.DFK_1 IS NULL
   {% endfor %}
-  THEN {{ dbtvault.prefix([src_eff_from], 'z') }} ELSE {{ max_date }} END AS {{ src_end_date }}
+  THEN {{ dbtvault.prefix([src_eff_from], 'z') }} ELSE TO_DATE({{ max_date }}) END AS {{ src_end_date }}
 FROM y
 LEFT JOIN {{ ref(source) }} AS z ON
 {{ dbtvault.multikey(src_dfk, ['y', 'z'], 'join') }}
