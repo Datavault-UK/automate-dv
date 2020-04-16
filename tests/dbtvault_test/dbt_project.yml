@@ -202,5 +202,4 @@ models:
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
   vars:
-    hash: MD5
     max_date: TO_DATE('9999-12-31')
