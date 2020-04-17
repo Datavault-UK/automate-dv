@@ -1,1 +1,1 @@
-{{ dbtvault.hash_check(hash=var('hash')) }}
+{{ dbtvault.hash_check(col=var('hash')) }}
