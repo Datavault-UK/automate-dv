@@ -15,6 +15,10 @@
                           tgt_pk, tgt_fk, tgt_payload, tgt_eff, tgt_ldts, tgt_source,
                           source) -%}
 
+{%- if execute -%}
+    {%- do exceptions.warn("Warning: This macro (t_link_template) is deprecated and will be removed in a future release. Use t_link instead.") -%}
+{%- endif -%}
+
 {%- set tgt_cols = dbtvault.create_tgt_cols(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
                                             src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
                                             tgt_pk=tgt_pk, tgt_fk=tgt_fk, tgt_payload=tgt_payload,
