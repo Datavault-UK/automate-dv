@@ -4,14 +4,14 @@ from unittest import TestCase
 from tests.unit.dbt_test_utils import *
 
 
-class TestMultiHashMacro(TestCase):
+class TestHashColumnsMacro(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
 
         macro_type = 'staging'
 
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/multi_hash')
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/hash_columns')
 
         os.chdir(TESTS_DBT_ROOT)
 
@@ -19,11 +19,11 @@ class TestMultiHashMacro(TestCase):
 
         self.dbt_test.clean_target()
 
-    # MULTI_HASH
+    # HASH_COLUMNS
 
-    def test_multi_hash_correctly_generates_hashed_columns_for_single_columns(self):
+    def test_hash_columns_correctly_generates_hashed_columns_for_single_columns(self):
 
-        model = 'test_multi_hash'
+        model = 'test_hash_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -43,9 +43,9 @@ class TestMultiHashMacro(TestCase):
 
         self.assertEqual(expected_sql, actual_sql)
 
-    def test_multi_hash_correctly_generates_hashed_columns_for_composite_columns(self):
+    def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns(self):
 
-        model = 'test_multi_hash'
+        model = 'test_hash_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -61,15 +61,16 @@ class TestMultiHashMacro(TestCase):
                        """CAST(MD5_BINARY(CONCAT(\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^') )) AS BINARY(16)) AS CUSTOMER_DETAILS"""
+                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS CUSTOMER_DETAILS"""
 
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
 
-    def test_multi_hash_correctly_generates_sorted_hashed_columns_for_composite_columns(self):
+    def test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns(self):
 
-        model = 'test_multi_hash'
+        model = 'test_hash_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -87,15 +88,16 @@ class TestMultiHashMacro(TestCase):
                        """CAST(MD5_BINARY(CONCAT(\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS CUSTOMER_DETAILS"""
+                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS CUSTOMER_DETAILS"""
 
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
 
-    def test_multi_hash_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns(self):
+    def test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns(self):
 
-        model = 'test_multi_hash'
+        model = 'test_hash_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -115,18 +117,20 @@ class TestMultiHashMacro(TestCase):
                        """CAST(MD5_BINARY(CONCAT(\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') )) AS BINARY(16)) AS CUSTOMER_DETAILS,\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS CUSTOMER_DETAILS,\n""" \
                        """CAST(MD5_BINARY(CONCAT(\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(ORDER_DATE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ORDER_AMOUNT AS VARCHAR))), '^^') )) AS BINARY(16)) AS ORDER_DETAILS"""
+                       """    IFNULL(UPPER(TRIM(CAST(ORDER_AMOUNT AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS ORDER_DETAILS"""
 
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
 
-    def test_multi_hash_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
+    def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
 
-        model = 'test_multi_hash'
+        model = 'test_hash_columns'
 
         var_dict = {
             'columns': {
@@ -145,7 +149,39 @@ class TestMultiHashMacro(TestCase):
                        """CAST(MD5_BINARY(CONCAT(\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
                        """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^') )) AS BINARY(16)) AS CUSTOMER_DETAILS"""
+                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS CUSTOMER_DETAILS"""
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
+    def test_hash_columns_correctly_generates_sql_from_yaml(self):
+
+        model = 'test_hash_columns'
+
+        process_logs = self.dbt_test.run_model(model=model)
+
+        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS BINARY(16)) AS BOOKING_PK,\n""" \
+                       """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR)))), '^^')) AS BINARY(16)) AS CUSTOMER_PK,\n""" \
+                       """CAST(MD5_BINARY(CONCAT(\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS CUSTOMER_BOOKING_PK,\n""" \
+                       """CAST(MD5_BINARY(CONCAT(\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(NATIONALITY AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS BOOK_CUSTOMER_HASHDIFF,\n""" \
+                       """CAST(MD5_BINARY(CONCAT(\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(BOOKING_DATE AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(DEPARTURE_DATE AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(DESTINATION AS VARCHAR))), '^^'), '||',\n""" \
+                       """    IFNULL(UPPER(TRIM(CAST(PRICE AS VARCHAR))), '^^') ))\n""" \
+                       """AS BINARY(16)) AS BOOK_BOOKING_HASHDIFF"""
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
         self.assertIn('Done', process_logs)
 

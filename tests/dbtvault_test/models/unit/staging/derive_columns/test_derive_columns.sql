@@ -3,4 +3,4 @@
 {%- set table_relation = ref(var('source_table')) -%}
 {% endif %}
 
-{{ dbtvault.add_columns(source_table=table_relation, columns=var('columns')) }}
+{{ dbtvault.derive_columns(source_table=table_relation, columns=var('columns')) }}

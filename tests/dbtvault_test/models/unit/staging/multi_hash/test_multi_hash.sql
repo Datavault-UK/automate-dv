@@ -1,1 +1,0 @@
-{{ dbtvault.multi_hash(var('columns')) }}
