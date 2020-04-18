@@ -189,9 +189,9 @@ models:
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
       load_t_links:
-        t_link_transaction_current:
+        test_t_link_transaction_current:
           vars:
-            source: 't_link_transaction_hashed_current'
+            source: 'test_t_link_transaction_hashed_current'
             src_pk: 'TRANSACTION_PK'
             src_fk: 'CUSTOMER_PK'
             src_payload:

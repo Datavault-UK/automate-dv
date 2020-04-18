@@ -12,31 +12,23 @@
 -#}
 
 {%- macro multi_hash(columns) -%}
-{%- if columns is mapping -%}
 
-{{- log('columns: ' ~ columns, true) -}}
+{%- if columns is mapping -%}
 
     {%- for col in columns -%}
 
-    {{- log('col: ' ~ col, true) -}}
+        {% if columns[col] is mapping -%}
 
-        {% if columns[col]['sort'] is not defined -%}
+            {{- dbtvault.hash(columns[col]['columns'], col, columns[col]['sort']) -}}
 
-            {{- dbtvault.hash(columns[col], col) -}}
+        {%- elif columns[col] is not mapping -%}
 
-        {%- elif columns[col]['sort'] is defined and columns['sort'] == true -%}
-
-            {{- dbtvault.hash(columns[col], col, true) -}}
-
-        {%- elif columns[col]['sort'] is not defined and columns[col]['columns'] is defined -%}
-
-            {{- dbtvault.hash(columns[col]['columns'], col, true) -}}
+            {{- dbtvault.hash(columns[col], col, false) -}}
 
         {%- endif -%}
 
         {%- if not loop.last -%},
 {% endif %}
     {%- endfor -%}
-
 {%- endif -%}
 {%- endmacro -%}
