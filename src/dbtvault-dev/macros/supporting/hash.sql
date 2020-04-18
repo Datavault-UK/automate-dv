@@ -43,7 +43,8 @@ CAST({{ hash_alg }}(CONCAT(
 {%- if not loop.last %}
     IFNULL(UPPER(TRIM(CAST({{ column }} AS VARCHAR))), '^^'), '||',
 {%- else %}
-    IFNULL(UPPER(TRIM(CAST({{ column }} AS VARCHAR))), '^^') )) AS BINARY({{ hash_size }})) AS {{alias}}
+    IFNULL(UPPER(TRIM(CAST({{ column }} AS VARCHAR))), '^^') ))
+AS BINARY({{ hash_size }})) AS {{alias}}
 {%- endif -%}
 
 {%- endfor -%}

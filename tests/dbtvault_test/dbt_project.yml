@@ -17,10 +17,33 @@ clean-targets:
 
 models:
   dbtvault_test:
-    current:
-      load_cycles:
-        hashing:
-          test_stg_booking_hashed_current:
+    unit:
+      staging:
+        hash_columns:
+          test_hash_columns:
+            vars:
+              columns:
+                BOOKING_PK: BOOKING_REF
+                CUSTOMER_PK: CUSTOMER_ID
+                CUSTOMER_BOOKING_PK:
+                  - CUSTOMER_ID
+                  - BOOKING_REF
+                BOOK_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - PHONE
+                    - NATIONALITY
+                    - CUSTOMER_ID
+                BOOK_BOOKING_HASHDIFF:
+                  sort: true
+                  columns:
+                    - BOOKING_REF
+                    - BOOKING_DATE
+                    - DEPARTURE_DATE
+                    - PRICE
+                    - DESTINATION
+        stage:
+          test_stage_macro:
             vars:
               hashed_columns:
                 BOOKING_PK: BOOKING_REF
@@ -47,190 +70,192 @@ models:
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'BOOKING_DATE'
-
-        hubs:
-          test_hub_booking_current:
+    feature:
+      current:
+        load_cycles:
+          hubs:
+            test_hub_booking_current:
+              vars:
+                source: 'test_stg_booking_hashed_current'
+                src_pk: 'BOOKING_PK'
+                src_nk: 'BOOKING_REF'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+            test_hub_customer_current:
+              vars:
+                source:
+                  - 'test_stg_booking_hashed_current'
+                  - 'test_stg_customer_hashed_current'
+                src_pk: 'CUSTOMER_PK'
+                src_nk: 'CUSTOMER_ID'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+          links:
+            test_link_customer_booking_current:
+              vars:
+                source: 'test_stg_booking_hashed_current'
+                src_pk: 'CUSTOMER_BOOKING_PK'
+                src_fk:
+                  - 'CUSTOMER_PK'
+                  - 'BOOKING_PK'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+          sats:
+            test_sat_book_booking_details_current:
+              vars:
+                source: 'test_stg_booking_hashed_current'
+                src_pk: 'BOOKING_PK'
+                src_hashdiff: 'BOOK_BOOKING_HASHDIFF'
+                src_payload:
+                  - 'PRICE'
+                  - 'BOOKING_DATE'
+                  - 'DEPARTURE_DATE'
+                  - 'DESTINATION'
+                src_eff: 'EFFECTIVE_FROM'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+            test_sat_book_customer_details_current:
+              vars:
+                source: 'test_stg_booking_hashed_current'
+                src_pk: 'CUSTOMER_PK'
+                src_hashdiff: 'BOOK_CUSTOMER_HASHDIFF'
+                src_payload:
+                  - 'PHONE'
+                  - 'NATIONALITY'
+                src_eff: 'EFFECTIVE_FROM'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+            test_sat_cust_customer_details_current:
+              vars:
+                source: 'test_stg_customer_hashed_current'
+                src_pk: 'CUSTOMER_PK'
+                src_hashdiff: 'CUSTOMER_HASHDIFF'
+                src_payload:
+                  - 'CUSTOMER_DOB'
+                  - 'CUSTOMER_NAME'
+                src_eff: 'EFFECTIVE_FROM'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+        load_hubs:
+          test_hub_customer_hubs_current:
             vars:
-              source: 'test_stg_booking_hashed_current'
-              src_pk: 'BOOKING_PK'
-              src_nk: 'BOOKING_REF'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          test_hub_customer_current:
-            vars:
-              source:
-                - 'test_stg_booking_hashed_current'
-                - 'test_stg_customer_hashed_current'
+              source: 'test_stg_customer_hashed_hubs_current'
               src_pk: 'CUSTOMER_PK'
               src_nk: 'CUSTOMER_ID'
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
-        links:
-          test_link_customer_booking_current:
+          unions:
+            test_hub_parts_current:
+              vars:
+                source:
+                  - 'test_stg_parts_hashed_current'
+                  - 'test_stg_supplier_hashed_current'
+                  - 'test_stg_lineitem_hashed_current'
+                src_pk: 'PART_PK'
+                src_nk: 'PART_ID'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+        load_links:
+          test_link_customer_nation_current:
             vars:
-              source: 'test_stg_booking_hashed_current'
-              src_pk: 'CUSTOMER_BOOKING_PK'
+              source: 'test_stg_crm_customer_hashed_links_current'
+              src_pk: 'CUSTOMER_NATION_PK'
               src_fk:
-                - 'CUSTOMER_PK'
-                - 'BOOKING_PK'
+                - 'CUSTOMER_FK'
+                - 'NATION_FK'
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
-        sats:
-          test_sat_book_booking_details_current:
-            vars:
-              source: 'test_stg_booking_hashed_current'
-              src_pk: 'BOOKING_PK'
-              src_hashdiff: 'BOOK_BOOKING_HASHDIFF'
-              src_payload:
-                - 'PRICE'
-                - 'BOOKING_DATE'
-                - 'DEPARTURE_DATE'
-                - 'DESTINATION'
-              src_eff: 'EFFECTIVE_FROM'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          test_sat_book_customer_details_current:
-            vars:
-              source: 'test_stg_booking_hashed_current'
-              src_pk: 'CUSTOMER_PK'
-              src_hashdiff: 'BOOK_CUSTOMER_HASHDIFF'
-              src_payload:
-                - 'PHONE'
-                - 'NATIONALITY'
-              src_eff: 'EFFECTIVE_FROM'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          test_sat_cust_customer_details_current:
-            vars:
-              source: 'test_stg_customer_hashed_current'
-              src_pk: 'CUSTOMER_PK'
-              src_hashdiff: 'CUSTOMER_HASHDIFF'
-              src_payload:
-                - 'CUSTOMER_DOB'
-                - 'CUSTOMER_NAME'
-              src_eff: 'EFFECTIVE_FROM'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-      load_hubs:
-        test_hub_customer_hubs_current:
-          vars:
-            source: 'test_stg_customer_hashed_hubs_current'
-            src_pk: 'CUSTOMER_PK'
-            src_nk: 'CUSTOMER_ID'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-        unions:
-          test_hub_parts_current:
+          test_link_customer_nation_union_current:
             vars:
               source:
-                - 'test_stg_parts_hashed_current'
-                - 'test_stg_supplier_hashed_current'
-                - 'test_stg_lineitem_hashed_current'
-              src_pk: 'PART_PK'
-              src_nk: 'PART_ID'
+                - 'test_stg_sap_customer_hashed_links_current'
+                - 'test_stg_crm_customer_hashed_links_current'
+                - 'test_stg_web_customer_hashed_links_current'
+              src_pk: 'CUSTOMER_NATION_PK'
+              src_fk:
+                - 'CUSTOMER_FK'
+                - 'NATION_FK'
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
-      load_links:
-        test_link_customer_nation_current:
-          vars:
-            source: 'test_stg_crm_customer_hashed_links_current'
-            src_pk: 'CUSTOMER_NATION_PK'
-            src_fk:
-              - 'CUSTOMER_FK'
-              - 'NATION_FK'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-        test_link_customer_nation_union_current:
-          vars:
-            source:
-              - 'test_stg_sap_customer_hashed_links_current'
-              - 'test_stg_crm_customer_hashed_links_current'
-              - 'test_stg_web_customer_hashed_links_current'
-            src_pk: 'CUSTOMER_NATION_PK'
-            src_fk:
-              - 'CUSTOMER_FK'
-              - 'NATION_FK'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-        test_link_customer_order_current:
-          vars:
-            source: 'test_stg_eff_sat_hashed_current'
-            src_pk: 'CUSTOMER_ORDER_PK'
-            src_fk:
-              - 'ORDER_FK'
-              - 'CUSTOMER_FK'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-        test_link_customer_order_multipart_current:
-          vars:
-            source: 'test_stg_eff_sat_hashed_current'
-            src_pk: 'CUSTOMER_ORDER_PK'
-            src_fk:
-              - 'CUSTOMER_FK'
-              - 'NATION_FK'
-              - 'ORDER_FK'
-              - 'PRODUCT_FK'
-              - 'ORGANISATION_FK'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-      load_sats:
-        test_sat_customer_details_current:
-          vars:
-            source: 'test_stg_customer_details_hashed_current'
-            src_pk: 'CUSTOMER_PK'
-            src_hashdiff:
-              source_column: 'CUSTOMER_HASHDIFF'
-              alias: 'HASHDIFF'
-            src_payload:
-              - 'CUSTOMER_NAME'
-              - 'CUSTOMER_DOB'
-              - 'CUSTOMER_PHONE'
-            src_eff: 'EFFECTIVE_FROM'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-      load_t_links:
-        test_t_link_transaction_current:
-          vars:
-            source: 'test_t_link_transaction_hashed_current'
-            src_pk: 'TRANSACTION_PK'
-            src_fk: 'CUSTOMER_PK'
-            src_payload:
-              - 'TRANSACTION_NUMBER'
-              - 'TRANSACTION_DATE'
-              - 'TYPE'
-              - 'AMOUNT'
-            src_eff: 'EFFECTIVE_FROM'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-      load_eff_sats:
-        test_eff_customer_order_current:
-          vars:
-            source: 'test_stg_eff_sat_hashed_current'
-            link: 'test_link_customer_order_current'
-            src_pk: 'CUSTOMER_ORDER_PK'
-            src_dfk: 'CUSTOMER_FK'
-            src_sfk: 'ORDER_FK'
-            src_eff_from: 'EFFECTIVE_FROM'
-            eff_start_date: 'START_DATETIME'
-            eff_end_date: 'END_DATETIME'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
-        test_eff_customer_order_multipart_current:
-          vars:
-            source: 'test_stg_eff_sat_hashed_current'
-            link: 'test_link_customer_order_multipart_current'
-            src_pk: 'CUSTOMER_ORDER_PK'
-            src_dfk:
-              - 'CUSTOMER_FK'
-              - 'NATION_FK'
-            src_sfk:
-              - 'ORDER_FK'
-              - 'PRODUCT_FK'
-              - 'ORGANISATION_FK'
-            src_eff_from: 'EFFECTIVE_FROM'
-            eff_start_date: 'START_DATETIME'
-            eff_end_date: 'END_DATETIME'
-            src_ldts: 'LOADDATE'
-            src_source: 'SOURCE'
+          test_link_customer_order_current:
+            vars:
+              source: 'test_stg_eff_sat_hashed_current'
+              src_pk: 'CUSTOMER_ORDER_PK'
+              src_fk:
+                - 'ORDER_FK'
+                - 'CUSTOMER_FK'
+              src_ldts: 'LOADDATE'
+              src_source: 'SOURCE'
+          test_link_customer_order_multipart_current:
+            vars:
+              source: 'test_stg_eff_sat_hashed_current'
+              src_pk: 'CUSTOMER_ORDER_PK'
+              src_fk:
+                - 'CUSTOMER_FK'
+                - 'NATION_FK'
+                - 'ORDER_FK'
+                - 'PRODUCT_FK'
+                - 'ORGANISATION_FK'
+              src_ldts: 'LOADDATE'
+              src_source: 'SOURCE'
+        load_sats:
+          test_sat_customer_details_current:
+            vars:
+              source: 'test_stg_customer_details_hashed_current'
+              src_pk: 'CUSTOMER_PK'
+              src_hashdiff:
+                source_column: 'CUSTOMER_HASHDIFF'
+                alias: 'HASHDIFF'
+              src_payload:
+                - 'CUSTOMER_NAME'
+                - 'CUSTOMER_DOB'
+                - 'CUSTOMER_PHONE'
+              src_eff: 'EFFECTIVE_FROM'
+              src_ldts: 'LOADDATE'
+              src_source: 'SOURCE'
+        load_t_links:
+          test_t_link_transaction_current:
+            vars:
+              source: 'test_t_link_transaction_hashed_current'
+              src_pk: 'TRANSACTION_PK'
+              src_fk: 'CUSTOMER_PK'
+              src_payload:
+                - 'TRANSACTION_NUMBER'
+                - 'TRANSACTION_DATE'
+                - 'TYPE'
+                - 'AMOUNT'
+              src_eff: 'EFFECTIVE_FROM'
+              src_ldts: 'LOADDATE'
+              src_source: 'SOURCE'
+        load_eff_sats:
+          test_eff_customer_order_current:
+            vars:
+              source: 'test_stg_eff_sat_hashed_current'
+              link: 'test_link_customer_order_current'
+              src_pk: 'CUSTOMER_ORDER_PK'
+              src_dfk: 'CUSTOMER_FK'
+              src_sfk: 'ORDER_FK'
+              src_eff_from: 'EFFECTIVE_FROM'
+              eff_start_date: 'START_DATETIME'
+              eff_end_date: 'END_DATETIME'
+              src_ldts: 'LOADDATE'
+              src_source: 'SOURCE'
+          test_eff_customer_order_multipart_current:
+            vars:
+              source: 'test_stg_eff_sat_hashed_current'
+              link: 'test_link_customer_order_multipart_current'
+              src_pk: 'CUSTOMER_ORDER_PK'
+              src_dfk:
+                - 'CUSTOMER_FK'
+                - 'NATION_FK'
+              src_sfk:
+                - 'ORDER_FK'
+                - 'PRODUCT_FK'
+                - 'ORGANISATION_FK'
+              src_eff_from: 'EFFECTIVE_FROM'
+              eff_start_date: 'START_DATETIME'
+              eff_end_date: 'END_DATETIME'
+              src_ldts: 'LOADDATE'
+              src_source: 'SOURCE'
   vars:
     max_date: TO_DATE('9999-12-31')

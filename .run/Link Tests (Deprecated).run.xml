@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Hub Tests (Deprecated)" type="PyBehaveRunConfigurationType" factoryName="Behave">
+  <configuration default="false" name="Link Tests (Deprecated)" type="PyBehaveRunConfigurationType" factoryName="Behave">
     <module name="dbtvault-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -12,7 +12,7 @@
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_hubs.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_links.feature" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>

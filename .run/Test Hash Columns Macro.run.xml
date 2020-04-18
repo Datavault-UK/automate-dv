@@ -1,19 +1,18 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Hub Tests (Deprecated)" type="PyBehaveRunConfigurationType" factoryName="Behave">
+  <configuration default="false" name="Test Hash Columns Macro" type="tests" factoryName="Unittests">
     <module name="dbtvault-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <envs>
-      <env name="MODE" value="deprecated" />
-    </envs>
     <option name="SDK_HOME" value="" />
-    <option name="WORKING_DIRECTORY" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests/unit/staging" />
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_hubs.feature" />
-    <option name="ADDITIONAL_ARGS" value="" />
+    <option name="_new_pattern" value="&quot;&quot;" />
+    <option name="_new_additionalArguments" value="&quot;&quot;" />
+    <option name="_new_target" value="&quot;staging.test_hash_columns&quot;" />
+    <option name="_new_targetType" value="&quot;PYTHON&quot;" />
     <method v="2" />
   </configuration>
 </component>

@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro add_columns(source_table, columns=[]) -%}
+{%- macro derive_columns(source_table, columns=[]) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}

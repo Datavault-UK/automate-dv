@@ -11,7 +11,7 @@ class TestAddColumnsMacro(TestCase):
 
         macro_type = 'staging'
 
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/add_columns')
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/derive_columns')
 
         os.chdir(TESTS_DBT_ROOT)
 
@@ -24,24 +24,26 @@ class TestAddColumnsMacro(TestCase):
     # ADD_COLUMNS
 
     def test_add_columns_correctly_generates_SQL_with_source_columns(self):
-
         model = 'test_add_columns'
 
         var_dict = {
-            'source_table': 'add_columns_source',
-            'columns': {"!STG_BOOKING": 'SOURCE',
-                        'EFFECTIVE_FROM': 'LOADDATE'}
+            'source_table': 'add_columns_source'
         }
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE, EFFECTIVE_FROM AS LOADDATE, TEST_COLUMN_2, """ \
-                       """TEST_COLUMN_3, TEST_COLUMN_4, TEST_COLUMN_5, TEST_COLUMN_6, TEST_COLUMN_7, """ \
-                       """TEST_COLUMN_8, TEST_COLUMN_9"""
+        expected_sql = """'STG_CUSTOMER' AS SOURCE,\n    LOADDATE AS EFFECTIVE_FROM,\n    LOADDATE,\n    TEST_COLUMN_2,""" \
+                       """\n    TEST_COLUMN_3,\n    TEST_COLUMN_4,\n    TEST_COLUMN_5,\n    TEST_COLUMN_6,\n    TEST_COLUMN_7,""" \
+                       """\n    TEST_COLUMN_8,\n    TEST_COLUMN_9"""
 
         self.assertIn('Done', process_logs)
+        self.assertIn('Warning: This macro (add_columns) is deprecated and '
+                      'will be removed in a future release. Use derive_columns instead.',
+                      process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
+
+
 

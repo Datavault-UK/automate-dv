@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro multi_hash(columns) -%}
+{%- macro hash_columns(columns) -%}
 
 {%- if columns is mapping -%}
 
