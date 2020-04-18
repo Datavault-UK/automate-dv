@@ -17,6 +17,10 @@
                        tgt_eff, tgt_ldts, tgt_source,
                        source) -%}
 
+{%- if execute -%}
+    {%- do exceptions.warn("Warning: This macro (sat_template) is deprecated and will be removed in a future release. Use sat instead.") -%}
+{%- endif -%}
+
 {%- set tgt_cols = dbtvault.create_tgt_cols(src_pk=src_pk,
                                             src_hashdiff=src_hashdiff, src_payload=src_payload, src_eff=src_eff,
                                             src_ldts=src_ldts, src_source=src_source,
