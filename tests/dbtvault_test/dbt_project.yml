@@ -43,29 +43,24 @@ models:
                     - PRICE
                     - DESTINATION
         stage:
-          test_stage_macro:
+          test_stage:
             vars:
+              source_table: 'raw_source'
               hashed_columns:
-                BOOKING_PK: BOOKING_REF
                 CUSTOMER_PK: CUSTOMER_ID
-                CUSTOMER_BOOKING_PK:
+                CUST_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                  - CUSTOMER_DOB
                   - CUSTOMER_ID
-                  - BOOKING_REF
-                BOOK_CUSTOMER_HASHDIFF:
+                  - CUSTOMER_NAME
+                CUSTOMER_HASHDIFF:
                   sort: true
                   columns:
                     - CUSTOMER_ID
                     - NATIONALITY
                     - PHONE
-                BOOK_BOOKING_HASHDIFF:
-                  sort: true
-                  columns:
-                    - BOOKING_REF
-                    - BOOKING_DATE
-                    - DEPARTURE_DATE
-                    - PRICE
-                    - DESTINATION
-              added_columns:
+              derived_columns:
                 include_source: true
                 columns:
                   SOURCE: '!STG_BOOKING'

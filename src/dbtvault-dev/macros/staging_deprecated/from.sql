@@ -13,6 +13,10 @@
 
 {% macro from(source_table) %}
 
+{%- if execute -%}
+    {%- do exceptions.warn("Warning: This macro (from)) is deprecated and will be removed in a future release.") -%}
+{%- endif -%}
+
 FROM {{ source_table }}
 
 {%- endmacro -%}
