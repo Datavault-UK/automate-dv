@@ -23,10 +23,4 @@ class TestStageMacro(TestCase):
 
     def test_stage_correctly_generates_SQL(self):
 
-        model = 'test_stage_macro'
-
-        process_logs = self.dbt_test.run_model(model=model)
-
-        self.assertIn('Done', process_logs)
-
         self.fail()
