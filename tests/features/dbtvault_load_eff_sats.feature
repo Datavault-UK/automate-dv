@@ -73,7 +73,7 @@ Feature: Effectivity Satellites
 
     ===========================================================================
 
-    Scenario: Empty Load with an Effectivity Satellite that does not exist
+    Scenario: [BASE-LOAD] Empty Load with an Effectivity Satellite that does not exist
       Given an empty Link_Customer_Order
       And a EFF_CUSTOMER_ORDER table does not exist
       And staging_data loaded on 2020-01-10
@@ -93,7 +93,7 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
 
-    Scenario: Empty Load with existing Effectivity Satellite
+    Scenario: [BASE-LOAD] Empty Load with existing Effectivity Satellite
       Given an empty Link_Customer_Order
       And an empty EFF_CUSTOMER_ORDER
       And staging_data loaded on 2020-01-10
@@ -114,7 +114,7 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
 
 
-    Scenario: Subsequent Load, No Effectivity Change
+    Scenario: [SUBSEQUENT-LOAD] No Effectivity Change
       Given there is a LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -143,7 +143,7 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
 
 
-    Scenario: Subsequent Load, New Link Added
+    Scenario: [SUBSEQUENT-LOAD] New Link Added
       Given there is a LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -178,7 +178,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
 
 
-    Scenario: Subsequent Load, Link is Changed
+    Scenario: [SUBSEQUENT-LOAD] Link is Changed
       Given there is a LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -224,7 +224,7 @@ Feature: Effectivity Satellites
 
 
 
-    Scenario: Subsequent 2 Loads, Link is Changed Back Again
+    Scenario: [SUBSEQUENT-LOAD] 2 loads, Link is Changed Back Again
       Given there is a LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -295,7 +295,7 @@ Feature: Effectivity Satellites
       | md5('7000\|\|III') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10     | 2020-01-11   |
       | md5('7000\|\|JJJ') | 2020-01-13 | orders | 2020-01-12     | 2020-01-12     | 9999-12-31   |
       
-    Scenario: No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed.
+    Scenario: [NULL-SFK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed.
       Given there is a LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -334,7 +334,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
       | md5('5000\|\|EEE') | 2020-01-13 | orders | 2020-01-10     | 2020-01-10     | 2020-01-12   |
 
-    Scenario: No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
+    Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
       Given there is a LINK_CUSTOMER_ORDER table
        | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
        | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -372,7 +372,7 @@ Feature: Effectivity Satellites
        | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
        | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
 
-    Scenario: Driving Key and Secondary Key are multipart keys.
+    Scenario: [MULTIPART-KEYS] Driving Key and Secondary Key are multipart keys.
       Given there is data in LINK_CUSTOMER_ORDER_MULTIPART
         | CUSTOMER_ORDER_PK                                | CUSTOMER_FK | NATION_FK  | ORDER_FK   | PRODUCT_FK    | ORGANISATION_FK  | LOADDATE   | SOURCE |
         | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('DEU') | md5('AAA') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-12 | orders |

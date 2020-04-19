@@ -1,4 +1,4 @@
-Feature: Load Satellites
+Feature: Satellites
 # =============================================================================
 # CHANGE HISTORY
 # ==============
