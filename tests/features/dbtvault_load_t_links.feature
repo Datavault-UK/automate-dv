@@ -39,7 +39,7 @@ Feature: Transactional Links
       | 1236        | 12345683           | 2019-09-19       | 2019-09-21 | SAP    | CR   | 236.55   |
       | 1237        | 12345684           | 2019-09-19       | 2019-09-21 | SAP    | DR   | 3567.34  |
     When I load the TEST_T_LINK_TRANSACTION table
-    Then the T_LINK_TRANSACTION table should contain
+    Then the TEST_T_LINK_TRANSACTION table should contain
       | TRANSACTION_PK          | CUSTOMER_PK | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE   | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 2019-09-19       | 2019-09-21 | SAP    | DR   | 2340.5   | 2019-09-19     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 2019-09-19       | 2019-09-21 | SAP    | CR   | 123.4    | 2019-09-19     |
@@ -64,7 +64,7 @@ Feature: Transactional Links
       | 1236        | 12345683           | 2019-09-19       | 2019-09-21 | SAP    | CR   | 236.55   |
       | 1237        | 12345684           | 2019-09-19       | 2019-09-21 | SAP    | DR   | 3567.34  |
     When I load the TEST_T_LINK_TRANSACTION table
-    Then the T_LINK_TRANSACTION table should contain
+    Then the TEST_T_LINK_TRANSACTION table should contain
       | TRANSACTION_PK          | CUSTOMER_PK | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE   | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 2019-09-19       | 2019-09-21 | SAP    | DR   | 2340.5   | 2019-09-19     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 2019-09-19       | 2019-09-21 | SAP    | CR   | 123.4    | 2019-09-19     |
@@ -202,7 +202,7 @@ Feature: Transactional Links
       | 1238        | 12345690           | 2019-09-20       | 2019-09-22 | SAP    | CR   | 6823.55 |
       | 1238        | 12345691           | 2019-09-20       | 2019-09-22 | SAP    | CR   | 4578.34 |
     When I load the T_LINK_TRANSACTION table
-    Then the T_LINK_TRANSACTION table should contain
+    Then the TEST_T_LINK_TRANSACTION table should contain
       | TRANSACTION_PK          | CUSTOMER_PK | TRANSACTION_NUMBER | TRANSACTION_DATE | LOADDATE   | SOURCE | TYPE | AMOUNT   | EFFECTIVE_FROM |
       | md5('1234\|\|12345678') | md5('1234') | 12345678           | 2019-09-19       | 2019-09-21 | SAP    | DR   | 2340.5   | 2019-09-19     |
       | md5('1234\|\|12345679') | md5('1234') | 12345679           | 2019-09-19       | 2019-09-21 | SAP    | CR   | 123.4    | 2019-09-19     |
