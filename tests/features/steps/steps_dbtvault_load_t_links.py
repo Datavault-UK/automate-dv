@@ -33,7 +33,7 @@ def step_impl(context):
                                         context.connection)
 
 
-@then("the T_LINK_TRANSACTION table should contain")
+@then("the TEST_T_LINK_TRANSACTION table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns='SOURCE',
                                                    binary_columns=['TRANSACTION_PK', 'CUSTOMER_PK'])
@@ -48,10 +48,10 @@ def step_impl(context):
 
 # CYCLE SCENARIO STEPS
 
-@given("I have a populated TLINK_TRANSACTION table")
+@given("I have a populated TEST_TLINK_TRANSACTION table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, f"t_link_transaction_{MODE.lower()}",
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_t_link_transaction_{MODE.lower()}",
                                     ["TRANSACTION_PK BINARY", "CUSTOMER_PK BINARY",
                                      "TRANSACTION_NUMBER NUMBER(38,0)", "TRANSACTION_DATE DATE", "LOADDATE DATE",
                                      "SOURCE VARCHAR(3)", "TYPE VARCHAR(2)", "AMOUNT NUMBER(38,2)",
