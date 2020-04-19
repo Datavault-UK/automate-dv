@@ -50,7 +50,7 @@ class DBTTestUtils:
             :param model_vars: variable dictionary to provide to dbt
             :return Log output of dbt run operation
         """
-        command = f"dbt {mode} --models {model}"
+        command = f"dbt {mode} --full-refresh --models {model}"
 
         if model_vars:
             yaml_str = str(model_vars).replace('\'', '"')
