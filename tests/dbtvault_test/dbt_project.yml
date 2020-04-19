@@ -45,7 +45,7 @@ models:
         stage:
           test_stage:
             vars:
-              source_table: 'raw_source'
+              source_model: 'raw_source'
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -65,6 +65,9 @@ models:
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'BOOKING_DATE'
+          test_stage_source_only:
+            vars:
+              source_model: 'raw_source'
     feature:
       current:
         load_cycles:

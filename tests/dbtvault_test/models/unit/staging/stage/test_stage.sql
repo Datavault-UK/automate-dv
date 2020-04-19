@@ -1,1 +1,1 @@
-{{ dbtvault.stage(source_table=var('source_table'), hashed_columns=var('hashed_columns'), derived_columns=var('derived_columns')) }}
+{{ dbtvault.stage(source_model=var('source_model'), hashed_columns=var('hashed_columns'), derived_columns=var('derived_columns')) }}

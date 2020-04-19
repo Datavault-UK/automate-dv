@@ -25,10 +25,10 @@ class TestDeriveColumnsMacro(TestCase):
 
     def test_derive_columns_correctly_generates_SQL_with_source_columns(self):
 
-        model = 'test_derive_columns'
+        model = 'test_derive_columns_with_source_columns'
 
         var_dict = {
-            'source_table': 'raw_source',
+            'source_model': 'raw_source',
             'columns': {'SOURCE': "!STG_BOOKING",
                         'LOADDATE': 'EFFECTIVE_FROM'}
         }
@@ -37,12 +37,52 @@ class TestDeriveColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE,\nEFFECTIVE_FROM AS LOADDATE,\nLOADDATE,\nTEST_COLUMN_2,\n""" \
+        expected_sql = """'STG_BOOKING' AS SOURCE,\nEFFECTIVE_FROM AS LOADDATE,\nTEST_COLUMN_2,\n""" \
                        """TEST_COLUMN_3,\nTEST_COLUMN_4,\nTEST_COLUMN_5,\nTEST_COLUMN_6,\nTEST_COLUMN_7,\n""" \
                        """TEST_COLUMN_8,\nTEST_COLUMN_9"""
 
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
+
+    def test_derive_columns_correctly_generates_SQL_without_source_columns(self):
+
+        model = 'test_derive_columns_without_source_columns'
+
+        var_dict = {
+            'columns': {'SOURCE': "!STG_BOOKING",
+                        'LOADDATE': 'EFFECTIVE_FROM'}
+        }
+
+        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        expected_sql = """'STG_BOOKING' AS SOURCE,\nEFFECTIVE_FROM AS LOADDATE"""
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
+    def test_derive_columns_correctly_generates_SQL_with_only_source_columns(self):
+
+        model = 'test_derive_columns_with_only_source_columns'
+
+        var_dict = {
+            'source_model': 'raw_source'
+        }
+
+        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        expected_sql = """LOADDATE,\nTEST_COLUMN_2,\nTEST_COLUMN_3,\nTEST_COLUMN_4,\nTEST_COLUMN_5,\n""" \
+                       """TEST_COLUMN_6,\nTEST_COLUMN_7,\n""" \
+                       """TEST_COLUMN_8,\nTEST_COLUMN_9"""
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
 
 

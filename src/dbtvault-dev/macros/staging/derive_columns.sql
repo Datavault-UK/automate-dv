@@ -11,13 +11,13 @@
     limitations under the License.
 -#}
 
-{%- macro derive_columns(source_table, columns=[]) -%}
+{%- macro derive_columns(source_model, columns) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
 
-{%- if source_table is defined and source_table is not none -%}
-    {%- set source_table_cols = adapter.get_columns_in_relation(source_table) -%}
+{%- if source_model is defined and source_model is not none -%}
+    {%- set source_model_cols = adapter.get_columns_in_relation(source_model) -%}
 {%- endif %}
 
 {%- if columns is mapping -%}
@@ -27,18 +27,18 @@
 
         {%- if columns[col] | first == "!" -%}
             {%- set _ = include_columns.append("'" ~ columns[col][1:] ~ "' AS " ~ col) -%}
-            {%- set _ = exclude_columns.append(columns[col]) -%}
+            {%- set _ = exclude_columns.append(col) -%}
         {%- else -%}
             {%- set _ = include_columns.append(columns[col] ~ " AS " ~ col) -%}
-            {%- set _ = exclude_columns.append(columns[col]) -%}
+            {%- set _ = exclude_columns.append(col) -%}
         {%- endif %}
 
     {%- endfor -%}
 
-    {#- Add all columns from source_table table -#}
-    {%- if source_table is defined and source_table is not none -%}
+    {#- Add all columns from source_model relation -#}
+    {%- if source_model is defined and source_model is not none -%}
 
-        {%- for source_col in source_table_cols -%}
+        {%- for source_col in source_model_cols -%}
             {%- if source_col.column not in exclude_columns -%}
                 {%- set _ = include_columns.append(source_col.column) -%}
             {%- endif -%}
@@ -52,6 +52,31 @@
         {%- if not loop.last -%},
 {% endif -%}
     {%- endfor -%}
+
+{%- elif columns is undefined and source_model is defined -%}
+
+    {#- Add all columns from source_model relation -#}
+    {%- for source_col in source_model_cols -%}
+        {%- if source_col.column not in exclude_columns -%}
+            {%- set _ = include_columns.append(source_col.column) -%}
+        {%- endif -%}
+    {%- endfor -%}
+
+    {#- Print out all columns in includes -#}
+    {%- for col in include_columns -%}
+        {{ col }}
+        {%- if not loop.last -%},
+{% endif -%}
+    {%- endfor -%}
+
+{%- else -%}
+
+{%- if execute -%}
+{{ exceptions.raise_compiler_error("Invalid column configuration:
+expected format: {source_model: 'model_name', columns: 'column_mapping'}
+got: {'source_model': " ~ source_model ~ ", 'columns': " ~ columns ~ "}") }}
+{%- endif %}
+
 {%- endif %}
 
 {%- endmacro -%}
