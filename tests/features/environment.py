@@ -43,6 +43,6 @@ def before_feature(context, feature):
     Re-create the database before every feature
     """
 
-    context.connection.execute("DROP DATABASE IF EXISTS {}".format(DATABASE))
+    context.connection.execute(f"DROP DATABASE IF EXISTS {DATABASE}")
 
-    context.connection.execute("CREATE DATABASE IF NOT EXISTS {}".format(DATABASE))
+    context.connection.execute(f"CREATE DATABASE IF NOT EXISTS {DATABASE}")
