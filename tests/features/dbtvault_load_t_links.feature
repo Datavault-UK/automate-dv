@@ -1,4 +1,4 @@
-Feature: Load Transactional Links
+Feature: Transactional Links
 # ==============================================================================
 # CHANGE HISTORY
 # ==============
