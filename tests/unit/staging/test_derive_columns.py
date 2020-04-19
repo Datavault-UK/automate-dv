@@ -15,7 +15,7 @@ class TestDeriveColumnsMacro(TestCase):
 
         os.chdir(TESTS_DBT_ROOT)
 
-        cls.dbt_test.run_model(mode='run', model='add_columns_source')
+        cls.dbt_test.run_model(mode='run', model='raw_source')
 
     def setUp(self) -> None:
 
@@ -28,18 +28,18 @@ class TestDeriveColumnsMacro(TestCase):
         model = 'test_derive_columns'
 
         var_dict = {
-            'source_table': 'add_columns_source',
-            'columns': {"!STG_BOOKING": 'SOURCE',
-                        'EFFECTIVE_FROM': 'LOADDATE'}
+            'source_table': 'raw_source',
+            'columns': {'SOURCE': "!STG_BOOKING",
+                        'LOADDATE': 'EFFECTIVE_FROM'}
         }
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE, EFFECTIVE_FROM AS LOADDATE, TEST_COLUMN_2, """ \
-                       """TEST_COLUMN_3, TEST_COLUMN_4, TEST_COLUMN_5, TEST_COLUMN_6, TEST_COLUMN_7, """ \
-                       """TEST_COLUMN_8, TEST_COLUMN_9"""
+        expected_sql = """'STG_BOOKING' AS SOURCE,\nEFFECTIVE_FROM AS LOADDATE,\nLOADDATE,\nTEST_COLUMN_2,\n""" \
+                       """TEST_COLUMN_3,\nTEST_COLUMN_4,\nTEST_COLUMN_5,\nTEST_COLUMN_6,\nTEST_COLUMN_7,\n""" \
+                       """TEST_COLUMN_8,\nTEST_COLUMN_9"""
 
         self.assertIn('Done', process_logs)
 

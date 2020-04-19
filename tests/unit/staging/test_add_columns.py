@@ -15,7 +15,7 @@ class TestAddColumnsMacro(TestCase):
 
         os.chdir(TESTS_DBT_ROOT)
 
-        cls.dbt_test.run_model(mode='run', model='add_columns_source')
+        cls.dbt_test.run_model(mode='run', model='raw_source')
 
     def setUp(self) -> None:
 
@@ -27,7 +27,7 @@ class TestAddColumnsMacro(TestCase):
         model = 'test_add_columns'
 
         var_dict = {
-            'source_table': 'add_columns_source'
+            'source_table': 'raw_source'
         }
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)

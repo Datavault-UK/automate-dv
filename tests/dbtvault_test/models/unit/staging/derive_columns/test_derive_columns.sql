@@ -1,4 +1,4 @@
--- depends_on: {{ ref('add_columns_source') }}
+-- depends_on: {{ ref('raw_source') }}
 {%- if execute -%}
 {%- set table_relation = ref(var('source_table')) -%}
 {% endif %}
