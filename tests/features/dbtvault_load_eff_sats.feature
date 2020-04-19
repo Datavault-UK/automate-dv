@@ -115,7 +115,7 @@ Feature: Effectivity Satellites
 
 
     Scenario: [INCREMENTAL-LOAD] No Effectivity Change
-      Given there is a LINK_CUSTOMER_ORDER table
+      Given there is a TEST_LINK_CUSTOMER_ORDER table
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
