@@ -8,18 +8,18 @@ use_step_matcher("parse")
 # SINGLE STEPS
 
 
-@step("an empty LINK_CUSTOMER_ORDER")
+@step("an empty TEST_LINK_CUSTOMER_ORDER")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_order_{}".format(MODE.lower()),
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_order_{MODE.lower()}",
                                     ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "ORDER_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
 
 
-@step("an empty EFF_CUSTOMER_ORDER")
+@step("an empty TEST_EFF_CUSTOMER_ORDER")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_eff_customer_order_{}".format(MODE.lower()),
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_eff_customer_order_{MODE.lower()}",
                                     ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
                                      "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
                                     context.connection)
@@ -41,7 +41,7 @@ def step_impl(context, table_name):
 
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
 
-    table_name = f"test_{table_name.lower()}_{MODE.lower()}"
+    table_name = f"{table_name.lower()}_{MODE.lower()}"
 
     if 'link' in table_name.lower():
 
@@ -70,7 +70,7 @@ def step_impl(context, table_name):
 def step_impl(context, table):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
 
-    table_name = f"test_{table.lower()}_{MODE.lower()}"
+    table_name = f"{table.lower()}_{MODE.lower()}"
 
     if 'link' in table.lower():
 
@@ -159,7 +159,7 @@ def step_impl(context, table_name):
                                                        binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "ORDER_FK"])
 
         result_df = context.dbutils.get_table_data(
-            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_link_customer_order_{MODE.lower()}",
+            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.{table_name}_{MODE.lower()}",
             binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "ORDER_FK"],
             order_by='CUSTOMER_ORDER_PK',
             connection=context.connection)
@@ -173,7 +173,7 @@ def step_impl(context, table_name):
                                                        binary_columns=['CUSTOMER_ORDER_PK'])
 
         result_df = context.dbutils.get_table_data(
-            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_eff_customer_order_{MODE.lower()}",
+            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.{table_name}_{MODE.lower()}",
             binary_columns=['CUSTOMER_ORDER_PK'],
             order_by=['CUSTOMER_ORDER_PK', 'LOADDATE'],
             connection=context.connection)
@@ -191,7 +191,7 @@ def step_impl(context, table_name):
                                                        binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "NATION_FK",
                                                                        "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"])
         result_df = context.dbutils.get_table_data(
-            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_link_customer_order_multipart_{MODE.lower()}",
+            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.{table_name}_{MODE.lower()}",
             binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "NATION_FK", "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"],
             order_by='CUSTOMER_ORDER_PK',
             connection=context.connection)
@@ -205,7 +205,7 @@ def step_impl(context, table_name):
                                                        binary_columns=['CUSTOMER_ORDER_PK'])
 
         result_df = context.dbutils.get_table_data(
-            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_eff_customer_order_multipart_{MODE.lower()}",
+            full_table_name=f"{DATABASE}.{VLT_SCHEMA}.{table_name}_{MODE.lower()}",
             binary_columns=['CUSTOMER_ORDER_PK'],
             order_by=['CUSTOMER_ORDER_PK', 'LOADDATE'],
             connection=context.connection)

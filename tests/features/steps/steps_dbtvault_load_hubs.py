@@ -31,7 +31,7 @@ def step_impl(context, model_name):
 @step("a {table_name} table does not exist")
 def step_impl(context, table_name):
 
-    table_name = table_name + '_' + MODE
+    table_name = f'{table_name}_{MODE}'
 
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
 
