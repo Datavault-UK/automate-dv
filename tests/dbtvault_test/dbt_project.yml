@@ -198,8 +198,6 @@ models:
                 - 'PRODUCT_FK'
                 - 'ORGANISATION_FK'
               src_eff_from: 'EFFECTIVE_FROM'
-              eff_start_date: 'START_DATETIME'
-              eff_end_date: 'END_DATETIME'
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
   vars:
