@@ -66,6 +66,19 @@ class TestAliasMacro(TestCase):
         self.assertIn('Invalid alias configuration:',
                       process_logs)
 
+    def test_alias_single_with_undefined_column_metadata_raises_error(self):
+
+        model = 'test_alias_single_undefined_columns'
+
+        var_dict = {'prefix': 'c'}
+
+        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+
+        self.assertIn(model, process_logs)
+
+        self.assertIn('Invalid alias configuration:',
+                      process_logs)
+
     # ALIAS_ALL
 
     def test_alias_all_correctly_generates_SQL_for_full_alias_list_with_prefix(self):

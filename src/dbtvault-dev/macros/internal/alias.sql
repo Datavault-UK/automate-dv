@@ -10,7 +10,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro alias(source_column, prefix='') -%}
+{%- macro alias(source_column='', prefix='') -%}
 
 {%- if (source_column is defined and source_column) -%}
 
