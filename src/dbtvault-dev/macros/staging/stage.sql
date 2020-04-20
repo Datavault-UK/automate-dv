@@ -17,21 +17,25 @@ SELECT
 
 {% if (hashed_columns is defined and hashed_columns) -%}
 
-{{ dbtvault.hash_columns(hashed_columns) -}},
+    {{ dbtvault.hash_columns(hashed_columns) -}}
+
+    {{ "," if derived_columns is defined and source_model is defined }}
 
 {% endif -%}
 
 {%- if derived_columns is defined -%}
-    {% if derived_columns.include_source -%}
+
+    {% if derived_columns['include_source'] -%}
 
     {{ dbtvault.derive_columns(source_model=ref(source_model), columns=derived_columns['columns']) }}
     {%- else -%}
 
     {{ dbtvault.derive_columns(columns=derived_columns['columns']) }}
     {%- endif %}
-{%- else -%}
+{%- elif source_model is defined -%}
 
     {{ dbtvault.derive_columns(source_model=ref(source_model)) }}
+
 {%- endif %}
 
 FROM {{ ref(source_model) }}

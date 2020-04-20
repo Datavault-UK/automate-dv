@@ -82,4 +82,3 @@ class TestStageMacro(TestCase):
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
-
