@@ -7,16 +7,16 @@ Effectivity satellites contain the following columns:
 1. A primary key, which is also the primary key of the [link](macros.md#link). This is the natural keys (prior to hashing) represented by the foreign key columns
 and create a hash on a concatenation of them.
 
-2. Effective From date or date timestamp. This is the date that the record is effective from.
+2. ```EFFECTIVE_FROM``` date or date timestamp. This is the date that the record is effective from.
 
-3. Start date or date timestamp. This is the date from which the link record is currently the latest/active link.
+3. ```START_DATETIME``` date or date timestamp. This is the date from which the link record is currently the latest/active link.
 
-4. End date or date timestamp. This is the date that a link is made inactive. If it is an active link, a record will 
+4. ```END_DATETIME``` date or date timestamp. This is the date that a link is made inactive. If it is an active link, a record will 
 contain a max date of ```9999-12-31```.  
 
-5. The load date or load date timestamp.
+5. The ```LOADDATE``` date or date timestamp.
 
-6. The source for the record.
+6. The ```SOURCE``` for the record.
 
 ### Creating the model header
 
@@ -65,17 +65,13 @@ driving foreign key.
 3. ```ORDER_FK``` which is the other foreign key in the link. This is the foreign key that is going to be used as the 
 secondary foreign key.
 4. ```EFFECTIVE_FROM``` which is the date in the staging table that states when a record becomes effective.
-5. ```START_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record begins its
-activity.
-6. ```END_DATETIME``` which is the column in the effectivity satellite whose date defines when a link record ends its
-activity and becomes inactive. Active link records will have a date equal to the max date ```9999-12-31```.
-7. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
-8. A ```SOURCE``` column. 
+5. A load date timestamp, which is present in the staging layer as ```LOADDATE``` 
+6. A ```SOURCE``` column. 
 
 We can now add this metadata to the ```dbt_project.yml``` file:
 
 ```dbt_project.yml```
-```yaml  hl_lines="5 6 7 8 9 10 11 12"
+```yaml  hl_lines="5 6 7 8 9 10"
 eff_sat_customer_order:
           vars:
             source: 'stg_customer_order_hashed'
@@ -84,8 +80,6 @@ eff_sat_customer_order:
             src_dfk: 'CUSTOMER_FK'
             src_sfk: 'ORDER_FK'
             src_eff_from: 'EFFECTIVE_FROM'
-            src_start_date: 'START_DATETIME'
-            src_end_date: 'END_DATETIME'
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
 ```
@@ -99,12 +93,11 @@ eff_sat_customer_order:
 Now we bring it all together and call the [eff_sat](macros.md#eff_sat) macro:
 
 ```eff_sat_customer_order.sql```
-``` sql hl_lines="2 3 4 5"
-{{- config(materialized='incremental', schema='MYSCHEMA', tags='eff_sat')           -}}
+``` sql hl_lines="2 3 4"
+{{- config(materialized='incremental', schema='MYSCHEMA', tags='eff_sat')              -}}
 -- depends_on: {{ ref(var('link')) }}
 {{ dbtvault.eff_sat(var('src_pk'), var('src_dfk'), var('src_sfk'), var('src_ldts'),
-                    var('src_eff_from'), var('src_start_date'), var('src_end_date'),
-                    var('src_source'), var('link'), var('source'))                   }}
+                    var('src_eff_from'), var('src_source'), var('link'), var('source')) }}
 ``` 
 
 !!! note
@@ -149,8 +142,6 @@ eff_sat_customer_order:
               - 'PRODUCT_FK'
               - 'ORGANISATION_FK'
             src_eff_from: 'EFFECTIVE_FROM'
-            src_start_date: 'START_DATETIME'
-            src_end_date: 'END_DATETIME'
             src_ldts: 'LOADDATE'
             src_source: 'SOURCE'
 ```
