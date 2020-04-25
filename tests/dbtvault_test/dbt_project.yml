@@ -65,6 +65,29 @@ models:
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'BOOKING_DATE'
+          test_stage_source_relation_style:
+            vars:
+              source_model:
+                test_unit: 'raw_source'
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUST_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
+                CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_ID
+                    - NATIONALITY
+                    - PHONE
+              derived_columns:
+                include_source: true
+                columns:
+                  SOURCE: '!STG_BOOKING'
+                  EFFECTIVE_FROM: 'BOOKING_DATE'
           test_stage_source_only:
             vars:
               source_model: 'raw_source'
@@ -135,6 +158,15 @@ models:
                 src_ldts: 'LOADDATE'
                 src_source: 'SOURCE'
         load_hubs:
+#          hashing:
+#            test_stg_customer_hashed_hubs_current:
+#              source_model: 'stg_customer_hubs_current'
+#              hashed_columns:
+#                CUSTOMER_PK: CUSTOMER_ID
+#              derived_columns:
+#                include_source: true
+#                columns:
+#                  EFFECTIVE_FROM: 'LOADDATE'
           test_hub_customer_hubs_current:
             vars:
               source: 'test_stg_customer_hashed_hubs_current'

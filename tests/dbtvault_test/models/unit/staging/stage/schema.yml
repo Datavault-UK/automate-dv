@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: test_unit
+    database: DBT_VAULT
+    schema: TEST_VLT
+    tables:
+      - name: raw_source
