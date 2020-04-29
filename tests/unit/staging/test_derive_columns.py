@@ -30,16 +30,29 @@ class TestDeriveColumnsMacro(TestCase):
         var_dict = {
             'source_model': 'raw_source',
             'columns': {'SOURCE': "!STG_BOOKING",
-                        'LOADDATE': 'EFFECTIVE_FROM'}
+                        'EFFECTIVE_FROM': 'LOADDATE'}
         }
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE,\nEFFECTIVE_FROM AS LOADDATE,\nTEST_COLUMN_2,\n""" \
-                       """TEST_COLUMN_3,\nTEST_COLUMN_4,\nTEST_COLUMN_5,\nTEST_COLUMN_6,\nTEST_COLUMN_7,\n""" \
-                       """TEST_COLUMN_8,\nTEST_COLUMN_9"""
+        expected_sql = """'STG_BOOKING' AS SOURCE,\n""" \
+                       """LOADDATE AS EFFECTIVE_FROM,\n""" \
+                       """LOADDATE,\n""" \
+                       """CUSTOMER_ID,\n""" \
+                       """CUSTOMER_DOB,\n""" \
+                       """CUSTOMER_NAME,\n""" \
+                       """NATIONALITY,\n""" \
+                       """PHONE,\n""" \
+                       """TEST_COLUMN_2,\n""" \
+                       """TEST_COLUMN_3,\n""" \
+                       """TEST_COLUMN_4,\n""" \
+                       """TEST_COLUMN_5,\n""" \
+                       """TEST_COLUMN_6,\n""" \
+                       """TEST_COLUMN_7,\n""" \
+                       """TEST_COLUMN_8,\n""" \
+                       """TEST_COLUMN_9"""
 
         self.assertIn('Done', process_logs)
 
@@ -76,9 +89,20 @@ class TestDeriveColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """LOADDATE,\nTEST_COLUMN_2,\nTEST_COLUMN_3,\nTEST_COLUMN_4,\nTEST_COLUMN_5,\n""" \
-                       """TEST_COLUMN_6,\nTEST_COLUMN_7,\n""" \
-                       """TEST_COLUMN_8,\nTEST_COLUMN_9"""
+        expected_sql = """LOADDATE,\n""" \
+                       """CUSTOMER_ID,\n""" \
+                       """CUSTOMER_DOB,\n""" \
+                       """CUSTOMER_NAME,\n""" \
+                       """NATIONALITY,\n""" \
+                       """PHONE,\n""" \
+                       """TEST_COLUMN_2,\n""" \
+                       """TEST_COLUMN_3,\n""" \
+                       """TEST_COLUMN_4,\n""" \
+                       """TEST_COLUMN_5,\n""" \
+                       """TEST_COLUMN_6,\n""" \
+                       """TEST_COLUMN_7,\n""" \
+                       """TEST_COLUMN_8,\n""" \
+                       """TEST_COLUMN_9"""
 
         self.assertIn('Done', process_logs)
 

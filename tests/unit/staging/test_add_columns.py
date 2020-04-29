@@ -34,9 +34,22 @@ class TestAddColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_CUSTOMER' AS SOURCE,\n    LOADDATE AS EFFECTIVE_FROM,\n    LOADDATE,\n    TEST_COLUMN_2,""" \
-                       """\n    TEST_COLUMN_3,\n    TEST_COLUMN_4,\n    TEST_COLUMN_5,\n    TEST_COLUMN_6,\n    TEST_COLUMN_7,""" \
-                       """\n    TEST_COLUMN_8,\n    TEST_COLUMN_9"""
+        expected_sql = """'STG_CUSTOMER' AS SOURCE,\n""" \
+                       """LOADDATE AS EFFECTIVE_FROM,\n""" \
+                       """LOADDATE,\n""" \
+                       """CUSTOMER_ID,\n""" \
+                       """CUSTOMER_DOB,\n""" \
+                       """CUSTOMER_NAME,\n""" \
+                       """NATIONALITY,\n""" \
+                       """PHONE,\n""" \
+                       """TEST_COLUMN_2,\n""" \
+                       """TEST_COLUMN_3,\n""" \
+                       """TEST_COLUMN_4,\n""" \
+                       """TEST_COLUMN_5,\n""" \
+                       """TEST_COLUMN_6,\n""" \
+                       """TEST_COLUMN_7,\n""" \
+                       """TEST_COLUMN_8,\n""" \
+                       """TEST_COLUMN_9"""
 
         self.assertIn('Done', process_logs)
         self.assertIn('Warning: This macro (add_columns) is deprecated and '

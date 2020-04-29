@@ -46,7 +46,7 @@
 
 {#- Print out all columns in includes -#}
 {%- for col in include_columns %}
-    {{ col }}{%if not loop.last %},
+{{ col }}{%if not loop.last %},
 {%- endif -%}
 
 {%- endfor -%}
