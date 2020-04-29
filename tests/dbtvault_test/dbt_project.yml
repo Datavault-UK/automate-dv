@@ -87,7 +87,7 @@ models:
                 include_source: true
                 columns:
                   SOURCE: '!STG_BOOKING'
-                  EFFECTIVE_FROM: 'BOOKING_DATE'
+                  EFFECTIVE_FROM: 'LOADDATE'
           test_stage_source_only:
             vars:
               source_model: 'raw_source'

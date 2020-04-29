@@ -86,7 +86,7 @@ class TestStageMacro(TestCase):
                        """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
                        """AS BINARY(16)) AS CUSTOMER_HASHDIFF,\n\n""" \
                        """'STG_BOOKING' AS SOURCE,\n""" \
-                       """BOOKING_DATE AS EFFECTIVE_FROM,\n""" \
+                       """LOADDATE AS EFFECTIVE_FROM,\n""" \
                        """LOADDATE,\n""" \
                        """CUSTOMER_ID,\n""" \
                        """CUSTOMER_DOB,\n""" \
