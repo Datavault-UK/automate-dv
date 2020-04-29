@@ -16,12 +16,18 @@
 
 SELECT
 
-{%- if source_model is mapping %}
-    {{ log('source: ' ~ source_relation, true) }}
-    {%- set source_relation = source('test_unit', 'raw_source') -%}
-{%- else -%}
+{% if source_model is mapping -%}
+    {%- set source_name = source_model | first -%}
+    {%- set source_table_name = source_model[source_name] -%}
 
+    {%- set source_relation = source(source_name, source_table_name) -%}
+
+{%- elif source_model is not mapping -%}
     {%- set source_relation = ref(source_model) -%}
+{%- else -%}
+    {%- if execute -%}
+        {{ exceptions.raise_compiler_error("") }}
+    {%- endif -%}
 {%- endif -%}
 
 {% if (hashed_columns is defined and hashed_columns) -%}
@@ -46,5 +52,5 @@ SELECT
     {{ dbtvault.derive_columns(source_model=source_relation) }}
 {%- endif %}
 
-FROM {{ ref(source_relation) }}
+FROM {{ source_relation }}
 {%- endmacro -%}
