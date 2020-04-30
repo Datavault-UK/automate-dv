@@ -11,7 +11,7 @@ class TestAddColumnsMacro(TestCase):
 
         macro_type = 'staging'
 
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/derive_columns')
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/add_columns')
 
         os.chdir(TESTS_DBT_ROOT)
 
@@ -21,10 +21,10 @@ class TestAddColumnsMacro(TestCase):
 
         self.dbt_test.clean_target()
 
-    # ADD_COLUMNS
-
     def test_add_columns_correctly_generates_SQL_with_source_columns(self):
         model = 'test_add_columns'
+
+        expected_file_name = 'test_add_columns_correctly_generates_SQL_with_source_columns'
 
         var_dict = {
             'source_table': 'raw_source'
@@ -34,22 +34,7 @@ class TestAddColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_CUSTOMER' AS SOURCE,\n""" \
-                       """LOADDATE AS EFFECTIVE_FROM,\n""" \
-                       """LOADDATE,\n""" \
-                       """CUSTOMER_ID,\n""" \
-                       """CUSTOMER_DOB,\n""" \
-                       """CUSTOMER_NAME,\n""" \
-                       """NATIONALITY,\n""" \
-                       """PHONE,\n""" \
-                       """TEST_COLUMN_2,\n""" \
-                       """TEST_COLUMN_3,\n""" \
-                       """TEST_COLUMN_4,\n""" \
-                       """TEST_COLUMN_5,\n""" \
-                       """TEST_COLUMN_6,\n""" \
-                       """TEST_COLUMN_7,\n""" \
-                       """TEST_COLUMN_8,\n""" \
-                       """TEST_COLUMN_9"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
         self.assertIn('Warning: This macro (add_columns) is deprecated and '

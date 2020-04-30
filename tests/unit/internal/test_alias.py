@@ -107,6 +107,8 @@ class TestAliasMacro(TestCase):
 
         model = 'test_alias_all'
 
+        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_partial_alias_list_with_prefix'
+
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
                    "ORDER_HASHDIFF",
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
@@ -115,9 +117,7 @@ class TestAliasMacro(TestCase):
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
-        expected_sql = 'c.CUSTOMER_HASHDIFF AS HASHDIFF, ' \
-                       'c.ORDER_HASHDIFF, ' \
-                       'c.BOOKING_HASHDIFF AS HASHDIFF'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -128,7 +128,7 @@ class TestAliasMacro(TestCase):
 
         model = 'test_alias_all_without_prefix'
 
-        expected_file_name = 'test_alias_all_03'
+        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_full_alias_list_without_prefix'
 
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
                    {"source_column": "ORDER_HASHDIFF", "alias": "HASHDIFF"},
@@ -140,10 +140,6 @@ class TestAliasMacro(TestCase):
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
-        expected_sql = 'CUSTOMER_HASHDIFF AS HASHDIFF, ' \
-                       'ORDER_HASHDIFF AS HASHDIFF, ' \
-                       'BOOKING_HASHDIFF AS HASHDIFF'
-
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
         self.assertIn('Done.', process_logs)
@@ -153,6 +149,8 @@ class TestAliasMacro(TestCase):
 
         model = 'test_alias_all_without_prefix'
 
+        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_partial_alias_list_without_prefix'
+
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
                    "ORDER_HASHDIFF",
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
@@ -161,9 +159,7 @@ class TestAliasMacro(TestCase):
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
-        expected_sql = 'CUSTOMER_HASHDIFF AS HASHDIFF, ' \
-                       'ORDER_HASHDIFF, ' \
-                       'BOOKING_HASHDIFF AS HASHDIFF'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 

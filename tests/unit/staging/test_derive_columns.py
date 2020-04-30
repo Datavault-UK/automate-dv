@@ -21,11 +21,11 @@ class TestDeriveColumnsMacro(TestCase):
 
         self.dbt_test.clean_target()
 
-    # DERIVE_COLUMNS
-
     def test_derive_columns_correctly_generates_SQL_with_source_columns(self):
 
         model = 'test_derive_columns_with_source_columns'
+
+        expected_file_name = 'test_derive_columns_correctly_generates_SQL_with_source_columns'
 
         var_dict = {
             'source_model': 'raw_source',
@@ -35,24 +35,9 @@ class TestDeriveColumnsMacro(TestCase):
 
         process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
 
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE,\n""" \
-                       """LOADDATE AS EFFECTIVE_FROM,\n""" \
-                       """LOADDATE,\n""" \
-                       """CUSTOMER_ID,\n""" \
-                       """CUSTOMER_DOB,\n""" \
-                       """CUSTOMER_NAME,\n""" \
-                       """NATIONALITY,\n""" \
-                       """PHONE,\n""" \
-                       """TEST_COLUMN_2,\n""" \
-                       """TEST_COLUMN_3,\n""" \
-                       """TEST_COLUMN_4,\n""" \
-                       """TEST_COLUMN_5,\n""" \
-                       """TEST_COLUMN_6,\n""" \
-                       """TEST_COLUMN_7,\n""" \
-                       """TEST_COLUMN_8,\n""" \
-                       """TEST_COLUMN_9"""
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
         self.assertIn('Done', process_logs)
 
@@ -61,6 +46,8 @@ class TestDeriveColumnsMacro(TestCase):
     def test_derive_columns_correctly_generates_SQL_without_source_columns(self):
 
         model = 'test_derive_columns_without_source_columns'
+
+        expected_file_name = 'test_derive_columns_correctly_generates_SQL_without_source_columns'
 
         var_dict = {
             'columns': {'SOURCE': "!STG_BOOKING",
@@ -71,7 +58,7 @@ class TestDeriveColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """'STG_BOOKING' AS SOURCE,\nEFFECTIVE_FROM AS LOADDATE"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -81,6 +68,8 @@ class TestDeriveColumnsMacro(TestCase):
 
         model = 'test_derive_columns_with_only_source_columns'
 
+        expected_file_name = 'test_derive_columns_correctly_generates_SQL_with_only_source_columns'
+
         var_dict = {
             'source_model': 'raw_source'
         }
@@ -89,20 +78,7 @@ class TestDeriveColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """LOADDATE,\n""" \
-                       """CUSTOMER_ID,\n""" \
-                       """CUSTOMER_DOB,\n""" \
-                       """CUSTOMER_NAME,\n""" \
-                       """NATIONALITY,\n""" \
-                       """PHONE,\n""" \
-                       """TEST_COLUMN_2,\n""" \
-                       """TEST_COLUMN_3,\n""" \
-                       """TEST_COLUMN_4,\n""" \
-                       """TEST_COLUMN_5,\n""" \
-                       """TEST_COLUMN_6,\n""" \
-                       """TEST_COLUMN_7,\n""" \
-                       """TEST_COLUMN_8,\n""" \
-                       """TEST_COLUMN_9"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 

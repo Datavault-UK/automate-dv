@@ -19,11 +19,11 @@ class TestHashColumnsMacro(TestCase):
 
         self.dbt_test.clean_target()
 
-    # HASH_COLUMNS
-
     def test_hash_columns_correctly_generates_hashed_columns_for_single_columns(self):
 
         model = 'test_hash_columns'
+
+        expected_file_name = 'test_hash_columns_correctly_generates_hashed_columns_for_single_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -34,10 +34,7 @@ class TestHashColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS """ \
-                       """BINARY(16)) AS BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR)))), '^^')) AS """ \
-                       """BINARY(16)) AS CUSTOMER_PK"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -46,6 +43,8 @@ class TestHashColumnsMacro(TestCase):
     def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns(self):
 
         model = 'test_hash_columns'
+
+        expected_file_name = 'test_hash_columns_correctly_generates_hashed_columns_for_composite_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -56,13 +55,7 @@ class TestHashColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS """ \
-                       """BINARY(16)) AS BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS CUSTOMER_DETAILS"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -71,6 +64,8 @@ class TestHashColumnsMacro(TestCase):
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns(self):
 
         model = 'test_hash_columns'
+
+        expected_file_name = 'test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -83,13 +78,7 @@ class TestHashColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS """ \
-                       """BINARY(16)) AS BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS CUSTOMER_DETAILS"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -98,6 +87,8 @@ class TestHashColumnsMacro(TestCase):
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns(self):
 
         model = 'test_hash_columns'
+
+        expected_file_name = 'test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns'
 
         var_dict = {
             'columns': {'BOOKING_PK': 'BOOKING_REF',
@@ -112,17 +103,7 @@ class TestHashColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS """ \
-                       """BINARY(16)) AS BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS CUSTOMER_DETAILS,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ORDER_DATE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ORDER_AMOUNT AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS ORDER_DETAILS"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -131,6 +112,8 @@ class TestHashColumnsMacro(TestCase):
     def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
 
         model = 'test_hash_columns'
+
+        expected_file_name = 'test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping'
 
         var_dict = {
             'columns': {
@@ -144,13 +127,7 @@ class TestHashColumnsMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS """ \
-                       """BINARY(16)) AS BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(ADDRESS AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NAME AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS CUSTOMER_DETAILS"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -160,26 +137,11 @@ class TestHashColumnsMacro(TestCase):
 
         model = 'test_hash_columns'
 
+        expected_file_name = 'test_hash_columns_correctly_generates_sql_from_yaml'
+
         process_logs = self.dbt_test.run_model(model=model)
 
-        expected_sql = """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR)))), '^^')) AS BINARY(16)) AS BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(IFNULL((UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR)))), '^^')) AS BINARY(16)) AS CUSTOMER_PK,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS CUSTOMER_BOOKING_PK,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(NATIONALITY AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PHONE AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS BOOK_CUSTOMER_HASHDIFF,\n""" \
-                       """CAST(MD5_BINARY(CONCAT(\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(BOOKING_DATE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(BOOKING_REF AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(DEPARTURE_DATE AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(DESTINATION AS VARCHAR))), '^^'), '||',\n""" \
-                       """    IFNULL(UPPER(TRIM(CAST(PRICE AS VARCHAR))), '^^') ))\n""" \
-                       """AS BINARY(16)) AS BOOK_BOOKING_HASHDIFF"""
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
