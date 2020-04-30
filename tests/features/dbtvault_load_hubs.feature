@@ -191,12 +191,12 @@ Feature: Load Hubs
     And I load the TEST_MULTIPERIOD_HUB_PARTS table
     Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-01 | *      |
-      | md5('1002') | 1002    | 1993-01-01 | *      |
-      | md5('1003') | 1003    | 1993-01-01 | *      |
-      | md5('1004') | 1004    | 1993-01-01 | *      |
-      | md5('1005') | 1005    | 1993-01-01 | *      |
-      | md5('1006') | 1006    | 1993-01-01 | *      |
+      | md5('1001') | 1001    | 1993-01-01 | LINE   |
+      | md5('1002') | 1002    | 1993-01-01 | LINE   |
+      | md5('1003') | 1003    | 1993-01-01 | LINE   |
+      | md5('1004') | 1004    | 1993-01-01 | LINE   |
+      | md5('1005') | 1005    | 1993-01-01 | LINE   |
+      | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
 # -----------------------------------------------------------------------------
 # Test union of different staging tables to insert records into an empty hub.
@@ -233,12 +233,12 @@ Feature: Load Hubs
     And I load the TEST_MULTIPERIOD_HUB_PARTS table
     Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-01 | *      |
-      | md5('1002') | 1002    | 1993-01-01 | *      |
-      | md5('1003') | 1003    | 1993-01-01 | *      |
-      | md5('1004') | 1004    | 1993-01-01 | *      |
-      | md5('1005') | 1005    | 1993-01-01 | *      |
-      | md5('1006') | 1006    | 1993-01-01 | *      |
+      | md5('1001') | 1001    | 1993-01-01 | LINE   |
+      | md5('1002') | 1002    | 1993-01-01 | LINE   |
+      | md5('1003') | 1003    | 1993-01-01 | LINE   |
+      | md5('1004') | 1004    | 1993-01-01 | LINE   |
+      | md5('1005') | 1005    | 1993-01-01 | LINE   |
+      | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
     Scenario: [UNION] Union three staging tables to feed an empty hub over two cycles.
     Given there is an empty TEST_MULTIPERIOD_HUB_PARTS table
@@ -293,15 +293,15 @@ Feature: Load Hubs
     When I load the TEST_MULTIPERIOD_HUB_PARTS table
     Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-02 | *      |
-      | md5('1002') | 1002    | 1993-01-02 | *      |
-      | md5('1003') | 1003    | 1993-01-02 | *      |
-      | md5('1004') | 1004    | 1993-01-02 | *      |
-      | md5('1005') | 1005    | 1993-01-02 | *      |
-      | md5('1006') | 1006    | 1993-01-02 | *      |
-      | md5('1007') | 1007    | 1993-01-03 | *      |
-      | md5('1008') | 1008    | 1993-01-03 | *      |
-      | md5('1009') | 1009    | 1993-01-03 | *      |
+      | md5('1001') | 1001    | 1993-01-02 | LINE   |
+      | md5('1002') | 1002    | 1993-01-02 | LINE   |
+      | md5('1003') | 1003    | 1993-01-02 | LINE   |
+      | md5('1004') | 1004    | 1993-01-02 | LINE   |
+      | md5('1005') | 1005    | 1993-01-02 | LINE   |
+      | md5('1006') | 1006    | 1993-01-02 | SUPP   |
+      | md5('1007') | 1007    | 1993-01-03 | LINE   |
+      | md5('1008') | 1008    | 1993-01-03 | LINE   |
+      | md5('1009') | 1009    | 1993-01-03 | LINE   |
 
 # -----------------------------------------------------------------------------
 # Test union of different staging tables to insert records into a hub with
@@ -310,8 +310,8 @@ Feature: Load Hubs
   Scenario: [UNION] Union three staging tables to feed a populated hub.
     Given there are records in the TEST_MULTIPERIOD_HUB_PARTS table
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-01 | *      |
-      | md5('1002') | 1002    | 1993-01-01 | *      |
+      | md5('1001') | 1001    | 1993-01-01 | LINE   |
+      | md5('1002') | 1002    | 1993-01-01 | LINE   |
     And there are records in the TEST_STG_PARTS table
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
@@ -341,9 +341,9 @@ Feature: Load Hubs
     When I load the TEST_MULTIPERIOD_HUB_PARTS table
     Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-01 | *      |
-      | md5('1002') | 1002    | 1993-01-01 | *      |
-      | md5('1003') | 1003    | 1993-01-02 | *      |
-      | md5('1004') | 1004    | 1993-01-02 | *      |
-      | md5('1005') | 1005    | 1993-01-02 | *      |
-      | md5('1006') | 1006    | 1993-01-02 | *      |
+      | md5('1001') | 1001    | 1993-01-01 | LINE   |
+      | md5('1002') | 1002    | 1993-01-01 | LINE   |
+      | md5('1003') | 1003    | 1993-01-02 | LINE   |
+      | md5('1004') | 1004    | 1993-01-02 | LINE   |
+      | md5('1005') | 1005    | 1993-01-02 | LINE   |
+      | md5('1006') | 1006    | 1993-01-02 | SUPP   |
