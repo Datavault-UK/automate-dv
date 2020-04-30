@@ -4,11 +4,11 @@ require-dbt-version: [">=0.14.0", "<0.17.0"]
 
 profile: 'dbtvault'
 
-source-paths: ["models"]
+source-paths: ["models", "models_test"]
 analysis-paths: ["analysis"] 
 test-paths: ["tests"]
 data-paths: ["data"]
-macro-paths: ["macros"]
+macro-paths: ["macros", "macros_deprecated"]
 
 target-path: "target"
 clean-targets:
