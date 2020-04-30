@@ -5,9 +5,10 @@ from subprocess import STDOUT, PIPE, Popen
 
 DBT_ROOT = PurePath(__file__).parent
 PROJECT_ROOT = PurePath(__file__).parents[2]
-TESTS_ROOT = Path("{}/tests".format(PROJECT_ROOT))
-TESTS_DBT_ROOT = Path("{}/tests/dbtvault_test".format(PROJECT_ROOT))
-COMPILED_TESTS_DBT_ROOT = Path("{}/tests/dbtvault_test/target/compiled/dbtvault_test/unit".format(PROJECT_ROOT))
+TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
+TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
+COMPILED_TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test/target/compiled/dbtvault_test/unit")
+EXPECTED_OUTPUT_FILE_ROOT = Path(f"{PROJECT_ROOT}/tests/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
 
 
@@ -16,6 +17,8 @@ class DBTTestUtils:
     def __init__(self, model_directory):
 
         self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
+
+        self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
 
         logging.basicConfig(level=logging.INFO)
 
@@ -87,6 +90,19 @@ class DBTTestUtils:
             file = f.readlines()
 
             return "".join([line for line in file if '--' not in line]).strip()
+
+    def retrieve_expected_sql(self, file_name: str):
+        """
+        Retrieve the expected SQL for a specific dbt model
+
+            :param file_name: File name to check
+            :return: Contents of compiled SQL file
+        """
+
+        with open(self.expected_sql_file_path / f'{file_name}.sql') as f:
+            file = f.readlines()
+
+            return "".join(file)
 
     @staticmethod
     def clean_target():
