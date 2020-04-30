@@ -74,7 +74,7 @@ def step_impl(context):
 
 @step("the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain")
 def step_impl(context):
-    table_df = context.dbutils.context_table_to_df(context.table, binary_columns=['CUSTOMER_PK'])
+    table_df = context.dbutils.context_table_to_df(context.table, binary_columns=['CUSTOMER_PK'], order_by='CUSTOMER_ID')
 
     result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_multiperiod_hub_customer_{}".format(MODE.lower()),
                                                binary_columns=['CUSTOMER_PK'], order_by='CUSTOMER_ID',
