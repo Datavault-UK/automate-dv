@@ -241,10 +241,7 @@ Feature: Load Hubs
       | md5('1006') | 1006    | 1993-01-01 | *      |
 
     Scenario: [UNION] Union three staging tables to feed an empty hub over two cycles.
-    Given there are records in the TEST_MULTIPERIOD_HUB_PARTS table
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-01 | *      |
-      | md5('1002') | 1002    | 1993-01-01 | *      |
+    Given there is an empty TEST_MULTIPERIOD_HUB_PARTS table
     And there are records in the TEST_STG_PARTS table
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
@@ -296,8 +293,8 @@ Feature: Load Hubs
     When I load the TEST_MULTIPERIOD_HUB_PARTS table
     Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-      | md5('1001') | 1001    | 1993-01-01 | *      |
-      | md5('1002') | 1002    | 1993-01-01 | *      |
+      | md5('1001') | 1001    | 1993-01-02 | *      |
+      | md5('1002') | 1002    | 1993-01-02 | *      |
       | md5('1003') | 1003    | 1993-01-02 | *      |
       | md5('1004') | 1004    | 1993-01-02 | *      |
       | md5('1005') | 1005    | 1993-01-02 | *      |
