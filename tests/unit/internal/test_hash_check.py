@@ -21,9 +21,9 @@ class TestHashCheckMacro(TestCase):
 
         self.dbt_test.clean_target()
 
-    # HASH_CHECK
-
     def test_hash_check_with_md5_setting(self):
+
+        expected_file_name = 'test_hash_check_with_md5_setting'
 
         var_dict = {
             'hash': 'MD5',
@@ -33,13 +33,15 @@ class TestHashCheckMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
 
-        expected_sql = "MD5_BINARY(^^)"
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_check_with_sha_setting(self):
+
+        expected_file_name = 'test_hash_check_with_sha_setting'
 
         var_dict = {
             'hash': 'SHA',
@@ -49,13 +51,15 @@ class TestHashCheckMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
 
-        expected_sql = "SHA2_BINARY(^^)"
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_check_with_default_setting(self):
+
+        expected_file_name = 'test_hash_check_with_default_setting'
 
         var_dict = {
             'col': '^^'}
@@ -64,7 +68,7 @@ class TestHashCheckMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
 
-        expected_sql = "MD5_BINARY(^^)"
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 

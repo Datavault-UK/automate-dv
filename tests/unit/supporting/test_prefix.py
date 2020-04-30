@@ -23,6 +23,8 @@ class TestPrefixMacro(TestCase):
 
         model = 'test_prefix'
 
+        expected_file_name = 'test_prefix_column_in_single_item_list_is_successful'
+
         var_dict = {
             'columns': ["CUSTOMER_HASHDIFF"],
             'prefix': 'c'}
@@ -31,7 +33,7 @@ class TestPrefixMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = 'c.CUSTOMER_HASHDIFF'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -41,6 +43,8 @@ class TestPrefixMacro(TestCase):
 
         model = 'test_prefix'
 
+        expected_file_name = 'test_prefix_multiple_columns_is_successful'
+
         var_dict = {
             'columns': ["CUSTOMER_HASHDIFF", 'CUSTOMER_PK', 'LOADDATE', 'SOURCE'],
             'prefix': 'c'}
@@ -49,7 +53,7 @@ class TestPrefixMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = 'c.CUSTOMER_HASHDIFF, c.CUSTOMER_PK, c.LOADDATE, c.SOURCE'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -58,6 +62,8 @@ class TestPrefixMacro(TestCase):
     def test_prefix_aliased_column_is_successful(self):
 
         model = 'test_prefix'
+
+        expected_file_name = 'test_prefix_aliased_column_is_successful'
 
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
                    "CUSTOMER_PK",
@@ -69,7 +75,7 @@ class TestPrefixMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = 'c.CUSTOMER_HASHDIFF, c.CUSTOMER_PK, c.LOADDATE'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -78,6 +84,8 @@ class TestPrefixMacro(TestCase):
     def test_prefix_aliased_column_with_alias_target_as_source_is_successful(self):
 
         model = 'test_prefix_alias_target'
+
+        expected_file_name = 'test_prefix_aliased_column_with_alias_target_as_source_is_successful'
 
         columns = [{"source_column": "CUSTOMER_HASHDIFF",
                     "alias": "HASHDIFF"},
@@ -90,7 +98,7 @@ class TestPrefixMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = 'c.CUSTOMER_HASHDIFF, c.CUSTOMER_PK, c.LOADDATE'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 
@@ -99,6 +107,8 @@ class TestPrefixMacro(TestCase):
     def test_prefix_aliased_column_with_alias_target_as_target_is_successful(self):
 
         model = 'test_prefix_alias_target'
+
+        expected_file_name = 'test_prefix_aliased_column_with_alias_target_as_target_is_successful'
 
         columns = [{"source_column": "CUSTOMER_HASHDIFF",
                     "alias": "HASHDIFF"},
@@ -111,7 +121,7 @@ class TestPrefixMacro(TestCase):
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
-        expected_sql = 'c.HASHDIFF, c.CUSTOMER_PK, c.LOADDATE'
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
         self.assertIn('Done', process_logs)
 

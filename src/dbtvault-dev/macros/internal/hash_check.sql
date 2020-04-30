@@ -16,11 +16,11 @@
 {%- set hash = var('hash', 'MD5') -%}
 
 {%- if hash == 'MD5' -%}
-MD5_BINARY({{ col }})
+MD5_BINARY('{{ col }}')
 {%- elif hash == 'SHA' -%}
-SHA2_BINARY({{ col }})
+SHA2_BINARY('{{ col }}')
 {%- else -%}
-MD5_BINARY({{ col }})
+MD5_BINARY('{{ col }}')
 {% endif %}
 
 {% endmacro %}
