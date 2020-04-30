@@ -55,28 +55,28 @@ def step_impl(context):
     context.dbutils.insert_data_from_ct(context.table, "test_stg_customer_hubs_{}".format(MODE.lower()), STG_SCHEMA, context.connection)
 
 
-@given("there are records in the TEST_HUB_CUSTOMER table")
+@given("there are records in the TEST_MULTIPERIOD_HUB_CUSTOMER table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_customer_hubs_{}".format(MODE.lower()),
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_multiperiod_hub_customer_{}".format(MODE.lower()),
                                     ["CUSTOMER_PK BINARY", "CUSTOMER_ID VARCHAR(38)", "LOADDATE DATE",
                                      "SOURCE VARCHAR(4)", ], connection=context.connection)
-    context.dbutils.insert_data_from_ct(context.table, "test_hub_customer_hubs_{}".format(MODE.lower()), VLT_SCHEMA, context.connection)
+    context.dbutils.insert_data_from_ct(context.table, "test_multiperiod_hub_customer_{}".format(MODE.lower()), VLT_SCHEMA, context.connection)
 
 
-@step("there is an empty TEST_HUB_CUSTOMER table")
+@step("there is an empty TEST_MULTIPERIOD_HUB_CUSTOMER table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_customer_hubs_{}".format(MODE.lower()),
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_multiperiod_hub_customer_{}".format(MODE.lower()),
                                     ["CUSTOMER_PK BINARY", "CUSTOMER_ID VARCHAR(38)", "LOADDATE DATE",
                                      "SOURCE VARCHAR(4)"], context.connection)
 
 
-@step("the TEST_HUB_CUSTOMER table should contain")
+@step("the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, binary_columns=['CUSTOMER_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_hub_customer_hubs_{}".format(MODE.lower()),
+    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_multiperiod_hub_customer_{}".format(MODE.lower()),
                                                binary_columns=['CUSTOMER_PK'], order_by='CUSTOMER_ID',
                                                connection=context.connection)
 
@@ -117,28 +117,28 @@ def step_impl(context):
     context.dbutils.insert_data_from_ct(context.table, "test_stg_lineitem_{}".format(MODE.lower()), STG_SCHEMA, context.connection)
 
 
-@step("there is an empty TEST_HUB_PARTS table")
+@step("there is an empty TEST_MULTIPERIOD_HUB_PARTS table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_parts_{}".format(MODE.lower()),
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_multiperiod_hub_parts_{}".format(MODE.lower()),
                                     ["PART_PK BINARY", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)", "LOADDATE DATE"],
                                     connection=context.connection)
 
 
-@given("there are records in the TEST_HUB_PARTS table")
+@given("there are records in the TEST_MULTIPERIOD_HUB_PARTS table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_hub_parts_{}".format(MODE.lower()),
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_multiperiod_hub_parts_{}".format(MODE.lower()),
                                     ["PART_PK BINARY", "PART_ID VARCHAR(38)", "SOURCE VARCHAR(4)", "LOADDATE DATE"],
                                     connection=context.connection)
-    context.dbutils.insert_data_from_ct(context.table, "test_hub_parts_{}".format(MODE.lower()), VLT_SCHEMA, context.connection)
+    context.dbutils.insert_data_from_ct(context.table, "test_multiperiod_hub_parts_{}".format(MODE.lower()), VLT_SCHEMA, context.connection)
 
 
-@step("the TEST_HUB_PARTS table should contain")
+@step("the TEST_MULTIPERIOD_HUB_PARTS table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'], binary_columns=['PART_PK'])
 
-    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_hub_parts_{}".format(MODE.lower()),
+    result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_multiperiod_hub_parts_{}".format(MODE.lower()),
                                                binary_columns=['PART_PK'], order_by='PART_ID',
                                                ignore_columns=['SOURCE'],
                                                connection=context.connection)
