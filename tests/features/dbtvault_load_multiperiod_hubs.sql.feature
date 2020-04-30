@@ -254,15 +254,15 @@ Feature: Load Multiperiod Hubs
       And I load the TEST_MULTIPERIOD_HUB_PARTS table
       Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-        | md5('1001') | 1001    | 2019-05-04 | *      |
-        | md5('1002') | 1002    | 2019-05-04 | *      |
-        | md5('1003') | 1003    | 2019-05-04 | *      |
-        | md5('1004') | 1004    | 2019-05-04 | *      |
-        | md5('1005') | 1005    | 2019-05-04 | *      |
-        | md5('1006') | 1006    | 2019-05-05 | *      |
-        | md5('1007') | 1007    | 2019-05-05 | *      |
-        | md5('1008') | 1008    | 2019-05-06 | *      |
-        | md5('1009') | 1009    | 2019-05-06 | *      |
+        | md5('1001') | 1001    | 2019-05-04 | LINE   |
+        | md5('1002') | 1002    | 2019-05-04 | LINE   |
+        | md5('1003') | 1003    | 2019-05-04 | LINE   |
+        | md5('1004') | 1004    | 2019-05-04 | LINE   |
+        | md5('1005') | 1005    | 2019-05-04 | PART   |
+        | md5('1006') | 1006    | 2019-05-05 | PART   |
+        | md5('1007') | 1007    | 2019-05-05 | PART   |
+        | md5('1008') | 1008    | 2019-05-06 | PART   |
+        | md5('1009') | 1009    | 2019-05-06 | SUPP   |
 
 # -----------------------------------------------------------------------------
 # Test union of different staging tables to insert records into an empty hub.
@@ -305,15 +305,15 @@ Feature: Load Multiperiod Hubs
       And I load the TEST_MULTIPERIOD_HUB_PARTS table
       Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-        | md5('1001') | 1001    | 2019-05-04 | *      |
-        | md5('1002') | 1002    | 2019-05-04 | *      |
-        | md5('1003') | 1003    | 2019-05-04 | *      |
-        | md5('1004') | 1004    | 2019-05-04 | *      |
-        | md5('1005') | 1005    | 2019-05-04 | *      |
-        | md5('1006') | 1006    | 2019-05-05 | *      |
-        | md5('1007') | 1007    | 2019-05-05 | *      |
-        | md5('1008') | 1008    | 2019-05-06 | *      |
-        | md5('1009') | 1009    | 2019-05-06 | *      |
+        | md5('1001') | 1001    | 2019-05-04 | LINE   |
+        | md5('1002') | 1002    | 2019-05-04 | LINE   |
+        | md5('1003') | 1003    | 2019-05-04 | LINE   |
+        | md5('1004') | 1004    | 2019-05-04 | LINE   |
+        | md5('1005') | 1005    | 2019-05-04 | PART   |
+        | md5('1006') | 1006    | 2019-05-05 | PART   |
+        | md5('1007') | 1007    | 2019-05-05 | PART   |
+        | md5('1008') | 1008    | 2019-05-06 | PART   |
+        | md5('1009') | 1009    | 2019-05-06 | SUPP   |
 
     Scenario: [UNION] Union three staging tables to feed an empty hub over two cycles.
       Given there is an empty TEST_MULTIPERIOD_HUB_PARTS table
@@ -381,18 +381,18 @@ Feature: Load Multiperiod Hubs
       When I load the TEST_MULTIPERIOD_HUB_PARTS table
       Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-        | md5('1001') | 1001    | 2019-05-04 | *      |
-        | md5('1002') | 1002    | 2019-05-04 | *      |
-        | md5('1003') | 1003    | 2019-05-04 | *      |
-        | md5('1004') | 1004    | 2019-05-04 | *      |
-        | md5('1005') | 1005    | 2019-05-04 | *      |
-        | md5('1006') | 1006    | 2019-05-05 | *      |
-        | md5('1007') | 1007    | 2019-05-05 | *      |
-        | md5('1008') | 1008    | 2019-05-06 | *      |
-        | md5('1009') | 1009    | 2019-05-06 | *      |
-        | md5('1010') | 1010    | 2019-05-07 | *      |
-        | md5('1011') | 1011    | 2019-05-08 | *      |
-        | md5('1012') | 1012    | 2019-05-09 | *      |
+        | md5('1001') | 1001    | 2019-05-04 | LINE   |
+        | md5('1002') | 1002    | 2019-05-04 | LINE   |
+        | md5('1003') | 1003    | 2019-05-04 | LINE   |
+        | md5('1004') | 1004    | 2019-05-04 | LINE   |
+        | md5('1005') | 1005    | 2019-05-04 | PART   |
+        | md5('1006') | 1006    | 2019-05-05 | PART   |
+        | md5('1007') | 1007    | 2019-05-05 | PART   |
+        | md5('1008') | 1008    | 2019-05-06 | PART   |
+        | md5('1009') | 1009    | 2019-05-06 | SUPP   |
+        | md5('1010') | 1010    | 2019-05-07 | LINE   |
+        | md5('1011') | 1011    | 2019-05-08 | LINE   |
+        | md5('1012') | 1012    | 2019-05-09 | LINE   |
 
 # -----------------------------------------------------------------------------
 # Test union of different staging tables to insert records into a hub with
@@ -402,8 +402,8 @@ Feature: Load Multiperiod Hubs
     Scenario: [UNION] Union three staging tables to feed a populated hub.
       Given there are records in the TEST_MULTIPERIOD_HUB_PARTS table
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-        | md5('1001') | 1001    | 2019-05-03 | *      |
-        | md5('1002') | 1002    | 2019-05-03 | *      |
+        | md5('1001') | 1001    | 2019-05-03 | LINE   |
+        | md5('1002') | 1002    | 2019-05-03 | LINE   |
       And there are records in the TEST_STG_PARTS table
         | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
         | 1001    | Pedal     | internal  | M         | 60.00            | 2019-05-04 | PART   |
@@ -439,12 +439,12 @@ Feature: Load Multiperiod Hubs
       When I load the TEST_MULTIPERIOD_HUB_PARTS table
       Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
-        | md5('1001') | 1001    | 2019-05-03 | *      |
-        | md5('1002') | 1002    | 2019-05-03 | *      |
-        | md5('1003') | 1003    | 2019-05-04 | *      |
-        | md5('1004') | 1004    | 2019-05-04 | *      |
-        | md5('1005') | 1005    | 2019-05-04 | *      |
-        | md5('1006') | 1006    | 2019-05-05 | *      |
-        | md5('1007') | 1007    | 2019-05-05 | *      |
-        | md5('1008') | 1008    | 2019-05-06 | *      |
-        | md5('1009') | 1009    | 2019-05-06 | *      |
+        | md5('1001') | 1001    | 2019-05-03 | LINE   |
+        | md5('1002') | 1002    | 2019-05-03 | LINE   |
+        | md5('1003') | 1003    | 2019-05-04 | LINE   |
+        | md5('1004') | 1004    | 2019-05-04 | LINE   |
+        | md5('1005') | 1005    | 2019-05-04 | PART   |
+        | md5('1006') | 1006    | 2019-05-05 | PART   |
+        | md5('1007') | 1007    | 2019-05-05 | PART   |
+        | md5('1008') | 1008    | 2019-05-06 | PART   |
+        | md5('1009') | 1009    | 2019-05-06 | SUPP   |

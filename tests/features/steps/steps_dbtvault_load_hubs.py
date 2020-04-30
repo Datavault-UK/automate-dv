@@ -136,11 +136,9 @@ def step_impl(context):
 
 @step("the TEST_MULTIPERIOD_HUB_PARTS table should contain")
 def step_impl(context):
-    table_df = context.dbutils.context_table_to_df(context.table, ignore_columns=['SOURCE'], binary_columns=['PART_PK'])
+    table_df = context.dbutils.context_table_to_df(context.table, binary_columns=['PART_PK'])
 
     result_df = context.dbutils.get_table_data(full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_multiperiod_hub_parts_{}".format(MODE.lower()),
-                                               binary_columns=['PART_PK'], order_by='PART_ID',
-                                               ignore_columns=['SOURCE'],
-                                               connection=context.connection)
+                                               binary_columns=['PART_PK'], order_by='PART_ID', connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
