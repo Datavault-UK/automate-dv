@@ -17,13 +17,19 @@
 
     {%- for col in columns -%}
 
-        {% if columns[col] is mapping -%}
+        {% if columns[col] is mapping and columns[col].sort -%}
 
             {{- dbtvault.hash(columns[col]['columns'], col, columns[col]['sort']) -}}
 
         {%- elif columns[col] is not mapping -%}
 
-            {{- dbtvault.hash(columns[col], col, false) -}}
+            {{- dbtvault.hash(columns[col], col, sort=false) -}}
+        
+        {%- elif columns[col] is mapping and not columns[col].sort -%}
+
+            {%- do exceptions.warn("You provided a list of columns under a 'column' key, but did not provide the 'sort' flag. HASHDIFF columns should be sorted.") -%}
+
+            {{- dbtvault.hash(columns[col]['columns'], col) -}}
 
         {%- endif -%}
 
