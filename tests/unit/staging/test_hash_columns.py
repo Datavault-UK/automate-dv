@@ -148,3 +148,22 @@ class TestHashColumnsMacro(TestCase):
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
+
+    def test_hash_columns_raises_warning_if_mapping_without_sort(self):
+
+        model = 'test_hash_columns_missing_sort'
+
+        expected_file_name = 'test_hash_columns_raises_warning_if_mapping_without_sort'
+
+        process_logs = self.dbt_test.run_model(model=model)
+
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        warning_message = "You provided a list of columns under a 'column' key, " \
+                          "but did not provide the 'sort' flag. HASHDIFF columns should be sorted."
+
+        self.assertIn(warning_message, process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
