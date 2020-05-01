@@ -167,3 +167,8 @@ class TestHashColumnsMacro(TestCase):
         self.assertIn(warning_message, process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
+
+    def test_hash_columns_with_hashdiffs_and_exclude_flag(self):
+
+        self.fail()
+
