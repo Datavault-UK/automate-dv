@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro hash_columns(columns) -%}
+{%- macro hash_columns(source_relation=none, columns=none) -%}
 
 {%- if columns is mapping -%}
 

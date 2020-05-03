@@ -8,7 +8,7 @@ from vaultBase.logger import Logger
 from vaultBase.testing.configGenerator import ConfigGenerator
 from vaultBase.testing.dbTestUtils import DBTestUtils
 
-from definitions import FEATURES_ROOT
+from dbt_test_utils import FEATURES_ROOT
 from steps.step_vars import DATABASE
 
 

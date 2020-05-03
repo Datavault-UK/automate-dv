@@ -1,1 +1,1 @@
-{{ dbtvault.hash_columns(var('columns')) }}
+{{ dbtvault.hash_columns(columns=var('columns')) }}

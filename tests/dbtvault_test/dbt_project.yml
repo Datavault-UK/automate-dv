@@ -83,7 +83,7 @@ models:
                     - BOOKING_DATE
                     - DEPARTURE_DATE
                     - PRICE
-                    - DESTINATION         
+                    - DESTINATION
         stage:
           test_stage:
             vars:
@@ -103,7 +103,7 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                include_source: true
+                include_source_columns: true
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'BOOKING_DATE'
@@ -126,7 +126,7 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                include_source: true
+                include_source_columns: true
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'LOADDATE'

@@ -11,16 +11,16 @@
     limitations under the License.
 -#}
 
-{%- macro derive_columns(source_model, columns) -%}
+{%- macro derive_columns(source_relation=none, columns=none) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
 
-{%- if source_model is defined and source_model is not none -%}
-    {%- set source_model_cols = adapter.get_columns_in_relation(source_model) -%}
+{%- if source_relation is defined and source_relation is not none -%}
+    {%- set source_model_cols = adapter.get_columns_in_relation(source_relation) -%}
 {%- endif %}
 
-{%- if columns is mapping -%}
+{%- if columns is mapping and columns is not none -%}
 
     {#- Add aliases of provided columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
@@ -36,7 +36,7 @@
     {%- endfor -%}
 
     {#- Add all columns from source_model relation -#}
-    {%- if source_model is defined and source_model is not none -%}
+    {%- if source_relation is defined and source_relation is not none -%}
 
         {%- for source_col in source_model_cols -%}
             {%- if source_col.column not in exclude_columns -%}
@@ -53,7 +53,7 @@
 {% endif -%}
     {%- endfor -%}
 
-{%- elif columns is undefined and source_model is defined -%}
+{%- elif columns is none and source_relation is not none -%}
 
     {#- Add all columns from source_model relation -#}
     {%- for source_col in source_model_cols -%}
@@ -73,8 +73,8 @@
 
 {%- if execute -%}
 {{ exceptions.raise_compiler_error("Invalid column configuration:
-expected format: {source_model: 'model_name', columns: 'column_mapping'}
-got: {'source_model': " ~ source_model ~ ", 'columns': " ~ columns ~ "}") }}
+expected format: {source_relation: Relation, columns: 'column_mapping'}
+got: {'source_relation': " ~ source_relation ~ ", 'columns': " ~ columns ~ "}") }}
 {%- endif %}
 
 {%- endif %}
