@@ -32,21 +32,21 @@ WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
 AND stg.FIRST_SOURCE IS NULL
 {%- endif -%}
 {%- for fk in src_fk %}
-AND {{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check("'^^'") }}
+AND {{ dbtvault.prefix([fk], 'stg') }} <> {{ dbtvault.hash_check("^^") }}
 {% endfor %}
 {%- elif not is_incremental() -%}
 {% if is_union %}
 WHERE stg.FIRST_SOURCE IS NULL
 {%- for fk in src_fk %}
-AND {{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check("'^^'") }}
+AND {{ dbtvault.prefix([fk], 'stg') }} <> {{ dbtvault.hash_check("^^") }}
 {% endfor %}
 {% else %}
 WHERE
 {%- for fk in src_fk %}
 {% if loop.index == src_fk|length %}
-{{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check("'^^'") }}
+{{ dbtvault.prefix([fk], 'stg') }} <> {{ dbtvault.hash_check("^^") }}
 {% else %}
-{{ dbtvault.prefix([fk], 'stg') }}<>{{ dbtvault.hash_check("'^^'") }} AND
+{{ dbtvault.prefix([fk], 'stg') }} <> {{ dbtvault.hash_check("^^") }} AND
 {% endif %}
 {% endfor %}
 {% endif %}
