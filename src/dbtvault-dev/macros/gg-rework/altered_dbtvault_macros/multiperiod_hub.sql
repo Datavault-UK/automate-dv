@@ -50,7 +50,9 @@ STG AS (
     UNION
     {%- endif %}
     {%- endfor %}
-    )) AS b
+    )
+    WHERE {{ src_pk }}<>{{ dbtvault.hash_check("'^^'") }}
+    AND {{ src_pk }}<>{{ dbtvault.hash_check("''") }}) AS b
     WHERE RN = 1)
 
 {%- else %}
@@ -62,7 +64,9 @@ STG AS (
     SELECT b.*,
     ROW_NUMBER() OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
     ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}, {{ dbtvault.prefix([src_source], 'b') }} ASC) AS RN
-    FROM {{ ref(source) }} AS b) AS a
+    FROM {{ ref(source) }} AS b
+    WHERE {{ dbtvault.prefix([src_pk], 'b') }}<>{{ dbtvault.hash_check("'^^'") }}
+    AND {{ dbtvault.prefix([src_pk], 'b') }}<>{{ dbtvault.hash_check("''") }}) AS a
     WHERE RN = 1)
 
 {%- endif %}
