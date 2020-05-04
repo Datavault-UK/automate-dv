@@ -200,24 +200,5 @@ models:
               src_eff_from: 'EFFECTIVE_FROM'
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
-        load_multiperiod_hubs:
-          test_multiperiod_hub_customer_current:
-            vars:
-              source: 'test_stg_customer_hashed_hubs_current'
-              src_pk: 'CUSTOMER_PK'
-              src_nk: 'CUSTOMER_ID'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          unions:
-            test_multiperiod_hub_parts_current:
-              vars:
-                source:
-                  - 'test_stg_parts_hashed_current'
-                  - 'test_stg_supplier_hashed_current'
-                  - 'test_stg_lineitem_hashed_current'
-                src_pk: 'PART_PK'
-                src_nk: 'PART_ID'
-                src_ldts: 'LOADDATE'
-                src_source: 'SOURCE'
   vars:
     max_date: TO_DATE('9999-12-31')

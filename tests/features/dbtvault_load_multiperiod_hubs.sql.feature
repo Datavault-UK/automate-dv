@@ -7,7 +7,7 @@ Feature: Load Multiperiod Hubs
 # -------- --- ------- --------------------------------------------------------
 
     Scenario: [BASE-LOAD-SINGLE] Simple load of stage data into an empty hub
-      Given a TEST_MULTIPERIOD_HUB_CUSTOMER table does not exist
+      Given a TEST_HUB_CUSTOMER_HUBS table does not exist
       And there are records in the TEST_STG_CUSTOMER table
         | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
         | 1001        | Albert        | 1990-02-03   | 2019-05-04 | TPCH   |
@@ -21,8 +21,8 @@ Feature: Load Multiperiod Hubs
         | 1003        | Harold        | 1990-02-03   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -33,7 +33,7 @@ Feature: Load Multiperiod Hubs
         | md5('1006') | 1006        | 2019-05-06 | TPCH   |
 
     Scenario: [BASE-LOAD-SINGLE] Simple load of distinct stage data into an empty hub
-      Given a TEST_MULTIPERIOD_HUB_CUSTOMER table does not exist
+      Given a TEST_HUB_CUSTOMER_HUBS table does not exist
       And there are records in the TEST_STG_CUSTOMER table
         | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
         | 1001        | Albert        | 1990-02-03   | 2019-05-04 | TPCH   |
@@ -50,8 +50,8 @@ Feature: Load Multiperiod Hubs
         | 1003        | Harold        | 1990-02-03   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -62,7 +62,7 @@ Feature: Load Multiperiod Hubs
         | md5('1006') | 1006        | 2019-05-06 | TPCH   |
 
     Scenario: [BASE-LOAD-SHA] Simple load of distinct stage data into an empty hub using SHA hashing
-      Given a TEST_MULTIPERIOD_HUB_CUSTOMER table does not exist
+      Given a TEST_HUB_CUSTOMER_HUBS table does not exist
       And there are records in the TEST_STG_CUSTOMER table
         | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
         | 1001        | Albert        | 1990-02-03   | 2019-05-04 | TPCH   |
@@ -79,8 +79,8 @@ Feature: Load Multiperiod Hubs
         | 1003        | Harold        | 1990-02-03   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table using SHA
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table using SHA
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | sha('1001') | 1001        | 2019-05-04 | TPCH   |
         | sha('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -91,7 +91,7 @@ Feature: Load Multiperiod Hubs
         | sha('1006') | 1006        | 2019-05-06 | TPCH   |
 
     Scenario: [BASE-LOAD-SINGLE] Keys with a NULL or empty value are not loaded into an empty hub that doesn't exist.
-      Given a TEST_MULTIPERIOD_HUB_CUSTOMER table does not exist
+      Given a TEST_HUB_CUSTOMER_HUBS table does not exist
       And there are records in the TEST_STG_CUSTOMER table
         | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
         | 1001        | Albert        | 1990-02-03   | 2019-05-04 | TPCH   |
@@ -107,8 +107,8 @@ Feature: Load Multiperiod Hubs
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
         | <null>      | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
         |             | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -123,7 +123,7 @@ Feature: Load Multiperiod Hubs
 # -----------------------------------------------------------------------------
 
     Scenario: [SINGLE-SOURCE] Simple load of stage data into an empty hub
-      Given there is an empty TEST_MULTIPERIOD_HUB_CUSTOMER table
+      Given there is an empty TEST_HUB_CUSTOMER_HUBS table
       And there are records in the TEST_STG_CUSTOMER table
         | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
         | 1001        | Albert        | 1990-02-03   | 2019-05-04 | TPCH   |
@@ -137,8 +137,8 @@ Feature: Load Multiperiod Hubs
         | 1003        | Harold        | 1990-02-03   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -149,7 +149,7 @@ Feature: Load Multiperiod Hubs
         | md5('1006') | 1006        | 2019-05-06 | TPCH   |
 
     Scenario: [SINGLE-SOURCE] Simple load of distinct stage data into an empty hub
-      Given there is an empty TEST_MULTIPERIOD_HUB_CUSTOMER table
+      Given there is an empty TEST_HUB_CUSTOMER_HUBS table
       And there are records in the TEST_STG_CUSTOMER table
         | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
         | 1001        | Albert        | 1990-02-03   | 2019-05-04 | TPCH   |
@@ -166,8 +166,8 @@ Feature: Load Multiperiod Hubs
         | 1003        | Harold        | 1990-02-03   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -183,7 +183,7 @@ Feature: Load Multiperiod Hubs
 # -----------------------------------------------------------------------------
 
     Scenario: [SINGLE-SOURCE] Load of stage data into a hub
-      Given there are records in the TEST_MULTIPERIOD_HUB_CUSTOMER table
+      Given there are records in the TEST_HUB_CUSTOMER_HUBS table
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -198,8 +198,8 @@ Feature: Load Multiperiod Hubs
         | 1003        | Harold        | 1990-02-03   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -210,7 +210,7 @@ Feature: Load Multiperiod Hubs
         | md5('1006') | 1006        | 2019-05-06 | TPCH   |
 
     Scenario: [SINGLE-SOURCE] Load of distinct stage data into a hub
-      Given there are records in the TEST_MULTIPERIOD_HUB_CUSTOMER table
+      Given there are records in the TEST_HUB_CUSTOMER_HUBS table
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -229,8 +229,8 @@ Feature: Load Multiperiod Hubs
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1005        | Kevin         | 2001-07-23   | 2019-05-06 | TPCH   |
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -241,7 +241,7 @@ Feature: Load Multiperiod Hubs
         | md5('1006') | 1006        | 2019-05-06 | TPCH   |
 
     Scenario: [SINGLE-SOURCE] Keys with NULL or empty values are not loaded into a hub
-      Given there are records in the TEST_MULTIPERIOD_HUB_CUSTOMER table
+      Given there are records in the TEST_HUB_CUSTOMER_HUBS table
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -262,8 +262,8 @@ Feature: Load Multiperiod Hubs
         | 1006        | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
         | <null>      | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
         |             | Chris         | 1960-01-01   | 2019-05-06 | TPCH   |
-      When I load the TEST_MULTIPERIOD_HUB_CUSTOMER table
-      Then the TEST_MULTIPERIOD_HUB_CUSTOMER table should contain
+      When I load the TEST_HUB_CUSTOMER_HUBS table
+      Then the TEST_HUB_CUSTOMER_HUBS table should contain
         | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001        | 2019-05-04 | TPCH   |
         | md5('1002') | 1002        | 2019-05-04 | TPCH   |
@@ -278,7 +278,7 @@ Feature: Load Multiperiod Hubs
 # -----------------------------------------------------------------------------------------
 
     Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a empty hub which doesn't yet exist.
-      Given a TEST_MULTIPERIOD_HUB_PARTS table does not exist
+      Given a TEST_HUB_PARTS table does not exist
       And there are records in the TEST_STG_PARTS table
         | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
         | 1001    | Pedal     | internal  | M         | 60.00            | 2019-05-04 | PART   |
@@ -311,8 +311,8 @@ Feature: Load Multiperiod Hubs
         | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 2019-05-04 | LINE   |
         | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 2019-05-06 | LINE   |
         | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 2019-05-06 | LINE   |
-      And I load the TEST_MULTIPERIOD_HUB_PARTS table
-      Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
+      And I load the TEST_HUB_PARTS table
+      Then the TEST_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-04 | LINE   |
         | md5('1002') | 1002    | 2019-05-04 | LINE   |
@@ -329,7 +329,7 @@ Feature: Load Multiperiod Hubs
 # -----------------------------------------------------------------------------
 
     Scenario: [UNION] Union three staging tables to feed an empty hub.
-      Given there is an empty TEST_MULTIPERIOD_HUB_PARTS table
+      Given there is an empty TEST_HUB_PARTS table
       And there are records in the TEST_STG_PARTS table
         | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
         | 1001    | Pedal     | internal  | M         | 60.00            | 2019-05-04 | PART   |
@@ -362,8 +362,8 @@ Feature: Load Multiperiod Hubs
         | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 2019-05-04 | LINE   |
         | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 2019-05-06 | LINE   |
         | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 2019-05-06 | LINE   |
-      And I load the TEST_MULTIPERIOD_HUB_PARTS table
-      Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
+      And I load the TEST_HUB_PARTS table
+      Then the TEST_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-04 | LINE   |
         | md5('1002') | 1002    | 2019-05-04 | LINE   |
@@ -376,7 +376,7 @@ Feature: Load Multiperiod Hubs
         | md5('1009') | 1009    | 2019-05-06 | SUPP   |
 
     Scenario: [UNION] Union three staging tables to feed an empty hub over two cycles.
-      Given there is an empty TEST_MULTIPERIOD_HUB_PARTS table
+      Given there is an empty TEST_HUB_PARTS table
       And there are records in the TEST_STG_PARTS table
         | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
         | 1001    | Pedal     | internal  | M         | 60.00            | 2019-05-04 | PART   |
@@ -409,7 +409,7 @@ Feature: Load Multiperiod Hubs
         | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 2019-05-04 | LINE   |
         | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 2019-05-06 | LINE   |
         | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 2019-05-06 | LINE   |
-      And I load the TEST_MULTIPERIOD_HUB_PARTS table
+      And I load the TEST_HUB_PARTS table
       And there are records in the TEST_STG_PARTS table
         | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
         | 1001    | Pedal     | internal  | M         | 60.00            | 2019-05-07 | PART   |
@@ -438,8 +438,8 @@ Feature: Load Multiperiod Hubs
         | 10011    | 1011    | 9           | 3          | 8        | 175.00         | 18.00    | 2019-05-08 | LINE   |
         | 10011    | 1011    | 11          | 1          | 2        | 10.00          | 1.00     | 2019-05-08 | LINE   |
         | 10012    | 1012    | 11          | 1          | 1        | 290.87         | 2.00     | 2019-05-09 | LINE   |
-      When I load the TEST_MULTIPERIOD_HUB_PARTS table
-      Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
+      When I load the TEST_HUB_PARTS table
+      Then the TEST_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-04 | LINE   |
         | md5('1002') | 1002    | 2019-05-04 | LINE   |
@@ -460,7 +460,7 @@ Feature: Load Multiperiod Hubs
 # -----------------------------------------------------------------------------
 
     Scenario: [UNION] Union three staging tables to feed a populated hub.
-      Given there are records in the TEST_MULTIPERIOD_HUB_PARTS table
+      Given there are records in the TEST_HUB_PARTS table
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-03 | LINE   |
         | md5('1002') | 1002    | 2019-05-03 | LINE   |
@@ -496,8 +496,8 @@ Feature: Load Multiperiod Hubs
         | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 2019-05-04 | LINE   |
         | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 2019-05-06 | LINE   |
         | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 2019-05-06 | LINE   |
-      When I load the TEST_MULTIPERIOD_HUB_PARTS table
-      Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
+      When I load the TEST_HUB_PARTS table
+      Then the TEST_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-03 | LINE   |
         | md5('1002') | 1002    | 2019-05-03 | LINE   |
@@ -510,7 +510,7 @@ Feature: Load Multiperiod Hubs
         | md5('1009') | 1009    | 2019-05-06 | SUPP   |
 
     Scenario: [UNION] Key values of NULL or empty are not fed into a populated hub for a union with three staging tables.
-      Given there are records in the TEST_MULTIPERIOD_HUB_PARTS table
+      Given there are records in the TEST_HUB_PARTS table
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-03 | LINE   |
         | md5('1002') | 1002    | 2019-05-03 | LINE   |
@@ -550,8 +550,8 @@ Feature: Load Multiperiod Hubs
         | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 2019-05-04 | LINE   |
         | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 2019-05-06 | LINE   |
         | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 2019-05-06 | LINE   |
-      When I load the TEST_MULTIPERIOD_HUB_PARTS table
-      Then the TEST_MULTIPERIOD_HUB_PARTS table should contain
+      When I load the TEST_HUB_PARTS table
+      Then the TEST_HUB_PARTS table should contain
         | PART_PK     | PART_ID | LOADDATE   | SOURCE |
         | md5('1001') | 1001    | 2019-05-03 | LINE   |
         | md5('1002') | 1002    | 2019-05-03 | LINE   |
