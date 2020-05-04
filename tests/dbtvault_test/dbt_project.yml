@@ -111,6 +111,27 @@ models:
           test_stage_source_only:
             vars:
               source_model: 'raw_source'
+          test_stage_raises_error_with_missing_source:
+            vars:
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUST_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
+                CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_ID
+                    - NATIONALITY
+                    - PHONE
+              derived_columns:
+                include_source_columns: true
+                columns:
+                  SOURCE: '!STG_BOOKING'
+                  EFFECTIVE_FROM: 'LOADDATE'
     feature:
       current:
         load_cycles:
@@ -178,15 +199,17 @@ models:
                 src_ldts: 'LOADDATE'
                 src_source: 'SOURCE'
         load_hubs:
-#          hashing:
-#            test_stg_customer_hashed_hubs_current:
-#              source_model: 'stg_customer_hubs_current'
-#              hashed_columns:
-#                CUSTOMER_PK: CUSTOMER_ID
-#              derived_columns:
-#                include_source: true
-#                columns:
-#                  EFFECTIVE_FROM: 'LOADDATE'
+          hashing: 
+              test_stg_customer_hashed_hubs_current:
+                vars:
+                  source_model: 
+                    test_current: 'stg_customer_hubs_current'
+                  hashed_columns:
+                    CUSTOMER_PK: CUSTOMER_ID
+                  derived_columns:
+                    include_source_columns: true
+                    columns:
+                      EFFECTIVE_FROM: 'LOADDATE'
           test_hub_customer_hubs_current:
             vars:
               source: 'test_stg_customer_hashed_hubs_current'
