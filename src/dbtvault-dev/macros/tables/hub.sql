@@ -14,14 +14,6 @@
 {%- macro hub(src_pk, src_nk, src_ldts, src_source,
               source) -%}
 
-{#- -- TODO: Add checks for variables here
-{%- if (src_pk is defined and src_pk) and
-       (src_nk is defined and src_nk) and
-       (src_ldts is defined and src_ldts) and
-       (src_source is defined and src_source) and
-       (source is defined and source) -%}
--#}
-
 {%- set source_data = dbtvault.is_multi_source(source, src_pk, src_nk, src_ldts, src_source) -%}
 {%- set source_col = source_data[0] -%}
 {%- set is_union = source_data[1] -%}
