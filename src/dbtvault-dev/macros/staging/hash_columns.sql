@@ -27,7 +27,9 @@
         
         {%- elif columns[col] is mapping and not columns[col].sort -%}
 
-            {%- do exceptions.warn("You provided a list of columns under a 'column' key, but did not provide the 'sort' flag. HASHDIFF columns should be sorted.") -%}
+            {%- if execute -%}
+                {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'column' key, but did not provide the 'sort' flag. HASHDIFF columns should be sorted.") -%}
+            {% endif %}
 
             {{- dbtvault.hash(columns[col]['columns'], col) -}}
 

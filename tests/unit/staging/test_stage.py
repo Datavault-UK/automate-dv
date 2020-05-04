@@ -8,7 +8,6 @@ class TestStageMacro(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-
         macro_type = 'staging'
 
         cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/stage')
@@ -18,7 +17,6 @@ class TestStageMacro(TestCase):
         cls.dbt_test.run_model(mode='run', model='raw_source')
 
     def setUp(self) -> None:
-
         self.dbt_test.clean_target()
 
     def test_stage_correctly_generates_SQL_from_YAML(self):
@@ -65,3 +63,10 @@ class TestStageMacro(TestCase):
         self.assertIn('Done', process_logs)
 
         self.assertEqual(expected_sql, actual_sql)
+
+    def test_stage_raises_error_with_missing_source(self):
+        model = 'test_stage_raises_error_with_missing_source'
+
+        process_logs = self.dbt_test.run_model(mode='run', model=model)
+
+        self.assertIn('Staging error: Missing source_model configuration. A source model name must be provided.', process_logs)
