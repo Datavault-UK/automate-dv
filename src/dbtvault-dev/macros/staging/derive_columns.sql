@@ -25,13 +25,10 @@
     {#- Add aliases of provided columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
 
-        {%- if columns[col] | first == "!" -%}
-            {%- set _ = include_columns.append("'" ~ columns[col][1:] ~ "' AS " ~ col) -%}
-            {%- set _ = exclude_columns.append(col) -%}
-        {%- else -%}
-            {%- set _ = include_columns.append(columns[col] ~ " AS " ~ col) -%}
-            {%- set _ = exclude_columns.append(col) -%}
-        {%- endif %}
+        {% set column_str = dbtvault.as_constant(columns[col]) %}
+
+        {%- set _ = include_columns.append(column_str ~ " AS " ~ col) -%}
+        {%- set _ = exclude_columns.append(col) -%}
 
     {%- endfor -%}
 

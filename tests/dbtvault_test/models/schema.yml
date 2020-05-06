@@ -63,4 +63,5 @@ sources:
     database: DBT_VAULT
     schema: TEST
     tables:
-      - name: raw_source
+      - name: source
+        identifier: raw_source
