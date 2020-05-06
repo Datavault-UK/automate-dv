@@ -64,6 +64,36 @@ class TestStageMacro(TestCase):
 
         self.assertEqual(expected_sql, actual_sql)
 
+    def test_stage_correctly_generates_SQL_for_only_hashing_from_YAML(self):
+        model = 'test_stage_hashing_only'
+
+        expected_file_name = 'test_stage_correctly_generates_SQL_for_only_hashing_from_YAML'
+
+        process_logs = self.dbt_test.run_model(mode='run', model=model)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
+    def test_stage_correctly_generates_SQL_for_hashing_and_source_from_YAML(self):
+        model = 'test_stage_hashing_and_source'
+
+        expected_file_name = 'test_stage_correctly_generates_SQL_for_hashing_and_source_from_YAML'
+
+        process_logs = self.dbt_test.run_model(mode='run', model=model)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
     def test_stage_raises_error_with_missing_source(self):
         model = 'test_stage_raises_error_with_missing_source'
 

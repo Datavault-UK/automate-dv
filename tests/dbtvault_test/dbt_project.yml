@@ -65,6 +65,7 @@ models:
         stage:
           test_stage:
             vars:
+              include_source_columns: true
               source_model: 'raw_source'
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
@@ -81,14 +82,14 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                include_source_columns: true
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'BOOKING_DATE'
           test_stage_source_relation_style:
             vars:
+              include_source_columns: true
               source_model:
-                test_unit: 'raw_source'
+                test_unit: 'source'
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -104,7 +105,6 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                include_source_columns: true
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'LOADDATE'
@@ -113,6 +113,7 @@ models:
               source_model: 'raw_source'
           test_stage_raises_error_with_missing_source:
             vars:
+              include_source_columns: true
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -128,10 +129,45 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                include_source_columns: true
                 columns:
                   SOURCE: '!STG_BOOKING'
                   EFFECTIVE_FROM: 'LOADDATE'
+          test_stage_hashing_only:
+            vars:
+              include_source_columns: false
+              source_model: 'raw_source'
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUST_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
+                CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_ID
+                    - NATIONALITY
+                    - PHONE
+          test_stage_hashing_and_source:
+            vars:
+              include_source_columns: true
+              source_model: 'raw_source'
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUST_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
+                CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - CUSTOMER_ID
+                    - NATIONALITY
+                    - PHONE
     feature:
       current:
         load_cycles:
