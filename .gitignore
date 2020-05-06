@@ -1,2 +1,5 @@
 site/
 .idea/
+target/
+logs/
+dbt_modules/
