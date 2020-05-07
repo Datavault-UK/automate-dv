@@ -149,6 +149,22 @@ class TestHashColumnsMacro(TestCase):
 
         self.assertEqual(expected_sql, actual_sql)
 
+    def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(self):
+
+        model = 'test_hash_columns_with_constants'
+
+        expected_file_name = 'test_hash_columns_correctly_generates_sql_with_constants_from_yaml'
+
+        process_logs = self.dbt_test.run_model(model=model)
+
+        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+
+        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+
+        self.assertIn('Done', process_logs)
+
+        self.assertEqual(expected_sql, actual_sql)
+
     def test_hash_columns_raises_warning_if_mapping_without_sort(self):
 
         model = 'test_hash_columns_missing_sort'
