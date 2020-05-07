@@ -15,7 +15,7 @@
 
 {%- set hash = var('hash', 'MD5') -%}
 
-{# Select hashing algorithm #}
+{#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
     {%- set hash_alg = 'MD5_BINARY' -%}
     {%- set hash_size = 16 -%}
@@ -27,23 +27,29 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{# Alpha sort columns before hashing #}
+{#- Alpha sort columns before hashing -#}
 {%- if sort and columns is iterable and columns is not string -%}
     {%- set columns = columns|sort -%}
 {%- endif -%}
 
+{#- If single column to hash -#}
 {%- if columns is string -%}
-CAST({{ hash_alg }}(IFNULL((UPPER(TRIM(CAST({{columns}} AS VARCHAR)))), '^^')) AS BINARY({{ hash_size }})) AS {{alias}}
+{%- set column_str = dbtvault.as_constant(columns) -%}
+CAST({{ hash_alg }}(IFNULL((UPPER(TRIM(CAST({{column_str}} AS VARCHAR)))), '^^')) AS BINARY({{ hash_size }})) AS {{alias}}
+
+{#- If list of columns to hash -#}
 {%- else -%}
 
 CAST({{ hash_alg }}(CONCAT(
 
 {%- for column in columns %}
 
+{%- set column_str = dbtvault.as_constant(column) -%}
+
 {%- if not loop.last %}
-    IFNULL(UPPER(TRIM(CAST({{ column }} AS VARCHAR))), '^^'), '||',
+    IFNULL(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), '^^'), '||',
 {%- else %}
-    IFNULL(UPPER(TRIM(CAST({{ column }} AS VARCHAR))), '^^') ))
+    IFNULL(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), '^^') ))
 AS BINARY({{ hash_size }})) AS {{alias}}
 {%- endif -%}
 

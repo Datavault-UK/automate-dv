@@ -42,6 +42,33 @@ models:
                     - DEPARTURE_DATE
                     - PRICE
                     - DESTINATION
+          test_hash_columns_with_constants:
+            vars:
+              columns:
+                BOOKING_PK: BOOKING_REF
+                CUSTOMER_PK: 
+                  - CUSTOMER_ID
+                  - "!9999-12-31"
+                CUSTOMER_BOOKING_PK:
+                  - CUSTOMER_ID
+                  - BOOKING_REF
+                  - "TO_DATE('9999-12-31')"
+                BOOK_CUSTOMER_HASHDIFF:
+                  sort: true
+                  columns:
+                    - PHONE
+                    - NATIONALITY
+                    - CUSTOMER_ID
+                BOOK_BOOKING_HASHDIFF:
+                  sort: true
+                  columns:
+                    - BOOKING_REF
+                    - "TO_DATE('9999-12-31')"
+                    - "!STG"
+                    - BOOKING_DATE
+                    - DEPARTURE_DATE
+                    - PRICE
+                    - DESTINATION
           test_hash_columns_missing_sort:
             vars:
               columns:
