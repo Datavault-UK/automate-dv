@@ -35,7 +35,7 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
 {%- set column_str = dbtvault.as_constant(columns) -%}
-CAST({{ hash_alg }}(IFNULL((UPPER(TRIM(CAST({{column_str}} AS VARCHAR)))), '^^')) AS BINARY({{ hash_size }})) AS {{alias}}
+CAST({{ hash_alg }}(UPPER(TRIM(CAST({{column_str}} AS VARCHAR)))) AS BINARY({{ hash_size }})) AS {{alias}}
 
 {#- If list of columns to hash -#}
 {%- else -%}
