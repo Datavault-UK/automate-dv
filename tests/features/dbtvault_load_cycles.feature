@@ -138,7 +138,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1015\|\|10048') | md5('1015') | md5('10048') | 2019-05-07 | *      |
       | md5('1040\|\|10070') | md5('1040') | md5('10070') | 2019-05-04 | *      |
     Then we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain
-      | CUSTOMER_PK | CUSTOMER_HASHDIFF                       | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | HASHDIFF                               | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT')    | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')      | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|JACK')      | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
@@ -161,7 +161,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1014') | md5('1999-01-31\|\|1014\|\|SHAYNE')    | Shayne        | 1999-01-31   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1015') | md5('1985-04-02\|\|1015\|\|FABIOLA')   | Fabiola       | 1985-04-02   | 2019-05-07     | 2019-05-07 | *      |
     Then we expect the TEST_SAT_BOOK_CUSTOMER_DETAILS table to contain
-      | CUSTOMER_PK | BOOK_CUSTOMER_HASHDIFF                       | PHONE           | NATIONALITY | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | HASHDIFF                                     | PHONE           | NATIONALITY | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | md5('1001') | md5('1001\|\|BRITISH\|\|17-214-233-1214')    | 17-214-233-1214 | BRITISH     | 2019-05-03     | 2019-05-04 | *      |
       | md5('1002') | md5('1002\|\|DUTCH\|\|17-214-200-1214')      | 17-214-200-1214 | DUTCH       | 2019-05-03     | 2019-05-04 | *      |
       | md5('1003') | md5('1003\|\|AUSTRALIAN\|\|17-214-555-1214') | 17-214-555-1214 | AUSTRALIAN  | 2019-05-04     | 2019-05-05 | *      |
@@ -179,7 +179,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1015') | md5('1015\|\|TAIWANESE\|\|17-214-577-1223')  | 17-214-577-1223 | TAIWANESE   | 2019-05-06     | 2019-05-07 | *      |
       | md5('1040') | md5('1040\|\|CHINESE\|\|17-214-200-4040')    | 17-214-200-4040 | CHINESE     | 2019-05-03     | 2019-05-04 | *      |
     Then we expect the TEST_SAT_BOOK_BOOKING_DETAILS table to contain
-      | BOOKING_PK   | BOOK_BOOKING_HASHDIFF                                     | PRICE  | BOOKING_DATE | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | BOOKING_PK   | HASHDIFF                                                  | PRICE  | BOOKING_DATE | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | md5('10034') | md5('2019-05-03\|\|10034\|\|2019-09-17\|\|GBR\|\|100')    | 100.0  | 2019-05-03   | 2019-09-17     | GBR         | 2019-05-03     | 2019-05-04 | *      |
       | md5('10035') | md5('2019-05-03\|\|10035\|\|2019-09-16\|\|NLD\|\|80')     | 80.0   | 2019-05-03   | 2019-09-16     | NLD         | 2019-05-03     | 2019-05-04 | *      |
       | md5('10036') | md5('2019-05-04\|\|10036\|\|2019-09-13\|\|AUS\|\|70')     | 70.0   | 2019-05-04   | 2019-09-13     | AUS         | 2019-05-04     | 2019-05-05 | *      |
