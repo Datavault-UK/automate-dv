@@ -17,7 +17,7 @@ jobs:
           command: python -m unittest discover -s tests/unit -t tests/unit
       - run:
           command: mkdir -p test-results/dbt
-      - store_test_results
+      - store_test_results:
           path: test-results/dbt
 
 workflows:
