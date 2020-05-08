@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  python: circleci/python@0.2.1
-
+  python: circleci/python:latest
+  
 jobs:
   build-and-test:
     executor: python/default
@@ -12,8 +12,9 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
-          command: ./manage.py test
-          name: Test
+          command: | 
+            sudo pip install pipenv
+            pipenv instal
 
 workflows:
   main:

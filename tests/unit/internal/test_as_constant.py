@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from dbt_test_utils import *
 
 
 class TestAsConstantMacro(TestCase):
@@ -29,7 +28,7 @@ class TestAsConstantMacro(TestCase):
             'column_str': '!STG_BOOKING'
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
