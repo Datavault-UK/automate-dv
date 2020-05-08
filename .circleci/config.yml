@@ -7,9 +7,7 @@ jobs:
     steps:
       - checkout
       - run:
-          command: |
-            sudo pip install pipenv
-            pipenv install
+          command: pip install -r requirements
       - run:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
