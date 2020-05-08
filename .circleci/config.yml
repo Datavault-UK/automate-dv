@@ -2,7 +2,7 @@ version: 2.1
 
 orbs:
   python: 'circleci/python@0.3.0'
-  
+
 jobs:
   build-and-test:
     executor: python/default
@@ -13,8 +13,10 @@ jobs:
       - python/save-cache
       - run:
           command: python -m unittest discover tests/unit -v
+          
 
 workflows:
   main:
     jobs:
-      - build-and-test
+      - build-and-test:
+          context: dbtvault_snowflake_test
