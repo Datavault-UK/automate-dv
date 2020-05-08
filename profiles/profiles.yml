@@ -26,7 +26,7 @@ dbtvault:
       warehouse: "{{ env_var('DB_WH') }}"
       schema: "{{ env_var('DB_SCHEMA') }}"
       
-      threads: 4
+      threads: 1
       client_session_keep_alive: False
   
   target: "{{ env_var('ENVIRONMENT') }}"
