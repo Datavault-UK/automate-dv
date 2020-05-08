@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  python: circleci/python:latest
+  python: 'circleci/python:latest'
   
 jobs:
   build-and-test:
