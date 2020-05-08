@@ -1,11 +1,9 @@
 version: 2.1
 
-orbs:
-  python: 'circleci/python@0.3.0'
-
 jobs:
   build-and-test:
-    executor: python/default
+    docker:
+      - image: circleci/python:3.6.4
     steps:
       - checkout
       - run:
