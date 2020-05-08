@@ -14,7 +14,7 @@ dbtvault:
       
       threads: 4
       client_session_keep_alive: False
-    test:
+    tst:
       type: "{{ env_var('DB_ENGINE') }}"
       account: "{{ env_var('DB_ACCOUNT') }}"
 
