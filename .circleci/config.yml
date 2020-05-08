@@ -11,7 +11,8 @@ jobs:
       - python/load-cache
       - python/install-deps
       - python/save-cache
-      - python/test
+      - run:
+          command: python -m unittest discover tests/unit -v
 
 workflows:
   main:
