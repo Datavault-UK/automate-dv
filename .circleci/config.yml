@@ -8,14 +8,14 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
+      - run:
+          command: |
+            sudo pip install pipenv
+            pipenv install
       - run:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
-          command: python -m unittest discover tests/unit -v
-          
+          command: python -m unittest discover -s /home/alex/PycharmProjects/dbtvault-dev/tests/unit -t /home/alex/PycharmProjects/dbtvault-dev/tests/unit
 
 workflows:
   main:
