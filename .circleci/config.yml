@@ -12,6 +12,8 @@ jobs:
       - python/install-deps
       - python/save-cache
       - run:
+          command: dbt deps
+      - run:
           command: python -m unittest discover tests/unit -v
           
 
