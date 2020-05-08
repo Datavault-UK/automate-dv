@@ -18,7 +18,7 @@ jobs:
       - run:
           command: mkdir -p test-results/dbt
       - store_test_results
-        path: test-results/dbt
+          path: test-results/dbt
 
 workflows:
   main:
