@@ -56,7 +56,7 @@ class DBTTestUtils:
 
         return lines
 
-    def run_dbt_model(self, *, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False, include_tag=False) -> str:
+    def run_dbt_model(self, *, mode='run', model: str, model_vars=None, full_refresh=False, include_model_deps=False, include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
 
