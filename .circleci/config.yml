@@ -20,7 +20,7 @@ jobs:
           paths:
             - "venv"
       - run:
-          command: python -m unittest discover -s /home/alex/PycharmProjects/dbtvault-dev/tests/unit -t /home/alex/PycharmProjects/dbtvault-dev/tests/unit
+          command: python -m unittest discover -s /tests/unit -t /tests/unit
       - store_test_results:
           path: test-results
       - store_artifacts: 
