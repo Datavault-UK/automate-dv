@@ -1,6 +1,7 @@
 from unittest import TestCase
 
-from dbt_test_utils import *
+from tests.dbt_test_utils import *
+
 
 
 class TestAsConstantMacro(TestCase):
