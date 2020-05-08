@@ -14,6 +14,7 @@ EXPECTED_OUTPUT_FILE_ROOT = Path(f"{PROJECT_ROOT}/tests/unit/expected_model_outp
 FEATURES_ROOT = TESTS_ROOT / 'features'
 
 os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
+os.environ['ENVIRONMENT'] = 'test'
 
 
 class DBTTestUtils:
