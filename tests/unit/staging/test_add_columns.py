@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-import dbt_test_utils
+from tests.dbt_test_utils import *
 
 
 class TestAddColumnsMacro(TestCase):
@@ -10,9 +10,9 @@ class TestAddColumnsMacro(TestCase):
 
         macro_type = 'staging'
 
-        cls.dbt_test = dbt_test_utils.DBTTestUtils(model_directory=f'{macro_type}/add_columns')
+        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/add_columns')
 
-        dbt_test_utils.os.chdir(dbt_test_utils.TESTS_DBT_ROOT)
+        os.chdir(TESTS_DBT_ROOT)
 
         cls.dbt_test.run_dbt_model(mode='run', model='raw_source')
 
