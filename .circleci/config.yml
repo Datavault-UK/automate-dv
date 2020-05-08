@@ -10,6 +10,8 @@ jobs:
       - restore_cache:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
+          command: mkdir test-results
+      - run:
           command: |
             sudo pip install pipenv
             pipenv install
@@ -18,8 +20,7 @@ jobs:
           paths:
             - "venv"
       - run:
-          command: |
-            pipenv run python manage.py test
+          command: python -m unittest discover -s /home/alex/PycharmProjects/dbtvault-dev/tests/unit -t /home/alex/PycharmProjects/dbtvault-dev/tests/unit
       - store_test_results:
           path: test-results
       - store_artifacts: 
