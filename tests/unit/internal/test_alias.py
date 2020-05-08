@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from dbt_test_utils import *
 
 
 class TestAliasMacro(TestCase):
@@ -31,7 +30,7 @@ class TestAliasMacro(TestCase):
                 "alias": "HASHDIFF"},
             'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -47,7 +46,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'source_column': {}, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         self.assertIn(model, process_logs)
 
@@ -60,7 +59,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'source_column': '', 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         self.assertIn(model, process_logs)
 
@@ -73,7 +72,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         self.assertIn(model, process_logs)
 
@@ -94,7 +93,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
@@ -115,7 +114,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
@@ -136,7 +135,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'columns': columns}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
@@ -157,7 +156,7 @@ class TestAliasMacro(TestCase):
 
         var_dict = {'columns': columns}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 

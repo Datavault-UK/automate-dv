@@ -1,0 +1,33 @@
+dbtvault:
+  outputs:
+    dev:
+      type: "{{ env_var('DB_ENGINE') }}"
+      account: "{{ env_var('DB_ACCOUNT') }}"
+
+      user: "{{ env_var('DB_USER') }}"
+      password: "{{ env_var('DB_PW') }}"
+
+      role: "{{ env_var('DB_ROLE') }}"
+      database: "{{ env_var('DB_DATABASE') }}"
+      warehouse: "{{ env_var('DB_WH') }}"
+      schema: "{{ env_var('DB_SCHEMA') }}"
+      
+      threads: 4
+      client_session_keep_alive: False
+    test:
+      type: "{{ env_var('DB_ENGINE') }}"
+      account: "{{ env_var('DB_ACCOUNT') }}"
+
+      user: "{{ env_var('DB_USER') }}"
+      password: "{{ env_var('DB_PW') }}"
+
+      role: "{{ env_var('DB_ROLE') }}"
+      database: "{{ env_var('DB_DATABASE') }}"
+      warehouse: "{{ env_var('DB_WH') }}"
+      schema: "{{ env_var('DB_SCHEMA') }}"
+      
+      threads: 4
+      client_session_keep_alive: False
+  
+  target: "{{ env_var('ENVIRONMENT') }}"
+

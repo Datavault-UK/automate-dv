@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from dbt_test_utils import *
 
 
 class TestHashColumnsMacro(TestCase):
@@ -25,7 +24,7 @@ class TestHashColumnsMacro(TestCase):
 
         expected_file_name = 'test_multi_hash_correctly_generates_hashed_columns'
 
-        process_logs = self.dbt_test.run_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
