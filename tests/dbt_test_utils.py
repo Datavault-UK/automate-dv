@@ -17,8 +17,6 @@ if not os.getenv('DBT_PROFILES_DIR'):
 
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
-os.environ['ENVIRONMENT'] = 'test'
-
 
 class DBTTestUtils:
 
