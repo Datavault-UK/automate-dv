@@ -1,20 +1,27 @@
-version: 2.1
-
+version: 2
 jobs:
-  build-and-test:
-    docker:
+  build:
+    docker: 
       - image: circleci/python:3.8
     steps:
       - checkout
+      - run: sudo chown -R circleci:circleci /usr/local/bin
+      - run: sudo chown -R circleci:circleci /usr/local/lib/python3.8/site-packages
+      - restore_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - run:
-          command: pip install -r requirements.txt
+          command: |
+            sudo pip install pipenv
+            pipenv install
+      - save_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - "venv"
       - run:
-          command: cd tests/dbtvault_test/ ; dbt deps
-      - run:
-          command: python -m unittest discover -s /home/alex/PycharmProjects/dbtvault-dev/tests/unit -t /home/alex/PycharmProjects/dbtvault-dev/tests/unit
-
-workflows:
-  main:
-    jobs:
-      - build-and-test:
-          context: dbtvault_snowflake_test
+          command: |
+            pipenv run python manage.py test
+      - store_test_results:
+          path: test-results
+      - store_artifacts: 
+          path: test-results
+          destination: tr1
