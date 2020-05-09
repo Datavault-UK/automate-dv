@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from tests.dbt_test_utils import *
 
 
 class TestPrefixMacro(TestCase):
@@ -29,7 +28,7 @@ class TestPrefixMacro(TestCase):
             'columns': ["CUSTOMER_HASHDIFF"],
             'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -49,7 +48,7 @@ class TestPrefixMacro(TestCase):
             'columns': ["CUSTOMER_HASHDIFF", 'CUSTOMER_PK', 'LOADDATE', 'SOURCE'],
             'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -71,7 +70,7 @@ class TestPrefixMacro(TestCase):
 
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -94,7 +93,7 @@ class TestPrefixMacro(TestCase):
 
         var_dict = {'columns': columns, 'prefix': 'c', 'alias_target': 'source'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -117,7 +116,7 @@ class TestPrefixMacro(TestCase):
 
         var_dict = {'columns': columns, 'prefix': 'c', 'alias_target': 'target'}
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 

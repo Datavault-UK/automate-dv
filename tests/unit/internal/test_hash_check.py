@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from tests.dbt_test_utils import *
 
 
 class TestHashCheckMacro(TestCase):
@@ -29,7 +28,7 @@ class TestHashCheckMacro(TestCase):
             'hash': 'MD5',
             'col': '^^'}
 
-        process_logs = self.dbt_test.run_model(model=self.model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=self.model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
 
@@ -47,7 +46,7 @@ class TestHashCheckMacro(TestCase):
             'hash': 'SHA',
             'col': '^^'}
 
-        process_logs = self.dbt_test.run_model(model=self.model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=self.model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
 
@@ -64,7 +63,7 @@ class TestHashCheckMacro(TestCase):
         var_dict = {
             'col': '^^'}
 
-        process_logs = self.dbt_test.run_model(model=self.model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=self.model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
 

@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from tests.dbt_test_utils import *
 
 
 class TestAddColumnsMacro(TestCase):
@@ -15,7 +14,7 @@ class TestAddColumnsMacro(TestCase):
 
         os.chdir(TESTS_DBT_ROOT)
 
-        cls.dbt_test.run_model(mode='run', model='raw_source')
+        cls.dbt_test.run_dbt_model(mode='run', model='raw_source')
 
     def setUp(self) -> None:
 
@@ -30,7 +29,7 @@ class TestAddColumnsMacro(TestCase):
             'source_table': 'raw_source'
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 

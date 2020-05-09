@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from tests.dbt_test_utils import *
 
 
 class TestDeriveColumnsMacro(TestCase):
@@ -15,7 +14,7 @@ class TestDeriveColumnsMacro(TestCase):
 
         os.chdir(TESTS_DBT_ROOT)
 
-        cls.dbt_test.run_model(mode='run', model='raw_source')
+        cls.dbt_test.run_dbt_model(mode='run', model='raw_source')
 
     def setUp(self) -> None:
 
@@ -33,7 +32,7 @@ class TestDeriveColumnsMacro(TestCase):
                         'EFFECTIVE_FROM': 'LOADDATE'}
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
@@ -54,7 +53,7 @@ class TestDeriveColumnsMacro(TestCase):
                         'LOADDATE': 'EFFECTIVE_FROM'}
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -74,7 +73,7 @@ class TestDeriveColumnsMacro(TestCase):
             'source_model': 'raw_source'
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
