@@ -76,28 +76,21 @@ class DBTTestUtils:
             model = f'+{model}'
 
         if full_refresh:
-            full_refresh_str = '--full-refresh'
+            full_refresh_str = ' --full-refresh'
         else:
             full_refresh_str = ''
 
-        command = f"dbt {mode} {full_refresh_str} -m {model}"
+        command = ['dbt', "".join([mode, full_refresh_str]), '-m', model]
 
         if model_vars:
             yaml_str = str(model_vars).replace('\'', '"')
-            command = f"{command} --vars '{yaml_str}'"
+            command.extend(['--vars', yaml_str])
 
-        process = Popen(command,
-                        shell=True,
-                        universal_newlines=True,
-                        stdout=PIPE,
-                        stderr=STDOUT)
+        p = Popen(command, stdout=PIPE)
 
-        process.wait()
+        stdout, _ = p.communicate()
 
-        with process.stdout:
-            output = self.log_process_output(process.stdout)
-
-        return "\n".join(output)
+        return stdout.decode('utf-8')
 
     def retrieve_compiled_model(self, model: str):
         """
