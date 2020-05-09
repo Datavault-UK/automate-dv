@@ -5,7 +5,7 @@ from pathlib import PurePath, Path
 from subprocess import PIPE, Popen
 
 DBT_ROOT = PurePath(__file__).parent
-PROJECT_ROOT = PurePath(__file__).parents[1]
+PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
