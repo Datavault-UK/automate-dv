@@ -19,5 +19,5 @@ jobs:
 workflows:
   main:
     jobs:
-      - build-and-test:
+      - build-and-test-macros:
           context: dbtvault_snowflake_test
