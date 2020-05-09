@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from tests.dbt_test_utils import *
+from tests.utils.dbt_test_utils import *
 
 
 class TestStageMacro(TestCase):

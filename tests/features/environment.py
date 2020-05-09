@@ -5,7 +5,7 @@ from vaultBase.connector import Connector
 from vaultBase.logger import Logger
 from vaultBase.testing.dbTestUtils import DBTestUtils
 
-from dbt_test_utils import *
+from tests.utils.dbt_test_utils import *
 from steps.step_vars import DATABASE
 
 
