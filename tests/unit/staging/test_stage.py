@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from tests.dbt_test_utils import *
 
 
 class TestStageMacro(TestCase):
@@ -14,7 +13,7 @@ class TestStageMacro(TestCase):
 
         os.chdir(TESTS_DBT_ROOT)
 
-        cls.dbt_test.run_model(mode='run', model='raw_source')
+        cls.dbt_test.run_dbt_model(mode='run', model='raw_source')
 
     def setUp(self) -> None:
         self.dbt_test.clean_target()
@@ -24,7 +23,7 @@ class TestStageMacro(TestCase):
 
         expected_file_name = 'test_stage_correctly_generates_SQL_from_YAML'
 
-        process_logs = self.dbt_test.run_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -39,7 +38,7 @@ class TestStageMacro(TestCase):
 
         expected_file_name = 'test_stage_correctly_generates_SQL_from_YAML_with_source_style'
 
-        process_logs = self.dbt_test.run_model(mode='run', model=model)
+        process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -54,7 +53,7 @@ class TestStageMacro(TestCase):
 
         expected_file_name = 'test_stage_correctly_generates_SQL_for_only_source_columns_from_YAML'
 
-        process_logs = self.dbt_test.run_model(mode='run', model=model)
+        process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -69,7 +68,7 @@ class TestStageMacro(TestCase):
 
         expected_file_name = 'test_stage_correctly_generates_SQL_for_only_hashing_from_YAML'
 
-        process_logs = self.dbt_test.run_model(mode='run', model=model)
+        process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -84,7 +83,7 @@ class TestStageMacro(TestCase):
 
         expected_file_name = 'test_stage_correctly_generates_SQL_for_hashing_and_source_from_YAML'
 
-        process_logs = self.dbt_test.run_model(mode='run', model=model)
+        process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -97,6 +96,6 @@ class TestStageMacro(TestCase):
     def test_stage_raises_error_with_missing_source(self):
         model = 'test_stage_raises_error_with_missing_source'
 
-        process_logs = self.dbt_test.run_model(mode='run', model=model)
+        process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
         self.assertIn('Staging error: Missing source_model configuration. A source model name must be provided.', process_logs)

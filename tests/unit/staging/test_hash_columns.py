@@ -1,7 +1,6 @@
-import os
 from unittest import TestCase
 
-from tests.unit.dbt_test_utils import *
+from tests.dbt_test_utils import *
 
 
 class TestHashColumnsMacro(TestCase):
@@ -30,7 +29,7 @@ class TestHashColumnsMacro(TestCase):
                         'CUSTOMER_PK': 'CUSTOMER_ID'}
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -51,7 +50,7 @@ class TestHashColumnsMacro(TestCase):
                         'CUSTOMER_DETAILS': ['ADDRESS', 'PHONE', 'NAME']}
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -74,7 +73,7 @@ class TestHashColumnsMacro(TestCase):
 
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -99,7 +98,7 @@ class TestHashColumnsMacro(TestCase):
 
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -123,7 +122,7 @@ class TestHashColumnsMacro(TestCase):
 
         }
 
-        process_logs = self.dbt_test.run_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -139,7 +138,7 @@ class TestHashColumnsMacro(TestCase):
 
         expected_file_name = 'test_hash_columns_correctly_generates_sql_from_yaml'
 
-        process_logs = self.dbt_test.run_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
@@ -155,7 +154,7 @@ class TestHashColumnsMacro(TestCase):
 
         expected_file_name = 'test_hash_columns_correctly_generates_sql_with_constants_from_yaml'
 
-        process_logs = self.dbt_test.run_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
@@ -171,7 +170,7 @@ class TestHashColumnsMacro(TestCase):
 
         expected_file_name = 'test_hash_columns_raises_warning_if_mapping_without_sort'
 
-        process_logs = self.dbt_test.run_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model)
 
         expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
 
