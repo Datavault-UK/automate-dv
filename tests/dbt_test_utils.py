@@ -2,7 +2,7 @@ import logging
 import os
 import shutil
 from pathlib import PurePath, Path
-from subprocess import STDOUT, PIPE, Popen
+from subprocess import PIPE, Popen
 
 DBT_ROOT = PurePath(__file__).parent
 PROJECT_ROOT = PurePath(__file__).parents[1]
@@ -40,23 +40,8 @@ class DBTTestUtils:
             self.logger.addHandler(ch)
             self.logger.propagate = False
 
-    def log_process_output(self, pipe_output: PIPE):
-        """
-        Log the output of a subprocess.
-
-            :param pipe_output: STDOUT of a process
-        """
-
-        lines = pipe_output.readlines()
-
-        lines = "".join(lines).splitlines()[:-1]
-
-        for line in lines:
-            self.logger.info(f"{line}")
-
-        return lines
-
-    def run_dbt_model(self, *, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False, include_tag=False) -> str:
+    @staticmethod
+    def run_dbt_model(*, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False, include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
 
