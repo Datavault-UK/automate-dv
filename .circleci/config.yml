@@ -4,7 +4,7 @@ orbs:
   python: 'circleci/python@0.3.0'
 
 jobs:
-  build-and-test:
+  build-and-test-macros:
     executor: python/default
     steps:
       - checkout
@@ -14,9 +14,7 @@ jobs:
       - run:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
-          command: python -m unittest discover -s tests/unit -t tests/unit
-      - store_test_results:
-          path: test-results/dbt
+          command: python -m unittest discover -s tests/unit -t tests/unit -v
 
 workflows:
   main:
