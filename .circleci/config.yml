@@ -15,8 +15,8 @@ jobs:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
           command: python -m unittest discover -s tests/unit -t tests/unit -v
-      - run:
-          command: behave
+#      - run:
+#          command: behave
 
 workflows:
   main:
