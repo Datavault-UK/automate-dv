@@ -6,6 +6,7 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
+    parallelism: 4
     steps:
       - checkout
       - python/load-cache
@@ -14,9 +15,10 @@ jobs:
       - run:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
-          command: circleci tests split test_filenames.txt
+          command: circleci tests glob "tests/unit/**/test*.py" | circleci tests split > tests_to_run.txt
       - run:
-          command: python -m unittest discover -s tests/unit -t tests/unit -v
+          command: python -m unittest $(cat ./tests/tests_to_run.txt)
+
       
 
 workflows:
