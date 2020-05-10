@@ -41,9 +41,9 @@ def before_all(context):
     context.connection = connector
 
 
-def before_feature(context, feature):
+def before_scenario(context, scenario):
     """
-    Re-create the database before every feature
+    Re-create the database before every scenario
     """
 
     context.connection.execute(f"DROP DATABASE IF EXISTS {DATABASE}")

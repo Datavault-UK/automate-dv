@@ -13,7 +13,7 @@ def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_order_{MODE.lower()}",
                                      ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "ORDER_FK BINARY",
-                                     "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
+                                      "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
 
 
 @step("an empty TEST_EFF_CUSTOMER_ORDER")
@@ -21,7 +21,7 @@ def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_eff_customer_order_{MODE.lower()}",
                                      ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
-                                     "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
+                                      "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
                                      context.connection)
 
 
@@ -47,7 +47,7 @@ def step_impl(context, table_name):
 
         context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, table_name,
                                          ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "ORDER_FK BINARY",
-                                         "LOADDATE DATE", "SOURCE VARCHAR(6)"],
+                                          "LOADDATE DATE", "SOURCE VARCHAR(6)"],
                                          context.connection)
         context.db_utils.insert_data_from_ct(context.table,
                                              table_name,
@@ -55,11 +55,11 @@ def step_impl(context, table_name):
                                              context.connection)
 
     elif 'eff' in table_name.lower():
-        
+
         context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA,
                                          table_name,
                                          ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
-                                         "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
+                                          "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
                                          context.connection)
         context.db_utils.insert_data_from_ct(context.table,
                                              table_name,
@@ -76,8 +76,8 @@ def step_impl(context, table):
 
         context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, table_name,
                                          ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
-                                         "ORDER_FK BINARY", "PRODUCT_FK BINARY", "ORGANISATION_FK BINARY",
-                                         "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
+                                          "ORDER_FK BINARY", "PRODUCT_FK BINARY", "ORGANISATION_FK BINARY",
+                                          "LOADDATE DATE", "SOURCE VARCHAR(6)"], context.connection)
         context.db_utils.insert_data_from_ct(context.table,
                                              table_name,
                                              VLT_SCHEMA,
@@ -87,7 +87,7 @@ def step_impl(context, table):
 
         context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, table_name,
                                          ["CUSTOMER_ORDER_PK BINARY", "SOURCE VARCHAR(6)", "LOADDATE DATE",
-                                         "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
+                                          "EFFECTIVE_FROM DATE", "START_DATETIME DATE", "END_DATETIME DATE"],
                                          context.connection)
         context.db_utils.insert_data_from_ct(context.table,
                                              table_name,
@@ -95,15 +95,15 @@ def step_impl(context, table):
                                              context.connection)
 
 
-@step("staging_data loaded on {date}")
+@step("there was staging data loaded on {date}")
 def step_impl(context, date):
     table_name = f"test_stg_eff_sat_{MODE.lower()}"
 
     context.db_utils.create_schema(DATABASE, STG_SCHEMA, context.connection)
     context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, table_name,
                                      ["CUSTOMER_ORDER_PK BINARY", "LOADDATE DATE", "SOURCE VARCHAR(6)",
-                                     "CUSTOMER_FK BINARY", "CUSTOMER_ID VARCHAR(38)", "ORDER_FK BINARY",
-                                     "ORDER_ID VARCHAR(3)", "EFFECTIVE_FROM DATE"],
+                                      "CUSTOMER_FK BINARY", "CUSTOMER_ID VARCHAR(38)", "ORDER_FK BINARY",
+                                      "ORDER_ID VARCHAR(3)", "EFFECTIVE_FROM DATE"],
                                      connection=context.connection)
     context.db_utils.insert_data_from_ct(context.table,
                                          table_name,
@@ -118,10 +118,10 @@ def step_impl(context, date):
     context.db_utils.create_schema(DATABASE, STG_SCHEMA, context.connection)
     context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, table_name,
                                      ["CUSTOMER_ORDER_PK BINARY", "LOADDATE DATE", "SOURCE VARCHAR(6)",
-                                     "CUSTOMER_FK BINARY", "CUSTOMER_ID VARCHAR(38)", "ORDER_FK BINARY",
-                                     "ORDER_ID VARCHAR(3)", "NATION_FK BINARY", "NATION_ID VARCHAR(3)",
-                                     "PRODUCT_FK BINARY", "PRODUCT_GROUP VARCHAR(6)", "ORGANISATION_FK BINARY",
-                                     "ORGANISATION_ID VARCHAR(9)", "EFFECTIVE_FROM DATE"],
+                                      "CUSTOMER_FK BINARY", "CUSTOMER_ID VARCHAR(38)", "ORDER_FK BINARY",
+                                      "ORDER_ID VARCHAR(3)", "NATION_FK BINARY", "NATION_ID VARCHAR(3)",
+                                      "PRODUCT_FK BINARY", "PRODUCT_GROUP VARCHAR(6)", "ORGANISATION_FK BINARY",
+                                      "ORGANISATION_ID VARCHAR(9)", "EFFECTIVE_FROM DATE"],
                                      connection=context.connection)
     context.db_utils.insert_data_from_ct(context.table,
                                          table_name,
@@ -189,7 +189,7 @@ def step_impl(context, table_name):
         table_df = context.db_utils.context_table_to_df(context.table,
                                                         order_by='CUSTOMER_ORDER_PK',
                                                         binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "NATION_FK",
-                                                                       "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"])
+                                                                        "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"])
         result_df = context.db_utils.get_table_data(
             full_table_name=f"{DATABASE}.{VLT_SCHEMA}.{table_name}_{MODE.lower()}",
             binary_columns=['CUSTOMER_ORDER_PK', "CUSTOMER_FK", "NATION_FK", "ORDER_FK", "PRODUCT_FK", "ORGANISATION_FK"],
@@ -211,7 +211,3 @@ def step_impl(context, table_name):
             connection=context.connection)
 
         assert context.db_utils.compare_dataframes(table_df, result_df)
-
-
-
-

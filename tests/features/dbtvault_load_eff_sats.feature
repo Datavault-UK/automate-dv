@@ -76,7 +76,7 @@ Feature: Effectivity Satellites
     Scenario: [BASE-LOAD] Empty Load with an Effectivity Satellite that does not exist
       Given an empty TEST_LINK_CUSTOMER_ORDER
       And a TEST_EFF_CUSTOMER_ORDER table does not exist
-      And staging_data loaded on 2020-01-10
+      And there was staging data loaded on 2020-01-10
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-10 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
       | md5('2000\|\|BBB') | 2020-01-10 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-09     |
@@ -96,7 +96,7 @@ Feature: Effectivity Satellites
     Scenario: [BASE-LOAD] Empty Load with existing Effectivity Satellite
       Given an empty TEST_LINK_CUSTOMER_ORDER
       And an empty TEST_EFF_CUSTOMER_ORDER
-      And staging_data loaded on 2020-01-10
+      And there was staging data loaded on 2020-01-10
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-10 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
       | md5('2000\|\|BBB') | 2020-01-10 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-09     |
@@ -125,7 +125,7 @@ Feature: Effectivity Satellites
       | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
-      And staging_data loaded on 2020-01-11
+      And there was staging data loaded on 2020-01-11
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-11 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-10     |
       | md5('2000\|\|BBB') | 2020-01-11 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-10     |
@@ -154,7 +154,7 @@ Feature: Effectivity Satellites
       | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
-      And staging_data loaded on 2020-01-11
+      And there was staging data loaded on 2020-01-11
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-11 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-09     |
       | md5('2000\|\|BBB') | 2020-01-11 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-09     |
@@ -193,7 +193,7 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
-      And staging_data loaded on 2020-01-12
+      And there was staging data loaded on 2020-01-12
       | CUSTOMER_ORDER_PK  | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-12 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-11     |
       | md5('2000\|\|BBB') | 2020-01-12 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
@@ -251,7 +251,7 @@ Feature: Effectivity Satellites
       | md5('7000\|\|III') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
       | md5('7000\|\|JJJ') | 2020-01-11 | orders | 2020-01-10     | 2020-01-09     | 2020-01-10   |
       | md5('7000\|\|III') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10     | 2020-01-11   |
-      And staging_data loaded on 2020-01-13
+      And there was staging data loaded on 2020-01-13
       | CUSTOMER_ORDER_PK  | LOADDATE   | SOURCE | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA') | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-12     |
       | md5('2000\|\|BBB') | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-12     |
@@ -310,7 +310,7 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
       | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
       | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
-      And staging_data loaded on 2020-01-13
+      And there was staging data loaded on 2020-01-13
       | CUSTOMER_ORDER_PK   | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
       | md5('1000\|\|AAA')  | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-11     |
       | md5('2000\|\|BBB')  | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
@@ -349,7 +349,7 @@ Feature: Effectivity Satellites
        | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09     | 9999-12-31   |
        | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
        | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10     | 9999-12-31   |
-      And staging_data loaded on 2020-01-13
+      And there was staging data loaded on 2020-01-13
        | CUSTOMER_ORDER_PK   | LOADDATE   | Source | CUSTOMER_FK | CUSTOMER_ID | ORDER_FK   | ORDER_ID | EFFECTIVE_FROM |
        | md5('1000\|\|AAA')  | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-11     |
        | md5('2000\|\|BBB')  | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
