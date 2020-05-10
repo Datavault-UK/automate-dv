@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -%}
+{%- macro old_union(src_pk, src_nk, src_ldts, src_source, tgt_pk, source) -%}
 
     SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], 'src')}},
     LAG({{ src_source }}, 1)
