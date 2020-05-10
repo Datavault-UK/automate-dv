@@ -23,6 +23,8 @@ def step_impl(context):
 
 @given("I have an empty TEST_SAT_CUSTOMER_DETAILS table")
 def step_impl(context):
+    context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
+
     context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_sat_customer_details_{MODE.lower()}",
                                      ["HASHDIFF BINARY", "CUSTOMER_PK BINARY", "CUSTOMER_NAME VARCHAR(60)",
                                       "CUSTOMER_PHONE VARCHAR(15)", "CUSTOMER_DOB DATE", "LOADDATE DATE",

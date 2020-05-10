@@ -137,6 +137,7 @@ models:
                   EFFECTIVE_FROM: 'LOADDATE'
           test_stage_source_only:
             vars:
+              include_source_columns: true
               source_model: 'raw_source'
           test_stage_raises_error_with_missing_source:
             vars:
@@ -196,9 +197,75 @@ models:
                     - NATIONALITY
                     - PHONE
     feature:
+      tags:
+        - feature
+        - current
       current:
         load_cycles:
+          tags:
+            - load_cycles_current
+          hashing:
+            materialized: table
+            schema: 'stg'
+            tags:
+              - load_cycles_hashing
+            test_stg_booking_hashed_current:
+              vars:   
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_booking_current'
+                hashed_columns:
+                  BOOKING_PK: BOOKING_REF
+                  CUSTOMER_PK: CUSTOMER_ID
+                  CUSTOMER_BOOKING_PK: 
+                    - CUSTOMER_ID
+                    - BOOKING_REF
+                  BOOK_CUSTOMER_HASHDIFF:
+                    sort: true
+                    columns:
+                      - CUSTOMER_ID
+                      - NATIONALITY
+                      - PHONE
+                  BOOK_BOOKING_HASHDIFF:
+                    sort: true
+                    columns:
+                      - BOOKING_REF
+                      - BOOKING_DATE
+                      - DEPARTURE_DATE
+                      - PRICE
+                      - DESTINATION
+                derived_columns:
+                  columns:
+                    EFFECTIVE_FROM: 'BOOKING_DATE'
+                    SOURCE: '!STG_BOOKING'
+            test_stg_customer_hashed_current:
+              vars:  
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_customer_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_ID
+                  CUST_CUSTOMER_HASHDIFF:
+                    sort: true
+                    columns:
+                      - CUSTOMER_ID
+                      - CUSTOMER_NAME
+                      - CUSTOMER_DOB
+                  CUSTOMER_HASHDIFF:
+                    sort: true
+                    columns:
+                      - CUSTOMER_ID
+                      - CUSTOMER_NAME
+                      - CUSTOMER_DOB
+                derived_columns:
+                  columns:
+                    EFFECTIVE_FROM: 'LOADDATE'
+                    SOURCE: '!STG_CUSTOMER'
           hubs:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - load_cycles_hubs
             test_hub_booking_current:
               vars:
                 source: 'test_stg_booking_hashed_current'
@@ -216,6 +283,10 @@ models:
                 src_ldts: 'LOADDATE'
                 src_source: 'SOURCE'
           links:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - load_cycles_links
             test_link_customer_booking_current:
               vars:
                 source: 'test_stg_booking_hashed_current'
@@ -226,6 +297,10 @@ models:
                 src_ldts: 'LOADDATE'
                 src_source: 'SOURCE'
           sats:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - load_cycles_sats
             test_sat_book_booking_details_current:
               vars:
                 source: 'test_stg_booking_hashed_current'
@@ -269,24 +344,64 @@ models:
                 src_source: 'SOURCE'
         load_hubs:
           hashing: 
-              test_stg_customer_hashed_hubs_current:
-                vars:
-                  source_model: 
-                    test_current: 'stg_customer_hubs_current'
-                  hashed_columns:
-                    CUSTOMER_PK: CUSTOMER_ID
-                  derived_columns:
-                    include_source_columns: true
-                    columns:
-                      EFFECTIVE_FROM: 'LOADDATE'
-          test_hub_customer_hubs_current:
-            vars:
-              source: 'test_stg_customer_hashed_hubs_current'
-              src_pk: 'CUSTOMER_PK'
-              src_nk: 'CUSTOMER_ID'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          unions:
+            materialized: table
+            schema: 'stg'
+            tags:
+              - load_hubs_hashing
+            test_stg_customer_hashed_hubs_current:
+              vars:
+                include_source_columns: true
+                source_model: 
+                  test_current: 'stg_customer_hubs_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_ID
+                derived_columns:
+                  columns:
+                    EFFECTIVE_FROM: 'LOADDATE'
+            test_stg_lineitem_hashed_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_lineitem_current'
+                hashed_columns:
+                  ORDER_PK: ORDER_ID
+                  PART_PK: PART_ID
+                  SUPPLIER_PK: SUPPLIER_ID
+                  LINEITEM_PK: LINENUMBER
+            test_stg_parts_hashed_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_parts_current'
+                hashed_columns:
+                  PART_PK: PART_ID
+            test_stg_supplier_hashed_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_supplier_current'
+                hashed_columns:
+                  PART_PK: PART_ID   
+                  SUPPLIER_PK: SUPPLIER_ID
+          single:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - single
+              - hub
+            test_hub_customer_hubs_current:
+              vars:
+                source: 'test_stg_customer_hashed_hubs_current'
+                src_pk: 'CUSTOMER_PK'
+                src_nk: 'CUSTOMER_ID'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+          union:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - union
+              - hub
             test_hub_parts_current:
               vars:
                 source:
@@ -298,50 +413,145 @@ models:
                 src_ldts: 'LOADDATE'
                 src_source: 'SOURCE'
         load_links:
-          test_link_customer_nation_current:
-            vars:
-              source: 'test_stg_crm_customer_hashed_links_current'
-              src_pk: 'CUSTOMER_NATION_PK'
-              src_fk:
-                - 'CUSTOMER_FK'
-                - 'NATION_FK'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          test_link_customer_nation_union_current:
-            vars:
-              source:
-                - 'test_stg_sap_customer_hashed_links_current'
-                - 'test_stg_crm_customer_hashed_links_current'
-                - 'test_stg_web_customer_hashed_links_current'
-              src_pk: 'CUSTOMER_NATION_PK'
-              src_fk:
-                - 'CUSTOMER_FK'
-                - 'NATION_FK'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          test_link_customer_order_current:
-            vars:
-              source: 'test_stg_eff_sat_hashed_current'
-              src_pk: 'CUSTOMER_ORDER_PK'
-              src_fk:
-                - 'ORDER_FK'
-                - 'CUSTOMER_FK'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
-          test_link_customer_order_multipart_current:
-            vars:
-              source: 'test_stg_eff_sat_hashed_current'
-              src_pk: 'CUSTOMER_ORDER_PK'
-              src_fk:
-                - 'CUSTOMER_FK'
-                - 'NATION_FK'
-                - 'ORDER_FK'
-                - 'PRODUCT_FK'
-                - 'ORGANISATION_FK'
-              src_ldts: 'LOADDATE'
-              src_source: 'SOURCE'
+          hashing: 
+            materialized: table
+            schema: 'stg'
+            tags:
+              - load_links_hashing
+            test_stg_crm_customer_hashed_links_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_crm_customer_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_REF
+                  CUSTOMER_FK: CUSTOMER_REF
+                  NATION_PK: NATION_KEY
+                  NATION_FK: NATION_KEY
+                  CUSTOMER_NATION_PK:
+                    - CUSTOMER_REF
+                    - NATION_KEY            
+            test_stg_customer_hashed_links_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_customer_links_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_ID
+                  CUSTOMER_FK: CUSTOMER_ID
+                  NATION_PK: NATION_ID
+                  NATION_FK: NATION_ID
+                  CUSTOMER_NATION_PK:
+                    - CUSTOMER_ID
+                    - NATION_ID
+            test_stg_sap_customer_hashed_links_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_sap_customer_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_ID
+                  CUSTOMER_FK: CUSTOMER_ID
+                  NATION_PK: NATION_ID
+                  NATION_FK: NATION_ID
+                  CUSTOMER_NATION_PK:
+                    - CUSTOMER_ID
+                    - NATION_ID
+            test_stg_web_customer_hashed_links_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_web_customer_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_REF
+                  CUSTOMER_FK: CUSTOMER_REF
+                  NATION_PK: NATION_KEY
+                  NATION_FK: NATION_KEY
+                  CUSTOMER_NATION_PK:
+                    - CUSTOMER_REF
+                    - NATION_KEY
+          single:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - single
+              - link
+            test_link_customer_nation_current:
+              vars:
+                source: 'test_stg_crm_customer_hashed_links_current'
+                src_pk: 'CUSTOMER_NATION_PK'
+                src_fk:
+                  - 'CUSTOMER_FK'
+                  - 'NATION_FK'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+            test_link_customer_order_current:
+              vars:
+                source: 'test_stg_eff_sat_hashed_current'
+                src_pk: 'CUSTOMER_ORDER_PK'
+                src_fk:
+                  - 'ORDER_FK'
+                  - 'CUSTOMER_FK'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+            test_link_customer_order_multipart_current:
+              vars:
+                source: 'test_stg_eff_sat_hashed_current'
+                src_pk: 'CUSTOMER_ORDER_PK'
+                src_fk:
+                  - 'CUSTOMER_FK'
+                  - 'NATION_FK'
+                  - 'ORDER_FK'
+                  - 'PRODUCT_FK'
+                  - 'ORGANISATION_FK'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
+          union:
+            materialized: incremental
+            schema: vlt
+            tags:
+              - union
+              - link
+            test_link_customer_nation_union_current:
+              vars:
+                source:
+                  - 'test_stg_sap_customer_hashed_links_current'
+                  - 'test_stg_crm_customer_hashed_links_current'
+                  - 'test_stg_web_customer_hashed_links_current'
+                src_pk: 'CUSTOMER_NATION_PK'
+                src_fk:
+                  - 'CUSTOMER_FK'
+                  - 'NATION_FK'
+                src_ldts: 'LOADDATE'
+                src_source: 'SOURCE'
         load_sats:
+          hashing:
+            materialized: table
+            schema: 'stg'
+            tags:
+              - load_sats_hashing
+            test_stg_customer_details_hashed_current:
+              vars:
+                include_source_columns: true
+                source_model: 
+                  test_current: 'stg_customer_details_current'
+                hashed_columns:
+                  CUSTOMER_PK: CUSTOMER_ID
+                  CUSTOMER_HASHDIFF:
+                    sort: true
+                    columns:
+                      - CUSTOMER_ID
+                      - CUSTOMER_NAME
+                      - CUSTOMER_DOB
+                      - CUSTOMER_PHONE
+                derived_columns:
+                  columns:
+                    EFFECTIVE_FROM: LOADDATE
           test_sat_customer_details_current:
+            materialized: incremental
+            schema: 'vlt'
+            tags:
+              - sat
             vars:
               source: 'test_stg_customer_details_hashed_current'
               src_pk: 'CUSTOMER_PK'
@@ -356,7 +566,29 @@ models:
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
         load_t_links:
+          hashing:
+            materialized: table
+            schema: 'stg'
+            tags:
+              - load_t_link_hashing
+            test_t_link_transaction_hashed_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: 'stg_transaction_current'
+                hashed_columns:
+                  TRANSACTION_PK: 
+                    - CUSTOMER_ID
+                    - TRANSACTION_NUMBER
+                  CUSTOMER_PK: CUSTOMER_ID
+                derived_columns:
+                  columns:
+                    EFFECTIVE_FROM: TRANSACTION_DATE
           test_t_link_transaction_current:
+            materialized: incremental
+            schema: 'vlt'
+            tags:
+              - t_link
             vars:
               source: 'test_t_link_transaction_hashed_current'
               src_pk: 'TRANSACTION_PK'
@@ -370,6 +602,18 @@ models:
               src_ldts: 'LOADDATE'
               src_source: 'SOURCE'
         load_eff_sats:
+          materialized: incremental
+          schema: 'vlt'
+          hashing:
+            materialized: table
+            schema: 'stg'
+            tags:
+              - load_eff_sat_hashing
+            test_stg_eff_sat_hashed_current:
+            vars:
+              include_source_columns: true
+              source_model:
+                test_current: 'stg_eff_sat_current'
           test_eff_customer_order_current:
             vars:
               source: 'test_stg_eff_sat_hashed_current'

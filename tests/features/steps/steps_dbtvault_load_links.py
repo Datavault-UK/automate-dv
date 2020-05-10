@@ -11,17 +11,18 @@ use_step_matcher("parse")
 @step("there are records in the TEST_STG_CUSTOMER table for links")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_customer_links_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, f"test_stg_customer_links_{MODE.lower()}",
                                      ["CUSTOMER_ID VARCHAR(38)", "NATION_ID VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_DOB DATE", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(15)"], connection=context.connection)
-    context.db_utils.insert_data_from_ct(context.table, "test_stg_customer_links_{}".format(MODE.lower()), STG_SCHEMA,
+    context.db_utils.insert_data_from_ct(context.table, f"test_stg_customer_links_{MODE.lower()}", STG_SCHEMA,
                                          context.connection)
 
 
 @step("I have an empty LINK_CUSTOMER_NATION table")
 def step_impl(context):
-    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_{}".format(MODE.lower()),
+    context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
+    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_nation_{MODE.lower()}",
                                      ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
@@ -29,11 +30,11 @@ def step_impl(context):
 @step("there are records in the LINK_CUSTOMER_NATION table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_nation_{MODE.lower()}",
                                      ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
-    context.db_utils.insert_data_from_ct(context.table, "test_link_customer_nation_{}".format(MODE.lower()), VLT_SCHEMA,
+    context.db_utils.insert_data_from_ct(context.table, f"test_link_customer_nation_{MODE.lower()}", VLT_SCHEMA,
                                          context.connection)
 
 
@@ -44,7 +45,7 @@ def step_impl(context):
                                                     binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'])
 
     result_df = context.db_utils.get_table_data(
-        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_nation_{}".format(MODE.lower()),
+        full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_link_customer_nation_{MODE.lower()}",
         binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'], order_by='CUSTOMER_NATION_PK',
         ignore_columns='SOURCE', connection=context.connection)
 
@@ -57,52 +58,52 @@ def step_impl(context):
 @step("I have an empty LINK_CUSTOMER_NATION_UNION table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_union_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_nation_union_{MODE.lower()}",
                                      ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
-                                     "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
+                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
 
 @step("there are records in the TEST_STG_SAP_CUSTOMER table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_sap_customer_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, f"test_stg_sap_customer_{MODE.lower()}",
                                      ["CUSTOMER_ID VARCHAR(38)", "NATION_ID VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_DOB DATE", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(15)"], connection=context.connection)
-    context.db_utils.insert_data_from_ct(context.table, "test_stg_sap_customer_{}".format(MODE.lower()), STG_SCHEMA,
+    context.db_utils.insert_data_from_ct(context.table, f"test_stg_sap_customer_{MODE.lower()}", STG_SCHEMA,
                                          context.connection)
 
 
 @step("there are records in the TEST_STG_CRM_CUSTOMER table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_crm_customer_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, f"test_stg_crm_customer_{MODE.lower()}",
                                      ["CUSTOMER_REF VARCHAR(38)", "NATION_KEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_DOB DATE", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(15)"], connection=context.connection)
-    context.db_utils.insert_data_from_ct(context.table, "test_stg_crm_customer_{}".format(MODE.lower()), STG_SCHEMA,
+    context.db_utils.insert_data_from_ct(context.table, f"test_stg_crm_customer_{MODE.lower()}", STG_SCHEMA,
                                          context.connection)
 
 
 @step("there are records in the TEST_STG_WEB_CUSTOMER table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, STG_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, "test_stg_web_customer_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, STG_SCHEMA, f"test_stg_web_customer_{MODE.lower()}",
                                      ["CUSTOMER_REF VARCHAR(38)", "NATION_KEY VARCHAR(38)", "CUSTOMER_NAME VARCHAR(25)",
                                       "CUSTOMER_DOB DATE", "CUSTOMER_PHONE VARCHAR(15)", "LOADDATE DATE",
                                       "SOURCE VARCHAR(15)"], connection=context.connection)
-    context.db_utils.insert_data_from_ct(context.table, "test_stg_web_customer_{}".format(MODE.lower()), STG_SCHEMA,
+    context.db_utils.insert_data_from_ct(context.table, f"test_stg_web_customer_{MODE.lower()}", STG_SCHEMA,
                                          context.connection)
 
 
 @step("there are records in the LINK_CUSTOMER_NATION_UNION table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_union_{}".format(MODE.lower()),
+    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_nation_union_{MODE.lower()}",
                                      ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                       "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
-    context.db_utils.insert_data_from_ct(context.table, "test_link_customer_nation_union_{}".format(MODE.lower()),
+    context.db_utils.insert_data_from_ct(context.table, f"test_link_customer_nation_union_{MODE.lower()}",
                                          VLT_SCHEMA, context.connection)
 
 
@@ -113,7 +114,7 @@ def step_impl(context):
                                                     binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'])
 
     result_df = context.db_utils.get_table_data(
-        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_nation_union_{}".format(MODE.lower()),
+        full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_link_customer_nation_union_{MODE.lower()}",
         binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'], order_by='CUSTOMER_NATION_PK',
         ignore_columns='SOURCE', connection=context.connection)
 
