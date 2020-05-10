@@ -6,7 +6,7 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
-    parallelism: 4
+    parallelism: 1
     steps:
       - checkout
       - python/load-cache
