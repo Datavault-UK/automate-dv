@@ -48,10 +48,10 @@ def step_impl(context):
 @step("I have an empty LINK_CUSTOMER_ORDER_MULTIPART table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_order_multipart_{}".format(MODE.lower()),
-                                    ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
-                                     "ORDER_FK BINARY", "PRODUCT_FK BINARY", "ORGANISATION_FK BINARY",
-                                     "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
+    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_order_multipart_{MODE.lower()}",
+                                     ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
+                                      "ORDER_FK BINARY", "PRODUCT_FK BINARY", "ORGANISATION_FK BINARY",
+                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
 
 @step("there are records in the LINK_CUSTOMER_NATION table")
@@ -68,13 +68,13 @@ def step_impl(context):
 @step("there are records in the LINK_CUSTOMER_CUSTOMER_ORDER_MULTIPART table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
-    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_order_multipart_{}".format(MODE.lower()),
-                                    ['CUSTOMER_ORDER_PK BINARY', 'CUSTOMER_FK BINARY', 'NATION_FK BINARY',
-                                     'ORDER_FK BINARY', 'PRODUCT_FK BINARY', 'ORGANISATION_FK BINARY', 'LOADDATE DATE',
-                                     'SOURCE VARCHAR(4)'], connection=context.connection)
+    context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_link_customer_order_multipart_{MODE.lower()}",
+                                     ['CUSTOMER_ORDER_PK BINARY', 'CUSTOMER_FK BINARY', 'NATION_FK BINARY',
+                                      'ORDER_FK BINARY', 'PRODUCT_FK BINARY', 'ORGANISATION_FK BINARY', 'LOADDATE DATE',
+                                      'SOURCE VARCHAR(4)'], connection=context.connection)
 
-    context.db_utils.insert_data_from_ct(context.table, "test_link_customer_order_multipart_{}".format(MODE.lower()),
-                                        VLT_SCHEMA, context.connection)
+    context.db_utils.insert_data_from_ct(context.table, f"test_link_customer_order_multipart_{MODE.lower()}",
+                                         VLT_SCHEMA, context.connection)
 
 
 @step("the LINK_CUSTOMER_NATION table should contain")
