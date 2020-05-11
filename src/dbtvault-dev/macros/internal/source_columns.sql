@@ -20,7 +20,7 @@
 
     {%- else -%}
 
-        {{- dbtvault.new_union(src_pk, src_nk, src_ldts, src_source, src_pk, source) -}}
+        {{- dbtvault.union(src_pk, src_nk, src_ldts, src_source, src_pk, source) -}}
 
     {%- endif -%}
 

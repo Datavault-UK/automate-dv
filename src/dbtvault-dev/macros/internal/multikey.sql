@@ -17,12 +17,12 @@
 
 {% for col in columns if not columns is string %}
     {% if loop.index == columns|length %}
-        {{ dbtvault.prefix([col], aliases[0]) }}={{ dbtvault.prefix([col], aliases[1]) }}
+        {{ dbtvault.prefix([col], aliases[0]) }} = {{ dbtvault.prefix([col], aliases[1]) }}
     {% else %}
-        {{ dbtvault.prefix([col], aliases[0]) }}={{ dbtvault.prefix([col], aliases[1]) }} AND
+        {{ dbtvault.prefix([col], aliases[0]) }} = {{ dbtvault.prefix([col], aliases[1]) }} AND
     {% endif %}
 {% else %}
-    {{ dbtvault.prefix([columns], aliases[0]) }}={{ dbtvault.prefix([columns], aliases[1]) }}
+    {{ dbtvault.prefix([columns], aliases[0]) }} = {{ dbtvault.prefix([columns], aliases[1]) }}
 {% endfor %}
 
 {% elif type_for ==  'where null'%}
@@ -41,12 +41,12 @@
 
 {% for col in columns if not columns is string %}
     {% if loop.index == columns|length %}
-        {{ dbtvault.prefix([col], aliases[0]) }}<>{{ dbtvault.hash_check("'^^'") }}
-    {% else %}
-        {{ dbtvault.prefix([col], aliases[0]) }}<>{{ dbtvault.hash_check("'^^'") }} AND
-    {% endif %}
-{% else %}
-    {{ dbtvault.prefix([columns], aliases[0]) }}<>{{ dbtvault.hash_check("'^^'") }}
+        {{ dbtvault.prefix([col], aliases[0]) }} <> {{ dbtvault.hash_check("^^") }}
+    {% else %}                                  
+        {{ dbtvault.prefix([col], aliases[0]) }} <> {{ dbtvault.hash_check("^^") }} AND
+    {% endif %}                                  
+{% else %}                                  
+    {{ dbtvault.prefix([columns], aliases[0]) }} <> {{ dbtvault.hash_check("^^") }}
 {% endfor %}
 {% endif %}
 {% endmacro %}

@@ -26,11 +26,20 @@
         {#- If list of lists -#}
         {%- elif columns is iterable and columns is not string -%}
 
-            {%- for cols in columns -%}
+            {%- if columns is mapping -%}
 
-                {%- set _ = col_list.append(cols) -%}
+                {%- set _ = col_list.append(columns) -%}
 
-            {%- endfor -%}
+            {%- else -%}
+
+                {%- for cols in columns -%}
+
+                    {%- set _ = col_list.append(cols) -%}
+
+                {%- endfor -%}
+
+            {%- endif -%}
+
         {%- endif -%}
 
     {%- endfor -%}
