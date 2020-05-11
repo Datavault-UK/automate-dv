@@ -19,7 +19,8 @@
 {%- endif -%}
 
 {%- if columns is string %}
-    {{ dbt_utils.surrogate_key([columns,"''"]) }} AS {{alias}}
+    {%- set field = "coalesce(cast(" ~ columns ~ " as " ~ dbt_utils.type_string() ~ "), '')" -%}
+    {{ dbt_utils.hash(field) }} AS {{alias}}
 {%- else %}
     {{ dbt_utils.surrogate_key(columns) }} AS {{alias}}
 {%- endif -%}
