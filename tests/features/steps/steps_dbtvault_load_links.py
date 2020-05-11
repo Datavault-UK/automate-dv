@@ -21,6 +21,7 @@ def step_impl(context):
 
 @step("I have an empty LINK_CUSTOMER_NATION table")
 def step_impl(context):
+    context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_{}".format(MODE.lower()),
                                     ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
@@ -109,12 +110,11 @@ def step_impl(context):
 @step("the LINK_CUSTOMER_NATION_UNION table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, order_by='CUSTOMER_NATION_PK',
-                                                   ignore_columns='SOURCE',
                                                    binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'])
 
     result_df = context.dbutils.get_table_data(
         full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_nation_union_{}".format(MODE.lower()),
         binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'], order_by='CUSTOMER_NATION_PK',
-        ignore_columns='SOURCE', connection=context.connection)
+        connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
