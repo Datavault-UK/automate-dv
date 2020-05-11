@@ -19,11 +19,38 @@ def step_impl(context):
                                         context.connection)
 
 
+@step("there are records in the TEST_STG_EFF_SAT_HASHED table")
+def step_impl(context):
+    table_name = f"test_stg_eff_sat_{MODE.lower()}"
+
+    context.dbutils.create_schema(DATABASE, STG_SCHEMA, context.connection)
+    context.dbutils.drop_and_create(DATABASE, STG_SCHEMA, table_name,
+                                    ["CUSTOMER_ORDER_PK BINARY", "LOADDATE DATE", "SOURCE VARCHAR(6)",
+                                     "CUSTOMER_FK BINARY", "CUSTOMER_ID VARCHAR(38)", "ORDER_FK BINARY",
+                                     "ORDER_ID VARCHAR(3)", "NATION_FK BINARY", "NATION_ID VARCHAR(3)",
+                                     "PRODUCT_FK BINARY", "PRODUCT_GROUP VARCHAR(6)", "ORGANISATION_FK BINARY",
+                                     "ORGANISATION_ID VARCHAR(9)", "EFFECTIVE_FROM DATE"],
+                                    connection=context.connection)
+    context.dbutils.insert_data_from_ct(context.table,
+                                        table_name,
+                                        STG_SCHEMA,
+                                        context.connection)
+
+
 @step("I have an empty LINK_CUSTOMER_NATION table")
 def step_impl(context):
     context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_nation_{}".format(MODE.lower()),
                                     ["CUSTOMER_NATION_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
+                                     "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
+
+
+@step("I have an empty LINK_CUSTOMER_ORDER_MULTIPART table")
+def step_impl(context):
+    context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_order_multipart_{}".format(MODE.lower()),
+                                    ["CUSTOMER_ORDER_PK BINARY", "CUSTOMER_FK BINARY", "NATION_FK BINARY",
+                                     "ORDER_FK BINARY", "PRODUCT_FK BINARY", "ORGANISATION_FK BINARY",
                                      "LOADDATE DATE", "SOURCE VARCHAR(4)"], connection=context.connection)
 
 
@@ -38,6 +65,18 @@ def step_impl(context):
                                         context.connection)
 
 
+@step("there are records in the LINK_CUSTOMER_CUSTOMER_ORDER_MULTIPART table")
+def step_impl(context):
+    context.dbutils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
+    context.dbutils.drop_and_create(DATABASE, VLT_SCHEMA, "test_link_customer_order_multipart_{}".format(MODE.lower()),
+                                    ['CUSTOMER_ORDER_PK BINARY', 'CUSTOMER_FK BINARY', 'NATION_FK BINARY',
+                                     'ORDER_FK BINARY', 'PRODUCT_FK BINARY', 'ORGANISATION_FK BINARY', 'LOADDATE DATE',
+                                     'SOURCE VARCHAR(4)'], connection=context.connection)
+
+    context.dbutils.insert_data_from_ct(context.table, "test_link_customer_order_multipart_{}".format(MODE.lower()),
+                                        VLT_SCHEMA, context.connection)
+
+
 @step("the LINK_CUSTOMER_NATION table should contain")
 def step_impl(context):
     table_df = context.dbutils.context_table_to_df(context.table, order_by='CUSTOMER_NATION_PK',
@@ -48,6 +87,20 @@ def step_impl(context):
         full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_nation_{}".format(MODE.lower()),
         binary_columns=['CUSTOMER_NATION_PK', 'CUSTOMER_FK', 'NATION_FK'], order_by='CUSTOMER_NATION_PK',
         ignore_columns='SOURCE', connection=context.connection)
+
+    assert context.dbutils.compare_dataframes(table_df, result_df)
+
+
+@step("the LINK_CUSTOMER_ORDER_MULTIPART should contain")
+def step_impl(context):
+    table_df = context.dbutils.context_table_to_df(context.table, order_by='CUSTOMER_ORDER_PK',
+                                                   binary_columns=['CUSTOMER_ORDER_PK', 'CUSTOMER_FK', 'NATION_FK',
+                                                                   'ORDER_FK', 'PRODUCT_FK', 'ORGANISATION_FK'])
+
+    result_df = context.dbutils.get_table_data(
+        full_table_name=DATABASE + "." + VLT_SCHEMA + ".test_link_customer_order_multipart_{}".format(MODE.lower()),
+        binary_columns=['CUSTOMER_ORDER_PK', 'CUSTOMER_FK', 'NATION_FK', 'ORDER_FK', 'PRODUCT_FK', 'ORGANISATION_FK'],
+        order_by='CUSTOMER_ORDER_PK', connection=context.connection)
 
     assert context.dbutils.compare_dataframes(table_df, result_df)
 
