@@ -19,7 +19,7 @@
 {%- endif -%}
 
 {%- if columns is string %}
-    {{ dbt_utils.surrogate_key([columns]) }} AS {{alias}}
+    {{ dbt_utils.surrogate_key([columns,"''"]) }} AS {{alias}}
 {%- else %}
     {{ dbt_utils.surrogate_key(columns) }} AS {{alias}}
 {%- endif -%}
