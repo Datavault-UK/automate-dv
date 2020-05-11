@@ -1,2 +1,4 @@
 {%- set obj = ref('raw_source') -%}
-{{ log(dbtvault.check_relation(obj), true) }}
+{%- if execute -%}
+    {{ log(dbtvault.check_relation(obj), true) }}
+{%- endif -%}

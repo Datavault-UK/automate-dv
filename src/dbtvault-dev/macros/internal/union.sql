@@ -16,7 +16,7 @@
     SELECT {{ dbtvault.prefix([src_pk, src_nk, src_ldts, src_source], 'src')}},
     LAG({{ src_source }}, 1)
     OVER(PARTITION by {{ tgt_pk }}
-    ORDER BY {{ tgt_pk }}) AS FIRST_SOURCE
+    ORDER BY {{ tgt_pk }}, {{ src_ldts }}, {{ src_source }}) AS FIRST_SOURCE
     FROM (
 
  {%- set letters='abcdefghijklmnopqrstuvwxyz' -%}

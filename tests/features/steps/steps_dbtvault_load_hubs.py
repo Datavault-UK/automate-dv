@@ -58,7 +58,7 @@ def step_impl(context):
     context.db_utils.insert_data_from_ct(context.table, f"test_stg_customer_hubs_{MODE.lower()}", STG_SCHEMA, context.connection)
 
 
-@given("there are records in the TEST_HUB_CUSTOMER table")
+@given("there are records in the TEST_HUB_CUSTOMER_HUBS table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_hub_customer_hubs_{MODE.lower()}",
@@ -67,7 +67,7 @@ def step_impl(context):
     context.db_utils.insert_data_from_ct(context.table, f"test_hub_customer_hubs_{MODE.lower()}", VLT_SCHEMA, context.connection)
 
 
-@step("there is an empty TEST_HUB_CUSTOMER table")
+@step("there is an empty TEST_HUB_CUSTOMER_HUBS table")
 def step_impl(context):
     context.db_utils.create_schema(DATABASE, VLT_SCHEMA, context.connection)
     context.db_utils.drop_and_create(DATABASE, VLT_SCHEMA, f"test_hub_customer_hubs_{MODE.lower()}",
@@ -75,9 +75,11 @@ def step_impl(context):
                                       "SOURCE VARCHAR(4)"], context.connection)
 
 
-@step("the TEST_HUB_CUSTOMER table should contain")
+@step("the TEST_HUB_CUSTOMER_HUBS table should contain")
 def step_impl(context):
-    table_df = context.db_utils.context_table_to_df(context.table, binary_columns=['CUSTOMER_PK'])
+    table_df = context.db_utils.context_table_to_df(context.table, 
+                                                    binary_columns=['CUSTOMER_PK'],
+                                                    order_by='CUSTOMER_ID')
 
     result_df = context.db_utils.get_table_data(
         full_table_name=f"{DATABASE }.{VLT_SCHEMA}.test_hub_customer_hubs_{MODE.lower()}",

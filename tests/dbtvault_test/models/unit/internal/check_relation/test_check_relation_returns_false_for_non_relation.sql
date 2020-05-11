@@ -1,2 +1,4 @@
 {%- set obj = 'not_a_relation' -%}
-{{ log(dbtvault.check_relation(obj), true) }}
+{%- if execute -%}
+    {{ log(dbtvault.check_relation(obj), true) }}
+{%- endif -%}
