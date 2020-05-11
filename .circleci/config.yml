@@ -1,0 +1,24 @@
+version: 2.1
+
+orbs:
+  python: 'circleci/python@0.3.0'
+
+jobs:
+  build-and-test:
+    executor: python/default
+    steps:
+      - checkout
+      - python/load-cache
+      - python/install-deps
+      - python/save-cache
+      - run:
+          command: cd tests/dbtvault_test/ ; dbt deps
+      - run:
+          command: python -m unittest discover -s tests/unit -t tests/unit -v
+      
+
+workflows:
+  main:
+    jobs:
+      - build-and-test:
+          context: dbtvault_snowflake_test

@@ -11,10 +11,10 @@
 {%- set src_source = 'SOURCE'                                                           -%}
 
 {%- set tgt_pk = source                                                                 -%}
-{%- set tgt_hashdiff = [src_hashdiff , 'BINARY(16)', 'CUSTOMER_HASHDIFF']                        -%}
+{%- set tgt_hashdiff = [src_hashdiff , 'BINARY(16)', 'CUSTOMER_HASHDIFF']               -%}
 {%- set tgt_payload = [[src_payload[0], 'VARCHAR(60)', 'CUSTOMER_NAME'],
                        [src_payload[1], 'DATE', 'CUSTOMER_DOB'],
-                       [src_payload[2], 'VARCHAR(15)', 'CUSTOMER_PHONE']]                        -%}
+                       [src_payload[2], 'VARCHAR(15)', 'CUSTOMER_PHONE']]               -%}
 {%- set tgt_eff = source                                                                -%}
 {%- set tgt_ldts = source                                                               -%}
 {%- set tgt_source = source                                                             -%}

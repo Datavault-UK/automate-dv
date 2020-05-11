@@ -59,3 +59,9 @@ sources:
         identifier: stg_transaction_current
       - name: stg_eff_sat_current
         identifier: test_stg_eff_sat_current
+  - name: test_unit
+    database: DBT_VAULT
+    schema: TEST
+    tables:
+      - name: source
+        identifier: raw_source

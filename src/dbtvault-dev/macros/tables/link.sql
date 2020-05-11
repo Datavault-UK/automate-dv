@@ -64,11 +64,11 @@ STG AS (
     WHERE
     {%- for fk in fk_cols %}
     {%- if loop.index == fk_cols|length %}
-    {{ fk }}<>{{ dbtvault.hash_check("'^^'") }} AND
-    {{ fk }}<>{{ dbtvault.hash_check("''") }}
+    {{ fk }} <> {{ dbtvault.hash_check("^^") }} AND
+    {{ fk }} <> {{ dbtvault.hash_check("") }}
     {%- else %}
-    {{ fk }}<>{{ dbtvault.hash_check("'^^'") }} AND
-    {{ fk }}<>{{ dbtvault.hash_check("''") }} AND
+    {{ fk }} <> {{ dbtvault.hash_check("^^") }} AND
+    {{ fk }} <> {{ dbtvault.hash_check("") }} AND
     {%- endif -%}
     {%- endfor -%}
     ) AS b
@@ -87,11 +87,11 @@ STG AS (
     WHERE
     {%- for fk in fk_cols %}
     {%- if loop.index == fk_cols|length %}
-    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("'^^'") }} AND
-    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("''") }}
+    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("^^") }} AND
+    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("") }}
     {%- else %}
-    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("'^^'") }} AND
-    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("''") }} AND
+    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("^^") }} AND
+    {{ dbtvault.prefix([fk], 'b') }}<>{{ dbtvault.hash_check("") }} AND
     {%- endif -%}
     {%- endfor -%}) AS a
     WHERE RN = 1)
