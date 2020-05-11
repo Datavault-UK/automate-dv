@@ -138,7 +138,7 @@ Feature: Loading through multiple tables and cycles from source to vault
       | md5('1015\|\|10048') | md5('1015') | md5('10048') | 2019-05-07 | *      |
       | md5('1040\|\|10070') | md5('1040') | md5('10070') | 2019-05-04 | *      |
     Then we expect the TEST_SAT_CUST_CUSTOMER_DETAILS table to contain
-      | CUSTOMER_PK | CUSTOMER_HASHDIFF                       | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_HASHDIFF                      | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT')    | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')      | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|JACK')      | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
