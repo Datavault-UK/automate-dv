@@ -29,7 +29,7 @@
                          source[loop.index0], letter) -}}
 
       {% if not loop.last %}
-      UNION
+      UNION ALL
       {%- endif -%}
       {%- endfor %}
       ) AS src
