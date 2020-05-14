@@ -38,7 +38,7 @@ class TestAliasMacro(TestCase):
 
         self.assertIn('Done', process_logs)
 
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(self):
 

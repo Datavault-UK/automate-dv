@@ -37,7 +37,7 @@
 
             {%- else -%}
 
-                {% if col is iterable and col is not string %}
+                {%- if col is iterable and col is not string -%}
 
                     {{- dbtvault.prefix(col, prefix_str) -}}
 
@@ -47,7 +47,7 @@
 
                 {%- endif -%}
 
-                {%- if not loop.last -%} , {% endif %}
+                {{- ', ' if not loop.last -}}
 
             {%- endif -%}
 
@@ -57,7 +57,7 @@
 
         {%- if execute -%}
 
-            {{ exceptions.raise_compiler_error("Invalid parameters provided to prefix macro. Expected: (columns [list/string], prefix_str [string]) got: (" ~ columns ~ ", " ~ prefix_str ~ ")") }}
+            {{- exceptions.raise_compiler_error("Invalid parameters provided to prefix macro. Expected: (columns [list/string], prefix_str [string]) got: (" ~ columns ~ ", " ~ prefix_str ~ ")") -}}
 
         {%- endif -%}
 

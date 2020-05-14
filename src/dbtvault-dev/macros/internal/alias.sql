@@ -10,9 +10,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro alias(source_column='', prefix='') -%}
+{%- macro alias(source_column=none, prefix=none) -%}
 
-{%- if (source_column is defined and source_column) -%}
+{%- if source_column -%}
 
     {%- if source_column is iterable and source_column is not string -%}
 
