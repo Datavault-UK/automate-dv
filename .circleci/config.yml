@@ -19,7 +19,7 @@ jobs:
           command: python -m unittest discover -s tests/unit -t tests/unit -v
       - slack/status:
           fail_only: false
-          mentions: 'URXTX0XEZ,UTUP7UC78'
+          mentions: 'URXTX0XEZ'
       
 
 workflows:
