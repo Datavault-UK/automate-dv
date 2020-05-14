@@ -1,8 +1,10 @@
 version: 2.1
 
+
 orbs:
   python: 'circleci/python@0.3.0'
-
+  slack: circleci/slack@3.4.2
+  
 jobs:
   build-and-test:
     executor: python/default
@@ -15,6 +17,9 @@ jobs:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
           command: python -m unittest discover -s tests/unit -t tests/unit -v
+      - slack/status:
+          fail_only: true
+          mentions: 'URXTX0XEZ,UTUP7UC78'
       
 
 workflows:
