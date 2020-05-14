@@ -196,6 +196,24 @@ models:
                     - CUSTOMER_ID
                     - NATIONALITY
                     - PHONE
+      tables:
+        hub:
+          test_hub_macro_single_source:
+            vars:
+              source_model: 'raw_source'
+              src_pk: 'TEST_COLUMN_2'
+              src_nk: 'TEST_COLUMN_3'
+              src_ldts: 'TEST_COLUMN_4'
+              src_source: 'TEST_COLUMN_5'
+          test_hub_macro_multi_source:
+            vars:
+              source_model: 
+                - 'raw_source'
+                - 'raw_source_2'
+              src_pk: 'TEST_COLUMN_2'
+              src_nk: 'TEST_COLUMN_3'
+              src_ldts: 'TEST_COLUMN_4'
+              src_source: 'TEST_COLUMN_5'
     feature:
       tags:
         - feature
