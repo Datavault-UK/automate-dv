@@ -13,7 +13,7 @@ class TestStageMacro(TestCase):
 
         os.chdir(TESTS_DBT_ROOT)
 
-        cls.dbt_test.run_dbt_model(mode='run', model='raw_source')
+        cls.dbt_test.run_dbt_seed()
 
     def setUp(self) -> None:
         self.dbt_test.clean_target()
@@ -37,6 +37,9 @@ class TestStageMacro(TestCase):
         model = 'test_stage_source_relation_style'
 
         expected_file_name = 'test_stage_correctly_generates_SQL_from_YAML_with_source_style'
+
+        # Load stagi`1ng
+        self.dbt_test.run_dbt_model(mode='run', model='raw_source_table')
 
         process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
@@ -98,4 +101,5 @@ class TestStageMacro(TestCase):
 
         process_logs = self.dbt_test.run_dbt_model(mode='run', model=model)
 
-        self.assertIn('Staging error: Missing source_model configuration. A source model name must be provided.', process_logs)
+        self.assertIn('Staging error: Missing source_model configuration. A source model name must be provided.',
+                      process_logs)

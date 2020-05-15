@@ -11,9 +11,9 @@
     limitations under the License.
 -#}
 
-{%- macro prefix(columns, prefix_str, alias_target='source') -%}
+{%- macro prefix(columns=none, prefix_str=none, alias_target='source') -%}
 
-    {%- if (columns is defined and columns) and (prefix_str is defined and prefix_str) -%}
+    {%- if columns and prefix_str -%}
 
         {%- for col in columns -%}
 
@@ -41,9 +41,9 @@
 
                     {{- dbtvault.prefix(col, prefix_str) -}}
 
-                {%- else -%}
-
+                {%- elif col is not none -%}
                     {{- prefix_str}}.{{col.strip() -}}
+                {% else %}
 
                 {%- endif -%}
 
