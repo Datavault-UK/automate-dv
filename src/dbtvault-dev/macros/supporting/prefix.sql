@@ -43,8 +43,11 @@
 
                 {%- elif col is not none -%}
                     {{- prefix_str}}.{{col.strip() -}}
-                {% else %}
+                {% else %}       
 
+                    {%- if execute -%}
+                        {{- exceptions.raise_compiler_error("Unexpected or missing configuration for '" ~ this ~ "' Unable to prefix columns.") -}}
+                    {%- endif -%}
                 {%- endif -%}
 
                 {{- ', ' if not loop.last -}}
@@ -56,11 +59,8 @@
     {%- else -%}
 
         {%- if execute -%}
-
             {{- exceptions.raise_compiler_error("Invalid parameters provided to prefix macro. Expected: (columns [list/string], prefix_str [string]) got: (" ~ columns ~ ", " ~ prefix_str ~ ")") -}}
-
         {%- endif -%}
-
     {%- endif -%}
 
 {%- endmacro -%}
