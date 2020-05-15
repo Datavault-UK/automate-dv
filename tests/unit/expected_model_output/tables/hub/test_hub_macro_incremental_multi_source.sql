@@ -4,9 +4,9 @@ WITH STG_1 AS (
     FROM (
         SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
         ROW_NUMBER() OVER(
-            PARTITION BY CUSTOMER_PK 
-            ORDER BY LOADDATE ASC)
-        AS RN
+            PARTITION BY CUSTOMER_PK
+            ORDER BY LOADDATE ASC
+        ) AS RN
         FROM DBT_VAULT.TEST.raw_source
     ) AS a
     WHERE RN = 1
@@ -17,9 +17,9 @@ STG_2 AS (
     FROM (
         SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
         ROW_NUMBER() OVER(
-            PARTITION BY CUSTOMER_PK 
-            ORDER BY LOADDATE ASC)
-        AS RN
+            PARTITION BY CUSTOMER_PK
+            ORDER BY LOADDATE ASC
+        ) AS RN
         FROM DBT_VAULT.TEST.raw_source
     ) AS a
     WHERE RN = 1
@@ -30,9 +30,9 @@ STG AS (
     FROM (
             SELECT *,
             ROW_NUMBER() OVER(
-                PARTITION BY CUSTOMER_PK 
-                ORDER BY LOADDATE, RECORD_SOURCE ASC) 
-            AS RN
+                PARTITION BY CUSTOMER_PK
+                ORDER BY LOADDATE, RECORD_SOURCE ASC
+            ) AS RN
             FROM (
                 SELECT * FROM STG_1
                 UNION ALL

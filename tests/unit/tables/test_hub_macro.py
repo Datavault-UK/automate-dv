@@ -7,7 +7,6 @@ class TestHubMacro(TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-
         macro_type = 'tables'
 
         cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/hub')
@@ -17,11 +16,9 @@ class TestHubMacro(TestCase):
         cls.dbt_test.run_dbt_seed()
 
     def setUp(self) -> None:
-
         self.dbt_test.clean_target()
 
     def test_hub_macro_correctly_generates_sql_for_single_source(self):
-
         model = 'test_hub_macro_single_source'
 
         expected_file_name = 'test_hub_macro_single_source'
@@ -37,7 +34,6 @@ class TestHubMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_single_source(self):
-
         model = 'test_hub_macro_incremental_single_source'
 
         expected_file_name = 'test_hub_macro_incremental_single_source'
@@ -56,7 +52,6 @@ class TestHubMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_multi_source(self):
-
         model = 'test_hub_macro_multi_source'
 
         expected_file_name = 'test_hub_macro_multi_source'
@@ -72,7 +67,6 @@ class TestHubMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_multi_source(self):
-
         model = 'test_hub_macro_incremental_multi_source'
 
         expected_file_name = 'test_hub_macro_incremental_multi_source'

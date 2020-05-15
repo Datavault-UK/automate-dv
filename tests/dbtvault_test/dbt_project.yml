@@ -231,6 +231,48 @@ models:
               src_nk: "CUSTOMER_ID"
               src_ldts: "LOADDATE"
               src_source: "RECORD_SOURCE"
+        link:
+          materialized: "incremental"
+          test_link_macro_single_source:
+            vars:
+              source_model: "raw_source"
+              src_pk: "CUSTOMER_PK"
+              src_fk: 
+                - "ORDER_FK"
+                - "BOOKING_FK"
+              src_ldts: "LOADDATE"
+              src_source: "RECORD_SOURCE"
+          test_link_macro_incremental_single_source:
+            vars:
+              source_model: "raw_source"
+              src_pk: "CUSTOMER_PK"
+              src_fk: 
+                - "ORDER_FK"
+                - "BOOKING_FK"
+              src_ldts: "LOADDATE"
+              src_source: "RECORD_SOURCE"
+          test_link_macro_multi_source:
+            vars:
+              source_model:
+                - "raw_source"
+                - "raw_source_2"
+              src_pk: "CUSTOMER_PK"
+              src_fk: 
+                - "ORDER_FK"
+                - "BOOKING_FK"
+              src_ldts: "LOADDATE"
+              src_source: "RECORD_SOURCE"
+          test_link_macro_incremental_multi_source:
+            vars:
+              source_model:
+                - "raw_source"
+                - "raw_source_2"
+              src_pk: "CUSTOMER_PK"
+              src_fk: 
+                - "ORDER_FK"
+                - "BOOKING_FK"
+              src_ldts: "LOADDATE"
+              src_source: "RECORD_SOURCE"
     feature:
       tags:
         - feature
@@ -683,9 +725,13 @@ seeds:
     raw_source:
       column_types:
         CUSTOMER_PK: BINARY(16)
+        BOOKING_FK: BINARY(16)
+        ORDER_FK: BINARY(16)
         LOADDATE: DATE
     raw_source_2:
       column_types:
         CUSTOMER_PK: BINARY(16)
+        BOOKING_FK: BINARY(16)
+        ORDER_FK: BINARY(16)
         LOADDATE: DATE
         
