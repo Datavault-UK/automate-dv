@@ -41,6 +41,19 @@ class DBTTestUtils:
             self.logger.propagate = False
 
     @staticmethod
+    def run_dbt_seed():
+
+        p = Popen(['dbt', 'seed', '--full-refresh'], stdout=PIPE)
+
+        stdout, _ = p.communicate()
+
+        p.wait()
+
+        logs = stdout.decode('utf-8')
+
+        return logs
+
+    @staticmethod
     def run_dbt_model(*, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False,
                       include_tag=False) -> str:
         """
@@ -62,11 +75,9 @@ class DBTTestUtils:
             model = f'+{model}'
 
         if full_refresh:
-            full_refresh_str = ' --full-refresh'
+            command = ['dbt', mode, '--full-refresh', '-m', model]
         else:
-            full_refresh_str = ''
-
-        command = ['dbt', "".join([mode, full_refresh_str]), '-m', model]
+            command = ['dbt', mode, '-m', model]
 
         if model_vars:
             yaml_str = str(model_vars).replace('\'', '"')
