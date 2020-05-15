@@ -28,9 +28,9 @@ STG_{{ loop.index|string }} AS (
     FROM (
         SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
         ROW_NUMBER() OVER(
-            PARTITION BY CUSTOMER_PK 
-            ORDER BY LOADDATE ASC)
-        AS RN
+            PARTITION BY CUSTOMER_PK
+            ORDER BY LOADDATE ASC
+        ) AS RN
         FROM DBT_VAULT.TEST.raw_source
     ) AS a
     WHERE RN = 1
@@ -42,9 +42,9 @@ STG AS (
     FROM (
             SELECT *,
             ROW_NUMBER() OVER(
-                PARTITION BY {{ src_pk }} 
-                ORDER BY {{ src_ldts }}, {{ src_source }} ASC) 
-            AS RN
+                PARTITION BY {{ src_pk }}
+                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
+            ) AS RN
             FROM (
             {%- for src in source_model %}
                 SELECT * {{ 'FROM ' -}}
@@ -68,8 +68,8 @@ STG AS (
         SELECT b.*,
         ROW_NUMBER() OVER(
             PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
-            ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}, {{ dbtvault.prefix([src_source], 'b') }} ASC) 
-        AS RN
+            ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}, {{ dbtvault.prefix([src_source], 'b') }} ASC
+        ) AS RN
         FROM {{ ref(source_model) }} AS b
         WHERE {{ dbtvault.prefix([src_pk], 'b') }} <> {{ dbtvault.hash_check("^^") }}
         AND {{ dbtvault.prefix([src_pk], 'b') }} <> {{ dbtvault.hash_check("") }}
