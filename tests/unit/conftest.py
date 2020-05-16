@@ -6,7 +6,7 @@ from pathlib import Path
 @pytest.fixture(scope="class")
 def dbt_test_utils(request):
     """
-    Setup DBTTestUtils to use a different macro_folder and macro_name for the current macro under test.
+    Configure the model_directory in DBTTestUtils using the directory structure of the macro under test.
     """
 
     test_path = Path(request.fspath.strpath)
