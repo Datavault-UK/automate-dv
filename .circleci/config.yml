@@ -16,7 +16,7 @@ jobs:
       - run:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
-          command: python -m unittest discover -s tests/unit -t tests/unit -v
+          command: python -m pytest ./tests/unit
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
