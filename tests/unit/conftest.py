@@ -18,11 +18,20 @@ def dbt_test_utils(request):
 
 @pytest.fixture(autouse=True)
 def clean_target(dbt_test_utils):
+    """ Clean the target folder for each test"""
     DBTTestUtils.clean_target()
     yield
 
 
 @pytest.fixture(autouse=True)
 def set_dbt_directory():
+    """ Set the current working directory as the dbt project location for each test"""
     os.chdir(TESTS_DBT_ROOT)
     yield
+
+
+@pytest.fixture(autouse=True)
+def expected_filename(request):
+    """ Provide the current test name to every test, as the filename for expected output file for that tests"""
+
+    request.cls.current_test_name = request.node.name
