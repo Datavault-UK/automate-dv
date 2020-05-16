@@ -38,7 +38,7 @@ class TestLinkMacro(TestCase):
 
     def test_link_macro_correctly_generates_sql_for_incremental_single_source(self):
 
-        model = 'test_link_macro_incremental_single_source'
+        model = 'test_link_macro_single_source'
 
         expected_file_name = 'test_link_macro_incremental_single_source'
 
@@ -71,7 +71,7 @@ class TestLinkMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_link_macro_correctly_generates_sql_for_incremental_multi_source(self):
-        model = 'test_link_macro_incremental_multi_source'
+        model = 'test_link_macro_multi_source'
 
         expected_file_name = 'test_link_macro_incremental_multi_source'
 
