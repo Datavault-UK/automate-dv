@@ -31,7 +31,7 @@ STG_{{ loop.index|string }} AS (
             PARTITION BY CUSTOMER_PK
             ORDER BY LOADDATE ASC
         ) AS RN
-        FROM DBT_VAULT.TEST.raw_source
+        FROM {{ ref(src) }}
     ) AS a
     WHERE RN = 1
 ),
@@ -47,8 +47,7 @@ STG AS (
             ) AS RN
             FROM (
             {%- for src in source_model %}
-                SELECT * {{ 'FROM ' -}}
-                STG_{{ loop.index|string }}
+                SELECT * {{ 'FROM ' -}} STG_{{ loop.index|string }}
                 {%- if not loop.last %}
                 UNION ALL
                 {%- endif %}

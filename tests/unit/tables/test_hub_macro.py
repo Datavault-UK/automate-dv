@@ -23,7 +23,7 @@ class TestHubMacro(TestCase):
 
         expected_file_name = 'test_hub_macro_single_source'
 
-        process_logs = self.dbt_test.run_dbt_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model, full_refresh=True)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -34,7 +34,7 @@ class TestHubMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_single_source(self):
-        model = 'test_hub_macro_incremental_single_source'
+        model = 'test_hub_macro_single_source'
 
         expected_file_name = 'test_hub_macro_incremental_single_source'
 
@@ -56,7 +56,7 @@ class TestHubMacro(TestCase):
 
         expected_file_name = 'test_hub_macro_multi_source'
 
-        process_logs = self.dbt_test.run_dbt_model(model=model)
+        process_logs = self.dbt_test.run_dbt_model(model=model, full_refresh=True)
 
         actual_sql = self.dbt_test.retrieve_compiled_model(model)
 
@@ -67,7 +67,7 @@ class TestHubMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_multi_source(self):
-        model = 'test_hub_macro_incremental_multi_source'
+        model = 'test_hub_macro_multi_source'
 
         expected_file_name = 'test_hub_macro_incremental_multi_source'
 
