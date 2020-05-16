@@ -29,9 +29,9 @@ jobs:
           paths:
             - /
       - run:
-          command: cd tests/dbtvault_test/ ; dbt deps
+          command: cd tests/dbtvault_test/ ; pipenv run dbt deps
       - run:
-          command: python -m pytest ./tests/unit
+          command: pipenv run python -m pytest ./tests/unit
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
