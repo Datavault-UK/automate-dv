@@ -32,6 +32,6 @@ def set_dbt_directory():
 
 @pytest.fixture(autouse=True)
 def expected_filename(request):
-    """ Provide the current test name to every test, as the filename for expected output file for that tests"""
+    """ Provide the current test name to every test, as the filename for the expected output file for that test"""
 
     request.cls.current_test_name = request.node.name
