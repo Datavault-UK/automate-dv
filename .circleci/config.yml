@@ -10,7 +10,10 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/load-cache
+      - restore_cache:
+          keys:
+            - v1-dbtvault-dev-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - v1-dbtvault-
       - run:
           name: Install pip
           command: |
@@ -21,7 +24,10 @@ jobs:
           command: |
             sudo pip install pipenv
             pipenv install
-      - python/save-cache
+      - save_cache:
+          key: v1-dbtvault-dev-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - /
       - run:
           command: cd tests/dbtvault_test/ ; dbt deps
       - run:
