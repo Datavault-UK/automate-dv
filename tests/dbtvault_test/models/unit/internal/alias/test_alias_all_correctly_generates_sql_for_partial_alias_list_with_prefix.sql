@@ -1,0 +1,1 @@
+{{ dbtvault.alias_all(columns=var('columns'), prefix=var('prefix')) }}

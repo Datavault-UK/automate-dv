@@ -16,9 +16,9 @@ def dbt_test_utils(request):
     request.cls.dbt_test_utils = DBTTestUtils(model_directory=f"{macro_folder}/{macro_under_test}")
 
 
-@pytest.fixture(autouse=True)
-def clean_target(dbt_test_utils):
-    """ Clean the target folder for each test"""
+@pytest.fixture(autouse=True, scope='session')
+def clean_target():
+    """ Clean the target folder for each session"""
     DBTTestUtils.clean_target()
     yield
 
