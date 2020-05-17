@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.usefixtures('dbt_test_utils')
+@pytest.mark.usefixtures('dbt_test_utils', 'run_seeds')
 class TestDeriveColumnsMacro:
 
     def test_derive_columns_correctly_generates_sql_with_source_columns(self):

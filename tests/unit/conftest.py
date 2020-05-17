@@ -35,3 +35,10 @@ def expected_filename(request):
     """ Provide the current test name to every test, as the filename for the expected output file for that test"""
 
     request.cls.current_test_name = request.node.name
+
+
+@pytest.fixture(scope='class')
+def run_seeds():
+    os.chdir(TESTS_DBT_ROOT)
+    DBTTestUtils.run_dbt_seed()
+    yield
