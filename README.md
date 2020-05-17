@@ -9,6 +9,7 @@
 </p>
 
 
+[![CircleCI](https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=svg&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c)](https://app.circleci.com/pipelines/github/Datavault-UK/dbtvault-dev)
 [![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
