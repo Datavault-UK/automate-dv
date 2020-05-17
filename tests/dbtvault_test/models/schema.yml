@@ -64,4 +64,4 @@ sources:
     schema: TEST
     tables:
       - name: source
-        identifier: raw_source
+        identifier: raw_source_table

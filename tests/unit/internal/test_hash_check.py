@@ -1,74 +1,35 @@
-from unittest import TestCase
-
-from tests.utils.dbt_test_utils import *
+import pytest
 
 
-class TestHashCheckMacro(TestCase):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-
-        macro_type = 'internal'
-
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/hash_check')
-
-        os.chdir(TESTS_DBT_ROOT)
-
-        cls.model = 'test_hash_check'
-
-    def setUp(self) -> None:
-
-        self.dbt_test.clean_target()
+@pytest.mark.usefixtures('dbt_test_utils')
+class TestHashCheckMacro:
 
     def test_hash_check_with_md5_setting(self):
+        var_dict = {'hash': 'MD5', 'col': '^^'}
 
-        expected_file_name = 'test_hash_check_with_md5_setting'
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        var_dict = {
-            'hash': 'MD5',
-            'col': '^^'}
-
-        process_logs = self.dbt_test.run_dbt_model(model=self.model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_check_with_sha_setting(self):
+        var_dict = {'hash': 'SHA', 'col': '^^'}
 
-        expected_file_name = 'test_hash_check_with_sha_setting'
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        var_dict = {
-            'hash': 'SHA',
-            'col': '^^'}
-
-        process_logs = self.dbt_test.run_dbt_model(model=self.model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_check_with_default_setting(self):
+        var_dict = {'col': '^^'}
 
-        expected_file_name = 'test_hash_check_with_default_setting'
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        var_dict = {
-            'col': '^^'}
-
-        process_logs = self.dbt_test.run_dbt_model(model=self.model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(self.model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql

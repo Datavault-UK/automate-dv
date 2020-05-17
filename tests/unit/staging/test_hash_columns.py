@@ -1,184 +1,93 @@
-from unittest import TestCase
-
-from tests.utils.dbt_test_utils import *
+import pytest
 
 
-class TestHashColumnsMacro(TestCase):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-
-        macro_type = 'staging'
-
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/hash_columns')
-
-        os.chdir(TESTS_DBT_ROOT)
-
-    def setUp(self) -> None:
-
-        self.dbt_test.clean_target()
+@pytest.mark.usefixtures('dbt_test_utils')
+class TestHashColumnsMacro:
 
     def test_hash_columns_correctly_generates_hashed_columns_for_single_columns(self):
-
-        model = 'test_hash_columns'
-
-        expected_file_name = 'test_hash_columns_correctly_generates_hashed_columns_for_single_columns'
-
         var_dict = {
-            'columns': {'BOOKING_PK': 'BOOKING_REF',
-                        'CUSTOMER_PK': 'CUSTOMER_ID'}
-        }
+            'columns': {
+                'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_PK': 'CUSTOMER_ID'}}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns(self):
-
-        model = 'test_hash_columns'
-
-        expected_file_name = 'test_hash_columns_correctly_generates_hashed_columns_for_composite_columns'
-
         var_dict = {
-            'columns': {'BOOKING_PK': 'BOOKING_REF',
-                        'CUSTOMER_DETAILS': ['ADDRESS', 'PHONE', 'NAME']}
-        }
+            'columns': {
+                'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': ['ADDRESS', 'PHONE', 'NAME']}}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns(self):
-
-        model = 'test_hash_columns'
-
-        expected_file_name = 'test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns'
-
         var_dict = {
-            'columns': {'BOOKING_PK': 'BOOKING_REF',
-                        'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'],
-                                             'sort': True}},
+            'columns': {
+                'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': {
+                    'columns': ['ADDRESS', 'PHONE', 'NAME'], 'hashdiff': True}}}
 
-        }
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns(self):
-
-        model = 'test_hash_columns'
-
-        expected_file_name = 'test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns'
-
-        var_dict = {
-            'columns': {'BOOKING_PK': 'BOOKING_REF',
-                        'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'],
-                                             'sort': True},
-                        'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'],
-                                          'sort': False}}
-
-        }
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
-
-        model = 'test_hash_columns'
-
-        expected_file_name = 'test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping'
-
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF',
-                'CUSTOMER_DETAILS': {
-                    'columns': ['ADDRESS', 'PHONE', 'NAME']}},
+                'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'], 'hashdiff': True},
+                'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'], 'hashdiff': False}}}
 
-        }
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+    def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
+        var_dict = {
+            'columns': {
+                'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': {
+                    'columns': ['ADDRESS', 'PHONE', 'NAME']}}, }
 
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_sql_from_yaml(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        model = 'test_hash_columns'
-
-        expected_file_name = 'test_hash_columns_correctly_generates_sql_from_yaml'
-
-        process_logs = self.dbt_test.run_dbt_model(model=model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        model = 'test_hash_columns_with_constants'
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        expected_file_name = 'test_hash_columns_correctly_generates_sql_with_constants_from_yaml'
+    def test_hash_columns_raises_warning_if_mapping_without_hashdiff(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        warning_message = "You provided a list of columns under a 'columns' key, " \
+                          "but did not provide the 'hashdiff' flag. Use list syntax for PKs."
 
-        process_logs = self.dbt_test.run_dbt_model(model=model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_hash_columns_raises_warning_if_mapping_without_sort(self):
-
-        model = 'test_hash_columns_missing_sort'
-
-        expected_file_name = 'test_hash_columns_raises_warning_if_mapping_without_sort'
-
-        process_logs = self.dbt_test.run_dbt_model(model=model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        warning_message = "You provided a list of columns under a 'column' key, " \
-                          "but did not provide the 'sort' flag. HASHDIFF columns should be sorted."
-
-        self.assertIn(warning_message, process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert warning_message in process_logs
+        assert actual_sql == expected_sql

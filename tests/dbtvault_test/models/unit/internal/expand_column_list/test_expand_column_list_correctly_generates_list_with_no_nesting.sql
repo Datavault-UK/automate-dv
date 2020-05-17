@@ -1,0 +1,1 @@
+{{- dbtvault.expand_column_list(columns=var('columns', none)) -}}
