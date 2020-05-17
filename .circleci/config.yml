@@ -8,12 +8,14 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
+    parallelism: 4
     steps:
       - checkout
       - restore_cache:
           keys:
-            - v1-dbtvault-dev-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-            - v1-dbtvault-
+            - v1-dbtvault-dev-{{ arch }}-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - v1-dbtvault-dev-{{ arch }}-{{ .Branch }}
+            - v1-dbtvault-dev-
       - run:
           name: Install pip
           command: |
@@ -27,7 +29,7 @@ jobs:
       - save_cache:
           key: v1-dbtvault-dev-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
-            - /
+            - /.circleci/.cache
       - run:
           command: cd tests/dbtvault_test/ ; pipenv run dbt deps
       - run:
