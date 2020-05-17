@@ -8,7 +8,7 @@ source-paths: ["models", "models_test"]
 analysis-paths: ["analysis"] 
 test-paths: ["tests"]
 data-paths: ["data"]
-macro-paths: ["macros", "macros_deprecated"]
+macro-paths: ["macros"]
 
 target-path: "target"
 clean-targets:
