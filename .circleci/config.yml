@@ -18,7 +18,7 @@ jobs:
           name: Install pip
           command: |
             sudo apt update
-            sudo apt install -y python-pip python-dev
+            sudo apt install -y python-pip python-dev tar untar gzip
       - run:
           name: Install pipenv and dependencies
           command: |
@@ -31,7 +31,7 @@ jobs:
       - run:
           command: cd tests/dbtvault_test/ ; pipenv run dbt deps
       - run:
-          command: pipenv run python -m pytest ./tests/unit -n 4
+          command: pipenv run python -m pytest -n 4 ./tests/unit
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
