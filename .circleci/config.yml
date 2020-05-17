@@ -19,7 +19,7 @@ jobs:
           name: Install pip
           command: |
             sudo apt update
-            sudo apt install -y python-pip python-dev tar untar gzip
+            sudo apt install -y python-pip python-dev tar gzip
       - run:
           name: Install pipenv and dependencies
           command: |
