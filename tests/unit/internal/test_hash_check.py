@@ -12,7 +12,7 @@ class TestHashCheckMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert expected_sql == actual_sql
+        assert actual_sql == expected_sql
 
     def test_hash_check_with_sha_setting(self):
         var_dict = {'hash': 'SHA', 'col': '^^'}
@@ -22,7 +22,7 @@ class TestHashCheckMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert expected_sql == actual_sql
+        assert actual_sql == expected_sql
 
     def test_hash_check_with_default_setting(self):
         var_dict = {'col': '^^'}
@@ -32,4 +32,4 @@ class TestHashCheckMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert expected_sql == actual_sql
+        assert actual_sql == expected_sql
