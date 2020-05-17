@@ -28,7 +28,7 @@
         {%- elif columns[col] is mapping and not columns[col].hashdiff -%}
 
             {%- if execute -%}
-                {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'column' key, but did not provide the 'hashdiff' flag. HASHDIFF columns should be hashdiffed.") -%}
+                {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'hashdiff' flag. Use list syntax for PKs.") -%}
             {% endif %}
 
             {{- dbtvault.hash(columns[col]['columns'], col) -}}
