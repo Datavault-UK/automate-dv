@@ -11,9 +11,9 @@
     limitations under the License.
 -#}
 
-{%- macro prefix(columns, prefix_str, alias_target='source') -%}
+{%- macro prefix(columns=none, prefix_str=none, alias_target='source') -%}
 
-    {%- if (columns is defined and columns) and (prefix_str is defined and prefix_str) -%}
+    {%- if columns and prefix_str -%}
 
         {%- for col in columns -%}
 
@@ -37,17 +37,20 @@
 
             {%- else -%}
 
-                {% if col is iterable and col is not string %}
+                {%- if col is iterable and col is not string -%}
 
                     {{- dbtvault.prefix(col, prefix_str) -}}
 
-                {%- else -%}
-
+                {%- elif col is not none -%}
                     {{- prefix_str}}.{{col.strip() -}}
+                {% else %}       
 
+                    {%- if execute -%}
+                        {{- exceptions.raise_compiler_error("Unexpected or missing configuration for '" ~ this ~ "' Unable to prefix columns.") -}}
+                    {%- endif -%}
                 {%- endif -%}
 
-                {%- if not loop.last -%} , {% endif %}
+                {{- ', ' if not loop.last -}}
 
             {%- endif -%}
 
@@ -56,11 +59,8 @@
     {%- else -%}
 
         {%- if execute -%}
-
-            {{ exceptions.raise_compiler_error("Invalid parameters provided to prefix macro. Expected: (columns [list/string], prefix_str [string]) got: (" ~ columns ~ ", " ~ prefix_str ~ ")") }}
-
+            {{- exceptions.raise_compiler_error("Invalid parameters provided to prefix macro. Expected: (columns [list/string], prefix_str [string]) got: (" ~ columns ~ ", " ~ prefix_str ~ ")") -}}
         {%- endif -%}
-
     {%- endif -%}
 
 {%- endmacro -%}

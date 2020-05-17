@@ -41,7 +41,21 @@ class DBTTestUtils:
             self.logger.propagate = False
 
     @staticmethod
-    def run_dbt_model(*, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False, include_tag=False) -> str:
+    def run_dbt_seed():
+
+        p = Popen(['dbt', 'seed', '--full-refresh'], stdout=PIPE)
+
+        stdout, _ = p.communicate()
+
+        p.wait()
+
+        logs = stdout.decode('utf-8')
+
+        return logs
+
+    @staticmethod
+    def run_dbt_model(*, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False,
+                      include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
 
@@ -61,11 +75,9 @@ class DBTTestUtils:
             model = f'+{model}'
 
         if full_refresh:
-            full_refresh_str = ' --full-refresh'
+            command = ['dbt', mode, '--full-refresh', '-m', model]
         else:
-            full_refresh_str = ''
-
-        command = ['dbt', "".join([mode, full_refresh_str]), '-m', model]
+            command = ['dbt', mode, '-m', model]
 
         if model_vars:
             yaml_str = str(model_vars).replace('\'', '"')
@@ -75,20 +87,28 @@ class DBTTestUtils:
 
         stdout, _ = p.communicate()
 
-        return stdout.decode('utf-8')
+        p.wait()
 
-    def retrieve_compiled_model(self, model: str):
+        logs = stdout.decode('utf-8')
+
+        return logs
+
+    def retrieve_compiled_model(self, model: str, exclude_comments=True):
         """
         Retrieve the compiled SQL for a specific dbt model
 
             :param model: Model name to check
+            :param exclude_comments: Exclude comments from output
             :return: Contents of compiled SQL file
         """
 
         with open(self.compiled_model_path / f'{model}.sql') as f:
             file = f.readlines()
 
-            return "".join([line for line in file if '--' not in line]).strip()
+            if exclude_comments:
+                file = [line for line in file if '--' not in line]
+
+            return "".join(file).strip()
 
     def retrieve_expected_sql(self, file_name: str):
         """

@@ -1,167 +1,89 @@
-from unittest import TestCase
-
-from tests.utils.dbt_test_utils import *
+import pytest
 
 
-class TestAliasMacro(TestCase):
+@pytest.mark.usefixtures('dbt_test_utils')
+class TestAliasMacro:
 
-    @classmethod
-    def setUpClass(cls) -> None:
+    def test_alias_single_correctly_generates_sql(self):
+        var_dict = {'source_column': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
 
-        macro_type = 'internal'
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/alias')
-
-        os.chdir(TESTS_DBT_ROOT)
-
-    def setUp(self) -> None:
-
-        self.dbt_test.clean_target()
-
-    def test_alias_single_correctly_generates_SQL(self):
-
-        model = 'test_alias_single'
-
-        expected_file_name = 'test_alias_single_correctly_generates_sql'
-
-        var_dict = {
-            'source_column': {
-                "source_column": "CUSTOMER_HASHDIFF",
-                "alias": "HASHDIFF"},
-            'prefix': 'c'}
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(actual_sql, expected_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
     def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(self):
-
-        model = 'test_alias_single'
-
         var_dict = {'source_column': {}, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
 
-        self.assertIn(model, process_logs)
-
-        self.assertIn('Invalid alias configuration:',
-                      process_logs)
+        assert self.current_test_name in process_logs
+        assert 'Invalid alias configuration:' in process_logs
 
     def test_alias_single_with_missing_column_metadata_raises_error(self):
-
-        model = 'test_alias_single'
-
         var_dict = {'source_column': '', 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
 
-        self.assertIn(model, process_logs)
-
-        self.assertIn('Invalid alias configuration:',
-                      process_logs)
+        assert self.current_test_name in process_logs
+        assert 'Invalid alias configuration:' in process_logs
 
     def test_alias_single_with_undefined_column_metadata_raises_error(self):
-
-        model = 'test_alias_single_undefined_columns'
-
         var_dict = {'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
 
-        self.assertIn(model, process_logs)
+        assert self.current_test_name in process_logs
+        assert 'Invalid alias configuration:' in process_logs
 
-        self.assertIn('Invalid alias configuration:',
-                      process_logs)
-
-    # ALIAS_ALL
-
-    def test_alias_all_correctly_generates_SQL_for_full_alias_list_with_prefix(self):
-
-        model = 'test_alias_all'
-
-        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_full_alias_list_with_prefix'
-
+    def test_alias_all_correctly_generates_sql_for_full_alias_list_with_prefix(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
                    {"source_column": "ORDER_HASHDIFF", "alias": "HASHDIFF"},
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
-
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+        assert 'Done.' in process_logs
+        assert actual_sql == expected_sql
 
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done.', process_logs)
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_alias_all_correctly_generates_SQL_for_partial_alias_list_with_prefix(self):
-
-        model = 'test_alias_all'
-
-        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_partial_alias_list_with_prefix'
-
-        columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
-                   "ORDER_HASHDIFF",
+    def test_alias_all_correctly_generates_sql_for_partial_alias_list_with_prefix(self):
+        columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "ORDER_HASHDIFF",
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
-
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+        assert 'Done.' in process_logs
+        assert actual_sql == expected_sql
 
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done.', process_logs)
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_alias_all_correctly_generates_SQL_for_full_alias_list_without_prefix(self):
-
-        model = 'test_alias_all_without_prefix'
-
-        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_full_alias_list_without_prefix'
-
+    def test_alias_all_correctly_generates_sql_for_full_alias_list_without_prefix(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
                    {"source_column": "ORDER_HASHDIFF", "alias": "HASHDIFF"},
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
 
         var_dict = {'columns': columns}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        assert 'Done.' in process_logs
+        assert actual_sql == expected_sql
 
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done.', process_logs)
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_alias_all_correctly_generates_SQL_for_partial_alias_list_without_prefix(self):
-
-        model = 'test_alias_all_without_prefix'
-
-        expected_file_name = 'test_alias_all_correctly_generates_SQL_for_partial_alias_list_without_prefix'
-
-        columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
-                   "ORDER_HASHDIFF",
+    def test_alias_all_correctly_generates_sql_for_partial_alias_list_without_prefix(self):
+        columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "ORDER_HASHDIFF",
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
-
         var_dict = {'columns': columns}
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done.', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done.' in process_logs
+        assert actual_sql == expected_sql

@@ -1,80 +1,50 @@
-from unittest import TestCase
-
-from tests.utils.dbt_test_utils import *
+import pytest
 
 
-class TestPrefixMacro(TestCase):
-
-    @classmethod
-    def setUpClass(cls) -> None:
-
-        macro_type = 'supporting'
-
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/hash')
-
-        os.chdir(TESTS_DBT_ROOT)
-
-    def setUp(self) -> None:
-
-        self.dbt_test.clean_target()
+@pytest.mark.usefixtures('dbt_test_utils')
+class TestHashMacro:
 
     def test_hash_single_column_is_successful(self):
+        var_dict = {'columns': "CUSTOMER_ID", 'alias': 'CUSTOMER_PK'}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        model = 'test_hash'
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        expected_file_name = 'test_hash_single_column_is_successful'
+    def test_hash_single_item_list_column_for_pk_is_successful(self):
+        var_dict = {'columns': ["CUSTOMER_ID"], 'alias': 'CUSTOMER_PK'}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        var_dict = {
-            'columns': "CUSTOMER_ID",
-            'alias': 'c'}
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
+    def test_hash_single_item_list_column_for_hashdiff_is_successful(self):
+        var_dict = {'columns': ["CUSTOMER_ID"], 'alias': 'HASHDIFF', 'hashdiff': 'true'}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
+    def test_hash_multi_column_as_pk_is_successful(self):
+        var_dict = {'columns': ['CUSTOMER_ID', 'PHONE', 'DOB'], 'alias': 'CUSTOMER_PK'}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        self.assertIn('Done', process_logs)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        self.assertEqual(expected_sql, actual_sql)
+    def test_hash_multi_column_as_hashdiff_is_successful(self):
+        var_dict = {'columns': ['CUSTOMER_ID', 'PHONE', 'DOB'], 'alias': 'HASHDIFF', 'hashdiff': 'true'}
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-    def test_hash_multi_column_with_no_sort_is_successful(self):
-
-        model = 'test_hash'
-
-        expected_file_name = 'test_hash_multi_column_with_no_sort_is_successful'
-
-        var_dict = {
-            'columns': ['CUSTOMER_ID', 'PHONE', 'DOB'],
-            'alias': 'c'}
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_hash_multi_column_with_sort_is_successful(self):
-
-        model = 'test_hash_with_sort'
-
-        expected_file_name = 'test_hash_multi_column_with_sort_is_successful'
-
-        var_dict = {
-            'columns': ['CUSTOMER_ID', 'PHONE', 'DOB'],
-            'alias': 'c',
-            'sort': 'true'}
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql

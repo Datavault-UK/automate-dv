@@ -1,87 +1,35 @@
-from unittest import TestCase
-
-from tests.utils.dbt_test_utils import *
+import pytest
 
 
-class TestDeriveColumnsMacro(TestCase):
+@pytest.mark.usefixtures('dbt_test_utils', 'run_seeds')
+class TestDeriveColumnsMacro:
 
-    @classmethod
-    def setUpClass(cls) -> None:
+    def test_derive_columns_correctly_generates_sql_with_source_columns(self):
+        var_dict = {'source_model': 'raw_source', 'columns': {'SOURCE': "!STG_BOOKING", 'EFFECTIVE_FROM': 'LOADDATE'}}
 
-        macro_type = 'staging'
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
-        cls.dbt_test = DBTTestUtils(model_directory=f'{macro_type}/derive_columns')
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        os.chdir(TESTS_DBT_ROOT)
+    def test_derive_columns_correctly_generates_sql_without_source_columns(self):
+        var_dict = {'columns': {'SOURCE': "!STG_BOOKING", 'LOADDATE': 'EFFECTIVE_FROM'}}
 
-        cls.dbt_test.run_dbt_model(mode='run', model='raw_source')
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-    def setUp(self) -> None:
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
 
-        self.dbt_test.clean_target()
+    def test_derive_columns_correctly_generates_sql_with_only_source_columns(self):
+        var_dict = {'source_model': 'raw_source'}
 
-    def test_derive_columns_correctly_generates_SQL_with_source_columns(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
-        model = 'test_derive_columns_with_source_columns'
-
-        expected_file_name = 'test_derive_columns_correctly_generates_SQL_with_source_columns'
-
-        var_dict = {
-            'source_model': 'raw_source',
-            'columns': {'SOURCE': "!STG_BOOKING",
-                        'EFFECTIVE_FROM': 'LOADDATE'}
-        }
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_derive_columns_correctly_generates_SQL_without_source_columns(self):
-
-        model = 'test_derive_columns_without_source_columns'
-
-        expected_file_name = 'test_derive_columns_correctly_generates_SQL_without_source_columns'
-
-        var_dict = {
-            'columns': {'SOURCE': "!STG_BOOKING",
-                        'LOADDATE': 'EFFECTIVE_FROM'}
-        }
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
-
-    def test_derive_columns_correctly_generates_SQL_with_only_source_columns(self):
-
-        model = 'test_derive_columns_with_only_source_columns'
-
-        expected_file_name = 'test_derive_columns_correctly_generates_SQL_with_only_source_columns'
-
-        var_dict = {
-            'source_model': 'raw_source'
-        }
-
-        process_logs = self.dbt_test.run_dbt_model(model=model, model_vars=var_dict)
-
-        actual_sql = self.dbt_test.retrieve_compiled_model(model)
-
-        expected_sql = self.dbt_test.retrieve_expected_sql(expected_file_name)
-
-        self.assertIn('Done', process_logs)
-
-        self.assertEqual(expected_sql, actual_sql)
-
-
-
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql

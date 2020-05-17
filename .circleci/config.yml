@@ -10,16 +10,32 @@ jobs:
     executor: python/default
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
+      - restore_cache:
+          keys:
+            - v1-dbtvault-dev-{{ arch }}-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+            - v1-dbtvault-dev-{{ arch }}-{{ .Branch }}
+            - v1-dbtvault-dev-
       - run:
-          command: cd tests/dbtvault_test/ ; dbt deps
+          name: Install pip
+          command: |
+            sudo apt update
+            sudo apt install -y python-pip python-dev tar gzip
       - run:
-          command: python -m unittest discover -s tests/unit -t tests/unit -v
+          name: Install pipenv and dependencies
+          command: |
+            sudo pip install pipenv
+            pipenv install
+      - save_cache:
+          key: v1-dbtvault-dev-{{ arch }}-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - /.circleci/.cache
+      - run:
+          command: cd tests/dbtvault_test/ ; pipenv run dbt deps
+      - run:
+          command: pipenv run python -m pytest ./tests/unit
       - slack/status:
           fail_only: false
-          mentions: 'URXTX0XEZ,UTUP7UC78'
+          mentions: 'URXTX0XEZ'
       
 
 workflows:
