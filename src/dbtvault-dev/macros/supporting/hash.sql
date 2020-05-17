@@ -11,7 +11,7 @@
     limitations under the License.
 #}
 
-{%- macro hash(columns, alias, sort=false) -%}
+{%- macro hash(columns=none, alias=none, hashdiff=false) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
@@ -27,17 +27,17 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{#- Alpha sort columns before hashing -#}
-{%- if sort and columns is iterable and columns is not string -%}
+{#- Alpha sort columns before hashing if a hashdiff -#}
+{%- if hashdiff and columns is iterable and columns is not string -%}
     {%- set columns = columns|sort -%}
 {%- endif -%}
 
 {#- If single column to hash -#}
 {%- if columns is string -%}
-{%- set column_str = dbtvault.as_constant(columns) -%}
-CAST({{ hash_alg }}(UPPER(TRIM(CAST({{column_str}} AS VARCHAR)))) AS BINARY({{ hash_size }})) AS {{alias}}
+    {%- set column_str = dbtvault.as_constant(columns) -%}
+    CAST(({{ hash_alg }}(NULLIF(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), ''))) AS BINARY({{ hash_size }})) AS {{ alias }}
 
-{#- If list of columns to hash -#}
+{#- Else a list of columns to hash -#}
 {%- else -%}
 
 CAST({{ hash_alg }}(CONCAT(
@@ -47,10 +47,10 @@ CAST({{ hash_alg }}(CONCAT(
 {%- set column_str = dbtvault.as_constant(column) -%}
 
 {%- if not loop.last %}
-    IFNULL(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), '^^'), '||',
+    IFNULL(NULLIF(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), ''), '^^'), '||',
 {%- else %}
-    IFNULL(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), '^^') ))
-AS BINARY({{ hash_size }})) AS {{alias}}
+    IFNULL(NULLIF(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), ''), '^^') ))
+AS BINARY({{ hash_size }})) AS {{ alias }}
 {%- endif -%}
 
 {%- endfor -%}
