@@ -30,7 +30,7 @@ class TestHashColumnsMacro:
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': {
-                    'columns': ['ADDRESS', 'PHONE', 'NAME'], 'sort': True}}}
+                    'columns': ['ADDRESS', 'PHONE', 'NAME'], 'hashdiff': True}}}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -43,8 +43,8 @@ class TestHashColumnsMacro:
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF',
-                'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'], 'sort': True},
-                'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'], 'sort': False}}}
+                'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'], 'hashdiff': True},
+                'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'], 'hashdiff': False}}}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -82,12 +82,12 @@ class TestHashColumnsMacro:
         assert 'Done' in process_logs
         assert actual_sql == expected_sql
 
-    def test_hash_columns_raises_warning_if_mapping_without_sort(self):
+    def test_hash_columns_raises_warning_if_mapping_without_hashdiff(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
-        warning_message = "You provided a list of columns under a 'column' key, " \
-                          "but did not provide the 'sort' flag. HASHDIFF columns should be sorted."
+        warning_message = "You provided a list of columns under a 'columns' key, " \
+                          "but did not provide the 'hashdiff' flag. Use list syntax for PKs."
 
         assert warning_message in process_logs
         assert actual_sql == expected_sql

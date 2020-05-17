@@ -68,7 +68,7 @@ models:
                     - DEPARTURE_DATE
                     - PRICE
                     - DESTINATION
-          test_hash_columns_raises_warning_if_mapping_without_sort:
+          test_hash_columns_raises_warning_if_mapping_without_hashdiff:
             vars:
               columns:
                 BOOKING_PK: BOOKING_REF
