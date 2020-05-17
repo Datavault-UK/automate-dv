@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.usefixtures('dbt_test_utils')
+@pytest.mark.usefixtures('dbt_test_utils', 'run_seeds')
 class TestHubMacro:
 
     def test_hub_macro_correctly_generates_sql_for_single_source(self):
