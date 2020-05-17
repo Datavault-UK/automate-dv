@@ -26,7 +26,7 @@ STG_{{ loop.index|string }} AS (
     SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
     FROM (
-        SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
+        SELECT {{ src_pk }}, {{ src_nk }}, {{ src_ldts }}, {{ src_source }},
         ROW_NUMBER() OVER(
             PARTITION BY CUSTOMER_PK
             ORDER BY LOADDATE ASC

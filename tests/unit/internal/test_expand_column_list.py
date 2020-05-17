@@ -2,20 +2,10 @@ import pytest
 
 
 @pytest.mark.usefixtures('dbt_test_utils')
-class TestDeriveColumnsMacro:
+class TestExpandColumnListMacro:
 
-    def test_derive_columns_correctly_generates_sql_with_source_columns(self):
-        var_dict = {'source_model': 'raw_source', 'columns': {'SOURCE': "!STG_BOOKING", 'EFFECTIVE_FROM': 'LOADDATE'}}
-
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
-        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
-        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
-
-        assert 'Done' in process_logs
-        assert actual_sql == expected_sql
-
-    def test_derive_columns_correctly_generates_sql_without_source_columns(self):
-        var_dict = {'columns': {'SOURCE': "!STG_BOOKING", 'LOADDATE': 'EFFECTIVE_FROM'}}
+    def test_expand_column_list_correctly_generates_list_with_nesting(self):
+        var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', 'BOOKING_FK']]}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -24,8 +14,8 @@ class TestDeriveColumnsMacro:
         assert 'Done' in process_logs
         assert actual_sql == expected_sql
 
-    def test_derive_columns_correctly_generates_sql_with_only_source_columns(self):
-        var_dict = {'source_model': 'raw_source'}
+    def test_expand_column_list_correctly_generates_list_with_extra_nesting(self):
+        var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', ['BOOKING_FK', 'TEST_COLUMN']]]}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -33,3 +23,18 @@ class TestDeriveColumnsMacro:
 
         assert 'Done' in process_logs
         assert actual_sql == expected_sql
+
+    def test_expand_column_list_correctly_generates_list_with_no_nesting(self):
+        var_dict = {'columns': ['CUSTOMER_PK', 'ORDER_FK', 'BOOKING_FK']}
+
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+
+        assert 'Done' in process_logs
+        assert actual_sql == expected_sql
+
+    def test_expand_column_list_raises_error_with_missing_columns(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+
+        assert 'Expected a list of columns, got: None' in process_logs
