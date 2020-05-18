@@ -9,6 +9,10 @@ jobs:
   build-and-test:
     executor: python/default
     steps:
+      - slack/notify:
+          color: '#42e2f4'
+          mentions: 'URXTX0XEZ'
+          message: A commit has been pushed to branch {{ .Branch }}.
       - checkout
       - restore_cache:
           keys:
@@ -35,7 +39,6 @@ jobs:
           command: pipenv run python -m pytest ./tests/unit
       - slack/status:
           fail_only: false
-          message: A commit has been pushed and tested on branch {{ .Branch }}.
           mentions: 'URXTX0XEZ'
       
 
