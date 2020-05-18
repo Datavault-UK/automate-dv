@@ -1,6 +1,3 @@
 [submodule "src/dbtvault"]
 	path = src/dbtvault
 	url = git@github.com:Datavault-UK/dbtvault.git
-[submodule "src/dbtvault-docs"]
-	path = src/dbtvault-docs
-	url = git@github.com:Datavault-UK/dbtvault-docs.git
