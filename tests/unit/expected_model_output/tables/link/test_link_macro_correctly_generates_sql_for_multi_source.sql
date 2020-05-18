@@ -35,7 +35,7 @@ STG AS (
         ) AS RN
         FROM (
             SELECT * FROM STG_1
-            UNION
+            UNION ALL
             SELECT * FROM STG_2
         )
         WHERE

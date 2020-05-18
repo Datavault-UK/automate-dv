@@ -55,7 +55,7 @@ STG AS (
             {%- for src in source_model %}
             SELECT * FROM STG_{{ loop.index|string }}
             {%- if not loop.last %}
-            UNION
+            UNION ALL
             {%- endif %}
             {%- endfor %}
         )
