@@ -35,6 +35,7 @@ jobs:
           command: pipenv run python -m pytest ./tests/unit
       - slack/status:
           fail_only: false
+          message: A commit has been pushed and tested on branch {{ .Branch }}.
           mentions: 'URXTX0XEZ'
       
 
