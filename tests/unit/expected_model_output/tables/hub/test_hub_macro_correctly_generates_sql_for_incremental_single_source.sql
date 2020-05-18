@@ -8,8 +8,7 @@ WITH STG AS (
             ORDER BY b.LOADDATE, b.RECORD_SOURCE ASC
         ) AS RN
         FROM DBT_VAULT.TEST.raw_source AS b
-        WHERE b.CUSTOMER_PK <> MD5_BINARY('^^')
-        AND b.CUSTOMER_PK <> MD5_BINARY('')
+        WHERE b.CUSTOMER_PK IS NOT NULL
     ) AS a
     WHERE RN = 1
 )

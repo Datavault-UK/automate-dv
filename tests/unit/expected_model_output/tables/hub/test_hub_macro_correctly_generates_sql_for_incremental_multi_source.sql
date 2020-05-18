@@ -38,8 +38,7 @@ STG AS (
                 UNION ALL
                 SELECT * FROM STG_2
             )
-        WHERE CUSTOMER_PK <> MD5_BINARY('^^')
-        AND CUSTOMER_PK <> MD5_BINARY('')
+        WHERE CUSTOMER_PK IS NOT NULL
     ) AS b
     WHERE RN = 1
 )

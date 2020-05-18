@@ -38,10 +38,9 @@ STG AS (
             UNION
             SELECT * FROM STG_2
         )
-        WHERE ORDER_FK <> MD5_BINARY('^^')
-        AND ORDER_FK <> MD5_BINARY('')
-        AND BOOKING_FK <> MD5_BINARY('^^')
-        AND BOOKING_FK <> MD5_BINARY('')
+        WHERE
+        ORDER_FK IS NOT NULL AND
+        BOOKING_FK IS NOT NULL
     ) AS b
     WHERE RN = 1
 )

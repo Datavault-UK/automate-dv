@@ -59,7 +59,7 @@ STG AS (
             {%- endif %}
             {%- endfor %}
         )
-        {{ 'WHERE ' -}}
+        {{ 'WHERE' -}}
         {%- for fk in fk_cols -%}
         {%- if not loop.last %}
         {{ fk }} IS NOT NULL AND
@@ -81,7 +81,7 @@ STG AS (
             ORDER BY b.{{ src_ldts }}, b.{{ src_source }} ASC
         ) AS RN
         FROM {{ ref(source_model) }} AS b
-        {{ 'WHERE ' -}}
+        {{ 'WHERE' -}}
         {%- for fk in fk_cols -%}
         {%- if not loop.last %}
         b.{{ fk }} IS NOT NULL AND
