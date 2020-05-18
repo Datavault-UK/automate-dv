@@ -12,7 +12,7 @@ jobs:
       - slack/notify:
           color: '#42e2f4'
           mentions: 'URXTX0XEZ'
-          message: A commit has been pushed to branch {{ .Branch }}.
+          message: A commit has been pushed to branch '${BRANCH}'
       - checkout
       - restore_cache:
           keys:
