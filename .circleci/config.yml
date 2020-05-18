@@ -9,10 +9,6 @@ jobs:
   build-and-test:
     executor: python/default
     steps:
-      - slack/notify:
-          color: '#42e2f4'
-          mentions: 'URXTX0XEZ'
-          message: A commit has been pushed to branch '${BRANCH}'
       - checkout
       - restore_cache:
           keys:
