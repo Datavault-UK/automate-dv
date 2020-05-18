@@ -28,8 +28,8 @@ STG_{{ loop.index|string }} AS (
     FROM (
         SELECT {{ src_pk }}, {{ src_nk }}, {{ src_ldts }}, {{ src_source }},
         ROW_NUMBER() OVER(
-            PARTITION BY CUSTOMER_PK
-            ORDER BY LOADDATE ASC
+            PARTITION BY {{ src_pk }}
+            ORDER BY {{ src_ldts }} ASC
         ) AS RN
         FROM {{ ref(src) }}
     ) AS a
