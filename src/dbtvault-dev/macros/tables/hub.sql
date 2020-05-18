@@ -53,8 +53,7 @@ STG AS (
                 {%- endif %}
             {%- endfor %}
             )
-        WHERE {{ src_pk }} <> {{ dbtvault.hash_check("^^") }}
-        AND {{ src_pk }} <> {{ dbtvault.hash_check("") }}
+        WHERE {{ src_pk }} IS NOT NULL
     ) AS b
     WHERE RN = 1
 )
@@ -70,8 +69,7 @@ STG AS (
             ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}, {{ dbtvault.prefix([src_source], 'b') }} ASC
         ) AS RN
         FROM {{ ref(source_model) }} AS b
-        WHERE {{ dbtvault.prefix([src_pk], 'b') }} <> {{ dbtvault.hash_check("^^") }}
-        AND {{ dbtvault.prefix([src_pk], 'b') }} <> {{ dbtvault.hash_check("") }}
+        WHERE {{ dbtvault.prefix([src_pk], 'b') }} IS NOT NULL
     ) AS a
     WHERE RN = 1
 )

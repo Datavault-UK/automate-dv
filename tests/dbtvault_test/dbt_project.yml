@@ -546,6 +546,11 @@ models:
                   CUSTOMER_NATION_PK:
                     - CUSTOMER_REF
                     - NATION_KEY
+            test_stg_crm_customer_order_hashed_current:
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: "stg_crm_customer_order_current"
           single:
             materialized: incremental
             schema: vlt
@@ -598,6 +603,20 @@ models:
                 src_fk:
                   - "CUSTOMER_FK"
                   - "NATION_FK"
+                src_ldts: "LOADDATE"
+                src_source: "SOURCE"
+            test_link_customer_order_multipart_union_current:
+              vars:
+                source_model:
+                  - "test_stg_eff_sat_hashed_current"
+                  - "test_stg_crm_customer_order_hashed_current"
+                src_pk: "CUSTOMER_ORDER_PK"
+                src_fk:
+                  - "CUSTOMER_FK"
+                  - "NATION_FK"
+                  - "ORDER_FK"
+                  - "PRODUCT_FK"
+                  - "ORGANISATION_FK"
                 src_ldts: "LOADDATE"
                 src_source: "SOURCE"
         load_sats:
@@ -686,10 +705,10 @@ models:
             tags:
               - load_eff_sat_hashing
             test_stg_eff_sat_hashed_current:
-            vars:
-              include_source_columns: true
-              source_model:
-                test_current: "stg_eff_sat_current"
+              vars:
+                include_source_columns: true
+                source_model:
+                  test_current: "stg_eff_sat_current"
           test_eff_customer_order_current:
             vars:
               source_model: "test_stg_eff_sat_hashed_current"

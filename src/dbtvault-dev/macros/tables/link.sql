@@ -61,12 +61,10 @@ STG AS (
         )
         {{ 'WHERE ' -}}
         {%- for fk in fk_cols -%}
-        {%- if not loop.last -%}
-        {{ fk }} <> {{ dbtvault.hash_check("^^") }}
-        AND {{ fk }} <> {{ dbtvault.hash_check("") }}
+        {%- if not loop.last %}
+        {{ fk }} IS NOT NULL AND
         {%- else %}
-        AND {{ fk }} <> {{ dbtvault.hash_check("^^") }}
-        AND {{ fk }} <> {{ dbtvault.hash_check("") }}
+        {{ fk }} IS NOT NULL
         {%- endif -%}
         {%- endfor %}
     ) AS b
@@ -85,12 +83,10 @@ STG AS (
         FROM {{ ref(source_model) }} AS b
         {{ 'WHERE ' -}}
         {%- for fk in fk_cols -%}
-        {%- if not loop.last -%}
-        b.{{ fk }} <> {{ dbtvault.hash_check("^^") }}
-        AND b.{{ fk }} <> {{ dbtvault.hash_check("") }}
+        {%- if not loop.last %}
+        b.{{ fk }} IS NOT NULL AND
         {%- else %}
-        AND b.{{ fk }} <> {{ dbtvault.hash_check("^^") }}
-        AND b.{{ fk }} <> {{ dbtvault.hash_check("") }}
+        b.{{ fk }} IS NOT NULL
         {%- endif -%}
         {%- endfor %}
     ) AS a
