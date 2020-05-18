@@ -23,3 +23,5 @@ profiles/.user.yml
 tests/__pycache__/
 
 *.pyc
+
+.run/
