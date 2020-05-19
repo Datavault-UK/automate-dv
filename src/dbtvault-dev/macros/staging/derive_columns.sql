@@ -62,8 +62,8 @@
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
         {{ col }}
-        {%- if not loop.last -%},
-{% endif -%}
+        {{- ',\n' if not loop.last -}}
+
     {%- endfor -%}
 
 {%- else -%}
