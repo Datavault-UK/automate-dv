@@ -4,13 +4,12 @@ import shutil
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen
 
-DBT_ROOT = PurePath(__file__).parent
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
-COMPILED_TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test/target/compiled/dbtvault_test/unit")
-EXPECTED_OUTPUT_FILE_ROOT = Path(f"{PROJECT_ROOT}/tests/unit/expected_model_output")
+COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
+EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
 
 if not os.getenv('DBT_PROFILES_DIR'):
