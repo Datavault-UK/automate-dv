@@ -41,12 +41,12 @@
 
 {% for col in columns if not columns is string %}
     {% if loop.index == columns|length %}
-        {{ dbtvault.prefix([col], aliases[0]) }} <> {{ dbtvault.hash_check("^^") }}
+        {{ dbtvault.prefix([col], aliases[0]) }} IS NOT NULL
     {% else %}                                  
-        {{ dbtvault.prefix([col], aliases[0]) }} <> {{ dbtvault.hash_check("^^") }} AND
+        {{ dbtvault.prefix([col], aliases[0]) }} IS NOT NULL AND
     {% endif %}                                  
 {% else %}                                  
-    {{ dbtvault.prefix([columns], aliases[0]) }} <> {{ dbtvault.hash_check("^^") }}
+    {{ dbtvault.prefix([columns], aliases[0]) }} IS NOT NULL
 {% endfor %}
 {% endif %}
 {% endmacro %}
