@@ -316,7 +316,7 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB')  | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
       | md5('3000\|\|CCC')  | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-11     |
       | md5('4000\|\|DDD')  | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-11     |
-      | md5('5000\|\|^^')   | 2020-01-13 | orders | md5('5000') | 5000        | md5('^^')  | <null>   | 2020-01-12     |
+      | <null>              | 2020-01-13 | orders | md5('5000') | 5000        | <null>     | <null>   | 2020-01-12     |
       When I run a Load Cycle for 2020-01-13
       Then I expect the following TEST_LINK_CUSTOMER_ORDER
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
@@ -355,7 +355,7 @@ Feature: Effectivity Satellites
        | md5('2000\|\|BBB')  | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-11     |
        | md5('3000\|\|CCC')  | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-11     |
        | md5('4000\|\|DDD')  | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-11     |
-       | md5('^^\|\|EEE')    | 2020-01-13 | orders | md5('^^')   | <null>      | md5('EEE') | EEE      | 2020-01-12     |
+       | <null>              | 2020-01-13 | orders | <null>      | <null>      | md5('EEE') | EEE      | 2020-01-12     |
       When I run a Load Cycle for 2020-01-13
       Then I expect the following TEST_LINK_CUSTOMER_ORDER
        | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOADDATE   | SOURCE |
