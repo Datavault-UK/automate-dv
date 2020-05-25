@@ -32,7 +32,7 @@
 
     {%- endfor -%}
 
-    {#- Add all columns from source_model relation -#}
+    {#- Add all columns from source_models relation -#}
     {%- if source_relation is defined and source_relation is not none -%}
 
         {%- for source_col in source_model_cols -%}
@@ -52,7 +52,7 @@
 
 {%- elif columns is none and source_relation is not none -%}
 
-    {#- Add all columns from source_model relation -#}
+    {#- Add all columns from source_models relation -#}
     {%- for source_col in source_model_cols -%}
         {%- if source_col.column not in exclude_columns -%}
             {%- set _ = include_columns.append(source_col.column) -%}

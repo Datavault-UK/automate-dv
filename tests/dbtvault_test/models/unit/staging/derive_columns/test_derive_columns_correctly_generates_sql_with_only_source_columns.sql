@@ -1,7 +1,7 @@
 -- depends_on: {{ ref('raw_source') }}
 {%- if execute -%}
-{%- if var('source_model', '') != '' -%}
-{%- set source_relation = ref(var('source_model')) -%}
+{%- if var('source_models', '') != '' -%}
+{%- set source_relation = ref(var('source_models')) -%}
 {% endif %}
 {% endif %}
 

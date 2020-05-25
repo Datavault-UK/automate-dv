@@ -65,5 +65,5 @@ class TestStageMacro:
     def test_stage_raises_error_with_missing_source(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model=self.current_test_name)
 
-        assert 'Staging error: Missing source_model configuration. ' \
+        assert 'Staging error: Missing source_models configuration. ' \
                'A source model name must be provided.' in process_logs

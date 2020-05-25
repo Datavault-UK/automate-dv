@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_models) -%}
 
 {%- set source_cols = dbtvault.expand_column_list([src_pk, src_fk, src_payload, src_eff, src_ldts, src_source])-%}
 
@@ -19,7 +19,7 @@
 SELECT DISTINCT {{ dbtvault.prefix(source_cols, 'stg') }}
 FROM (
       SELECT {{ dbtvault.prefix(source_cols, 'stg') }}
-      FROM {{ ref(source_model) }} AS stg
+      FROM {{ ref(source_models) }} AS stg
 ) AS stg
 {% if is_incremental() -%}
 LEFT JOIN {{ this }} AS tgt
