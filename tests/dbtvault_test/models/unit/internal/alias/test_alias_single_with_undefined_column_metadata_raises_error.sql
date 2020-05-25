@@ -1,0 +1,1 @@
+{{ dbtvault.alias(prefix=var('prefix')) }}

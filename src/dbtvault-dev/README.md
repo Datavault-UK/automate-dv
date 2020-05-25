@@ -1,17 +1,10 @@
-<p align="left">
-  <h3> News </h3>
-</p>
-
- * We now have a slack channel, use the button below to join
- * Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
-  <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
-  
 <p align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=stable)](https://dbtvault.readthedocs.io/en/latest/?badge=stable)
+[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=v0.4.1)](https://dbtvault.readthedocs.io/en/v0.4.1/?badge=v0.4.1)[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 [past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
 
@@ -49,13 +42,13 @@ Add the following to your ```packages.yml```
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.4.1 # Latest stable version
+    revision: v0.5 # Latest stable version
 ```
 
 And run 
 ```dbt deps```
 
-[Read more on package installation](https://docs.getdbt.com/v0.14.0/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/v0.15.0/docs/package-management)
 
 ## Usage
 
@@ -66,22 +59,26 @@ And run
 ```bash
 {{- config(...)                                                           -}}
 
-{%- set metadata = ...                                                    -%}
-
-{%- set source = ...                                                      -%}
-
-{{ dbtvault.hub_template(src_pk, src_nk, src_ldts, src_source,
-                         tgt_pk, tgt_nk, tgt_ldts, tgt_source,
-                         source)                                           }}
+{{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
+                var('src_source'), var('source'))                          }}
 ```
+
+## Join our Slack Channel
+
+Talk to our developers and other members of our growing community, get support and discuss anything related to dbtvault or Data Vault 2.0
+
+[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 ## Sign up for early-bird announcements 
 
-[SIGN UP](https://www.data-vault.co.uk/dbtvault/) and get notified of new features and new releases 
-before anyone else!
+[![Sign up](https://img.shields.io/badge/Email-Sign--up-blue)](https://www.data-vault.co.uk/dbtvault/)
+
+Get notified of new features and new releases before anyone else!
+
+## Starting a Data Vault project 
 
 ## Contributing
-[View our contribution guidelines](../dbtvault/CONTRIBUTING.md)
+[View our contribution guidelines](CONTRIBUTING.md)
 
 ## License
-[Apache 2.0](../dbtvault/LICENSE.md)
+[Apache 2.0](LICENSE.md)
