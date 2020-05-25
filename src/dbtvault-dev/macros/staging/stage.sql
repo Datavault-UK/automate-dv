@@ -10,7 +10,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro stage(include_source_columns=true, source_model=none, hashed_columns=none, derived_columns=none) -%}
+{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none) -%}
+
+    {% if include_source_columns is none %}
+        {%- set include_source_columns = true -%}
+    {% endif %}
+
     {{- adapter_macro('dbtvault.stage', include_source_columns=include_source_columns, source_model=source_model, hashed_columns=hashed_columns, derived_columns=derived_columns) -}}
 {%- endmacro -%}
 
@@ -51,11 +56,7 @@ SELECT
 {#- Hash columns, if provided -#}
 {% if hashed_columns is defined and hashed_columns is not none -%}
     
-    {% if hashed_columns['include_source'] -%}
-        {{ dbtvault.hash_columns(columns=hashed_columns) -}}
-    {%- else -%}
-        {{ dbtvault.hash_columns(columns=hashed_columns) -}}
-    {%- endif -%}
+    {{ dbtvault.hash_columns(columns=hashed_columns) -}}
     {{ "," if derived_columns is defined and source_relation is defined and include_source_columns }}
 
 {% endif -%}
@@ -64,12 +65,13 @@ SELECT
 {%- if derived_columns is defined and derived_columns is not none -%}
 
     {%- if include_source_columns -%}
-    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns['columns']) }}
+    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) }}
     {%- else -%}
-    {{ dbtvault.derive_columns(columns=derived_columns['columns']) }}
+    {{ dbtvault.derive_columns(columns=derived_columns) }}
     {%- endif -%}
 {#- If source relation is defined but derived_columns is not, add columns from source model. -#}
-{%- elif source_relation is defined and include_source_columns -%}
+{%- elif source_relation is defined and include_source_columns is true -%}
+ 
     {{ dbtvault.derive_columns(source_relation=source_relation) }}
 {%- endif %}
 
