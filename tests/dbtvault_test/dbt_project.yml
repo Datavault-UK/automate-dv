@@ -91,16 +91,15 @@ models:
         stage:
           test_stage_correctly_generates_sql_from_yaml:
             vars:
-              include_source_columns: true
               source_model: "raw_source"
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
                   hashdiff: true
                   columns:
-                  - CUSTOMER_DOB
-                  - CUSTOMER_ID
-                  - CUSTOMER_NAME
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
                 CUSTOMER_HASHDIFF:
                   hashdiff: true
                   columns:
@@ -108,12 +107,10 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                columns:
-                  SOURCE: "!STG_BOOKING"
-                  EFFECTIVE_FROM: "BOOKING_DATE"
+                SOURCE: "!STG_BOOKING"
+                EFFECTIVE_FROM: "BOOKING_DATE"
           test_stage_correctly_generates_sql_from_yaml_with_source_style:
             vars:
-              include_source_columns: true
               source_model:
                 test_unit: "source"
               hashed_columns:
@@ -131,13 +128,22 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                columns:
-                  SOURCE: "!STG_BOOKING"
-                  EFFECTIVE_FROM: "LOADDATE"
+                SOURCE: "!STG_BOOKING"
+                EFFECTIVE_FROM: "LOADDATE"
           test_stage_correctly_generates_sql_for_only_source_columns_from_yaml:
             vars:
               include_source_columns: true
               source_model: "raw_source"
+          test_stage_correctly_generates_sql_for_only_source_columns_and_missing_flag_from_yaml:
+            vars:
+              source_model: "raw_source"
+          test_stage_correctly_generates_sql_for_only_derived_from_yaml:
+            vars:
+              include_source_columns: false
+              source_model: "raw_source"
+              derived_columns:
+                SOURCE: "!STG_BOOKING"
+                EFFECTIVE_FROM: "LOAD_DATETIME"
           test_stage_correctly_generates_sql_for_only_hashing_from_yaml:
             vars:
               include_source_columns: false
@@ -158,7 +164,6 @@ models:
                     - PHONE
           test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml:
             vars:
-              include_source_columns: true
               source_model: "raw_source"
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
@@ -176,7 +181,6 @@ models:
                     - PHONE
           test_stage_raises_error_with_missing_source:
             vars:
-              include_source_columns: true
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -192,9 +196,8 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                columns:
-                  SOURCE: "!STG_BOOKING"
-                  EFFECTIVE_FROM: "LOADDATE"
+                SOURCE: "!STG_BOOKING"
+                EFFECTIVE_FROM: "LOADDATE"
       tables:
         hub:
           materialized: "incremental"
@@ -311,9 +314,8 @@ models:
                       - PRICE
                       - DESTINATION
                 derived_columns:
-                  columns:
-                    EFFECTIVE_FROM: "BOOKING_DATE"
-                    SOURCE: "!STG_BOOKING"
+                  EFFECTIVE_FROM: "BOOKING_DATE"
+                  SOURCE: "!STG_BOOKING"
             test_stg_customer_hashed_current:
               vars:  
                 include_source_columns: true
@@ -334,9 +336,8 @@ models:
                       - CUSTOMER_NAME
                       - CUSTOMER_DOB
                 derived_columns:
-                  columns:
-                    EFFECTIVE_FROM: "LOADDATE"
-                    SOURCE: "!STG_CUSTOMER"
+                  EFFECTIVE_FROM: "LOADDATE"
+                  SOURCE: "!STG_CUSTOMER"
           hubs:
             materialized: incremental
             schema: vlt
@@ -432,8 +433,7 @@ models:
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
                 derived_columns:
-                  columns:
-                    EFFECTIVE_FROM: "LOADDATE"
+                  EFFECTIVE_FROM: "LOADDATE"
             test_stg_lineitem_hashed_current:
               vars:
                 include_source_columns: true
@@ -640,8 +640,7 @@ models:
                       - CUSTOMER_DOB
                       - CUSTOMER_PHONE
                 derived_columns:
-                  columns:
-                    EFFECTIVE_FROM: LOADDATE
+                  EFFECTIVE_FROM: LOADDATE
           test_sat_customer_details_current:
             materialized: incremental
             schema: "vlt"
@@ -677,8 +676,7 @@ models:
                     - TRANSACTION_NUMBER
                   CUSTOMER_PK: CUSTOMER_ID
                 derived_columns:
-                  columns:
-                    EFFECTIVE_FROM: TRANSACTION_DATE
+                  EFFECTIVE_FROM: TRANSACTION_DATE
           test_t_link_transaction_current:
             materialized: incremental
             schema: "vlt"
