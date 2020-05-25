@@ -91,7 +91,7 @@ models:
         stage:
           test_stage_correctly_generates_sql_from_yaml:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -111,7 +111,7 @@ models:
                 EFFECTIVE_FROM: "BOOKING_DATE"
           test_stage_correctly_generates_sql_from_yaml_with_source_style:
             vars:
-              source_model:
+              source_models:
                 test_unit: "source"
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
@@ -133,21 +133,21 @@ models:
           test_stage_correctly_generates_sql_for_only_source_columns_from_yaml:
             vars:
               include_source_columns: true
-              source_model: "raw_source"
+              source_models: "raw_source"
           test_stage_correctly_generates_sql_for_only_source_columns_and_missing_flag_from_yaml:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
           test_stage_correctly_generates_sql_for_only_derived_from_yaml:
             vars:
               include_source_columns: false
-              source_model: "raw_source"
+              source_models: "raw_source"
               derived_columns:
                 SOURCE: "!STG_BOOKING"
                 EFFECTIVE_FROM: "LOAD_DATETIME"
           test_stage_correctly_generates_sql_for_only_hashing_from_yaml:
             vars:
               include_source_columns: false
-              source_model: "raw_source"
+              source_models: "raw_source"
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -164,7 +164,7 @@ models:
                     - PHONE
           test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -203,21 +203,21 @@ models:
           materialized: "incremental"
           test_hub_macro_correctly_generates_sql_for_single_source:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
               src_pk: "CUSTOMER_PK"
               src_nk: "CUSTOMER_ID"
               src_ldts: "LOADDATE"
               src_source: "RECORD_SOURCE"
           test_hub_macro_correctly_generates_sql_for_incremental_single_source:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
               src_pk: "CUSTOMER_PK"
               src_nk: "CUSTOMER_ID"
               src_ldts: "LOADDATE"
               src_source: "RECORD_SOURCE"
           test_hub_macro_correctly_generates_sql_for_multi_source:
             vars:
-              source_model:
+              source_models:
                 - "raw_source"
                 - "raw_source_2"
               src_pk: "CUSTOMER_PK"
@@ -226,7 +226,7 @@ models:
               src_source: "RECORD_SOURCE"
           test_hub_macro_correctly_generates_sql_for_incremental_multi_source:
             vars:
-              source_model:
+              source_models:
                 - "raw_source"
                 - "raw_source_2"
               src_pk: "CUSTOMER_PK"
@@ -237,7 +237,7 @@ models:
           materialized: "incremental"
           test_link_macro_correctly_generates_sql_for_single_source:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
               src_pk: "CUSTOMER_PK"
               src_fk: 
                 - "ORDER_FK"
@@ -246,7 +246,7 @@ models:
               src_source: "RECORD_SOURCE"
           test_link_macro_correctly_generates_sql_for_incremental_single_source:
             vars:
-              source_model: "raw_source"
+              source_models: "raw_source"
               src_pk: "CUSTOMER_PK"
               src_fk: 
                 - "ORDER_FK"
@@ -255,7 +255,7 @@ models:
               src_source: "RECORD_SOURCE"
           test_link_macro_correctly_generates_sql_for_multi_source:
             vars:
-              source_model:
+              source_models:
                 - "raw_source"
                 - "raw_source_2"
               src_pk: "CUSTOMER_PK"
@@ -266,7 +266,7 @@ models:
               src_source: "RECORD_SOURCE"
           test_link_macro_correctly_generates_sql_for_incremental_multi_source:
             vars:
-              source_model:
+              source_models:
                 - "raw_source"
                 - "raw_source_2"
               src_pk: "CUSTOMER_PK"
@@ -291,7 +291,7 @@ models:
             test_stg_booking_hashed_current:
               vars:   
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_booking_current"
                 hashed_columns:
                   BOOKING_PK: BOOKING_REF
@@ -319,7 +319,7 @@ models:
             test_stg_customer_hashed_current:
               vars:  
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_customer_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
@@ -345,14 +345,14 @@ models:
               - load_cycles_hubs
             test_hub_booking_current:
               vars:
-                source_model: "test_stg_booking_hashed_current"
+                source_models: "test_stg_booking_hashed_current"
                 src_pk: "BOOKING_PK"
                 src_nk: "BOOKING_REF"
                 src_ldts: "LOADDATE"
                 src_source: "SOURCE"
             test_hub_customer_current:
               vars:
-                source_model:
+                source_models:
                   - "test_stg_booking_hashed_current"
                   - "test_stg_customer_hashed_current"
                 src_pk: "CUSTOMER_PK"
@@ -366,7 +366,7 @@ models:
               - load_cycles_links
             test_link_customer_booking_current:
               vars:
-                source_model: "test_stg_booking_hashed_current"
+                source_models: "test_stg_booking_hashed_current"
                 src_pk: "CUSTOMER_BOOKING_PK"
                 src_fk:
                   - "CUSTOMER_PK"
@@ -380,7 +380,7 @@ models:
               - load_cycles_sats
             test_sat_book_booking_details_current:
               vars:
-                source_model: "test_stg_booking_hashed_current"
+                source_models: "test_stg_booking_hashed_current"
                 src_pk: "BOOKING_PK"
                 src_hashdiff:
                   source_column: "BOOK_BOOKING_HASHDIFF"
@@ -395,7 +395,7 @@ models:
                 src_source: "SOURCE"
             test_sat_book_customer_details_current:
               vars:
-                source_model: "test_stg_booking_hashed_current"
+                source_models: "test_stg_booking_hashed_current"
                 src_pk: "CUSTOMER_PK"
                 src_hashdiff:
                   source_column: "BOOK_CUSTOMER_HASHDIFF"
@@ -408,7 +408,7 @@ models:
                 src_source: "SOURCE"
             test_sat_cust_customer_details_current:
               vars:
-                source_model: "test_stg_customer_hashed_current"
+                source_models: "test_stg_customer_hashed_current"
                 src_pk: "CUSTOMER_PK"
                 src_hashdiff: 
                   source_column: "CUSTOMER_HASHDIFF"
@@ -428,7 +428,7 @@ models:
             test_stg_customer_hashed_hubs_current:
               vars:
                 include_source_columns: true
-                source_model: 
+                source_models: 
                   test_current: "stg_customer_hubs_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
@@ -437,7 +437,7 @@ models:
             test_stg_lineitem_hashed_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_lineitem_current"
                 hashed_columns:
                   ORDER_PK: ORDER_ID
@@ -447,14 +447,14 @@ models:
             test_stg_parts_hashed_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_parts_current"
                 hashed_columns:
                   PART_PK: PART_ID
             test_stg_supplier_hashed_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_supplier_current"
                 hashed_columns:
                   PART_PK: PART_ID   
@@ -467,7 +467,7 @@ models:
               - hub
             test_hub_customer_hubs_current:
               vars:
-                source_model: "test_stg_customer_hashed_hubs_current"
+                source_models: "test_stg_customer_hashed_hubs_current"
                 src_pk: "CUSTOMER_PK"
                 src_nk: "CUSTOMER_ID"
                 src_ldts: "LOADDATE"
@@ -480,7 +480,7 @@ models:
               - hub
             test_hub_parts_current:
               vars:
-                source_model:
+                source_models:
                   - "test_stg_parts_hashed_current"
                   - "test_stg_supplier_hashed_current"
                   - "test_stg_lineitem_hashed_current"
@@ -497,7 +497,7 @@ models:
             test_stg_crm_customer_hashed_links_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_crm_customer_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_REF
@@ -510,7 +510,7 @@ models:
             test_stg_customer_hashed_links_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_customer_links_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
@@ -523,7 +523,7 @@ models:
             test_stg_sap_customer_hashed_links_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_sap_customer_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
@@ -536,7 +536,7 @@ models:
             test_stg_web_customer_hashed_links_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_web_customer_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_REF
@@ -549,7 +549,7 @@ models:
             test_stg_crm_customer_order_hashed_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_crm_customer_order_current"
           single:
             materialized: incremental
@@ -559,7 +559,7 @@ models:
               - link
             test_link_customer_nation_current:
               vars:
-                source_model: "test_stg_crm_customer_hashed_links_current"
+                source_models: "test_stg_crm_customer_hashed_links_current"
                 src_pk: "CUSTOMER_NATION_PK"
                 src_fk:
                   - "CUSTOMER_FK"
@@ -568,7 +568,7 @@ models:
                 src_source: "SOURCE"
             test_link_customer_order_current:
               vars:
-                source_model: "test_stg_eff_sat_hashed_current"
+                source_models: "test_stg_eff_sat_hashed_current"
                 src_pk: "CUSTOMER_ORDER_PK"
                 src_fk:
                   - "ORDER_FK"
@@ -577,7 +577,7 @@ models:
                 src_source: "SOURCE"
             test_link_customer_order_multipart_current:
               vars:
-                source_model: "test_stg_eff_sat_hashed_current"
+                source_models: "test_stg_eff_sat_hashed_current"
                 src_pk: "CUSTOMER_ORDER_PK"
                 src_fk:
                   - "CUSTOMER_FK"
@@ -595,7 +595,7 @@ models:
               - link
             test_link_customer_nation_union_current:
               vars:
-                source_model:
+                source_models:
                   - "test_stg_sap_customer_hashed_links_current"
                   - "test_stg_crm_customer_hashed_links_current"
                   - "test_stg_web_customer_hashed_links_current"
@@ -607,7 +607,7 @@ models:
                 src_source: "SOURCE"
             test_link_customer_order_multipart_union_current:
               vars:
-                source_model:
+                source_models:
                   - "test_stg_eff_sat_hashed_current"
                   - "test_stg_crm_customer_order_hashed_current"
                 src_pk: "CUSTOMER_ORDER_PK"
@@ -628,7 +628,7 @@ models:
             test_stg_customer_details_hashed_current:
               vars:
                 include_source_columns: true
-                source_model: 
+                source_models: 
                   test_current: "stg_customer_details_current"
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
@@ -647,7 +647,7 @@ models:
             tags:
               - sat
             vars:
-              source_model: "test_stg_customer_details_hashed_current"
+              source_models: "test_stg_customer_details_hashed_current"
               src_pk: "CUSTOMER_PK"
               src_hashdiff: 
                 source_column: "CUSTOMER_HASHDIFF"
@@ -668,7 +668,7 @@ models:
             test_t_link_transaction_hashed_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_transaction_current"
                 hashed_columns:
                   TRANSACTION_PK: 
@@ -683,7 +683,7 @@ models:
             tags:
               - t_link
             vars:
-              source_model: "test_t_link_transaction_hashed_current"
+              source_models: "test_t_link_transaction_hashed_current"
               src_pk: "TRANSACTION_PK"
               src_fk: "CUSTOMER_PK"
               src_payload:
@@ -705,11 +705,11 @@ models:
             test_stg_eff_sat_hashed_current:
               vars:
                 include_source_columns: true
-                source_model:
+                source_models:
                   test_current: "stg_eff_sat_current"
           test_eff_customer_order_current:
             vars:
-              source_model: "test_stg_eff_sat_hashed_current"
+              source_models: "test_stg_eff_sat_hashed_current"
               link: "test_link_customer_order_current"
               src_pk: "CUSTOMER_ORDER_PK"
               src_dfk: "CUSTOMER_FK"
@@ -719,7 +719,7 @@ models:
               src_source: "SOURCE"
           test_eff_customer_order_multipart_current:
             vars:
-              source_model: "test_stg_eff_sat_hashed_current"
+              source_models: "test_stg_eff_sat_hashed_current"
               link: "test_link_customer_order_multipart_current"
               src_pk: "CUSTOMER_ORDER_PK"
               src_dfk:

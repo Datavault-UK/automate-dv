@@ -11,7 +11,7 @@
     limitations under the License.
 -#}
 
-{%- macro eff_sat(src_pk, src_dfk, src_sfk, src_ldts, src_eff_from, src_source, link, source_model)-%}
+{%- macro eff_sat(src_pk, src_dfk, src_sfk, src_ldts, src_eff_from, src_source, link, source_models)-%}
 
 {%- set source_cols = dbtvault.expand_column_list([src_pk, src_ldts, src_eff_from, src_source])-%}
 {%- set max_date = "'" ~ '9999-12-31' ~ "'" -%}
@@ -23,7 +23,7 @@ c AS (SELECT DISTINCT
             {{ dbtvault.prefix(source_cols, 'a') }},
             a.START_DATETIME, a.END_DATETIME
             FROM {{ this }} AS a
-            INNER JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
+            INNER JOIN {{ ref(source_models) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
             )
 {# Find latest satellite for each pk in set c. -#}
 , d as (SELECT
@@ -36,7 +36,7 @@ c AS (SELECT DISTINCT
         FROM c)
 , p AS (
     SELECT q.* FROM {{ ref(link) }} AS q
-    INNER JOIN {{ ref(source_model) }} AS r ON
+    INNER JOIN {{ ref(source_models) }} AS r ON
     {{ dbtvault.multikey(src_dfk, ['q', 'r'], 'join') }}
 )
 , x AS (
@@ -47,7 +47,7 @@ c AS (SELECT DISTINCT
     , {{ dbtvault.prefix([src_dfk], 's') }} AS DFK_1
     {% endfor %}
     FROM p
-    LEFT JOIN {{ ref(source_model) }} AS s ON
+    LEFT JOIN {{ ref(source_models) }} AS s ON
     {{ dbtvault.multikey(src_dfk, ['p', 's'], 'join') }}
     AND
     {{ dbtvault.multikey(src_sfk, ['p', 's'], 'join') }}
@@ -79,7 +79,7 @@ SELECT DISTINCT
   {{ dbtvault.prefix([src_pk, src_ldts, src_source, src_eff_from], 'e') }},
   {{ dbtvault.prefix([src_eff_from], 'e') }} AS START_DATETIME,
   TO_DATE({{ max_date }}) AS END_DATETIME
-FROM {{ ref(source_model) }} AS e
+FROM {{ ref(source_models) }} AS e
 {% if is_incremental() -%}
 LEFT JOIN (
     SELECT {{ dbtvault.prefix(source_cols, 'd')}}, d.START_DATETIME, d.END_DATETIME
@@ -111,7 +111,7 @@ SELECT
   {% endfor %}
   THEN {{ dbtvault.prefix([src_eff_from], 'z') }} ELSE TO_DATE({{ max_date }}) END AS END_DATETIME
 FROM y
-LEFT JOIN {{ ref(source_model) }} AS z ON
+LEFT JOIN {{ ref(source_models) }} AS z ON
 {{ dbtvault.multikey(src_dfk, ['y', 'z'], 'join') }}
 WHERE (y.CURR_FLG='Y' AND {{ dbtvault.prefix(['END_DATETIME'], 'y') }}={{ max_date }})
 {%- endif -%}
