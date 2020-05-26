@@ -4,7 +4,7 @@ version: 2.1
 orbs:
   python: 'circleci/python@0.3.0'
   slack: circleci/slack@3.4.2
-  
+
 jobs:
   build:
     executor: python/default
@@ -32,25 +32,24 @@ jobs:
       - run:
           command: cd tests/dbtvault_test/ ; pipenv run dbt deps
   test:
-      - run:
-          command: pipenv run python -m pytest ./tests/unit
-      - slack/status:
-          fail_only: false
-          mentions: 'URXTX0XEZ'
-      
+    - run:
+        command: pipenv run python -m pytest ./tests/unit
+    - slack/status:
+        fail_only: false
+        mentions: 'URXTX0XEZ'
 
 workflows:
   main:
     jobs:
-      - build:
-          context: dbtvault_snowflake_test
-          filters:
-            branches:
-              only: master
-      - test:
-          requires: 
-            - build
-          context: dbtvault_snowflake_test
-          filters:
-            branches:
-              only: master
+      build:
+        context: dbtvault_snowflake_test
+        filters:
+          branches:
+            only: master
+      test:
+        requires:
+          - build
+        context: dbtvault_snowflake_test
+        filters:
+          branches:
+            only: master
