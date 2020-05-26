@@ -31,9 +31,6 @@ jobs:
             - /.circleci/.cache
       - run:
           command: cd tests/dbtvault_test/ ; pipenv run dbt deps
-  test:
-    executor: python/default
-    steps:
       - run:
           command: pipenv run python -m pytest ./tests/unit
       - slack/status:
