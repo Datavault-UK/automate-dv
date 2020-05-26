@@ -42,16 +42,17 @@ jobs:
 
 workflows:
   version: 2
-  jobs:
-    build:
-      context: dbtvault_snowflake_test
-      filters:
-        branches:
-          only: master
-    test:
-      requires:
-        - build
-      context: dbtvault_snowflake_test
-      filters:
-        branches:
-          only: master
+  build_and_test:
+    jobs:
+      build:
+        context: dbtvault_snowflake_test
+        filters:
+          branches:
+            only: master
+      test:
+        requires:
+          - build
+        context: dbtvault_snowflake_test
+        filters:
+          branches:
+            only: master
