@@ -11,26 +11,41 @@
     limitations under the License.
 -#}
 
-{%- macro get_src_col_list(tgt_cols) -%}
+{%- macro expand_column_list(columns=none) -%}
+
+{%- if not columns -%}
+    {%- if execute -%}
+         {{ exceptions.raise_compiler_error("Expected a list of columns, got: " ~ columns) }}
+    {%- endif -%}
+{%- endif -%}
 
 {%- set col_list = [] -%}
 
-{%- if tgt_cols is iterable -%}
+{%- if columns is iterable -%}
 
-    {%- for columns in tgt_cols -%}
+    {%- for col in columns -%}
 
-        {%- if columns is string -%}
+        {%- if col is string -%}
 
-            {%- set _ = col_list.append(columns) -%}
+            {%- set _ = col_list.append(col) -%}
 
         {#- If list of lists -#}
-        {%- elif columns is iterable and columns is not string -%}
+        {%- elif col is iterable and col is not string -%}
 
-            {%- for cols in columns -%}
+            {%- if col is mapping -%}
 
-                {%- set _ = col_list.append(cols) -%}
+                {%- set _ = col_list.append(col) -%}
 
-            {%- endfor -%}
+            {%- else -%}
+
+                {%- for cols in col -%}
+
+                    {%- set _ = col_list.append(cols) -%}
+
+                {%- endfor -%}
+
+            {%- endif -%}
+
         {%- endif -%}
 
     {%- endfor -%}

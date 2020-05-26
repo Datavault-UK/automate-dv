@@ -1,14 +1,8 @@
-### News
-
- * We now have a slack channel, use the button below to join
- * Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
-  <a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
-  
 <p align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=latest)](https://dbtvault.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=stable)](https://dbtvault.readthedocs.io/en/latest/?badge=stable)
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 
@@ -69,11 +63,19 @@ And run
                 var('src_source'), var('source'))                          }}
 ```
 
+## Join our Slack Channel
+
+Talk to our developers and other members of our growing community, get support and discuss anything related to dbtvault or Data Vault 2.0
+
+[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
+
 ## Sign up for early-bird announcements 
 
 [![Sign up](https://img.shields.io/badge/Email-Sign--up-blue)](https://www.data-vault.co.uk/dbtvault/)
 
 Get notified of new features and new releases before anyone else!
+
+## Starting a Data Vault project 
 
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)
