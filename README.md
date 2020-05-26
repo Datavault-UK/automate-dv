@@ -25,7 +25,7 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown A
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://dbtvault.readthedocs.io/en/latest/workedexample/)
+- [Read the docs](https://dbtvault.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
 - [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
