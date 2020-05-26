@@ -6,7 +6,7 @@ orbs:
   slack: circleci/slack@3.4.2
 
 jobs:
-  build:
+  build-and-test:
     executor: python/default
     steps:
       - checkout
@@ -31,9 +31,6 @@ jobs:
             - /.circleci/.cache
       - run:
           command: cd tests/dbtvault_test/ ; pipenv run dbt deps
-  test:
-    executor: python/default
-    steps:
       - run:
           command: pipenv run python -m pytest ./tests/unit
       - slack/status:
@@ -44,15 +41,8 @@ workflows:
   version: 2
   build-test:
     jobs:
-      - build:
+      - build-and-test:
           context: dbtvault_snowflake_test
-          filters:
-            branches:
-              only: master
-      - test:
-          context: dbtvault_snowflake_test
-          requires:
-            - build
           filters:
             branches:
               only: master
