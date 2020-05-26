@@ -34,24 +34,23 @@ jobs:
   test:
     executor: python/default
     steps:
-    - run:
-        command: pipenv run python -m pytest ./tests/unit
-    - slack/status:
-        fail_only: false
-        mentions: 'URXTX0XEZ'
+      - run:
+          command: pipenv run python -m pytest ./tests/unit
+      - slack/status:
+          fail_only: false
+          mentions: 'URXTX0XEZ'
 
 workflows:
-  main:
-    jobs:
-      build:
-        context: dbtvault_snowflake_test
-        filters:
-          branches:
-            only: master
-      test:
-        requires:
-          - build
-        context: dbtvault_snowflake_test
-        filters:
-          branches:
-            only: master
+  jobs:
+    build:
+      context: dbtvault_snowflake_test
+      filters:
+        branches:
+          only: master
+    test:
+      requires:
+        - build
+      context: dbtvault_snowflake_test
+      filters:
+        branches:
+          only: master
