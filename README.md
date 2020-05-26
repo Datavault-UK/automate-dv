@@ -6,7 +6,8 @@
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
 
-[past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
+[Past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
+[Changelog](https://dbtvault.readthedocs.io/en/latest/changelog/stable/)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
