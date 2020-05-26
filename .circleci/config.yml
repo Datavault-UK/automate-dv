@@ -41,6 +41,7 @@ jobs:
           mentions: 'URXTX0XEZ'
 
 workflows:
+  version: 2
   jobs:
     build:
       context: dbtvault_snowflake_test
