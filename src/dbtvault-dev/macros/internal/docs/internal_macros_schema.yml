@@ -1,0 +1,10 @@
+version: 2
+
+macros:
+  - name: alias
+    description: "{{ doc('macro_alias') }}"
+    
+    arguments:
+      - name: src_pk
+        type: string
+        description: ""
