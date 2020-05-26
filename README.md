@@ -7,6 +7,7 @@
 
 
 [Past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
+
 [Changelog](https://dbtvault.readthedocs.io/en/latest/changelog/stable/)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
