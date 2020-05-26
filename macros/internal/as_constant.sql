@@ -10,15 +10,19 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+{%- macro as_constant(column_str) -%}
 
-{%- macro hash_check(hash) -%}
+    {% if column_str is not none %}
 
-{%- if hash == 'MD5' %}
-MD5_BINARY('^^')
-{%- elif hash == 'SHA' %}
-SHA2_BINARY('^^')
-{%- else %}
-MD5_BINARY('^^')
-{% endif %}
+        {%- if column_str | first == "!" -%}
+        
+            {{- return("'" ~ column_str[1:] ~ "'") -}}
+        
+        {%- else -%}
+        
+            {{- return(column_str) -}}
+        
+        {%- endif -%}
+    {%- endif -%}
 
-{% endmacro %}
+{%- endmacro -%}
