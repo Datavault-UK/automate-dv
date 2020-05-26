@@ -77,6 +77,10 @@ Get notified of new features and new releases before anyone else!
 
 ## Starting a Data Vault project 
 
+Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
+
+<a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
+
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)
 
