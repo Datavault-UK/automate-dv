@@ -11,19 +11,37 @@
     limitations under the License.
 -#}
 
-{%- macro hash_columns(columns=none) -%}
-
+{%- macro hash_columns(columns=none, hash_algo=none) -%}
+{#-
+Args: 
+    columns: list(str) - Column names to hash
+    hash_algo: str - The identifier of the hashing algorithm to use. One of 'MD5' or 'SHA'
+-#}
 {%- if columns is mapping -%}
 
     {%- for col in columns -%}
 
         {% if columns[col] is mapping and columns[col].hashdiff -%}
 
-            {{- dbtvault.hash(columns[col]['columns'], col, columns[col]['hashdiff']) -}}
+            {{- 
+                dbtvault.hash(
+                    columns=columns[col]['columns'],
+                    alias=col,
+                    is_hashdiff=columns[col]['hashdiff'],
+                    hash_algo=hash_algo
+                )
+            -}}
 
         {%- elif columns[col] is not mapping -%}
 
-            {{- dbtvault.hash(columns[col], col, hashdiff=false) -}}
+            {{- 
+                dbtvault.hash(
+                    columns=columns[col],
+                    alias=col,
+                    is_hashdiff=hashdiff,
+                    hash_algo=hash_algo
+                )
+            -}}
         
         {%- elif columns[col] is mapping and not columns[col].hashdiff -%}
 
@@ -31,7 +49,7 @@
                 {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'hashdiff' flag. Use list syntax for PKs.") -%}
             {% endif %}
 
-            {{- dbtvault.hash(columns[col]['columns'], col) -}}
+            {{- dbtvault.hash(columns[col]['columns'], col, false, hash_algo) -}}
 
         {%- endif -%}
 
