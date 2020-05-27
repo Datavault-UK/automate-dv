@@ -11,33 +11,75 @@
     limitations under the License.
 -#}
 
-{%- macro hash_columns(columns=none) -%}
+{%- macro hash_columns(columns=none, hash_algo=none) -%}
+    {#-
+    Hashes a the values of given list of columns using the provided hash algorithm
+    
+    Args:
+        columns {Mapping[str, Union[str, Mapping]} - Column names to hash. Either a string or a mapping with 
+            a boolean value at the "hashdiff" key and a list of column names as the "columns" key (see example)
+        hash_algo: str - The identifier of the hashing algorithm to use.
 
-{%- if columns is mapping -%}
+    Example 1:
+        if columns is
 
-    {%- for col in columns -%}
+        {
+            'EXAMPLE_HK': 'SRC_COLUMN',
+            'EXAMPLE2_HK': 'SRC_COLUMN2'
 
-        {% if columns[col] is mapping and columns[col].hashdiff -%}
+        }
 
-            {{- dbtvault.hash(columns[col]['columns'], col, columns[col]['hashdiff']) -}}
+        The resulting output will have columns
 
-        {%- elif columns[col] is not mapping -%}
+        EXAMPLE_HK = HASH(SRC_COLUMN)
+        EXAMPLE2_HK = HASH(SRC_COLUMN2)
 
-            {{- dbtvault.hash(columns[col], col, hashdiff=false) -}}
+    Example 2:
+
+        if columns is 
+
+        {
+            EXAMPLE_HK: {
+                hashdiff: true
+                columns: ['B', 'C', 'A']
+            }
+        }
+
+        the resulting output will have columns
         
-        {%- elif columns[col] is mapping and not columns[col].hashdiff -%}
+        EXAMPLE_HK = HASH(A||B||C)
 
-            {%- if execute -%}
-                {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'hashdiff' flag. Use list syntax for PKs.") -%}
-            {% endif %}
+        
+    -#}
+    {%- if columns is mapping -%}
+        {%- for output_col in columns -%}
 
-            {{- dbtvault.hash(columns[col]['columns'], col) -}}
+            {%- set src_col_config = columns[output_col] -%}
+            {%- set is_hashdiff = src_col_config['hashdiff'] -%}
+            {%-
+                if 
+                    execute  
+                    and is_hashdiff is not defined
+                    and src_col_config['columns'] is defined
+                    and src_col_config['columns'] is iterable
+                    and src_col_config['columns'] is not string
+                    and src_col_config['columns'] is not mapping
+             -%}
+                {%- do exceptions.warn('[' ~ this ~ '] Warning: You provided a list of columns under  "' ~ (this | string).split('.') | last ~ '.'  ~ output_col ~ '.columns", but did not provide the "hashdiff" flag. Use list syntax for PKs.') -%}
+            {%- endif -%}
 
-        {%- endif -%}
+            {{-
+                dbtvault.hash(
+                    columns=src_col_config if src_col_config is string else src_col_config['columns'],
+                    alias=output_col,
+                    is_hashdiff=is_hashdiff,
+                    hash_algo=hash_algo
+                )
+            -}}
 
-        {%- if not loop.last -%},
-{% endif %}
-    {%- endfor -%}
-
+            {%- if not loop.last -%} ,
 {%- endif -%}
+
+        {%- endfor -%}
+    {%- endif -%}
 {%- endmacro -%}
