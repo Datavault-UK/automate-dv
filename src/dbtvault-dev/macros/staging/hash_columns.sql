@@ -10,8 +10,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-
 {%- macro hash_columns(columns=none) -%}
+
+    {{- adapter_macro('dbtvault.hash_columns', columns=columns) -}}
+
+{%- endmacro %}
+
+{%- macro default__hash_columns(columns=none) -%}
 
 {%- if columns is mapping -%}
 

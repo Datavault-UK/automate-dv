@@ -11,23 +11,46 @@
     limitations under the License.
 -#}
 
-{%- macro prefix(columns=none, prefix_str=none, alias_target='source') -%}
+{%- macro prefix(columns, prefix_str, alias_target) -%}
+
+    {{- log(this, true) -}}
+    {{- log('cols 1: ' ~ columns, true) -}}
+
+    {{- adapter_macro('dbtvault.prefix', columns=columns, prefix_str=prefix_str, alias_target=alias_target) -}}
+
+{%- endmacro -%}
+
+{%- macro default__prefix(columns=none, prefix_str=none, alias_target='source') -%}
+
+    {{- log('cols 2: ' ~ columns, true) -}}
 
     {%- if columns and prefix_str -%}
 
+        {{- log('here 1', true) -}}
+
         {%- for col in columns -%}
+
+            {{- log('here 2', true) -}}
 
             {%- if col is mapping -%}
 
+                {{- log('here 3', true) -}}
+
                 {%- if alias_target == 'source' -%}
+
+                    {{- log('cols 3: ' ~ columns, true) -}}
 
                     {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
 
                 {%- elif alias_target == 'target' -%}
 
+                    {{- log('cols 4: ' ~ columns, true) -}}
+
                     {{- dbtvault.prefix([col['alias']], prefix_str) -}}
 
                 {%- else -%}
+
+                    {{- log('cols 5: ' ~ columns, true) -}}
 
                     {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
 
@@ -37,13 +60,20 @@
 
             {%- else -%}
 
+                {{- log('here 6 ' ~ col, true) -}}
+
                 {%- if col is iterable and col is not string -%}
+
+                    {{- log('cols 6: ' ~ columns, true) -}}
 
                     {{- dbtvault.prefix(col, prefix_str) -}}
 
                 {%- elif col is not none -%}
+
+                    {{- log('here 7 ' ~ col, true) -}}
+
                     {{- prefix_str}}.{{col.strip() -}}
-                {% else %}       
+                {% else %}
 
                     {%- if execute -%}
                         {{- exceptions.raise_compiler_error("Unexpected or missing configuration for '" ~ this ~ "' Unable to prefix columns.") -}}

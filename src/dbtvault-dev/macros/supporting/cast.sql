@@ -10,8 +10,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+{%- macro cast(columns=none, prefix=none) -%}
 
-{%- macro cast(columns, prefix=none) -%}
+    {{- adapter_macro('dbtvault.cast', columns=columns, prefix=prefix) -}}
+
+{%- endmacro %}
+
+{%- macro default__cast(columns, prefix=none) -%}
 
 {#- If a string or list -#}
 {%- if columns is iterable -%}

@@ -10,7 +10,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro alias_all(columns, prefix) -%}
+{%- macro alias_all(columns=none, prefix=none) -%}
+
+    {{- adapter_macro('dbtvault.alias_all', columns=columns, prefix=prefix) -}}
+
+{%- endmacro %}
+
+{%- macro default__alias_all(columns, prefix) -%}
 
 {%- if columns is iterable and columns is not string -%}
 

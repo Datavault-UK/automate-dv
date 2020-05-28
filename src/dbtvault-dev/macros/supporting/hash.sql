@@ -10,8 +10,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 #}
-
 {%- macro hash(columns=none, alias=none, hashdiff=false) -%}
+
+    {% if hashdiff is none %}
+        {%- set hashdiff = false -%}
+    {% endif %}
+
+    {{- adapter_macro('dbtvault.hash', columns=columns, alias=alias, hashdiff=hashdiff) -}}
+
+{%- endmacro %}
+
+{%- macro default__hash(columns, alias, hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
