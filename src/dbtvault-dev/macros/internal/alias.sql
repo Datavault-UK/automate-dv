@@ -12,6 +12,12 @@
 -#}
 {%- macro alias(source_column=none, prefix=none) -%}
 
+    {{- adapter_macro('dbtvault.alias', source_column=source_column, prefix=prefix) -}}
+
+{%- endmacro %}
+
+{%- macro default__alias(source_column=none, prefix=none) -%}
+
 {%- if source_column -%}
 
     {%- if source_column is iterable and source_column is not string -%}
