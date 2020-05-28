@@ -52,9 +52,8 @@ class DBTTestUtils:
 
         return logs
 
-    @staticmethod
-    def run_dbt_model(*, mode='compile', model: str, model_vars=None, full_refresh=False, include_model_deps=False,
-                      include_tag=False) -> str:
+    def run_dbt_model(self, *, mode='compile', model: str, model_vars=None, full_refresh=False,
+                      include_model_deps=False, include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
 
@@ -89,6 +88,10 @@ class DBTTestUtils:
         p.wait()
 
         logs = stdout.decode('utf-8')
+
+        self.logger.log(msg=f"Running with dbt command: {' '.join(command)}", level=logging.DEBUG)
+
+        self.logger.log(msg=logs, level=logging.DEBUG)
 
         return logs
 
