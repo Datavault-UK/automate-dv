@@ -65,10 +65,12 @@ STG AS (
             {%- endif %}
             {%- endfor %}
         )
-        {{ 'WHERE' }}
+        {{ 'WHERE ' -}}
         {%- for fk in fk_cols -%}
         {{ fk }} IS NOT NULL
-        {{ 'AND\n' if not loop.last }}
+        {%- if not loop.last %}
+        {{ 'AND ' -}}
+        {%- endif -%}
         {%- endfor %}
     ) AS b
     WHERE RN = 1
@@ -84,10 +86,12 @@ STG AS (
             ORDER BY b.{{ src_ldts }}, b.{{ src_source }} ASC
         ) AS RN
         FROM {{ ref(source_model) }} AS b
-        WHERE
-        {% for fk in fk_cols -%}
-        b.{{ fk }} IS NOT NULL 
-        {{ '\nAND ' if not loop.last -}}
+        {{ 'WHERE ' -}}
+        {%- for fk in fk_cols -%}
+        b.{{ fk }} IS NOT NULL
+        {%- if not loop.last %}
+        {{ 'AND ' -}}
+        {%- endif -%}
         {%- endfor %}
     ) AS a
     WHERE RN = 1

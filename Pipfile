@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pytest-xdist = "*"
+pytest-clarity = "*"
 
 [packages]
 urllib3 = "==1.24.3"
@@ -29,3 +30,6 @@ pymdown-extensions = "==7.1"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
