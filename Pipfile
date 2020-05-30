@@ -25,6 +25,7 @@ boto3 = "==1.11.17"
 mkdocs = "==1.1.2"
 mkdocs-material = "==5.2.1"
 mkdocs-minify-plugin = "==0.2.3"
+mkdocs-git-revision-date-localized-plugin = "*"
 pygments = "==2.6.1"
 pymdown-extensions = "==7.1"
 
