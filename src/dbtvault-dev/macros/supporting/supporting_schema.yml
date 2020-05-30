@@ -1,0 +1,29 @@
+version: 2
+
+macros:
+  - name: hash
+    description: '{{ doc("macro_hash") }}'
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg_hash_columns") }}'
+      - name: alias
+        type: string
+        description: '{{ doc("arg_hash_alias") }}'
+      - name: is_hashdiff
+        type: boolean
+        description: '{{ doc("arg_hash_is_hashdiff") }}'
+        
+  - name: prefix
+    description: '{{ doc("macro_prefix") }}'
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg_prefix_columns") }}'
+      - name: prefix_str
+        type: string
+        description: '{{ doc("arg_prefix_prefix_str") }}'
+      - name: alias_target
+        type: source | target
+        description: '{{ doc("arg_prefix_alias_target") }}'
+    

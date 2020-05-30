@@ -5,7 +5,7 @@ import pytest
 class TestAliasMacro:
 
     def test_alias_single_correctly_generates_sql(self):
-        var_dict = {'source_column': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
+        var_dict = {'alias_config': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -15,7 +15,7 @@ class TestAliasMacro:
         assert actual_sql == expected_sql
 
     def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(self):
-        var_dict = {'source_column': {}, 'prefix': 'c'}
+        var_dict = {'alias_config': {}, 'prefix': 'c'}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
 
@@ -23,7 +23,7 @@ class TestAliasMacro:
         assert 'Invalid alias configuration:' in process_logs
 
     def test_alias_single_with_missing_column_metadata_raises_error(self):
-        var_dict = {'source_column': '', 'prefix': 'c'}
+        var_dict = {'alias_config': '', 'prefix': 'c'}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
 

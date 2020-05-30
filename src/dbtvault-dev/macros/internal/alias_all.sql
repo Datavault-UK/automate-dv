@@ -21,7 +21,7 @@
 {%- if columns is iterable and columns is not string -%}
 
     {%- for column in columns -%}
-        {{ dbtvault.alias(column, prefix) }}
+        {{ dbtvault.alias(alias_config=column, prefix=prefix) }}
         {%- if not loop.last -%} , {% endif -%}
     {%- endfor -%}
 

@@ -1,0 +1,35 @@
+version: 2
+
+macros:
+  - name: stage
+    description: '{{ doc("macro_stage") }}'
+    arguments:
+      - name: include_source_columns
+        type: boolean
+        description: '{{ doc("arg_stage_include_source_columns") }}'
+      - name: source_model
+        type: string
+        description: '{{ doc("arg_stage_source_model") }}'
+      - name: hashed_columns
+        type: Mapping
+        description: '{{ doc("arg_stage_hashed_columns") }}'
+      - name: derived_columns
+        type: Mapping
+        description: '{{ doc("arg_stage_derived_columns") }}'
+          
+  - name: derive_columns
+    description: '{{ doc("macro_derive_columns") }}'
+    arguments:
+      - name: source_relation
+        type: Relation
+        description: '{{ doc("arg_derive_columns_source_relation") }}'
+      - name: columns
+        type: list
+        description: '{{ doc("arg_derive_columns_columns") }}'
+
+  - name: hash_columns
+    description: '{{ doc("macro_hash_columns") }}'
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg_hash_columns_columns") }}'
