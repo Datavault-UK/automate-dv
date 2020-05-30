@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "200b351b4f00cb190b1165ed24242412d26d361758055b8ceced962c171bd1cd"
+            "sha256": "06707ee6f0f39a7ba5f0d50cbbca3e5d2007917e02c926b770c1f3f9c0cc3511"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -256,6 +256,20 @@
             ],
             "version": "==0.18.2"
         },
+        "gitdb": {
+            "hashes": [
+                "sha256:91f36bfb1ab7949b3b40e23736db18231bf7593edada2ba5c3a174a7b23657ac",
+                "sha256:c9e1f2d0db7ddb9a704c2a0217be31214e91a4fe1dea1efad19ae42ba0c285c9"
+            ],
+            "version": "==4.0.5"
+        },
+        "gitpython": {
+            "hashes": [
+                "sha256:864a47472548f3ba716ca202e034c1900f197c0fb3a08f641c20c3cafd15ed94",
+                "sha256:da3b2cf819974789da34f95ac218ef99f515a928685db141327c09b73dd69c09"
+            ],
+            "version": "==3.1.2"
+        },
         "google-api-core": {
             "hashes": [
                 "sha256:859f7392676761f2b160c6ee030c3422135ada4458f0948c5690a6a7c8d86294",
@@ -473,6 +487,14 @@
             ],
             "index": "pypi",
             "version": "==1.1.2"
+        },
+        "mkdocs-git-revision-date-localized-plugin": {
+            "hashes": [
+                "sha256:3a109a2edd47cf2f80f60a272c88077ede4a88d25a46d9bdf276014bdbc3a14a",
+                "sha256:9a5f4f0f9de298af7c11f749822b9396d83c7920369ccd868d9cf035a627021f"
+            ],
+            "index": "pypi",
+            "version": "==0.5.2"
         },
         "mkdocs-material": {
             "hashes": [
@@ -901,6 +923,13 @@
                 "sha256:8b74bedcbbbaca38ff6d7491d76f2b06b3592611af620f8426e82dddb04a5ced"
             ],
             "version": "==1.15.0"
+        },
+        "smmap": {
+            "hashes": [
+                "sha256:54c44c197c819d5ef1991799a7e30b662d1e520f2ac75c9efbeb54a742214cf4",
+                "sha256:9c98bbd1f9786d22f14b3d4126894d56befb835ec90cef151af566c7e19b5d24"
+            ],
+            "version": "==3.0.4"
         },
         "snowflake-connector-python": {
             "hashes": [
