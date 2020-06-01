@@ -70,7 +70,7 @@
 
             {{-
                 dbtvault.hash(
-                    columns=src_col_config if src_col_config is string else src_col_config['columns'],
+                    columns=src_col_config['columns'] if src_col_config is mapping else src_col_config,
                     alias=output_col,
                     is_hashdiff=is_hashdiff,
                     hash_algo=hash_algo
