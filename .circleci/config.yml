@@ -33,9 +33,9 @@ jobs:
             - /.circleci/.cache
       - secrethub/install
       - run:
-          command: inv run-dbt -p test -d 'deps'
+          command: pipenv run inv run-dbt -p test -d 'deps'
       - run:
-          command: inv run-tests -t snowflake -u dev
+          command: pipenv run inv run-tests -t snowflake -u dev
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
