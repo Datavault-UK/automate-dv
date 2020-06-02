@@ -8,6 +8,59 @@ PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 SECRETHUB_FILE = Path(f"{PROJECT_ROOT}/secrethub.env")
 
 
+def check_target(target: str):
+    """
+    Check specified target is available
+        :param target: Target to check
+        :return: bool
+    """
+
+    available_targets = ['snowflake', 'bigquery']
+
+    if target in available_targets:
+        return True
+    else:
+        raise ValueError(f"Unexpected target, available targets: {', '.join(available_targets)}")
+
+
+def check_project(project: str):
+    """
+    Check specified project is available
+        :param project: Project to check
+        :return: work_dir: Working directory for the selected project
+    """
+
+    available_projects = {
+        'core': {'work_dir': './src/dbtvault'},
+        'dev': {'work_dir': './src/dbtvault-dev'},
+        'test': {'work_dir': './tests/dbtvault_test'}
+    }
+
+    if project in available_projects:
+        return available_projects[project]['work_dir']
+    else:
+        raise ValueError(f"Unexpected project, available projects: {', '.join(available_projects)}")
+
+
+@task
+def set_defaults(c, target=None, user=None, project=None):
+    """
+    Generate an 'invoke.yml' file
+    :param c: invoke context
+    :param target: dbt profile target
+    :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+    :param project: dbt project to run with, either core (public dbtvault project), dev (dev project) or test (test project)
+    """
+
+    dict_file = {
+        'secrets_user': user, 'project': project, 'target': target}
+
+    dict_file = {k: v for k, v in dict_file.items() if v}
+
+    with open('./invoke.yml', 'w') as file:
+        yaml.dump(dict_file, file)
+
+
 @task
 def run_tests(c, target, user=None):
     """
@@ -20,17 +73,13 @@ def run_tests(c, target, user=None):
     if not user:
         target = c.config.get('secrets_user', None)
 
-    available_targets = ['snowflake']
-
-    if target in available_targets:
+    if check_target(target):
 
         print(f"Running on '{target}' with user '{user}'")
 
         command = f"secrethub run -v env={target} -v user={user} -- pytest -n 4 -vv"
 
         c.run(command)
-    else:
-        raise ValueError(f"Unexpected target, available targets: {', '.join(available_targets)}")
 
 
 @task
@@ -43,11 +92,8 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
         :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
         :param project: dbt project to run with, either core (public dbtvault project), dev (dev project) or test (test project)
     """
-    available_projects = {
-        'core': {'work_dir': './src/dbtvault'},
-        'dev': {'work_dir': './src/dbtvault-dev'},
-        'test': {'work_dir': './tests/dbtvault_test'}}
 
+    # Get config
     if not target:
         target = c.config.get('target', None)
 
@@ -57,36 +103,29 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
     if not project:
         project = c.config.get('project', None)
 
+    # Raise error if any are null
     if all(v is None for v in [target, user, project]):
         raise ValueError('Expected target, user and project configurations, at least one is missing.')
 
+    # Select dbt profile
+    if check_target(target):
+        os.environ['TARGET'] = target
+
+    # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
     command = f"secrethub run --env-file={SECRETHUB_FILE} -v env={target} -v user={user} -- dbt {dbt_args}"
 
-    if project in set(available_projects):
+    # Run dbt in project directory
+    project_dir = check_project(project)
+    with c.cd(project_dir):
 
-        with c.cd(available_projects[project]['work_dir']):
+        print(f'Running dbt with command: dbt {dbt_args}')
 
-            print(f'Running dbt with command: dbt {dbt_args}')
+        if user:
+            print(f'User: {user}')
 
-            if user:
-                print(f'User: {user}')
-            print(f'Project: {project}\n')
+        print(f'Project: {project}')
+        print(f'Target: {target}\n')
 
-            c.run(command)
-
-
-@task
-def set_defaults(c, user=None, project=None, target=None):
-
-    dict_file = {'secrets_user': user,
-                 'project': project,
-                 'target': target}
-
-    dict_file = {k: v for k, v in dict_file.items() if v}
-
-    with open('./invoke.yml', 'w') as file:
-        yaml.dump(dict_file, file)
-
-
+        c.run(command)
