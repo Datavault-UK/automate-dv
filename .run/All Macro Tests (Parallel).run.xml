@@ -16,8 +16,8 @@
       <option name="IS_IGNORE_MISSING_FILES" value="true" />
       <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
       <ENTRIES>
-        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
         <ENTRY IS_ENABLED="true" PARSER="env" PATH="pycharm.env" />
+        <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
     <option name="_new_keywords" value="&quot;&quot;" />
