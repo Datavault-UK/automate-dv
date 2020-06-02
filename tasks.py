@@ -71,9 +71,14 @@ def run_tests(c, target, user=None):
     """
 
     if not user:
-        target = c.config.get('secrets_user', None)
+        user = c.config.get('secrets_user', None)
+
+    if not target:
+        user = c.config.get('target', None)
 
     if check_target(target):
+
+        os.environ['TARGET'] = target
 
         print(f"Running on '{target}' with user '{user}'")
 
@@ -114,7 +119,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
     # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
-    command = f"secrethub run --env-file={SECRETHUB_FILE} -v env={target} -v user={user} -- dbt {dbt_args}"
+    command = f"secrethub run --env-file={SECRETHUB_FILE} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(project)

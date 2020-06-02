@@ -33,7 +33,7 @@ jobs:
             - /.circleci/.cache
       - secrethub/install
       - run:
-          command: pipenv run inv run-dbt -t snowflake -p test -d 'deps'
+          command: pipenv run inv run-dbt -u dev -t snowflake -p test -d 'deps'
       - run:
           command: pipenv run inv run-tests -t snowflake -u dev
       - slack/status:
