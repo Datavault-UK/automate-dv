@@ -25,7 +25,8 @@ jobs:
           name: Install pipenv and dependencies
           command: |
             sudo pip install pipenv
-            pipenv install
+            pipenv install --dev
+            pipenv install 
       - save_cache:
           key: v1-dbtvault-dev-{{ arch }}-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
@@ -34,7 +35,7 @@ jobs:
       - run:
           command: cd ./tests/dbtvault_test ; secrethub run -v env=snowflake -v user=dev -- pipenv run dbt deps
       - run:
-          command: pipenv run macro-tests
+          command: pipenv run circleci-macro-tests
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'

@@ -5,6 +5,7 @@ verify_ssl = true
 
 [scripts]
 macro-tests = "secrethub run -v env=snowflake -v user=dev -- pytest -n 4 -vv"
+circleci-macro-tests = "secrethub run -v env=snowflake -v user=dev -- pytest -vv"
 
 [dev-packages]
 pytest = "*"
