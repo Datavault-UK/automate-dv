@@ -11,6 +11,7 @@ circleci-macro-tests = "secrethub run -v env=snowflake -v user=dev -- pytest -vv
 pytest = "*"
 pytest-xdist = "*"
 pytest-clarity = "*"
+invoke = "*"
 
 [packages]
 urllib3 = "==1.24.3"
@@ -32,7 +33,6 @@ mkdocs-minify-plugin = "==0.2.3"
 mkdocs-git-revision-date-localized-plugin = "*"
 pygments = "==2.6.1"
 pymdown-extensions = "==7.1"
-invoke = "*"
 
 [requires]
 python_version = "3.8"
