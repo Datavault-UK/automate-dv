@@ -20,7 +20,7 @@ def check_target(target: str):
     if target in available_targets:
         return True
     else:
-        raise ValueError(f"Unexpected target, available targets: {', '.join(available_targets)}")
+        raise ValueError(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
 
 
 def check_project(project: str):
@@ -39,7 +39,7 @@ def check_project(project: str):
     if project in available_projects:
         return available_projects[project]['work_dir']
     else:
-        raise ValueError(f"Unexpected project, available projects: {', '.join(available_projects)}")
+        raise ValueError(f"Unexpected project '{project}', available projects: {', '.join(available_projects)}")
 
 
 @task
