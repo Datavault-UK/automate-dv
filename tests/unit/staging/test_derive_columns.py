@@ -27,7 +27,8 @@ class TestDeriveColumnsMacro:
     def test_derive_columns_correctly_generates_sql_with_only_source_columns(self):
         var_dict = {'source_model': 'raw_source'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, 
+                                                         model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 

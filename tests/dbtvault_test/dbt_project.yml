@@ -28,13 +28,13 @@ models:
                 - CUSTOMER_ID
                 - BOOKING_REF
               BOOK_CUSTOMER_HASHDIFF:
-                hashdiff: true
+                is_hashdiff: true
                 columns:
                   - PHONE
                   - NATIONALITY
                   - CUSTOMER_ID
               BOOK_BOOKING_HASHDIFF:
-                hashdiff: true
+                is_hashdiff: true
                 columns:
                   - BOOKING_REF
                   - BOOKING_DATE
@@ -53,13 +53,13 @@ models:
                   - BOOKING_REF
                   - "TO_DATE('9999-12-31')"
                 BOOK_CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - PHONE
                     - NATIONALITY
                     - CUSTOMER_ID
                 BOOK_BOOKING_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - BOOKING_REF
                     - "TO_DATE('9999-12-31')"
@@ -95,13 +95,13 @@ models:
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_DOB
                     - CUSTOMER_ID
                     - CUSTOMER_NAME
                 CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_ID
                     - NATIONALITY
@@ -116,13 +116,13 @@ models:
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_DOB
                     - CUSTOMER_ID
                     - CUSTOMER_NAME
                 CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_ID
                     - NATIONALITY
@@ -151,13 +151,13 @@ models:
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_DOB
                     - CUSTOMER_ID
                     - CUSTOMER_NAME
                 CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_ID
                     - NATIONALITY
@@ -168,13 +168,13 @@ models:
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_DOB
                     - CUSTOMER_ID
                     - CUSTOMER_NAME
                 CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_ID
                     - NATIONALITY
@@ -184,13 +184,13 @@ models:
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_DOB
                     - CUSTOMER_ID
                     - CUSTOMER_NAME
                 CUSTOMER_HASHDIFF:
-                  hashdiff: true
+                  is_hashdiff: true
                   columns:
                     - CUSTOMER_ID
                     - NATIONALITY
@@ -300,13 +300,13 @@ models:
                     - CUSTOMER_ID
                     - BOOKING_REF
                   BOOK_CUSTOMER_HASHDIFF:
-                    hashdiff: true
+                    is_hashdiff: true
                     columns:
                       - CUSTOMER_ID
                       - NATIONALITY
                       - PHONE
                   BOOK_BOOKING_HASHDIFF:
-                    hashdiff: true
+                    is_hashdiff: true
                     columns:
                       - BOOKING_REF
                       - BOOKING_DATE
@@ -324,13 +324,13 @@ models:
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
                   CUST_CUSTOMER_HASHDIFF:
-                    hashdiff: true
+                    is_hashdiff: true
                     columns:
                       - CUSTOMER_ID
                       - CUSTOMER_NAME
                       - CUSTOMER_DOB
                   CUSTOMER_HASHDIFF:
-                    hashdiff: true
+                    is_hashdiff: true
                     columns:
                       - CUSTOMER_ID
                       - CUSTOMER_NAME
@@ -384,7 +384,7 @@ models:
                 src_pk: "BOOKING_PK"
                 src_hashdiff:
                   source_column: "BOOK_BOOKING_HASHDIFF"
-                  alias: "HASHDIFF"
+                  alias: "is_hashdiff"
                 src_payload:
                   - "PRICE"
                   - "BOOKING_DATE"
@@ -399,7 +399,7 @@ models:
                 src_pk: "CUSTOMER_PK"
                 src_hashdiff:
                   source_column: "BOOK_CUSTOMER_HASHDIFF"
-                  alias: "HASHDIFF"
+                  alias: "is_hashdiff"
                 src_payload:
                   - "PHONE"
                   - "NATIONALITY"
@@ -412,7 +412,7 @@ models:
                 src_pk: "CUSTOMER_PK"
                 src_hashdiff: 
                   source_column: "CUSTOMER_HASHDIFF"
-                  alias: "HASHDIFF"
+                  alias: "is_hashdiff"
                 src_payload:
                   - "CUSTOMER_DOB"
                   - "CUSTOMER_NAME"
@@ -633,7 +633,7 @@ models:
                 hashed_columns:
                   CUSTOMER_PK: CUSTOMER_ID
                   CUSTOMER_HASHDIFF:
-                    hashdiff: true
+                    is_hashdiff: true
                     columns:
                       - CUSTOMER_ID
                       - CUSTOMER_NAME
@@ -651,7 +651,7 @@ models:
               src_pk: "CUSTOMER_PK"
               src_hashdiff: 
                 source_column: "CUSTOMER_HASHDIFF"
-                alias: "HASHDIFF"
+                alias: "is_hashdiff"
               src_payload:
                 - "CUSTOMER_NAME"
                 - "CUSTOMER_DOB"

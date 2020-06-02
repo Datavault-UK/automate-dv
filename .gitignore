@@ -1,10 +1,5 @@
 \.idea/
 
-tests/features/config/credentials.json
-tests/features/config/config.ini
-
-src/SnowflakeDV/__pycache__/
-
 tests/features/__pycache__/
 
 src/dbtvault-dev/logs/
@@ -24,4 +19,11 @@ tests/__pycache__/
 
 *.pyc
 
-.run/
+/pycharm.env
+
+tests/dbtvault_test/logs/
+
+*.log
+/tests/dbtvault_test/dbt_modules/
+
+tests/dbtvault_test/target/

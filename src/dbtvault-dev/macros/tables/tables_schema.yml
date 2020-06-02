@@ -1,0 +1,90 @@
+version: 2
+
+macros:
+  - name: hub
+    description: '{{ doc("macro_hub") }}'
+    arguments:
+      - name: src_pk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_pk") }}'
+      - name: src_nk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_nk") }}'
+      - name: src_ldts
+        type: string
+        description: '{{ doc("arg_tables_src_ldts") }}'
+      - name: src_source
+        type: string
+        description: '{{ doc("arg_tables_src_source") }}'
+      - name: source_model
+        type: string
+        description: '{{ doc("arg_tables_source_model") }}'
+
+  - name: link
+    description: '{{ doc("macro_link") }}'
+    arguments:
+      - name: src_pk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_pk") }}'
+      - name: src_fk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_fk") }}'
+      - name: src_ldts
+        type: string
+        description: '{{ doc("arg_tables_src_ldts") }}'
+      - name: src_source
+        type: string
+        description: '{{ doc("arg_tables_src_source") }}'
+      - name: source_model
+        type: string
+        description: '{{ doc("arg_tables_source_model") }}'
+
+  - name: sat
+    description: '{{ doc("macro_sat") }}'
+    arguments:
+      - name: src_pk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_pk") }}'
+      - name: src_hashdiff
+        type: string
+        description: '{{ doc("arg_tables_src_hashdiff") }}'
+      - name: src_payload
+        type: string
+        description: '{{ doc("arg_tables_src_payload_sat") }}'
+      - name: src_eff
+        type: string
+        description: '{{ doc("arg_tables_src_eff") }}'
+      - name: src_ldts
+        type: string
+        description: '{{ doc("arg_tables_src_ldts") }}'
+      - name: src_source
+        type: string
+        description: '{{ doc("arg_tables_src_source") }}'
+      - name: source_model
+        type: string
+        description: '{{ doc("arg_tables_source_model") }}'
+
+  - name: t_link
+    description: '{{ doc("macro_sat") }}'
+    arguments:
+      - name: src_pk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_pk") }}'
+      - name: src_fk
+        type: mapping/string
+        description: '{{ doc("arg_tables_src_fk") }}'
+      - name: src_payload
+        type: string
+        description: '{{ doc("arg_tables_src_payload_t_link") }}'
+      - name: src_eff
+        type: string
+        description: '{{ doc("arg_tables_src_eff") }}'
+      - name: src_ldts
+        type: string
+        description: '{{ doc("arg_tables_src_ldts") }}'
+      - name: src_source
+        type: string
+        description: '{{ doc("arg_tables_src_source") }}'
+      - name: source_model
+        type: string
+        description: '{{ doc("arg_tables_source_model") }}'

@@ -1,0 +1,42 @@
+version: 2
+
+macros:
+  - name: alias
+    description: '{{ doc("macro_alias") }}'
+    arguments:
+      - name: alias_config
+        type: Mapping
+        description: '{{ doc("arg_alias_alias_config") }}'
+      - name: prefix
+        type: String
+        description: '{{ doc("arg_alias_prefix") }}'
+
+  - name: alias_all
+    description: '{{ doc("macro_alias_all") }}'
+    arguments:
+      - name: columns
+        type: string
+        description: '{{ doc("arg_alias_all_columns") }}'
+      - name: prefix
+        type: string
+        description: '{{ doc("arg_alias_all_prefix") }}'
+
+  - name: expand_column_list
+    description: '{{ doc("macro_expand_column_list") }}'
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg_expand_column_list_columns") }}'
+
+  - name: multikey
+    description: '{{ doc("macro_multikey") }}'
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg_multikey_columns") }}'
+      - name: aliases
+        type: list
+        description: '{{ doc("arg_multikey_aliases") }}'
+      - name: type_for
+        type: string
+        description: '{{ doc("arg_multikey_type_for") }}'

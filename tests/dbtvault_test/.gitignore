@@ -1,4 +1,22 @@
+\.idea/
 
-target/
-dbt_modules/
-logs/
+tests/features/__pycache__/
+
+src/dbtvault-dev/logs/
+
+src/dbtvault-dev/target/
+
+src/dbtvault-dev/__pycache__/
+
+src/dbtvault-dev/perftest/__pycache__/
+
+tests/features/steps/__pycache__/
+/venv/
+
+profiles/.user.yml
+
+tests/__pycache__/
+
+*.pyc
+
+/pycharm.env

@@ -1,1 +1,0 @@
-{{ dbtvault.cast(columns=var('columns', none)) }}

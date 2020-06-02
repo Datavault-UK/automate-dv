@@ -1,1 +1,1 @@
-{{ dbtvault.alias(source_column=var('source_column'), prefix=var('prefix')) }}
+{{ dbtvault.alias(alias_config=var('alias_config'), prefix=var('prefix')) }}

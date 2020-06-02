@@ -38,9 +38,8 @@ STG AS (
             UNION ALL
             SELECT * FROM STG_2
         )
-        WHERE
-        ORDER_FK IS NOT NULL AND
-        BOOKING_FK IS NOT NULL
+        WHERE ORDER_FK IS NOT NULL
+        AND BOOKING_FK IS NOT NULL
     ) AS b
     WHERE RN = 1
 )
