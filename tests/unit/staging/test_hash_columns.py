@@ -30,7 +30,7 @@ class TestHashColumnsMacro:
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': {
-                    'columns': ['ADDRESS', 'PHONE', 'NAME'], 'hashdiff': True}}}
+                    'columns': ['ADDRESS', 'PHONE', 'NAME'], 'is_hashdiff': True}}}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -43,8 +43,8 @@ class TestHashColumnsMacro:
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF',
-                'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'], 'hashdiff': True},
-                'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'], 'hashdiff': False}}}
+                'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'], 'is_hashdiff': True},
+                'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'], 'is_hashdiff': False}}}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
@@ -87,7 +87,7 @@ class TestHashColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         warning_message = "You provided a list of columns under a 'columns' key, " \
-                          "but did not provide the 'hashdiff' flag. Use list syntax for PKs."
+                          "but did not provide the 'is_hashdiff' flag. Use list syntax for PKs."
 
         assert warning_message in process_logs
         assert actual_sql == expected_sql
