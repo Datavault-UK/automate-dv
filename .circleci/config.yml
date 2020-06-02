@@ -44,7 +44,6 @@ workflows:
   build-test:
     jobs:
       - build-and-test:
-          context: dbtvault_snowflake_test
           filters:
             branches:
               only: master
