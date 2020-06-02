@@ -4,6 +4,7 @@ version: 2.1
 orbs:
   python: 'circleci/python@0.3.0'
   slack: circleci/slack@3.4.2
+  secrethub: secrethub/cli@1.0.1
 
 jobs:
   build-and-test:
@@ -29,10 +30,11 @@ jobs:
           key: v1-dbtvault-dev-{{ arch }}-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
           paths:
             - /.circleci/.cache
+      - secrethub/install
       - run:
-          command: cd tests/dbtvault_test/ ; pipenv run dbt deps
+          command: cd ./tests/dbtvault_test ; secrethub run -v env=snowflake -v user=$USER -- pipenv run dbt deps
       - run:
-          command: pipenv run python -m pytest ./tests/unit
+          command: pipenv run macro-tests
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
