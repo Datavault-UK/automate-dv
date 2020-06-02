@@ -1,6 +1,6 @@
 from behave import *
 
-from tests.test_utils.dbt_test_utils import TESTS_DBT_ROOT
+from tests.dbt_test_utils import TESTS_DBT_ROOT
 from steps.step_vars import *
 
 use_step_matcher("parse")
