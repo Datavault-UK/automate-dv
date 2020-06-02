@@ -20,3 +20,10 @@ tests/__pycache__/
 *.pyc
 
 /pycharm.env
+
+tests/dbtvault_test/logs/
+
+*.log
+/tests/dbtvault_test/dbt_modules/
+
+tests/dbtvault_test/target/
