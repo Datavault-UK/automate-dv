@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Install pipenv and dependencies
           command: |
-            sudo pip install pipenv
+            sudo -H pip install pipenv
             pipenv install --dev
             pipenv install 
       - save_cache:
@@ -33,7 +33,7 @@ jobs:
             - /.circleci/.cache
       - secrethub/install
       - run:
-          command: pipenv run inv run-dbt -p test -d 'deps'
+          command: pipenv run inv run-dbt -t snowflake -p test -d 'deps'
       - run:
           command: pipenv run inv run-tests -t snowflake -u dev
       - slack/status:
