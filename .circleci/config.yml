@@ -32,7 +32,7 @@ jobs:
             - /.circleci/.cache
       - secrethub/install
       - run:
-          command: cd ./tests/dbtvault_test ; secrethub run -v env=snowflake -v user=$USER -- pipenv run dbt deps
+          command: cd ./tests/dbtvault_test ; secrethub run -v env=snowflake -v user=dev -- pipenv run dbt deps
       - run:
           command: pipenv run macro-tests
       - slack/status:
