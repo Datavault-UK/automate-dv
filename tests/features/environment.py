@@ -7,3 +7,7 @@ def before_all(context):
     """
 
     context.dbt_test_utils = DBTTestUtils()
+
+
+def after_scenario(context, scenario):
+    DBTTestUtils.clean_csv()

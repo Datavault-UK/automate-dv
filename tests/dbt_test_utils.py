@@ -1,5 +1,6 @@
 import logging
 import os
+import glob
 import re
 import shutil
 from hashlib import md5, sha256
@@ -143,6 +144,17 @@ class DBTTestUtils:
         target = TESTS_DBT_ROOT / 'target'
 
         shutil.rmtree(target, ignore_errors=True)
+
+    @staticmethod
+    def clean_csv():
+        """
+        Deletes content in csv folder.
+        """
+
+        delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
+
+        for file in delete_files:
+            os.remove(file)
 
     @staticmethod
     def calc_hash(columns_as_series) -> Series:
