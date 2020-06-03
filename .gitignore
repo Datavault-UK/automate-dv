@@ -27,3 +27,4 @@ tests/dbtvault_test/logs/
 /tests/dbtvault_test/dbt_modules/
 
 tests/dbtvault_test/target/
+/invoke.yml
