@@ -2,6 +2,7 @@ from unittest.mock import Mock
 
 from vaultBase.cliParse import CLIParse
 from vaultBase.logger import Logger
+from vaultBase.testing.dbTestUtils import DBTestUtils
 
 from steps.step_vars import DATABASE
 from tests.dbt_test_utils import *
