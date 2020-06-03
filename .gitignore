@@ -1,6 +1,6 @@
 \.idea/
 
-tests/features_old/__pycache__/
+tests/features/__pycache__/
 
 src/dbtvault-dev/logs/
 
@@ -10,7 +10,7 @@ src/dbtvault-dev/__pycache__/
 
 src/dbtvault-dev/perftest/__pycache__/
 
-tests/features_old/steps/__pycache__/
+tests/features/steps/__pycache__/
 /venv/
 
 profiles/.user.yml
@@ -28,3 +28,5 @@ tests/dbtvault_test/logs/
 
 tests/dbtvault_test/target/
 /invoke.yml
+
+tests/features/csv_temp/*.csv

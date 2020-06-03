@@ -1,8 +1,15 @@
 import logging
 import os
+import re
 import shutil
+from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen
+
+import pandas as pd
+from behave.model import Table
+from behave.runner import Context
+from pandas import Series
 
 PROJECT_ROOT = PurePath(__file__).parents[1]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -10,7 +17,8 @@ TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
-FEATURES_ROOT = TESTS_ROOT / 'features_old'
+FEATURES_ROOT = TESTS_ROOT / 'features'
+CSV_DIR = FEATURES_ROOT / 'csv_temp'
 
 if not os.getenv('DBT_PROFILES_DIR'):
 
@@ -135,3 +143,59 @@ class DBTTestUtils:
         target = TESTS_DBT_ROOT / 'target'
 
         shutil.rmtree(target, ignore_errors=True)
+
+    @staticmethod
+    def calc_hash(columns_as_series) -> Series:
+        """
+        Calculates the MD5 hash for a given value
+            :param columns_as_series: A pandas Series of strings for the hash to be calculated on.
+            In the form of "md5('1000')" or "sha('1000')"
+            :type columns_as_series: Series
+            :return:  Hash (MD5 or SHA) of values as Series (used as column)
+        """
+
+        for index, item in enumerate(columns_as_series):
+
+            patterns = {
+                'md5': {
+                    'active': True if 'md5' in item else False,
+                    'pattern': "^(?:md5\(')(.*)(?:'\))",
+                    'function': md5},
+                'sha': {
+                    'active'  : True if 'sha' in item else False,
+                    'pattern': "^(?:sha\(')(.*)(?:'\))",
+                    'function': sha256}
+            }
+
+            active_algorithm = [patterns[sel] for sel in patterns.keys() if patterns[sel]['active']]
+
+            if active_algorithm:
+                pattern = active_algorithm[0]['pattern']
+                algorithm = active_algorithm[0]['function']
+
+                new_item = re.findall(pattern, item)
+
+                if isinstance(new_item, list):
+
+                    if new_item:
+
+                        hashed_item = algorithm(new_item[0].encode('utf-8')).hexdigest()
+
+                        columns_as_series[index] = str(hashed_item).upper()
+
+        return columns_as_series
+
+    def context_table_to_df(self, table: Table, context: Context, model_name: str):
+        """
+        Converts a context table in a feature file into a pandas DataFrame
+            :param table: The context.table from a feature file
+            :param context: Behave context
+            :param model_name: Name of the model to create
+            :return: A pandas DataFrame modelled from a context table
+        """
+
+        table_df = pd.DataFrame(columns=table.headings, data=table.rows)
+
+        table_df.apply(self.calc_hash)
+
+        table_df.to_csv(CSV_DIR / f'{context.feature.name}_{model_name}.csv', index=False)
