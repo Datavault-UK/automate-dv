@@ -10,7 +10,7 @@ TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
-FEATURES_ROOT = TESTS_ROOT / 'features'
+FEATURES_ROOT = TESTS_ROOT / 'features_old'
 
 if not os.getenv('DBT_PROFILES_DIR'):
 

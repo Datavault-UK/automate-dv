@@ -23,13 +23,13 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_cycles.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_hubs.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_links.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_multiperiod_hubs.sql.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_multiperiod_links.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_sats.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/dbtvault_load_t_links.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_multiperiod_hubs.sql.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_cycles.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_sats.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_hubs.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_links.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_t_links.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features_old/dbtvault_load_multiperiod_links.feature" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2">
       <option name="ToolBeforeRunTask" enabled="true" actionId="Tool_External Tools_secrethub" />

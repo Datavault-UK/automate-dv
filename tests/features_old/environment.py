@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 from vaultBase.cliParse import CLIParse
+from vaultBase.connector import Connector
 from vaultBase.logger import Logger
 from vaultBase.testing.dbTestUtils import DBTestUtils
 
@@ -25,15 +26,10 @@ def before_all(context):
     logger = Logger("dbtvault-test", cli_args)
 
     credentials = {
-        "engine": os.getenv('TARGET', None),
-        "un": os.getenv('SNOWFLAKE_DB_USER', None),
-        "pw": os.getenv('SNOWFLAKE_DB_PW', None),
-        "account": os.getenv('SNOWFLAKE_DB_ACCOUNT', None),
-        "warehouse": os.getenv('SNOWFLAKE_DB_WH', None),
-        "db": os.getenv('SNOWFLAKE_DB_DATABASE', None),
-        "schema": os.getenv('SNOWFLAKE_DB_SCHEMA', None),
-        "role": os.getenv('SNOWFLAKE_DB_ROLE', None)
-    }
+        "engine"   : os.getenv('TARGET', None), "un": os.getenv('SNOWFLAKE_DB_USER', None),
+        "pw"       : os.getenv('SNOWFLAKE_DB_PW', None), "account": os.getenv('SNOWFLAKE_DB_ACCOUNT', None),
+        "warehouse": os.getenv('SNOWFLAKE_DB_WH', None), "db": os.getenv('SNOWFLAKE_DB_DATABASE', None),
+        "schema"   : os.getenv('SNOWFLAKE_DB_SCHEMA', None), "role": os.getenv('SNOWFLAKE_DB_ROLE', None)}
 
     if all(v is None for k, v in credentials.items()):
         raise SystemExit('Credentials not correctly loaded, please check environment.')
