@@ -77,12 +77,12 @@ def step_impl(context):
 
 @step("the TEST_HUB_CUSTOMER_HUBS table should contain")
 def step_impl(context):
-    table_df = context.db_utils.context_table_to_df(context.table, 
+    table_df = context.db_utils.context_table_to_df(context.table,
                                                     binary_columns=['CUSTOMER_PK'],
                                                     order_by='CUSTOMER_ID')
 
     result_df = context.db_utils.get_table_data(
-        full_table_name=f"{DATABASE }.{VLT_SCHEMA}.test_hub_customer_hubs_{MODE.lower()}",
+        full_table_name=f"{DATABASE}.{VLT_SCHEMA}.test_hub_customer_hubs_{MODE.lower()}",
         binary_columns=['CUSTOMER_PK'],
         order_by='CUSTOMER_ID', connection=context.connection)
 
