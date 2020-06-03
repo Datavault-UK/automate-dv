@@ -2,7 +2,7 @@ Feature: Hubs
 
   Scenario: Simple load of stage data into an empty hub
     Given the HUB table does not exist
-    And the HUB table contains data
+    And the STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_ID | LOADDATE   | SOURCE |
       | 1001        | Alice       | 1993-01-01 | TPCH   |
       | 1001        | Alice       | 1993-01-01 | TPCH   |
