@@ -384,7 +384,7 @@ models:
                 src_pk: "BOOKING_PK"
                 src_hashdiff:
                   source_column: "BOOK_BOOKING_HASHDIFF"
-                  alias: "is_hashdiff"
+                  alias: "HASHDIFF"
                 src_payload:
                   - "PRICE"
                   - "BOOKING_DATE"
@@ -399,7 +399,7 @@ models:
                 src_pk: "CUSTOMER_PK"
                 src_hashdiff:
                   source_column: "BOOK_CUSTOMER_HASHDIFF"
-                  alias: "is_hashdiff"
+                  alias: "HASHDIFF"
                 src_payload:
                   - "PHONE"
                   - "NATIONALITY"
@@ -412,7 +412,7 @@ models:
                 src_pk: "CUSTOMER_PK"
                 src_hashdiff: 
                   source_column: "CUSTOMER_HASHDIFF"
-                  alias: "is_hashdiff"
+                  alias: "HASHDIFF"
                 src_payload:
                   - "CUSTOMER_DOB"
                   - "CUSTOMER_NAME"
@@ -651,7 +651,7 @@ models:
               src_pk: "CUSTOMER_PK"
               src_hashdiff: 
                 source_column: "CUSTOMER_HASHDIFF"
-                alias: "is_hashdiff"
+                alias: "HASHDIFF"
               src_payload:
                 - "CUSTOMER_NAME"
                 - "CUSTOMER_DOB"
