@@ -5,7 +5,7 @@ import re
 import shutil
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, run
 
 import pandas as pd
 from behave.model import Table
@@ -19,7 +19,7 @@ TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
-CSV_DIR = FEATURES_ROOT / 'csv_temp'
+CSV_DIR = TESTS_DBT_ROOT / 'data/temp'
 
 if not os.getenv('DBT_PROFILES_DIR'):
 
@@ -27,6 +27,9 @@ if not os.getenv('DBT_PROFILES_DIR'):
 
 
 class DBTTestUtils:
+    """
+    Utilities for running dbt under test
+    """
 
     def __init__(self, model_directory=''):
 
@@ -46,18 +49,47 @@ class DBTTestUtils:
             ch.setFormatter(formatter)
 
             self.logger.addHandler(ch)
+            self.logger.setLevel(logging.DEBUG)
             self.logger.propagate = False
 
-    @staticmethod
-    def run_dbt_seed():
+    def run_dbt_command(self, command: str) -> str:
+        """
+        Run a dbt command using the invoke cli.
+            :param command: A dbt command to run (everything after > dbt ..)
+            :return: dbt logs
+        """
 
-        p = Popen(['dbt', 'seed', '--full-refresh'], stdout=PIPE)
+        def escape_ansi(line):
+            """
+            Remove ANSI escape sequences from logs
+                :param line: logs string
+            """
+            ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
+            return ansi_escape.sub('', line)
 
-        stdout, _ = p.communicate()
+        inv_command = ['pipenv', 'run', 'inv', 'run-dbt', '-p', 'test', '-d', f'{command}']
 
-        p.wait()
+        logs = run(inv_command, check=True, capture_output=True)
 
-        logs = stdout.decode('utf-8')
+        logs = escape_ansi(str(logs.stdout, 'utf-8'))
+
+        self.logger.log(msg=logs, level=logging.DEBUG)
+
+        return logs
+
+    def run_dbt_seed(self, seed_file_name=None) -> str:
+        """
+        Run dbt seeds in full refresh mode
+            :param seed_file_name: Name of the specific seed file to run
+            :return: dbt logs
+        """
+
+        command = f'seed --full-refresh'
+
+        if seed_file_name:
+            command = f'{command} --select {seed_file_name}'
+
+        logs = self.run_dbt_command(command)
 
         return logs
 
@@ -82,25 +114,31 @@ class DBTTestUtils:
             model = f'+{model}'
 
         if full_refresh:
-            command = ['dbt', mode, '--full-refresh', '-m', model]
+            command = f"{mode} --full-refresh -m {model}"
         else:
-            command = ['dbt', mode, '-m', model]
+            command = f"{mode} -m {model}"
 
         if model_vars:
-            yaml_str = str(model_vars).replace('\'', '"')
-            command.extend(['--vars', yaml_str])
+            yaml_str = str(model_vars).replace('\'', '')
+            command = f"{command} --vars {yaml_str}"
 
-        p = Popen(command, stdout=PIPE)
+        logs = self.run_dbt_command(command)
 
-        stdout, _ = p.communicate()
+        return logs
 
-        p.wait()
+    def run_dbt_operation(self, op_name: str, args: dict):
+        """
+        Run a specified macro in dbt, with the given arguments.
+            :param op_name: Name of macro/operation
+            :param args: Arguments to provide
+            :return: dbt logs
+        """
 
-        logs = stdout.decode('utf-8')
+        args = str(args).replace('\'', '')
 
-        self.logger.log(msg=f"Running with dbt command: {' '.join(command)}", level=logging.DEBUG)
+        command = f"run-operation {op_name} --args '{args}'"
 
-        self.logger.log(msg=logs, level=logging.DEBUG)
+        logs = self.run_dbt_command(command)
 
         return logs
 
@@ -174,10 +212,9 @@ class DBTTestUtils:
                     'pattern': "^(?:md5\(')(.*)(?:'\))",
                     'function': md5},
                 'sha': {
-                    'active'  : True if 'sha' in item else False,
+                    'active': True if 'sha' in item else False,
                     'pattern': "^(?:sha\(')(.*)(?:'\))",
-                    'function': sha256}
-            }
+                    'function': sha256}}
 
             active_algorithm = [patterns[sel] for sel in patterns.keys() if patterns[sel]['active']]
 
@@ -197,7 +234,7 @@ class DBTTestUtils:
 
         return columns_as_series
 
-    def context_table_to_df(self, table: Table, context: Context, model_name: str):
+    def context_table_to_csv(self, table: Table, context: Context, model_name: str):
         """
         Converts a context table in a feature file into a pandas DataFrame
             :param table: The context.table from a feature file
@@ -210,4 +247,10 @@ class DBTTestUtils:
 
         table_df.apply(self.calc_hash)
 
-        table_df.to_csv(CSV_DIR / f'{context.feature.name}_{model_name}.csv', index=False)
+        csv_fqn = CSV_DIR / f'{context.feature.name.lower()}_{model_name.lower()}.csv'
+
+        table_df.to_csv(csv_fqn, index=False)
+
+        self.logger.log(msg=f'Created {csv_fqn.name}', level=logging.DEBUG)
+
+        return csv_fqn.stem
