@@ -38,7 +38,7 @@ def expected_filename(request):
 
 
 @pytest.fixture(scope='class')
-def run_seeds():
+def run_seeds(request):
     os.chdir(TESTS_DBT_ROOT)
-    DBTTestUtils.run_dbt_seed()
+    request.cls.dbt_test_utils.run_dbt_seed()
     yield

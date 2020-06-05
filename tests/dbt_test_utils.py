@@ -1,11 +1,11 @@
+import glob
 import logging
 import os
-import glob
 import re
 import shutil
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
-from subprocess import PIPE, Popen, run
+from subprocess import PIPE, Popen
 
 import pandas as pd
 from behave.model import Table
@@ -52,55 +52,27 @@ class DBTTestUtils:
             self.logger.setLevel(logging.DEBUG)
             self.logger.propagate = False
 
-    def run_dbt_command(self, command: str) -> str:
-        """
-        Run a dbt command using the invoke cli.
-            :param command: A dbt command to run (everything after > dbt ..)
-            :return: dbt logs
-        """
+    @staticmethod
+    def run_dbt_seed():
 
-        def escape_ansi(line):
-            """
-            Remove ANSI escape sequences from logs
-                :param line: logs string
-            """
-            ansi_escape = re.compile(r'(\x9B|\x1B\[)[0-?]*[ -\/]*[@-~]')
-            return ansi_escape.sub('', line)
+        p = Popen(['dbt', 'seed', '--full-refresh'], stdout=PIPE)
 
-        inv_command = ['pipenv', 'run', 'inv', 'run-dbt', '-p', 'test', '-d', f'{command}']
+        stdout, _ = p.communicate()
 
-        logs = run(inv_command, check=True, capture_output=True)
+        p.wait()
 
-        logs = escape_ansi(str(logs.stdout, 'utf-8'))
-
-        self.logger.log(msg=logs, level=logging.DEBUG)
+        logs = stdout.decode('utf-8')
 
         return logs
 
-    def run_dbt_seed(self, seed_file_name=None) -> str:
-        """
-        Run dbt seeds in full refresh mode
-            :param seed_file_name: Name of the specific seed file to run
-            :return: dbt logs
-        """
-
-        command = f'seed --full-refresh'
-
-        if seed_file_name:
-            command = f'{command} --select {seed_file_name}'
-
-        logs = self.run_dbt_command(command)
-
-        return logs
-
-    def run_dbt_model(self, *, mode='compile', model: str, model_vars=None, full_refresh=False,
-                      include_model_deps=False, include_tag=False) -> str:
+    def run_dbt_model(self, *, mode='compile', model_name: str, args=None, full_refresh=False, include_model_deps=False,
+                      include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
 
             :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
-            :param model: Model name for dbt to run
-            :param model_vars: variable dictionary to provide to dbt
+            :param model_name: Model name for dbt to run
+            :param args: variable dictionary to provide to dbt
             :param full_refresh: Run a full refresh
             :param include_model_deps: Include model dependencies (+)
             :param include_tag: Include tag string (tag:)
@@ -108,21 +80,31 @@ class DBTTestUtils:
         """
 
         if include_tag:
-            model = f'tag:{model}'
+            model_name = f'tag:{model_name}'
 
         if include_model_deps:
-            model = f'+{model}'
+            model_name = f'+{model_name}'
 
         if full_refresh:
-            command = f"{mode} --full-refresh -m {model}"
+            command = ['dbt', mode, '--full-refresh', '-m', model_name]
         else:
-            command = f"{mode} -m {model}"
+            command = ['dbt', mode, '-m', model_name]
 
-        if model_vars:
-            yaml_str = str(model_vars).replace('\'', '')
-            command = f"{command} --vars {yaml_str}"
+        if args:
+            yaml_str = str(args).replace('\'', '"')
+            command.extend(['--vars', yaml_str])
 
-        logs = self.run_dbt_command(command)
+        p = Popen(command, stdout=PIPE)
+
+        stdout, _ = p.communicate()
+
+        p.wait()
+
+        logs = stdout.decode('utf-8')
+
+        self.logger.log(msg=f"Running with dbt command: {' '.join(command)}", level=logging.DEBUG)
+
+        self.logger.log(msg=logs, level=logging.DEBUG)
 
         return logs
 
@@ -138,7 +120,17 @@ class DBTTestUtils:
 
         command = f"run-operation {op_name} --args '{args}'"
 
-        logs = self.run_dbt_command(command)
+        p = Popen(command, stdout=PIPE)
+
+        stdout, _ = p.communicate()
+
+        p.wait()
+
+        logs = stdout.decode('utf-8')
+
+        self.logger.log(msg=f"Running with dbt command: {' '.join(command)}", level=logging.DEBUG)
+
+        self.logger.log(msg=logs, level=logging.DEBUG)
 
         return logs
 
@@ -212,7 +204,7 @@ class DBTTestUtils:
                     'pattern': "^(?:md5\(')(.*)(?:'\))",
                     'function': md5},
                 'sha': {
-                    'active': True if 'sha' in item else False,
+                    'active'  : True if 'sha' in item else False,
                     'pattern': "^(?:sha\(')(.*)(?:'\))",
                     'function': sha256}}
 

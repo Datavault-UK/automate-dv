@@ -8,7 +8,7 @@ class TestHashColumnsMacro:
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_PK': 'CUSTOMER_ID'}}
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
@@ -19,7 +19,7 @@ class TestHashColumnsMacro:
         var_dict = {
             'columns': {
                 'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': ['ADDRESS', 'PHONE', 'NAME']}}
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
@@ -32,7 +32,7 @@ class TestHashColumnsMacro:
                 'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': {
                     'columns': ['ADDRESS', 'PHONE', 'NAME'], 'is_hashdiff': True}}}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
@@ -46,7 +46,7 @@ class TestHashColumnsMacro:
                 'CUSTOMER_DETAILS': {'columns': ['ADDRESS', 'PHONE', 'NAME'], 'is_hashdiff': True},
                 'ORDER_DETAILS': {'columns': ['ORDER_DATE', 'ORDER_AMOUNT'], 'is_hashdiff': False}}}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
@@ -59,7 +59,7 @@ class TestHashColumnsMacro:
                 'BOOKING_PK': 'BOOKING_REF', 'CUSTOMER_DETAILS': {
                     'columns': ['ADDRESS', 'PHONE', 'NAME']}}, }
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
@@ -67,7 +67,7 @@ class TestHashColumnsMacro:
         assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_sql_from_yaml(self):
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
@@ -75,7 +75,7 @@ class TestHashColumnsMacro:
         assert actual_sql == expected_sql
 
     def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(self):
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
@@ -83,7 +83,7 @@ class TestHashColumnsMacro:
         assert actual_sql == expected_sql
 
     def test_hash_columns_raises_warning_if_mapping_without_hashdiff(self):
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         warning_message = "You provided a list of columns under a 'columns' key, " \
