@@ -32,7 +32,7 @@ STG_{{ loop.index|string }} AS (
     SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
     FROM (
-        SELECT {{ src_pk }}, {{ src_nk }}, {{ src_ldts }}, {{ src_source }},
+        SELECT {{ source_cols | join(', ') }},
         ROW_NUMBER() OVER(
             PARTITION BY {{ src_pk }}
             ORDER BY {{ src_ldts }} ASC
