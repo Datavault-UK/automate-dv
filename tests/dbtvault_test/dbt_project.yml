@@ -15,7 +15,6 @@ clean-targets:
     - "target"
     - "dbt_modules"
 
-
 models:
   dbtvault_test:
     unit:

@@ -16,6 +16,7 @@ PROJECT_ROOT = PurePath(__file__).parents[1]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
+FEATURE_MODELS_ROOT = TESTS_DBT_ROOT / 'models/feature'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
@@ -53,7 +54,7 @@ class DBTTestUtils:
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
         else:
 
-            self.logger.warning('Model directory unset.')
+            self.logger.warning('Model directory not set.')
 
     def run_command(self, command) -> str:
         """
@@ -127,17 +128,18 @@ class DBTTestUtils:
 
         return self.run_command(command)
 
-    def run_dbt_operation(self, macro_name: str, args: dict) -> str:
+    def run_dbt_operation(self, macro_name: str, args=None) -> str:
         """
         Run a specified macro in dbt, with the given arguments.
             :param macro_name: Name of macro/operation
             :param args: Arguments to provide
             :return: dbt logs
         """
+        command = ['run-operation', f'{macro_name}']
 
-        args = str(args).replace('\'', '')
-
-        command = ['run-operation', f'{macro_name}', '--args', f'{args}']
+        if args:
+            args = str(args).replace('\'', '')
+            command.extend(['--args', f'{args}'])
 
         return self.run_command(command)
 
@@ -185,13 +187,69 @@ class DBTTestUtils:
     @staticmethod
     def clean_csv():
         """
-        Deletes content in csv folder.
+        Deletes csv files in csv folder.
         """
 
-        delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
+        delete_files = [file for file in glob.glob(str(CSV_DIR/ '*.csv'), recursive=True)]
 
         for file in delete_files:
             os.remove(file)
+
+    @staticmethod
+    def clean_models():
+        """
+        Deletes models in features folder.
+        """
+
+        delete_files = [file for file in glob.glob(str(FEATURE_MODELS_ROOT / '*.sql'), recursive=True)]
+
+        for file in delete_files:
+            os.remove(file)
+
+    def context_table_to_df(self, table: Table) -> pd.DataFrame:
+        """
+        Converts a context table in a feature file into a pandas DataFrame
+            :param table: The context.table from a feature file
+            :return: DataFrame representation of the provide context table
+        """
+
+        table_df = pd.DataFrame(columns=table.headings, data=table.rows)
+
+        table_df.apply(self.calc_hash)
+
+        return table_df
+
+    def context_table_to_csv(self, table: Table, context: Context, model_name: str) -> str:
+        """
+        Converts a context table in a feature file into a dictionary
+            :param table: The context.table from a feature file
+            :param context: Behave context
+            :param model_name: Name of the model to create
+            :return: Name of csv file (minus extension)
+        """
+
+        table_df = self.context_table_to_df(table)
+
+        csv_fqn = CSV_DIR / f'{context.feature.name.lower()}_{model_name.lower()}.csv'
+
+        table_df.to_csv(csv_fqn, index=False)
+
+        self.logger.log(msg=f'Created {csv_fqn.name}', level=logging.DEBUG)
+
+        return csv_fqn.stem
+
+    def context_table_to_dict(self, table: Table):
+        """
+        Converts a context table in a feature file into a pandas DataFrame
+            :param table: The context.table from a feature file
+            :return: A pandas DataFrame modelled from a context table
+        """
+
+        table_df = self.context_table_to_df(table)
+
+        table_dict = table_df.to_dict(orient='index')
+
+        return table_dict
 
     @staticmethod
     def calc_hash(columns_as_series) -> Series:
@@ -207,9 +265,12 @@ class DBTTestUtils:
 
             patterns = {
                 'md5': {
-                    'active': True if 'md5' in item else False, 'pattern': "^(?:md5\(')(.*)(?:'\))", 'function': md5},
+                    'active': True if 'md5' in item else False,
+                    'pattern': "^(?:md5\(')(.*)(?:'\))",
+                    'function': md5},
                 'sha': {
-                    'active'  : True if 'sha' in item else False, 'pattern': "^(?:sha\(')(.*)(?:'\))",
+                    'active': True if 'sha' in item else False,
+                    'pattern': "^(?:sha\(')(.*)(?:'\))",
                     'function': sha256}}
 
             active_algorithm = [patterns[sel] for sel in patterns.keys() if patterns[sel]['active']]
@@ -230,48 +291,84 @@ class DBTTestUtils:
 
         return columns_as_series
 
+
+class DBTModelGenerator:
+    """Functions to generate dbtvault Models"""
+
     @staticmethod
-    def context_table_to_df(table: Table) -> pd.DataFrame:
+    def template_to_file(template, model_name):
         """
-        Converts a context table in a feature file into a pandas DataFrame
-            :param table: The context.table from a feature file
-            :return: DataFrame representation of the provide context table
+        Write a template to a file
+            :param template: Template string to write
+            :param model_name: Name of file to write
         """
+        with open(FEATURE_MODELS_ROOT / f'{model_name}.sql', 'w') as f:
+            f.write(template.strip())
 
-        return pd.DataFrame(columns=table.headings, data=table.rows)
-
-    def context_table_to_csv(self, table: Table, context: Context, model_name: str) -> str:
+    def stage(self, model_name):
         """
-        Converts a context table in a feature file into a dictionary
-            :param table: The context.table from a feature file
-            :param context: Behave context
-            :param model_name: Name of the model to create
-            :return: Name of csv file (minus extension)
+        Generate a stage model template
+            :param model_name: Name of the model file
         """
 
-        table_df = self.context_table_to_df(table)
-
-        table_df.apply(self.calc_hash)
-
-        csv_fqn = CSV_DIR / f'{context.feature.name.lower()}_{model_name.lower()}.csv'
-
-        table_df.to_csv(csv_fqn, index=False)
-
-        self.logger.log(msg=f'Created {csv_fqn.name}', level=logging.DEBUG)
-
-        return csv_fqn.stem
-
-    def context_table_to_dict(self, table: Table):
-        """
-        Converts a context table in a feature file into a pandas DataFrame
-            :param table: The context.table from a feature file
-            :return: A pandas DataFrame modelled from a context table
+        template = """
+        {{ dbtvault.stage(include_source_columns=var('include_source_columns', none),
+                          source_model=var('source_model', none),
+                          hashed_columns=var('hashed_columns', none),
+                          derived_columns=var('derived_columns', none)) }}
         """
 
-        table_df = self.context_table_to_df(table)
+        self.template_to_file(template, model_name)
 
-        table_df.apply(self.calc_hash)
+    def hub(self, model_name):
+        """
+        Generate a hub model template
+            :param model_name: Name of the model file
+        """
 
-        table_dict = table_df.to_dict(orient='index')
+        template = """
+        {{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
+                        var('src_source'), var('source_model'))        }}
+        """
 
-        return table_dict
+        self.template_to_file(template, model_name)
+
+    def link(self, model_name):
+        """
+        Generate a link model template
+            :param model_name: Name of the model file
+        """
+
+        template = """
+        {{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
+                         var('src_source'), var('source_model')) }}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def t_link(self, model_name):
+        """
+        Generate a t-link model template
+            :param model_name: Name of the model file
+        """
+
+        template = """
+        {{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
+                           var('src_ldts'), var('src_source'), var('source_model')) }}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def sat(self, model_name):
+        """
+        Generate a satellite model template
+            :param model_name: Name of the model file
+        """
+
+        template = """
+        {{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
+                        var('src_eff'), var('src_ldts'), var('src_source'),
+                        var('source_model')) }}
+        """
+
+        self.template_to_file(template, model_name)
