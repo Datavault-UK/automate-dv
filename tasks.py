@@ -2,10 +2,16 @@ from invoke import task
 from pathlib import PurePath, Path
 import os
 import yaml
+import logging
+from tests.dbt_test_utils import DBTTestUtils
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 SECRETHUB_FILE = Path(f"{PROJECT_ROOT}/secrethub.env")
+
+logger = logging.getLogger('dbt')
+
+dbt_utils = DBTTestUtils()
 
 
 def check_target(target: str):
@@ -23,9 +29,11 @@ def check_target(target: str):
         raise ValueError(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
 
 
-def check_project(project: str):
+@task
+def check_project(c, project='core'):
     """
-    Check specified project is available
+    Check specified project is available.
+        :param c: invoke context
         :param project: Project to check
         :return: work_dir: Working directory for the selected project
     """
@@ -33,10 +41,10 @@ def check_project(project: str):
     available_projects = {
         'core': {'work_dir': './src/dbtvault'},
         'dev': {'work_dir': './src/dbtvault-dev'},
-        'test': {'work_dir': './tests/dbtvault_test'}
-    }
+        'test': {'work_dir': './tests/dbtvault_test'}}
 
     if project in available_projects:
+        logger.info(f"Project '{project}' is available at: '{Path(available_projects[project]['work_dir']).absolute()}'")
         return available_projects[project]['work_dir']
     else:
         raise ValueError(f"Unexpected project '{project}', available projects: {', '.join(available_projects)}")
@@ -59,6 +67,10 @@ def set_defaults(c, target=None, user=None, project=None):
 
     with open('./invoke.yml', 'w') as file:
         yaml.dump(dict_file, file)
+        logger.info(f'Defaults set.')
+        logger.info(f'secrets_users: {user}')
+        logger.info(f'project: {project}')
+        logger.info(f'target: {target}')
 
 
 @task
@@ -80,7 +92,7 @@ def run_tests(c, target, user=None):
 
         os.environ['TARGET'] = target
 
-        print(f"Running on '{target}' with user '{user}'")
+        logger.info(f"Running on '{target}' with user '{user}'")
 
         command = f"secrethub run -v env={target} -v user={user} -- pytest -n 4 -vv"
 
@@ -95,7 +107,8 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
         :param dbt_args: Arguments to run db with (proceeding dbt)
         :param target: dbt profile target
         :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
-        :param project: dbt project to run with, either core (public dbtvault project), dev (dev project) or test (test project)
+        :param project: dbt project to run with, either core (public dbtvault project),
+        dev (dev project) or test (test project)
     """
 
     # Get config
@@ -122,15 +135,14 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
     command = f"secrethub run --env-file={SECRETHUB_FILE} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
-    project_dir = check_project(project)
+    project_dir = check_project(c, project)
+
     with c.cd(project_dir):
 
-        print(f'Running dbt with command: dbt {dbt_args}')
-
         if user:
-            print(f'User: {user}')
+            logger.info(f'User: {user}')
 
-        print(f'Project: {project}')
-        print(f'Target: {target}\n')
+        logger.info(f'Project: {project}')
+        logger.info(f'Target: {target}\n')
 
-        c.run(command)
+        dbt_utils.run_command(command)

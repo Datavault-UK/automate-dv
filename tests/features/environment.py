@@ -1,4 +1,9 @@
 from tests.dbt_test_utils import *
+from fixtures import set_workdir
+from behave.fixture import use_fixture_by_tag
+
+fixture_registry = {
+    "fixture.set_workdir": set_workdir}
 
 
 def before_all(context):
@@ -18,3 +23,8 @@ def after_scenario(context, scenario):
     """
 
     DBTTestUtils.clean_csv()
+
+
+def before_tag(context, tag):
+    if tag.startswith("fixture."):
+        return use_fixture_by_tag(tag, context, fixture_registry)
