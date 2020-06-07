@@ -17,6 +17,7 @@ Feature: Hubs
       | 1002        | Bob           | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 1993-01-01 | TPCH   |
+    And I hash the raw data
     When I load the HUB table
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |

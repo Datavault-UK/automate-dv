@@ -145,4 +145,4 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
         logger.info(f'Project: {project}')
         logger.info(f'Target: {target}\n')
 
-        dbt_utils.run_command(command)
+        c.run(command)

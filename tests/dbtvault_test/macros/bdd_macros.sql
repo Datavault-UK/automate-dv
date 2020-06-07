@@ -13,3 +13,22 @@
     {% endif %}
 
 {%- endmacro -%}
+
+{%- macro drop_current_schema() -%}
+
+{%- do adapter.drop_schema(target.database, target.schema) %}
+
+{% endmacro %}
+
+{%- macro create_current_schema() -%}
+
+{%- do adapter.create_schema(target.database, target.schema) %}
+
+{%- endmacro -%}
+
+{%- macro recreate_current_schema() -%}
+
+{{ drop_current_schema() }}
+{{ create_current_schema() }}
+
+{%- endmacro -%}
