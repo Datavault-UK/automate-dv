@@ -5,7 +5,7 @@ import re
 import shutil
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
-from subprocess import PIPE, Popen
+from subprocess import PIPE, Popen, STDOUT
 
 import pandas as pd
 from behave.model import Table
@@ -31,16 +31,12 @@ class DBTTestUtils:
     Utilities for running dbt under test
     """
 
-    def __init__(self, model_directory=''):
-
-        self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
-
-        self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
-
-        logging.basicConfig(level=logging.INFO)
+    def __init__(self, model_directory=None):
 
         # Setup logging
         self.logger = logging.getLogger('dbt')
+
+        logging.basicConfig(level=logging.INFO)
 
         if not self.logger.handlers:
             ch = logging.StreamHandler()
@@ -52,14 +48,28 @@ class DBTTestUtils:
             self.logger.setLevel(logging.DEBUG)
             self.logger.propagate = False
 
-    def run_dbt_command(self, command) -> str:
+        if model_directory:
+            self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
+            self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
+        else:
+
+            self.logger.warning('Model directory unset.')
+
+    def run_command(self, command) -> str:
         """
         Run a command in dbt and capture dbt logs.
             :param command: Command to run.
             :return: dbt logs
         """
 
-        p = Popen(command, stdout=PIPE)
+        if 'dbt' not in command and isinstance(command, list):
+            dbt_cmd = ['dbt']
+            dbt_cmd.extend(command)
+            command = dbt_cmd
+        elif 'dbt' not in command and isinstance(command, str):
+            command = ['dbt', command]
+
+        p = Popen(command, stdout=PIPE, stderr=STDOUT)
 
         stdout, _ = p.communicate()
 
@@ -73,7 +83,7 @@ class DBTTestUtils:
 
         return logs
 
-    def run_dbt_seed(self) -> str:
+    def run_dbt_seed(self, seed_file_name=None) -> str:
         """
         Run seed files in dbt
             :return: dbt logs
@@ -81,7 +91,10 @@ class DBTTestUtils:
 
         command = ['dbt', 'seed', '--full-refresh']
 
-        return self.run_dbt_command(command)
+        if seed_file_name:
+            command.extend(['--select', seed_file_name])
+
+        return self.run_command(command)
 
     def run_dbt_model(self, *, mode='compile', model_name: str, args=None, full_refresh=False, include_model_deps=False,
                       include_tag=False) -> str:
@@ -112,21 +125,21 @@ class DBTTestUtils:
             yaml_str = str(args).replace('\'', '"')
             command.extend(['--vars', yaml_str])
 
-        return self.run_dbt_command(command)
+        return self.run_command(command)
 
-    def run_dbt_operation(self, op_name: str, args: dict) -> str:
+    def run_dbt_operation(self, macro_name: str, args: dict) -> str:
         """
         Run a specified macro in dbt, with the given arguments.
-            :param op_name: Name of macro/operation
+            :param macro_name: Name of macro/operation
             :param args: Arguments to provide
             :return: dbt logs
         """
 
         args = str(args).replace('\'', '')
 
-        command = f"run-operation {op_name} --args '{args}'"
+        command = ['run-operation', f'{macro_name}', '--args', f'{args}']
 
-        return self.run_dbt_command(command)
+        return self.run_command(command)
 
     def retrieve_compiled_model(self, model: str, exclude_comments=True):
         """
@@ -217,16 +230,26 @@ class DBTTestUtils:
 
         return columns_as_series
 
-    def context_table_to_csv(self, table: Table, context: Context, model_name: str):
+    @staticmethod
+    def context_table_to_df(table: Table) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
             :param table: The context.table from a feature file
-            :param context: Behave context
-            :param model_name: Name of the model to create
-            :return: A pandas DataFrame modelled from a context table
+            :return: DataFrame representation of the provide context table
         """
 
-        table_df = pd.DataFrame(columns=table.headings, data=table.rows)
+        return pd.DataFrame(columns=table.headings, data=table.rows)
+
+    def context_table_to_csv(self, table: Table, context: Context, model_name: str) -> str:
+        """
+        Converts a context table in a feature file into a dictionary
+            :param table: The context.table from a feature file
+            :param context: Behave context
+            :param model_name: Name of the model to create
+            :return: Name of csv file (minus extension)
+        """
+
+        table_df = self.context_table_to_df(table)
 
         table_df.apply(self.calc_hash)
 
@@ -237,3 +260,18 @@ class DBTTestUtils:
         self.logger.log(msg=f'Created {csv_fqn.name}', level=logging.DEBUG)
 
         return csv_fqn.stem
+
+    def context_table_to_dict(self, table: Table):
+        """
+        Converts a context table in a feature file into a pandas DataFrame
+            :param table: The context.table from a feature file
+            :return: A pandas DataFrame modelled from a context table
+        """
+
+        table_df = self.context_table_to_df(table)
+
+        table_df.apply(self.calc_hash)
+
+        table_dict = table_df.to_dict(orient='index')
+
+        return table_dict

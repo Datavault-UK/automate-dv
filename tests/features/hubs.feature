@@ -1,10 +1,11 @@
+@fixture.set_workdir
 Feature: Hubs
 
   Background: Hubs follow a pattern
     Given that hubs will be generated with metadata
       | src_pk      | src_nk      | src_ldts | src_source |
       | CUSTOMER_PK | CUSTOMER_ID | LOADDATE | SOURCE     |
-
+    
   Scenario: Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
