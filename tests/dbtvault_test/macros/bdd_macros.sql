@@ -6,7 +6,7 @@
           identifier=model_name) -%}
 
     {% if source_relation %}
-        {%- do adapter.drop_relation(ref(model_name)) -%}
+        {%- do adapter.drop_relation(source_relation) -%}
         {% do log('Successfully dropped model ' ~ "'" ~ model_name ~ "'", true) %}
     {% else %}
         {% do log('Nothing to drop', true) %}
