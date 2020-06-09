@@ -8,6 +8,7 @@ from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 
 import pandas as pd
+import ruamel.yaml
 from behave.model import Table
 from behave.runner import Context
 from pandas import Series
@@ -16,7 +17,11 @@ PROJECT_ROOT = PurePath(__file__).parents[1]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
-FEATURE_MODELS_ROOT = TESTS_DBT_ROOT / 'models/feature'
+MODELS_ROOT = TESTS_DBT_ROOT / 'models'
+SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
+TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
+BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'schema_test.bak'
+FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
@@ -56,7 +61,7 @@ class DBTTestUtils:
 
             self.logger.warning('Model directory not set.')
 
-    def run_command(self, command) -> str:
+    def run_dbt_command(self, command) -> str:
         """
         Run a command in dbt and capture dbt logs.
             :param command: Command to run.
@@ -95,7 +100,7 @@ class DBTTestUtils:
         if seed_file_name:
             command.extend(['--select', seed_file_name])
 
-        return self.run_command(command)
+        return self.run_dbt_command(command)
 
     def run_dbt_model(self, *, mode='compile', model_name: str, args=None, full_refresh=False, include_model_deps=False,
                       include_tag=False) -> str:
@@ -126,7 +131,7 @@ class DBTTestUtils:
             yaml_str = str(args).replace('\'', '"')
             command.extend(['--vars', yaml_str])
 
-        return self.run_command(command)
+        return self.run_dbt_command(command)
 
     def run_dbt_operation(self, macro_name: str, args=None) -> str:
         """
@@ -141,7 +146,7 @@ class DBTTestUtils:
             args = str(args).replace('\'', '')
             command.extend(['--args', f'{args}'])
 
-        return self.run_command(command)
+        return self.run_dbt_command(command)
 
     def retrieve_compiled_model(self, model: str, exclude_comments=True):
         """
@@ -190,7 +195,7 @@ class DBTTestUtils:
         Deletes csv files in csv folder.
         """
 
-        delete_files = [file for file in glob.glob(str(CSV_DIR/ '*.csv'), recursive=True)]
+        delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
 
         for file in delete_files:
             os.remove(file)
@@ -265,12 +270,9 @@ class DBTTestUtils:
 
             patterns = {
                 'md5': {
-                    'active': True if 'md5' in item else False,
-                    'pattern': "^(?:md5\(')(.*)(?:'\))",
-                    'function': md5},
+                    'active': True if 'md5' in item else False, 'pattern': "^(?:md5\(')(.*)(?:'\))", 'function': md5},
                 'sha': {
-                    'active': True if 'sha' in item else False,
-                    'pattern': "^(?:sha\(')(.*)(?:'\))",
+                    'active'  : True if 'sha' in item else False, 'pattern': "^(?:sha\(')(.*)(?:'\))",
                     'function': sha256}}
 
             active_algorithm = [patterns[sel] for sel in patterns.keys() if patterns[sel]['active']]
@@ -292,7 +294,7 @@ class DBTTestUtils:
         return columns_as_series
 
 
-class DBTModelGenerator:
+class DBTVAULTGenerator:
     """Functions to generate dbtvault Models"""
 
     @staticmethod
@@ -320,15 +322,20 @@ class DBTModelGenerator:
 
         self.template_to_file(template, model_name)
 
-    def hub(self, model_name):
+    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model):
         """
         Generate a hub model template
             :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_nk: Source nk
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
         """
 
-        template = """
-        {{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
-                        var('src_source'), var('source_model'))        }}
+        template = f"""
+        {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
+                          '{src_source}', '{source_model}')   }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -372,3 +379,39 @@ class DBTModelGenerator:
         """
 
         self.template_to_file(template, model_name)
+
+    @staticmethod
+    def append_dict_to_schema_yml(yaml_dict):
+        """
+        Append a given dictionary to the end of the schema.yml file
+            :param yaml_dict: Dictionary to append to the schema.yml file
+        """
+        shutil.copyfile(BACKUP_TEST_SCHEMA_YML_FILE, TEST_SCHEMA_YML_FILE)
+
+        with open(TEST_SCHEMA_YML_FILE, 'a+') as f:
+            f.write('\n\n')
+
+            yaml = ruamel.yaml.YAML()
+            yaml.indent(sequence=4, offset=2)
+
+            yaml.dump(yaml_dict, f)
+
+    @staticmethod
+    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
+        test_yaml = {
+            "models": [{
+                "name": target_model_name,
+                "tests": [
+                   {"assert_data_equal_to_expected": {
+                        "expected_seed": expected_output_csv,
+                        "unique_id": unique_id,
+                        "compare_columns": [v for k, v in metadata.items() if k not in ['source_model', 'src_pk']]
+                    }}]}]}
+
+        return test_yaml
+
+    @staticmethod
+    def clean_test_schema():
+
+        if os.path.exists(TEST_SCHEMA_YML_FILE):
+            os.remove(TEST_SCHEMA_YML_FILE)
