@@ -1,4 +1,5 @@
 from behave import *
+from behave.model import Table, Row
 
 from tests.dbt_test_utils import DBTVAULTGenerator
 
@@ -10,6 +11,8 @@ dbtvault_generator = DBTVAULTGenerator()
 @given("that {vault_structure} will be generated with metadata")
 def define_hub_columns(context, vault_structure):
     table_dict = context.dbt_test_utils.context_table_to_dict(context.table)
+
+    context.vault_structure_table = context.table
 
     vault_structure_definition = table_dict[0]
 
@@ -27,6 +30,37 @@ def drop_table(context, model_name):
     context.target_model_name = model_name
 
     assert (('Nothing to drop' in logs) or (f"Successfully dropped model '{model_name}'" in logs))
+
+
+@given("the {model_name} table is empty")
+def load_empty_table(context, model_name):
+    """Creates an empty table"""
+
+    context.target_model_name = model_name
+
+    table_dict = context.dbt_test_utils.context_table_to_dict(table=context.vault_structure_table)
+
+    headings = [v for k, v in table_dict[0].items()]
+
+    row = Row(cells=[], headings=headings)
+
+    empty_table = Table(headings=headings, rows=row)
+
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+                                                                 context=context,
+                                                                 model_name=f'stg_{model_name}_empty')
+
+    context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    hub_metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
+
+    context.vault_structure_metadata = hub_metadata
+
+    dbtvault_generator.hub(model_name, **hub_metadata)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+
+    assert 'Completed successfully' in logs
 
 
 @given("the {raw_stage_model_name} table contains data")

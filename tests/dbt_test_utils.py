@@ -11,6 +11,7 @@ import pandas as pd
 import ruamel.yaml
 from behave.model import Table
 from behave.runner import Context
+from numpy import NaN
 from pandas import Series
 
 PROJECT_ROOT = PurePath(__file__).parents[1]
@@ -178,6 +179,11 @@ class DBTTestUtils:
 
             return "".join(file)
 
+    def drop_and_create_schema(self):
+
+        first_log = self.run_dbt_operation(macro_name='drop_current_schema')
+        self.run_dbt_operation(macro_name='create_current_schema')
+
     @staticmethod
     def clean_target():
         """
@@ -221,6 +227,8 @@ class DBTTestUtils:
         table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
         table_df.apply(self.calc_hash)
+
+        table_df = table_df.replace("<null>", NaN)
 
         return table_df
 
@@ -334,6 +342,7 @@ class DBTVAULTGenerator:
         """
 
         template = f"""
+        {{{{ config(materialized='incremental') }}}}
         {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
                           '{src_source}', '{source_model}')   }}}}
         """
@@ -347,8 +356,9 @@ class DBTVAULTGenerator:
         """
 
         template = """
-        {{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
-                         var('src_source'), var('source_model')) }}
+        {{{{ config(materialized='incremental') }}}}
+        {{{{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
+                           var('src_source'), var('source_model')) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -360,8 +370,9 @@ class DBTVAULTGenerator:
         """
 
         template = """
-        {{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
-                           var('src_ldts'), var('src_source'), var('source_model')) }}
+        {{{{ config(materialized='incremental') }}
+        {{{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
+                             var('src_ldts'), var('src_source'), var('source_model')) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -373,9 +384,10 @@ class DBTVAULTGenerator:
         """
 
         template = """
-        {{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
-                        var('src_eff'), var('src_ldts'), var('src_source'),
-                        var('source_model')) }}
+        {{{{ config(materialized='incremental') }}}}
+        {{{{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
+                          var('src_eff'), var('src_ldts'), var('src_source'),
+                          var('source_model')) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -400,18 +412,18 @@ class DBTVAULTGenerator:
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
         test_yaml = {
             "models": [{
-                "name": target_model_name,
-                "tests": [
-                   {"assert_data_equal_to_expected": {
-                        "expected_seed": expected_output_csv,
-                        "unique_id": unique_id,
-                        "compare_columns": [v for k, v in metadata.items() if k not in ['source_model', 'src_pk']]
-                    }}]}]}
+                "name": target_model_name, "tests": [{
+                    "assert_data_equal_to_expected": {
+                        "expected_seed"  : expected_output_csv, "unique_id": unique_id,
+                        "compare_columns": [v for k, v in metadata.items() if k not in ['source_model', 'src_pk']]}}]}]}
 
         return test_yaml
 
     @staticmethod
     def clean_test_schema():
+        """
+        Delete the schema_test.yml file if it exists
+        """
 
         if os.path.exists(TEST_SCHEMA_YML_FILE):
             os.remove(TEST_SCHEMA_YML_FILE)

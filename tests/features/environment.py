@@ -26,6 +26,10 @@ def before_all(context):
     # Replace schema.yml with schema_test.bak
     DBTVAULTGenerator.clean_test_schema()
 
+    # Recreate Schema
+    logs = context.dbt_test_utils.drop_and_create_schema()
+    logs
+
 
 def after_scenario(context, scenario):
     """
