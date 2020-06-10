@@ -14,7 +14,7 @@ from behave.runner import Context
 from numpy import NaN
 from pandas import Series
 
-PROJECT_ROOT = PurePath(__file__).parents[1]
+PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/tests")
 TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
@@ -23,7 +23,7 @@ SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'schema_test.bak'
 FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
-COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/unit")
+COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/models/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
 CSV_DIR = TESTS_DBT_ROOT / 'data/temp'
@@ -179,11 +179,6 @@ class DBTTestUtils:
 
             return "".join(file)
 
-    def drop_and_create_schema(self):
-
-        first_log = self.run_dbt_operation(macro_name='drop_current_schema')
-        self.run_dbt_operation(macro_name='create_current_schema')
-
     @staticmethod
     def clean_target():
         """
@@ -271,35 +266,29 @@ class DBTTestUtils:
             :param columns_as_series: A pandas Series of strings for the hash to be calculated on.
             In the form of "md5('1000')" or "sha('1000')"
             :type columns_as_series: Series
-            :return:  Hash (MD5 or SHA) of values as Series (used as column)
+            :return: Hash (MD5 or SHA) of values as Series (used as column)
         """
 
-        for index, item in enumerate(columns_as_series):
+        patterns = {
+            'md5': {
+                'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5}, 'sha': {
+                'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
 
-            patterns = {
-                'md5': {
-                    'active': True if 'md5' in item else False, 'pattern': "^(?:md5\(')(.*)(?:'\))", 'function': md5},
-                'sha': {
-                    'active'  : True if 'sha' in item else False, 'pattern': "^(?:sha\(')(.*)(?:'\))",
-                    'function': sha256}}
+        hashed_list = []
 
-            active_algorithm = [patterns[sel] for sel in patterns.keys() if patterns[sel]['active']]
+        for item in columns_as_series:
 
-            if active_algorithm:
-                pattern = active_algorithm[0]['pattern']
-                algorithm = active_algorithm[0]['function']
+            active_hash_func = [pattern for pattern in patterns if pattern in item]
+            if active_hash_func:
+                active_hash_func = active_hash_func[0]
+                raw_item = re.findall(patterns[active_hash_func]['pattern'], item)[0]
+                hash_func = patterns[active_hash_func]['function']
+                hashed_item = str(hash_func(raw_item.encode('utf-8')).hexdigest()).upper()
+                hashed_list.append(hashed_item)
+            else:
+                hashed_list.append(item)
 
-                new_item = re.findall(pattern, item)
-
-                if isinstance(new_item, list):
-
-                    if new_item:
-
-                        hashed_item = algorithm(new_item[0].encode('utf-8')).hexdigest()
-
-                        columns_as_series[index] = str(hashed_item).upper()
-
-        return columns_as_series
+        return Series(hashed_list)
 
 
 class DBTVAULTGenerator:

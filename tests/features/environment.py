@@ -1,7 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from fixtures import set_workdir
-from tests.dbt_test_utils import *
+from tests.test_utils.dbt_test_utils import *
 
 fixture_registry = {
     "fixture.set_workdir": set_workdir}
@@ -25,10 +25,6 @@ def before_all(context):
 
     # Replace schema.yml with schema_test.bak
     DBTVAULTGenerator.clean_test_schema()
-
-    # Recreate Schema
-    logs = context.dbt_test_utils.drop_and_create_schema()
-    logs
 
 
 def after_scenario(context, scenario):

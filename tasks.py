@@ -3,7 +3,7 @@ from pathlib import PurePath, Path
 import os
 import yaml
 import logging
-from tests.dbt_test_utils import DBTTestUtils
+from tests.test_utils.dbt_test_utils import DBTTestUtils
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -74,7 +74,7 @@ def set_defaults(c, target=None, user=None, project=None):
 
 
 @task
-def run_tests(c, target, user=None):
+def macro_tests(c, target=None, user=None):
     """
     Run macro tests with secrets
         :param c: invoke context
@@ -86,7 +86,7 @@ def run_tests(c, target, user=None):
         user = c.config.get('secrets_user', None)
 
     if not target:
-        user = c.config.get('target', None)
+        target = c.config.get('target', None)
 
     if check_target(target):
 
@@ -94,7 +94,8 @@ def run_tests(c, target, user=None):
 
         logger.info(f"Running on '{target}' with user '{user}'")
 
-        command = f"secrethub run -v env={target} -v user={user} -- pytest -n 4 -vv"
+        command = f"secrethub run -v env={target} -v user={user}" \
+                  f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv "
 
         c.run(command)
 
