@@ -1,7 +1,7 @@
 from behave import *
 from behave.model import Table, Row
 
-from tests.dbt_test_utils import DBTVAULTGenerator
+from tests.test_utils.dbt_test_utils import DBTVAULTGenerator
 
 use_step_matcher("parse")
 
