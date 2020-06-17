@@ -113,12 +113,10 @@ def expect_data(context, model_name):
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=context.target_model_name,
                                                                  expected_output_csv=expected_output_csv,
-                                                                 unique_id=metadata['src_pk'])
+                                                                 unique_id=metadata['src_pk'],
+                                                                 metadata=metadata)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
-
-    dbtvault_generator.add_seed_config({f'{model_name}_expected': {
-                                                          'column_types': {'CUSTOMER_PK': 'BINARY(16)'}}})
 
     context.dbt_test_utils.run_dbt_seed(expected_output_csv)
 

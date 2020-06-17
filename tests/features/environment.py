@@ -23,8 +23,11 @@ def before_all(context):
     DBTTestUtils.clean_models()
     DBTTestUtils.clean_target()
 
-    # Replace schema.yml with schema_test.bak
+    # Restore modified YAML to starting state
     DBTVAULTGenerator.clean_test_schema()
+
+    # Backup YAML prior to run
+    DBTVAULTGenerator.backup_project_yml()
 
 
 def after_scenario(context, scenario):
@@ -39,6 +42,7 @@ def after_scenario(context, scenario):
     DBTTestUtils.clean_target()
 
     DBTVAULTGenerator.clean_test_schema()
+    DBTVAULTGenerator.restore_project_yml()
 
 
 def before_tag(context, tag):
