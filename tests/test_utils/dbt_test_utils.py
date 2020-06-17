@@ -21,7 +21,9 @@ TESTS_DBT_ROOT = Path(f"{PROJECT_ROOT}/tests/dbtvault_test")
 MODELS_ROOT = TESTS_DBT_ROOT / 'models'
 SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
-BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'schema_test.bak'
+DBT_PROJECT_YML_FILE = TESTS_DBT_ROOT / 'dbt_project.yml'
+BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak'
+BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak'
 FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/models/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
@@ -221,7 +223,7 @@ class DBTTestUtils:
 
         table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
-        table_df.apply(self.calc_hash)
+        table_df = table_df.apply(self.calc_hash)
 
         table_df = table_df.replace("<null>", NaN)
 
@@ -384,8 +386,8 @@ class DBTVAULTGenerator:
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
         """
-        Append a given dictionary to the end of the schema.yml file
-            :param yaml_dict: Dictionary to append to the schema.yml file
+        Append a given dictionary to the end of the schema_test.yml file
+            :param yaml_dict: Dictionary to append to the schema_test.yml file
         """
         shutil.copyfile(BACKUP_TEST_SCHEMA_YML_FILE, TEST_SCHEMA_YML_FILE)
 
@@ -398,13 +400,30 @@ class DBTVAULTGenerator:
             yaml.dump(yaml_dict, f)
 
     @staticmethod
-    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
+    def add_seed_config(yaml_dict):
+        """
+        Append a given dictionary to the end of the dbt_project.yml file
+            :param yaml_dict: Dictionary to append to the dbt_project.yml file
+        """
+
+        yaml = ruamel.yaml.YAML()
+
+        with open(DBT_PROJECT_YML_FILE, 'a+') as f:
+
+            f.write('\n\n')
+
+            yaml.indent(sequence=4, offset=2)
+
+            yaml.dump(yaml_dict, f)
+
+    @staticmethod
+    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id):
         test_yaml = {
             "models": [{
                 "name": target_model_name, "tests": [{
                     "assert_data_equal_to_expected": {
-                        "expected_seed"  : expected_output_csv, "unique_id": unique_id,
-                        "compare_columns": [v for k, v in metadata.items() if k not in ['source_model', 'src_pk']]}}]}]}
+                        "expected_seed": expected_output_csv, "unique_id": unique_id,
+                        "compare_columns": "*"}}]}]}
 
         return test_yaml
 

@@ -46,8 +46,7 @@ def load_empty_table(context, model_name):
 
     empty_table = Table(headings=headings, rows=row)
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
-                                                                 context=context,
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table, context=context,
                                                                  model_name=f'stg_{model_name}_empty')
 
     context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
@@ -114,10 +113,12 @@ def expect_data(context, model_name):
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=context.target_model_name,
                                                                  expected_output_csv=expected_output_csv,
-                                                                 unique_id=metadata['src_pk'],
-                                                                 metadata=metadata)
+                                                                 unique_id=metadata['src_pk'])
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
+
+    dbtvault_generator.add_seed_config({f'{model_name}_expected': {
+                                                          'column_types': {'CUSTOMER_PK': 'BINARY(16)'}}})
 
     context.dbt_test_utils.run_dbt_seed(expected_output_csv)
 

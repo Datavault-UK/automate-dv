@@ -319,7 +319,6 @@ models:
   vars:
     max_date: TO_DATE("9999-12-31")
     
-
 seeds:
   quote_columns: true
   dbtvault_test:
@@ -335,3 +334,4 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
+        
