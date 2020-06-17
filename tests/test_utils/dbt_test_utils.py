@@ -413,7 +413,7 @@ class DBTVAULTGenerator:
 
             project_file = yaml.load(f)
 
-            project_file['seeds']['dbtvault_test'][seed_name] = seed_config
+            project_file['seeds']['dbtvault_test']['temp'] = {seed_name: seed_config}
 
             f.seek(0)
             f.truncate()

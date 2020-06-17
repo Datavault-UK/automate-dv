@@ -36,6 +36,8 @@ def drop_table(context, model_name):
 def load_empty_table(context, model_name):
     """Creates an empty table"""
 
+    context.dbt_test_utils.run_dbt_operation(macro_name='drop_model', args={'model_name': model_name})
+
     context.target_model_name = model_name
 
     table_dict = context.dbt_test_utils.context_table_to_dict(table=context.vault_structure_table)
@@ -48,6 +50,11 @@ def load_empty_table(context, model_name):
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table, context=context,
                                                                  model_name=f'stg_{model_name}_empty')
+
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name, seed_config={'column_types': {'CUSTOMER_PK': 'BINARY(16)',
+                                                                                               'CUSTOMER_ID': 'NUMBER(38,0)',
+                                                                                               'LOADDATE': 'DATE',
+                                                                                               'SOURCE': 'VARCHAR'}})
 
     context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
