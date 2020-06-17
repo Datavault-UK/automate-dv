@@ -400,30 +400,36 @@ class DBTVAULTGenerator:
             yaml.dump(yaml_dict, f)
 
     @staticmethod
-    def add_seed_config(yaml_dict):
+    def add_seed_config(seed_name: str, seed_config: dict):
         """
         Append a given dictionary to the end of the dbt_project.yml file
-            :param yaml_dict: Dictionary to append to the dbt_project.yml file
+            :param seed_name: Name of seed file to configure
+            :param seed_config: Configuration dict for seed file
         """
 
         yaml = ruamel.yaml.YAML()
 
-        with open(DBT_PROJECT_YML_FILE, 'a+') as f:
+        with open(DBT_PROJECT_YML_FILE, 'r+') as f:
 
-            f.write('\n\n')
+            project_file = yaml.load(f)
+
+            project_file['seeds']['dbtvault_test'][seed_name] = seed_config
+
+            f.seek(0)
+            f.truncate()
 
             yaml.indent(sequence=4, offset=2)
 
-            yaml.dump(yaml_dict, f)
+            yaml.dump(project_file, f)
 
     @staticmethod
-    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id):
+    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
         test_yaml = {
             "models": [{
                 "name": target_model_name, "tests": [{
                     "assert_data_equal_to_expected": {
                         "expected_seed": expected_output_csv, "unique_id": unique_id,
-                        "compare_columns": "*"}}]}]}
+                        "compare_columns": [v for k, v in metadata.items() if k not in ['source_model']]}}]}]}
 
         return test_yaml
 
@@ -435,3 +441,19 @@ class DBTVAULTGenerator:
 
         if os.path.exists(TEST_SCHEMA_YML_FILE):
             os.remove(TEST_SCHEMA_YML_FILE)
+
+    @staticmethod
+    def backup_project_yml():
+        """
+        Restore dbt_project.yml from backup
+        """
+
+        shutil.copyfile(DBT_PROJECT_YML_FILE, BACKUP_DBT_PROJECT_YML_FILE)
+
+    @staticmethod
+    def restore_project_yml():
+        """
+        Restore dbt_project.yml from backup
+        """
+
+        shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
