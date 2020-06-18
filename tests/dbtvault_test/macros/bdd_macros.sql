@@ -14,21 +14,36 @@
 
 {%- endmacro -%}
 
-{%- macro drop_current_schema() -%}
+{% macro check_model_exists(model_name) %}
 
-{%- do adapter.drop_schema(target.database, target.schema) %}
+    {%- set source_relation = adapter.get_relation(
+          database=target.database,
+          schema=target.schema,
+          identifier=model_name) -%}
+
+    {% if source_relation %}
+        {% do log('Model {} exists.'.format(model_name), true) %}
+    {% else %}
+        {% do log('Model {} does not exist.'.format(model_name), true) %}
+    {% endif %}
 
 {% endmacro %}
 
-{%- macro create_current_schema() -%}
+{%- macro drop_test_schema() -%}
 
-{%- do adapter.create_schema(target.database, target.schema) %}
+{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST")) %}
+
+{% endmacro %}
+
+{%- macro create_test_schema() -%}
+
+{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST")) %}
 
 {%- endmacro -%}
 
 {%- macro recreate_current_schema() -%}
 
-{{ drop_current_schema() }}
-{{ create_current_schema() }}
+{% do drop_test_schema() %}
+{% do create_test_schema() %}
 
 {%- endmacro -%}

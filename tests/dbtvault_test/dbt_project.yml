@@ -1,20 +1,20 @@
-name: "dbtvault_test"
-version: "0.6"
-require-dbt-version: [">=0.14.0", "<0.18.0"]
+name: dbtvault_test
+version: '0.6'
+require-dbt-version: ['>=0.14.0', <0.18.0]
 config-version: 1
 
-profile: "dbtvault"
+profile: dbtvault
 
-source-paths: ["models"]
-analysis-paths: ["analysis"]
-test-paths: ["tests"]
-data-paths: ["data"]
-macro-paths: ["macros"]
+source-paths: [models]
+analysis-paths: [analysis]
+test-paths: [tests]
+data-paths: [data]
+macro-paths: [macros]
 
-target-path: "target"
+target-path: target
 clean-targets:
-    - "target"
-    - "dbt_modules"
+  - target
+  - dbt_modules
 
 models:
   dbtvault_test:
@@ -46,13 +46,13 @@ models:
             vars:
               columns:
                 BOOKING_PK: BOOKING_REF
-                CUSTOMER_PK: 
+                CUSTOMER_PK:
                   - CUSTOMER_ID
-                  - "!9999-12-31"
+                  - '!9999-12-31'
                 CUSTOMER_BOOKING_PK:
                   - CUSTOMER_ID
                   - BOOKING_REF
-                  - "TO_DATE('9999-12-31')"
+                  - TO_DATE('9999-12-31')
                 BOOK_CUSTOMER_HASHDIFF:
                   is_hashdiff: true
                   columns:
@@ -63,8 +63,8 @@ models:
                   is_hashdiff: true
                   columns:
                     - BOOKING_REF
-                    - "TO_DATE('9999-12-31')"
-                    - "!STG"
+                    - TO_DATE('9999-12-31')
+                    - '!STG'
                     - BOOKING_DATE
                     - DEPARTURE_DATE
                     - PRICE
@@ -92,7 +92,7 @@ models:
         stage:
           test_stage_correctly_generates_sql_from_yaml:
             vars:
-              source_model: "raw_source"
+              source_model: raw_source
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -108,12 +108,12 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                SOURCE: "!STG_BOOKING"
-                EFFECTIVE_FROM: "BOOKING_DATE"
+                SOURCE: '!STG_BOOKING'
+                EFFECTIVE_FROM: BOOKING_DATE
           test_stage_correctly_generates_sql_from_yaml_with_source_style:
             vars:
               source_model:
-                test_unit: "source"
+                test_unit: source
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -129,26 +129,26 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                SOURCE: "!STG_BOOKING"
-                EFFECTIVE_FROM: "LOADDATE"
+                SOURCE: '!STG_BOOKING'
+                EFFECTIVE_FROM: LOADDATE
           test_stage_correctly_generates_sql_for_only_source_columns_from_yaml:
             vars:
               include_source_columns: true
-              source_model: "raw_source"
+              source_model: raw_source
           test_stage_correctly_generates_sql_for_only_source_columns_and_missing_flag_from_yaml:
             vars:
-              source_model: "raw_source"
+              source_model: raw_source
           test_stage_correctly_generates_sql_for_only_derived_from_yaml:
             vars:
               include_source_columns: false
-              source_model: "raw_source"
+              source_model: raw_source
               derived_columns:
-                SOURCE: "!STG_BOOKING"
-                EFFECTIVE_FROM: "LOAD_DATETIME"
+                SOURCE: '!STG_BOOKING'
+                EFFECTIVE_FROM: LOAD_DATETIME
           test_stage_correctly_generates_sql_for_only_hashing_from_yaml:
             vars:
               include_source_columns: false
-              source_model: "raw_source"
+              source_model: raw_source
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -165,7 +165,7 @@ models:
                     - PHONE
           test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml:
             vars:
-              source_model: "raw_source"
+              source_model: raw_source
               hashed_columns:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUST_CUSTOMER_HASHDIFF:
@@ -197,128 +197,128 @@ models:
                     - NATIONALITY
                     - PHONE
               derived_columns:
-                SOURCE: "!STG_BOOKING"
-                EFFECTIVE_FROM: "LOADDATE"
+                SOURCE: '!STG_BOOKING'
+                EFFECTIVE_FROM: LOADDATE
       tables:
         hub:
-          materialized: "incremental"
+          materialized: incremental
           test_hub_macro_correctly_generates_sql_for_single_source:
             vars:
-              source_model: "raw_source"
-              src_pk: "CUSTOMER_PK"
-              src_nk: "CUSTOMER_ID"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+              source_model: raw_source
+              src_pk: CUSTOMER_PK
+              src_nk: CUSTOMER_ID
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_single_source_multi_nk:
             vars:
-              source_model: "raw_source"
-              src_pk: "CUSTOMER_PK"
-              src_nk: 
-                - "CUSTOMER_ID"
-                - "CUSTOMER_NAME"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+              source_model: raw_source
+              src_pk: CUSTOMER_PK
+              src_nk:
+                - CUSTOMER_ID
+                - CUSTOMER_NAME
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_incremental_single_source:
             vars:
-              source_model: "raw_source"
-              src_pk: "CUSTOMER_PK"
-              src_nk: "CUSTOMER_ID"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+              source_model: raw_source
+              src_pk: CUSTOMER_PK
+              src_nk: CUSTOMER_ID
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_incremental_single_source_multi_nk:
             vars:
-              source_model: "raw_source"
-              src_pk: "CUSTOMER_PK"
-              src_nk: 
-                - "CUSTOMER_ID"
-                - "CUSTOMER_NAME"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+              source_model: raw_source
+              src_pk: CUSTOMER_PK
+              src_nk:
+                - CUSTOMER_ID
+                - CUSTOMER_NAME
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_multi_source:
             vars:
               source_model:
-                - "raw_source"
-                - "raw_source_2"
-              src_pk: "CUSTOMER_PK"
-              src_nk: "CUSTOMER_ID"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+                - raw_source
+                - raw_source_2
+              src_pk: CUSTOMER_PK
+              src_nk: CUSTOMER_ID
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_multi_source_multi_nk:
             vars:
               source_model:
-                - "raw_source"
-                - "raw_source_2"
-              src_pk: "CUSTOMER_PK"
-              src_nk: 
-                - "CUSTOMER_ID"
-                - "CUSTOMER_NAME"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+                - raw_source
+                - raw_source_2
+              src_pk: CUSTOMER_PK
+              src_nk:
+                - CUSTOMER_ID
+                - CUSTOMER_NAME
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_incremental_multi_source:
             vars:
               source_model:
-                - "raw_source"
-                - "raw_source_2"
-              src_pk: "CUSTOMER_PK"
-              src_nk: "CUSTOMER_ID"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+                - raw_source
+                - raw_source_2
+              src_pk: CUSTOMER_PK
+              src_nk: CUSTOMER_ID
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_hub_macro_correctly_generates_sql_for_incremental_multi_source_multi_nk:
             vars:
               source_model:
-                - "raw_source"
-                - "raw_source_2"
-              src_pk: "CUSTOMER_PK"
-              src_nk: 
-                - "CUSTOMER_ID"
-                - "CUSTOMER_NAME"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+                - raw_source
+                - raw_source_2
+              src_pk: CUSTOMER_PK
+              src_nk:
+                - CUSTOMER_ID
+                - CUSTOMER_NAME
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
         link:
-          materialized: "incremental"
+          materialized: incremental
           test_link_macro_correctly_generates_sql_for_single_source:
             vars:
-              source_model: "raw_source"
-              src_pk: "CUSTOMER_PK"
-              src_fk: 
-                - "ORDER_FK"
-                - "BOOKING_FK"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+              source_model: raw_source
+              src_pk: CUSTOMER_PK
+              src_fk:
+                - ORDER_FK
+                - BOOKING_FK
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_link_macro_correctly_generates_sql_for_incremental_single_source:
             vars:
-              source_model: "raw_source"
-              src_pk: "CUSTOMER_PK"
-              src_fk: 
-                - "ORDER_FK"
-                - "BOOKING_FK"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+              source_model: raw_source
+              src_pk: CUSTOMER_PK
+              src_fk:
+                - ORDER_FK
+                - BOOKING_FK
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_link_macro_correctly_generates_sql_for_multi_source:
             vars:
               source_model:
-                - "raw_source"
-                - "raw_source_2"
-              src_pk: "CUSTOMER_PK"
-              src_fk: 
-                - "ORDER_FK"
-                - "BOOKING_FK"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+                - raw_source
+                - raw_source_2
+              src_pk: CUSTOMER_PK
+              src_fk:
+                - ORDER_FK
+                - BOOKING_FK
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
           test_link_macro_correctly_generates_sql_for_incremental_multi_source:
             vars:
               source_model:
-                - "raw_source"
-                - "raw_source_2"
-              src_pk: "CUSTOMER_PK"
-              src_fk: 
-                - "ORDER_FK"
-                - "BOOKING_FK"
-              src_ldts: "LOADDATE"
-              src_source: "RECORD_SOURCE"
+                - raw_source
+                - raw_source_2
+              src_pk: CUSTOMER_PK
+              src_fk:
+                - ORDER_FK
+                - BOOKING_FK
+              src_ldts: LOADDATE
+              src_source: RECORD_SOURCE
   vars:
     max_date: TO_DATE("9999-12-31")
-    
+
 seeds:
   quote_columns: true
   dbtvault_test:
@@ -334,4 +334,3 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
-        
