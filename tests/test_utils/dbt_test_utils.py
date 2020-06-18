@@ -31,7 +31,6 @@ FEATURES_ROOT = TESTS_ROOT / 'features'
 CSV_DIR = TESTS_DBT_ROOT / 'data/temp'
 
 if not os.getenv('DBT_PROFILES_DIR'):
-
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
 
@@ -214,6 +213,13 @@ class DBTTestUtils:
         for file in delete_files:
             os.remove(file)
 
+    def replace_test_schema(self):
+        """
+        Drop and create the TEST schema
+        """
+
+        self.run_dbt_operation(macro_name='recreate_current_schema')
+
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
@@ -291,6 +297,17 @@ class DBTTestUtils:
                 hashed_list.append(item)
 
         return Series(hashed_list)
+
+    @staticmethod
+    def generate_hashed_column_mapping(columns):
+
+        hashed_columns = dict()
+
+        for col in columns:
+
+            hashed_columns[f"{col.split('_', 1)[0]}_PK"] = col
+
+        return hashed_columns
 
 
 class DBTVAULTGenerator:
@@ -410,7 +427,6 @@ class DBTVAULTGenerator:
         yaml = ruamel.yaml.YAML()
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
-
             project_file = yaml.load(f)
 
             project_file['seeds']['dbtvault_test']['temp'] = {seed_name: seed_config}
@@ -434,7 +450,7 @@ class DBTVAULTGenerator:
         return test_yaml
 
     @staticmethod
-    def clean_test_schema():
+    def clean_test_schema_file():
         """
         Delete the schema_test.yml file if it exists
         """
