@@ -100,18 +100,14 @@ def create_csv(context, raw_stage_model_name):
     assert 'Completed successfully' in logs
 
 
-@step("I hash the {columns} column(s)")
-def create_stage(context, columns):
+@step("I hash the stage")
+def create_stage(context):
     hashed_model_name = f'{context.raw_stage_model_name}_hashed'
 
     dbtvault_generator.stage(hashed_model_name)
 
-    column_list = [col.strip() for col in columns.split(',')]
-
-    hashed_columns = context.dbt_test_utils.generate_hashed_column_mapping(column_list)
-
     stage_args = {
-        'source_model': context.raw_stage_model_name, 'hashed_columns': hashed_columns}
+        'source_model': context.raw_stage_model_name, 'hashed_columns': context.hash_mapping}
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
@@ -120,14 +116,17 @@ def create_stage(context, columns):
     assert 'Completed successfully' in logs
 
 
-@step("I load the {model_name} table")
-@when("I load the {model_name} table")
-def load_table(context, model_name):
-    hub_metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns}
+@step("I load the {model_name} {structure_type}")
+@when("I load the {model_name} {structure_type}")
+def load_table(context, model_name, structure_type):
+    metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns}
 
-    context.vault_structure_metadata = hub_metadata
+    context.vault_structure_metadata = metadata
 
-    dbtvault_generator.hub(model_name, **hub_metadata)
+    if structure_type.lower() == 'hub':
+        dbtvault_generator.hub(model_name, **metadata)
+    elif structure_type.lower() == 'link':
+        dbtvault_generator.link(model_name, **metadata)
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 

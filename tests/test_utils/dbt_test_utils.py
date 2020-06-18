@@ -298,17 +298,6 @@ class DBTTestUtils:
 
         return Series(hashed_list)
 
-    @staticmethod
-    def generate_hashed_column_mapping(columns):
-
-        hashed_columns = dict()
-
-        for col in columns:
-
-            hashed_columns[f"{col.split('_', 1)[0]}_PK"] = col
-
-        return hashed_columns
-
 
 class DBTVAULTGenerator:
     """Functions to generate dbtvault Models"""
@@ -357,16 +346,21 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def link(self, model_name):
+    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model):
         """
         Generate a link model template
             :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_fk: Source fk
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
         """
 
-        template = """
+        template = f"""
         {{{{ config(materialized='incremental') }}}}
-        {{{{ dbtvault.link(var('src_pk'), var('src_fk'), var('src_ldts'),
-                           var('src_source'), var('source_model')) }}}}
+        {{{{ dbtvault.link('{src_pk}', {src_fk}, '{src_ldts}',
+                           '{src_source}', '{source_model}')   }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -440,12 +434,25 @@ class DBTVAULTGenerator:
 
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
+
+        def flatten(lis):
+            for item in lis:
+                if isinstance(item, list):
+                    for x in flatten(item):
+                        yield x
+                else:
+                    yield item
+
+        extracted_compare_columns = [v for k, v in metadata.items() if k not in ['source_model']]
+
+        compare_columns = list(flatten(extracted_compare_columns))
+
         test_yaml = {
             "models": [{
                 "name": target_model_name, "tests": [{
                     "assert_data_equal_to_expected": {
                         "expected_seed": expected_output_csv, "unique_id": unique_id,
-                        "compare_columns": [v for k, v in metadata.items() if k not in ['source_model']]}}]}]}
+                        "compare_columns": compare_columns}}]}]}
 
         return test_yaml
 
