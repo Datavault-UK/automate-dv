@@ -93,13 +93,17 @@ def create_csv(context, raw_stage_model_name):
 
 
 @step("I hash the stage")
-def hash_stage(context):
+def stage(context):
     hashed_model_name = f'{context.raw_stage_models}_hashed'
 
     dbtvault_generator.stage(hashed_model_name)
 
     stage_args = {
-        'source_model': context.raw_stage_models, 'hashed_columns': context.hash_mapping}
+        'source_model': context.raw_stage_models,
+        'hashed_columns': context.hash_mapping}
+
+    if hasattr(context, 'derived_mapping'):
+        stage_args['derived_columns'] = context.derived_mapping
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
