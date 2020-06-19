@@ -149,11 +149,6 @@ Feature: Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  # -----------------------------------------------------------------------------
-  # Testing insertion of records into a hub with data already populated from
-  # previous load cycles.
-  # -----------------------------------------------------------------------------
-
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Load of stage data into a hub
     Given the HUB hub is already populated with data
@@ -315,10 +310,6 @@ Feature: Hubs
       | md5('1005') | 1005    | 1993-01-01 | LINE   |
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
-  # -----------------------------------------------------------------------------
-  # Test union of different staging tables to insert records into an empty hub.
-  # -----------------------------------------------------------------------------
-
   @fixture.multi_source_hub
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed an empty hub.
     Given the HUB hub is empty
@@ -433,11 +424,6 @@ Feature: Hubs
       | md5('1007') | 1007    | 1993-01-03 | *      |
       | md5('1008') | 1008    | 1993-01-03 | *      |
       | md5('1009') | 1009    | 1993-01-03 | *      |
-
-  # -----------------------------------------------------------------------------
-  # Test union of different staging tables to insert records into a hub with
-  # existing records.
-  # -----------------------------------------------------------------------------
 
   @fixture.multi_source_hub
   Scenario: [POPULATED-LOAD-UNION] Union three staging tables to feed a populated hub.
