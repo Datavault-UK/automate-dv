@@ -18,13 +18,13 @@ def check_exists(context, model_name):
     assert f'Model {model_name} does not exist.' in logs
 
 
-@given("the {model_name} table is empty")
-def load_empty_table(context, model_name):
+@given("the {model_name} {vault_structure} is empty")
+def load_empty_table(context, model_name, vault_structure):
     """Creates an empty table"""
 
     context.target_model_name = model_name
 
-    headings = list(context.vault_structure_columns.values())
+    headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns.values()))
 
     row = Row(cells=[], headings=headings)
 
@@ -34,27 +34,23 @@ def load_empty_table(context, model_name):
                                                                  model_name=f'stg_{model_name}_empty')
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config={
-                                           'column_types': {context.vault_structure_columns['src_pk']: 'BINARY(16)',
-                                                            context.vault_structure_columns['src_nk']: 'NUMBER(38,0)',
-                                                            'LOADDATE': 'DATE',
-                                                            'SOURCE': 'VARCHAR'}})
+                                       seed_config=context.seed_config)
 
     context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    hub_metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
+    metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
 
-    context.vault_structure_metadata = hub_metadata
+    context.vault_structure_metadata = metadata
 
-    dbtvault_generator.hub(model_name, **hub_metadata)
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 
     assert 'Completed successfully' in logs
 
 
-@given("the {model_name} table is already populated with data")
-def load_populated_table(context, model_name):
+@given("the {model_name} {vault_structure} is already populated with data")
+def load_populated_table(context, model_name, vault_structure):
     """
     Create a table with data pre-populated from the context table.
     """
@@ -65,19 +61,15 @@ def load_populated_table(context, model_name):
                                                                  model_name=f'stg_{model_name}_populated')
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config={
-                                           'column_types': {context.vault_structure_columns['src_pk']: 'BINARY(16)',
-                                                            context.vault_structure_columns['src_nk']: 'NUMBER(38,0)',
-                                                            'LOADDATE': 'DATE',
-                                                            'SOURCE': 'VARCHAR'}})
+                                       seed_config=context.seed_config)
 
     context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    hub_metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
+    metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
 
-    context.vault_structure_metadata = hub_metadata
+    context.vault_structure_metadata = metadata
 
-    dbtvault_generator.hub(model_name, **hub_metadata)
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 
@@ -93,7 +85,7 @@ def create_csv(context, raw_stage_model_name):
 
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    context.raw_stage_model_name = seed_file_name
+    context.raw_stage_models = seed_file_name
 
     context.vault_hash_columns = context.table.headings
 
@@ -101,13 +93,13 @@ def create_csv(context, raw_stage_model_name):
 
 
 @step("I hash the stage")
-def create_stage(context):
-    hashed_model_name = f'{context.raw_stage_model_name}_hashed'
+def hash_stage(context):
+    hashed_model_name = f'{context.raw_stage_models}_hashed'
 
     dbtvault_generator.stage(hashed_model_name)
 
     stage_args = {
-        'source_model': context.raw_stage_model_name, 'hashed_columns': context.hash_mapping}
+        'source_model': context.raw_stage_models, 'hashed_columns': context.hash_mapping}
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
@@ -116,17 +108,14 @@ def create_stage(context):
     assert 'Completed successfully' in logs
 
 
-@step("I load the {model_name} {structure_type}")
-@when("I load the {model_name} {structure_type}")
-def load_table(context, model_name, structure_type):
+@step("I load the {model_name} {vault_structure}")
+@when("I load the {model_name} {vault_structure}")
+def load_table(context, model_name, vault_structure):
     metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns}
 
     context.vault_structure_metadata = metadata
 
-    if structure_type.lower() == 'hub':
-        dbtvault_generator.hub(model_name, **metadata)
-    elif structure_type.lower() == 'link':
-        dbtvault_generator.link(model_name, **metadata)
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 
