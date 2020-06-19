@@ -45,7 +45,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   Scenario: [BASE-LOAD] Simple load of distinct stage data into an empty hub using SHA hashing
-    Given the HUB table is empty
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
@@ -66,7 +66,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   Scenario: [BASE-LOAD] Keys with NULL or empty values are not loaded into empty hub that doesn't exist
-    Given the HUB table is empty
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
@@ -88,8 +88,8 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Simple load of stage data into an empty hub
-    Given the HUB table is empty
+  Scenario: [BASE-LOAD-EMPTY] Simple load of stage data into an empty hub
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
@@ -106,8 +106,8 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Simple load of distinct stage data into an empty hub
-    Given the HUB table is empty
+  Scenario: [BASE-LOAD-EMPTY] Simple load of distinct stage data into an empty hub
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
@@ -127,8 +127,8 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Keys with NULL or empty values are not loaded into an existing empty hub
-    Given the HUB table is empty
+  Scenario: [BASE-LOAD-EMPTY] Keys with NULL or empty values are not loaded into an existing empty hub
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
@@ -156,7 +156,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Load of stage data into a hub
-    Given the HUB table is already populated with data
+    Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
@@ -177,7 +177,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Load of distinct stage data into a hub
-    Given the HUB table is already populated with data
+    Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
@@ -203,7 +203,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Keys with NULL or empty values are not loaded into a hub
-    Given the HUB table is already populated with data
+    Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
@@ -226,10 +226,6 @@ Feature: Hubs
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
-
-  # -----------------------------------------------------------------------------------------
-  # Test union of different staging tables to insert records into hubs which don't yet exist
-  # -----------------------------------------------------------------------------------------
 
   @fixture.multi_source_hub
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a empty hub which doesn't yet exist.
@@ -325,7 +321,7 @@ Feature: Hubs
 
   @fixture.multi_source_hub
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed an empty hub.
-    Given the HUB table is empty
+    Given the HUB hub is empty
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
@@ -366,8 +362,8 @@ Feature: Hubs
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
   @fixture.multi_source_hub
-  Scenario: [POPULATED-UNION-LOAD] Union three staging tables to feed an empty hub over two cycles.
-    Given the HUB table is already populated with data
+  Scenario: [POPULATED-LOAD-UNION] Union three staging tables to feed an empty hub over two cycles.
+    Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | *      |
       | md5('1002') | 1002    | 1993-01-01 | *      |
@@ -444,8 +440,8 @@ Feature: Hubs
   # -----------------------------------------------------------------------------
 
   @fixture.multi_source_hub
-  Scenario: [POPULATED-UNION-LOAD] Union three staging tables to feed a populated hub.
-    Given the HUB table is already populated with data
+  Scenario: [POPULATED-LOAD-UNION] Union three staging tables to feed a populated hub.
+    Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
@@ -489,8 +485,8 @@ Feature: Hubs
       | md5('1006') | 1006    | 1993-01-02 | SUPP   |
 
   @fixture.multi_source_hub
-  Scenario: [POPULATED-UNION-LOAD] Keys with a NULL or empty value in a union of three staging tables are not fed into a populated hub.
-    Given the HUB table is already populated with data
+  Scenario: [POPULATED-LOAD-UNION] Keys with a NULL or empty value in a union of three staging tables are not fed into a populated hub.
+    Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOADDATE   | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |

@@ -29,6 +29,15 @@ def single_source_hub(context):
         'src_source': 'SOURCE'
     }
 
+    context.seed_config = {
+        'column_types': {
+            'CUSTOMER_PK': 'BINARY(16)',
+            'CUSTOMER_ID': 'VARCHAR',
+            'LOADDATE': 'DATE',
+            'SOURCE': 'VARCHAR'
+        }
+    }
+
 
 @fixture
 def multi_source_hub(context):
@@ -45,6 +54,15 @@ def multi_source_hub(context):
         'src_nk': 'PART_ID',
         'src_ldts': 'LOADDATE',
         'src_source': 'SOURCE'
+    }
+
+    context.seed_config = {
+        'column_types': {
+            'PART_PK': 'BINARY(16)',
+            'PART_ID': 'VARCHAR',
+            'LOADDATE': 'DATE',
+            'SOURCE': 'VARCHAR'
+        }
     }
 
 
@@ -65,4 +83,44 @@ def single_source_link(context):
         'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
         'src_ldts': 'LOADDATE',
         'src_source': 'SOURCE'
+    }
+
+    context.seed_config = {
+        'column_types': {
+            'CUSTOMER_NATION_PK': 'BINARY(16)',
+            'CUSTOMER_FK': 'BINARY(16)',
+            'NATION_FK': 'BINARY(16)',
+            'LOADDATE': 'DATE',
+            'SOURCE': 'VARCHAR'
+        }
+    }
+
+
+@fixture
+def multi_source_link(context):
+    """
+    Define the structures and metadata to load single-source links
+    """
+
+    context.hash_mapping = {
+        'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
+        'CUSTOMER_FK': 'CUSTOMER_ID',
+        'NATION_FK': 'NATION_ID',
+    }
+
+    context.vault_structure_columns = {
+        'src_pk': 'CUSTOMER_NATION_PK',
+        'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
+        'src_ldts': 'LOADDATE',
+        'src_source': 'SOURCE'
+    }
+
+    context.seed_config = {
+        'column_types': {
+            'CUSTOMER_NATION_PK': 'BINARY(16)',
+            'CUSTOMER_FK': 'BINARY(16)',
+            'NATION_FK': 'BINARY(16)',
+            'LOADDATE': 'DATE',
+            'SOURCE': 'VARCHAR'
+        }
     }

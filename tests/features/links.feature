@@ -2,7 +2,7 @@
 Feature: Links
 
   @fixture.single_source_link
-  Scenario: [BASE-LOAD-SINGLE] Load a simple stage table into an empty link table
+  Scenario: [BASE-LOAD] Load a simple stage table into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
@@ -21,401 +21,416 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-#  Scenario: [SINGLE-SOURCE] Load a stage table with duplicates into an empty link table
-#    Given I have an empty LINK_CUSTOMER_NATION table
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-#
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
-#
-#  Scenario: [BASE-LOAD-SINGLE] Load a simple stage table into an empty link table and exclude Links with NULL foreign keys
-#    Given a TEST_LINK_CUSTOMER_NATION table does not exist
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
-#      | 1007         | <null>     | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
-#
-## -----------------------------------------------------------------------------
-## Test the load of one stage table feeding an empty link.
-## -----------------------------------------------------------------------------
-#  Scenario: [SINGLE-SOURCE] Load a simple stage table into an empty link table
-#    Given I have an empty LINK_CUSTOMER_NATION table
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
-#
-#  Scenario: [SINGLE-SOURCE] Loading a stage table with duplicates into an empty link table
-#    Given I have an empty LINK_CUSTOMER_NATION table
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-#
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
-#
-#
-## -----------------------------------------------------------------------------
-## Test the load of one stage table feeding a populated link.
-## -----------------------------------------------------------------------------
-#  Scenario: [SINGLE-SOURCE] Load a simple stage table into a populated link.
-#    Given there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the LINK_CUSTOMER_NATION table
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#
-#  Scenario: [SINGLE-SOURCE] Load a stage table with duplicates into a populated link.
-#    Given there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#      | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the LINK_CUSTOMER_NATION table
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#
-#  Scenario: [SINGLE-SOURCE] Load a stage table where a foreign key is NULL, no link is inserted.
-#    Given there are records in the TEST_STG_CRM_CUSTOMER table
-#     | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#     | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#     | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#     | 1002         | POL        | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#     | 1003         | AUS        | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#     | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#     | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#     | 1006         | DEU        | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-#     | 1007         | ITA        | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#     | 1007         | <null>     | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the LINK_CUSTOMER_NATION table
-#     | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#     | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#     | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#     | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#     | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION table
-#    Then the LINK_CUSTOMER_NATION table should contain
-#     | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#     | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#     | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#     | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
-#     | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#     | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#     | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
-#     | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#
-#
-## -----------------------------------------------------------------------------------------
-## Test union of different staging tables to insert records into links which don't yet exist
-## -----------------------------------------------------------------------------------------
-#  Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a link which does not exist.
-#    Given a TEST_LINK_CUSTOMER_NATION_UNION table does not exist
-#    And there are records in the TEST_STG_SAP_CUSTOMER table
-#      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1003         | AUS        | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the TEST_STG_WEB_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1006         | DEU        | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1008         | AUS        | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1010         | ITA        | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#    When I load the TEST_LINK_CUSTOMER_NATION_UNION table
-#    Then the LINK_CUSTOMER_NATION_UNION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-02 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-02 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-02 | SAP    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-02 | SAP    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
-#      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
-#
-## -----------------------------------------------------------------------------
-## Test the union of three stage tables feeding an empty link.
-## -----------------------------------------------------------------------------
-#  Scenario: [UNION] Union three staging tables to feed empty link.
-#    Given I have an empty LINK_CUSTOMER_NATION_UNION table
-#    And there are records in the TEST_STG_SAP_CUSTOMER table
-#      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1003         | AUS        | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the TEST_STG_WEB_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1006         | DEU        | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1008         | AUS        | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1010         | ITA        | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#    When I load the TEST_LINK_CUSTOMER_NATION_UNION table
-#    Then the LINK_CUSTOMER_NATION_UNION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-02 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-02 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-02 | SAP    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-02 | SAP    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
-#      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
-#
-#  Scenario: [UNION] Union three staging tables with duplicates to feed populated link.
-#    Given I have an empty LINK_CUSTOMER_NATION_UNION table
-#    And there are records in the TEST_STG_SAP_CUSTOMER table
-#      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1003         | AUS        | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the TEST_STG_WEB_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1006         | DEU        | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#      | 1008         | AUS        | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1010         | ITA        | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#    And there are records in the LINK_CUSTOMER_NATION_UNION table
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION_UNION table
-#    Then the LINK_CUSTOMER_NATION_UNION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
-#      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
-#
-#  Scenario: [UNION] Load a stage table where a foreign key is NULL, no link is inserted.
-#    Given there are records in the TEST_STG_SAP_CUSTOMER table
-#      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1003        | <null>    | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1005        | <null>    | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1003         | <null>     | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the TEST_STG_WEB_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1006         | DEU        | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#      | 1008         | AUS        | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1010         | <null>     | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#    And there are records in the LINK_CUSTOMER_NATION_UNION table
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#    When I load the TEST_LINK_CUSTOMER_NATION_UNION table
-#    Then the LINK_CUSTOMER_NATION_UNION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
-#      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
-#
-#   Scenario: [UNION] Union three staging tables to feed empty link where NULL foreign keys are not added.
-#    Given I have an empty LINK_CUSTOMER_NATION_UNION table
-#    And there are records in the TEST_STG_SAP_CUSTOMER table
-#      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
-#      | <null>      | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
-#      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
-#      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-#    And there are records in the TEST_STG_CRM_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | 1002         | POL        | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
-#      | <null>       | AUS        | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
-#      | 1007         | ITA        | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-#    And there are records in the TEST_STG_WEB_CUSTOMER table
-#      | CUSTOMER_REF | NATION_KEY | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
-#      | 1001         | GBR        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
-#      | 1006         | DEU        | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1008         | AUS        | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
-#      | 1009         | DEU        | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
-#      | 1010         | <null>     | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-#    When I load the TEST_LINK_CUSTOMER_NATION_UNION table
-#    Then the LINK_CUSTOMER_NATION_UNION table should contain
-#      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
-#      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-02 | CRM    |
-#      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-02 | CRM    |
-#      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-02 | SAP    |
-#      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-02 | SAP    |
-#      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
-#      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-#      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
-#      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
-#
-## -----------------------------------------------------------------------------
-## Test the load of one stage table feeding a populated multi-part link.
-## -----------------------------------------------------------------------------
+  @fixture.single_source_link
+  Scenario: [BASE-LOAD] Load a stage table with duplicates into a non-existent link table
+    Given the LINK table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
+
+  @fixture.single_source_link
+  Scenario: [BASE-LOAD] Load a simple stage table into a non-existent link and exclude records with NULL foreign keys
+    Given the LINK table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
+      | 1007        | <null>    | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
+
+  @fixture.single_source_link
+  Scenario: [BASE-LOAD] Load a simple stage table into an empty link table
+    Given the LINK link is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
+
+  @fixture.single_source_link
+  Scenario: [BASE-LOAD] Loading a stage table with duplicates into an empty link table
+    Given the LINK link is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
+
+  @fixture.single_source_link
+  Scenario: [POPULATED-LOAD] Load a simple stage table into a populated link.
+    Given the LINK link is already populated with data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+
+  @fixture.single_source_link
+  Scenario: [POPULATED-LOAD] Load a stage table with duplicates into a populated link.
+    Given the LINK link is already populated with data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+
+  @fixture.single_source_link
+  Scenario: [POPULATED-LOAD] Load a stage table where a foreign key is NULL, no link is inserted.
+    Given the LINK link is already populated with data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1007        | <null>    | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+
+  @fixture.multi_source_link
+  Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a link which does not exist.
+    Given the LINK table does not exist
+    And the RAW_STAGE_SAP table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
+    And I hash the stage
+    And the RAW_STAGE_CRM table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    And the RAW_STAGE_WEB table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1006        | DEU       | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1010        | ITA       | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-02 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-02 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-02 | SAP    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-02 | SAP    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
+      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
+
+  @fixture.multi_source_link
+  Scenario: [BASE-LOAD-UNION] Union three staging tables to feed empty link.
+    Given the LINK link is empty
+    And the RAW_STAGE_SAP table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
+    And I hash the stage
+    And the RAW_STAGE_CRM table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    And the RAW_STAGE_WEB table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1006        | DEU       | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1010        | ITA       | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-02 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-02 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-02 | SAP    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-02 | SAP    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
+      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
+
+  @fixture.multi_source_link
+  Scenario: [BASE-LOAD-UNION] Union three staging tables to feed empty link where NULL foreign keys are not added.
+    Given the LINK link is empty
+    And the RAW_STAGE_SAP table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | <null>      | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
+    And I hash the stage
+    And the RAW_STAGE_CRM table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | <null>      | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    And the RAW_STAGE_WEB table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1006        | DEU       | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1010        | <null>    | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-02 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-02 | SAP    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-02 | SAP    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
+      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
+
+  @fixture.multi_source_link
+  Scenario: [POPULATED-LOAD-UNION] Union three staging tables with duplicates to feed populated link.
+    Given the LINK link is already populated with data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    And the RAW_STAGE_SAP table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
+    And I hash the stage
+    And the RAW_STAGE_CRM table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    And the RAW_STAGE_WEB table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1006        | DEU       | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+      | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1010        | ITA       | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
+      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
+
+  @fixture.multi_source_link
+  Scenario: [POPULATED-LOAD-UNION] Load a stage table where a foreign key is NULL, no link is inserted.
+    Given the LINK link is already populated with data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    And the RAW_STAGE_SAP table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | SAP    |
+      | 1003        | <null>    | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
+      | 1005        | <null>    | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
+    And I hash the stage
+    And the RAW_STAGE_CRM table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1003        | <null>    | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I hash the stage
+    And the RAW_STAGE_WEB table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOADDATE   | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
+      | 1006        | DEU       | Fred          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+      | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+      | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
+      | 1010        | <null>    | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
+    And I hash the stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOADDATE   | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | WEB    |
+      | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
+      | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
+      | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
+
+
 #  Scenario: [SINGLE-SOURCE] Load a stage table into an empty multi-part link
 #    Given I have an empty LINK_CUSTOMER_ORDER_MULTIPART table
 #    And there are records in the TEST_STG_EFF_SAT_HASHED table

@@ -312,6 +312,24 @@ class DBTVAULTGenerator:
         with open(FEATURE_MODELS_ROOT / f'{model_name}.sql', 'w') as f:
             f.write(template.strip())
 
+    def raw_vault_structure(self, model_name, vault_structure, **kwargs):
+        """
+        Generate a vault structure
+            :param model_name: Name of model to generate
+            :param vault_structure: Type of structure to generate (stage, hub, link, sat)
+            :param kwargs: Arguments for the
+            :return:
+        """
+
+        vault_structure = vault_structure.lower()
+
+        generator_functions = {
+            'hub': self.hub,
+            'link': self.link
+        }
+
+        generator_functions[vault_structure](model_name, **kwargs)
+
     def stage(self, model_name):
         """
         Generate a stage model template
@@ -435,17 +453,9 @@ class DBTVAULTGenerator:
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
 
-        def flatten(lis):
-            for item in lis:
-                if isinstance(item, list):
-                    for x in flatten(item):
-                        yield x
-                else:
-                    yield item
-
         extracted_compare_columns = [v for k, v in metadata.items() if k not in ['source_model']]
 
-        compare_columns = list(flatten(extracted_compare_columns))
+        compare_columns = list(DBTVAULTGenerator.flatten(extracted_compare_columns))
 
         test_yaml = {
             "models": [{
@@ -455,6 +465,16 @@ class DBTVAULTGenerator:
                         "compare_columns": compare_columns}}]}]}
 
         return test_yaml
+
+    @staticmethod
+    def flatten(lis):
+        """ Flatten nested lists into one list """
+        for item in lis:
+            if isinstance(item, list):
+                for x in DBTVAULTGenerator.flatten(item):
+                    yield x
+            else:
+                yield item
 
     @staticmethod
     def clean_test_schema_file():
