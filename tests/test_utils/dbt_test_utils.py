@@ -325,7 +325,8 @@ class DBTVAULTGenerator:
 
         generator_functions = {
             'hub': self.hub,
-            'link': self.link
+            'link': self.link,
+            'sat': self.sat
         }
 
         generator_functions[vault_structure](model_name, **kwargs)
@@ -383,6 +384,29 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model):
+        """
+        Generate a satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_hashdiff: Source hashdiff
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+        :return:
+        """
+
+        template = f"""
+        {{{{ config(materialized='incremental') }}}}
+        {{{{ dbtvault.sat('{src_pk}', '{src_hashdiff}', {src_payload},
+                          '{src_eff}', '{src_ldts}', '{src_source}', 
+                          '{source_model}')   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def t_link(self, model_name):
         """
         Generate a t-link model template
@@ -393,21 +417,6 @@ class DBTVAULTGenerator:
         {{{{ config(materialized='incremental') }}
         {{{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
                              var('src_ldts'), var('src_source'), var('source_model')) }}}}
-        """
-
-        self.template_to_file(template, model_name)
-
-    def sat(self, model_name):
-        """
-        Generate a satellite model template
-            :param model_name: Name of the model file
-        """
-
-        template = """
-        {{{{ config(materialized='incremental') }}}}
-        {{{{ dbtvault.sat(var('src_pk'), var('src_hashdiff'), var('src_payload'),
-                          var('src_eff'), var('src_ldts'), var('src_source'),
-                          var('source_model')) }}}}
         """
 
         self.template_to_file(template, model_name)
