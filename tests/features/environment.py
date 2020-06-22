@@ -9,7 +9,8 @@ fixture_registry = {
     "fixture.multi_source_hub": multi_source_hub,
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
-    "fixture.satellite": satellite
+    "fixture.satellite": satellite,
+    "fixture.satellite_cycle": satellite_cycle
 }
 
 

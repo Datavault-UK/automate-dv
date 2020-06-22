@@ -36,15 +36,16 @@ def load_empty_table(context, model_name, vault_structure):
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config)
 
-    context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
+    if not vault_structure == 'stage':
+        metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
 
-    context.vault_structure_metadata = metadata
+        context.vault_structure_metadata = metadata
 
-    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+        dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+        logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 
     assert 'Completed successfully' in logs
 
@@ -92,6 +93,27 @@ def create_csv(context, raw_stage_model_name):
     assert 'Completed successfully' in logs
 
 
+@when("the {raw_stage_model_name} is loaded")
+@when("the {raw_stage_model_name} is loaded for day 1")
+@when("the {raw_stage_model_name} is loaded for day 2")
+@when("the {raw_stage_model_name} is loaded for day 3")
+@when("the {raw_stage_model_name} is loaded for day 4")
+def create_csv(context, raw_stage_model_name):
+    """Creates a CSV file in the data folder
+    """
+
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
+                                                                 model_name=raw_stage_model_name)
+
+    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    context.raw_stage_models = seed_file_name
+
+    context.vault_hash_columns = context.table.headings
+
+    assert 'Completed successfully' in logs
+
+
 @step("I hash the stage")
 def stage(context):
     hashed_model_name = f'{context.raw_stage_models}_hashed'
@@ -113,7 +135,6 @@ def stage(context):
 
 
 @step("I load the {model_name} {vault_structure}")
-@when("I load the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure):
     metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns}
 
