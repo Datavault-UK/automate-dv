@@ -327,7 +327,8 @@ class DBTVAULTGenerator:
             'stage': self.stage,
             'hub': self.hub,
             'link': self.link,
-            'sat': self.sat
+            'sat': self.sat,
+            't_link': self.t_link
         }
 
         if vault_structure == 'stage':
@@ -411,16 +412,23 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name):
+    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_fk: Source fk
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
         """
 
-        template = """
-        {{{{ config(materialized='incremental') }}
-        {{{{ dbtvault.t_link(var('src_pk'), var('src_fk'), var('src_payload'), var('src_eff'),
-                             var('src_ldts'), var('src_source'), var('source_model')) }}}}
+        template = f"""
+        {{{{ config(materialized='incremental') }}}}
+        {{{{ dbtvault.t_link('{src_pk}', '{src_fk}', {src_payload}, '{src_eff}',
+                             '{src_ldts}', '{src_source}', '{source_model}')   }}}}
         """
 
         self.template_to_file(template, model_name)

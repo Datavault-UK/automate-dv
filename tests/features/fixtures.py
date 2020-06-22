@@ -199,3 +199,41 @@ def satellite_cycle(context):
             'SOURCE': 'VARCHAR'
         }
     }
+
+
+@fixture
+def t_link(context):
+    """
+    Define the structures and metadata to perform load cycles for transactional links
+    """
+
+    context.hash_mapping = {
+        'TRANSACTION_PK': ['CUSTOMER_ID', 'TRANSACTION_NUMBER'],
+        'CUSTOMER_FK': 'CUSTOMER_ID'
+    }
+
+    context.derived_mapping = {
+        'EFFECTIVE_FROM': 'LOADDATE'
+    }
+
+    context.vault_structure_columns = {
+        'src_pk': 'TRANSACTION_PK',
+        'src_fk': 'CUSTOMER_FK',
+        'src_payload': ['TRANSACTION_NUMBER', 'TRANSACTION_DATE',
+                        'TYPE', 'AMOUNT'],
+        'src_eff': 'EFFECTIVE_FROM',
+        'src_ldts': 'LOADDATE',
+        'src_source': 'SOURCE'
+    }
+
+    context.seed_config = {
+        'column_types': {
+            'CUSTOMER_PK': 'BINARY(16)',
+            'CUSTOMER_NAME': 'VARCHAR',
+            'CUSTOMER_DOB': 'DATE',
+            'HASHDIFF': 'BINARY(16)',
+            'EFFECTIVE_FROM': 'DATE',
+            'LOADDATE': 'DATE',
+            'SOURCE': 'VARCHAR'
+        }
+    }
