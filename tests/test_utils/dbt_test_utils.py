@@ -324,12 +324,16 @@ class DBTVAULTGenerator:
         vault_structure = vault_structure.lower()
 
         generator_functions = {
+            'stage': self.stage,
             'hub': self.hub,
             'link': self.link,
             'sat': self.sat
         }
 
-        generator_functions[vault_structure](model_name, **kwargs)
+        if vault_structure == 'stage':
+            generator_functions[vault_structure](model_name)
+        else:
+            generator_functions[vault_structure](model_name, **kwargs)
 
     def stage(self, model_name):
         """
