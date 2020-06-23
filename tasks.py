@@ -86,6 +86,32 @@ def macro_tests(c, target=None, user=None):
 
 
 @task
+def bdd_tests(c, target=None, user=None):
+    """
+    Run macro tests with secrets
+        :param c: invoke context
+        :param target: dbt profile target
+        :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+    """
+
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    if not target:
+        target = c.config.get('target', None)
+
+    if check_target(target):
+        os.environ['TARGET'] = target
+
+        logger.info(f"Running on '{target}' with user '{user}'")
+
+        command = f"secrethub run -v env={target} -v user={user}" \
+                  f" -- behave tests/features"
+
+        c.run(command)
+
+
+@task
 def run_dbt(c, dbt_args, target=None, user=None, project=None):
     """
     Run dbt in the context of the provided project with the provided dbt args.
