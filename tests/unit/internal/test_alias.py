@@ -7,7 +7,7 @@ class TestAliasMacro:
     def test_alias_single_correctly_generates_sql(self):
         var_dict = {'alias_config': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
@@ -17,7 +17,7 @@ class TestAliasMacro:
     def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(self):
         var_dict = {'alias_config': {}, 'prefix': 'c'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
 
         assert self.current_test_name in process_logs
         assert 'Invalid alias configuration:' in process_logs
@@ -25,7 +25,7 @@ class TestAliasMacro:
     def test_alias_single_with_missing_column_metadata_raises_error(self):
         var_dict = {'alias_config': '', 'prefix': 'c'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
 
         assert self.current_test_name in process_logs
         assert 'Invalid alias configuration:' in process_logs
@@ -33,7 +33,7 @@ class TestAliasMacro:
     def test_alias_single_with_undefined_column_metadata_raises_error(self):
         var_dict = {'prefix': 'c'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
 
         assert self.current_test_name in process_logs
         assert 'Invalid alias configuration:' in process_logs
@@ -44,7 +44,7 @@ class TestAliasMacro:
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
@@ -56,7 +56,7 @@ class TestAliasMacro:
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
         var_dict = {'columns': columns, 'prefix': 'c'}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
@@ -69,7 +69,7 @@ class TestAliasMacro:
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
 
         var_dict = {'columns': columns}
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
@@ -81,7 +81,7 @@ class TestAliasMacro:
                    {"source_column": "BOOKING_HASHDIFF", "alias": "HASHDIFF"}]
         var_dict = {'columns': columns}
 
-        process_logs = self.dbt_test_utils.run_dbt_model(model=self.current_test_name, model_vars=var_dict)
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 

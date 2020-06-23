@@ -1,12 +1,18 @@
-from unittest.mock import Mock
+from behave.fixture import use_fixture_by_tag
 
-from vaultBase.cliParse import CLIParse
-from vaultBase.connector import Connector
-from vaultBase.logger import Logger
-from vaultBase.testing.dbTestUtils import DBTestUtils
+from fixtures import *
+from tests.test_utils.dbt_test_utils import *
 
-from tests.dbt_test_utils import *
-from steps.step_vars import DATABASE
+fixture_registry = {
+    "fixture.set_workdir": set_workdir,
+    "fixture.single_source_hub": single_source_hub,
+    "fixture.multi_source_hub": multi_source_hub,
+    "fixture.single_source_link": single_source_link,
+    "fixture.multi_source_link": multi_source_link,
+    "fixture.satellite": satellite,
+    "fixture.satellite_cycle": satellite_cycle,
+    "fixture.t_link": t_link
+}
 
 
 def before_all(context):
@@ -14,38 +20,47 @@ def before_all(context):
     Set up the full test environment and add objects to the context for use in steps
     """
 
-    config_path = FEATURES_ROOT / 'config'
+    dbt_test_utils = DBTTestUtils()
 
-    context.db_utils = DBTestUtils()
-    context.dbt_test_utils = DBTTestUtils()
+    # Setup context
+    context.config.setup_logging()
+    context.dbt_test_utils = dbt_test_utils
 
-    cli_args = CLIParse("dbtvault Behave Tests", "dbtvault")
-    cli_args.config_name = str(config_path / 'config')
-    cli_args.get_log_level = Mock(return_value=logging.DEBUG)
+    # Clean dbt folders and generated files
+    DBTTestUtils.clean_csv()
+    DBTTestUtils.clean_models()
+    DBTTestUtils.clean_target()
 
-    logger = Logger("dbtvault-test", cli_args)
+    # Restore modified YAML to starting state
+    DBTVAULTGenerator.clean_test_schema_file()
 
-    credentials = {
-        "engine": os.getenv('DB_ENGINE'),
-        "un": os.getenv('DB_USER'),
-        "pw": os.getenv('DB_PW'),
-        "account": os.getenv('DB_ACCOUNT'),
-        "warehouse": os.getenv('DB_WH'),
-        "db": os.getenv('DB_DATABASE'),
-        "schema": os.getenv('DB_SCHEMA'),
-        "role": os.getenv('DB_ROLE')
-    }
+    # Backup YAML prior to run
+    DBTVAULTGenerator.backup_project_yml()
 
-    connector = Connector(logger, credentials)
+    os.chdir(TESTS_DBT_ROOT)
 
-    context.connection = connector
+    context.dbt_test_utils.replace_test_schema()
 
 
 def before_scenario(context, scenario):
+    context.dbt_test_utils.replace_test_schema()
+
+
+def after_scenario(context, scenario):
     """
-    Re-create the database before every scenario
+    Clean generated files after every scenario
+        :param context: behave context
+        :param scenario: Current scenario
     """
 
-    context.connection.execute(f"DROP DATABASE IF EXISTS {DATABASE}")
+    DBTTestUtils.clean_csv()
+    DBTTestUtils.clean_models()
+    DBTTestUtils.clean_target()
 
-    context.connection.execute(f"CREATE DATABASE IF NOT EXISTS {DATABASE}")
+    DBTVAULTGenerator.clean_test_schema_file()
+    DBTVAULTGenerator.restore_project_yml()
+
+
+def before_tag(context, tag):
+    if tag.startswith("fixture."):
+        return use_fixture_by_tag(tag, context, fixture_registry)
