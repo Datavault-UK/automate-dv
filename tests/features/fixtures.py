@@ -228,10 +228,12 @@ def t_link(context):
 
     context.seed_config = {
         'column_types': {
-            'CUSTOMER_PK': 'BINARY(16)',
-            'CUSTOMER_NAME': 'VARCHAR',
-            'CUSTOMER_DOB': 'DATE',
-            'HASHDIFF': 'BINARY(16)',
+            'TRANSACTION_PK': 'BINARY(16)',
+            'CUSTOMER_FK': 'BINARY(16)',
+            'TRANSACTION_NUMBER': 'NUMBER(38,0)',
+            'TRANSACTION_DATE': 'DATE',
+            'TYPE': 'VARCHAR',
+            'AMOUNT': 'NUMBER(38,2)',
             'EFFECTIVE_FROM': 'DATE',
             'LOADDATE': 'DATE',
             'SOURCE': 'VARCHAR'
