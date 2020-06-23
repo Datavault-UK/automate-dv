@@ -334,10 +334,3 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
-    temp:
-      hubs_stg_hub_empty:
-        column_types:
-          CUSTOMER_PK: BINARY(16)
-          CUSTOMER_ID: VARCHAR
-          LOADDATE: DATE
-          SOURCE: VARCHAR
