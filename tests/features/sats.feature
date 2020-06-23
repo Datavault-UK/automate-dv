@@ -205,7 +205,7 @@ Feature: Satellites
     And the SATELLITE sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE is loaded for day 1
+    And the RAW_STAGE is loaded for day 1
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
@@ -216,7 +216,7 @@ Feature: Satellites
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
-    When the RAW_STAGE is loaded for day 2
+    And the RAW_STAGE is loaded for day 2
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
@@ -226,7 +226,7 @@ Feature: Satellites
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
-    When the RAW_STAGE is loaded for day 3
+    And the RAW_STAGE is loaded for day 3
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
@@ -236,7 +236,7 @@ Feature: Satellites
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
-    When the RAW_STAGE is loaded for day 4
+    And the RAW_STAGE is loaded for day 4
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOADDATE   | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |

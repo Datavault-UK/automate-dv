@@ -94,10 +94,10 @@ def create_csv(context, raw_stage_model_name):
 
 
 @when("the {raw_stage_model_name} is loaded")
-@when("the {raw_stage_model_name} is loaded for day 1")
-@when("the {raw_stage_model_name} is loaded for day 2")
-@when("the {raw_stage_model_name} is loaded for day 3")
-@when("the {raw_stage_model_name} is loaded for day 4")
+@step("the {raw_stage_model_name} is loaded for day 1")
+@step("the {raw_stage_model_name} is loaded for day 2")
+@step("the {raw_stage_model_name} is loaded for day 3")
+@step("the {raw_stage_model_name} is loaded for day 4")
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
     """
