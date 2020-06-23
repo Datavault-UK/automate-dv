@@ -14,21 +14,6 @@ logger = logging.getLogger('dbt')
 dbt_utils = DBTTestUtils()
 
 
-def check_target(target: str):
-    """
-    Check specified target is available
-        :param target: Target to check
-        :return: bool
-    """
-
-    available_targets = ['snowflake', 'bigquery']
-
-    if target in available_targets:
-        return True
-    else:
-        raise ValueError(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
-
-
 @task
 def check_project(c, project='core'):
     """
@@ -44,7 +29,8 @@ def check_project(c, project='core'):
         'test': {'work_dir': './tests/dbtvault_test'}}
 
     if project in available_projects:
-        logger.info(f"Project '{project}' is available at: '{Path(available_projects[project]['work_dir']).absolute()}'")
+        logger.info(
+            f"Project '{project}' is available at: '{Path(available_projects[project]['work_dir']).absolute()}'")
         return available_projects[project]['work_dir']
     else:
         raise ValueError(f"Unexpected project '{project}', available projects: {', '.join(available_projects)}")
@@ -89,7 +75,6 @@ def macro_tests(c, target=None, user=None):
         target = c.config.get('target', None)
 
     if check_target(target):
-
         os.environ['TARGET'] = target
 
         logger.info(f"Running on '{target}' with user '{user}'")
@@ -147,3 +132,18 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
         logger.info(f'Target: {target}\n')
 
         c.run(command)
+
+
+def check_target(target: str):
+    """
+    Check specified target is available
+        :param target: Target to check
+        :return: bool
+    """
+
+    available_targets = ['snowflake', 'bigquery']
+
+    if target in available_targets:
+        return True
+    else:
+        raise ValueError(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
