@@ -37,7 +37,10 @@ jobs:
           command: pipenv run inv run-dbt -u dev -t snowflake -p test -d 'deps'
       - run:
           name: Run snowflake macro tests
-          command: pipenv run inv run-tests -t snowflake -u dev
+          command: pipenv run inv macro-tests -t snowflake -u dev
+      - run:
+          name: Run snowflake bdd tests
+          command: pipenv run inv bdd-tests -t snowflake -u dev
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'

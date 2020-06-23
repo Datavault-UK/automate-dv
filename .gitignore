@@ -1,21 +1,14 @@
 \.idea/
 
-tests/features_old/__pycache__/
+*/__pycache__/
 
 src/dbtvault-dev/logs/
 
 src/dbtvault-dev/target/
 
-src/dbtvault-dev/__pycache__/
-
-src/dbtvault-dev/perftest/__pycache__/
-
-tests/features_old/steps/__pycache__/
 /venv/
 
 profiles/.user.yml
-
-tests/__pycache__/
 
 *.pyc
 
@@ -28,3 +21,10 @@ tests/dbtvault_test/logs/
 
 tests/dbtvault_test/target/
 /invoke.yml
+
+tests/features/csv_temp/*.csv
+/tests/dbtvault_test/data/temp/*.csv
+/tests/dbtvault_test/models/feature/*.sql
+/tests/dbtvault_test/models/schema_test.yml
+
+secrethub.env
