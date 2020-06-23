@@ -97,7 +97,7 @@ class DBTTestUtils:
             :return: dbt logs
         """
 
-        command = ['dbt', 'seed', '--full-refresh']
+        command = ['dbt', 'seed']
 
         if seed_file_name:
             command.extend(['--select', seed_file_name])
