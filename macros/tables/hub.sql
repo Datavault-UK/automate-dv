@@ -52,7 +52,7 @@ STG AS (
                 UNION ALL
                 {%- endif %}
             {%- endfor %}
-            )
+            ) as all_sources
         WHERE {{ src_pk }} IS NOT NULL
     ) AS b
     WHERE RN = 1
@@ -77,7 +77,7 @@ STG AS (
 
 SELECT c.* FROM STG AS c
 {%- if is_incremental() %}
-LEFT JOIN {{ this }} AS d 
+LEFT JOIN {{ this }} AS d
 ON {{ dbtvault.prefix([src_pk], 'c') }} = {{ dbtvault.prefix([src_pk], 'd') }}
 WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
 {%- endif -%}
