@@ -10,29 +10,28 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
+{%- macro multikey(columns=none, aliases=none, type_for=none) -%}
 
-{%- macro multikey(columns, aliases, type_for) -%}
+    {{- adapter_macro('dbtvault.multikey', columns=columns, aliases=aliases, type_for=type_for) -}}
+
+{%- endmacro %}
+
+{%- macro default__multikey(columns, aliases, type_for) -%}
 
 {% if type_for == 'join' %}
 
 {% for col in columns if not columns is string %}
-    {% if loop.index == columns|length %}
-        {{ dbtvault.prefix([col], aliases[0]) }} = {{ dbtvault.prefix([col], aliases[1]) }}
-    {% else %}
-        {{ dbtvault.prefix([col], aliases[0]) }} = {{ dbtvault.prefix([col], aliases[1]) }} AND
-    {% endif %}
+    {{ dbtvault.prefix([col], aliases[0]) }} = {{ dbtvault.prefix([col], aliases[1]) }}
+    {% if not loop.last %} AND {% endif %}
 {% else %}
     {{ dbtvault.prefix([columns], aliases[0]) }} = {{ dbtvault.prefix([columns], aliases[1]) }}
 {% endfor %}
 
-{% elif type_for ==  'where null'%}
+{% elif type_for == 'where null' %}
 
 {% for col in columns if not columns is string %}
-    {% if loop.index == columns|length %}
-        {{ dbtvault.prefix([col], aliases[0]) }} IS NULL
-    {% else %}
-        {{ dbtvault.prefix([col], aliases[0]) }} IS NULL AND
-    {% endif %}
+    {{ dbtvault.prefix([col], aliases[0]) }} IS NULL
+    {% if not loop.last %} AND {% endif %}
 {% else %}
     {{ dbtvault.prefix([columns], aliases[0]) }} IS NULL
 {% endfor %}
@@ -40,12 +39,9 @@
 {% elif type_for == 'where not null'%}
 
 {% for col in columns if not columns is string %}
-    {% if loop.index == columns|length %}
-        {{ dbtvault.prefix([col], aliases[0]) }} IS NOT NULL
-    {% else %}                                  
-        {{ dbtvault.prefix([col], aliases[0]) }} IS NOT NULL AND
-    {% endif %}                                  
-{% else %}                                  
+    {{ dbtvault.prefix([col], aliases[0]) }} IS NOT NULL
+    {% if not loop.last %} AND {% endif %}
+{% else %}
     {{ dbtvault.prefix([columns], aliases[0]) }} IS NOT NULL
 {% endfor %}
 {% endif %}

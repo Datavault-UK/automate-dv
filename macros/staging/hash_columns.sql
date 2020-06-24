@@ -10,28 +10,38 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-
 {%- macro hash_columns(columns=none) -%}
+
+    {{- adapter_macro('dbtvault.hash_columns', columns=columns) -}}
+
+{%- endmacro %}
+
+{%- macro default__hash_columns(columns=none) -%}
 
 {%- if columns is mapping -%}
 
     {%- for col in columns -%}
 
-        {% if columns[col] is mapping and columns[col].hashdiff -%}
+        {% if columns[col] is mapping and columns[col].is_hashdiff -%}
 
-            {{- dbtvault.hash(columns[col]['columns'], col, columns[col]['hashdiff']) -}}
+            {{- dbtvault.hash(columns=columns[col]['columns'], 
+                              alias=col, 
+                              is_hashdiff=columns[col]['is_hashdiff']) -}}
 
         {%- elif columns[col] is not mapping -%}
 
-            {{- dbtvault.hash(columns[col], col, hashdiff=false) -}}
+            {{- dbtvault.hash(columns=columns[col], 
+                              alias=col, 
+                              is_hashdiff=false) -}}
         
-        {%- elif columns[col] is mapping and not columns[col].hashdiff -%}
+        {%- elif columns[col] is mapping and not columns[col].is_hashdiff -%}
 
             {%- if execute -%}
-                {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'hashdiff' flag. Use list syntax for PKs.") -%}
+                {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'is_hashdiff' flag. Use list syntax for PKs.") -%}
             {% endif %}
 
-            {{- dbtvault.hash(columns[col]['columns'], col) -}}
+            {{- dbtvault.hash(columns=columns[col]['columns'], 
+                              alias=col) -}}
 
         {%- endif -%}
 

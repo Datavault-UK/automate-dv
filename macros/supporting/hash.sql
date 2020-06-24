@@ -10,8 +10,17 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 #}
+{%- macro hash(columns=none, alias=none, is_hashdiff=false) -%}
 
-{%- macro hash(columns=none, alias=none, hashdiff=false) -%}
+    {% if is_hashdiff is none %}
+        {%- set is_hashdiff = false -%}
+    {% endif %}
+
+    {{- adapter_macro('dbtvault.hash', columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
+
+{%- endmacro %}
+
+{%- macro default__hash(columns, alias, is_hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
@@ -27,15 +36,17 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
+{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" %}
+
 {#- Alpha sort columns before hashing if a hashdiff -#}
-{%- if hashdiff and columns is iterable and columns is not string -%}
+{%- if is_hashdiff and columns is iterable and columns is not string -%}
     {%- set columns = columns|sort -%}
 {%- endif -%}
 
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    CAST(({{ hash_alg }}(NULLIF(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), ''))) AS BINARY({{ hash_size }})) AS {{ alias }}
+    CAST(({{ hash_alg }}({{ standardise | replace('[EXPRESSION]', column_str) }})) AS BINARY({{ hash_size }})) AS {{ alias }}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -47,9 +58,9 @@ CAST({{ hash_alg }}(CONCAT(
 {%- set column_str = dbtvault.as_constant(column) -%}
 
 {%- if not loop.last %}
-    IFNULL(NULLIF(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), ''), '^^'), '||',
+    IFNULL({{ standardise | replace('[EXPRESSION]', column_str) }}, '^^'), '||',
 {%- else %}
-    IFNULL(NULLIF(UPPER(TRIM(CAST({{ column_str }} AS VARCHAR))), ''), '^^') ))
+    IFNULL({{ standardise | replace('[EXPRESSION]', column_str) }}, '^^') ))
 AS BINARY({{ hash_size }})) AS {{ alias }}
 {%- endif -%}
 
