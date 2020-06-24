@@ -10,8 +10,14 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-
 {%- macro hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
+
+    {{- adapter_macro('dbtvault.hub', src_pk=src_pk, src_nk=src_nk, 
+                      src_ldts=src_ldts, src_source=src_source, source_model=source_model) -}}
+
+{%- endmacro -%}
+
+{%- macro default__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list([src_pk, src_nk, src_ldts, src_source]) -%}
 
@@ -26,7 +32,7 @@ STG_{{ loop.index|string }} AS (
     SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
     FROM (
-        SELECT {{ src_pk }}, {{ src_nk }}, {{ src_ldts }}, {{ src_source }},
+        SELECT {{ source_cols | join(', ') }},
         ROW_NUMBER() OVER(
             PARTITION BY {{ src_pk }}
             ORDER BY {{ src_ldts }} ASC
