@@ -239,3 +239,42 @@ def t_link(context):
             'SOURCE': 'VARCHAR'
         }
     }
+
+
+@fixture
+def cycle(context):
+    """
+    Define the structures and metadata to perform vault load cycles
+    """
+
+    context.hash_mapping = {
+        'CUSTOMER_PK': 'CUSTOMER_ID',
+        'BOOKING_PK': 'BOOKING_ID'
+    }
+
+    context.derived_mapping = {
+        'EFFECTIVE_FROM': 'LOADDATE'
+    }
+
+    context.vault_structure_columns = {
+        'src_pk': 'TRANSACTION_PK',
+        'src_fk': 'CUSTOMER_FK',
+        'src_payload': ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT'],
+        'src_eff': 'EFFECTIVE_FROM',
+        'src_ldts': 'LOADDATE',
+        'src_source': 'SOURCE'
+    }
+
+    context.seed_config = {
+        'column_types': {
+            'TRANSACTION_PK': 'BINARY(16)',
+            'CUSTOMER_FK': 'BINARY(16)',
+            'TRANSACTION_NUMBER': 'NUMBER(38,0)',
+            'TRANSACTION_DATE': 'DATE',
+            'TYPE': 'VARCHAR',
+            'AMOUNT': 'NUMBER(38,2)',
+            'EFFECTIVE_FROM': 'DATE',
+            'LOADDATE': 'DATE',
+            'SOURCE': 'VARCHAR'
+        }
+    }

@@ -18,6 +18,11 @@ def check_exists(context, model_name):
     assert f'Model {model_name} does not exist.' in logs
 
 
+@given('the vault is empty')
+def clear_schema(context):
+    context.dbt_test_utils.replace_test_schema()
+
+
 @given("the {model_name} {vault_structure} is empty")
 def load_empty_table(context, model_name, vault_structure):
     """Creates an empty table"""
@@ -31,7 +36,7 @@ def load_empty_table(context, model_name, vault_structure):
     empty_table = Table(headings=headings, rows=row)
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table, context=context,
-                                                                 model_name=f'stg_{model_name}_empty')
+                                                                 model_name=f'stg_{model_name}')
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config)
@@ -59,7 +64,7 @@ def load_populated_table(context, model_name, vault_structure):
     context.target_model_name = model_name
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
-                                                                 model_name=f'stg_{model_name}_populated')
+                                                                 model_name=f'stg_{model_name}')
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config)
