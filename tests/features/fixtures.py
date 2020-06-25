@@ -18,8 +18,10 @@ def single_source_hub(context):
     Define the structures and metadata to load single-source hubs
     """
 
-    context.hash_mapping = {
-        'CUSTOMER_PK': 'CUSTOMER_ID'
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_PK': 'CUSTOMER_ID'
+        }
     }
 
     context.vault_structure_columns = {
@@ -30,11 +32,13 @@ def single_source_hub(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'CUSTOMER_PK': 'BINARY(16)',
-            'CUSTOMER_ID': 'VARCHAR',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'HUB': {
+            'column_types': {
+                'CUSTOMER_PK': 'BINARY(16)',
+                'CUSTOMER_ID': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -45,8 +49,19 @@ def multi_source_hub(context):
     Define the structures and metadata to load multi-source hubs
     """
 
-    context.hash_mapping = {
-        'PART_PK': 'PART_ID'
+    context.hash_mapping_config = {
+        'RAW_STAGE_PARTS': {
+            'PART_PK': 'PART_ID'
+        },
+        'RAW_STAGE_SUPPLIER': {
+            'PART_PK': 'PART_ID',
+            'SUPPLIER_PK': 'SUPPLIER_ID'
+        },
+        'RAW_STAGE_LINEITEM': {
+            'PART_PK': 'PART_ID',
+            'SUPPLIER_PK': 'SUPPLIER_ID',
+            'ORDER_PK': 'ORDER_ID'
+        }
     }
 
     context.vault_structure_columns = {
@@ -57,11 +72,13 @@ def multi_source_hub(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'PART_PK': 'BINARY(16)',
-            'PART_ID': 'VARCHAR',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'HUB': {
+            'column_types': {
+                'PART_PK': 'BINARY(16)',
+                'PART_ID': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -72,10 +89,12 @@ def single_source_link(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hash_mapping = {
-        'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
-        'CUSTOMER_FK': 'CUSTOMER_ID',
-        'NATION_FK': 'NATION_ID',
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
+            'CUSTOMER_FK': 'CUSTOMER_ID',
+            'NATION_FK': 'NATION_ID'
+        }
     }
 
     context.vault_structure_columns = {
@@ -86,12 +105,14 @@ def single_source_link(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'CUSTOMER_NATION_PK': 'BINARY(16)',
-            'CUSTOMER_FK': 'BINARY(16)',
-            'NATION_FK': 'BINARY(16)',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'LINK': {
+            'column_types': {
+                'CUSTOMER_NATION_PK': 'BINARY(16)',
+                'CUSTOMER_FK': 'BINARY(16)',
+                'NATION_FK': 'BINARY(16)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -102,10 +123,22 @@ def multi_source_link(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hash_mapping = {
-        'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
-        'CUSTOMER_FK': 'CUSTOMER_ID',
-        'NATION_FK': 'NATION_ID',
+    context.hash_mapping_config = {
+        'RAW_STAGE_SAP': {
+            'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
+            'CUSTOMER_FK': 'CUSTOMER_ID',
+            'NATION_FK': 'NATION_ID'
+        },
+        'RAW_STAGE_CRM': {
+            'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
+            'CUSTOMER_FK': 'CUSTOMER_ID',
+            'NATION_FK': 'NATION_ID'
+        },
+        'RAW_STAGE_WEB': {
+            'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
+            'CUSTOMER_FK': 'CUSTOMER_ID',
+            'NATION_FK': 'NATION_ID'
+        },
     }
 
     context.vault_structure_columns = {
@@ -116,12 +149,14 @@ def multi_source_link(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'CUSTOMER_NATION_PK': 'BINARY(16)',
-            'CUSTOMER_FK': 'BINARY(16)',
-            'NATION_FK': 'BINARY(16)',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'LINK': {
+            'column_types': {
+                'CUSTOMER_NATION_PK': 'BINARY(16)',
+                'CUSTOMER_FK': 'BINARY(16)',
+                'NATION_FK': 'BINARY(16)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -132,9 +167,11 @@ def satellite(context):
     Define the structures and metadata to load satellites
     """
 
-    context.hash_mapping = {
-        'CUSTOMER_PK': 'CUSTOMER_ID',
-        'HASHDIFF': {'is_hashdiff': True, 'columns': ['CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_NAME']}
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'HASHDIFF': {'is_hashdiff': True, 'columns': ['CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_NAME']}
+        }
     }
 
     context.derived_mapping = {
@@ -151,15 +188,27 @@ def satellite(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'CUSTOMER_PK': 'BINARY(16)',
-            'CUSTOMER_NAME': 'VARCHAR',
-            'CUSTOMER_PHONE': 'VARCHAR',
-            'CUSTOMER_DOB': 'DATE',
-            'HASHDIFF': 'BINARY(16)',
-            'EFFECTIVE_FROM': 'DATE',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'NUMBER(38, 0)',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'SATELLITE': {
+            'column_types': {
+                'CUSTOMER_PK': 'BINARY(16)',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'HASHDIFF': 'BINARY(16)',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -170,13 +219,27 @@ def satellite_cycle(context):
     Define the structures and metadata to perform load cycles for satellites
     """
 
-    context.hash_mapping = {
-        'CUSTOMER_PK': 'CUSTOMER_ID',
-        'HASHDIFF': {'is_hashdiff': True, 'columns': ['CUSTOMER_DOB', 'CUSTOMER_ID', 'CUSTOMER_NAME']}
+    context.hash_mapping_config = {
+        'RAW_STAGE':
+            {'CUSTOMER_PK': 'CUSTOMER_ID',
+             'HASHDIFF': {'is_hashdiff': True,
+                          'columns': ['CUSTOMER_DOB', 'CUSTOMER_ID', 'CUSTOMER_NAME']
+                          }
+             }
     }
 
     context.derived_mapping = {
         'EFFECTIVE_FROM': 'LOADDATE'
+    }
+
+    context.stage_columns = {
+        'RAW_STAGE':
+            ['CUSTOMER_ID',
+             'CUSTOMER_NAME',
+             'CUSTOMER_DOB',
+             'EFFECTIVE_FROM',
+             'LOADDATE',
+             'SOURCE']
     }
 
     context.vault_structure_columns = {
@@ -189,14 +252,26 @@ def satellite_cycle(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'CUSTOMER_PK': 'BINARY(16)',
-            'CUSTOMER_NAME': 'VARCHAR',
-            'CUSTOMER_DOB': 'DATE',
-            'HASHDIFF': 'BINARY(16)',
-            'EFFECTIVE_FROM': 'DATE',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'SATELLITE': {
+            'column_types': {
+                'CUSTOMER_PK': 'BINARY(16)',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'HASHDIFF': 'BINARY(16)',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -207,9 +282,11 @@ def t_link(context):
     Define the structures and metadata to perform load cycles for transactional links
     """
 
-    context.hash_mapping = {
-        'TRANSACTION_PK': ['CUSTOMER_ID', 'TRANSACTION_NUMBER'],
-        'CUSTOMER_FK': 'CUSTOMER_ID'
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'TRANSACTION_PK': ['CUSTOMER_ID', 'TRANSACTION_NUMBER'],
+            'CUSTOMER_FK': 'CUSTOMER_ID'
+        }
     }
 
     context.derived_mapping = {
@@ -227,16 +304,29 @@ def t_link(context):
     }
 
     context.seed_config = {
-        'column_types': {
-            'TRANSACTION_PK': 'BINARY(16)',
-            'CUSTOMER_FK': 'BINARY(16)',
-            'TRANSACTION_NUMBER': 'NUMBER(38,0)',
-            'TRANSACTION_DATE': 'DATE',
-            'TYPE': 'VARCHAR',
-            'AMOUNT': 'NUMBER(38,2)',
-            'EFFECTIVE_FROM': 'DATE',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'TRANSACTION_NUMBER': 'NUMBER(38,0)',
+                'TRANSACTION_DATE': 'DATE',
+                'TYPE': 'VARCHAR',
+                'AMOUNT': 'NUMBER(38,2)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'T_LINK': {
+            'column_types': {
+                'TRANSACTION_PK': 'BINARY(16)',
+                'CUSTOMER_FK': 'BINARY(16)',
+                'TRANSACTION_NUMBER': 'NUMBER(38,0)',
+                'TRANSACTION_DATE': 'DATE',
+                'TYPE': 'VARCHAR',
+                'AMOUNT': 'NUMBER(38,2)',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -247,13 +337,14 @@ def cycle(context):
     Define the structures and metadata to perform vault load cycles
     """
 
-    context.hash_mapping = {
-        'CUSTOMER_PK': 'CUSTOMER_ID',
-        'BOOKING_PK': 'BOOKING_ID'
-    }
-
-    context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
+    context.hash_mapping_config = {
+        'RAW_STAGE_CUSTOMER': {
+            'CUSTOMER_PK': 'CUSTOMER_ID'
+        },
+        'RAW_STAGE_BOOKING': {
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'BOOKING_PK': 'BOOKING_ID'
+        },
     }
 
     context.vault_structure_columns = {
@@ -265,16 +356,51 @@ def cycle(context):
         'src_source': 'SOURCE'
     }
 
+    context.stage_columns = {
+        'RAW_STAGE_CUSTOMER':
+            ['CUSTOMER_ID',
+             'CUSTOMER_NAME',
+             'CUSTOMER_DOB',
+             'EFFECTIVE_FROM',
+             'LOADDATE',
+             'SOURCE']
+        ,
+        'RAW_STAGE_BOOKING':
+            ['BOOKING_ID',
+             'CUSTOMER_ID',
+             'BOOKING_DATE',
+             'PRICE',
+             'DEPARTURE_DATE',
+             'DESTINATION',
+             'PHONE',
+             'NATIONALITY',
+             'LOADDATE',
+             'SOURCE']
+    }
+
     context.seed_config = {
-        'column_types': {
-            'TRANSACTION_PK': 'BINARY(16)',
-            'CUSTOMER_FK': 'BINARY(16)',
-            'TRANSACTION_NUMBER': 'NUMBER(38,0)',
-            'TRANSACTION_DATE': 'DATE',
-            'TYPE': 'VARCHAR',
-            'AMOUNT': 'NUMBER(38,2)',
-            'EFFECTIVE_FROM': 'DATE',
-            'LOADDATE': 'DATE',
-            'SOURCE': 'VARCHAR'
+        'RAW_STAGE_CUSTOMER': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'RAW_STAGE_BOOKING': {
+            'column_types': {
+                'BOOKING_ID': 'VARCHAR',
+                'CUSTOMER_ID': 'VARCHAR',
+                'PRICE': 'NUMBER(38,2)',
+                'DEPARTURE_DATE': 'DATE',
+                'BOOKING_DATE': 'DATE',
+                'PHONE': 'VARCHAR',
+                'DESTINATION': 'VARCHAR',
+                'NATIONALITY': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }

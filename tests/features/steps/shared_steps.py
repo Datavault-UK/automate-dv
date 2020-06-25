@@ -11,7 +11,8 @@ dbtvault_generator = DBTVAULTGenerator()
 @given("the {model_name} table does not exist")
 def check_exists(context, model_name):
     """Check the model exists"""
-    logs = context.dbt_test_utils.run_dbt_operation(macro_name='check_model_exists', args={'model_name': model_name})
+    logs = context.dbt_test_utils.run_dbt_operation(macro_name='check_model_exists',
+                                                    args={'model_name': model_name})
 
     context.target_model_name = model_name
 
@@ -29,17 +30,20 @@ def load_empty_table(context, model_name, vault_structure):
 
     context.target_model_name = model_name
 
-    headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns.values()))
+    if vault_structure == 'stage':
+        headings = context.stage_columns[model_name]
+    else:
+        headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns.values()))
 
     row = Row(cells=[], headings=headings)
 
     empty_table = Table(headings=headings, rows=row)
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table, context=context,
-                                                                 model_name=f'stg_{model_name}')
+                                                                 model_name=model_name)
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config)
+                                       seed_config=context.seed_config[model_name])
 
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
@@ -64,10 +68,10 @@ def load_populated_table(context, model_name, vault_structure):
     context.target_model_name = model_name
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
-                                                                 model_name=f'stg_{model_name}')
+                                                                 model_name=model_name)
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config)
+                                       seed_config=context.seed_config[model_name])
 
     context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
@@ -93,7 +97,7 @@ def create_csv(context, raw_stage_model_name):
 
     context.raw_stage_models = seed_file_name
 
-    context.vault_hash_columns = context.table.headings
+    context.raw_stage_model_name = raw_stage_model_name
 
     assert 'Completed successfully' in logs
 
@@ -107,14 +111,14 @@ def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
     """
 
+    context.raw_stage_model_name = raw_stage_model_name
+
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
                                                                  model_name=raw_stage_model_name)
 
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     context.raw_stage_models = seed_file_name
-
-    context.vault_hash_columns = context.table.headings
 
     assert 'Completed successfully' in logs
 
@@ -127,7 +131,7 @@ def stage(context):
 
     stage_args = {
         'source_model': context.raw_stage_models,
-        'hashed_columns': context.hash_mapping}
+        'hashed_columns': context.hash_mapping_config[context.raw_stage_model_name]}
 
     if hasattr(context, 'derived_mapping'):
         stage_args['derived_columns'] = context.derived_mapping
