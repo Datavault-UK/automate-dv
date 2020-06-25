@@ -138,7 +138,11 @@ Feature: Cycles
 
   @fixture.cycle
   Scenario: [CYCLE-VAULT] Test several load cycles of a raw vault
-    Given the vault is empty
+    Given the raw vault contains empty tables
+      | HUBS         | LINKS                 | SATS                      | T_LINKS | EFF_SATS |
+      | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |         |          |
+      | HUB_BOOKING  |                       | SAT_BOOK_CUSTOMER_DETAILS |         |          |
+
     And the RAW_STAGE_CUSTOMER stage is empty
     And the RAW_STAGE_BOOKING stage is empty
 
@@ -156,6 +160,7 @@ Feature: Cycles
       | 10035      | 1002        | 2019-05-03   | 80.0  | 2019-09-16     | NLD         | 17-214-200-1214 | DUTCH       | 2019-05-04 | *      |
       | 10070      | 1040        | 2019-05-03   | 90.0  | 2019-09-15     | ZIM         | 17-214-200-4040 | CHINESE     | 2019-05-04 | *      |
     And I hash the stage
+    And I load the vault
 
     # ================ DAY 2 ===================
     When the RAW_STAGE_CUSTOMER is loaded for day 2
@@ -169,6 +174,7 @@ Feature: Cycles
       | 10036      | 1003        | 2019-05-04   | 70.0  | 2019-09-13     | AUS         | 17-214-555-1214 | AUSTRALIAN  | 2019-05-05 | *      |
       | 10037      | 1004        | 2019-05-04   | 810.0 | 2019-09-18     | DEU         | 17-214-123-1214 | GERMAN      | 2019-05-05 | *      |
     And I hash the stage
+    And I load the vault
 
     # ================ DAY 3 ===================
     When the RAW_STAGE_CUSTOMER is loaded for day 3
@@ -183,6 +189,7 @@ Feature: Cycles
       | 10038      | 1005        | 2019-05-05   | 216.5 | 2019-09-19     | ITA         | 17-214-456-1214 | BRITISH     | 2019-05-06 | *      |
       | 10039      | 1006        | 2019-05-05   | 111.1 | 2019-09-20     | NOR         | 17-214-789-1214 | RUSSIAN     | 2019-05-06 | *      |
     And I hash the stage
+    And I load the vault
 
     # ================ DAY 4 ===================
     When the RAW_STAGE_CUSTOMER is loaded for day 4
@@ -212,7 +219,8 @@ Feature: Cycles
       | 10047      | 1014        | 2019-05-06   | 259.99 | 2019-12-22     | HMD         | 17-214-577-1222 | ANGOLAN     | 2019-05-07 | *      |
       | 10048      | 1015        | 2019-05-06   | 219.99 | 2019-10-16     | JAM         | 17-214-577-1223 | TAIWANESE   | 2019-05-07 | *      |
     And I hash the stage
-#
+    And I load the vault
+
 #    # =============== CHECKS ===================
 #    Then we expect the TEST_HUB_CUSTOMER table to contain
 #      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
@@ -233,7 +241,7 @@ Feature: Cycles
 #      | md5('1015') | 1015        | 2019-05-07 | *      |
 #      | md5('1040') | 1040        | 2019-05-04 | *      |
 #    Then we expect the TEST_HUB_BOOKING table to contain
-#      | BOOKING_PK   | BOOKING_REF | LOADDATE   | SOURCE |
+#      | BOOKING_PK   | BOOKING_ID | LOADDATE   | SOURCE |
 #      | md5('10034') | 10034       | 2019-05-04 | *      |
 #      | md5('10035') | 10035       | 2019-05-04 | *      |
 #      | md5('10036') | 10036       | 2019-05-05 | *      |

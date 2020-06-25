@@ -19,9 +19,31 @@ def check_exists(context, model_name):
     assert f'Model {model_name} does not exist.' in logs
 
 
-@given('the vault is empty')
+@given('the raw vault contains empty tables')
 def clear_schema(context):
     context.dbt_test_utils.replace_test_schema()
+
+    model_names = context.dbt_test_utils.context_table_to_dict(table=context.table,
+                                                               orient='list')
+
+    hubs = model_names['HUBS']
+
+    for hub_model_name in hubs:
+        headings = context.vault_structure_columns[hub_model_name].values()
+
+        row = Row(cells=[], headings=headings)
+
+        empty_table = Table(headings=headings, rows=row)
+
+        seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+                                                                     model_name=hub_model_name)
+
+        dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                           seed_config=context.seed_config[hub_model_name])
+
+        logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+        assert 'Completed successfully' in logs
 
 
 @given("the {model_name} {vault_structure} is empty")
@@ -39,7 +61,7 @@ def load_empty_table(context, model_name, vault_structure):
 
     empty_table = Table(headings=headings, rows=row)
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table, context=context,
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
                                                                  model_name=model_name)
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
@@ -67,7 +89,7 @@ def load_populated_table(context, model_name, vault_structure):
 
     context.target_model_name = model_name
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                  model_name=model_name)
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
@@ -90,7 +112,7 @@ def load_populated_table(context, model_name, vault_structure):
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                  model_name=raw_stage_model_name)
 
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
@@ -113,7 +135,7 @@ def create_csv(context, raw_stage_model_name):
 
     context.raw_stage_model_name = raw_stage_model_name
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                  model_name=raw_stage_model_name)
 
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
@@ -158,7 +180,7 @@ def load_table(context, model_name, vault_structure):
 
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
-    expected_output_csv = context.dbt_test_utils.context_table_to_csv(table=context.table, context=context,
+    expected_output_csv = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                       model_name=f'{model_name}_expected')
     metadata = context.vault_structure_metadata
 
@@ -174,3 +196,8 @@ def expect_data(context, model_name):
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
 
     assert '1 of 1 PASS' in logs
+
+
+@step("I load the vault")
+def load_vault(context):
+    pass

@@ -348,12 +348,18 @@ def cycle(context):
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'TRANSACTION_PK',
-        'src_fk': 'CUSTOMER_FK',
-        'src_payload': ['TRANSACTION_NUMBER', 'TRANSACTION_DATE', 'TYPE', 'AMOUNT'],
-        'src_eff': 'EFFECTIVE_FROM',
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
+        'HUB_CUSTOMER': {
+            'src_pk': 'CUSTOMER_PK',
+            'src_nk': 'CUSTOMER_ID',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        },
+        'HUB_BOOKING': {
+            'src_pk': 'BOOKING_PK',
+            'src_nk': 'BOOKING_ID',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
     }
 
     context.stage_columns = {
@@ -399,6 +405,22 @@ def cycle(context):
                 'PHONE': 'VARCHAR',
                 'DESTINATION': 'VARCHAR',
                 'NATIONALITY': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'HUB_CUSTOMER': {
+            'column_types': {
+                'CUSTOMER_PK': 'BINARY(16)',
+                'CUSTOMER_ID': 'NUMBER(38,0)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'HUB_BOOKING': {
+            'column_types': {
+                'BOOKING_PK': 'BINARY(16)',
+                'BOOKING_ID': 'NUMBER(38,0)',
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
