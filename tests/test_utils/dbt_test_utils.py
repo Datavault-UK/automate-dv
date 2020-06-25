@@ -235,7 +235,7 @@ class DBTTestUtils:
 
         return table_df
 
-    def context_table_to_csv(self, table: Table, context: Context, model_name: str) -> str:
+    def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a feature file
@@ -246,7 +246,7 @@ class DBTTestUtils:
 
         table_df = self.context_table_to_df(table)
 
-        csv_fqn = CSV_DIR / f'{context.feature.name.lower()}_{model_name.lower()}.csv'
+        csv_fqn = CSV_DIR / f'{model_name.lower()}.csv'
 
         table_df.to_csv(csv_fqn, index=False)
 
@@ -254,16 +254,17 @@ class DBTTestUtils:
 
         return csv_fqn.stem
 
-    def context_table_to_dict(self, table: Table):
+    def context_table_to_dict(self, table: Table, orient='index'):
         """
         Converts a context table in a feature file into a pandas DataFrame
             :param table: The context.table from a feature file
+            :param orient: orient for df to_dict
             :return: A pandas DataFrame modelled from a context table
         """
 
         table_df = self.context_table_to_df(table)
 
-        table_dict = table_df.to_dict(orient='index')
+        table_dict = table_df.to_dict(orient=orient)
 
         return table_dict
 
