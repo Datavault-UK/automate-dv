@@ -26,20 +26,23 @@ def clear_schema(context):
     model_names = context.dbt_test_utils.context_table_to_dict(table=context.table,
                                                                orient='list')
 
-    hubs = model_names['HUBS']
+    context.vault_model_names = model_names
 
-    for hub_model_name in hubs:
-        headings = context.vault_structure_columns[hub_model_name].values()
+    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in model_names.items()]) if name]
+
+    for model_name in models:
+
+        headings = list(DBTVAULTGenerator.flatten([v for k, v in context.vault_structure_columns[model_name].items() if k != 'source_model']))
 
         row = Row(cells=[], headings=headings)
 
         empty_table = Table(headings=headings, rows=row)
 
         seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
-                                                                     model_name=hub_model_name)
+                                                                     model_name=model_name)
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                           seed_config=context.seed_config[hub_model_name])
+                                           seed_config=context.seed_config[model_name])
 
         logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
@@ -160,7 +163,10 @@ def stage(context):
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
-    context.hashed_stage_model_name = hashed_model_name
+    if hasattr(context, 'hashed_stage_model_name'):
+        context.hashed_stage_model_name.append(hashed_model_name)
+    else:
+        context.hashed_stage_model_name = [] + [hashed_model_name]
 
     assert 'Completed successfully' in logs
 
@@ -182,9 +188,9 @@ def load_table(context, model_name, vault_structure):
 def expect_data(context, model_name):
     expected_output_csv = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                       model_name=f'{model_name}_expected')
-    metadata = context.vault_structure_metadata
+    metadata = context.vault_structure_columns[model_name]
 
-    test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=context.target_model_name,
+    test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv,
                                                                  unique_id=metadata['src_pk'],
                                                                  metadata=metadata)
@@ -200,4 +206,20 @@ def expect_data(context, model_name):
 
 @step("I load the vault")
 def load_vault(context):
-    pass
+
+    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in context.vault_model_names.items()]) if name]
+
+    for model_name in models:
+
+        metadata = {**context.vault_structure_columns[model_name]}
+
+        context.vault_structure_metadata = metadata
+
+        vault_structure = model_name.split('_')[0]
+
+        dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+
+        logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+
+        assert 'Completed successfully' in logs
+

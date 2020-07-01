@@ -142,7 +142,7 @@ Feature: Cycles
       | HUBS         | LINKS                 | SATS                      | T_LINKS | EFF_SATS |
       | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |         |          |
       | HUB_BOOKING  |                       | SAT_BOOK_CUSTOMER_DETAILS |         |          |
-
+      |              |                       | SAT_BOOK_BOOKING_DETAILS  |         |          |
     And the RAW_STAGE_CUSTOMER stage is empty
     And the RAW_STAGE_BOOKING stage is empty
 
@@ -221,25 +221,25 @@ Feature: Cycles
     And I hash the stage
     And I load the vault
 
-#    # =============== CHECKS ===================
-#    Then we expect the TEST_HUB_CUSTOMER table to contain
-#      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
-#      | md5('1001') | 1001        | 2019-05-04 | *      |
-#      | md5('1002') | 1002        | 2019-05-04 | *      |
-#      | md5('1003') | 1003        | 2019-05-04 | *      |
-#      | md5('1004') | 1004        | 2019-05-05 | *      |
-#      | md5('1005') | 1005        | 2019-05-06 | *      |
-#      | md5('1006') | 1006        | 2019-05-06 | *      |
-#      | md5('1007') | 1007        | 2019-05-07 | *      |
-#      | md5('1008') | 1008        | 2019-05-07 | *      |
-#      | md5('1009') | 1009        | 2019-05-07 | *      |
-#      | md5('1010') | 1010        | 2019-05-04 | *      |
-#      | md5('1011') | 1011        | 2019-05-07 | *      |
-#      | md5('1012') | 1012        | 2019-05-07 | *      |
-#      | md5('1013') | 1013        | 2019-05-07 | *      |
-#      | md5('1014') | 1014        | 2019-05-07 | *      |
-#      | md5('1015') | 1015        | 2019-05-07 | *      |
-#      | md5('1040') | 1040        | 2019-05-04 | *      |
+    # =============== CHECKS ===================
+    Then the HUB_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | md5('1001') | 1001        | 2019-05-04 | *      |
+      | md5('1002') | 1002        | 2019-05-04 | *      |
+      | md5('1003') | 1003        | 2019-05-04 | *      |
+      | md5('1004') | 1004        | 2019-05-05 | *      |
+      | md5('1005') | 1005        | 2019-05-06 | *      |
+      | md5('1006') | 1006        | 2019-05-06 | *      |
+      | md5('1007') | 1007        | 2019-05-07 | *      |
+      | md5('1008') | 1008        | 2019-05-07 | *      |
+      | md5('1009') | 1009        | 2019-05-07 | *      |
+      | md5('1010') | 1010        | 2019-05-04 | *      |
+      | md5('1011') | 1011        | 2019-05-07 | *      |
+      | md5('1012') | 1012        | 2019-05-07 | *      |
+      | md5('1013') | 1013        | 2019-05-07 | *      |
+      | md5('1014') | 1014        | 2019-05-07 | *      |
+      | md5('1015') | 1015        | 2019-05-07 | *      |
+      | md5('1040') | 1040        | 2019-05-04 | *      |
 #    Then we expect the TEST_HUB_BOOKING table to contain
 #      | BOOKING_PK   | BOOKING_ID | LOADDATE   | SOURCE |
 #      | md5('10034') | 10034       | 2019-05-04 | *      |

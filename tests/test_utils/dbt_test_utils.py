@@ -239,7 +239,6 @@ class DBTTestUtils:
         """
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a feature file
-            :param context: Behave context
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
         """
@@ -318,8 +317,7 @@ class DBTVAULTGenerator:
         Generate a vault structure
             :param model_name: Name of model to generate
             :param vault_structure: Type of structure to generate (stage, hub, link, sat)
-            :param kwargs: Arguments for the
-            :return:
+            :param kwargs: Arguments for model the generator
         """
 
         vault_structure = vault_structure.lower()
