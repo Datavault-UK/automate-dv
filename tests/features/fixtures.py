@@ -339,24 +339,75 @@ def cycle(context):
 
     context.hash_mapping_config = {
         'RAW_STAGE_CUSTOMER': {
-            'CUSTOMER_PK': 'CUSTOMER_ID'
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'HASHDIFF': {'is_hashdiff': True,
+                         'columns': ['CUSTOMER_DOB', 'CUSTOMER_ID', 'CUSTOMER_NAME']
+                         }
         },
         'RAW_STAGE_BOOKING': {
             'CUSTOMER_PK': 'CUSTOMER_ID',
-            'BOOKING_PK': 'BOOKING_ID'
-        },
+            'BOOKING_PK': 'BOOKING_ID',
+            'CUSTOMER_BOOKING_PK': ['CUSTOMER_ID', 'BOOKING_ID'],
+            'HASHDIFF': {'is_hashdiff': True,
+                         'columns': ['BOOKING_DATE',
+                                     'PRICE',
+                                     'DEPARTURE_DATE',
+                                     'DESTINATION']
+                         }
+        }
+    }
+
+    context.derived_mapping = {
+        'EFFECTIVE_FROM': 'LOADDATE'
     }
 
     context.vault_structure_columns = {
         'HUB_CUSTOMER': {
+            'source_model': 'raw_stage_customer_hashed',
             'src_pk': 'CUSTOMER_PK',
             'src_nk': 'CUSTOMER_ID',
             'src_ldts': 'LOADDATE',
             'src_source': 'SOURCE'
         },
         'HUB_BOOKING': {
+            'source_model': 'raw_stage_booking_hashed',
             'src_pk': 'BOOKING_PK',
             'src_nk': 'BOOKING_ID',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        },
+        'LINK_CUSTOMER_BOOKING': {
+            'source_model': 'raw_stage_booking_hashed',
+            'src_pk': 'CUSTOMER_BOOKING_PK',
+            'src_fk': ['CUSTOMER_PK', 'BOOKING_PK'],
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        },
+        'SAT_CUST_CUSTOMER_DETAILS': {
+            'source_model': 'raw_stage_customer_hashed',
+            'src_pk': 'CUSTOMER_PK',
+            'src_hashdiff': 'HASHDIFF',
+            'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_DOB'],
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        },
+        'SAT_BOOK_CUSTOMER_DETAILS': {
+            'source_model': 'raw_stage_booking_hashed',
+            'src_pk': 'CUSTOMER_PK',
+            'src_hashdiff': 'HASHDIFF',
+            'src_payload': ['PHONE', 'NATIONALITY'],
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        },
+        'SAT_BOOK_BOOKING_DETAILS': {
+            'source_model': 'raw_stage_booking_hashed',
+            'src_pk': 'BOOKING_PK',
+            'src_hashdiff': 'HASHDIFF',
+            'src_payload': ['PRICE', 'BOOKING_DATE',
+                            'DEPARTURE_DATE', 'DESTINATION'],
+            'src_eff': 'EFFECTIVE_FROM',
             'src_ldts': 'LOADDATE',
             'src_source': 'SOURCE'
         }
@@ -421,6 +472,50 @@ def cycle(context):
             'column_types': {
                 'BOOKING_PK': 'BINARY(16)',
                 'BOOKING_ID': 'NUMBER(38,0)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'LINK_CUSTOMER_BOOKING': {
+            'column_types': {
+                'CUSTOMER_BOOKING_PK': 'BINARY(16)',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'BOOKING_PK': 'BINARY(16)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'SAT_CUST_CUSTOMER_DETAILS': {
+            'column_types': {
+                'CUSTOMER_PK': 'BINARY(16)',
+                'HASHDIFF': 'BINARY(16)',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'SAT_BOOK_CUSTOMER_DETAILS': {
+            'column_types': {
+                'CUSTOMER_PK': 'BINARY(16)',
+                'HASHDIFF': 'BINARY(16)',
+                'PHONE': 'VARCHAR',
+                'NATIONALITY': 'VARCHAR',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'SAT_BOOK_BOOKING_DETAILS': {
+            'column_types': {
+                'BOOKING_PK': 'BINARY(16)',
+                'HASHDIFF': 'BINARY(16)',
+                'PRICE': 'NUMBER(38,2)',
+                'BOOKING_DATE': 'DATE',
+                'DEPARTURE_DATE': 'DATE',
+                'DESTINATION': 'VARCHAR',
+                'EFFECTIVE_FROM': 'DATE',
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
