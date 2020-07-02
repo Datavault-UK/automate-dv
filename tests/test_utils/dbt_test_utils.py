@@ -361,10 +361,15 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
         """
 
+        if isinstance(source_model, list):
+            source_model = f"{source_model}"
+        else:
+            source_model = f"'{source_model}'"
+
         template = f"""
         {{{{ config(materialized='incremental') }}}}
         {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
-                          '{src_source}', '{source_model}')   }}}}
+                          '{src_source}', {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)

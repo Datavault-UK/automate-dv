@@ -363,7 +363,8 @@ def cycle(context):
 
     context.vault_structure_columns = {
         'HUB_CUSTOMER': {
-            'source_model': 'raw_stage_customer_hashed',
+            'source_model': ['raw_stage_customer_hashed',
+                             'raw_stage_booking_hashed'],
             'src_pk': 'CUSTOMER_PK',
             'src_nk': 'CUSTOMER_ID',
             'src_ldts': 'LOADDATE',
