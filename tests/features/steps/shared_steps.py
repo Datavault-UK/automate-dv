@@ -197,6 +197,9 @@ def expect_data(context, model_name):
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
+    dbtvault_generator.add_seed_config(seed_name=f"{model_name}_expected".lower(),
+                                       seed_config=context.seed_config[model_name])
+
     context.dbt_test_utils.run_dbt_seed(expected_output_csv)
 
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
