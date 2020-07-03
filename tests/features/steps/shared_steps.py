@@ -192,7 +192,7 @@ def stage(context):
         'hashed_columns': context.hash_mapping_config[context.raw_stage_model_name]}
 
     if hasattr(context, 'derived_mapping'):
-        stage_args['derived_columns'] = context.derived_mapping
+        stage_args['derived_columns'] = context.derived_mapping[context.raw_stage_model_name]
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
