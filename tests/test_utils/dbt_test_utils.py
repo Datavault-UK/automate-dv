@@ -10,7 +10,6 @@ from subprocess import PIPE, Popen, STDOUT
 import pandas as pd
 import ruamel.yaml
 from behave.model import Table
-from behave.runner import Context
 from numpy import NaN
 from pandas import Series
 
@@ -407,9 +406,14 @@ class DBTVAULTGenerator:
         :return:
         """
 
+        if isinstance(src_hashdiff, dict):
+            src_hashdiff = f"{src_hashdiff}"
+        else:
+            src_hashdiff = f"'{src_hashdiff}'"
+
         template = f"""
         {{{{ config(materialized='incremental') }}}}
-        {{{{ dbtvault.sat('{src_pk}', '{src_hashdiff}', {src_payload},
+        {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
                           '{src_eff}', '{src_ldts}', '{src_source}', 
                           '{source_model}')   }}}}
         """
@@ -500,6 +504,16 @@ class DBTVAULTGenerator:
                     yield x
             else:
                 yield item
+
+    @staticmethod
+    def evaluate_hashdiff(structure_dict):
+
+        # Extract hashdiff column alias
+        if 'src_hashdiff' in structure_dict.keys():
+            if isinstance(structure_dict['src_hashdiff'], dict):
+                structure_dict['src_hashdiff'] = structure_dict['src_hashdiff']['alias']
+
+        return structure_dict
 
     @staticmethod
     def clean_test_schema_file():

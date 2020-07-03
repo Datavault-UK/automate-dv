@@ -25,11 +25,11 @@ def single_source_hub(context):
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'CUSTOMER_PK',
-        'src_nk': 'CUSTOMER_ID',
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
-    }
+            'src_pk': 'CUSTOMER_PK',
+            'src_nk': 'CUSTOMER_ID',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
 
     context.seed_config = {
         'HUB': {
@@ -65,11 +65,11 @@ def multi_source_hub(context):
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'PART_PK',
-        'src_nk': 'PART_ID',
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
-    }
+            'src_pk': 'PART_PK',
+            'src_nk': 'PART_ID',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
 
     context.seed_config = {
         'HUB': {
@@ -175,8 +175,8 @@ def satellite(context):
     }
 
     context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
-    }
+            'EFFECTIVE_FROM': 'LOADDATE'
+        }
 
     context.vault_structure_columns = {
         'src_pk': 'CUSTOMER_PK',
@@ -229,9 +229,9 @@ def satellite_cycle(context):
     }
 
     context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
-    }
-
+            'EFFECTIVE_FROM': 'LOADDATE'
+        }
+    
     context.stage_columns = {
         'RAW_STAGE':
             ['CUSTOMER_ID',
@@ -290,8 +290,8 @@ def t_link(context):
     }
 
     context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
-    }
+            'EFFECTIVE_FROM': 'LOADDATE'
+        }
 
     context.vault_structure_columns = {
         'src_pk': 'TRANSACTION_PK',
@@ -348,17 +348,28 @@ def cycle(context):
             'CUSTOMER_PK': 'CUSTOMER_ID',
             'BOOKING_PK': 'BOOKING_ID',
             'CUSTOMER_BOOKING_PK': ['CUSTOMER_ID', 'BOOKING_ID'],
-            'HASHDIFF': {'is_hashdiff': True,
-                         'columns': ['BOOKING_DATE',
-                                     'PRICE',
-                                     'DEPARTURE_DATE',
-                                     'DESTINATION']
-                         }
+            'HASHDIFF_BOOK_CUSTOMER_DETAILS': {'is_hashdiff': True,
+                                               'columns': ['CUSTOMER_ID',
+                                                           'NATIONALITY',
+                                                           'PHONE']
+                                               },
+            'HASHDIFF_BOOK_BOOKING_DETAILS': {'is_hashdiff': True,
+                                              'columns': ['BOOKING_ID',
+                                                          'BOOKING_DATE',
+                                                          'PRICE',
+                                                          'DEPARTURE_DATE',
+                                                          'DESTINATION']
+                                              }
         }
     }
 
     context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
+        'RAW_STAGE_CUSTOMER': {
+            'EFFECTIVE_FROM': 'LOADDATE'
+        },
+        'RAW_STAGE_BOOKING': {
+            'EFFECTIVE_FROM': 'BOOKING_DATE'
+        }
     }
 
     context.vault_structure_columns = {
@@ -396,7 +407,8 @@ def cycle(context):
         'SAT_BOOK_CUSTOMER_DETAILS': {
             'source_model': 'raw_stage_booking_hashed',
             'src_pk': 'CUSTOMER_PK',
-            'src_hashdiff': 'HASHDIFF',
+            'src_hashdiff': {'source_column': 'HASHDIFF_BOOK_CUSTOMER_DETAILS',
+                             'alias': 'HASHDIFF'},
             'src_payload': ['PHONE', 'NATIONALITY'],
             'src_eff': 'EFFECTIVE_FROM',
             'src_ldts': 'LOADDATE',
@@ -405,7 +417,8 @@ def cycle(context):
         'SAT_BOOK_BOOKING_DETAILS': {
             'source_model': 'raw_stage_booking_hashed',
             'src_pk': 'BOOKING_PK',
-            'src_hashdiff': 'HASHDIFF',
+            'src_hashdiff': {'source_column': 'HASHDIFF_BOOK_BOOKING_DETAILS',
+                             'alias': 'HASHDIFF'},
             'src_payload': ['PRICE', 'BOOKING_DATE',
                             'DEPARTURE_DATE', 'DESTINATION'],
             'src_eff': 'EFFECTIVE_FROM',

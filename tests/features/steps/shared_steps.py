@@ -1,5 +1,6 @@
 from behave import *
 from behave.model import Table, Row
+import copy
 
 from tests.test_utils.dbt_test_utils import DBTVAULTGenerator
 
@@ -31,8 +32,9 @@ def clear_schema(context):
     models = [name for name in DBTVAULTGenerator.flatten([v for k, v in model_names.items()]) if name]
 
     for model_name in models:
+        headings_dict = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
 
-        headings = list(DBTVAULTGenerator.flatten([v for k, v in context.vault_structure_columns[model_name].items() if k != 'source_model']))
+        headings = list(DBTVAULTGenerator.flatten([v for k, v in headings_dict.items() if k != 'source_model']))
 
         row = Row(cells=[], headings=headings)
 
@@ -111,6 +113,37 @@ def load_populated_table(context, model_name, vault_structure):
     assert 'Completed successfully' in logs
 
 
+@step("I load the {model_name} {vault_structure}")
+def load_table(context, model_name, vault_structure):
+    metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns[model_name]}
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+
+    assert 'Completed successfully' in logs
+
+
+@step("I load the vault")
+def load_vault(context):
+    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in context.vault_model_names.items()]) if name]
+
+    for model_name in models:
+        metadata = {**context.vault_structure_columns[model_name]}
+
+        context.vault_structure_metadata = metadata
+
+        vault_structure = model_name.split('_')[0]
+
+        dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+
+        logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+
+        assert 'Completed successfully' in logs
+
+
 @given("the {raw_stage_model_name} table contains data")
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
@@ -171,24 +204,12 @@ def stage(context):
     assert 'Completed successfully' in logs
 
 
-@step("I load the {model_name} {vault_structure}")
-def load_table(context, model_name, vault_structure):
-    metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns}
-
-    context.vault_structure_metadata = metadata
-
-    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
-
-    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
-
-    assert 'Completed successfully' in logs
-
-
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     expected_output_csv = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                       model_name=f'{model_name}_expected')
-    metadata = context.vault_structure_columns[model_name]
+
+    metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv,
@@ -205,24 +226,3 @@ def expect_data(context, model_name):
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
 
     assert '1 of 1 PASS' in logs
-
-
-@step("I load the vault")
-def load_vault(context):
-
-    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in context.vault_model_names.items()]) if name]
-
-    for model_name in models:
-
-        metadata = {**context.vault_structure_columns[model_name]}
-
-        context.vault_structure_metadata = metadata
-
-        vault_structure = model_name.split('_')[0]
-
-        dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
-
-        logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
-
-        assert 'Completed successfully' in logs
-
