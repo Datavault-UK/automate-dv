@@ -13,6 +13,29 @@ def set_workdir(context):
 
 
 @fixture
+def sha(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashing = 'sha'
+
+    if hasattr(context, 'seed_config'):
+
+        config = dict(context.seed_config)
+
+        for k, v in config.items():
+
+            for c, t in config[k]['column_types'].items():
+
+                if t == 'BINARY(16)':
+                    config[k]['column_types'][c] = 'BINARY(32)'
+
+    else:
+        raise ValueError('sha fixture used before vault structure fixture.')
+
+
+@fixture
 def single_source_hub(context):
     """
     Define the structures and metadata to load single-source hubs
@@ -25,11 +48,13 @@ def single_source_hub(context):
     }
 
     context.vault_structure_columns = {
+        'HUB': {
             'src_pk': 'CUSTOMER_PK',
             'src_nk': 'CUSTOMER_ID',
             'src_ldts': 'LOADDATE',
             'src_source': 'SOURCE'
         }
+    }
 
     context.seed_config = {
         'HUB': {
@@ -65,11 +90,13 @@ def multi_source_hub(context):
     }
 
     context.vault_structure_columns = {
+        'HUB': {
             'src_pk': 'PART_PK',
             'src_nk': 'PART_ID',
             'src_ldts': 'LOADDATE',
             'src_source': 'SOURCE'
         }
+    }
 
     context.seed_config = {
         'HUB': {
@@ -98,10 +125,12 @@ def single_source_link(context):
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'CUSTOMER_NATION_PK',
-        'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
+        'LINK': {
+            'src_pk': 'CUSTOMER_NATION_PK',
+            'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
     }
 
     context.seed_config = {
@@ -142,10 +171,12 @@ def multi_source_link(context):
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'CUSTOMER_NATION_PK',
-        'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
+        'LINK': {
+            'src_pk': 'CUSTOMER_NATION_PK',
+            'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
     }
 
     context.seed_config = {
@@ -175,16 +206,20 @@ def satellite(context):
     }
 
     context.derived_mapping = {
+        'RAW_STAGE': {
             'EFFECTIVE_FROM': 'LOADDATE'
         }
+    }
 
     context.vault_structure_columns = {
-        'src_pk': 'CUSTOMER_PK',
-        'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_PHONE', 'CUSTOMER_DOB'],
-        'src_hashdiff': 'HASHDIFF',
-        'src_eff': 'EFFECTIVE_FROM',
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
+        'SATELLITE': {
+            'src_pk': 'CUSTOMER_PK',
+            'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_PHONE', 'CUSTOMER_DOB'],
+            'src_hashdiff': 'HASHDIFF',
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
     }
 
     context.seed_config = {
@@ -229,9 +264,9 @@ def satellite_cycle(context):
     }
 
     context.derived_mapping = {
-            'EFFECTIVE_FROM': 'LOADDATE'
-        }
-    
+        'EFFECTIVE_FROM': 'LOADDATE'
+    }
+
     context.stage_columns = {
         'RAW_STAGE':
             ['CUSTOMER_ID',
@@ -290,8 +325,8 @@ def t_link(context):
     }
 
     context.derived_mapping = {
-            'EFFECTIVE_FROM': 'LOADDATE'
-        }
+        'EFFECTIVE_FROM': 'LOADDATE'
+    }
 
     context.vault_structure_columns = {
         'src_pk': 'TRANSACTION_PK',

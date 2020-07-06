@@ -60,7 +60,7 @@ def load_empty_table(context, model_name, vault_structure):
     if vault_structure == 'stage':
         headings = context.stage_columns[model_name]
     else:
-        headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns.values()))
+        headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns[model_name].values()))
 
     row = Row(cells=[], headings=headings)
 
@@ -75,7 +75,7 @@ def load_empty_table(context, model_name, vault_structure):
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     if not vault_structure == 'stage':
-        metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
+        metadata = {'source_model': seed_file_name, **context.vault_structure_columns[model_name]}
 
         context.vault_structure_metadata = metadata
 
@@ -102,7 +102,7 @@ def load_populated_table(context, model_name, vault_structure):
 
     context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    metadata = {'source_model': seed_file_name, **context.vault_structure_columns}
+    metadata = {'source_model': seed_file_name, **context.vault_structure_columns[model_name]}
 
     context.vault_structure_metadata = metadata
 
@@ -194,6 +194,12 @@ def stage(context):
     if hasattr(context, 'derived_mapping'):
         stage_args['derived_columns'] = context.derived_mapping[context.raw_stage_model_name]
 
+    if hasattr(context, 'hashing'):
+
+        if context.hashing == 'sha':
+
+            stage_args['hash'] = 'SHA'
+
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
     if hasattr(context, 'hashed_stage_model_name'):
@@ -211,10 +217,13 @@ def expect_data(context, model_name):
 
     metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
 
+    ignore_columns = context.dbt_test_utils.find_columns_to_ignore(context.table)
+
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv,
                                                                  unique_id=metadata['src_pk'],
-                                                                 metadata=metadata)
+                                                                 metadata=metadata,
+                                                                 ignore_columns=ignore_columns)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 

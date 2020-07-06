@@ -6,6 +6,7 @@ from tests.test_utils.dbt_test_utils import *
 fixture_registry = {
     "fixture.set_workdir": set_workdir,
     "fixture.single_source_hub": single_source_hub,
+    "fixture.sha": sha,
     "fixture.multi_source_hub": multi_source_hub,
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
