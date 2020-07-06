@@ -427,16 +427,11 @@ class DBTVAULTGenerator:
         else:
             src_hashdiff = f"'{src_hashdiff}'"
 
-        if isinstance(source_model, list):
-            source_model = f"{source_model}"
-        else:
-            source_model = f"'{source_model}'"
-
         template = f"""
         {{{{ config(materialized='incremental') }}}}
         {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
                           '{src_eff}', '{src_ldts}', '{src_source}', 
-                          {source_model})   }}}}
+                          '{source_model}')   }}}}
         """
 
         self.template_to_file(template, model_name)

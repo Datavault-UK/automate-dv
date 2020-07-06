@@ -201,7 +201,7 @@ def satellite(context):
     context.hash_mapping_config = {
         'RAW_STAGE': {
             'CUSTOMER_PK': 'CUSTOMER_ID',
-            'HASHDIFF': {'is_hashdiff': True, 'columns': ['CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_NAME']}
+            'HASHDIFF': {'is_hashdiff': True, 'columns': ['CUSTOMER_ID', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_NAME']}
         }
     }
 
