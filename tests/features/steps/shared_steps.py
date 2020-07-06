@@ -195,17 +195,15 @@ def stage(context):
         stage_args['derived_columns'] = context.derived_mapping[context.raw_stage_model_name]
 
     if hasattr(context, 'hashing'):
-
         if context.hashing == 'sha':
-
             stage_args['hash'] = 'SHA'
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
 
     if hasattr(context, 'hashed_stage_model_name'):
-        context.hashed_stage_model_name.append(hashed_model_name)
+        context.hashed_stage_model_name = [context.hashed_stage_model_name] + [hashed_model_name]
     else:
-        context.hashed_stage_model_name = [] + [hashed_model_name]
+        context.hashed_stage_model_name = hashed_model_name
 
     assert 'Completed successfully' in logs
 
