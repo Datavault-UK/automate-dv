@@ -1,7 +1,7 @@
 Feature: Cycles
 
   @fixture.satellite_cycle
-  Scenario: [CYCLE] Satellite load over several cycles
+  Scenario: [SAT-CYCLE] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -69,7 +69,8 @@ Feature: Cycles
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [CYCLE-SHA] Satellite load over several cycles
+  @fixture.sha
+  Scenario: [SAT-CYCLE-SHA] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -137,7 +138,7 @@ Feature: Cycles
       | sha('1012') | sha('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
   @fixture.cycle
-  Scenario: [CYCLE-VAULT] Test several load cycles of a raw vault
+  Scenario: [VAULT-CYCLE] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
       | HUBS         | LINKS                 | SATS                      | T_LINKS | EFF_SATS |
       | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |         |          |

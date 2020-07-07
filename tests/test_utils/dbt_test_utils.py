@@ -278,6 +278,21 @@ class DBTTestUtils:
         return list(df.columns[df.isin(['*']).all()])
 
     @staticmethod
+    def process_hashed_stage_names(hashed_stage_names, hashed_model_name):
+
+        if isinstance(hashed_stage_names, list):
+            hashed_stage_names.append(hashed_model_name)
+        else:
+            hashed_stage_names = [hashed_stage_names] + [hashed_model_name]
+
+        hashed_stage_names = list(set(hashed_stage_names))
+
+        if isinstance(hashed_stage_names, list) and len(hashed_stage_names) == 1:
+            hashed_stage_names = hashed_stage_names[0]
+
+        return hashed_stage_names
+
+    @staticmethod
     def calc_hash(columns_as_series) -> Series:
         """
         Calculates the MD5 hash for a given value
@@ -500,7 +515,8 @@ class DBTVAULTGenerator:
 
         extracted_compare_columns = [v for k, v in metadata.items() if k not in ['source_model']]
 
-        compare_columns = list([c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
+        compare_columns = list(
+            [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
 
         test_yaml = {
             "models": [{

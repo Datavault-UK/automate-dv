@@ -2,6 +2,10 @@ from behave import fixture
 
 from tests.test_utils.dbt_test_utils import *
 
+"""
+The fixtures here are used to supply runtime metadata to tests, in place of metadata usually provided via vars or a YAML config
+"""
+
 
 @fixture
 def set_workdir(context):
@@ -15,7 +19,7 @@ def set_workdir(context):
 @fixture
 def sha(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Augment the metadata for a vault structure load to work with SHA hashing instead of MD5
     """
 
     context.hashing = 'sha'
@@ -64,6 +68,14 @@ def single_source_hub(context):
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -106,6 +118,40 @@ def multi_source_hub(context):
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
+        },
+        'RAW_STAGE_PARTS': {
+            'column_types': {
+                'PART_ID': 'VARCHAR',
+                'PART_NAME': 'VARCHAR',
+                'PART_TYPE': 'VARCHAR',
+                'PART_SIZE': 'VARCHAR',
+                'PART_RETAILPRICE': 'NUMBER(38,2)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'RAW_STAGE_SUPPLIER': {
+            'column_types': {
+                'PART_ID': 'VARCHAR',
+                'SUPPLIER_ID': 'VARCHAR',
+                'AVAILQTY': 'FLOAT',
+                'SUPPLYCOST': 'NUMBER(38,2)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'RAW_STAGE_LINEITEM': {
+            'column_types': {
+                'ORDER_ID': 'VARCHAR',
+                'PART_ID': 'VARCHAR',
+                'SUPPLIER_ID': 'VARCHAR',
+                'LINENUMBER': 'FLOAT',
+                'QUANTITY': 'FLOAT',
+                'EXTENDED_PRICE': 'NUMBER(38,2)',
+                'DISCOUNT': 'NUMBER(38,2)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -139,6 +185,17 @@ def single_source_link(context):
                 'CUSTOMER_NATION_PK': 'BINARY(16)',
                 'CUSTOMER_FK': 'BINARY(16)',
                 'NATION_FK': 'BINARY(16)',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'NATION_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'CUSTOMER_PHONE': 'VARCHAR',
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
@@ -188,6 +245,39 @@ def multi_source_link(context):
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
+        },
+        'RAW_STAGE_SAP': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'NATION_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'RAW_STAGE_CRM': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'NATION_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'RAW_STAGE_WEB': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'NATION_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'DATE',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOADDATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
         }
     }
 
@@ -201,7 +291,8 @@ def satellite(context):
     context.hash_mapping_config = {
         'RAW_STAGE': {
             'CUSTOMER_PK': 'CUSTOMER_ID',
-            'HASHDIFF': {'is_hashdiff': True, 'columns': ['CUSTOMER_ID', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_NAME']}
+            'HASHDIFF': {'is_hashdiff': True,
+                         'columns': ['CUSTOMER_ID', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_NAME']}
         }
     }
 
@@ -264,7 +355,9 @@ def satellite_cycle(context):
     }
 
     context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
+        'RAW_STAGE': {
+            'EFFECTIVE_FROM': 'LOADDATE'
+        }
     }
 
     context.stage_columns = {
@@ -278,12 +371,14 @@ def satellite_cycle(context):
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'CUSTOMER_PK',
-        'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_DOB'],
-        'src_hashdiff': 'HASHDIFF',
-        'src_eff': 'EFFECTIVE_FROM',
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
+        'SATELLITE': {
+            'src_pk': 'CUSTOMER_PK',
+            'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_DOB'],
+            'src_hashdiff': 'HASHDIFF',
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
     }
 
     context.seed_config = {
@@ -325,17 +420,21 @@ def t_link(context):
     }
 
     context.derived_mapping = {
-        'EFFECTIVE_FROM': 'LOADDATE'
+        'RAW_STAGE': {
+            'EFFECTIVE_FROM': 'TRANSACTION_DATE'
+        }
     }
 
     context.vault_structure_columns = {
-        'src_pk': 'TRANSACTION_PK',
-        'src_fk': 'CUSTOMER_FK',
-        'src_payload': ['TRANSACTION_NUMBER', 'TRANSACTION_DATE',
-                        'TYPE', 'AMOUNT'],
-        'src_eff': 'EFFECTIVE_FROM',
-        'src_ldts': 'LOADDATE',
-        'src_source': 'SOURCE'
+        'T_LINK': {
+            'src_pk': 'TRANSACTION_PK',
+            'src_fk': 'CUSTOMER_FK',
+            'src_payload': ['TRANSACTION_NUMBER', 'TRANSACTION_DATE',
+                            'TYPE', 'AMOUNT'],
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOADDATE',
+            'src_source': 'SOURCE'
+        }
     }
 
     context.seed_config = {
