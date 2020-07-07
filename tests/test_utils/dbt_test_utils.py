@@ -10,7 +10,6 @@ from subprocess import PIPE, Popen, STDOUT
 import pandas as pd
 import ruamel.yaml
 from behave.model import Table
-from behave.runner import Context
 from numpy import NaN
 from pandas import Series
 
@@ -235,18 +234,17 @@ class DBTTestUtils:
 
         return table_df
 
-    def context_table_to_csv(self, table: Table, context: Context, model_name: str) -> str:
+    def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a feature file
-            :param context: Behave context
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
         """
 
         table_df = self.context_table_to_df(table)
 
-        csv_fqn = CSV_DIR / f'{context.feature.name.lower()}_{model_name.lower()}.csv'
+        csv_fqn = CSV_DIR / f'{model_name.lower()}.csv'
 
         table_df.to_csv(csv_fqn, index=False)
 
@@ -254,18 +252,45 @@ class DBTTestUtils:
 
         return csv_fqn.stem
 
-    def context_table_to_dict(self, table: Table):
+    def context_table_to_dict(self, table: Table, orient='index'):
         """
         Converts a context table in a feature file into a pandas DataFrame
             :param table: The context.table from a feature file
+            :param orient: orient for df to_dict
             :return: A pandas DataFrame modelled from a context table
         """
 
         table_df = self.context_table_to_df(table)
 
-        table_dict = table_df.to_dict(orient='index')
+        table_dict = table_df.to_dict(orient=orient)
 
         return table_dict
+
+    def find_columns_to_ignore(self, table: Table):
+        """
+        Gets a list of columns which contain all *, which is shorthand to denote ignoring a column for comparison
+            :param table: The context.table from a feature file
+            :return: List of columns
+        """
+
+        df = self.context_table_to_df(table)
+
+        return list(df.columns[df.isin(['*']).all()])
+
+    @staticmethod
+    def process_hashed_stage_names(hashed_stage_names, hashed_model_name):
+
+        if isinstance(hashed_stage_names, list):
+            hashed_stage_names.append(hashed_model_name)
+        else:
+            hashed_stage_names = [hashed_stage_names] + [hashed_model_name]
+
+        hashed_stage_names = list(set(hashed_stage_names))
+
+        if isinstance(hashed_stage_names, list) and len(hashed_stage_names) == 1:
+            hashed_stage_names = hashed_stage_names[0]
+
+        return hashed_stage_names
 
     @staticmethod
     def calc_hash(columns_as_series) -> Series:
@@ -317,8 +342,7 @@ class DBTVAULTGenerator:
         Generate a vault structure
             :param model_name: Name of model to generate
             :param vault_structure: Type of structure to generate (stage, hub, link, sat)
-            :param kwargs: Arguments for the
-            :return:
+            :param kwargs: Arguments for model the generator
         """
 
         vault_structure = vault_structure.lower()
@@ -362,10 +386,15 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
         """
 
+        if isinstance(source_model, list):
+            source_model = f"{source_model}"
+        else:
+            source_model = f"'{source_model}'"
+
         template = f"""
         {{{{ config(materialized='incremental') }}}}
         {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
-                          '{src_source}', '{source_model}')   }}}}
+                          '{src_source}', {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -381,10 +410,15 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
         """
 
+        if isinstance(source_model, list):
+            source_model = f"{source_model}"
+        else:
+            source_model = f"'{source_model}'"
+
         template = f"""
         {{{{ config(materialized='incremental') }}}}
         {{{{ dbtvault.link('{src_pk}', {src_fk}, '{src_ldts}',
-                           '{src_source}', '{source_model}')   }}}}
+                           '{src_source}', {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -403,9 +437,14 @@ class DBTVAULTGenerator:
         :return:
         """
 
+        if isinstance(src_hashdiff, dict):
+            src_hashdiff = f"{src_hashdiff}"
+        else:
+            src_hashdiff = f"'{src_hashdiff}'"
+
         template = f"""
         {{{{ config(materialized='incremental') }}}}
-        {{{{ dbtvault.sat('{src_pk}', '{src_hashdiff}', {src_payload},
+        {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
                           '{src_eff}', '{src_ldts}', '{src_source}', 
                           '{source_model}')   }}}}
         """
@@ -472,11 +511,12 @@ class DBTVAULTGenerator:
             yaml.dump(project_file, f)
 
     @staticmethod
-    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata):
+    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata, ignore_columns):
 
         extracted_compare_columns = [v for k, v in metadata.items() if k not in ['source_model']]
 
-        compare_columns = list(DBTVAULTGenerator.flatten(extracted_compare_columns))
+        compare_columns = list(
+            [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
 
         test_yaml = {
             "models": [{
@@ -496,6 +536,16 @@ class DBTVAULTGenerator:
                     yield x
             else:
                 yield item
+
+    @staticmethod
+    def evaluate_hashdiff(structure_dict):
+
+        # Extract hashdiff column alias
+        if 'src_hashdiff' in structure_dict.keys():
+            if isinstance(structure_dict['src_hashdiff'], dict):
+                structure_dict['src_hashdiff'] = structure_dict['src_hashdiff']['alias']
+
+        return structure_dict
 
     @staticmethod
     def clean_test_schema_file():

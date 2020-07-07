@@ -334,3 +334,13 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
+    temp:
+      raw_stage_parts:
+        column_types:
+          PART_ID: VARCHAR
+          PART_NAME: VARCHAR
+          PART_TYPE: VARCHAR
+          PART_SIZE: VARCHAR
+          PART_RETAILPRICE: NUMBER(38,2)
+          LOADDATE: DATE
+          SOURCE: VARCHAR
