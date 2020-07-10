@@ -99,7 +99,7 @@ class DBTTestUtils:
         command = ['dbt', 'seed']
 
         if seed_file_name:
-            command.extend(['--select', seed_file_name])
+            command.extend(['--select', seed_file_name, '--full-refresh'])
 
         return self.run_dbt_command(command)
 
