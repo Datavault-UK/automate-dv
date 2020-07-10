@@ -3,12 +3,7 @@ from tests.test_utils.dbt_test_utils import *
 from pathlib import Path
 
 
-@pytest.fixture(scope="class")
-def dbt_test_utils(request):
-    """
-    Configure the model_directory in DBTTestUtils using the directory structure of the macro under test.
-    """
-
+def get_test_utils(request):
     # Set working directory to test project root
     os.chdir(TESTS_DBT_ROOT)
 
@@ -16,9 +11,16 @@ def dbt_test_utils(request):
     macro_folder = test_path.parent.name
     macro_under_test = test_path.stem.split('test_')[1]
 
-    dbt_test_utils = DBTTestUtils(model_directory=f"{macro_folder}/{macro_under_test}")
+    return DBTTestUtils(model_directory=f"{macro_folder}/{macro_under_test}")
 
-    request.cls.dbt_test_utils = dbt_test_utils
+
+@pytest.fixture(scope="class")
+def dbt_test_utils(request):
+    """
+    Configure the model_directory in DBTTestUtils using the directory structure of the macro under test.
+    """
+
+    request.cls.dbt_test_utils = get_test_utils(request)
 
 
 @pytest.fixture(scope='class')
@@ -28,9 +30,14 @@ def run_seeds(request):
     yield
 
 
-@pytest.fixture(scope='class')
+@pytest.fixture(scope='session')
 def clean_database(request):
-    request.cls.dbt_test_utils.replace_test_schema()
+    # Set working directory to test project root
+    os.chdir(TESTS_DBT_ROOT)
+
+    test_utils = DBTTestUtils()
+
+    test_utils.replace_test_schema()
 
 
 @pytest.fixture(autouse=True, scope='session')
