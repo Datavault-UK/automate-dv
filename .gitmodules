@@ -4,3 +4,9 @@
 [submodule "src/dbtvault-docs"]
 	path = src/dbtvault-docs
 	url = git@github.com:Datavault-UK/dbtvault-docs.git
+[submodule "src/snowflakeDemo"]
+	path = src/snowflakeDemo
+	url = git@github.com:Datavault-UK/snowflakeDemo.git
+[submodule "src/snowflakeDemo-dev"]
+	path = src/snowflakeDemo-dev
+	url = git@github.com:Datavault-UK/snowflakeDemo-dev.git
