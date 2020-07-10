@@ -26,5 +26,3 @@ tests/features/csv_temp/*.csv
 /tests/dbtvault_test/data/temp/*.csv
 /tests/dbtvault_test/models/feature/*.sql
 /tests/dbtvault_test/models/schema_test.yml
-
-src/dbtvault-dev/secrethub.env
