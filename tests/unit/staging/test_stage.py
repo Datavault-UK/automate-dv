@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.usefixtures('dbt_test_utils', 'run_seeds')
+@pytest.mark.usefixtures('dbt_test_utils', 'clean_database', 'run_seeds')
 class TestStageMacro:
 
     def test_stage_correctly_generates_sql_from_yaml(self):

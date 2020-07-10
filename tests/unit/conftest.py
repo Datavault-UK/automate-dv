@@ -26,8 +26,6 @@ def run_seeds(request):
     os.chdir(TESTS_DBT_ROOT)
     request.cls.dbt_test_utils.run_dbt_seed()
     yield
-    # # Rebuild schema for clean test bed
-    # dbt_test_utils.replace_test_schema()
 
 
 @pytest.fixture(scope='class')

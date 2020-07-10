@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.usefixtures('dbt_test_utils')
+@pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
 class TestAliasMacro:
 
     def test_alias_single_correctly_generates_sql(self):
