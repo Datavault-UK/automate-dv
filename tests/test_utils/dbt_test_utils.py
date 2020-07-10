@@ -217,7 +217,7 @@ class DBTTestUtils:
         Drop and create the TEST schema
         """
 
-        self.run_dbt_operation(macro_name='recreate_current_schema')
+        self.run_dbt_operation(macro_name='recreate_current_schemas')
 
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """

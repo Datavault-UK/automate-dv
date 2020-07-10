@@ -29,21 +29,27 @@
 
 {% endmacro %}
 
-{%- macro drop_test_schema() -%}
+{%- macro drop_test_schemas() -%}
 
 {% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST")) %}
+{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_RAW")) %}
+{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_STG")) %}
+{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_VLT")) %}
 
 {% endmacro %}
 
-{%- macro create_test_schema() -%}
+{%- macro create_test_schemas() -%}
 
 {% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST")) %}
+{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_RAW")) %}
+{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_STG")) %}
+{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_VLT")) %}
 
 {%- endmacro -%}
 
-{%- macro recreate_current_schema() -%}
+{%- macro recreate_current_schemas() -%}
 
-{% do drop_test_schema() %}
-{% do create_test_schema() %}
+{% do drop_test_schemas() %}
+{% do create_test_schemas() %}
 
 {%- endmacro -%}

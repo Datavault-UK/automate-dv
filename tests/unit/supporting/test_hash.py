@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.usefixtures('dbt_test_utils')
+@pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
 class TestHashMacro:
 
     def test_hash_single_column_is_successful(self):

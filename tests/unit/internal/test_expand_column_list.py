@@ -1,7 +1,7 @@
 import pytest
 
 
-@pytest.mark.usefixtures('dbt_test_utils')
+@pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
 class TestExpandColumnListMacro:
 
     def test_expand_column_list_correctly_generates_list_with_nesting(self):
