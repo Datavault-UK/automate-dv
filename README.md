@@ -130,3 +130,22 @@ project = test
 
 This will create an `invoke.yml` file in the root of the repository, which will store these defaults. This is ignored
 by git by default. 
+
+#### Running tests
+
+There are two types of test:
+
+Macro tests (unit) and BDD Tests (integration tests).
+
+Given your SecretHub environment is correctly set up you may run the following commands:
+
+- `pipenv run inv macro_tests`
+
+- `pipenv run inv bdd_tests`
+
+Both of these commands can be provided a `-t` and `-u` flag to specify a target and user respectively, as documented in
+Method 2 for running dbt, above. 
+
+Macro tests are run in parallel (4 at a time) and should be fairly fast, though it depends on your system specification.
+
+The BDD tests are significantly slower, and we'll soon be adding functionality to accept additional parameters to run specific tests instead of the whole suite.
