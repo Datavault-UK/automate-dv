@@ -26,7 +26,10 @@ def check_project(c, project='core'):
     available_projects = {
         'core': {'work_dir': './src/dbtvault'},
         'dev': {'work_dir': './src/dbtvault-dev'},
-        'test': {'work_dir': './tests/dbtvault_test'}}
+        'test': {'work_dir': './tests/dbtvault_test'},
+        'sf_demo': {'work_dir': './src/snowflakeDemo'},
+        'sf_demo_dev': {'work_dir': './src/snowflakeDemo-dev/src'}
+    }
 
     if project in available_projects:
         logger.info(
