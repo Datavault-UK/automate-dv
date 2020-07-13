@@ -91,7 +91,7 @@ if the following command is used:
 
 `pipenv run inv run-dbt -u dev -d "run"`.
 
-####### -p, --project 
+###### -p, --project 
 
 This specifies a project to run the command in, the following are available:
 
