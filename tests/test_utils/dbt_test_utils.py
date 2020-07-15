@@ -337,11 +337,12 @@ class DBTVAULTGenerator:
         with open(FEATURE_MODELS_ROOT / f'{model_name}.sql', 'w') as f:
             f.write(template.strip())
 
-    def raw_vault_structure(self, model_name, vault_structure, **kwargs):
+    def raw_vault_structure(self, model_name, vault_structure, config=None, **kwargs):
         """
         Generate a vault structure
             :param model_name: Name of model to generate
             :param vault_structure: Type of structure to generate (stage, hub, link, sat)
+            :param config: Optional config
             :param kwargs: Arguments for model the generator
         """
 
@@ -358,12 +359,13 @@ class DBTVAULTGenerator:
         if vault_structure == 'stage':
             generator_functions[vault_structure](model_name)
         else:
-            generator_functions[vault_structure](model_name, **kwargs)
+            generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
-    def stage(self, model_name):
+    def stage(self, model_name, config=None):
         """
         Generate a stage model template
             :param model_name: Name of the model file
+            :param config: Optional model config
         """
 
         template = """
@@ -375,7 +377,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model):
+    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config=None):
         """
         Generate a hub model template
             :param model_name: Name of the model file
@@ -384,6 +386,7 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
+            :param config: Optional model config
         """
 
         if isinstance(source_model, list):
@@ -399,7 +402,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model):
+    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config=None):
         """
         Generate a link model template
             :param model_name: Name of the model file
@@ -408,6 +411,7 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
+            :param config: Optional model config
         """
 
         if isinstance(source_model, list):
@@ -423,7 +427,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model):
+    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, config=None):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -434,7 +438,7 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
-        :return:
+            :param config: Optional model config
         """
 
         if isinstance(src_hashdiff, dict):
@@ -442,8 +446,13 @@ class DBTVAULTGenerator:
         else:
             src_hashdiff = f"'{src_hashdiff}'"
 
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = ", ".join([f"{k}='{v}'" for k, v in config.items()])
+
         template = f"""
-        {{{{ config(materialized='incremental') }}}}
+        {{{{ config({config_string}) }}}}
         {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
                           '{src_eff}', '{src_ldts}', '{src_source}', 
                           '{source_model}')   }}}}
@@ -451,7 +460,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model):
+    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, config=None):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -462,6 +471,7 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
+            :param config: Optional model config
         """
 
         template = f"""
