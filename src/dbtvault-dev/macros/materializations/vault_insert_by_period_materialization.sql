@@ -24,7 +24,7 @@
                                      "nullif('" ~ stop_date ~ "','')::timestamp")}},
                 {{ dbt_utils.current_timestamp() }}
                 ) as stop_timestamp
-            from {{target_schema}}.{{target_table}}
+            from {{ target_schema }}.{{ target_table }}
         )
         select
             start_timestamp,
@@ -92,13 +92,36 @@
 
 {%- endmacro %}
 
+{%- macro min_max_date(timestamp_field) %}
+
+{%- set filtered_sql = sql | replace("__PERIOD_FILTER__", "1=1", 1) -%}
+
+{% set query_sql %}
+WITH source AS (
+    {{ filtered_sql }}
+)
+
+SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM source
+{% endset %}
+
+{% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
+
+{% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
+                       'max': min_max_dict['MAX'][0] | string} %}
+
+
+{{ return(min_max_dict) }}
+
+{%- endmacro -%}
+
 {% materialization vault_insert_by_period, default -%}
 
     {% set full_refresh_mode = flags.FULL_REFRESH %}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
-    {%- set start_date = config.get('start_date', default='2019-05-04') -%}
-    {%- set stop_date = config.get('stop_date', default='2019-05-07') -%}
+    {%- set min_max_date = dbtvault.min_max_date(timestamp_field) -%}
+    {%- set start_date = config.get('start_date', default=min_max_date['min']) -%}
+    {%- set stop_date = config.get('stop_date', default=min_max_date['max']) -%}
     {%- set period = config.get('period', default='day') -%}
 
     {% set target_relation = this %}
@@ -180,7 +203,7 @@
 
             {%- set tmp_identifier = model['name'] ~ '__dbt_incremental_period' ~ i ~ '_tmp' -%}
             {%- set tmp_relation = api.Relation.create(identifier=tmp_identifier,
-                                                   schema=schema, type='table') -%}
+                                                       schema=schema, type='table') -%}
 
             {% call statement() -%}
                 {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv,
@@ -200,7 +223,7 @@
             {%- set name = 'main-' ~ i -%}
 
             {% call statement(name, fetch_result=True) -%}
-                insert into {{target_relation}} ({{target_cols_csv}})
+                insert into {{ target_relation }} ({{ target_cols_csv }})
                 (
                   select
                       {{target_cols_csv}}
