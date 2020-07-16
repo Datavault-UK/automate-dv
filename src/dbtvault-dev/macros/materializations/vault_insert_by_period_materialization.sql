@@ -17,21 +17,21 @@
     {% set period_boundary_sql -%}
         with data as (
             select
-                coalesce(max({{timestamp_field}}), '{{start_date}}')::timestamp as start_timestamp,
+                coalesce(max({{ timestamp_field }}), '{{ start_date }}')::timestamp as start_timestamp,
                 coalesce(
-                {{dbt_utils.dateadd('millisecond',
-                                    -1,
-                                    "nullif('" ~ stop_date ~ "','')::timestamp")}},
-                {{dbt_utils.current_timestamp()}}
+                {{ dbt_utils.dateadd('millisecond',
+                                     86399999,
+                                     "nullif('" ~ stop_date ~ "','')::timestamp")}},
+                {{ dbt_utils.current_timestamp() }}
                 ) as stop_timestamp
             from {{target_schema}}.{{target_table}}
         )
         select
             start_timestamp,
             stop_timestamp,
-            {{dbt_utils.datediff('start_timestamp',
-                               'stop_timestamp',
-                               period)}} + 1 as num_periods
+            {{ dbt_utils.datediff('start_timestamp',
+                                  'stop_timestamp',
+                                  period) }} + 1 as num_periods
         from data
     {%- endset %}
 
@@ -46,10 +46,6 @@
 {%- endmacro %}
 
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
-
-    {{ log('period: ' ~ period, false) }}
-    {{ log('offset: ' ~ offset, false) }}
-    {{ log('start_timestamp: ' ~ start_timestamp, false) }}
 
     {% set period_of_load_sql -%}
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{start_timestamp}}'))) AS period_of_load
@@ -70,6 +66,7 @@
              TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
       AND (TO_DATE({{ timestamp_field }}) >= TO_DATE('{{ start_timestamp }}'))
     {%- endset -%}
+
     {%- set filtered_sql = sql | replace("__PERIOD_FILTER__", period_filter, 1) -%}
 
     {{ return(filtered_sql) }}
@@ -81,14 +78,11 @@
     {%- set filtered_sql = {'sql': sql} %}
 
 
-    {% do filtered_sql.update({'sql': replace_filter_placeholder(filtered_sql.sql,
-                                                                 timestamp_field,
-                                                                 start_timestamp,
-                                                                 stop_timestamp,
-                                                                 offset, period)}) %}
-
-
-    {{ log(filtered_sql.sql, false) }}
+    {% do filtered_sql.update({'sql': dbtvault.replace_filter_placeholder(filtered_sql.sql,
+                                                                          timestamp_field,
+                                                                          start_timestamp,
+                                                                          stop_timestamp,
+                                                                          offset, period)}) %}
 
     select
         {{target_cols_csv}}
@@ -103,8 +97,8 @@
     {% set full_refresh_mode = flags.FULL_REFRESH %}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
-    {%- set start_date = config.get('start_date', default=none) -%}
-    {%- set stop_date = config.get('stop_date', default=none) -%}
+    {%- set start_date = config.get('start_date', default='2019-05-04') -%}
+    {%- set stop_date = config.get('stop_date', default='2019-05-07') -%}
     {%- set period = config.get('period', default='day') -%}
 
     {% set target_relation = this %}
@@ -130,15 +124,7 @@
 
         {% set build_sql = create_table_as(False, target_relation, sql) %}
 
-        {%- set period_filter -%}
-            (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_date }}') + INTERVAL '0 {{ period }}') AND
-             TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_date }}') + INTERVAL '0 {{ period }}' + INTERVAL '1 {{ period }}'))
-             AND (TO_DATE({{ timestamp_field }}) >= TO_DATE('{{ start_date }}'))
-        {%- endset -%}
-
-        {%- set filtered_sql = build_sql | replace("__PERIOD_FILTER__", period_filter) -%}
-
-        {{ log('base load filter: ' ~ filtered_sql, false) }}
+        {%- set filtered_sql = dbtvault.replace_filter_placeholder(build_sql, timestamp_field, start_date, stop_date, 0, period) %}
 
         {% call statement("main") %}
             {{ filtered_sql }}
@@ -165,7 +151,7 @@
             {% do adapter.drop_relation(rel) %}
         {% endfor %}
 
-        {% call noop_statement(name='main', status='Full-refresh') -%}
+        {% call noop_statement(name='main', status='FULL-REFRESH') -%}
             -- no-op
         {%- endcall %}
 
@@ -189,7 +175,7 @@
 
             {%- set period_of_load = dbtvault.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
 
-            {%- set msg = "Running for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ " (" ~ period_of_load ~ ") [" ~ identifier ~ "]" -%}
+            {%- set msg = "Running for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ " (" ~ period_of_load ~ ") [" ~ model.unique_id ~ "]" -%}
             {{ dbt_utils.log_info(msg) }}
 
             {%- set tmp_identifier = model['name'] ~ '__dbt_incremental_period' ~ i ~ '_tmp' -%}
@@ -227,7 +213,7 @@
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
             {%- if loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %} {% endif -%}
 
-            {%- set msg = "Ran for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ "; " ~ rows_inserted ~ " records inserted [" ~ identifier ~ "]" -%}
+            {%- set msg = "Ran for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ "; " ~ rows_inserted ~ " records inserted [" ~ model.unique_id ~ "]" -%}
             {{ dbt_utils.log_info(msg) }}
 
             {% call statement() -%}
