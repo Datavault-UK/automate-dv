@@ -139,9 +139,9 @@ Macro tests (unit) and BDD Tests (integration tests).
 
 Given your SecretHub environment is correctly set up you may run the following commands:
 
-- `pipenv run inv macro_tests`
+- `pipenv run inv macro-tests`
 
-- `pipenv run inv bdd_tests`
+- `pipenv run inv bdd-tests`
 
 Both of these commands can be provided a `-t` and `-u` flag to specify a target and user respectively, as documented in
 Method 2 for running dbt, above. 
