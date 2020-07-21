@@ -82,7 +82,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
-        command = f"secrethub run --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv "
 
         c.run(command)
@@ -109,7 +109,7 @@ def bdd_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}'")
 
-        command = f"secrethub run --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- behave tests/features"
 
         c.run(command)
@@ -149,7 +149,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
     # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
-    command = f"secrethub run --env-file={PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
+    command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
