@@ -53,7 +53,9 @@ In `dbtvault` this `.env` file will be used to populate environment variables at
 used by the dbt profiles, for example: `account: "{{ env_var('SNOWFLAKE_DB_ACCOUNT') }}"`
 
 By taking this approach instead of using SecretHub's config file injection, developers only need to provide their own
-`secrethub.env` file with paths to their own secrets, instead of needing to modify the dbt profiles directly. 
+`secrethub_dev.env` file with paths to their own secrets, instead of needing to modify the dbt profiles directly. 
+
+Simply copy and modify the `secrethub_tmpl.env` with your own secret paths, and rename it `secrethub_dev.env`.
 
 
 #### Running dbt
