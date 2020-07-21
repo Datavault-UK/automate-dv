@@ -7,7 +7,6 @@ from tests.test_utils.dbt_test_utils import DBTTestUtils
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
-SECRETHUB_FILE = Path(f"{PROJECT_ROOT}/secrethub.env")
 
 logger = logging.getLogger('dbt')
 
@@ -83,18 +82,20 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
-        command = f"secrethub run --env-file {env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv "
 
         c.run(command)
 
+
 @task
-def bdd_tests(c, target=None, user=None):
+def bdd_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
     """
     Run macro tests with secrets
         :param c: invoke context
         :param target: dbt profile target
         :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param env_file: Environment file to use for secrethub
     """
 
     if not user:
@@ -108,14 +109,14 @@ def bdd_tests(c, target=None, user=None):
 
         logger.info(f"Running on '{target}' with user '{user}'")
 
-        command = f"secrethub run -v env={target} -v user={user}" \
+        command = f"secrethub run --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- behave tests/features"
 
         c.run(command)
 
 
 @task
-def run_dbt(c, dbt_args, target=None, user=None, project=None):
+def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secrethub_dev.env'):
     """
     Run dbt in the context of the provided project with the provided dbt args.
         :param c: invoke context
@@ -124,6 +125,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
         :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
         :param project: dbt project to run with, either core (public dbtvault project),
         dev (dev project) or test (test project)
+        :param env_file: Environment file to use for secrethub
     """
 
     # Get config
@@ -147,7 +149,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
     # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
-    command = f"secrethub run --env-file={SECRETHUB_FILE} -v user={user} -- dbt {dbt_args}"
+    command = f"secrethub run --env-file={PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
@@ -158,7 +160,8 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
             logger.info(f'User: {user}')
 
         logger.info(f'Project: {project}')
-        logger.info(f'Target: {target}\n')
+        logger.info(f'Target: {target}')
+        logger.info(f'Env file: {PROJECT_ROOT}/{env_file}\n')
 
         c.run(command)
 
