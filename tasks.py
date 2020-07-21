@@ -63,12 +63,13 @@ def set_defaults(c, target=None, user=None, project=None):
 
 
 @task
-def macro_tests(c, target=None, user=None):
+def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
     """
     Run macro tests with secrets
         :param c: invoke context
         :param target: dbt profile target
         :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param env_file: Environment file to use for secrethub
     """
 
     if not user:
@@ -80,13 +81,12 @@ def macro_tests(c, target=None, user=None):
     if check_target(target):
         os.environ['TARGET'] = target
 
-        logger.info(f"Running on '{target}' with user '{user}'")
+        logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
-        command = f"secrethub run -v env={target} -v user={user}" \
+        command = f"secrethub run --env-file {env_file} -v env={target} -v user={user}" \
                   f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv "
 
         c.run(command)
-
 
 @task
 def bdd_tests(c, target=None, user=None):
