@@ -55,13 +55,12 @@ def after_scenario(context, scenario):
         :param scenario: Current scenario
     """
 
-    # DBTTestUtils.clean_csv()
-    # DBTTestUtils.clean_models()
-    # DBTTestUtils.clean_target()
-    #
-    # DBTVAULTGenerator.clean_test_schema_file()
-    # DBTVAULTGenerator.restore_project_yml()
-    pass
+    DBTTestUtils.clean_csv()
+    DBTTestUtils.clean_models()
+    DBTTestUtils.clean_target()
+
+    DBTVAULTGenerator.clean_test_schema_file()
+    DBTVAULTGenerator.restore_project_yml()
 
 
 def before_tag(context, tag):
