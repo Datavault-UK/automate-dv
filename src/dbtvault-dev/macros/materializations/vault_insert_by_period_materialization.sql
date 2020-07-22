@@ -37,6 +37,7 @@
 
     {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
 
+
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
                                 'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
@@ -97,18 +98,18 @@
 {%- set filtered_sql = sql | replace("__PERIOD_FILTER__", "1=1", 1) -%}
 
 {% set query_sql %}
-WITH source AS (
-    {{ filtered_sql }}
-)
 
-SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM source
+{{ filtered_sql }}
+{{ model }}
+SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM source_data
 {% endset %}
+
+{% do log(query_sql, true) %}
 
 {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
 
 {% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
                        'max': min_max_dict['MAX'][0] | string} %}
-
 
 {{ return(min_max_dict) }}
 
@@ -141,6 +142,7 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     -- `BEGIN` happens here:
     {{ run_hooks(pre_hooks, inside_transaction=True) }}
+
 
     {% set to_drop = [] %}
     {% if existing_relation is none %}
@@ -182,12 +184,15 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     {% else %}
 
+        {% do log('existing', true) %}
+
         {% set period_boundaries = dbtvault.get_period_boundaries(schema,
                                                                   identifier,
                                                                   timestamp_field,
                                                                   start_date,
                                                                   stop_date,
                                                                   period) %}
+
 
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
@@ -249,8 +254,10 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
-    -- `COMMIT` happens here
-    {% do adapter.commit() %}
+    {% if period_boundaries.num_periods > 0 %}
+        -- `COMMIT` happens here
+        {% do adapter.commit() %}
+    {% endif %}
 
     {% for rel in to_drop %}
         {{ drop_relation_if_exists(backup_relation) }}
