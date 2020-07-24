@@ -67,8 +67,7 @@ Feature: Cycles
       | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY')   | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
-
-
+    
   @fixture.satellite_cycle
   Scenario: [SAT-CYCLE-PERIOD-MAT] Satellite load over several cycles with insert_by_period into non-existent satellite.
     Given the SATELLITE table does not exist
@@ -118,7 +117,6 @@ Feature: Cycles
       | md5('1003') | md5('1990-02-03\|\|1003\|\|CHARLEY') | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-
 
   @fixture.satellite_cycle
   Scenario: [SAT-CYCLE-PERIOD-MAT] Satellite load over several cycles with insert_by_period into empty satellite.

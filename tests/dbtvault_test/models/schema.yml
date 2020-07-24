@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: test_unit
     database: DBT_VAULT
-    schema: TEST
+    schema: TEST_{{ env_var('SNOWFLAKE_DB_USER') }}
     tables:
       - name: source
         identifier: raw_source_table
