@@ -84,7 +84,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
-                  f"--junitxml=test-results/junit.xml"
+                  f"--junitxml=test-results/macro_tests/junit.xml"
 
         c.run(command)
 
@@ -111,7 +111,7 @@ def bdd_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
         logger.info(f"Running on '{target}' with user '{user}'")
 
         command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
-                  f" -- behave tests/features"
+                  f" -- behave tests/features --junit --junit-directory ../../test-results/bdd_tests/"
 
         c.run(command)
 
