@@ -45,9 +45,13 @@ jobs:
           fail_only: false
           mentions: 'URXTX0XEZ'
       - store_test_results:
-          path: test-results
+          path: test-results/bdd_tests
+      - store_test_results:
+          path: test-results/macro_tests
       - store_artifacts:
-          path: test-results
+          path: test-results/bdd_tests
+      - store_artifacts:
+          path: test-results/macro_tests
 
 workflows:
   version: 2
