@@ -34,16 +34,24 @@ jobs:
       - secrethub/install
       - run:
           name: Install dbt dependencies in test project
-          command: pipenv run inv run-dbt -u dev -t snowflake -p test -d 'deps'
+          command: pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub_circleci.env
       - run:
           name: Run snowflake macro tests
-          command: pipenv run inv macro-tests -t snowflake -u dev -e secrethub_circleci.env
+          command: pipenv run inv macro-tests -t snowflake -u circleci -e secrethub_circleci.env
       - run:
-          name: Run snowflake bdd tests
-          command: pipenv run inv bdd-tests -t snowflake -u dev -e secrethub_circleci.env
+          name: Run snowflake integration tests
+          command: pipenv run inv integration-tests -t snowflake -u circleci -e secrethub_circleci.env
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
+      - store_test_results:
+          path: test-results/integration_tests
+      - store_test_results:
+          path: test-results/macro_tests
+      - store_artifacts:
+          path: test-results/integration_tests
+      - store_artifacts:
+          path: test-results/macro_tests
 
 workflows:
   version: 2
