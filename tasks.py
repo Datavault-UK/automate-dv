@@ -90,9 +90,9 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
 
 @task
-def bdd_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
+def integration_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
     """
-    Run macro tests with secrets
+    Run integration (bdd/behave) tests with secrets
         :param c: invoke context
         :param target: dbt profile target
         :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
@@ -111,7 +111,7 @@ def bdd_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
         logger.info(f"Running on '{target}' with user '{user}'")
 
         command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
-                  f" -- behave tests/features --junit --junit-directory ../../test-results/bdd_tests/"
+                  f" -- behave tests/features --junit --junit-directory ../../test-results/integration_tests/"
 
         c.run(command)
 
