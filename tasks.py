@@ -83,7 +83,8 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
         command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
-                  f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv "
+                  f" -- pytest --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
+                  f"--junitxml=test-results/junit.xml"
 
         c.run(command)
 
