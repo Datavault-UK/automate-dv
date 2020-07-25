@@ -5,7 +5,6 @@
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="TARGET" value="snowflake" />
-      <env name="PARAM_TARGET" value="snowflake" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="" />
