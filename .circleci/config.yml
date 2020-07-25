@@ -12,9 +12,10 @@ jobs:
     parallelism: 4
     steps:
       - run:
-          name: Check splitting
+          name: Split features splitting
           command: |
-            circleci tests glob "tests/features/*.feature" "tests/unit/*/test_*.py" | circleci tests split > /tmp/tests-to-run
+            ls tests/features/*.feature > /tmp/featute-tests-to-run
+            ls tests/unit/*/test_*.py > /tmp/macro-tests-to-run
       - checkout
       - restore_cache:
           keys:
