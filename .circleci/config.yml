@@ -13,7 +13,6 @@ jobs:
     steps:
       - run:
           name: Check splitting
-          - run:
           command: |
             echo $(circleci tests glob "tests/features/*.feature")
             circleci tests glob "tests/features/*.feature" | xargs -n 1 echo
