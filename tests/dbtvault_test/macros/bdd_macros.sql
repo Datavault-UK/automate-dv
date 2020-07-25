@@ -18,7 +18,7 @@
 
     {%- set source_relation = adapter.get_relation(
           database=target.database,
-          schema=target.schema,
+          schema="{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER')),
           identifier=model_name) -%}
 
     {% if source_relation %}
@@ -31,19 +31,13 @@
 
 {%- macro drop_test_schemas() -%}
 
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST")) %}
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_RAW")) %}
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_STG")) %}
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_VLT")) %}
+{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER')) )) %}
 
 {% endmacro %}
 
 {%- macro create_test_schemas() -%}
 
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST")) %}
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_RAW")) %}
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_STG")) %}
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_VLT")) %}
+{% do adapter.create_schema(api.Relation.create(database=target.database, schema="{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER')) )) %}
 
 {%- endmacro -%}
 
