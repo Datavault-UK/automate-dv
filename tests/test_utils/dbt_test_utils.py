@@ -29,6 +29,14 @@ EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
 CSV_DIR = TESTS_DBT_ROOT / 'data/temp'
 
+if os.getenv('TARGET').lower() == 'snowflake':
+
+    EXPECTED_PARAMETERS = {
+        'SCHEMA_NAME': f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
+    }
+else:
+    EXPECTED_PARAMETERS = dict()
+
 if not os.getenv('DBT_PROFILES_DIR'):
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
@@ -177,7 +185,26 @@ class DBTTestUtils:
         with open(self.expected_sql_file_path / f'{file_name}.sql') as f:
             file = f.readlines()
 
-            return "".join(file)
+            processed_file = self.inject_parameters("".join(file), EXPECTED_PARAMETERS)
+
+            return processed_file
+
+    @staticmethod
+    def inject_parameters(file: str, parameters: dict):
+        """
+        Replace placeholders in a file with the provided dictionary
+            :param file: String containing expected file contents
+            :param parameters: Dictionary of parameters {placeholder: value}
+            :return: Parsed/injected file
+        """
+
+        if not parameters:
+            return file
+        else:
+            for key, val in parameters.items():
+                file = file.replace(f'[{key}]', val)
+
+            return file
 
     @staticmethod
     def clean_target():
