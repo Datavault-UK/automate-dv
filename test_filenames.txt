@@ -1,5 +1,0 @@
-cycles.feature
-hubs.feature
-links.feature
-sats.feature
-t_links.feature

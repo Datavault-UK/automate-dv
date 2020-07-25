@@ -13,7 +13,7 @@ jobs:
       - run:
           name: Check splitting
           command: |
-            circleci tests split --total=4 test_filenames.txt
+            circleci tests glob "tests/features/*.feature" | circleci tests split
       - checkout
       - restore_cache:
           keys:
