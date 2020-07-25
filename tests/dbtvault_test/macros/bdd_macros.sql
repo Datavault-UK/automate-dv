@@ -18,7 +18,7 @@
 
     {%- set source_relation = adapter.get_relation(
           database=target.database,
-          schema="{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER')),
+          schema="{}_{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER'), env_var('CIRCLE_NODE_INDEX', '')),
           identifier=model_name) -%}
 
     {% if source_relation %}
@@ -31,13 +31,13 @@
 
 {%- macro drop_test_schemas() -%}
 
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER')) )) %}
+{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="{}_{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER'), env_var('CIRCLE_NODE_INDEX', '')) )) %}
 
 {% endmacro %}
 
 {%- macro create_test_schemas() -%}
 
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER')) )) %}
+{% do adapter.create_schema(api.Relation.create(database=target.database, schema="{}_{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER'), env_var('CIRCLE_NODE_INDEX', '')) )) %}
 
 {%- endmacro -%}
 
