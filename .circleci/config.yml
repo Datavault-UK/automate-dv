@@ -37,12 +37,12 @@ jobs:
           name: Print macro tests to run
           command: |
             cat /tmp/macro-tests-to-run
-            circleci tests glob "tests/unit/*/test_*.py" | circleci tests split > /tmp/macro-tests-to-run
+            circleci tests glob tests/unit/*/test_*.py | circleci tests split > /tmp/macro-tests-to-run
       - run:
           name: Print feature tests to run
           command: |
             cat /tmp/feature-tests-to-run
-            circleci tests glob "tests/features/*.feature" | circleci tests split > /tmp/feature-tests-to-run
+            circleci tests glob tests/features/*.feature | circleci tests split > /tmp/feature-tests-to-run
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
