@@ -45,7 +45,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   @fixture.sha
-  Scenario: [BASE-LOAD] Simple load of distinct stage data into an empty hub using SHA hashing
+  Scenario: [BASE-LOAD-SHA] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |

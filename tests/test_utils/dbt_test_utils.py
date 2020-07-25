@@ -8,7 +8,7 @@ from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 
 import pandas as pd
-import ruamel.yaml
+from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
@@ -21,8 +21,8 @@ MODELS_ROOT = TESTS_DBT_ROOT / 'models'
 SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
 DBT_PROJECT_YML_FILE = TESTS_DBT_ROOT / 'dbt_project.yml'
-BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak'
-BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak'
+BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
+BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/models/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
@@ -61,6 +61,20 @@ class DBTTestUtils:
         else:
 
             self.logger.warning('Model directory not set.')
+
+        if os.getenv('PARAM_TARGET').lower() == 'snowflake':
+
+            if os.getenv('CIRCLE_NODE_INDEX'):
+                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
+                              f"_{os.getenv('CIRCLE_NODE_INDEX')}"
+            else:
+                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
+
+            self.EXPECTED_PARAMETERS = {
+                'SCHEMA_NAME': schema_name
+            }
+        else:
+            self.EXPECTED_PARAMETERS = dict()
 
     def run_dbt_command(self, command) -> str:
         """
@@ -177,7 +191,26 @@ class DBTTestUtils:
         with open(self.expected_sql_file_path / f'{file_name}.sql') as f:
             file = f.readlines()
 
-            return "".join(file)
+            processed_file = self.inject_parameters("".join(file), self.EXPECTED_PARAMETERS)
+
+            return processed_file
+
+    @staticmethod
+    def inject_parameters(file: str, parameters: dict):
+        """
+        Replace placeholders in a file with the provided dictionary
+            :param file: String containing expected file contents
+            :param parameters: Dictionary of parameters {placeholder: value}
+            :return: Parsed/injected file
+        """
+
+        if not parameters:
+            return file
+        else:
+            for key, val in parameters.items():
+                file = file.replace(f'[{key}]', val)
+
+            return file
 
     @staticmethod
     def clean_target():
@@ -493,7 +526,7 @@ class DBTVAULTGenerator:
         with open(TEST_SCHEMA_YML_FILE, 'a+') as f:
             f.write('\n\n')
 
-            yaml = ruamel.yaml.YAML()
+            yaml = YAML()
             yaml.indent(sequence=4, offset=2)
 
             yaml.dump(yaml_dict, f)
@@ -506,7 +539,7 @@ class DBTVAULTGenerator:
             :param seed_config: Configuration dict for seed file
         """
 
-        yaml = ruamel.yaml.YAML()
+        yaml = YAML()
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
             project_file = yaml.load(f)
@@ -515,6 +548,8 @@ class DBTVAULTGenerator:
 
             f.seek(0)
             f.truncate()
+
+            yaml.width = 150
 
             yaml.indent(sequence=4, offset=2)
 

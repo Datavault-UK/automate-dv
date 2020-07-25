@@ -197,6 +197,9 @@ def create_csv(context, raw_stage_model_name):
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                  model_name=raw_stage_model_name)
 
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                       seed_config=context.seed_config[raw_stage_model_name])
+
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     context.raw_stage_models = seed_file_name

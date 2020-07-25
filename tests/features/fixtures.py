@@ -611,7 +611,7 @@ def cycle(context):
         'HUB_CUSTOMER': {
             'column_types': {
                 'CUSTOMER_PK': 'BINARY(16)',
-                'CUSTOMER_ID': 'NUMBER(38,0)',
+                'CUSTOMER_ID': 'VARCHAR',
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
@@ -619,7 +619,7 @@ def cycle(context):
         'HUB_BOOKING': {
             'column_types': {
                 'BOOKING_PK': 'BINARY(16)',
-                'BOOKING_ID': 'NUMBER(38,0)',
+                'BOOKING_ID': 'VARCHAR',
                 'LOADDATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
