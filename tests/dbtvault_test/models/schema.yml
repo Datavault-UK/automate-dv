@@ -3,6 +3,6 @@ version: 2
 sources:
   - name: test_unit
     database: DBT_VAULT
-    schema: TEST_{{ env_var('SNOWFLAKE_DB_USER') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    schema: "TEST_{{ env_var('SNOWFLAKE_DB_USER') }}_{{ env_var('CIRCLE_NODE_INDEX', '') }}"
       - name: source
         identifier: raw_source_table
