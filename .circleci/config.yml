@@ -9,11 +9,14 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
+    parallelism: 4
     steps:
       - run:
           name: Check splitting
+          - run:
           command: |
-            circleci tests glob "tests/features/*.feature" | circleci tests split
+            echo $(circleci tests glob "tests/features/*.feature")
+            circleci tests glob "tests/features/*.feature" | xargs -n 1 echo
       - checkout
       - restore_cache:
           keys:
