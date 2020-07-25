@@ -14,8 +14,8 @@ jobs:
       - run:
           name: Check splitting
           command: |
-            echo $(circleci tests glob "tests/features/*.feature")
-            circleci tests glob "tests/features/*.feature" | xargs -n 1 echo
+            echo $(circleci tests glob "tests/features/*.feature" "tests/unit/*/test_*.py")
+            circleci tests glob "tests/features/*.feature" "tests/unit/*/test_*.py" | xargs -n 1 echo
       - checkout
       - restore_cache:
           keys:
