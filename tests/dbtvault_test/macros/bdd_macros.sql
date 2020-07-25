@@ -35,13 +35,21 @@
 
 {%- macro drop_test_schemas() -%}
 
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="{}_{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER'), env_var('CIRCLE_NODE_INDEX', '')) )) %}
+    {% set schema_name %} 
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    {% endset %}
+
+    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
 
 {% endmacro %}
 
 {%- macro create_test_schemas() -%}
 
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="{}_{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER'), env_var('CIRCLE_NODE_INDEX', '')) )) %}
+    {% set schema_name %} 
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    {% endset %}
+
+    {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
 
 {%- endmacro -%}
 
