@@ -14,6 +14,6 @@ WITH STG AS (
 )
 
 SELECT c.* FROM STG AS c
-LEFT JOIN DBT_VAULT.TEST.test_hub_macro_correctly_generates_sql_for_incremental_single_source_multi_nk AS d 
+LEFT JOIN DBT_VAULT.[SCHEMA_NAME].test_hub_macro_correctly_generates_sql_for_incremental_single_source_multi_nk AS d 
 ON c.CUSTOMER_PK = d.CUSTOMER_PK
 WHERE d.CUSTOMER_PK IS NULL
