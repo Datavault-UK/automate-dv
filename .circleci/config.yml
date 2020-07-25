@@ -9,6 +9,7 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
+    parallelism: 5
     steps:
       - checkout
       - restore_cache:
@@ -34,13 +35,17 @@ jobs:
       - secrethub/install
       - run:
           name: Install dbt dependencies in test project
-          command: pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub_circleci.env
+          command: PARAM_TARGET=snowflake pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub_circleci.env
       - run:
           name: Run snowflake macro tests
-          command: pipenv run inv macro-tests -t snowflake -u circleci -e secrethub_circleci.env
+          command: |
+            circleci tests glob tests/unit/*/test_*.py | circleci tests split > /tmp/macro-tests-to-run
+            PARAM_TARGET=snowflake pipenv run inv macro-tests -t snowflake -u circleci -e secrethub_circleci.env
       - run:
           name: Run snowflake integration tests
-          command: pipenv run inv integration-tests -t snowflake -u circleci -e secrethub_circleci.env
+          command: |
+            circleci tests glob tests/features/*.feature | circleci tests split > /tmp/feature-tests-to-run
+            PARAM_TARGET=snowflake pipenv run inv integration-tests -t snowflake -u circleci -e secrethub_circleci.env
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'

@@ -16,9 +16,13 @@
 
 {% macro check_model_exists(model_name) %}
 
+    {% set schema_name %} 
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    {% endset %}
+
     {%- set source_relation = adapter.get_relation(
           database=target.database,
-          schema=target.schema,
+          schema=schema_name,
           identifier=model_name) -%}
 
     {% if source_relation %}
@@ -31,19 +35,21 @@
 
 {%- macro drop_test_schemas() -%}
 
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST")) %}
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_RAW")) %}
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_STG")) %}
-{% do adapter.drop_schema(api.Relation.create(database=target.database, schema="TEST_VLT")) %}
+    {% set schema_name %} 
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    {% endset %}
+
+    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
 
 {% endmacro %}
 
 {%- macro create_test_schemas() -%}
 
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST")) %}
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_RAW")) %}
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_STG")) %}
-{% do adapter.create_schema(api.Relation.create(database=target.database, schema="TEST_VLT")) %}
+    {% set schema_name %} 
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    {% endset %}
+
+    {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
 
 {%- endmacro -%}
 
