@@ -11,11 +11,6 @@ jobs:
     executor: python/default
     parallelism: 4
     steps:
-      - run:
-          name: Split features splitting
-          command: |
-            circleci tests glob "tests/features/*.feature" | circleci tests split > /tmp/macro-tests-to-run
-            circleci tests glob "tests/unit/*/test_*.py" | circleci tests split > /tmp/feature-tests-to-run
       - checkout
       - restore_cache:
           keys:
@@ -39,14 +34,15 @@ jobs:
             - /.circleci/.cache
       - secrethub/install
       - run:
-          name: Install dbt dependencies in test project
-          command: PARAM_TARGET=snowflake pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub_circleci.env
+          name: Print macro tests to run
+          command: |
+            cat /tmp/macro-tests-to-run
+            circleci tests glob "tests/unit/*/test_*.py" | circleci tests split > /tmp/macro-tests-to-run
       - run:
-          name: Run snowflake macro tests
-          command: PARAM_TARGET=snowflake pipenv run inv macro-tests -t snowflake -u circleci -e secrethub_circleci.env
-      - run:
-          name: Run snowflake integration tests
-          command: PARAM_TARGET=snowflake pipenv run inv integration-tests -t snowflake -u circleci -e secrethub_circleci.env
+          name: Print feature tests to run
+          command: |
+            cat /tmp/feature-tests-to-run
+            circleci tests glob "tests/features/*.feature" | circleci tests split > /tmp/feature-tests-to-run
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
