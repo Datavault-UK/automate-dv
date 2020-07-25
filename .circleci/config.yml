@@ -14,8 +14,8 @@ jobs:
       - run:
           name: Split features splitting
           command: |
-            ls tests/features/*.feature > /tmp/featute-tests-to-run
-            ls tests/unit/*/test_*.py > /tmp/macro-tests-to-run
+            circleci tests glob "tests/features/*.feature" > /tmp/macro-tests-to-run
+            circleci tests glob "tests/unit/*/test_*.py" > /tmp/feature-tests-to-run
       - checkout
       - restore_cache:
           keys:
