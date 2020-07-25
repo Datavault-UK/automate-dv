@@ -34,6 +34,9 @@ jobs:
             - /.circleci/.cache
       - secrethub/install
       - run:
+          name: Install dbt dependencies in test project
+          command: PARAM_TARGET=snowflake pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub_circleci.env
+      - run:
           name: Run snowflake macro tests
           command: |
             circleci tests glob tests/unit/*/test_*.py | circleci tests split > /tmp/macro-tests-to-run
