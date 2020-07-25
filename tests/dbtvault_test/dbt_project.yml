@@ -19,7 +19,7 @@ clean-targets:
 models:
   dbtvault_test:
     unit:
-      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '')}}{{ env_var('CIRCLE_NODE_INDEX', '') }}"
+      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}"
       staging:
         hash_columns:
           vars:
@@ -318,11 +318,12 @@ models:
               src_ldts: LOADDATE
               src_source: RECORD_SOURCE
     feature:
-      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '')}}{{ env_var('CIRCLE_NODE_INDEX', '') }}"
+      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}"
   vars:
     max_date: TO_DATE("9999-12-31")
 
 seeds:
+  schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}"
   quote_columns: true
   dbtvault_test:
     raw_source:
@@ -337,12 +338,3 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
-    temp:
-      raw_stage:
-        column_types:
-          CUSTOMER_ID: VARCHAR
-          CUSTOMER_NAME: VARCHAR
-          CUSTOMER_DOB: DATE
-          EFFECTIVE_FROM: DATE
-          LOADDATE: DATE
-          SOURCE: VARCHAR

@@ -14,7 +14,7 @@ dbt_utils = DBTTestUtils()
 
 
 @task
-def check_project(c, project='core'):
+def check_project(c, project='public'):
     """
     Check specified project is available.
         :param c: invoke context
@@ -23,7 +23,7 @@ def check_project(c, project='core'):
     """
 
     available_projects = {
-        'core': {'work_dir': './src/dbtvault'},
+        'public': {'work_dir': './src/dbtvault'},
         'dev': {'work_dir': './src/dbtvault-dev'},
         'test': {'work_dir': './tests/dbtvault_test'},
         'sf_demo': {'work_dir': './src/snowflakeDemo'},
@@ -83,7 +83,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
         command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
-                  f" -- pytest $(cat /tmp/macro-tests-to-run) --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
+                  f" -- pytest {'$(cat /tmp/macro-tests-to-run)' if user == 'circleci' else ''} --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
                   f"--junitxml=test-results/macro_tests/junit.xml"
 
         c.run(command)
@@ -111,7 +111,7 @@ def integration_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
         logger.info(f"Running on '{target}' with user '{user}'")
 
         command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
-                  f" -- behave $(cat /tmp/feature-tests-to-run) --junit --junit-directory ../../test-results/integration_tests/"
+                  f" -- behave {'$(cat /tmp/feature-tests-to-run)' if user == 'circleci' else ''} --junit --junit-directory ../../test-results/integration_tests/"
 
         c.run(command)
 

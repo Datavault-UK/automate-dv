@@ -8,7 +8,7 @@ from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 
 import pandas as pd
-import ruamel.yaml
+from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
@@ -21,8 +21,8 @@ MODELS_ROOT = TESTS_DBT_ROOT / 'models'
 SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
 DBT_PROJECT_YML_FILE = TESTS_DBT_ROOT / 'dbt_project.yml'
-BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak'
-BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak'
+BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
+BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test/target/compiled/dbtvault_test/models/unit")
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
@@ -65,7 +65,8 @@ class DBTTestUtils:
         if os.getenv('PARAM_TARGET').lower() == 'snowflake':
 
             if os.getenv('CIRCLE_NODE_INDEX'):
-                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
+                              f"_{os.getenv('CIRCLE_NODE_INDEX')}"
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
@@ -525,7 +526,7 @@ class DBTVAULTGenerator:
         with open(TEST_SCHEMA_YML_FILE, 'a+') as f:
             f.write('\n\n')
 
-            yaml = ruamel.yaml.YAML()
+            yaml = YAML()
             yaml.indent(sequence=4, offset=2)
 
             yaml.dump(yaml_dict, f)
@@ -538,7 +539,7 @@ class DBTVAULTGenerator:
             :param seed_config: Configuration dict for seed file
         """
 
-        yaml = ruamel.yaml.YAML()
+        yaml = YAML()
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
             project_file = yaml.load(f)
@@ -547,6 +548,8 @@ class DBTVAULTGenerator:
 
             f.seek(0)
             f.truncate()
+
+            yaml.width = 150
 
             yaml.indent(sequence=4, offset=2)
 
