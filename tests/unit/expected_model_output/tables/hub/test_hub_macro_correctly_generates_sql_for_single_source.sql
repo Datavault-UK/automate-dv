@@ -7,7 +7,7 @@ WITH STG AS (
             PARTITION BY b.CUSTOMER_PK
             ORDER BY b.LOADDATE, b.RECORD_SOURCE ASC
         ) AS RN
-        FROM DBT_VAULT.TEST.raw_source AS b
+        FROM DBT_VAULT.[SCHEMA_NAME].raw_source AS b
         WHERE b.CUSTOMER_PK IS NOT NULL
     ) AS a
     WHERE RN = 1

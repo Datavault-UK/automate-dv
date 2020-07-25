@@ -62,7 +62,7 @@ class DBTTestUtils:
 
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('PARAM_TARGET').lower() == 'snowflake':
+        if os.getenv('TARGET').lower() == 'snowflake':
 
             if os.getenv('CIRCLE_NODE_INDEX'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
