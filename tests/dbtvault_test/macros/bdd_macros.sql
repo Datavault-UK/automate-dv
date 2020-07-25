@@ -16,9 +16,13 @@
 
 {% macro check_model_exists(model_name) %}
 
+    {% set schema_name %} 
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+    {% endset %}
+
     {%- set source_relation = adapter.get_relation(
           database=target.database,
-          schema="{}_{}_{}".format(target.schema, env_var('SNOWFLAKE_DB_USER'), env_var('CIRCLE_NODE_INDEX', '')),
+          schema=schema_name,
           identifier=model_name) -%}
 
     {% if source_relation %}
