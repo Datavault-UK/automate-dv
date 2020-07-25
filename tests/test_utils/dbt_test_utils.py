@@ -64,8 +64,14 @@ class DBTTestUtils:
 
         if os.getenv('PARAM_TARGET').lower() == 'snowflake':
 
+            if os.getenv('CIRCLE_NODE_INDEX'):
+                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+            else:
+                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
+
             self.EXPECTED_PARAMETERS = {
-                'SCHEMA_NAME': f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"}
+                'SCHEMA_NAME': schema_name
+            }
         else:
             self.EXPECTED_PARAMETERS = dict()
 
