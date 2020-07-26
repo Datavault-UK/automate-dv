@@ -104,20 +104,29 @@
 
 {%- macro min_max_date(timestamp_field) %}
 
-{% set query_sql %}
+    {% set source_data_sql %}
 
-    SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX 
-    FROM {{ ref(model.refs[0][0]) }}
+        {{ sql.split(')', 1)[0].strip() ~ '\n)' }}
 
-{% endset %}
+    {% endset %}
 
-{% do log(query_sql, true) %}
-{% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
+    {%- set filtered_sql = source_data_sql | replace("__PERIOD_FILTER__", "1=1", 1) -%}
 
-{% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
-                       'max': min_max_dict['MAX'][0] | string} %}
+    {% set query_sql %}
 
-{{ return(min_max_dict) }}
+        {{ filtered_sql }}
+
+        SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX
+        FROM source_data
+
+    {% endset %}
+
+    {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
+
+    {% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
+                           'max': min_max_dict['MAX'][0] | string} %}
+
+    {{ return(min_max_dict) }}
 
 {%- endmacro -%}
 
