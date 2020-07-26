@@ -102,22 +102,12 @@
     {% do log('here 0.6', true) %}
 {%- endmacro %}
 
-{%- macro min_max_date(timestamp_field) %}
-
-    {% set source_data_sql %}
-
-        {{ sql.split(')', 1)[0].strip() ~ '\n)' }}
-
-    {% endset %}
-
-    {%- set filtered_sql = source_data_sql | replace("__PERIOD_FILTER__", "1=1", 1) -%}
+{%- macro min_max_date(timestamp_field, source_model) %}
 
     {% set query_sql %}
 
-        {{ filtered_sql }}
-
         SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX
-        FROM source_data
+        FROM {{ ref(source_model) }}
 
     {% endset %}
 
@@ -135,7 +125,8 @@
     {% set full_refresh_mode = flags.FULL_REFRESH %}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
-    {%- set min_max_date = dbtvault.min_max_date(timestamp_field) -%}
+    {%- set source_model = config.require('source_model') %}
+    {%- set min_max_date = dbtvault.min_max_date(timestamp_field, source_model) -%}
     {%- set start_date = config.get('start_date', default=min_max_date['min']) -%}
     {%- set stop_date = config.get('stop_date', default=min_max_date['max']) -%}
     {%- set period = config.get('period', default='day') -%}
