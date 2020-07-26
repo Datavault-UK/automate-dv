@@ -134,7 +134,8 @@ def load_table(context, model_name, vault_structure, start_date=None, stop_date=
     config = {'materialized': 'vault_insert_by_period',
               'timestamp_field': 'LOADDATE',
               'start_date': start_date,
-              'stop_date': stop_date}
+              'stop_date': stop_date,
+              'source_model': context.hashed_stage_model_name}
 
     context.vault_structure_metadata = metadata
 
@@ -154,7 +155,8 @@ def load_table(context, model_name, vault_structure):
                 **context.vault_structure_columns[model_name]}
 
     config = {'materialized': 'vault_insert_by_period',
-              'timestamp_field': 'LOADDATE'}
+              'timestamp_field': 'LOADDATE',
+              'source_model': context.hashed_stage_model_name}
 
     context.vault_structure_metadata = metadata
 
