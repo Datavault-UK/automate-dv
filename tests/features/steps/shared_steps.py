@@ -126,6 +126,28 @@ def load_table(context, model_name, vault_structure):
     assert 'Completed successfully' in logs
 
 
+@step("I use insert_by_period to load the {model_name} {vault_structure} with date range: {start_date} to {stop_date}")
+def load_table(context, model_name, vault_structure, start_date=None, stop_date=None):
+    metadata = {'source_model': context.hashed_stage_model_name,
+                **context.vault_structure_columns[model_name]}
+
+    config = {'materialized': 'vault_insert_by_period',
+              'timestamp_field': 'LOADDATE',
+              'start_date': start_date,
+              'stop_date': stop_date}
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+
+    assert 'Completed successfully' in logs
+
+
 @step("I use insert_by_period to load the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure):
     metadata = {'source_model': context.hashed_stage_model_name,
