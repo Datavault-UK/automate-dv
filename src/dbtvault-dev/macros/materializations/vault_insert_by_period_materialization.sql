@@ -37,7 +37,6 @@
 
     {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
 
-
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
                                 'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
@@ -60,16 +59,23 @@
 
 {%- endmacro -%}
 
-{% macro replace_filter_placeholder(sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro replace_filter_placeholder(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+
+    {% do log('here 0.2', true) %}
+    {% do log('timestamp_field: ' ~ timestamp_field, true) %}
+    {% do log('start_timestamp: ' ~ start_timestamp, true) %}
+    {% do log('stop_timestamp: ' ~ stop_timestamp, true) %}
+    {% do log('offset: ' ~ offset, true) %}
+    {% do log('period: ' ~ period, true) %}
 
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
              TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
       AND (TO_DATE({{ timestamp_field }}) >= TO_DATE('{{ start_timestamp }}'))
     {%- endset -%}
-
-    {%- set filtered_sql = sql | replace("__PERIOD_FILTER__", period_filter, 1) -%}
-
+    {% do log('here 0.3', true) %}  
+    {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter, 1) -%}
+    {% do log('here 0.4', true) %}  
     {{ return(filtered_sql) }}
 
 {% endmacro %}
@@ -78,34 +84,34 @@
 
     {%- set filtered_sql = {'sql': sql} %}
 
+    {% do log('here 0.1', true) %}
+
 
     {% do filtered_sql.update({'sql': dbtvault.replace_filter_placeholder(filtered_sql.sql,
                                                                           timestamp_field,
                                                                           start_timestamp,
                                                                           stop_timestamp,
                                                                           offset, period)}) %}
-
+    
+    {% do log('here 0.5', true) %}
     select
         {{target_cols_csv}}
     from (
-        {{filtered_sql.sql}}
+        {{ filtered_sql.sql }}
     )
-
+    {% do log('here 0.6', true) %}
 {%- endmacro %}
 
 {%- macro min_max_date(timestamp_field) %}
 
-{%- set filtered_sql = sql | replace("__PERIOD_FILTER__", "1=1", 1) -%}
-
 {% set query_sql %}
 
-{{ filtered_sql }}
-{{ model }}
-SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM source_data
+    SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX 
+    FROM {{ ref(model.refs[0][0]) }}
+
 {% endset %}
 
 {% do log(query_sql, true) %}
-
 {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
 
 {% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
@@ -142,7 +148,6 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     -- `BEGIN` happens here:
     {{ run_hooks(pre_hooks, inside_transaction=True) }}
-
 
     {% set to_drop = [] %}
     {% if existing_relation is none %}
@@ -184,15 +189,12 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     {% else %}
 
-        {% do log('existing', true) %}
-
         {% set period_boundaries = dbtvault.get_period_boundaries(schema,
                                                                   identifier,
                                                                   timestamp_field,
                                                                   start_date,
                                                                   stop_date,
                                                                   period) %}
-
 
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
@@ -206,10 +208,10 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
             {%- set msg = "Running for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ " (" ~ period_of_load ~ ") [" ~ model.unique_id ~ "]" -%}
             {{ dbt_utils.log_info(msg) }}
 
-            {%- set tmp_identifier = model['name'] ~ '__dbt_incremental_period' ~ i ~ '_tmp' -%}
+            {%- set tmp_identifier = model['name'] ~ '__dbt_incremental_period_' ~ i ~ '_tmp' -%}
             {%- set tmp_relation = api.Relation.create(identifier=tmp_identifier,
                                                        schema=schema, type='table') -%}
-
+            {% do log('here 0', true) %}     
             {% call statement() -%}
                 {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv,
                                                                       sql,
@@ -219,34 +221,45 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
                                                                       period_boundaries.stop_timestamp,
                                                                       i) %}
 
-                {{dbt.create_table_as(True, tmp_relation, tmp_table_sql)}}
+                {% do log('here 0.7', true) %}
+                {{ dbt.create_table_as(True, tmp_relation, tmp_table_sql) }}
+                {% do log('here 0.8', true) %}
             {%- endcall %}
-
-            {{adapter.expand_target_column_types(from_relation=tmp_relation,
-                                                 to_relation=target_relation)}}
+            {% do log('here 1', true) %}
+            {{ adapter.expand_target_column_types(from_relation=tmp_relation,
+                                                 to_relation=target_relation) }}
 
             {%- set name = 'main-' ~ i -%}
+
+
 
             {% call statement(name, fetch_result=True) -%}
                 insert into {{ target_relation }} ({{ target_cols_csv }})
                 (
                   select
-                      {{target_cols_csv}}
-                  from {{tmp_relation.include(schema=False)}}
+                      {{ target_cols_csv }}
+                  from {{ tmp_relation.include(schema=True) }}
                 );
             {%- endcall %}
+
+            {% do log('here 2', true) %}
 
             {%- set rows_inserted = (load_result('main-' ~ i)['status'].split(" "))[1] | int -%}
 
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
             {%- if loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %} {% endif -%}
 
+            {% do log('here 3', true) %}
+
             {%- set msg = "Ran for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ "; " ~ rows_inserted ~ " records inserted [" ~ model.unique_id ~ "]" -%}
+            
             {{ dbt_utils.log_info(msg) }}
 
             {% call statement() -%}
                 begin;
             {%- endcall %}
+
+            {% do log('here 4', true) %}
 
         {%- endfor %}
 
@@ -254,7 +267,7 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
-    {% if period_boundaries.num_periods > 0 %}
+    {% if period_boundaries is defined and period_boundaries.num_periods > 0 %}
         -- `COMMIT` happens here
         {% do adapter.commit() %}
     {% endif %}
