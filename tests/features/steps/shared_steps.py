@@ -126,8 +126,8 @@ def load_table(context, model_name, vault_structure):
     assert 'Completed successfully' in logs
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure} with date range: {start_date} to {stop_date}")
-def load_table(context, model_name, vault_structure, start_date=None, stop_date=None):
+@step("I use insert_by_period to load the {model_name} {vault_structure} by {period} with date range: {start_date} to {stop_date}")
+def load_table(context, model_name, vault_structure, period, start_date=None, stop_date=None):
     metadata = {'source_model': context.hashed_stage_model_name,
                 **context.vault_structure_columns[model_name]}
 
@@ -135,7 +135,8 @@ def load_table(context, model_name, vault_structure, start_date=None, stop_date=
               'timestamp_field': 'LOADDATE',
               'start_date': start_date,
               'stop_date': stop_date,
-              'source_model': context.hashed_stage_model_name}
+              'source_model': context.hashed_stage_model_name,
+              'period': period}
 
     context.vault_structure_metadata = metadata
 
@@ -149,14 +150,15 @@ def load_table(context, model_name, vault_structure, start_date=None, stop_date=
     assert 'Completed successfully' in logs
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure}")
-def load_table(context, model_name, vault_structure):
+@step("I use insert_by_period to load the {model_name} {vault_structure} by {period}")
+def load_table(context, model_name, vault_structure, period):
     metadata = {'source_model': context.hashed_stage_model_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {'materialized': 'vault_insert_by_period',
               'timestamp_field': 'LOADDATE',
-              'source_model': context.hashed_stage_model_name}
+              'source_model': context.hashed_stage_model_name,
+              'period': period}
 
     context.vault_structure_metadata = metadata
 
