@@ -466,6 +466,61 @@ def t_link(context):
 
 
 @fixture
+def eff_satellite(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_ORDER_PK': ['CUSTOMER_ID', 'ORDER_ID'],
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'ORDER_PK': 'ORDER_ID'
+        }
+    }
+
+    context.derived_mapping = {
+        'RAW_STAGE': {
+            'EFFECTIVE_FROM': 'LOADDATE',
+            'START_DATE': '2020-01-09',
+            'END_DATE': '9999-12-31'
+        }
+    }
+
+    context.vault_structure_columns = {
+        'LINK': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_fk': ['CUSTOMER_PK', 'ORDER_PK'],
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE'
+        },
+        'EFF_SAT': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_dfk': 'CUSTOMER_PK',
+            'src_sfk': 'CUSTOMER_PK',
+            'src_start_date': 'START_DATE',
+            'src_end_date': 'END_DATE',
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE',
+            'link_model': "LINK",
+        },
+    }
+
+    context.seed_config = {
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'NUMBER(38, 0)',
+                'ORDER_ID': 'NUMBER(38, 0)',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
 def cycle(context):
     """
     Define the structures and metadata to perform vault load cycles
