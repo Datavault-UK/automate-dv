@@ -5,7 +5,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 1993-01-01 | TPCH   |
@@ -16,7 +16,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -26,7 +26,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD] Simple load of distinct stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
@@ -37,7 +37,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -48,7 +48,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-SHA] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
@@ -59,7 +59,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | sha('1001') | 1001        | 1993-01-01 | TPCH   |
       | sha('1002') | 1002        | 1993-01-01 | TPCH   |
       | sha('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -69,7 +69,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD] Keys with NULL or empty values are not loaded into empty hub that doesn't exist
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
@@ -82,7 +82,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -92,7 +92,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-EMPTY] Simple load of stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
@@ -100,7 +100,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -110,7 +110,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-EMPTY] Simple load of distinct stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
@@ -121,7 +121,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -131,7 +131,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-EMPTY] Keys with NULL or empty values are not loaded into an existing empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
@@ -144,7 +144,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -153,11 +153,11 @@ Feature: Hubs
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Load of stage data into a hub
     Given the HUB hub is already populated with data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
@@ -165,7 +165,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
@@ -174,11 +174,11 @@ Feature: Hubs
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Load of distinct stage data into a hub
     Given the HUB hub is already populated with data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
@@ -191,7 +191,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
@@ -200,11 +200,11 @@ Feature: Hubs
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Keys with NULL or empty values are not loaded into a hub
     Given the HUB hub is already populated with data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOADDATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
@@ -217,7 +217,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOADDATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
@@ -227,7 +227,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a empty hub which doesn't yet exist.
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-01 | PART   |
@@ -235,7 +235,7 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-01 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
       | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
       | 1003    | 1           | 1        | 29.87      | 1993-01-01 | SUPP   |
@@ -244,7 +244,7 @@ Feature: Hubs
       | 1006    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
       | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-01 | LINE   |
@@ -257,7 +257,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | *      |
       | md5('1002') | 1002    | 1993-01-01 | *      |
       | md5('1003') | 1003    | 1993-01-01 | *      |
@@ -269,7 +269,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-UNION] Keys with NULL or empty values in the union of three staging tables are not feed into an empty hub which doesn't yet exist.
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-01 | PART   |
@@ -279,7 +279,7 @@ Feature: Hubs
       |         | Pedal     | other     | L         | 1.50             | 1993-01-01 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
       | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
       | 1003    | 1           | 1        | 29.87      | 1993-01-01 | SUPP   |
@@ -289,7 +289,7 @@ Feature: Hubs
       | <null>  | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
       | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-01 | LINE   |
@@ -303,7 +303,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
       | md5('1003') | 1003    | 1993-01-01 | LINE   |
@@ -315,7 +315,7 @@ Feature: Hubs
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed an empty hub.
     Given the HUB hub is empty
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-01 | PART   |
@@ -323,7 +323,7 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-01 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
       | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
       | 1003    | 1           | 1        | 29.87      | 1993-01-01 | SUPP   |
@@ -332,7 +332,7 @@ Feature: Hubs
       | 1006    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
       | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-01 | LINE   |
@@ -345,7 +345,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
       | md5('1003') | 1003    | 1993-01-01 | LINE   |
@@ -356,11 +356,11 @@ Feature: Hubs
   @fixture.multi_source_hub
   Scenario: [POPULATED-LOAD-UNION] Union three staging tables to feed an empty hub over two cycles.
     Given the HUB hub is already populated with data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | *      |
       | md5('1002') | 1002    | 1993-01-01 | *      |
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-02 | PART   |
@@ -368,7 +368,7 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
       | 1002    | 1           | 2        | 120.00     | 1993-01-02 | SUPP   |
       | 1003    | 1           | 1        | 29.87      | 1993-01-02 | SUPP   |
@@ -377,7 +377,7 @@ Feature: Hubs
       | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
       | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-02 | LINE   |
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-02 | LINE   |
@@ -390,7 +390,7 @@ Feature: Hubs
     And I hash the stage
     And I load the HUB hub
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-03 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-03 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-03 | PART   |
@@ -398,7 +398,7 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-03 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 5        | 68.00      | 1993-01-03 | SUPP   |
       | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
       | 1002    | 1           | 13       | 110.00     | 1993-01-03 | SUPP   |
@@ -406,7 +406,7 @@ Feature: Hubs
       | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10007    | 1007    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-03 | LINE   |
       | 10007    | 1007    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-03 | LINE   |
       | 10008    | 1008    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-03 | LINE   |
@@ -415,7 +415,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | *      |
       | md5('1002') | 1002    | 1993-01-01 | *      |
       | md5('1003') | 1003    | 1993-01-02 | *      |
@@ -429,11 +429,11 @@ Feature: Hubs
   @fixture.multi_source_hub
   Scenario: [POPULATED-LOAD-UNION] Union three staging tables to feed a populated hub.
     Given the HUB hub is already populated with data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-02 | PART   |
@@ -441,7 +441,7 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
       | 1002    | 1           | 2        | 120.00     | 1993-01-02 | SUPP   |
       | 1003    | 1           | 1        | 29.87      | 1993-01-02 | SUPP   |
@@ -450,7 +450,7 @@ Feature: Hubs
       | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
       | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-02 | LINE   |
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-02 | LINE   |
@@ -463,7 +463,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
       | md5('1003') | 1003    | 1993-01-02 | LINE   |
@@ -474,11 +474,11 @@ Feature: Hubs
   @fixture.multi_source_hub
   Scenario: [POPULATED-LOAD-UNION] Keys with a NULL or empty value in a union of three staging tables are not fed into a populated hub.
     Given the HUB hub is already populated with data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
     And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOADDATE   | SOURCE |
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | PART   |
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-02 | PART   |
@@ -488,7 +488,7 @@ Feature: Hubs
       |         | Door      | other     | L         | 1.50             | 1993-01-02 | PART   |
     And I hash the stage
     And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOADDATE   | SOURCE |
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
       | 1002    | 1           | 2        | 120.00     | 1993-01-02 | SUPP   |
       | 1003    | 1           | 1        | 29.87      | 1993-01-02 | SUPP   |
@@ -498,7 +498,7 @@ Feature: Hubs
       | <null>  | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
     And I hash the stage
     And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOADDATE   | SOURCE |
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
       | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-02 | LINE   |
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-02 | LINE   |
@@ -512,7 +512,7 @@ Feature: Hubs
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | PART_PK     | PART_ID | LOADDATE   | SOURCE |
+      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
       | md5('1003') | 1003    | 1993-01-02 | LINE   |
