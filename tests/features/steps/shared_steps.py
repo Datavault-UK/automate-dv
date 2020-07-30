@@ -56,11 +56,12 @@ def load_empty_table(context, model_name, vault_structure):
     """Creates an empty table"""
 
     context.target_model_name = model_name
+    columns = context.vault_structure_columns
 
     if vault_structure == 'stage':
         headings = context.stage_columns[model_name]
     else:
-        headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns[model_name].values()))
+        headings = list(DBTVAULTGenerator.flatten([val for key, val in columns[model_name].items()]))
 
     row = Row(cells=[], headings=headings)
 
@@ -288,4 +289,3 @@ def expect_data(context, model_name):
 
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
 
-    assert '1 of 1 PASS' in logs

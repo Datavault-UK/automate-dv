@@ -143,7 +143,10 @@ class DBTTestUtils:
             command = ['dbt', mode, '-m', model_name]
 
         if args:
-            yaml_str = str(args).replace('\'', '"')
+            if not any(x in str(args) for x in ['(', ')']):
+                yaml_str = str(args).replace('\'', '"')
+            else:
+                yaml_str = str(args)
             command.extend(['--vars', yaml_str])
 
         return self.run_dbt_command(command)
@@ -277,7 +280,7 @@ class DBTTestUtils:
 
         table_df = self.context_table_to_df(table)
 
-        csv_fqn = CSV_DIR / f'{model_name.lower()}.csv'
+        csv_fqn = CSV_DIR / f'{model_name.lower()}_seed.csv'
 
         table_df.to_csv(csv_fqn, index=False)
 
@@ -386,9 +389,9 @@ class DBTVAULTGenerator:
             'hub': self.hub,
             'link': self.link,
             'sat': self.sat,
+            'eff_sat': self.eff_sat,
             't_link': self.t_link
         }
-
         if vault_structure == 'stage':
             generator_functions[vault_structure](model_name)
         else:
@@ -460,7 +463,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, config=None):
+    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
+            config=None):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -489,6 +493,41 @@ class DBTVAULTGenerator:
         {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
                           '{src_eff}', '{src_ldts}', '{src_source}', 
                           '{source_model}')   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
+                src_start_date, src_end_date, src_eff, src_ldts, src_source,
+                link_model, source_model,
+                config=None):
+        """
+        Generate an effectivity satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_dfk: Source driving foreign key
+            :param src_sfk: Source surrogate foreign key
+            :param src_eff: Source effective from
+            :param src_start_date: Source start date
+            :param src_end_date: Source end date
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param link_model: Link model the eff_sat is attached to
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = ", ".join([f"{k}='{v}'" for k, v in config.items()])
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        {{{{ dbtvault.eff_sat('{src_pk}', '{src_dfk}', '{src_sfk}',
+                              '{src_start_date}', '{src_end_date}',
+                              '{src_eff}', '{src_ldts}', '{src_source}',
+                              '{link_model}', '{source_model}') }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -558,7 +597,9 @@ class DBTVAULTGenerator:
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata, ignore_columns):
 
-        extracted_compare_columns = [v for k, v in metadata.items() if k not in ['source_model']]
+        meta_to_ignore = ['source_model', 'link_model', 'src_dfk', 'src_sfk']
+
+        extracted_compare_columns = [v for k, v in metadata.items() if k not in meta_to_ignore]
 
         compare_columns = list(
             [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
