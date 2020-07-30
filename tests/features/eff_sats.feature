@@ -85,6 +85,7 @@ The Driving Key problem:
       | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
       | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
       | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
+    And I hash the stage
     When I load the EFF_SAT eff_sat
     And I load the LINK link
     Then the LINK table should contain expected data
@@ -101,12 +102,13 @@ The Driving Key problem:
   @fixture.eff_satellite
   Scenario: [BASE-LOAD] Load data into an empty effectivity satellite.
     Given the LINK link is empty
-    Given the EFF_SAT eff_sat is empty
+    And the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
+    And I hash the stage
     When I load the EFF_SAT eff_sat
     Then the LINK table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
@@ -118,7 +120,6 @@ The Driving Key problem:
       | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-
 
   Scenario: [INCREMENTAL-LOAD] No Effectivity Change
     Given the LINK link is already populated with data
