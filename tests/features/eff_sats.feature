@@ -86,8 +86,8 @@ The Driving Key problem:
       | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
       | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
     And I hash the stage
-    When I load the EFF_SAT eff_sat
-    And I load the LINK link
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
     Then the LINK table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -109,7 +109,8 @@ The Driving Key problem:
       | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
       | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
     And I hash the stage
-    When I load the EFF_SAT eff_sat
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
     Then the LINK table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -139,7 +140,8 @@ The Driving Key problem:
       | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
     And I hash the stage
-    When I load the EFF_SAT eff_sat
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
     Then the LINK table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -171,7 +173,8 @@ The Driving Key problem:
       | 4000        | DDD      | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | 5000        | EEE      | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
     And I hash the stage
-    When I load the EFF_SAT eff_sat
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
     Then the LINK table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -211,7 +214,8 @@ The Driving Key problem:
       | 4000        | FFF      | 2020-01-10 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | 5000        | GGG      | 2020-01-10 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
     And I hash the stage
-    When I load the EFF_SAT eff_sat
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
     Then the LINK table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
