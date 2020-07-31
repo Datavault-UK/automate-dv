@@ -481,7 +481,7 @@ def eff_satellite(context):
 
     context.derived_mapping = {
         'RAW_STAGE': {
-            'EFFECTIVE_FROM': 'LOAD_DATE'
+            'EFFECTIVE_FROM': 'START_DATE'
         }
     }
 
@@ -536,7 +536,7 @@ def eff_satellite(context):
                 'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
-        },
+        }
     }
 
 
