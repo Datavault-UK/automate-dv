@@ -8,7 +8,7 @@ The fixtures here are used to supply runtime metadata to tests, in place of meta
 
 
 @fixture
-def set_workdir(context):
+def set_workdir(_):
     """
     Set the working (run) dir for dbt
     """
@@ -481,9 +481,7 @@ def eff_satellite(context):
 
     context.derived_mapping = {
         'RAW_STAGE': {
-            'EFFECTIVE_FROM': 'LOAD_DATE',
-            'START_DATE': "TO_DATE(\'2020-01-09\')",
-            'END_DATE': "TO_DATE(\'9999-12-31\')"
+            'EFFECTIVE_FROM': 'LOAD_DATE'
         }
     }
 

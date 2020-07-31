@@ -101,7 +101,7 @@ def load_populated_table(context, model_name, vault_structure):
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[model_name])
 
-    context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     metadata = {'source_model': seed_file_name, **context.vault_structure_columns[model_name]}
 
@@ -127,7 +127,8 @@ def load_table(context, model_name, vault_structure):
     assert 'Completed successfully' in logs
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure} by {period} with date range: {start_date} to {stop_date}")
+@step(
+    "I use insert_by_period to load the {model_name} {vault_structure} by {period} with date range: {start_date} to {stop_date}")
 def load_table(context, model_name, vault_structure, period, start_date=None, stop_date=None):
     metadata = {'source_model': context.hashed_stage_model_name,
                 **context.vault_structure_columns[model_name]}
@@ -289,3 +290,4 @@ def expect_data(context, model_name):
 
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
 
+    assert '1 of 1 PASS' in logs
