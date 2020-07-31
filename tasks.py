@@ -39,6 +39,20 @@ def check_project(c, project='public'):
 
 
 @task
+def inject_to_file(c, target=None, user=None, from_file='secrethub_dev.env', to_file='pycharm.env'):
+
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    if not target:
+        target = c.config.get('target', None)
+
+    command = f"secrethub inject -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
+
+    c.run(command)
+
+
+@task
 def set_defaults(c, target=None, user=None, project=None):
     """
     Generate an 'invoke.yml' file

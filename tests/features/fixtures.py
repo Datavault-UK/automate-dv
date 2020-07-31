@@ -479,12 +479,6 @@ def eff_satellite(context):
         }
     }
 
-    context.derived_mapping = {
-        'RAW_STAGE': {
-            'EFFECTIVE_FROM': 'START_DATE'
-        }
-    }
-
     context.vault_structure_columns = {
         'LINK': {
             'src_pk': 'CUSTOMER_ORDER_PK',

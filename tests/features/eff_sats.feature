@@ -81,10 +81,10 @@ The Driving Key problem:
     Given the LINK link is empty
     And the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | 2020-01-09     | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | 2020-01-09     | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | 2020-01-09     | orders |
     And I hash the stage
     When I load the LINK link
     And I load the EFF_SAT eff_sat
@@ -104,10 +104,10 @@ The Driving Key problem:
     Given the LINK link is empty
     And the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders | 2020-01-09     |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders | 2020-01-09     |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders | 2020-01-09     |
     And I hash the stage
     When I load the LINK link
     And I load the EFF_SAT eff_sat
