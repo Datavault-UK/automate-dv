@@ -237,78 +237,80 @@ The Driving Key problem:
       | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|GGG') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
+  @fixture.eff_satellite
+  Scenario: [INCREMENTAL-LOAD] 2 loads, Link is Changed Back Again
+    Given the LINK link is already populated with data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
+    And the EFF_SAT eff_sat is already populated with data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-12 | orders |
+      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | 2000        | BBB      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | 3000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | 4000        | DDD      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | 5000        | EEE      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | 6000        | HHH      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | 7000        | JJJ      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+    And I hash the stage
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
+    Then the LINK table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
+      | md5('6000\|\|HHH') | md5('6000') | md5('HHH') | 2020-01-13 | orders |
+      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
+    And the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('4000\|\|DDD') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('4000\|\|FFF') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('4000\|\|FFF') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('5000\|\|GGG') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('5000\|\|GGG') | 2020-01-11 | 2020-01-12 | 2020-01-11     | 2020-01-13 | orders |
+      | md5('6000\|\|HHH') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('7000\|\|III') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('7000\|\|III') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('7000\|\|JJJ') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
-#  Scenario: [INCREMENTAL-LOAD] 2 loads, Link is Changed Back Again
-#    Given the LINK link is already populated with data
-#      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
-#      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
-#      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
-#      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
-#      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
-#      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
-#      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
-#      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
-#      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
-#      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
-#    And the EFF_SAT eff_sat is already populated with data
-#      | CUSTOMER_ORDER_PK  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM | START_DATE | END_DATE   |
-#      | md5('1000\|\|AAA') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09 | 9999-12-31 |
-#      | md5('2000\|\|BBB') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09 | 9999-12-31 |
-#      | md5('3000\|\|CCC') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09 | 9999-12-31 |
-#      | md5('4000\|\|DDD') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10 | 9999-12-31 |
-#      | md5('4000\|\|FFF') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11 | 9999-12-31 |
-#      | md5('4000\|\|DDD') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10 | 2020-01-11 |
-#      | md5('5000\|\|EEE') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10 | 9999-12-31 |
-#      | md5('5000\|\|GGG') | 2020-01-12 | orders | 2020-01-11     | 2020-01-11 | 9999-12-31 |
-#      | md5('5000\|\|EEE') | 2020-01-12 | orders | 2020-01-10     | 2020-01-10 | 2020-01-11 |
-#      | md5('7000\|\|JJJ') | 2020-01-10 | orders | 2020-01-09     | 2020-01-09 | 9999-12-31 |
-#      | md5('7000\|\|III') | 2020-01-11 | orders | 2020-01-10     | 2020-01-10 | 9999-12-31 |
-#      | md5('7000\|\|JJJ') | 2020-01-11 | orders | 2020-01-10     | 2020-01-09 | 2020-01-10 |
-#      | md5('7000\|\|III') | 2020-01-12 | orders | 2020-01-11     | 2020-01-10 | 2020-01-11 |
-#    And the RAW_STAGE table contains data
-#      | CUSTOMER_ORDER_PK  | LOAD_DATE  | SOURCE | CUSTOMER_PK | CUSTOMER_ID | ORDER_PK   | ORDER_ID | EFFECTIVE_FROM |
-#      | md5('1000\|\|AAA') | 2020-01-13 | orders | md5('1000') | 1000        | md5('AAA') | AAA      | 2020-01-12     |
-#      | md5('2000\|\|BBB') | 2020-01-13 | orders | md5('2000') | 2000        | md5('BBB') | BBB      | 2020-01-12     |
-#      | md5('3000\|\|CCC') | 2020-01-13 | orders | md5('3000') | 3000        | md5('CCC') | CCC      | 2020-01-12     |
-#      | md5('4000\|\|DDD') | 2020-01-13 | orders | md5('4000') | 4000        | md5('DDD') | DDD      | 2020-01-12     |
-#      | md5('5000\|\|EEE') | 2020-01-13 | orders | md5('5000') | 5000        | md5('EEE') | EEE      | 2020-01-12     |
-#      | md5('6000\|\|HHH') | 2020-01-13 | orders | md5('6000') | 6000        | md5('HHH') | HHH      | 2020-01-12     |
-#      | md5('7000\|\|JJJ') | 2020-01-13 | orders | md5('7000') | 7000        | md5('JJJ') | JJJ      | 2020-01-12     |
-#    When I load the EFF_SAT eff_sat
-#    Then the LINK table should contain expected data
-#      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
-#      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
-#      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
-#      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
-#      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
-#      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-12 | orders |
-#      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
-#      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-12 | orders |
-#      | md5('6000\|\|HHH') | md5('6000') | md5('HHH') | 2020-01-13 | orders |
-#      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
-#      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
-#    And the EFF_SAT table should contain expected data
-#      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-#      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-#      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-#      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-#      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-#      | md5('4000\|\|DDD') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
-#      | md5('4000\|\|FFF') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-#      | md5('4000\|\|FFF') | 2020-01-11 | 2020-01-12 | 2020-01-11     | 2020-01-13 | orders |
-#      | md5('4000\|\|DDD') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-#      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-#      | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-12 | orders |
-#      | md5('5000\|\|GGG') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-#      | md5('5000\|\|GGG') | 2020-01-11 | 2020-01-12 | 2020-01-11     | 2020-01-13 | orders |
-#      | md5('5000\|\|EEE') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-#      | md5('6000\|\|HHH') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-#      | md5('7000\|\|JJJ') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-#      | md5('7000\|\|III') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-#      | md5('7000\|\|JJJ') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
-#      | md5('7000\|\|III') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
-#      | md5('7000\|\|JJJ') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-#
 #  Scenario: [NULL-SPK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DPK is Closed.
 #    Given the LINK link is already populated with data
 #      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
