@@ -76,23 +76,21 @@ WITH source_data AS (
       WHERE stg.{{ src_sfk }} IS NULL
       OR stg.{{ src_sfk }} <> a.{{ src_sfk }}
     )
+
     SELECT DISTINCT
         {{ dbtvault.alias_all(structure_cols, 'slice_a') }}
     FROM stage_slice AS slice_a
-    LEFT JOIN
-        latest_open_eff AS e
-        ON slice_a.{{ src_pk }} = e.{{ src_pk }}
-        WHERE e.{{ src_pk }} IS NULL
+    LEFT JOIN latest_open_eff AS e
+    ON slice_a.{{ src_pk }} = e.{{ src_pk }}
+    WHERE e.{{ src_pk }} IS NULL
     UNION
     SELECT DISTINCT
-        h.{{ src_pk }}, h.{{ src_start_date }}, slice_b.EFFECTIVE_FROM AS {{ src_end_date }},
+        h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, slice_b.EFFECTIVE_FROM AS {{ src_end_date }},
         slice_b.{{ src_eff}}, slice_b.{{ src_ldts }}, h.{{ src_source }}
-    FROM LATEST_OPEN_EFF AS h
-    INNER JOIN
-        LINKS_TO_END_DATE AS g
-        ON g.{{ src_pk }} = h.{{ src_pk }}
-        INNER JOIN
-        stage_slice AS slice_b
-        ON g.{{ src_dfk }} = slice_b.{{ src_dfk }}
+    FROM latest_open_eff AS h
+    INNER JOIN links_to_end_date AS g
+    ON g.{{ src_pk }} = h.{{ src_pk }}
+    INNER JOIN stage_slice AS slice_b
+    ON g.{{ src_dfk }} = slice_b.{{ src_dfk }}
 {% endif %}
 {% endmacro %}
