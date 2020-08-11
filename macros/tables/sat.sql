@@ -12,7 +12,7 @@
 -#}
 {%- macro sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter_macro('dbtvault.sat', src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload, 
+    {{- adapter_macro('dbtvault.sat', src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source, source_model=source_model) -}}
 
 {%- endmacro %}
@@ -26,26 +26,30 @@
 SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
 FROM {{ ref(source_model) }} AS e
 {% else -%}
+WITH
+    sat_potential_updates as (
+        SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
+        FROM {{ this }} as a
+        JOIN {{ ref(source_model) }} as b
+            ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
+    ),
+    ranked as (
+      SELECT {{ dbtvault.prefix(source_cols, 'c', alias_target='target') }},
+          CASE WHEN RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
+                           ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
+               THEN 'Y' ELSE 'N' END CURR_FLG
+      FROM sat_potential_updates as c
+    ),
+    latest_in_sat (
+        SELECT {{ dbtvault.prefix(source_cols, 'd', alias_target='target') }}
+        FROM ranked AS d
+        WHERE d.CURR_FLG = 'Y'
+    )
 SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
 FROM {{ ref(source_model) }} AS e
-LEFT JOIN (
-    SELECT {{ dbtvault.prefix(source_cols, 'd', alias_target='target') }}
-    FROM (
-          SELECT {{ dbtvault.prefix(source_cols, 'c', alias_target='target') }},
-          CASE WHEN RANK()
-          OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
-          ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
-          THEN 'Y' ELSE 'N' END CURR_FLG
-          FROM (
-            SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
-            FROM {{ this }} as a
-            JOIN {{ ref(source_model) }} as b
-            ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
-          ) as c
-    ) AS d
-WHERE d.CURR_FLG = 'Y') AS src
-ON {{ dbtvault.prefix([src_hashdiff], 'src', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
-WHERE {{ dbtvault.prefix([src_hashdiff], 'src', alias_target='target') }} IS NULL
+LEFT JOIN latest_in_sat AS sat
+    ON {{ dbtvault.prefix([src_hashdiff], 'sat', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
+WHERE {{ dbtvault.prefix([src_hashdiff], 'sat', alias_target='target') }} IS NULL
 {%- endif -%}
 
 {% endmacro %}
