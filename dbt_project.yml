@@ -1,14 +1,15 @@
 name: 'dbtvault'
-version: '0.6'
-require-dbt-version: [">=0.14.0", "<0.17.0"]
+version: '0.6.2'
+require-dbt-version: [">=0.14.0", "<0.18.0"]
 
 profile: 'dbtvault'
 
-source-paths: ["models"]
+source-paths: ["models", "models_test"]
 analysis-paths: ["analysis"] 
 test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
+docs-paths: ["docs"]
 
 target-path: "target"
 clean-targets:

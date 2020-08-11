@@ -42,20 +42,20 @@ Learn quickly with our worked example:
 
 ## Installation
 
-Add the following to your ```packages.yml```
+Add the following to your `packages.yml`
 
 
 ```yaml
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.6 # Latest stable version
+    revision: v0.6.2 # Latest stable version
 ```
 
 And run 
-```dbt deps```
+`dbt deps`
 
-[Read more on package installation](https://docs.getdbt.com/v0.15.0/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/#git-packages)
 
 ## Usage
 

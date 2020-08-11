@@ -10,8 +10,13 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-
 {%- macro derive_columns(source_relation=none, columns=none) -%}
+
+    {{- adapter_macro('dbtvault.derive_columns', source_relation=source_relation, columns=columns) -}}
+
+{%- endmacro %}
+
+{%- macro default__derive_columns(source_relation=none, columns=none) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
