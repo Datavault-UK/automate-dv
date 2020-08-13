@@ -35,10 +35,10 @@ WITH source_data AS (
     {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
         WHERE __PERIOD_FILTER__
         AND {{ src_dfk }} IS NOT NULL
-        AND {{ src_sfk }} IS NOT NULL
+{#        AND {{ src_sfk }} IS NOT NULL#}
     {% else %}
         WHERE {{ src_dfk }} IS NOT NULL
-        AND {{ src_sfk }} IS NOT NULL
+{#        AND {{ src_sfk }} IS NOT NULL#}
     {% endif %}
 )
 
@@ -83,10 +83,11 @@ WITH source_data AS (
     LEFT JOIN latest_open_eff AS e
     ON slice_a.{{ src_pk }} = e.{{ src_pk }}
     WHERE e.{{ src_pk }} IS NULL
+    AND slice_a.{{ src_sfk }} IS NOT NULL
     UNION
     SELECT DISTINCT
         h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, slice_b.EFFECTIVE_FROM AS {{ src_end_date }},
-        slice_b.{{ src_eff}}, slice_b.{{ src_ldts }}, h.{{ src_source }}
+        slice_b.{{ src_eff }}, slice_b.{{ src_ldts }}, h.{{ src_source }}
     FROM latest_open_eff AS h
     INNER JOIN links_to_end_date AS g
     ON g.{{ src_pk }} = h.{{ src_pk }}

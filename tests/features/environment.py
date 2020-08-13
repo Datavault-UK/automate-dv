@@ -13,6 +13,7 @@ fixture_registry = {
     "fixture.satellite": satellite,
     "fixture.satellite_cycle": satellite_cycle,
     "fixture.eff_satellite": eff_satellite,
+    "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.t_link": t_link,
     "fixture.cycle": cycle
 }
