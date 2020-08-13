@@ -535,6 +535,87 @@ def eff_satellite(context):
 
 
 @fixture
+def eff_satellite_multipart(context):
+    """
+    Define the structures and metadata to load effectivity satellites with multipart keys
+    """
+
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_ORDER_PK': ['CUSTOMER_ID',  'NATION_ID', 'ORDER_ID', 'PRODUCT_GROUP', 'ORGANISATION_ID'],
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'NATION_PK': 'NATION_ID',
+            'ORDER_PK': 'ORDER_ID',
+            'PRODUCT_PK': 'PRODUCT_GROUP',
+            'ORGANISATION_PK': 'ORGANISATION_ID'
+        }
+    }
+
+    context.vault_structure_columns = {
+        'LINK': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_fk': ['CUSTOMER_PK', 'NATION_PK', 'ORDER_PK', 'PRODUCT_PK', 'ORGANISATION_PK'],
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE'
+        },
+        'EFF_SAT': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_dfk': 'CUSTOMER_PK',
+            'src_sfk': 'ORDER_PK',
+            'src_start_date': 'START_DATE',
+            'src_end_date': 'END_DATE',
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE',
+            'link_model': "LINK",
+        }
+    }
+
+    context.seed_config = {
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'NUMBER(38, 0)',
+                'NATION_ID': 'VARCHAR',
+                'ORDER_ID': 'VARCHAR',
+                'PRODUCT_GROUP': 'VARCHAR',
+                'ORGANISATION_ID': 'VARCHAR',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'LINK': {
+            'column_types': {
+                'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'NATION_PK': 'BINARY(16)',
+                'ORDER_PK': 'BINARY(16)',
+                'PRODUCT_PK': 'BINARY(16)',
+                'ORGANISATION_PK': 'BINARY(16)',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'EFF_SAT': {
+            'column_types': {
+                'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'NATION_PK': 'BINARY(16)',
+                'ORDER_PK': 'BINARY(16)',
+                'PRODUCT_PK': 'BINARY(16)',
+                'ORGANISATION_PK': 'BINARY(16)',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
 def cycle(context):
     """
     Define the structures and metadata to perform vault load cycles
