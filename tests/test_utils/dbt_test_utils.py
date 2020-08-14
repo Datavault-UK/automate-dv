@@ -258,7 +258,7 @@ class DBTTestUtils:
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :return: DataFrame representation of the provide context table
         """
 
@@ -273,7 +273,7 @@ class DBTTestUtils:
     def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
         Converts a context table in a feature file into a dictionary
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
         """
@@ -291,7 +291,7 @@ class DBTTestUtils:
     def context_table_to_dict(self, table: Table, orient='index'):
         """
         Converts a context table in a feature file into a pandas DataFrame
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :param orient: orient for df to_dict
             :return: A pandas DataFrame modelled from a context table
         """
@@ -302,10 +302,23 @@ class DBTTestUtils:
 
         return table_dict
 
+    def columns_from_context_table(self, table: Table) -> list:
+        """
+            Get a List of columns (headers) from a context table
+            :param table: The context.table from a scenario
+            :return: List of column names in the context table
+        """
+
+        table_df = self.context_table_to_df(table)
+
+        table_dict = table_df.to_dict()
+
+        return list(table_dict.keys())
+
     def find_columns_to_ignore(self, table: Table):
         """
         Gets a list of columns which contain all *, which is shorthand to denote ignoring a column for comparison
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :return: List of columns
         """
 

@@ -23,6 +23,11 @@ mkdocs-git-revision-date-localized-plugin = "*"
 pygments = "==2.6.1"
 pymdown-extensions = "==7.1"
 ruamel-yaml = "*"
+dbt-redshift = "==0.17.2"
+dbt-core = "==0.17.2"
+dbt-snowflake = "==0.17.2"
+dbt-bigquery = "==0.17.2"
+dbt-postgres = "==0.17.2"
 
 [requires]
 python_version = "3.8"
