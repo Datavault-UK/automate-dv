@@ -488,8 +488,8 @@ def eff_satellite(context):
         },
         'EFF_SAT': {
             'src_pk': 'CUSTOMER_ORDER_PK',
-            'src_dfk': 'CUSTOMER_PK',
-            'src_sfk': 'ORDER_PK',
+            'src_dfk': 'ORDER_PK',
+            'src_sfk': 'CUSTOMER_PK',
             'src_start_date': 'START_DATE',
             'src_end_date': 'END_DATE',
             'src_eff': 'EFFECTIVE_FROM',
@@ -560,8 +560,8 @@ def eff_satellite_multipart(context):
         },
         'EFF_SAT': {
             'src_pk': 'CUSTOMER_ORDER_PK',
-            'src_dfk': 'CUSTOMER_PK',
-            'src_sfk': 'ORDER_PK',
+            'src_dfk': 'ORDER_PK',
+            'src_sfk': 'CUSTOMER_PK',
             'src_start_date': 'START_DATE',
             'src_end_date': 'END_DATE',
             'src_eff': 'EFFECTIVE_FROM',

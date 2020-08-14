@@ -81,10 +81,10 @@ The Driving Key problem:
     Given the LINK link is empty
     And the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
-      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | 2020-01-09     | orders |
-      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | 2020-01-09     | orders |
-      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | 2020-01-09     | orders |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
     And I hash the stage
     When I load the LINK link
     And I load the EFF_SAT eff_sat
@@ -104,10 +104,10 @@ The Driving Key problem:
     Given the LINK link is empty
     And the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
-      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders | 2020-01-09     |
-      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders | 2020-01-09     |
-      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-10 | orders | 2020-01-09     |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
     And I hash the stage
     When I load the LINK link
     And I load the EFF_SAT eff_sat
@@ -333,7 +333,7 @@ The Driving Key problem:
       | 2000        | BBB      | 2020-01-12 | 9999-12-31 | 2020-01-11     | 2020-01-13 | orders |
       | 3000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-11     | 2020-01-13 | orders |
       | 4000        | DDD      | 2020-01-12 | 9999-12-31 | 2020-01-11     | 2020-01-13 | orders |
-      | 5000        | <null>   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | <null>      | FFF      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
     And I hash the stage
     When I load the LINK link
     And I load the EFF_SAT eff_sat
@@ -410,9 +410,9 @@ The Driving Key problem:
       | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('DEU') | md5('AAA') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | md5('2000') | md5('GBR') | md5('BBB') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
       | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | md5('3000') | md5('AUS') | md5('CCC') | md5('SHOP')   | md5('BUSSTHINK') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-12 | 2020-01-13 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('EEE') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-13 | 9999-12-31 | 2020-01-13     | 2020-01-13 | orders |
+      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('EEE') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
       | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | md5('5000') | md5('SPA') | md5('FFF') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | NATION_ID | PRODUCT_GROUP | ORGANISATION_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

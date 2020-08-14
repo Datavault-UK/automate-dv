@@ -45,7 +45,7 @@ WITH source_data AS (
 {% if load_relation(this) is none -%}
     SELECT {{ dbtvault.alias_all(structure_cols, 'e') }}
     FROM source_data AS e
-{% else %}
+{% else -%}
     ,latest_open_eff AS
     (
         SELECT {{ dbtvault.alias_all(structure_cols, 'a') }}
@@ -75,23 +75,32 @@ WITH source_data AS (
       ON a.{{ src_dfk }} = stg.{{ src_dfk }}
       WHERE stg.{{ src_sfk }} IS NULL
       OR stg.{{ src_sfk }} <> a.{{ src_sfk }}
+    ),
+    new_open_records AS (
+        SELECT DISTINCT
+            {{ dbtvault.alias_all(structure_cols, 'stage') }}
+        FROM stage_slice AS stage
+        LEFT JOIN latest_open_eff AS e
+        ON stage.{{ src_pk }} = e.{{ src_pk }}
+        WHERE e.{{ src_pk }} IS NULL
+        AND stage.{{ src_sfk }} IS NOT NULL
+    ),
+    new_end_dated_records AS (
+        SELECT DISTINCT
+            h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, stage.EFFECTIVE_FROM AS {{ src_end_date }},
+            stage.{{ src_eff }}, stage.{{ src_ldts }}, h.{{ src_source }}
+        FROM latest_open_eff AS h
+        INNER JOIN links_to_end_date AS g
+        ON g.{{ src_pk }} = h.{{ src_pk }}
+        INNER JOIN stage_slice AS stage
+{#        ON g.{{ src_dfk }} = stage.{{ src_dfk }}#}
+    ),
+    records_to_insert AS (
+        SELECT * FROM new_open_records
+        UNION
+        SELECT * FROM new_end_dated_records
     )
-
-    SELECT DISTINCT
-        {{ dbtvault.alias_all(structure_cols, 'slice_a') }}
-    FROM stage_slice AS slice_a
-    LEFT JOIN latest_open_eff AS e
-    ON slice_a.{{ src_pk }} = e.{{ src_pk }}
-    WHERE e.{{ src_pk }} IS NULL
-    AND slice_a.{{ src_sfk }} IS NOT NULL
-    UNION
-    SELECT DISTINCT
-        h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, slice_b.EFFECTIVE_FROM AS {{ src_end_date }},
-        slice_b.{{ src_eff }}, slice_b.{{ src_ldts }}, h.{{ src_source }}
-    FROM latest_open_eff AS h
-    INNER JOIN links_to_end_date AS g
-    ON g.{{ src_pk }} = h.{{ src_pk }}
-    INNER JOIN stage_slice AS slice_b
-    ON g.{{ src_dfk }} = slice_b.{{ src_dfk }}
+    
+    SELECT * FROM records_to_insert
 {% endif %}
 {% endmacro %}
