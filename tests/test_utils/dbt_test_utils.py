@@ -62,8 +62,15 @@ class DBTTestUtils:
 
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET').lower() == 'snowflake':
+        if os.getenv('TARGET', '').lower() == 'snowflake':
+            target = 'snowflake'
+        elif not os.getenv('TARGET', None):
+            print('TARGET not set. Target set to snowflake.')
+            target = 'snowflake'
+        else:
+            target = None
 
+        if target == 'snowflake':
             if os.getenv('CIRCLE_NODE_INDEX'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
                               f"_{os.getenv('CIRCLE_NODE_INDEX')}"
@@ -74,7 +81,7 @@ class DBTTestUtils:
                 'SCHEMA_NAME': schema_name
             }
         else:
-            self.EXPECTED_PARAMETERS = dict()
+            raise ValueError('TARGET not set')
 
     def run_dbt_command(self, command) -> str:
         """
