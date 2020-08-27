@@ -35,10 +35,8 @@ WITH source_data AS (
     {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
         WHERE __PERIOD_FILTER__
         AND {{ src_dfk }} IS NOT NULL
-{#        AND {{ src_sfk }} IS NOT NULL#}
     {% else %}
         WHERE {{ src_dfk }} IS NOT NULL
-{#        AND {{ src_sfk }} IS NOT NULL#}
     {% endif %}
 )
 
@@ -69,12 +67,12 @@ WITH source_data AS (
         ON c.{{ src_pk }} = d.{{ src_pk }}
     ),
     links_to_end_date AS (
-      SELECT a.{{ src_pk }}, a.{{ src_dfk }}
-      FROM open_links AS a
-      LEFT JOIN stage_slice AS stg
-      ON a.{{ src_dfk }} = stg.{{ src_dfk }}
-      WHERE stg.{{ src_sfk }} IS NULL
-      OR stg.{{ src_sfk }} <> a.{{ src_sfk }}
+        SELECT a.{{ src_pk }}, a.{{ src_dfk }}
+        FROM open_links AS a
+        LEFT JOIN stage_slice AS stg
+        ON a.{{ src_dfk }} = stg.{{ src_dfk }}
+        WHERE stg.{{ src_sfk }} IS NULL
+        OR stg.{{ src_sfk }} <> a.{{ src_sfk }}
     ),
     new_open_records AS (
         SELECT DISTINCT
@@ -93,7 +91,7 @@ WITH source_data AS (
         INNER JOIN links_to_end_date AS g
         ON g.{{ src_pk }} = h.{{ src_pk }}
         INNER JOIN stage_slice AS stage
-{#        ON g.{{ src_dfk }} = stage.{{ src_dfk }}#}
+        ON g.{{ src_dfk }} = stage.{{ src_dfk }}
     ),
     records_to_insert AS (
         SELECT * FROM new_open_records
