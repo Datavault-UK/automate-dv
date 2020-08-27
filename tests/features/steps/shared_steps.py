@@ -101,7 +101,7 @@ def load_populated_table(context, model_name, vault_structure):
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[model_name])
 
-    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     metadata = {'source_model': seed_file_name, **context.vault_structure_columns[model_name]}
 
