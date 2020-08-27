@@ -540,11 +540,17 @@ class DBTVAULTGenerator:
         if not config:
             config = {'materialized': 'incremental'}
 
+        if isinstance(src_dfk, str):
+            src_dfk = f"'{src_dfk}'"
+
+        if isinstance(src_sfk, str):
+            src_sfk = f"'{src_sfk}'"
+
         config_string = ", ".join([f"{k}='{v}'" for k, v in config.items()])
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.eff_sat('{src_pk}', '{src_dfk}', '{src_sfk}',
+        {{{{ dbtvault.eff_sat('{src_pk}', {src_dfk}, {src_sfk},
                               '{src_start_date}', '{src_end_date}',
                               '{src_eff}', '{src_ldts}', '{src_source}',
                               '{link_model}', '{source_model}') }}}}

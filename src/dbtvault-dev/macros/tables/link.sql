@@ -65,13 +65,8 @@ STG AS (
             {%- endif %}
             {%- endfor %}
         )
-        {{ 'WHERE ' -}}
-        {%- for fk in fk_cols -%}
-        {{ fk }} IS NOT NULL
-        {%- if not loop.last %}
-        {{ 'AND ' -}}
-        {%- endif -%}
-        {%- endfor %}
+        WHERE
+        {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
     ) AS b
     WHERE RN = 1
 )
@@ -86,13 +81,8 @@ STG AS (
             ORDER BY b.{{ src_ldts }}, b.{{ src_source }} ASC
         ) AS RN
         FROM {{ ref(source_model) }} AS b
-        {{ 'WHERE ' -}}
-        {%- for fk in fk_cols -%}
-        b.{{ fk }} IS NOT NULL
-        {%- if not loop.last %}
-        {{ 'AND ' -}}
-        {%- endif -%}
-        {%- endfor %}
+        WHERE
+        {{ dbtvault.multikey(fk_cols, alias='b', condition='IS NOT NULL') }}
     ) AS a
     WHERE RN = 1
 )
