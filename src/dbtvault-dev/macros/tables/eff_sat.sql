@@ -34,10 +34,6 @@ WITH source_data AS (
     FROM {{ ref(source_model) }}
     {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
         WHERE __PERIOD_FILTER__
-        AND {{ dbtvault.multikey(src_dfk, condition='IS NOT NULL') }}
-    {% else %}
-        WHERE
-        {{ dbtvault.multikey(src_dfk, condition='IS NOT NULL') }}
     {% endif %}
 )
 
@@ -71,10 +67,10 @@ WITH source_data AS (
         SELECT {{ dbtvault.alias_all(dbtvault.expand_column_list(columns=[src_pk, src_dfk]), 'a') }}
         FROM open_links AS a
         LEFT JOIN stage_slice AS stage
-        ON {{ dbtvault.multikey(src_dfk, alias=['a', 'stage'], condition='=') }}
+        ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'stage'], condition='=') }}
         WHERE
-        {{ dbtvault.multikey(src_sfk, alias='stage', condition='IS NULL') }}
-        OR {{ dbtvault.multikey(src_sfk, alias=['stage', 'a'], condition='<>') }}
+        {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NULL') }}
+        OR {{ dbtvault.multikey(src_sfk, prefix=['stage', 'a'], condition='<>') }}
     ),
     new_open_records AS (
         SELECT DISTINCT
@@ -83,8 +79,8 @@ WITH source_data AS (
         LEFT JOIN latest_open_eff AS e
         ON stage.{{ src_pk }} = e.{{ src_pk }}
         WHERE e.{{ src_pk }} IS NULL
-        AND
-        {{ dbtvault.multikey(src_sfk, alias='stage', condition='IS NOT NULL') }}
+        AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
+        AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
     ),
     new_end_dated_records AS (
         SELECT DISTINCT
@@ -94,7 +90,7 @@ WITH source_data AS (
         INNER JOIN links_to_end_date AS g
         ON g.{{ src_pk }} = h.{{ src_pk }}
         INNER JOIN stage_slice AS stage
-        ON {{ dbtvault.multikey(src_dfk, alias=['g', 'stage'], condition='=') }}
+{#        ON {{ dbtvault.multikey(src_dfk, prefix=['stage', 'g'], condition='=') }}#}
     ),
     records_to_insert AS (
         SELECT * FROM new_open_records
@@ -103,5 +99,5 @@ WITH source_data AS (
     )
     
     SELECT * FROM records_to_insert
-{% endif %}
-{% endmacro %}
+{%- endif -%}
+{%- endmacro -%}
