@@ -82,7 +82,7 @@ STG AS (
         ) AS RN
         FROM {{ ref(source_model) }} AS b
         WHERE
-        {{ dbtvault.multikey(fk_cols, alias='b', condition='IS NOT NULL') }}
+        {{ dbtvault.multikey(fk_cols, prefix='b', condition='IS NOT NULL') }}
     ) AS a
     WHERE RN = 1
 )
