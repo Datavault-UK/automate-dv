@@ -1,6 +1,5 @@
 dbtvault:
   outputs:
-    
     snowflake:
       type: snowflake
       account: "{{ env_var('SNOWFLAKE_DB_ACCOUNT') }}"
@@ -13,7 +12,7 @@ dbtvault:
       warehouse: "{{ env_var('SNOWFLAKE_DB_WH') }}"
       schema: "{{ env_var('SNOWFLAKE_DB_SCHEMA') }}"
       
-      threads: 1
+      threads: 4
       client_session_keep_alive: False
       
     bigquery:
@@ -29,5 +28,22 @@ dbtvault:
       timeout_seconds: 300
       priority: interactive
       retries: 1
-  
+
+snowflake-demo:
+  outputs:
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_DB_ACCOUNT') }}"
+
+      user: "{{ env_var('SNOWFLAKE_DB_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_DB_PW') }}"
+
+      role: "{{ env_var('SNOWFLAKE_DB_ROLE') }}"
+      database: "{{ env_var('SNOWFLAKE_DB_DATABASE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_DB_WH') }}"
+      schema: "{{ env_var('SNOWFLAKE_DB_SCHEMA') }}"
+
+      threads: 4
+      client_session_keep_alive: False
+
   target: "{{ env_var('TARGET') }}"
