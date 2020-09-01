@@ -28,7 +28,7 @@ dbtvault:
       timeout_seconds: 300
       priority: interactive
       retries: 1
-      
+
   target: "{{ env_var('TARGET') }}"
 
 snowflake-demo:
