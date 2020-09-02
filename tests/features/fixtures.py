@@ -522,8 +522,6 @@ def eff_satellite(context):
         'EFF_SAT': {
             'column_types': {
                 'CUSTOMER_ORDER_PK': 'BINARY(16)',
-                'CUSTOMER_PK': 'BINARY(16)',
-                'ORDER_PK': 'BINARY(16)',
                 'START_DATE': 'DATE',
                 'END_DATE': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
@@ -658,29 +656,29 @@ def cycle(context):
 
     context.vault_structure_columns = {
         'HUB_CUSTOMER': {
-            'source_model': ['raw_stage_customer_hashed',
-                             'raw_stage_booking_hashed'],
+            'source_model': ['raw_stage_customer_seed_hashed',
+                             'raw_stage_booking_seed_hashed'],
             'src_pk': 'CUSTOMER_PK',
             'src_nk': 'CUSTOMER_ID',
             'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'HUB_BOOKING': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'BOOKING_PK',
             'src_nk': 'BOOKING_ID',
             'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'LINK_CUSTOMER_BOOKING': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'CUSTOMER_BOOKING_PK',
             'src_fk': ['CUSTOMER_PK', 'BOOKING_PK'],
             'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'SAT_CUST_CUSTOMER_DETAILS': {
-            'source_model': 'raw_stage_customer_hashed',
+            'source_model': 'raw_stage_customer_seed_hashed',
             'src_pk': 'CUSTOMER_PK',
             'src_hashdiff': 'HASHDIFF',
             'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_DOB'],
@@ -689,7 +687,7 @@ def cycle(context):
             'src_source': 'SOURCE'
         },
         'SAT_BOOK_CUSTOMER_DETAILS': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'CUSTOMER_PK',
             'src_hashdiff': {'source_column': 'HASHDIFF_BOOK_CUSTOMER_DETAILS',
                              'alias': 'HASHDIFF'},
@@ -699,7 +697,7 @@ def cycle(context):
             'src_source': 'SOURCE'
         },
         'SAT_BOOK_BOOKING_DETAILS': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'BOOKING_PK',
             'src_hashdiff': {'source_column': 'HASHDIFF_BOOK_BOOKING_DETAILS',
                              'alias': 'HASHDIFF'},

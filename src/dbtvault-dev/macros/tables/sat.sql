@@ -43,13 +43,13 @@ rank AS (
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
-    THEN 'Y' ELSE 'N' END latest
+    THEN 'Y' ELSE 'N' END AS latest
     FROM update_records as c
 ),
 stage AS (
     SELECT {{ dbtvault.prefix(source_cols, 'd', alias_target='target') }}
-    FROM rank
-    WHERE rank.latest = 'Y'
+    FROM rank AS d
+    WHERE d.latest = 'Y'
 ),
 {% endif -%}
 

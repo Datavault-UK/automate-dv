@@ -51,6 +51,7 @@ def clear_schema(context):
         assert 'Completed successfully' in logs
 
 
+@step("the {model_name} {vault_structure} is empty")
 @given("the {model_name} {vault_structure} is empty")
 def load_empty_table(context, model_name, vault_structure):
     """Creates an empty table"""
@@ -87,6 +88,7 @@ def load_empty_table(context, model_name, vault_structure):
     assert 'Completed successfully' in logs
 
 
+@step("the {model_name} {vault_structure} is already populated with data")
 @given("the {model_name} {vault_structure} is already populated with data")
 def load_populated_table(context, model_name, vault_structure):
     """
@@ -266,10 +268,11 @@ def stage(context):
     assert 'Completed successfully' in logs
 
 
+@step("the {model_name} table contains expected data")
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                      model_name=f'{model_name}_expected')
+                                                                           model_name=f'{model_name}_expected')
 
     metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
 
