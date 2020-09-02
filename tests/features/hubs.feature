@@ -128,7 +128,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD-EMPTY] Keys with NULL or empty values are not loaded into an existing empty hub
+  Scenario: [BASE-LOAD-EMPTY] Keys with NULL or empty values are not loaded into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |

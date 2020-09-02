@@ -66,7 +66,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [BASE-LOAD] Load a simple stage table into an empty link table
+  Scenario: [BASE-LOAD-EMPTY] Load a simple stage table into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -86,7 +86,7 @@ Feature: Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [BASE-LOAD] Loading a stage table with duplicates into an empty link table
+  Scenario: [BASE-LOAD-EMPTY] Load a stage table with duplicates into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
