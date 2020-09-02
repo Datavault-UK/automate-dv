@@ -148,7 +148,7 @@ Feature: Cycles
     And the RAW_STAGE_BOOKING stage is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_CUSTOMER is loaded for day 1
+    And the RAW_STAGE_CUSTOMER is loaded for day 1
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
@@ -164,7 +164,7 @@ Feature: Cycles
     And I load the vault
 
     # ================ DAY 2 ===================
-    When the RAW_STAGE_CUSTOMER is loaded for day 2
+    And the RAW_STAGE_CUSTOMER is loaded for day 2
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
       | 1002        | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Michael       | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
@@ -178,7 +178,7 @@ Feature: Cycles
     And I load the vault
 
     # ================ DAY 3 ===================
-    When the RAW_STAGE_CUSTOMER is loaded for day 3
+    And the RAW_STAGE_CUSTOMER is loaded for day 3
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Harold        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
@@ -193,7 +193,7 @@ Feature: Cycles
     And I load the vault
 
     # ================ DAY 4 ===================
-    When the RAW_STAGE_CUSTOMER is loaded for day 4
+    And the RAW_STAGE_CUSTOMER is loaded for day 4
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
       | 1002        | Bethany       | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |

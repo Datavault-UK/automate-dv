@@ -35,18 +35,20 @@ WITH source_data AS (
     {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
         WHERE __PERIOD_FILTER__
     {% endif %}
-)
-
-{% if load_relation(this) is none -%}
-    SELECT {{ dbtvault.alias_all(structure_cols, 'e') }}
-    FROM source_data AS e
-{% else -%}
-    ,
+),
+{%- if load_relation(this) is none %}
+    records_to_insert AS (
+        SELECT {{ dbtvault.alias_all(structure_cols, 'e') }}
+        FROM source_data AS e
+    )
+{%- else -%}
     latest_eff AS
     (
         SELECT {{ dbtvault.alias_all(structure_cols, 'b') }},
-        ROW_NUMBER() OVER (PARTITION BY b.{{ src_pk }}
-        ORDER BY b.{{ src_ldts }} DESC) AS RowNum
+               ROW_NUMBER() OVER (
+                    PARTITION BY b.{{ src_pk }}
+                    ORDER BY b.{{ src_ldts }} DESC
+               ) AS row_number
         FROM {{ this }} AS b
     ),
     latest_open_eff AS
@@ -54,7 +56,7 @@ WITH source_data AS (
         SELECT {{ dbtvault.alias_all(structure_cols, 'a') }}
         FROM latest_eff AS a
         WHERE TO_DATE(a.{{ src_end_date }}) = TO_DATE('9999-12-31')
-        AND a.RowNum = 1
+        AND a.row_number = 1
     ),
     stage_slice AS
     (
@@ -95,16 +97,13 @@ WITH source_data AS (
         INNER JOIN links_to_end_date AS g
         ON g.{{ src_pk }} = h.{{ src_pk }}
         INNER JOIN stage_slice AS stage
-{#        ON stage.{{ src_pk }} = h.{{ src_pk }}#}
-{#        WHERE {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}#}
-{#        OR {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}#}
     ),
     records_to_insert AS (
         SELECT * FROM new_open_records
         UNION
         SELECT * FROM new_end_dated_records
     )
-    
-    SELECT * FROM records_to_insert
-{%- endif -%}
+{%- endif %}
+
+SELECT * FROM records_to_insert
 {%- endmacro -%}
