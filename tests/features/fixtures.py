@@ -598,11 +598,6 @@ def eff_satellite_multipart(context):
         'EFF_SAT': {
             'column_types': {
                 'CUSTOMER_ORDER_PK': 'BINARY(16)',
-                'CUSTOMER_PK': 'BINARY(16)',
-                'NATION_PK': 'BINARY(16)',
-                'ORDER_PK': 'BINARY(16)',
-                'PRODUCT_PK': 'BINARY(16)',
-                'ORGANISATION_PK': 'BINARY(16)',
                 'START_DATE': 'DATE',
                 'END_DATE': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
