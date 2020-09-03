@@ -146,10 +146,10 @@ The Driving Key problem:
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-11 | orders |
@@ -178,12 +178,12 @@ The Driving Key problem:
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
@@ -220,20 +220,20 @@ The Driving Key problem:
       | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-11 | orders |
       | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-10 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('4000\|\|FFF') | md5('4000') | md5('FFF') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|GGG') | md5('5000') | md5('GGG') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-12 | orders |
-      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('7000\|\|JJJ') | md5('7000') | md5('JJJ') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('7000\|\|III') | md5('7000') | md5('III') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('4000\|\|FFF') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|GGG') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-12 | orders |
+      | md5('7000\|\|JJJ') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('7000\|\|III') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('7000\|\|JJJ') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('7000\|\|III') | 2020-01-10 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
@@ -278,12 +278,12 @@ The Driving Key problem:
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-12 | 9999-12-31 | 2020-01-11     | 2020-01-13 | orders |
@@ -312,12 +312,12 @@ The Driving Key problem:
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-11 | orders |
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-11 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-12 | 9999-12-31 | 2020-01-11     | 2020-01-13 | orders |
@@ -346,12 +346,12 @@ The Driving Key problem:
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-12 | 9999-12-31 | 2020-01-11     | 2020-01-13 | orders |
@@ -383,14 +383,14 @@ The Driving Key problem:
       | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('EEE') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-13 | orders |
       | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | md5('5000') | md5('SPA') | md5('FFF') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-13 | orders |
     And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | NATION_PK  | ORDER_PK   | PRODUCT_PK    | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('DEU') | md5('AAA') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | md5('2000') | md5('GBR') | md5('BBB') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | md5('3000') | md5('AUS') | md5('CCC') | md5('SHOP')   | md5('BUSSTHINK') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('DDD') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | md5('4000') | md5('POL') | md5('EEE') | md5('ONLINE') | md5('BUSSTHINK') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-      | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | md5('5000') | md5('SPA') | md5('FFF') | md5('SHOP')   | md5('DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | CUSTOMER_ORDER_PK                                | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|DEU\|\|AAA\|\|ONLINE\|\|DATAVAULT') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('2000\|\|GBR\|\|BBB\|\|ONLINE\|\|DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('3000\|\|AUS\|\|CCC\|\|SHOP\|\|BUSSTHINK')   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('4000\|\|POL\|\|DDD\|\|ONLINE\|\|BUSSTHINK') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('4000\|\|POL\|\|EEE\|\|ONLINE\|\|BUSSTHINK') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | md5('5000\|\|SPA\|\|FFF\|\|SHOP\|\|DATAVAULT')   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | NATION_ID | PRODUCT_GROUP | ORGANISATION_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | DEU       | ONLINE        | DATAVAULT       | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-14 | orders |
