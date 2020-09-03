@@ -41,7 +41,7 @@ WITH source_data AS (
         SELECT {{ dbtvault.alias_all(structure_cols, 'e') }}
         FROM source_data AS e
     )
-{%- else -%}
+{%- else %}
     latest_eff AS
     (
         SELECT {{ dbtvault.alias_all(structure_cols, 'b') }},
@@ -62,8 +62,8 @@ WITH source_data AS (
     (
         SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
         FROM source_data AS stage
-        WHERE {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
-        AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
+{#        WHERE {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}#}
+{#        AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}#}
     ),
     open_links AS (
         SELECT c.*
@@ -72,12 +72,14 @@ WITH source_data AS (
         ON c.{{ src_pk }} = d.{{ src_pk }}
     ),
     links_to_end_date AS (
-        SELECT {{ dbtvault.alias_all(dbtvault.expand_column_list(columns=[src_pk, src_dfk]), 'a') }}
+        SELECT a.*
         FROM open_links AS a
-        LEFT JOIN stage_slice AS stage
-        ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'stage'], condition='=') }}
-        WHERE {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NULL') }}
-        OR {{ dbtvault.multikey(src_sfk, prefix=['stage', 'a'], condition='<>') }}
+        LEFT JOIN stage_slice AS b
+        ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
+{#        LEFT JOIN stage_slice AS c#}
+{#        ON {{ dbtvault.multikey(src_sfk, prefix=['a', 'c'], condition='=') }}#}
+        WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL') }}
+        OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>') }}
     ),
     new_open_records AS (
         SELECT DISTINCT
@@ -87,21 +89,27 @@ WITH source_data AS (
         ON stage.{{ src_pk }} = e.{{ src_pk }}
         WHERE e.{{ src_pk }} IS NULL
         AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
-        OR {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
+        AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
     ),
     new_end_dated_records AS (
         SELECT DISTINCT
-            h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, stage.EFFECTIVE_FROM AS {{ src_end_date }},
-            stage.{{ src_eff }}, stage.{{ src_ldts }}, h.{{ src_source }}
+            h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, h.{{ src_source }}
         FROM latest_open_eff AS h
         INNER JOIN links_to_end_date AS g
         ON g.{{ src_pk }} = h.{{ src_pk }}
+    ),
+    amended_end_dated_records AS (
+        SELECT DISTINCT
+            a.CUSTOMER_ORDER_PK, a.START_DATE,
+            stage.EFFECTIVE_FROM AS END_DATE, stage.EFFECTIVE_FROM, stage.LOAD_DATE,
+            a.SOURCE
+        FROM new_end_dated_records AS a
         INNER JOIN stage_slice AS stage
     ),
     records_to_insert AS (
         SELECT * FROM new_open_records
         UNION
-        SELECT * FROM new_end_dated_records
+        SELECT * FROM amended_end_dated_records
     )
 {%- endif %}
 
