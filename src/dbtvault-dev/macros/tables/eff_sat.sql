@@ -76,8 +76,6 @@ WITH source_data AS (
         FROM open_links AS a
         LEFT JOIN stage_slice AS b
         ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
-{#        LEFT JOIN stage_slice AS c#}
-{#        ON {{ dbtvault.multikey(src_sfk, prefix=['a', 'c'], condition='=') }}#}
         WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL') }}
         OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>') }}
     ),
@@ -93,7 +91,7 @@ WITH source_data AS (
     ),
     new_end_dated_records AS (
         SELECT DISTINCT
-            h.{{ src_pk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, h.{{ src_source }}
+            h.{{ src_pk }}, g.{{ src_dfk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, h.{{ src_source }}
         FROM latest_open_eff AS h
         INNER JOIN links_to_end_date AS g
         ON g.{{ src_pk }} = h.{{ src_pk }}
@@ -105,6 +103,7 @@ WITH source_data AS (
             a.SOURCE
         FROM new_end_dated_records AS a
         INNER JOIN stage_slice AS stage
+        ON {{ dbtvault.multikey(src_dfk, prefix=['stage', 'a'], condition='=') }}
     ),
     records_to_insert AS (
         SELECT * FROM new_open_records
