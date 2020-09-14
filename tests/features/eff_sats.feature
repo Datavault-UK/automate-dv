@@ -150,7 +150,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
   @fixture.eff_satellite
-  Scenario: [NULL-DPK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
+  Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -180,37 +180,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
 
   @fixture.eff_satellite
-  Scenario: [NULL-DPK-SFK] No New Eff Sat Added if DFK  and SFK are both NULL
-    Given the LINK link is already populated with data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
-    And the EFF_SAT eff_sat is already populated with data
-      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | <null>      | <null>   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-    And I hash the stage
-    When I load the LINK link
-    And I load the EFF_SAT eff_sat
-    Then the EFF_SAT table should contain expected data
-      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-
-  @fixture.eff_satellite
-  Scenario: [NULL-DPK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
+  Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -240,7 +210,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-11 | orders |
 
   @fixture.eff_satellite
-  Scenario: [NULL-SPK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DPK is Closed.
+  Scenario: [NULL-SFK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK Remains Open.
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -269,3 +239,33 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
+
+  @fixture.eff_satellite
+  Scenario: [NULL-DFK-SFK] No New Eff Sat Added if DFK and SFK are both NULL
+    Given the LINK link is already populated with data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 | orders |
+    And the EFF_SAT eff_sat is already populated with data
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | <null>      | <null>   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+    And I hash the stage
+    When I load the LINK link
+    And I load the EFF_SAT eff_sat
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |

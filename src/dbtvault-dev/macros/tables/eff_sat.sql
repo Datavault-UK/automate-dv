@@ -74,8 +74,8 @@ WITH source_data AS (
         FROM open_links AS a
         LEFT JOIN stage_slice AS b
         ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
-        WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL') }}
-        OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>') }}
+        WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
+        OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
     ),
     new_open_records AS (
         SELECT DISTINCT
