@@ -3,7 +3,7 @@ Feature: Satellites Loaded using Period Materialization
   # INFERRED DATE RANGE (DAILY)
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite.
+  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
