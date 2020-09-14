@@ -540,11 +540,11 @@ def eff_satellite_multipart(context):
 
     context.hash_mapping_config = {
         'RAW_STAGE': {
-            'CUSTOMER_ORDER_PK': ['CUSTOMER_ID',  'NATION_ID', 'ORDER_ID', 'PRODUCT_GROUP', 'ORGANISATION_ID'],
+            'CUSTOMER_ORDER_PK': ['CUSTOMER_ID', 'ORDER_ID', 'NATION_ID', 'PLATFORM_ID', 'ORGANISATION_ID'],
             'CUSTOMER_PK': 'CUSTOMER_ID',
             'NATION_PK': 'NATION_ID',
             'ORDER_PK': 'ORDER_ID',
-            'PRODUCT_PK': 'PRODUCT_GROUP',
+            'PLATFORM_PK': 'PLATFORM_ID',
             'ORGANISATION_PK': 'ORGANISATION_ID'
         }
     }
@@ -552,13 +552,13 @@ def eff_satellite_multipart(context):
     context.vault_structure_columns = {
         'LINK': {
             'src_pk': 'CUSTOMER_ORDER_PK',
-            'src_fk': ['CUSTOMER_PK', 'NATION_PK', 'ORDER_PK', 'PRODUCT_PK', 'ORGANISATION_PK'],
+            'src_fk': ['CUSTOMER_PK', 'NATION_PK', 'ORDER_PK', 'PLATFORM_PK', 'ORGANISATION_PK'],
             'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'EFF_SAT': {
             'src_pk': 'CUSTOMER_ORDER_PK',
-            'src_dfk': ['ORDER_PK', 'PRODUCT_PK', 'ORGANISATION_PK'],
+            'src_dfk': ['ORDER_PK', 'PLATFORM_PK', 'ORGANISATION_PK'],
             'src_sfk': ['CUSTOMER_PK', 'NATION_PK'],
             'src_start_date': 'START_DATE',
             'src_end_date': 'END_DATE',
@@ -575,7 +575,7 @@ def eff_satellite_multipart(context):
                 'CUSTOMER_ID': 'NUMBER(38, 0)',
                 'NATION_ID': 'VARCHAR',
                 'ORDER_ID': 'VARCHAR',
-                'PRODUCT_GROUP': 'VARCHAR',
+                'PLATFORM_ID': 'VARCHAR',
                 'ORGANISATION_ID': 'VARCHAR',
                 'START_DATE': 'DATE',
                 'END_DATE': 'DATE',
@@ -589,7 +589,7 @@ def eff_satellite_multipart(context):
                 'CUSTOMER_PK': 'BINARY(16)',
                 'NATION_PK': 'BINARY(16)',
                 'ORDER_PK': 'BINARY(16)',
-                'PRODUCT_PK': 'BINARY(16)',
+                'PLATFORM_PK': 'BINARY(16)',
                 'ORGANISATION_PK': 'BINARY(16)',
                 'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
