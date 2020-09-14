@@ -1,7 +1,7 @@
 Feature: Effectivity Satellites
 
   @fixture.eff_satellite
-  Scenario: [BASE-LOAD] Load data into a non-existent effectivity satellite.
+  Scenario: [BASE-LOAD] Load data into a non-existent effectivity satellite
     Given the LINK link is empty
     And the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
@@ -19,7 +19,7 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
   @fixture.eff_satellite
-  Scenario: [BASE-LOAD] Load data into an empty effectivity satellite.
+  Scenario: [BASE-LOAD] Load data into an empty effectivity satellite
     Given the LINK link is empty
     And the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
@@ -150,7 +150,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
   @fixture.eff_satellite
-  Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
+  Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |
@@ -210,7 +210,7 @@ Feature: Effectivity Satellites
       | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-11 | orders |
 
   @fixture.eff_satellite
-  Scenario: [NULL-SFK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK Remains Open.
+  Scenario: [NULL-SFK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK Remains Open
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-10 | orders |

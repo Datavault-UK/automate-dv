@@ -1,7 +1,7 @@
 Feature: Multipart-Key Effectivity Satellites
 
   @fixture.eff_satellite_multipart
-  Scenario: [BASE-LOAD-MULTI] Load data into an non-existent effectivity satellite.
+  Scenario: [BASE-LOAD-MULTI] Load data into an non-existent effectivity satellite
     Given the LINK link is empty
     And the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
@@ -19,7 +19,7 @@ Feature: Multipart-Key Effectivity Satellites
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
   @fixture.eff_satellite_multipart
-  Scenario: [BASE-LOAD-MULTI] Load data into an empty effectivity satellite.
+  Scenario: [BASE-LOAD-MULTI] Load data into an empty effectivity satellite
     Given the LINK link is empty
     And the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
@@ -145,7 +145,7 @@ Feature: Multipart-Key Effectivity Satellites
       | md5('5000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
   @fixture.eff_satellite_multipart
-  Scenario: [NULL-DFK-MULTI] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
+  Scenario: [NULL-DFK-MULTI] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-10 | orders |
@@ -193,7 +193,7 @@ Feature: Multipart-Key Effectivity Satellites
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 2020-01-11 | 2020-01-09     | 2020-01-10 | orders |
 
   @fixture.eff_satellite_multipart
-  Scenario: [NULL-SFK-MULTI] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed.
+  Scenario: [NULL-SFK-MULTI] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed
     Given the LINK link is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-10 | orders |

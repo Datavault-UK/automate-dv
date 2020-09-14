@@ -26,7 +26,7 @@ Feature: Effectivity Satellites Loaded using Period Materialization
 
 
   @fixture.eff_satellite
-  Scenario: [NULL-DFK-PM] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open.
+  Scenario: [NULL-DFK-PM] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
