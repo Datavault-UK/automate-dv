@@ -62,8 +62,6 @@ WITH source_data AS (
     (
         SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
         FROM source_data AS stage
-{#        WHERE {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}#}
-{#        AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}#}
     ),
     open_links AS (
         SELECT c.*
@@ -91,7 +89,7 @@ WITH source_data AS (
     ),
     new_end_dated_records AS (
         SELECT DISTINCT
-            h.{{ src_pk }}, g.{{ src_dfk }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, h.{{ src_source }}
+            h.{{ src_pk }}, {{ dbtvault.alias_all(columns=src_dfk, prefix='g') }}, h.EFFECTIVE_FROM AS {{ src_start_date }}, h.{{ src_source }}
         FROM latest_open_eff AS h
         INNER JOIN links_to_end_date AS g
         ON g.{{ src_pk }} = h.{{ src_pk }}

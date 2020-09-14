@@ -25,6 +25,10 @@
         {%- if not loop.last -%} , {% endif -%}
     {%- endfor -%}
 
+{%- elif columns is string -%}
+
+{{ dbtvault.alias(alias_config=columns, prefix=prefix) }}
+
 {%- endif -%}
 
 {%- endmacro -%}
