@@ -1,5 +1,6 @@
 Feature: Effectivity Satellites with multi-part keys
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [BASE-LOAD-MULTI] Load data into an non-existent effectivity satellite
     Given the LINK link is empty
@@ -18,6 +19,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('2000\|\|BBB\|\|SPA\|\|RETAIL\|\|BUSSTHINK') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [BASE-LOAD-MULTI] Load data into an empty effectivity satellite
     Given the LINK link is empty
@@ -36,6 +38,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('2000\|\|BBB\|\|SPA\|\|RETAIL\|\|BUSSTHINK') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [INCREMENTAL-LOAD-MULTI] No Effectivity Change when duplicates are loaded
     Given the LINK link is already populated with data
@@ -62,6 +65,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('2000\|\|BBB\|\|SPA\|\|RETAIL\|\|BUSSTHINK') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [INCREMENTAL-LOAD-MULTI] New Link record Added
     Given the LINK link is already populated with data
@@ -146,6 +150,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('4000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
       | md5('5000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [NULL-DFK-MULTI] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the LINK link is already populated with data
@@ -170,6 +175,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('2000\|\|BBB\|\|SPA\|\|RETAIL\|\|BUSSTHINK') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [NULL-DFK-MULTI] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
     Given the LINK link is already populated with data
@@ -194,6 +200,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('2000\|\|BBB\|\|SPA\|\|RETAIL\|\|BUSSTHINK') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 2020-01-11 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [NULL-SFK-MULTI] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed
     Given the LINK link is already populated with data
@@ -218,6 +225,7 @@ Feature: Effectivity Satellites with multi-part keys
       | md5('2000\|\|BBB\|\|SPA\|\|RETAIL\|\|BUSSTHINK') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [NULL-DFK-SFK-MULTI] No New Eff Sat Added if DFK and SFK are both NULL
     Given the LINK link is already populated with data

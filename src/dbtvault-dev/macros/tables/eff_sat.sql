@@ -105,6 +105,8 @@ WITH source_data AS (
         FROM new_end_dated_records AS a
         INNER JOIN stage_slice AS stage
         ON {{ dbtvault.multikey(src_dfk, prefix=['stage', 'a'], condition='=') }}
+        WHERE {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
+        AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
     ),
     {%- endif %}
     records_to_insert AS (
