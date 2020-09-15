@@ -12,10 +12,10 @@
 -#}
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, link_model, source_model) -%}
 
-    {{- adapter_macro('dbtvault.eff_sat', src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                      src_start_date=src_start_date, src_end_date=src_end_date,
-                      src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                      link_model=link_model, source_model=source_model) -}}
+    {{- adapter.dispatch('eff_sat', packages = ['dbtvault'])(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+                                                             src_start_date=src_start_date, src_end_date=src_end_date,
+                                                             src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                             link_model=link_model, source_model=source_model) -}}
 
 {%- endmacro %}
 

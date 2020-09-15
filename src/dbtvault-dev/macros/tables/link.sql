@@ -12,8 +12,9 @@
 -#}
 {%- macro link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
 
-    {{- adapter_macro('dbtvault.link', src_pk=src_pk, src_fk=src_fk, 
-                      src_ldts=src_ldts, src_source=src_source, source_model=source_model) -}}
+    {{- adapter.dispatch('link', packages = ['dbtvault'])(src_pk=src_pk, src_fk=src_fk,
+                                                          src_ldts=src_ldts, src_source=src_source,
+                                                          source_model=source_model) -}}
 
 {%- endmacro -%}
 

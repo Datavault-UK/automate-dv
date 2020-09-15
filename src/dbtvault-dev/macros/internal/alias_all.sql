@@ -12,7 +12,7 @@
 -#}
 {%- macro alias_all(columns=none, prefix=none) -%}
 
-    {{- adapter_macro('dbtvault.alias_all', columns=columns, prefix=prefix) -}}
+    {{- adapter.dispatch('alias_all', packages = ['dbtvault'])(columns=columns, prefix=prefix) -}}
 
 {%- endmacro %}
 
