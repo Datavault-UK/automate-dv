@@ -12,7 +12,7 @@
 -#}
 {%- macro hash_columns(columns=none) -%}
 
-    {{- adapter_macro('dbtvault.hash_columns', columns=columns) -}}
+    {{- adapter.dispatch('hash_columns', packages = ['dbtvault'])(columns=columns) -}}
 
 {%- endmacro %}
 
