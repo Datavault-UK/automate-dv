@@ -23,7 +23,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/eff_sats_period_mat.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/eff_sats/eff_sats_period_mat.feature" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>

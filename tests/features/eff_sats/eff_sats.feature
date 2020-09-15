@@ -1,5 +1,6 @@
 Feature: Effectivity Satellites
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [BASE-LOAD] Load data into a non-existent effectivity satellite
     Given the LINK link is empty
@@ -18,6 +19,7 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [BASE-LOAD] Load data into an empty effectivity satellite
     Given the LINK link is empty
@@ -36,6 +38,7 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD] No Effectivity Change when duplicates are loaded
     Given the LINK link is already populated with data
@@ -62,6 +65,7 @@ Feature: Effectivity Satellites
       | md5('2000\|\|BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD] New Link record Added
     Given the LINK link is already populated with data
@@ -92,6 +96,7 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD] Link is Changed
     Given the LINK link is already populated with data
@@ -118,6 +123,7 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
       | md5('4000\|\|CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD] 2 loads, Link is Changed Back Again
     Given the LINK link is already populated with data
@@ -149,6 +155,7 @@ Feature: Effectivity Satellites
       | md5('4000\|\|CCC') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
       | md5('5000\|\|CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the LINK link is already populated with data
@@ -179,6 +186,8 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
 
+
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
     Given the LINK link is already populated with data
@@ -209,6 +218,7 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-11 | 2020-01-10     | 2020-01-11 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-SFK] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK Remains Open
     Given the LINK link is already populated with data
@@ -238,8 +248,8 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('4000\|\|DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | md5('5000\|\|EEE') | 2020-01-10 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-DFK-SFK] No New Eff Sat Added if DFK and SFK are both NULL
     Given the LINK link is already populated with data

@@ -1,5 +1,6 @@
 Feature: Effectivity Satellites Loaded using Period Materialization
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD-PM] 2 loads, Link is Changed Back Again
     Given the RAW_STAGE table contains data
@@ -24,7 +25,7 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | md5('4000\|\|CCC') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
       | md5('5000\|\|CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
-
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-DFK-PM] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the RAW_STAGE table contains data
