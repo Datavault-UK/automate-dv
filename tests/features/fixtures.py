@@ -409,7 +409,7 @@ def satellite_cycle(context):
 @fixture
 def t_link(context):
     """
-    Define the structures and metadata to perform load cycles for transactional links
+    Define the structures and metadata to load transactional links
     """
 
     context.hash_mapping_config = {
@@ -530,6 +530,14 @@ def eff_satellite(context):
             }
         }
     }
+
+
+@fixture
+def enable_auto_end_date(context):
+    """
+    Enable auto end-dating on effectivity satellites
+    """
+    context.auto_end_date = True
 
 
 @fixture

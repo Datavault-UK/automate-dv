@@ -1,4 +1,4 @@
-Feature: Multipart-Key Effectivity Satellites
+Feature: Effectivity Satellites with multi-part keys
 
   @fixture.eff_satellite_multipart
   Scenario: [BASE-LOAD-MULTI] Load data into an non-existent effectivity satellite
@@ -87,6 +87,7 @@ Feature: Multipart-Key Effectivity Satellites
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('4000\|\|DDD\|\|GER\|\|RETAIL\|\|BUSSTHINK') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [INCREMENTAL-LOAD-MULTI] Link is Changed
     Given the LINK link is already populated with data
@@ -113,6 +114,7 @@ Feature: Multipart-Key Effectivity Satellites
       | md5('3000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
       | md5('4000\|\|CCC\|\|GBR\|\|ONLINE\|\|DATAVAULT') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
+  @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
   Scenario: [INCREMENTAL-LOAD-MULTI] 2 loads, Link is Changed Back Again
     Given the LINK link is already populated with data

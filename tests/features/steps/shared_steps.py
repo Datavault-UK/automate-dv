@@ -120,9 +120,14 @@ def load_populated_table(context, model_name, vault_structure):
 def load_table(context, model_name, vault_structure):
     metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns[model_name]}
 
+    config = dbtvault_generator.append_end_date_config(context, dict())
+
     context.vault_structure_metadata = metadata
 
-    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 
@@ -141,6 +146,8 @@ def load_table(context, model_name, vault_structure, period, start_date=None, st
               'stop_date': stop_date,
               'source_model': context.hashed_stage_model_name,
               'period': period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
 
     context.vault_structure_metadata = metadata
 
@@ -163,6 +170,8 @@ def load_table(context, model_name, vault_structure, period):
               'timestamp_field': 'LOAD_DATE',
               'source_model': context.hashed_stage_model_name,
               'period': period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
 
     context.vault_structure_metadata = metadata
 

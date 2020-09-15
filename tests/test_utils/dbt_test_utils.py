@@ -546,7 +546,7 @@ class DBTVAULTGenerator:
         if isinstance(src_sfk, str):
             src_sfk = f"'{src_sfk}'"
 
-        config_string = ", ".join([f"{k}='{v}'" for k, v in config.items()])
+        config_string = ", ".join([f"{k}='{v}'" if isinstance(v, str) else f"{k}={v}" for k, v in config.items()])
 
         template = f"""
         {{{{ config({config_string}) }}}}
@@ -658,6 +658,22 @@ class DBTVAULTGenerator:
                 structure_dict['src_hashdiff'] = structure_dict['src_hashdiff']['alias']
 
         return structure_dict
+
+    @staticmethod
+    def append_end_date_config(context, config: dict) -> dict:
+        """
+        Append end dating config if attribute is present.
+        """
+
+        if hasattr(context, 'auto_end_date'):
+            if context.auto_end_date:
+                if config:
+                    config['auto_end_date'] = True
+                else:
+                    config = {'materialized': 'incremental',
+                              'auto_end_date': True}
+
+        return config
 
     @staticmethod
     def clean_test_schema_file():
