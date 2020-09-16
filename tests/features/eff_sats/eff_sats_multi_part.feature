@@ -1,3 +1,4 @@
+@fixture.set_workdir
 Feature: Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date

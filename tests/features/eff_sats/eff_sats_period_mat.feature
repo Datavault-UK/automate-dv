@@ -1,3 +1,4 @@
+@fixture.set_workdir
 Feature: Effectivity Satellites Loaded using Period Materialization
 
   @fixture.enable_auto_end_date
