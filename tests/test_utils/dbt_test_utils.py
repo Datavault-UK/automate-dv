@@ -62,8 +62,15 @@ class DBTTestUtils:
 
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET').lower() == 'snowflake':
+        if os.getenv('TARGET', '').lower() == 'snowflake':
+            target = 'snowflake'
+        elif not os.getenv('TARGET', None):
+            print('TARGET not set. Target set to snowflake.')
+            target = 'snowflake'
+        else:
+            target = None
 
+        if target == 'snowflake':
             if os.getenv('CIRCLE_NODE_INDEX'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
                               f"_{os.getenv('CIRCLE_NODE_INDEX')}"
@@ -74,7 +81,7 @@ class DBTTestUtils:
                 'SCHEMA_NAME': schema_name
             }
         else:
-            self.EXPECTED_PARAMETERS = dict()
+            raise ValueError('TARGET not set')
 
     def run_dbt_command(self, command) -> str:
         """
@@ -143,7 +150,10 @@ class DBTTestUtils:
             command = ['dbt', mode, '-m', model_name]
 
         if args:
-            yaml_str = str(args).replace('\'', '"')
+            if not any(x in str(args) for x in ['(', ')']):
+                yaml_str = str(args).replace('\'', '"')
+            else:
+                yaml_str = str(args)
             command.extend(['--vars', yaml_str])
 
         return self.run_dbt_command(command)
@@ -255,7 +265,7 @@ class DBTTestUtils:
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :return: DataFrame representation of the provide context table
         """
 
@@ -270,14 +280,14 @@ class DBTTestUtils:
     def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
         Converts a context table in a feature file into a dictionary
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
         """
 
         table_df = self.context_table_to_df(table)
 
-        csv_fqn = CSV_DIR / f'{model_name.lower()}.csv'
+        csv_fqn = CSV_DIR / f'{model_name.lower()}_seed.csv'
 
         table_df.to_csv(csv_fqn, index=False)
 
@@ -288,7 +298,7 @@ class DBTTestUtils:
     def context_table_to_dict(self, table: Table, orient='index'):
         """
         Converts a context table in a feature file into a pandas DataFrame
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :param orient: orient for df to_dict
             :return: A pandas DataFrame modelled from a context table
         """
@@ -299,10 +309,23 @@ class DBTTestUtils:
 
         return table_dict
 
+    def columns_from_context_table(self, table: Table) -> list:
+        """
+            Get a List of columns (headers) from a context table
+            :param table: The context.table from a scenario
+            :return: List of column names in the context table
+        """
+
+        table_df = self.context_table_to_df(table)
+
+        table_dict = table_df.to_dict()
+
+        return list(table_dict.keys())
+
     def find_columns_to_ignore(self, table: Table):
         """
         Gets a list of columns which contain all *, which is shorthand to denote ignoring a column for comparison
-            :param table: The context.table from a feature file
+            :param table: The context.table from a scenario
             :return: List of columns
         """
 
@@ -386,9 +409,9 @@ class DBTVAULTGenerator:
             'hub': self.hub,
             'link': self.link,
             'sat': self.sat,
+            'eff_sat': self.eff_sat,
             't_link': self.t_link
         }
-
         if vault_structure == 'stage':
             generator_functions[vault_structure](model_name)
         else:
@@ -460,7 +483,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, config=None):
+    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
+            config=None):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -489,6 +513,47 @@ class DBTVAULTGenerator:
         {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
                           '{src_eff}', '{src_ldts}', '{src_source}', 
                           '{source_model}')   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
+                src_start_date, src_end_date, src_eff, src_ldts, src_source,
+                link_model, source_model,
+                config=None):
+        """
+        Generate an effectivity satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_dfk: Source driving foreign key
+            :param src_sfk: Source surrogate foreign key
+            :param src_eff: Source effective from
+            :param src_start_date: Source start date
+            :param src_end_date: Source end date
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param link_model: Link model the eff_sat is attached to
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        if isinstance(src_dfk, str):
+            src_dfk = f"'{src_dfk}'"
+
+        if isinstance(src_sfk, str):
+            src_sfk = f"'{src_sfk}'"
+
+        config_string = ", ".join([f"{k}='{v}'" if isinstance(v, str) else f"{k}={v}" for k, v in config.items()])
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        {{{{ dbtvault.eff_sat('{src_pk}', {src_dfk}, {src_sfk},
+                              '{src_start_date}', '{src_end_date}',
+                              '{src_eff}', '{src_ldts}', '{src_source}',
+                              '{link_model}', '{source_model}') }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -558,7 +623,9 @@ class DBTVAULTGenerator:
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata, ignore_columns):
 
-        extracted_compare_columns = [v for k, v in metadata.items() if k not in ['source_model']]
+        meta_to_ignore = ['source_model', 'link_model', 'src_dfk', 'src_sfk']
+
+        extracted_compare_columns = [v for k, v in metadata.items() if k not in meta_to_ignore]
 
         compare_columns = list(
             [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
@@ -591,6 +658,22 @@ class DBTVAULTGenerator:
                 structure_dict['src_hashdiff'] = structure_dict['src_hashdiff']['alias']
 
         return structure_dict
+
+    @staticmethod
+    def append_end_date_config(context, config: dict) -> dict:
+        """
+        Append end dating config if attribute is present.
+        """
+
+        if hasattr(context, 'auto_end_date'):
+            if context.auto_end_date:
+                if config:
+                    config['auto_end_date'] = True
+                else:
+                    config = {'materialized': 'incremental',
+                              'auto_end_date': True}
+
+        return config
 
     @staticmethod
     def clean_test_schema_file():

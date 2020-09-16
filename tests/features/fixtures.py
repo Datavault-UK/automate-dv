@@ -8,7 +8,7 @@ The fixtures here are used to supply runtime metadata to tests, in place of meta
 
 
 @fixture
-def set_workdir(context):
+def set_workdir(_):
     """
     Set the working (run) dir for dbt
     """
@@ -55,7 +55,7 @@ def single_source_hub(context):
         'HUB': {
             'src_pk': 'CUSTOMER_PK',
             'src_nk': 'CUSTOMER_ID',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -65,7 +65,7 @@ def single_source_hub(context):
             'column_types': {
                 'CUSTOMER_PK': 'BINARY(16)',
                 'CUSTOMER_ID': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -73,7 +73,7 @@ def single_source_hub(context):
             'column_types': {
                 'CUSTOMER_ID': 'VARCHAR',
                 'CUSTOMER_NAME': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -105,7 +105,7 @@ def multi_source_hub(context):
         'HUB': {
             'src_pk': 'PART_PK',
             'src_nk': 'PART_ID',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -115,7 +115,7 @@ def multi_source_hub(context):
             'column_types': {
                 'PART_PK': 'BINARY(16)',
                 'PART_ID': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -126,7 +126,7 @@ def multi_source_hub(context):
                 'PART_TYPE': 'VARCHAR',
                 'PART_SIZE': 'VARCHAR',
                 'PART_RETAILPRICE': 'NUMBER(38,2)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -136,7 +136,7 @@ def multi_source_hub(context):
                 'SUPPLIER_ID': 'VARCHAR',
                 'AVAILQTY': 'FLOAT',
                 'SUPPLYCOST': 'NUMBER(38,2)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -149,7 +149,7 @@ def multi_source_hub(context):
                 'QUANTITY': 'FLOAT',
                 'EXTENDED_PRICE': 'NUMBER(38,2)',
                 'DISCOUNT': 'NUMBER(38,2)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -174,7 +174,7 @@ def single_source_link(context):
         'LINK': {
             'src_pk': 'CUSTOMER_NATION_PK',
             'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -185,7 +185,7 @@ def single_source_link(context):
                 'CUSTOMER_NATION_PK': 'BINARY(16)',
                 'CUSTOMER_FK': 'BINARY(16)',
                 'NATION_FK': 'BINARY(16)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -196,7 +196,7 @@ def single_source_link(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'CUSTOMER_PHONE': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -231,7 +231,7 @@ def multi_source_link(context):
         'LINK': {
             'src_pk': 'CUSTOMER_NATION_PK',
             'src_fk': ['CUSTOMER_FK', 'NATION_FK'],
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -242,7 +242,7 @@ def multi_source_link(context):
                 'CUSTOMER_NATION_PK': 'BINARY(16)',
                 'CUSTOMER_FK': 'BINARY(16)',
                 'NATION_FK': 'BINARY(16)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -253,7 +253,7 @@ def multi_source_link(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'CUSTOMER_PHONE': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -264,7 +264,7 @@ def multi_source_link(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'CUSTOMER_PHONE': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -275,7 +275,7 @@ def multi_source_link(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'CUSTOMER_PHONE': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -298,7 +298,7 @@ def satellite(context):
 
     context.derived_mapping = {
         'RAW_STAGE': {
-            'EFFECTIVE_FROM': 'LOADDATE'
+            'EFFECTIVE_FROM': 'LOAD_DATE'
         }
     }
 
@@ -308,7 +308,7 @@ def satellite(context):
             'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_PHONE', 'CUSTOMER_DOB'],
             'src_hashdiff': 'HASHDIFF',
             'src_eff': 'EFFECTIVE_FROM',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -320,7 +320,7 @@ def satellite(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_PHONE': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -332,7 +332,7 @@ def satellite(context):
                 'CUSTOMER_DOB': 'DATE',
                 'HASHDIFF': 'BINARY(16)',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -356,7 +356,7 @@ def satellite_cycle(context):
 
     context.derived_mapping = {
         'RAW_STAGE': {
-            'EFFECTIVE_FROM': 'LOADDATE'
+            'EFFECTIVE_FROM': 'LOAD_DATE'
         }
     }
 
@@ -366,7 +366,7 @@ def satellite_cycle(context):
              'CUSTOMER_NAME',
              'CUSTOMER_DOB',
              'EFFECTIVE_FROM',
-             'LOADDATE',
+             'LOAD_DATE',
              'SOURCE']
     }
 
@@ -376,7 +376,7 @@ def satellite_cycle(context):
             'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_DOB'],
             'src_hashdiff': 'HASHDIFF',
             'src_eff': 'EFFECTIVE_FROM',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -388,7 +388,7 @@ def satellite_cycle(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -399,7 +399,7 @@ def satellite_cycle(context):
                 'CUSTOMER_DOB': 'DATE',
                 'HASHDIFF': 'BINARY(16)',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -409,7 +409,7 @@ def satellite_cycle(context):
 @fixture
 def t_link(context):
     """
-    Define the structures and metadata to perform load cycles for transactional links
+    Define the structures and metadata to load transactional links
     """
 
     context.hash_mapping_config = {
@@ -432,7 +432,7 @@ def t_link(context):
             'src_payload': ['TRANSACTION_NUMBER', 'TRANSACTION_DATE',
                             'TYPE', 'AMOUNT'],
             'src_eff': 'EFFECTIVE_FROM',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -445,7 +445,7 @@ def t_link(context):
                 'TRANSACTION_DATE': 'DATE',
                 'TYPE': 'VARCHAR',
                 'AMOUNT': 'NUMBER(38,2)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -458,7 +458,158 @@ def t_link(context):
                 'TYPE': 'VARCHAR',
                 'AMOUNT': 'NUMBER(38,2)',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
+def eff_satellite(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_ORDER_PK': ['CUSTOMER_ID', 'ORDER_ID'],
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'ORDER_PK': 'ORDER_ID'
+        }
+    }
+
+    context.vault_structure_columns = {
+        'LINK': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_fk': ['CUSTOMER_PK', 'ORDER_PK'],
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE'
+        },
+        'EFF_SAT': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_dfk': 'ORDER_PK',
+            'src_sfk': 'CUSTOMER_PK',
+            'src_start_date': 'START_DATE',
+            'src_end_date': 'END_DATE',
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE',
+            'link_model': "LINK",
+        }
+    }
+
+    context.seed_config = {
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'NUMBER(38, 0)',
+                'ORDER_ID': 'VARCHAR',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'LINK': {
+            'column_types': {
+                'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'ORDER_PK': 'BINARY(16)',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'EFF_SAT': {
+            'column_types': {
+                'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
+def enable_auto_end_date(context):
+    """
+    Enable auto end-dating on effectivity satellites
+    """
+    context.auto_end_date = True
+
+
+@fixture
+def eff_satellite_multipart(context):
+    """
+    Define the structures and metadata to load effectivity satellites with multipart keys
+    """
+
+    context.hash_mapping_config = {
+        'RAW_STAGE': {
+            'CUSTOMER_ORDER_PK': ['CUSTOMER_ID', 'ORDER_ID', 'NATION_ID', 'PLATFORM_ID', 'ORGANISATION_ID'],
+            'CUSTOMER_PK': 'CUSTOMER_ID',
+            'NATION_PK': 'NATION_ID',
+            'ORDER_PK': 'ORDER_ID',
+            'PLATFORM_PK': 'PLATFORM_ID',
+            'ORGANISATION_PK': 'ORGANISATION_ID'
+        }
+    }
+
+    context.vault_structure_columns = {
+        'LINK': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_fk': ['CUSTOMER_PK', 'NATION_PK', 'ORDER_PK', 'PLATFORM_PK', 'ORGANISATION_PK'],
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE'
+        },
+        'EFF_SAT': {
+            'src_pk': 'CUSTOMER_ORDER_PK',
+            'src_dfk': ['ORDER_PK', 'PLATFORM_PK', 'ORGANISATION_PK'],
+            'src_sfk': ['CUSTOMER_PK', 'NATION_PK'],
+            'src_start_date': 'START_DATE',
+            'src_end_date': 'END_DATE',
+            'src_eff': 'EFFECTIVE_FROM',
+            'src_ldts': 'LOAD_DATE',
+            'src_source': 'SOURCE',
+            'link_model': "LINK",
+        }
+    }
+
+    context.seed_config = {
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'NUMBER(38, 0)',
+                'NATION_ID': 'VARCHAR',
+                'ORDER_ID': 'VARCHAR',
+                'PLATFORM_ID': 'VARCHAR',
+                'ORGANISATION_ID': 'VARCHAR',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'LINK': {
+            'column_types': {
+                'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'NATION_PK': 'BINARY(16)',
+                'ORDER_PK': 'BINARY(16)',
+                'PLATFORM_PK': 'BINARY(16)',
+                'ORGANISATION_PK': 'BINARY(16)',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        },
+        'EFF_SAT': {
+            'column_types': {
+                'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'START_DATE': 'DATE',
+                'END_DATE': 'DATE',
+                'EFFECTIVE_FROM': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }
@@ -499,7 +650,7 @@ def cycle(context):
 
     context.derived_mapping = {
         'RAW_STAGE_CUSTOMER': {
-            'EFFECTIVE_FROM': 'LOADDATE'
+            'EFFECTIVE_FROM': 'LOAD_DATE'
         },
         'RAW_STAGE_BOOKING': {
             'EFFECTIVE_FROM': 'BOOKING_DATE'
@@ -508,55 +659,55 @@ def cycle(context):
 
     context.vault_structure_columns = {
         'HUB_CUSTOMER': {
-            'source_model': ['raw_stage_customer_hashed',
-                             'raw_stage_booking_hashed'],
+            'source_model': ['raw_stage_customer_seed_hashed',
+                             'raw_stage_booking_seed_hashed'],
             'src_pk': 'CUSTOMER_PK',
             'src_nk': 'CUSTOMER_ID',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'HUB_BOOKING': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'BOOKING_PK',
             'src_nk': 'BOOKING_ID',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'LINK_CUSTOMER_BOOKING': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'CUSTOMER_BOOKING_PK',
             'src_fk': ['CUSTOMER_PK', 'BOOKING_PK'],
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'SAT_CUST_CUSTOMER_DETAILS': {
-            'source_model': 'raw_stage_customer_hashed',
+            'source_model': 'raw_stage_customer_seed_hashed',
             'src_pk': 'CUSTOMER_PK',
             'src_hashdiff': 'HASHDIFF',
             'src_payload': ['CUSTOMER_NAME', 'CUSTOMER_DOB'],
             'src_eff': 'EFFECTIVE_FROM',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'SAT_BOOK_CUSTOMER_DETAILS': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'CUSTOMER_PK',
             'src_hashdiff': {'source_column': 'HASHDIFF_BOOK_CUSTOMER_DETAILS',
                              'alias': 'HASHDIFF'},
             'src_payload': ['PHONE', 'NATIONALITY'],
             'src_eff': 'EFFECTIVE_FROM',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         },
         'SAT_BOOK_BOOKING_DETAILS': {
-            'source_model': 'raw_stage_booking_hashed',
+            'source_model': 'raw_stage_booking_seed_hashed',
             'src_pk': 'BOOKING_PK',
             'src_hashdiff': {'source_column': 'HASHDIFF_BOOK_BOOKING_DETAILS',
                              'alias': 'HASHDIFF'},
             'src_payload': ['PRICE', 'BOOKING_DATE',
                             'DEPARTURE_DATE', 'DESTINATION'],
             'src_eff': 'EFFECTIVE_FROM',
-            'src_ldts': 'LOADDATE',
+            'src_ldts': 'LOAD_DATE',
             'src_source': 'SOURCE'
         }
     }
@@ -567,7 +718,7 @@ def cycle(context):
              'CUSTOMER_NAME',
              'CUSTOMER_DOB',
              'EFFECTIVE_FROM',
-             'LOADDATE',
+             'LOAD_DATE',
              'SOURCE']
         ,
         'RAW_STAGE_BOOKING':
@@ -579,7 +730,7 @@ def cycle(context):
              'DESTINATION',
              'PHONE',
              'NATIONALITY',
-             'LOADDATE',
+             'LOAD_DATE',
              'SOURCE']
     }
 
@@ -590,7 +741,7 @@ def cycle(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -604,7 +755,7 @@ def cycle(context):
                 'PHONE': 'VARCHAR',
                 'DESTINATION': 'VARCHAR',
                 'NATIONALITY': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -612,7 +763,7 @@ def cycle(context):
             'column_types': {
                 'CUSTOMER_PK': 'BINARY(16)',
                 'CUSTOMER_ID': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -620,7 +771,7 @@ def cycle(context):
             'column_types': {
                 'BOOKING_PK': 'BINARY(16)',
                 'BOOKING_ID': 'VARCHAR',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -629,7 +780,7 @@ def cycle(context):
                 'CUSTOMER_BOOKING_PK': 'BINARY(16)',
                 'CUSTOMER_PK': 'BINARY(16)',
                 'BOOKING_PK': 'BINARY(16)',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -640,7 +791,7 @@ def cycle(context):
                 'CUSTOMER_NAME': 'VARCHAR',
                 'CUSTOMER_DOB': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -651,7 +802,7 @@ def cycle(context):
                 'PHONE': 'VARCHAR',
                 'NATIONALITY': 'VARCHAR',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         },
@@ -664,7 +815,7 @@ def cycle(context):
                 'DEPARTURE_DATE': 'DATE',
                 'DESTINATION': 'VARCHAR',
                 'EFFECTIVE_FROM': 'DATE',
-                'LOADDATE': 'DATE',
+                'LOAD_DATE': 'DATE',
                 'SOURCE': 'VARCHAR'
             }
         }

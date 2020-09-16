@@ -10,39 +10,36 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -#}
-{%- macro multikey(columns=none, aliases=none, type_for=none) -%}
+{%- macro multikey(columns, prefix=none, condition=none, operator='AND') -%}
 
-    {{- adapter_macro('dbtvault.multikey', columns=columns, aliases=aliases, type_for=type_for) -}}
+    {{- adapter.dispatch('multikey', packages = ['dbtvault'])(columns=columns, prefix=prefix, condition=condition, operator=operator) -}}
 
 {%- endmacro %}
 
-{%- macro default__multikey(columns, aliases, type_for) -%}
+{%- macro default__multikey(columns, prefix=none, condition=none, operator='AND') -%}
 
-{% if type_for == 'join' %}
+    {%- if prefix is string -%}
+        {%- set prefix = [prefix] -%}
+    {%- endif -%}
 
-{% for col in columns if not columns is string %}
-    {{ dbtvault.prefix([col], aliases[0]) }} = {{ dbtvault.prefix([col], aliases[1]) }}
-    {% if not loop.last %} AND {% endif %}
-{% else %}
-    {{ dbtvault.prefix([columns], aliases[0]) }} = {{ dbtvault.prefix([columns], aliases[1]) }}
-{% endfor %}
+    {%- if columns is string -%}
+        {%- set columns = [columns] -%}
+    {%- endif -%}
 
-{% elif type_for == 'where null' %}
+    {%- if condition in ['<>', '!=', '='] -%}
+        {%- for col in columns -%}
+            {{ prefix[0] ~ '.' if prefix }}{{ col }} {{ condition }} {{ prefix[1] ~ '.' if prefix }}{{ col }}
+            {%- if not loop.last %} {{ operator }} {% endif %}
+        {% endfor -%}
+    {%- else -%}
+        {%- if columns is iterable and columns is not string -%}
+            {%- for col in columns -%}
+                {{ prefix[0] ~ '.' if prefix }}{{ col }} {{ condition if condition else '' }}
+                {%- if not loop.last %} {{ operator }} {% endif %}
+            {% endfor -%}
+        {%- else -%}
+            {{ prefix[0] ~ '.' if prefix }}{{ columns }} {{ condition if condition else '' }}
+        {%- endif -%}
+    {%- endif -%}
 
-{% for col in columns if not columns is string %}
-    {{ dbtvault.prefix([col], aliases[0]) }} IS NULL
-    {% if not loop.last %} AND {% endif %}
-{% else %}
-    {{ dbtvault.prefix([columns], aliases[0]) }} IS NULL
-{% endfor %}
-
-{% elif type_for == 'where not null'%}
-
-{% for col in columns if not columns is string %}
-    {{ dbtvault.prefix([col], aliases[0]) }} IS NOT NULL
-    {% if not loop.last %} AND {% endif %}
-{% else %}
-    {{ dbtvault.prefix([columns], aliases[0]) }} IS NOT NULL
-{% endfor %}
-{% endif %}
-{% endmacro %}
+{%- endmacro -%}
