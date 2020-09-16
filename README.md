@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c"><img
+  <a href="https://github.com/Datavault-UK/dbtvault-dev"><img
     src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c" 
     alt="Test Status"
   /></a>
