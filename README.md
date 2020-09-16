@@ -4,7 +4,7 @@
 
 <h1 align="center"> Development Repository </h1>
 <p align="center">
-<a href="https://github.com/Datavault-UK/dbtvault-dev"><img
+<a href="https://app.circleci.com/pipelines/github/Datavault-UK/dbtvault-dev?branch=master"><img
     src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c" 
     alt="Test Status"
   /></a>
