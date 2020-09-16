@@ -1,3 +1,4 @@
+@fixture.set_workdir
 Feature: Transactional Links
 
   @fixture.t_link

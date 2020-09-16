@@ -1,3 +1,4 @@
+@fixture.set_workdir
 Feature: Full Vault Cycles
 
   @fixture.cycle
