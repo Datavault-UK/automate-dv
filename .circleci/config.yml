@@ -44,7 +44,7 @@ jobs:
       - run:
           name: Run snowflake integration tests
           command: |
-            circleci tests glob tests/features/*.feature | circleci tests split > /tmp/feature-tests-to-run
+            circleci tests glob tests/features/*/*.feature | circleci tests split > /tmp/feature-tests-to-run
             TARGET=snowflake pipenv run inv integration-tests -t snowflake -u circleci -e secrethub_circleci.env
       - slack/status:
           fail_only: false
