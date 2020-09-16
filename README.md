@@ -10,6 +10,8 @@
   /></a>
 </p>
 
+[Public repo](https://github.com/Datavault-UK/dbtvault)
+
 This repository contains a development environment for dbtvault which facilitates secure development of dbtvault using a
 snowflake (and soon BigQuery) data warehouse.
 
