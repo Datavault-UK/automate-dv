@@ -3,10 +3,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/Datavault-UK/dbtvault-dev"><img
-    src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c" 
-    alt="Test Status"
-  /></a>
   <a href="https://dbtvault.readthedocs.io/en/latest/?badge=stable"><img
     src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
     alt="Documentation Status"
