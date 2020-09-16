@@ -1,9 +1,14 @@
-# dbtvault Development Repository
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
+</p>
 
+<h1 align="center"> Development Repository </h1>
+<p align="center">
 <a href="https://github.com/Datavault-UK/dbtvault-dev"><img
     src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c" 
     alt="Test Status"
   /></a>
+</p>
 
 This repository contains a development environment for dbtvault which facilitates secure development of dbtvault using a
 snowflake (and soon BigQuery) data warehouse.
