@@ -62,8 +62,7 @@ rank_union AS (
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
            ) AS row_number
     FROM stage_union
-    WHERE
-    {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
 ),
 stage AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}

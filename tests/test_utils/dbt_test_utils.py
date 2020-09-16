@@ -78,7 +78,8 @@ class DBTTestUtils:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
             self.EXPECTED_PARAMETERS = {
-                'SCHEMA_NAME': schema_name
+                'SCHEMA_NAME': schema_name,
+                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE')
             }
         else:
             raise ValueError('TARGET not set')

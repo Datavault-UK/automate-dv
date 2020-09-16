@@ -35,8 +35,8 @@
         {%- if columns is iterable and columns is not string -%}
             {%- for col in columns -%}
                 {{ prefix[0] ~ '.' if prefix }}{{ col }} {{ condition if condition else '' }}
-                {%- if not loop.last %} {{ operator }} {% endif %}
-            {% endfor -%}
+                {%- if not loop.last -%} {{ "\n    " ~ operator }} {% endif -%}
+            {%- endfor -%}
         {%- else -%}
             {{ prefix[0] ~ '.' if prefix }}{{ columns }} {{ condition if condition else '' }}
         {%- endif -%}
