@@ -2,9 +2,16 @@
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=stable)](https://dbtvault.readthedocs.io/en/latest/?badge=stable)
-[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
-
+<p align="center">
+  <a href="https://dbtvault.readthedocs.io/en/latest/?badge=stable"><img
+    src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
+    alt="Documentation Status"
+  /></a>
+  <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
+    src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
+    alt="Join our slack"
+  /></a>
+</p>
 
 [Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
 
@@ -35,20 +42,20 @@ Learn quickly with our worked example:
 
 ## Installation
 
-Add the following to your ```packages.yml```
+Add the following to your `packages.yml`
 
 
 ```yaml
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.6 # Latest stable version
+    revision: v0.6.2 # Latest stable version
 ```
 
 And run 
-```dbt deps```
+`dbt deps`
 
-[Read more on package installation](https://docs.getdbt.com/v0.15.0/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/#git-packages)
 
 ## Usage
 
