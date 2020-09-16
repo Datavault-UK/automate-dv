@@ -51,16 +51,18 @@ def clear_schema(context):
         assert 'Completed successfully' in logs
 
 
+@step("the {model_name} {vault_structure} is empty")
 @given("the {model_name} {vault_structure} is empty")
 def load_empty_table(context, model_name, vault_structure):
     """Creates an empty table"""
 
     context.target_model_name = model_name
+    columns = context.vault_structure_columns
 
     if vault_structure == 'stage':
         headings = context.stage_columns[model_name]
     else:
-        headings = list(DBTVAULTGenerator.flatten(context.vault_structure_columns[model_name].values()))
+        headings = list(DBTVAULTGenerator.flatten([val for key, val in columns[model_name].items()]))
 
     row = Row(cells=[], headings=headings)
 
@@ -86,6 +88,7 @@ def load_empty_table(context, model_name, vault_structure):
     assert 'Completed successfully' in logs
 
 
+@step("the {model_name} {vault_structure} is already populated with data")
 @given("the {model_name} {vault_structure} is already populated with data")
 def load_populated_table(context, model_name, vault_structure):
     """
@@ -117,22 +120,58 @@ def load_populated_table(context, model_name, vault_structure):
 def load_table(context, model_name, vault_structure):
     metadata = {'source_model': context.hashed_stage_model_name, **context.vault_structure_columns[model_name]}
 
+    config = dbtvault_generator.append_end_date_config(context, dict())
+
     context.vault_structure_metadata = metadata
 
-    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
 
     logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
 
     assert 'Completed successfully' in logs
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure}")
-def load_table(context, model_name, vault_structure):
+@step("I use insert_by_period to load the {model_name} {vault_structure} "
+      "by {period} with date range: {start_date} to {stop_date}")
+def load_table(context, model_name, vault_structure, period, start_date=None, stop_date=None):
     metadata = {'source_model': context.hashed_stage_model_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {'materialized': 'vault_insert_by_period',
-              'timestamp_field': 'LOADDATE'}
+              'timestamp_field': 'LOAD_DATE',
+              'start_date': start_date,
+              'stop_date': stop_date,
+              'source_model': context.hashed_stage_model_name,
+              'period': period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+
+    assert 'Completed successfully' in logs
+
+
+@step("I use insert_by_period to load the {model_name} {vault_structure} by {period}")
+def load_table(context, model_name, vault_structure, period):
+    metadata = {'source_model': context.hashed_stage_model_name,
+                **context.vault_structure_columns[model_name]}
+
+    config = {'materialized': 'vault_insert_by_period',
+              'timestamp_field': 'LOAD_DATE',
+              'source_model': context.hashed_stage_model_name,
+              'period': period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
 
     context.vault_structure_metadata = metadata
 
@@ -238,27 +277,28 @@ def stage(context):
     assert 'Completed successfully' in logs
 
 
+@step("the {model_name} table contains expected data")
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
-    expected_output_csv = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                      model_name=f'{model_name}_expected')
+    expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+                                                                           model_name=f'{model_name}_expected')
 
     metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
 
     ignore_columns = context.dbt_test_utils.find_columns_to_ignore(context.table)
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
-                                                                 expected_output_csv=expected_output_csv,
+                                                                 expected_output_csv=expected_output_csv_name,
                                                                  unique_id=metadata['src_pk'],
                                                                  metadata=metadata,
                                                                  ignore_columns=ignore_columns)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-    dbtvault_generator.add_seed_config(seed_name=f"{model_name}_expected".lower(),
+    dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
                                        seed_config=context.seed_config[model_name])
 
-    context.dbt_test_utils.run_dbt_seed(expected_output_csv)
+    context.dbt_test_utils.run_dbt_seed(expected_output_csv_name)
 
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
 

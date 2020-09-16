@@ -59,7 +59,7 @@
 
 {%- endmacro -%}
 
-{% macro replace_filter_placeholder(sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro replace_filter_placeholder(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
@@ -67,7 +67,7 @@
       AND (TO_DATE({{ timestamp_field }}) >= TO_DATE('{{ start_timestamp }}'))
     {%- endset -%}
 
-    {%- set filtered_sql = sql | replace("__PERIOD_FILTER__", period_filter, 1) -%}
+    {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter, 1) -%}
 
     {{ return(filtered_sql) }}
 
@@ -76,7 +76,6 @@
 {% macro get_period_filter_sql(target_cols_csv, sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {%- set filtered_sql = {'sql': sql} %}
-
 
     {% do filtered_sql.update({'sql': dbtvault.replace_filter_placeholder(filtered_sql.sql,
                                                                           timestamp_field,
@@ -87,30 +86,26 @@
     select
         {{target_cols_csv}}
     from (
-        {{filtered_sql.sql}}
+        {{ filtered_sql.sql }}
     )
 
 {%- endmacro %}
 
-{%- macro min_max_date(timestamp_field) %}
+{%- macro min_max_date(timestamp_field, source_model) %}
 
-{%- set filtered_sql = sql | replace("__PERIOD_FILTER__", "1=1", 1) -%}
+    {% set query_sql %}
 
-{% set query_sql %}
-WITH source AS (
-    {{ filtered_sql }}
-)
+        SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX
+        FROM {{ ref(source_model) }}
 
-SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM source
-{% endset %}
+    {% endset %}
 
-{% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
+    {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
 
-{% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
-                       'max': min_max_dict['MAX'][0] | string} %}
+    {% set min_max_dict = {'min': min_max_dict['MIN'][0] | string,
+                           'max': min_max_dict['MAX'][0] | string} %}
 
-
-{{ return(min_max_dict) }}
+    {{ return(min_max_dict) }}
 
 {%- endmacro -%}
 
@@ -119,7 +114,8 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
     {% set full_refresh_mode = flags.FULL_REFRESH %}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
-    {%- set min_max_date = dbtvault.min_max_date(timestamp_field) -%}
+    {%- set source_model = config.require('source_model') %}
+    {%- set min_max_date = dbtvault.min_max_date(timestamp_field, source_model) -%}
     {%- set start_date = config.get('start_date', default=min_max_date['min']) -%}
     {%- set stop_date = config.get('stop_date', default=min_max_date['max']) -%}
     {%- set period = config.get('period', default='day') -%}
@@ -201,7 +197,7 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
             {%- set msg = "Running for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ " (" ~ period_of_load ~ ") [" ~ model.unique_id ~ "]" -%}
             {{ dbt_utils.log_info(msg) }}
 
-            {%- set tmp_identifier = model['name'] ~ '__dbt_incremental_period' ~ i ~ '_tmp' -%}
+            {%- set tmp_identifier = model['name'] ~ '__dbt_incremental_period_' ~ i ~ '_tmp' -%}
             {%- set tmp_relation = api.Relation.create(identifier=tmp_identifier,
                                                        schema=schema, type='table') -%}
 
@@ -214,11 +210,11 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
                                                                       period_boundaries.stop_timestamp,
                                                                       i) %}
 
-                {{dbt.create_table_as(True, tmp_relation, tmp_table_sql)}}
+                {{ dbt.create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}
 
-            {{adapter.expand_target_column_types(from_relation=tmp_relation,
-                                                 to_relation=target_relation)}}
+            {{ adapter.expand_target_column_types(from_relation=tmp_relation,
+                                                 to_relation=target_relation) }}
 
             {%- set name = 'main-' ~ i -%}
 
@@ -226,8 +222,8 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
                 insert into {{ target_relation }} ({{ target_cols_csv }})
                 (
                   select
-                      {{target_cols_csv}}
-                  from {{tmp_relation.include(schema=False)}}
+                      {{ target_cols_csv }}
+                  from {{ tmp_relation.include(schema=True) }}
                 );
             {%- endcall %}
 
@@ -237,6 +233,7 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
             {%- if loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %} {% endif -%}
 
             {%- set msg = "Ran for " ~ period ~ " " ~ (i + 1) ~ " of " ~ (period_boundaries.num_periods) ~ "; " ~ rows_inserted ~ " records inserted [" ~ model.unique_id ~ "]" -%}
+            
             {{ dbt_utils.log_info(msg) }}
 
             {% call statement() -%}
@@ -249,8 +246,10 @@ SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX FROM
 
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
-    -- `COMMIT` happens here
-    {% do adapter.commit() %}
+    {% if period_boundaries is defined and period_boundaries.num_periods > 0 %}
+        -- `COMMIT` happens here
+        {% do adapter.commit() %}
+    {% endif %}
 
     {% for rel in to_drop %}
         {{ drop_relation_if_exists(backup_relation) }}

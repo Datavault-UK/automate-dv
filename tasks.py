@@ -39,6 +39,29 @@ def check_project(c, project='public'):
 
 
 @task
+def inject_to_file(c, target=None, user=None, from_file='secrethub_dev.env', to_file='pycharm.env'):
+    """
+    Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
+    pycharm.env, which is an ignored file in git.
+        :param c: invoke context
+        :param target: dbt profile target
+        :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param from_file: File which includes secrethub paths to extract into plain text
+        :param to_file: File to store plain text in
+    """
+
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    if not target:
+        target = c.config.get('target', None)
+
+    command = f"secrethub inject -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
+
+    c.run(command)
+
+
+@task
 def set_defaults(c, target=None, user=None, project=None):
     """
     Generate an 'invoke.yml' file
