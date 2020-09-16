@@ -44,13 +44,13 @@ def before_all(context):
 
     os.chdir(TESTS_DBT_ROOT)
 
-    # Create dummy model
     context.dbt_test_utils.create_dummy_model()
 
     context.dbt_test_utils.replace_test_schema()
 
 
 def before_scenario(context, scenario):
+    context.dbt_test_utils.create_dummy_model()
     context.dbt_test_utils.replace_test_schema()
 
 

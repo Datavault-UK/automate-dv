@@ -529,8 +529,7 @@ class DBTVAULTGenerator:
 
     def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
                 src_start_date, src_end_date, src_eff, src_ldts, src_source,
-                link_model, source_model,
-                config=None):
+                source_model, config=None):
         """
         Generate an effectivity satellite model template
             :param model_name: Name of the model file
@@ -542,7 +541,6 @@ class DBTVAULTGenerator:
             :param src_end_date: Source end date
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
-            :param link_model: Link model the eff_sat is attached to
             :param source_model: Model name to select from
             :param config: Optional model config
         """
@@ -563,7 +561,7 @@ class DBTVAULTGenerator:
         {{{{ dbtvault.eff_sat('{src_pk}', {src_dfk}, {src_sfk},
                               '{src_start_date}', '{src_end_date}',
                               '{src_eff}', '{src_ldts}', '{src_source}',
-                              '{link_model}', '{source_model}') }}}}
+                              '{source_model}') }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -661,6 +659,9 @@ class DBTVAULTGenerator:
 
     @staticmethod
     def evaluate_hashdiff(structure_dict):
+        """
+        Convert hashdiff to hashdiff alias
+        """
 
         # Extract hashdiff column alias
         if 'src_hashdiff' in structure_dict.keys():
