@@ -480,12 +480,6 @@ def eff_satellite(context):
     }
 
     context.vault_structure_columns = {
-        'LINK': {
-            'src_pk': 'CUSTOMER_ORDER_PK',
-            'src_fk': ['CUSTOMER_PK', 'ORDER_PK'],
-            'src_ldts': 'LOAD_DATE',
-            'src_source': 'SOURCE'
-        },
         'EFF_SAT': {
             'src_pk': 'CUSTOMER_ORDER_PK',
             'src_dfk': 'ORDER_PK',
@@ -494,8 +488,7 @@ def eff_satellite(context):
             'src_end_date': 'END_DATE',
             'src_eff': 'EFFECTIVE_FROM',
             'src_ldts': 'LOAD_DATE',
-            'src_source': 'SOURCE',
-            'link_model': "LINK",
+            'src_source': 'SOURCE'
         }
     }
 
@@ -510,18 +503,11 @@ def eff_satellite(context):
                 'SOURCE': 'VARCHAR'
             }
         },
-        'LINK': {
+        'EFF_SAT': {
             'column_types': {
                 'CUSTOMER_ORDER_PK': 'BINARY(16)',
                 'CUSTOMER_PK': 'BINARY(16)',
                 'ORDER_PK': 'BINARY(16)',
-                'LOAD_DATE': 'DATE',
-                'SOURCE': 'VARCHAR'
-            }
-        },
-        'EFF_SAT': {
-            'column_types': {
-                'CUSTOMER_ORDER_PK': 'BINARY(16)',
                 'START_DATE': 'DATE',
                 'END_DATE': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
@@ -530,14 +516,6 @@ def eff_satellite(context):
             }
         }
     }
-
-
-@fixture
-def enable_auto_end_date(context):
-    """
-    Enable auto end-dating on effectivity satellites
-    """
-    context.auto_end_date = True
 
 
 @fixture
@@ -558,12 +536,6 @@ def eff_satellite_multipart(context):
     }
 
     context.vault_structure_columns = {
-        'LINK': {
-            'src_pk': 'CUSTOMER_ORDER_PK',
-            'src_fk': ['CUSTOMER_PK', 'NATION_PK', 'ORDER_PK', 'PLATFORM_PK', 'ORGANISATION_PK'],
-            'src_ldts': 'LOAD_DATE',
-            'src_source': 'SOURCE'
-        },
         'EFF_SAT': {
             'src_pk': 'CUSTOMER_ORDER_PK',
             'src_dfk': ['ORDER_PK', 'PLATFORM_PK', 'ORGANISATION_PK'],
@@ -572,8 +544,7 @@ def eff_satellite_multipart(context):
             'src_end_date': 'END_DATE',
             'src_eff': 'EFFECTIVE_FROM',
             'src_ldts': 'LOAD_DATE',
-            'src_source': 'SOURCE',
-            'link_model': "LINK",
+            'src_source': 'SOURCE'
         }
     }
 
@@ -591,21 +562,14 @@ def eff_satellite_multipart(context):
                 'SOURCE': 'VARCHAR'
             }
         },
-        'LINK': {
-            'column_types': {
-                'CUSTOMER_ORDER_PK': 'BINARY(16)',
-                'CUSTOMER_PK': 'BINARY(16)',
-                'NATION_PK': 'BINARY(16)',
-                'ORDER_PK': 'BINARY(16)',
-                'PLATFORM_PK': 'BINARY(16)',
-                'ORGANISATION_PK': 'BINARY(16)',
-                'LOAD_DATE': 'DATE',
-                'SOURCE': 'VARCHAR'
-            }
-        },
         'EFF_SAT': {
             'column_types': {
                 'CUSTOMER_ORDER_PK': 'BINARY(16)',
+                'ORDER_PK': 'BINARY(16)',
+                'PLATFORM_PK': 'BINARY(16)',
+                'ORGANISATION_PK': 'BINARY(16)',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'NATION_PK': 'BINARY(16)',
                 'START_DATE': 'DATE',
                 'END_DATE': 'DATE',
                 'EFFECTIVE_FROM': 'DATE',
@@ -820,3 +784,11 @@ def cycle(context):
             }
         }
     }
+
+
+@fixture
+def enable_auto_end_date(context):
+    """
+    Enable auto end-dating on effectivity satellites
+    """
+    context.auto_end_date = True
