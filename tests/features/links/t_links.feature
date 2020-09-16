@@ -1,4 +1,4 @@
-Feature: Transactional_Links
+Feature: Transactional Links
 
   @fixture.t_link
   Scenario: [BASE-LOAD] Load an a non-existent Transactional Link
