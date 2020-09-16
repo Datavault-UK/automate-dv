@@ -256,6 +256,15 @@ class DBTTestUtils:
         for file in delete_files:
             os.remove(file)
 
+    @staticmethod
+    def create_dummy_model():
+        """
+        Create dummy model to avoid unused config warning
+        """
+
+        with open(FEATURE_MODELS_ROOT / 'dummy.sql', 'w') as f:
+            f.write('SELECT 1')
+
     def replace_test_schema(self):
         """
         Drop and create the TEST schema
