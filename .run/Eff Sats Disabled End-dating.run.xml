@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Eff Sats" type="PyBehaveRunConfigurationType" factoryName="Behave">
+  <configuration default="false" name="Eff Sats Disabled End-dating" type="PyBehaveRunConfigurationType" factoryName="Behave">
     <module name="dbtvault-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -23,7 +23,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/eff_sats/eff_sats.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features/eff_sats/eff_sats_disabled_end_dating.feature" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
