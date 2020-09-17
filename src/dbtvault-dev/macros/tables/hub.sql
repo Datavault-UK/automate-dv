@@ -30,14 +30,20 @@
 {%- endif -%}
 
 {%- for src in source_model -%}
-
+source_data_{{ loop.index|string }} AS (
+    SELECT *
+    FROM {{ ref(src) }}
+    {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
+    WHERE __PERIOD_FILTER__
+    {% endif %}
+),
 rank_{{ loop.index|string }} AS (
     SELECT {{ source_cols | join(', ') }},
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
-    FROM {{ ref(src) }}
+    FROM source_data_{{ loop.index|string }}
 ),
 stage_{{ loop.index|string }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
@@ -70,7 +76,7 @@ stage AS (
 ),
 records_to_insert AS (
     SELECT stage.* FROM stage
-    {%- if is_incremental() %}
+    {% if not load_relation(this) is none -%}
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL

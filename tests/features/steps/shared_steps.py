@@ -277,7 +277,6 @@ def stage(context):
     assert 'Completed successfully' in logs
 
 
-@step("the {model_name} table contains expected data")
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
