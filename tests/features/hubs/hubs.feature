@@ -205,23 +205,23 @@ Feature: Hubs
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
-      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
-      | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
-      | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-      | <null>      | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-      |             | Chad          | 2018-04-13   | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
+      | 1003        | Chad          | 2013-02-04   | 1993-01-03 | TPCH   |
+      | 1004        | Dom           | 2018-04-13   | 1993-01-04 | TPCH   |
+      | <null>      | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
+      |             | Chad          | 2018-04-13   | 1993-01-02 | TPCH   |
     And I hash the stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-      | md5('1003') | 1003        | 1993-01-01 | TPCH   |
-      | md5('1004') | 1004        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-03 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.multi_source_hub
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a empty hub which does not exist

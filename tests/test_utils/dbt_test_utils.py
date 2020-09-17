@@ -460,8 +460,13 @@ class DBTVAULTGenerator:
         else:
             source_model = f"'{source_model}'"
 
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = ", ".join([f"{k}='{v}'" for k, v in config.items()])
+
         template = f"""
-        {{{{ config(materialized='incremental') }}}}
+        {{{{ config({config_string}) }}}}
         {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
                           '{src_source}', {source_model})   }}}}
         """
