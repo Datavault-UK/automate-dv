@@ -18,7 +18,7 @@
 
 {%- endmacro %}
 
-{%- macro default__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro snowflake__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 
@@ -31,7 +31,7 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{% if not load_relation(this) is none -%}
+{% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
 
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
@@ -57,7 +57,7 @@ stage AS (
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
     FROM source_data AS e
-    {% if not load_relation(this) is none -%}
+    {% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
     LEFT JOIN stage
     ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} IS NULL
