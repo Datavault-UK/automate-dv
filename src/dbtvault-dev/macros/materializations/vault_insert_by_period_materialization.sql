@@ -9,7 +9,7 @@
     {%- set timestamp_field = config.require('timestamp_field') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
-    {%- set start_date, stop_date = dbtvault.get_start_stop_dates(config, timestamp_field, date_source_models) -%}
+    {%- set start_stop_dates = dbtvault.get_start_stop_dates(config, timestamp_field, date_source_models) | as_native -%}
 
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
@@ -23,26 +23,34 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field, start_date, stop_date, 0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field,
+                                                                       start_stop_dates.start_date,
+                                                                       start_stop_dates.stop_date,
+                                                                       0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif existing_relation.is_view or full_refresh_mode %}
         {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
         {% set backup_identifier = existing_relation.identifier ~ "__dbt_backup" %}
         {% set backup_relation = existing_relation.incorporate(path={"identifier": backup_identifier}) %}
+
         {% do adapter.drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field, start_date, stop_date, 0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field,
+                                                                       start_stop_dates.start_date,
+                                                                       start_stop_dates.stop_date,
+                                                                       0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(backup_relation) %}
     {% else %}
+
         {% set period_boundaries = dbtvault.get_period_boundaries(schema,
                                                                   target_relation.name,
                                                                   timestamp_field,
-                                                                  start_date,
-                                                                  stop_date,
+                                                                  start_stop_dates.start_date,
+                                                                  start_stop_dates.stop_date,
                                                                   period) %}
 
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
@@ -69,7 +77,6 @@
                                                   to_relation=target_relation) }}
 
             {%- set insert_query_name = 'main-' ~ i -%}
-
             {% call statement(insert_query_name, fetch_result=True) -%}
                 insert into {{ target_relation }} ({{ target_cols_csv }})
                 (
@@ -81,14 +88,14 @@
             {%- set rows_inserted = (load_result(insert_query_name)['status'].split(" "))[1] | int -%}
 
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
-            {%- if loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %} {% endif -%}
+            {%- set _ = loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
 
             {{ dbt_utils.log_info("Ran for {} {} of {} ({}); {} records inserted [{}]".format(period, iteration_number,
                                                                                               period_boundaries.num_periods,
                                                                                               period_of_load, rows_inserted,
                                                                                               model.unique_id)) }}
-            {% do adapter.commit() %}
 
+            {% do adapter.commit() %}
 
         {% endfor %}
 
