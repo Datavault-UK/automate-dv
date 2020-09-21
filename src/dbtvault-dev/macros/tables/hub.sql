@@ -18,7 +18,7 @@
 
 {%- endmacro -%}
 
-{%- macro default__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
+{%- macro snowflake__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
 
@@ -76,7 +76,7 @@ stage AS (
 ),
 records_to_insert AS (
     SELECT stage.* FROM stage
-    {% if not load_relation(this) is none -%}
+    {% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
