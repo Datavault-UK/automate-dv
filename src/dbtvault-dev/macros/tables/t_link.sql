@@ -18,7 +18,7 @@
 
 {%- endmacro %}
 
-{%- macro default__t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro snowflake__t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_payload, src_eff, src_ldts, src_source])-%}
 

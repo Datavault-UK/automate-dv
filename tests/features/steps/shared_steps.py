@@ -144,7 +144,6 @@ def load_table(context, model_name, vault_structure, period, start_date=None, st
               'timestamp_field': 'LOAD_DATE',
               'start_date': start_date,
               'stop_date': stop_date,
-              'source_model': context.hashed_stage_model_name,
               'period': period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
@@ -156,7 +155,10 @@ def load_table(context, model_name, vault_structure, period, start_date=None, st
                                            config=config,
                                            **metadata)
 
-    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+    is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name,
+                                                full_refresh=is_full_refresh)
 
     assert 'Completed successfully' in logs
 
@@ -168,7 +170,7 @@ def load_table(context, model_name, vault_structure, period):
 
     config = {'materialized': 'vault_insert_by_period',
               'timestamp_field': 'LOAD_DATE',
-              'source_model': context.hashed_stage_model_name,
+              'date_source_models': context.hashed_stage_model_name,
               'period': period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
@@ -180,7 +182,10 @@ def load_table(context, model_name, vault_structure, period):
                                            config=config,
                                            **metadata)
 
-    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+    is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name,
+                                                full_refresh=is_full_refresh)
 
     assert 'Completed successfully' in logs
 
@@ -198,7 +203,10 @@ def load_vault(context):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name)
+        is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
+
+        logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=model_name,
+                                                    full_refresh=is_full_refresh)
 
         assert 'Completed successfully' in logs
 
@@ -277,7 +285,6 @@ def stage(context):
     assert 'Completed successfully' in logs
 
 
-@step("the {model_name} table contains expected data")
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,

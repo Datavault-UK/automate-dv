@@ -1,7 +1,7 @@
 packages:
 
   - package: fishtown-analytics/dbt_utils
-    version: 0.5.0
+    version: 0.6.2
 
   #Live
 #  - git: "https://github.com/Datavault-UK/dbtvault"
