@@ -51,6 +51,6 @@
     {%- endfor -%}
 {%- endif -%}
 
-{{ return(col_list) }}
+{% do return(col_list) %}
 
 {%- endmacro -%}
