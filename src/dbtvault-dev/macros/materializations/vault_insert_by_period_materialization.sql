@@ -23,7 +23,7 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder(sql, timestamp_field, start_date, stop_date, 0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field, start_date, stop_date, 0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif existing_relation.is_view or full_refresh_mode %}
@@ -33,7 +33,7 @@
         {% do adapter.drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder(sql, timestamp_field, start_date, stop_date, 0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field, start_date, stop_date, 0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(backup_relation) %}
