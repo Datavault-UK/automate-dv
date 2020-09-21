@@ -12,7 +12,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro get_start_stop_dates(mat_config) %}
+{% macro get_start_stop_dates(mat_config, timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
 
@@ -21,7 +21,7 @@
 
     {% elif date_source_models is not none %}
 
-        {% set min_date, max_date = dbtvault.get_mix_max_date_from_source(timestamp_field,
+        {% set min_date, max_date = dbtvault.get_min_max_date_from_source(timestamp_field,
                                                                           date_source_models) %}
         {%- set start_date = min_date %}
         {%- set stop_date = max_date %}
@@ -36,7 +36,7 @@
 
 {% endmacro %}
 
-{%- macro get_mix_max_date_from_source(timestamp_field, date_source_models) %}
+{%- macro get_min_max_date_from_source(timestamp_field, date_source_models) %}
 
     {% if date_source_models is string %}
         {% set date_source_models = [date_source_models] %}
@@ -51,7 +51,7 @@
         SELECT MIN({{ timestamp_field }}) AS MIN, MAX({{ timestamp_field }}) AS MAX
         FROM stage
     {% endset %}
-    {% do log(query_sql, true) %}
+
     {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
 
     {% set min_date = min_max_dict['MIN'][0] | string %}
