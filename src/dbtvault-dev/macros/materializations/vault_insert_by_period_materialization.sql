@@ -9,7 +9,7 @@
     {%- set timestamp_field = config.require('timestamp_field') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
-    {%- set start_date, stop_date = dbtvault.get_start_stop_dates(config) -%}
+    {%- set start_date, stop_date = dbtvault.get_start_stop_dates(config, timestamp_field, date_source_models) -%}
 
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
@@ -87,6 +87,8 @@
                                                                                               period_boundaries.num_periods,
                                                                                               period_of_load, rows_inserted,
                                                                                               model.unique_id)) }}
+            {% do adapter.commit() %}
+
 
         {% endfor %}
 
@@ -106,6 +108,9 @@
         {% call noop_statement(name='main', status="BASE LOAD {}".format(rows_inserted)) -%}
             -- no-op
         {%- endcall %}
+
+        -- `COMMIT` happens here
+        {% do adapter.commit() %}
     {% endif %}
 
     {{ run_hooks(post_hooks, inside_transaction=True) }}
@@ -113,9 +118,6 @@
     {% for rel in to_drop %}
         {{ drop_relation_if_exists(backup_relation) }}
     {% endfor %}
-
-    -- `COMMIT` happens here
-    {% do adapter.commit() %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
 
