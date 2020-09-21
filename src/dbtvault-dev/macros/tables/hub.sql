@@ -33,9 +33,9 @@
 source_data_{{ loop.index|string }} AS (
     SELECT *
     FROM {{ ref(src) }}
-    {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
+    {%- if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
-    {% endif %}
+    {%- endif %}
 ),
 rank_{{ loop.index|string }} AS (
     SELECT {{ source_cols | join(', ') }},
@@ -76,11 +76,11 @@ stage AS (
 ),
 records_to_insert AS (
     SELECT stage.* FROM stage
-    {% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
+    {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
-    {%- endif -%}
+    {%- endif %}
 )
 
 SELECT * FROM records_to_insert
