@@ -265,6 +265,17 @@ class DBTTestUtils:
         with open(FEATURE_MODELS_ROOT / 'dummy.sql', 'w') as f:
             f.write('SELECT 1')
 
+    @staticmethod
+    def check_full_refresh(context):
+        """
+        Check context for full refresh
+        """
+        if hasattr(context, 'full_refresh'):
+            if context.full_refresh:
+                return True
+
+        return False
+
     def replace_test_schema(self):
         """
         Drop and create the TEST schema
@@ -460,8 +471,13 @@ class DBTVAULTGenerator:
         else:
             source_model = f"'{source_model}'"
 
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = self.format_config_str(config)
+
         template = f"""
-        {{{{ config(materialized='incremental') }}}}
+        {{{{ config({config_string}) }}}}
         {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
                           '{src_source}', {source_model})   }}}}
         """
@@ -485,8 +501,13 @@ class DBTVAULTGenerator:
         else:
             source_model = f"'{source_model}'"
 
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = self.format_config_str(config)
+
         template = f"""
-        {{{{ config(materialized='incremental') }}}}
+        {{{{ config({config_string}) }}}}
         {{{{ dbtvault.link('{src_pk}', {src_fk}, '{src_ldts}',
                            '{src_source}', {source_model})   }}}}
         """
@@ -516,7 +537,7 @@ class DBTVAULTGenerator:
         if not config:
             config = {'materialized': 'incremental'}
 
-        config_string = ", ".join([f"{k}='{v}'" for k, v in config.items()])
+        config_string = self.format_config_str(config)
 
         template = f"""
         {{{{ config({config_string}) }}}}
@@ -545,16 +566,16 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if not config:
-            config = {'materialized': 'incremental'}
-
         if isinstance(src_dfk, str):
             src_dfk = f"'{src_dfk}'"
 
         if isinstance(src_sfk, str):
             src_sfk = f"'{src_sfk}'"
 
-        config_string = ", ".join([f"{k}='{v}'" if isinstance(v, str) else f"{k}={v}" for k, v in config.items()])
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = self.format_config_str(config)
 
         template = f"""
         {{{{ config({config_string}) }}}}
@@ -580,8 +601,13 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
+        if not config:
+            config = {'materialized': 'incremental'}
+
+        config_string = self.format_config_str(config)
+
         template = f"""
-        {{{{ config(materialized='incremental') }}}}
+        {{{{ config({config_string}) }}}}
         {{{{ dbtvault.t_link('{src_pk}', '{src_fk}', {src_payload}, '{src_eff}',
                              '{src_ldts}', '{src_source}', '{source_model}')   }}}}
         """
@@ -656,6 +682,17 @@ class DBTVAULTGenerator:
                     yield x
             else:
                 yield item
+
+    @staticmethod
+    def format_config_str(config: dict):
+        """
+        Correctly format a config string for a dbt model
+        """
+
+        config_string = ", ".join(
+            [f"{k}='{v}'" if isinstance(v, str) else f"{k}={v}" for k, v in config.items()])
+
+        return config_string
 
     @staticmethod
     def evaluate_hashdiff(structure_dict):

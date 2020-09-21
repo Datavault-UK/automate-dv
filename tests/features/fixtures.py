@@ -792,3 +792,11 @@ def enable_auto_end_date(context):
     Enable auto end-dating on effectivity satellites
     """
     context.auto_end_date = True
+
+
+@fixture
+def enable_full_refresh(context):
+    """
+    Enable full refresh for a dbt run
+    """
+    context.full_refresh = True

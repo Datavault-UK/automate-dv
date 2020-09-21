@@ -16,7 +16,7 @@
 
 {%- endmacro %}
 
-{%- macro default__hash_columns(columns=none) -%}
+{%- macro snowflake__hash_columns(columns=none) -%}
 
 {%- if columns is mapping -%}
 
