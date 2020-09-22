@@ -137,15 +137,10 @@
     {% else %}
         {% set relation = adapter.get_relation(this.database, this.schema, this.table) %}
 
-        {% if flags.FULL_REFRESH and model.config.materialized == 'vault_insert_by_period' %}
-            {{ return(true) }}
-        {% else %}
-
             {{ return(relation is not none
                       and relation.type == 'table'
                       and model.config.materialized == 'vault_insert_by_period'
                       and not flags.FULL_REFRESH) }}
-        {% endif %}
     {% endif %}
 {% endmacro %}
 

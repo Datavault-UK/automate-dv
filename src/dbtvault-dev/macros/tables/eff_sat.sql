@@ -15,11 +15,10 @@
 {{- dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-
     SELECT *
     FROM {{ ref(source_model) }}
-    {% if dbtvault.is_vault_insert_by_period() %}
-        WHERE __PERIOD_FILTER__
+    {%- if model.config.materialized == 'vault_insert_by_period' %}
+    WHERE __PERIOD_FILTER__
     {% endif %}
 ),
 {%- if load_relation(this) is none %}

@@ -1,14 +1,10 @@
-WITH source_data_1 AS (
-    SELECT *
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-),
-rank_1 AS (
+WITH rank_1 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE ASC
            ) AS row_number
-    FROM source_data_1
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 stage_1 AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE
