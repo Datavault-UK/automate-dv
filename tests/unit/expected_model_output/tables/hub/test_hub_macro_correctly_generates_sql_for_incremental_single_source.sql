@@ -1,10 +1,14 @@
-WITH rank_1 AS (
+WITH source_data_1 AS (
+    SELECT *
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+),
+rank_1 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE ASC
            ) AS row_number
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+    FROM source_data_1
 ),
 stage_1 AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE
@@ -32,6 +36,7 @@ records_to_insert AS (
     SELECT stage.* FROM stage
     LEFT JOIN [DATABASE_NAME].[SCHEMA_NAME].test_hub_macro_correctly_generates_sql_for_incremental_single_source AS d
     ON stage.CUSTOMER_PK = d.CUSTOMER_PK
-    WHERE d.CUSTOMER_PK IS NULL)
+    WHERE d.CUSTOMER_PK IS NULL
+)
 
 SELECT * FROM records_to_insert
