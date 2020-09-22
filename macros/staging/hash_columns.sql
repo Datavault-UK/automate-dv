@@ -14,9 +14,9 @@
 {%- macro hash_columns(columns=none, hash_algo=none) -%}
     {#-
     Hashes a the values of given list of columns using the provided hash algorithm
-    
+
     Args:
-        columns {Mapping[str, Union[str, Mapping]} - Column names to hash. Either a string or a mapping with 
+        columns {Mapping[str, Union[str, Mapping]} - Column names to hash. Either a string or a mapping with
             a boolean value at the "hashdiff" key and a list of column names as the "columns" key (see example)
         hash_algo: str - The identifier of the hashing algorithm to use.
 
@@ -36,7 +36,7 @@
 
     Example 2:
 
-        if columns is 
+        if columns is
 
         {
             EXAMPLE_HK: {
@@ -46,10 +46,10 @@
         }
 
         the resulting output will have columns
-        
+
         EXAMPLE_HK = HASH(A||B||C)
 
-        
+
     -#}
     {%- if columns is mapping -%}
         {%- for output_col in columns -%}
@@ -57,8 +57,8 @@
             {%- set src_col_config = columns[output_col] -%}
             {%- set is_hashdiff = src_col_config['hashdiff'] -%}
             {%-
-                if 
-                    execute  
+                if
+                    execute
                     and is_hashdiff is not defined
                     and src_col_config['columns'] is defined
                     and src_col_config['columns'] is iterable

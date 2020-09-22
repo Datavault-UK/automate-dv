@@ -11,7 +11,6 @@
     limitations under the License.
 #}
 
-
 {%- macro _standardize_hash_input(expr, output_str_if_null='^^') -%}
 {#-
     Casts any field into a standardized string to prepare for hashing
