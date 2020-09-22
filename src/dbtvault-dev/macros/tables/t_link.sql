@@ -8,13 +8,16 @@
 
 {%- macro snowflake__t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_payload, src_eff, src_ldts, src_source])-%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_payload, src_eff, src_ldts, src_source]) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
 WITH stage AS (
     SELECT {{ source_cols | join(', ') }}
     FROM {{ ref(source_model) }}
+    {%- if model.config.materialized == 'vault_insert_by_period' %}
+    WHERE __PERIOD_FILTER__
+    {%- endif %}
 ),
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.prefix(source_cols, 'stg') }}
