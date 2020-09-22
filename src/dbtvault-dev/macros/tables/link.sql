@@ -21,24 +21,33 @@
 
 {%- for src in source_model -%}
 
-rank_{{ loop.index|string }} AS (
+{% set source_number = loop.index | string %}
+
+source_data_{{ loop.index|string }} AS (
+    SELECT *
+    FROM {{ ref(src) }}
+    {%- if dbtvault.is_vault_insert_by_period() %}
+    WHERE __PERIOD_FILTER__
+    {%- endif %}
+),
+rank_{{ source_number }} AS (
     SELECT {{ source_cols | join(', ') }},
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
-    FROM {{ ref(src) }}
+    FROM source_data_{{ source_number }}
 ),
-stage_{{ loop.index|string }} AS (
+stage_{{ source_number }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_{{ loop.index|string }}
+    FROM rank_{{ source_number }}
     WHERE row_number = 1
 ),
 {% endfor -%}
 
 stage_union AS (
     {%- for src in source_model %}
-    SELECT * FROM stage_{{ loop.index|string }}
+    SELECT * FROM stage_{{ source_number }}
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
@@ -60,7 +69,7 @@ stage AS (
 ),
 records_to_insert AS (
     SELECT stage.* FROM stage
-    {%- if is_incremental() %}
+    {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
