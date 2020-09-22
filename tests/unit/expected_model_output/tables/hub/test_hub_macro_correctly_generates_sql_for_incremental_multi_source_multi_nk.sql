@@ -1,23 +1,15 @@
-WITH source_data_1 AS (
-    SELECT *
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-),
-rank_1 AS (
+WITH rank_1 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE ASC
            ) AS row_number
-    FROM source_data_1
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 stage_1 AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE
     FROM rank_1
     WHERE row_number = 1
-),
-source_data_2 AS (
-    SELECT *
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_2
 ),
 rank_2 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE,
@@ -25,7 +17,7 @@ rank_2 AS (
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE ASC
            ) AS row_number
-    FROM source_data_2
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_2
 ),
 stage_2 AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE
