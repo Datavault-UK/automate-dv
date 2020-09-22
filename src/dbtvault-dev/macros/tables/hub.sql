@@ -19,43 +19,50 @@
 {%- endif -%}
 
 {%- for src in source_model -%}
-source_data_{{ loop.index|string }} AS (
-    SELECT *
-    FROM {{ ref(src) }}
-    {%- if dbtvault.is_vault_insert_by_period() %}
-    WHERE __PERIOD_FILTER__
-    {%- endif %}
-),
-rank_{{ loop.index|string }} AS (
+
+{%- set source_number = loop.index | string -%}
+
+rank_{{ source_number }} AS (
     SELECT {{ source_cols | join(', ') }},
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
-    FROM source_data_{{ loop.index|string }}
+    FROM {{ ref(src) }}
 ),
-stage_{{ loop.index|string }} AS (
+stage_{{ source_number }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_{{ loop.index|string }}
+    FROM rank_{{ source_number }}
     WHERE row_number = 1
 ),
 {% endfor -%}
 
 stage_union AS (
     {%- for src in source_model %}
-    SELECT * FROM stage_{{ loop.index|string }}
+    SELECT * FROM stage_{{ loop.index | string }}
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
     {%- endfor %}
 ),
+{%- if model.config.materialized == 'vault_insert_by_period' %}
+stage_period_filter AS (
+    SELECT *
+    FROM stage_union
+    WHERE __PERIOD_FILTER__
+),
+{%- endif %}
 rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
            ) AS row_number
+    {%- if model.config.materialized == 'vault_insert_by_period' %}
+    FROM stage_period_filter
+    {%- else %}
     FROM stage_union
+    {%- endif %}
     WHERE {{ src_pk }} IS NOT NULL
 ),
 stage AS (
