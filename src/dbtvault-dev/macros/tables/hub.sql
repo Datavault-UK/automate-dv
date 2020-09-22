@@ -22,7 +22,7 @@
 source_data_{{ loop.index|string }} AS (
     SELECT *
     FROM {{ ref(src) }}
-    {%- if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
+    {%- if dbtvault.is_vault_insert_by_period() %}
     WHERE __PERIOD_FILTER__
     {%- endif %}
 ),

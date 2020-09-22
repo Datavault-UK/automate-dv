@@ -15,7 +15,7 @@
 WITH source_data AS (
     SELECT *
     FROM {{ ref(source_model) }}
-    {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
+    {% if dbtvault.is_vault_insert_by_period() %}
     WHERE __PERIOD_FILTER__
     {% endif %}
 ),

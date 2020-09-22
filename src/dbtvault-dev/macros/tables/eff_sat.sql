@@ -10,6 +10,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
+{%- set is_auto_end_date = config.get('auto_end_date', default=false) %}
 
 {{- dbtvault.prepend_generated_by() }}
 
@@ -17,7 +18,7 @@ WITH source_data AS (
 
     SELECT *
     FROM {{ ref(source_model) }}
-    {% if dbtvault.is_vault_insert_by_period() or model.config.materialized == 'vault_insert_by_period' %}
+    {% if dbtvault.is_vault_insert_by_period() %}
         WHERE __PERIOD_FILTER__
     {% endif %}
 ),
