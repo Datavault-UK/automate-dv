@@ -1,8 +1,11 @@
 version: 2
 
 macros:
-  - name: replace_placeholder_with_filter
-    description: '{{ doc("macro__replace_placeholder_with_filter") }}'
+  - name: snowflake__replace_placeholder_with_filter
+    description: |
+                 {{ doc("macro__replace_placeholder_with_filter") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: core_sql
         type: string
@@ -23,8 +26,11 @@ macros:
         type: string
         description: '{{ doc("arg__period_materialisation__period") }}'
 
-  - name: get_period_filter_sql
-    description: '{{ doc("macro__get_period_filter_sql") }}'
+  - name: snowflake__get_period_filter_sql
+    description: |
+                 {{ doc("macro__get_period_filter_sql") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: target_cols_csv
         type: string
@@ -48,8 +54,11 @@ macros:
         type: string
         description: '{{ doc("arg__period_materialisation__offset") }}'
 
-  - name: get_period_boundaries
-    description: '{{ doc("macro__get_period_boundaries") }}'
+  - name: snowflake__get_period_boundaries
+    description: |
+                 {{ doc("macro__get_period_boundaries") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: target_schema
         type: string
@@ -70,8 +79,11 @@ macros:
         type: string
         description: '{{ doc("arg__period_materialisation__period") }}'
 
-  - name: get_period_of_load
-    description: '{{ doc("macro__get_period_of_load") }}'
+  - name: snowflake__get_period_of_load
+    description: |
+                 {{ doc("macro__get_period_of_load") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: period
         type: string
@@ -82,29 +94,3 @@ macros:
       - name: start_timestamp
         type: string
         description: '{{ doc("arg__get_period_of_load__start_timestamp") }}'
-
-  - name: is_vault_insert_by_period
-    description: '{{ doc("macro__is_vault_insert_by_period") }}'
-
-  - name: check_placeholder
-    description: '{{ doc("macro__check_placeholder") }}'
-    arguments:
-      - name: model_sql
-        type: string
-        description: '{{ doc("arg__check_placeholder__model_sql") }}'
-      - name: placeholder
-        type: string
-        description: '{{ doc("arg__check_placeholder__placeholder") }}'
-
-  - name: get_start_stop_dates
-    description: '{{ doc("macro__get_start_stop_dates") }}'
-    arguments:
-      - name: mat_config
-        type: dict
-        description: '{{ doc("arg__get_start_stop_dates__mat_config") }}'
-      - name: timestamp_field
-        type: string
-        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
-      - name: date_source_models
-        type: string/list
-        description: '{{ doc("arg__get_start_stop_dates__date_source_models") }}'

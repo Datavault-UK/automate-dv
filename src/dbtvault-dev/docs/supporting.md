@@ -4,6 +4,8 @@ Generate SQL to hash one or more columns using MD5 or SHA256.
 
 See [How do we hash?](https://dbtvault.readthedocs.io/en/latest/best_practices/#how-do-we-hash) for an in-depth look at how dbtvault does hashing. 
 
+[Read more online](https://dbtvault.readthedocs.io/en/latest/macros/#hash)
+
 {% enddocs %}
 
 
@@ -34,6 +36,8 @@ This is required for hashdiffs to ensure consistent hashing.
 {% docs macro__prefix %}
 
 Prefix one or more strings with a given string and print each one.
+
+[Read more online](https://dbtvault.readthedocs.io/en/latest/macros/#prefix)
 
 {% enddocs %}
 
