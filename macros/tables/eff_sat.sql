@@ -92,7 +92,7 @@ amended_end_dated_records AS (
 {%- endif %}
 records_to_insert AS (
     SELECT * FROM new_open_records
-    {%- if is_auto_end_date %}
+    {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM amended_end_dated_records
     {%- endif %}
