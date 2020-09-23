@@ -45,7 +45,7 @@ jobs:
           name: Run snowflake integration tests
           command: |
             circleci tests glob test_project/features/*/*.feature | circleci tests split > /tmp/feature-tests-to-run
-            TARGET=snowflake pipenv run inv integration-tests -t snowflake -u circleci -e secrethub/secrethub_circleci.env
+            TARGET=snowflake pipenv run inv integration-tests -t snowflake -u circleci -e secrethub_circleci.env
       - slack/status:
           fail_only: false
           mentions: 'URXTX0XEZ'
