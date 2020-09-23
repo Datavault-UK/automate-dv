@@ -716,10 +716,10 @@ class DBTVAULTGenerator:
         if hasattr(context, 'auto_end_date'):
             if context.auto_end_date:
                 if config:
-                    config['auto_end_date'] = True
+                    config['is_auto_end_dating'] = True
                 else:
                     config = {'materialized': 'incremental',
-                              'auto_end_date': True}
+                              'is_auto_end_dating': True}
 
         return config
 
