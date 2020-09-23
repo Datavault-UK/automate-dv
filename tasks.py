@@ -39,7 +39,7 @@ def check_project(c, project='public'):
 
 
 @task
-def inject_to_file(c, target=None, user=None, from_file='secrethub_dev.env', to_file='pycharm.env'):
+def inject_to_file(c, target=None, user=None, from_file='secrethub/secrethub_dev.env', to_file='pycharm.env'):
     """
     Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
     pycharm.env, which is an ignored file in git.
@@ -85,7 +85,7 @@ def set_defaults(c, target=None, user=None, project=None):
 
 
 @task
-def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
+def macro_tests(c, target=None, user=None, env_file='secrethub/secrethub_dev.env'):
     """
     Run macro tests with secrets
         :param c: invoke context
@@ -105,7 +105,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
-        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/secrethub/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- pytest {'$(cat /tmp/macro-tests-to-run)' if user == 'circleci' else ''} --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
                   f"--junitxml=test-results/macro_tests/junit.xml"
 
@@ -113,7 +113,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
 
 @task
-def integration_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
+def integration_tests(c, target=None, user=None, env_file='secrethub/secrethub_dev.env'):
     """
     Run integration (bdd/behave) tests with secrets
         :param c: invoke context
@@ -133,14 +133,14 @@ def integration_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}'")
 
-        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/secrethub/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- behave {'$(cat /tmp/feature-tests-to-run)' if user == 'circleci' else ''} --junit --junit-directory ../../test-results/integration_tests/"
 
         c.run(command)
 
 
 @task
-def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secrethub_dev.env'):
+def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secrethub/secrethub_dev.env'):
     """
     Run dbt in the context of the provided project with the provided dbt args.
         :param c: invoke context
@@ -173,7 +173,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
     # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
-    command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/secrethub/{env_file} -v user={user} -- dbt {dbt_args}"
+    command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
@@ -188,21 +188,6 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         logger.info(f'Env file: {PROJECT_ROOT}/{env_file}\n')
 
         c.run(command)
-
-
-@task
-def release(c):
-    """
-    Bump version and merge
-        :param c: invoke context
-    """
-
-    dev_folder = 'src/dbtvault-dev'
-    public_folder = 'src/dbtvault'
-
-    rmtree(public_folder)
-    copytree(src=dev_folder, dst=public_folder, ignore=ignore_patterns('target', 'logs', '*.env'))
-
 
 def check_target(target: str):
     """
