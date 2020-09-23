@@ -6,7 +6,7 @@ from pathlib import PurePath, Path
 import yaml
 from invoke import task
 
-from tests.test_utils.dbt_test_utils import DBTTestUtils
+from test_project.test_utils.dbt_test_utils import DBTTestUtils
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -26,8 +26,8 @@ def check_project(c, project='public'):
     """
 
     available_projects = {
-        'dev': {'work_dir': './dbtvault-dev'},
-        'test': {'work_dir': './tests/dbtvault_test'},
+        'dev': {'work_dir': './'},
+        'test': {'work_dir': './test_project/dbtvault_test'},
     }
 
     if project in available_projects:
@@ -56,7 +56,7 @@ def inject_to_file(c, target=None, user=None, from_file='secrethub_dev.env', to_
     if not target:
         target = c.config.get('target', None)
 
-    command = f"secrethub inject -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
+    command = f"secrethub inject --env-file secrethub/secrethub.env -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
 
     c.run(command)
 
@@ -105,7 +105,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
-        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/secrethub/{env_file} -v env={target} -v user={user}" \
                   f" -- pytest {'$(cat /tmp/macro-tests-to-run)' if user == 'circleci' else ''} --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
                   f"--junitxml=test-results/macro_tests/junit.xml"
 
@@ -133,7 +133,7 @@ def integration_tests(c, target=None, user=None, env_file='secrethub_dev.env'):
 
         logger.info(f"Running on '{target}' with user '{user}'")
 
-        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/secrethub/{env_file} -v env={target} -v user={user}" \
                   f" -- behave {'$(cat /tmp/feature-tests-to-run)' if user == 'circleci' else ''} --junit --junit-directory ../../test-results/integration_tests/"
 
         c.run(command)
@@ -173,7 +173,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
     # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
 
-    command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
+    command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/secrethub/{env_file} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
