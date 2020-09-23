@@ -50,10 +50,10 @@
     {%- set filtered_sql = {'sql': base_sql} -%}
 
     {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_filter(filtered_sql.sql,
-                                                                               timestamp_field,
-                                                                               start_timestamp,
-                                                                               stop_timestamp,
-                                                                               offset, period)}) -%}
+                                                                                timestamp_field,
+                                                                                start_timestamp,
+                                                                                stop_timestamp,
+                                                                                offset, period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
 
@@ -145,9 +145,9 @@
 {% endmacro %}
 
 
-{% macro check_placeholder(sql, placeholder='__PERIOD_FILTER__') %}
+{% macro check_placeholder(model_sql, placeholder='__PERIOD_FILTER__') %}
 
-    {%- if sql.find(placeholder) == -1 -%}
+    {%- if model_sql.find(placeholder) == -1 -%}
         {%- set error_message -%}
             Model '{{ model.unique_id }}' does not include the required string '__PERIOD_FILTER__' in its sql
         {%- endset -%}

@@ -1,8 +1,11 @@
 version: 2
 
 macros:
-  - name: hub
-    description: '{{ doc("macro__hub") }}'
+  - name: snowflake__hub
+    description: |
+                 {{ doc("macro__hub") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: src_pk
         type: mapping/string
@@ -20,8 +23,11 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: link
-    description: '{{ doc("macro__link") }}'
+  - name: snowflake__link
+    description: |
+                 {{ doc("macro__link") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: src_pk
         type: mapping/string
@@ -39,8 +45,11 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: sat
-    description: '{{ doc("macro__sat") }}'
+  - name: snowflake__sat
+    description: |
+                 {{ doc("macro__sat") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: src_pk
         type: mapping/string
@@ -64,8 +73,11 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: t_link
-    description: '{{ doc("macro__t_link") }}'
+  - name: snowflake__t_link
+    description: |
+                 {{ doc("macro__t_link") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: src_pk
         type: mapping/string
@@ -89,8 +101,11 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: eff_sat
-    description: '{{ doc("macro__eff_sat") }}'
+  - name: snowflake__eff_sat
+    description: |
+                 {{ doc("macro__eff_sat") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: src_pk
         type: mapping/string

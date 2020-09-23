@@ -10,7 +10,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
-{%- set is_auto_end_date = config.get('auto_end_date', default=false) %}
+{%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
 {{- dbtvault.prepend_generated_by() }}
 
@@ -66,7 +66,7 @@ new_open_records AS (
     AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
 ),
-{%- if is_auto_end_date %}
+{%- if is_auto_end_dating %}
 new_end_dated_records AS (
     SELECT DISTINCT
         h.{{ src_pk }},
