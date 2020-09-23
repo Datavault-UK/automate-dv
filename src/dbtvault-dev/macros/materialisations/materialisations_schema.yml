@@ -1,5 +1,5 @@
 version: 2
 
 macros:
-  - name: is_vault_insert_by_period
-    description: '{{ doc("macro_is_vault_insert_by_period") }}'
+  - name: materialization_vault_insert_by_period_default
+    description: '{{ doc("materialization__vault_insert_by_period__default") }}'
