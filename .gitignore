@@ -5,3 +5,5 @@ logs/
 target/
 
 tests/dbtvault_test/dbt_modules/
+
+test_project/dbtvault_test/dbt_modules/
