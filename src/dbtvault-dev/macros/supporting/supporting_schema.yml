@@ -2,28 +2,28 @@ version: 2
 
 macros:
   - name: hash
-    description: '{{ doc("macro_hash") }}'
+    description: '{{ doc("macro__hash") }}'
     arguments:
       - name: columns
         type: list
-        description: '{{ doc("arg_hash_columns") }}'
+        description: '{{ doc("arg__hash__columns") }}'
       - name: alias
         type: string
-        description: '{{ doc("arg_hash_alias") }}'
+        description: '{{ doc("arg__hash__alias") }}'
       - name: is_hashdiff
         type: boolean
-        description: '{{ doc("arg_hash_is_hashdiff") }}'
+        description: '{{ doc("arg__hash__is_hashdiff") }}'
         
   - name: prefix
-    description: '{{ doc("macro_prefix") }}'
+    description: '{{ doc("macro__prefix") }}'
     arguments:
       - name: columns
         type: list
-        description: '{{ doc("arg_prefix_columns") }}'
+        description: '{{ doc("arg__prefix__columns") }}'
       - name: prefix_str
         type: string
-        description: '{{ doc("arg_prefix_prefix_str") }}'
+        description: '{{ doc("arg__prefix__prefix_str") }}'
       - name: alias_target
         type: source | target
-        description: '{{ doc("arg_prefix_alias_target") }}'
+        description: '{{ doc("arg__prefix__alias_target") }}'
     
