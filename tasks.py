@@ -56,7 +56,7 @@ def inject_to_file(c, target=None, user=None, from_file='secrethub/secrethub_dev
     if not target:
         target = c.config.get('target', None)
 
-    command = f"secrethub inject --env-file secrethub/secrethub.env -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
+    command = f"secrethub inject  -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
 
     c.run(command)
 
