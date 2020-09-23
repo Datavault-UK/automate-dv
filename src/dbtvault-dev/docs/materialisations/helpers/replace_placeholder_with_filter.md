@@ -24,10 +24,3 @@
 .
 
 {% enddocs %}
-
-
-{% docs arg__replace_placeholder_with_filter__offset %}
-
-.
-
-{% enddocs %}
