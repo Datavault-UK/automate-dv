@@ -1,8 +1,11 @@
 version: 2
 
 macros:
-  - name: stage
-    description: '{{ doc("macro__stage") }}'
+  - name: snowflake__stage
+    description: |
+                 {{ doc("macro__stage") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: include_source_columns
         type: boolean
@@ -17,15 +20,21 @@ macros:
         type: Mapping
         description: '{{ doc("arg__stage__derived_columns") }}'
 
-  - name: hash_columns
-    description: '{{ doc("macro__hash_columns") }}'
+  - name: snowflake__hash_columns
+    description: |
+                 {{ doc("macro__hash_columns") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: columns
         type: list
         description: '{{ doc("arg__stage__hashed_columns") }}'
 
-  - name: derive_columns
-    description: '{{ doc("macro__derive_columns") }}'
+  - name: snowflake__derive_columns
+    description: |
+                 {{ doc("macro__derive_columns") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: source_relation
         type: Relation
@@ -33,3 +42,4 @@ macros:
       - name: columns
         type: list
         description: '{{ doc("arg__stage__hashed_columns") }}'
+
