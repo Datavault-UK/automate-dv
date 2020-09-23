@@ -50,13 +50,13 @@ jobs:
           fail_only: false
           mentions: 'URXTX0XEZ'
       - store_test_results:
-          path: test-results/integration_tests
+          path: test_results/integration_tests
       - store_test_results:
-          path: test-results/macro_tests
+          path: test_results/macro_tests
       - store_artifacts:
-          path: test-results/integration_tests
+          path: test_results/integration_tests
       - store_artifacts:
-          path: test-results/macro_tests
+          path: test_results/macro_tests
 
 workflows:
   version: 2
