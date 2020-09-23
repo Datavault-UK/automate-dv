@@ -1,30 +1,9 @@
-\.idea/
+.idea/
 
-*/__pycache__/
+logs/
 
-src/dbtvault-dev/logs/
+target/
 
-src/dbtvault-dev/target/
+tests/dbtvault_test/dbt_modules/
 
-/venv/
-
-profiles/.user.yml
-
-*.pyc
-
-/pycharm.env
-
-tests/dbtvault_test/logs/
-
-*.log
-/tests/dbtvault_test/dbt_modules/
-
-tests/dbtvault_test/target/
-/invoke.yml
-
-tests/features/csv_temp/*.csv
-/tests/dbtvault_test/data/temp/*.csv
-/tests/dbtvault_test/models/feature/*.sql
-/tests/dbtvault_test/models/schema_test.yml
-secrethub_dev.env
-/process.yml
+test_project/dbtvault_test/dbt_modules/

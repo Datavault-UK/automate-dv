@@ -2,7 +2,7 @@ from behave import *
 from behave.model import Table, Row
 import copy
 
-from tests.test_utils.dbt_test_utils import DBTVAULTGenerator
+from test_project.test_utils.dbt_test_utils import DBTVAULTGenerator
 
 use_step_matcher("parse")
 

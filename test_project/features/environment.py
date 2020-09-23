@@ -1,7 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from fixtures import *
-from tests.test_utils.dbt_test_utils import *
+from test_project.test_utils.dbt_test_utils import *
 
 fixture_registry = {
     "fixture.set_workdir": set_workdir,
