@@ -8,4 +8,4 @@ packages:
 #    revision: v0.6.1
 
   #Dev
-  - local: "../../src/dbtvault-dev/"
+  - local: "../../"

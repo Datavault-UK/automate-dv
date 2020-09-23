@@ -1,6 +1,6 @@
 from behave import fixture
 
-from tests.test_utils.dbt_test_utils import *
+from test_project.test_utils.dbt_test_utils import *
 
 """
 The fixtures here are used to supply runtime metadata to tests, in place of metadata usually provided via vars or a YAML config
