@@ -1,62 +1,72 @@
-{% docs macro_stage %}
+{% docs macro__stage %}
 
-
-{% enddocs %}
-
-
-{% docs arg_stage_include_source_columns %}
-
+.
 
 {% enddocs %}
 
 
-{% docs arg_stage_source_model %}
+{% docs arg__stage__include_source_columns %}
 
-
-{% enddocs %}
-
-
-{% docs arg_stage_hashed_columns %}
-
+.
 
 {% enddocs %}
 
 
-{% docs arg_stage_derived_columns %}
+{% docs arg__stage__source_model %}
 
-
-{% enddocs %}
-
-
-
-
-{% docs macro_derive_columns %}
-
+.
 
 {% enddocs %}
 
 
-{% docs arg_derive_columns_source_relation %}
+{% docs arg__stage__hashed_columns %}
 
+.
 
 {% enddocs %}
 
 
-{% docs arg_derive_columns_columns %}
+{% docs arg__stage__derived_columns %}
 
+.
 
 {% enddocs %}
 
 
 
 
-{% docs macro_hash_columns %}
+{% docs macro__derive_columns %}
 
+.
 
 {% enddocs %}
 
 
-{% docs arg_hash_columns_columns %}
+{% docs arg__derive_columns__source_relation %}
 
+.
+
+{% enddocs %}
+
+
+{% docs arg__derive_columns__columns %}
+
+.
+
+{% enddocs %}
+
+
+
+
+{% docs macro__hash_columns %}
+
+.
+
+{% enddocs %}
+
+
+{% docs arg__hash_columns__columns %}
+
+.
 
 {% enddocs %}

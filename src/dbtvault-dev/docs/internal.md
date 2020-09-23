@@ -1,4 +1,4 @@
-{% docs macro_alias %}
+{% docs macro__alias %}
 
 Perform aliasing on a mapping and optionally prefix the string as well.
 
@@ -10,7 +10,7 @@ See also:
 {% enddocs %}
 
 
-{% docs arg_alias_alias_config %}
+{% docs arg__alias__alias_config %}
                                                 
 | Key           | Description          | Type   |
 | ------------- | -------------------- | ------ |
@@ -20,7 +20,7 @@ See also:
 {% enddocs %}
 
 
-{% docs arg_alias_prefix %}
+{% docs arg__alias__prefix %}
 
 A string to prefix the column with.
  
@@ -29,14 +29,14 @@ A string to prefix the column with.
 
 
 
-{% docs macro_alias_all %}
+{% docs macro__alias_all %}
 
 Perform aliasing on a mapping and optionally prefix the string as well.
  
 {% enddocs %}
 
 
-{% docs arg_alias_all_columns %}
+{% docs arg__alias_all__columns %}
 
 A list of columns, as strings or mappings.
 
@@ -50,7 +50,7 @@ src_hashdiff:
 
 {% enddocs %}
 
-{% docs arg_alias_all_prefix %}
+{% docs arg__alias_all__prefix %}
 
 A string to prefix all columns with.
 
@@ -59,53 +59,77 @@ A string to prefix all columns with.
 
 
 
-{% docs macro_as_constant %}
+{% docs macro__as_constant %}
 
- 
+.
+
 {% enddocs %}
 
 
-{% docs arg_as_constant_column_str %}
+{% docs arg__as_constant__column_str %}
 
- 
-{% enddocs %}
-
-
-
-
-{% docs macro_expand_column_list %}
-
- 
-{% enddocs %}
-
-
-{% docs arg_expand_column_list_columns %}
-
+.
  
 {% enddocs %}
 
 
 
 
-{% docs macro_multikey %}
+{% docs macro__expand_column_list %}
 
+.
  
 {% enddocs %}
 
 
-{% docs arg_multikey_columns %}
+{% docs arg__expand_column_list__columns %}
 
+.
  
 {% enddocs %}
 
 
-{% docs arg_multikey_aliases %}
 
- 
+
+{% docs macro__multikey %}
+
+. 
+
 {% enddocs %}
 
 
-{% docs arg_multikey_type_for %}
+{% docs arg__multikey__columns %}
 
- 
+. 
+
+{% enddocs %}
+
+
+{% docs arg__multikey__prefix %}
+
+. 
+
+{% enddocs %}
+
+
+{% docs arg__multikey__condition %}
+
+. 
+
+{% enddocs %}
+
+
+{% docs arg__multikey__operator %}
+
+. 
+
+{% enddocs %}
+
+
+
+
+{% docs macro__prepend_generated_by %}
+
+. 
+
 {% enddocs %}
