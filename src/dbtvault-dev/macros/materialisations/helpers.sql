@@ -145,9 +145,9 @@
 {% endmacro %}
 
 
-{% macro check_placeholder(sql, placeholder='__PERIOD_FILTER__') %}
+{% macro check_placeholder(model_sql, placeholder='__PERIOD_FILTER__') %}
 
-    {%- if sql.find(placeholder) == -1 -%}
+    {%- if model_sql.find(placeholder) == -1 -%}
         {%- set error_message -%}
             Model '{{ model.unique_id }}' does not include the required string '__PERIOD_FILTER__' in its sql
         {%- endset -%}
