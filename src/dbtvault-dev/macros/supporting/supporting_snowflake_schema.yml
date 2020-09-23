@@ -1,8 +1,11 @@
 version: 2
 
 macros:
-  - name: hash
-    description: '{{ doc("macro__hash") }}'
+  - name: snowflake__hash
+    description: |
+                 {{ doc("macro__hash") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: columns
         type: list
@@ -14,8 +17,11 @@ macros:
         type: boolean
         description: '{{ doc("arg__hash__is_hashdiff") }}'
         
-  - name: prefix
-    description: '{{ doc("macro__prefix") }}'
+  - name: snowflake__prefix
+    description: |
+                 {{ doc("macro__prefix") }}
+
+                 {{ doc("platform__snowflake") }}
     arguments:
       - name: columns
         type: list
