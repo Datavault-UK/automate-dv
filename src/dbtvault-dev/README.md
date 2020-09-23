@@ -2,11 +2,20 @@
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
 </p>
 
-[![Documentation Status](https://readthedocs.org/projects/dbtvault/badge/?version=stable)](https://dbtvault.readthedocs.io/en/latest/?badge=stable)
-[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
+<p align="center">
+  <a href="https://dbtvault.readthedocs.io/en/latest/?badge=stable"><img
+    src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
+    alt="Documentation Status"
+  /></a>
+  <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
+    src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
+    alt="Join our slack"
+  /></a>
+ 
+</p>
 
 
-[past docs versions](https://dbtvault.readthedocs.io/en/latest/changelog/)
+[Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
@@ -25,7 +34,7 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown A
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://dbtvault.readthedocs.io/en/latest/workedexample/)
+- [Read the docs](https://dbtvault.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
 - [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
@@ -35,20 +44,20 @@ Learn quickly with our worked example:
 
 ## Installation
 
-Add the following to your ```packages.yml```
+Add the following to your `packages.yml`
 
 
 ```yaml
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.5 # Latest stable version
+    revision: v0.6.2 # Latest stable version
 ```
 
 And run 
-```dbt deps```
+`dbt deps`
 
-[Read more on package installation](https://docs.getdbt.com/v0.15.0/docs/package-management)
+[Read more on package installation](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/#git-packages)
 
 ## Usage
 
@@ -60,7 +69,7 @@ And run
 {{- config(...)                                                           -}}
 
 {{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
-                var('src_source'), var('source'))                          }}
+                var('src_source'), var('source_model'))                    }}
 ```
 
 ## Join our Slack Channel
@@ -76,6 +85,10 @@ Talk to our developers and other members of our growing community, get support a
 Get notified of new features and new releases before anyone else!
 
 ## Starting a Data Vault project 
+
+Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
+
+<a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
 
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)
