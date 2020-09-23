@@ -40,10 +40,10 @@ macros:
         description: '{{ doc("arg__period_materialisation__period") }}'
       - name: start_timestamp
         type: string
-        description: '{{ doc("arg__get_period_filter_sql__start_timestamp") }}'
+        description: '{{ doc("arg__period_materialisation__start_timestamp") }}'
       - name: stop_timestamp
         type: string
-        description: '{{ doc("arg__get_period_filter_sql__stop_timestamp") }}'
+        description: '{{ doc("arg__period_materialisation__stop_timestamp") }}'
       - name: offset
         type: string
         description: '{{ doc("arg__period_materialisation__offset") }}'

@@ -29,3 +29,19 @@ See below for platform specific documentation.
 [Snowflake](https://docs.snowflake.com/en/sql-reference/functions-date-time.html#supported-date-and-time-parts)
 
 {% enddocs %}
+
+
+{% docs arg__period_materialisation__start_timestamp %}
+
+The starting timestamp for the range of records to be loaded. 
+Records must have a timestamp greater or equal to this value to be included.
+
+{% enddocs %}
+
+
+{% docs arg__period_materialisation__stop_timestamp %}
+
+The stopping timestamp for the range of records to be loaded. 
+Records must have a timestamp less than this value to be included.
+
+{% enddocs %}
