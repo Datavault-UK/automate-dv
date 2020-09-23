@@ -1,8 +1,11 @@
-from invoke import task
-from pathlib import PurePath, Path
-import os
-import yaml
 import logging
+import os
+from shutil import copytree, ignore_patterns, rmtree
+from pathlib import PurePath, Path
+
+import yaml
+from invoke import task
+
 from tests.test_utils.dbt_test_utils import DBTTestUtils
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
@@ -23,11 +26,8 @@ def check_project(c, project='public'):
     """
 
     available_projects = {
-        'public': {'work_dir': './src/dbtvault'},
-        'dev': {'work_dir': './src/dbtvault-dev'},
+        'dev': {'work_dir': './dbtvault-dev'},
         'test': {'work_dir': './tests/dbtvault_test'},
-        'sf_demo': {'work_dir': './src/snowflakeDemo'},
-        'sf_demo_dev': {'work_dir': './src/snowflakeDemo-dev/src'}
     }
 
     if project in available_projects:
@@ -188,6 +188,20 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         logger.info(f'Env file: {PROJECT_ROOT}/{env_file}\n')
 
         c.run(command)
+
+
+@task
+def release(c):
+    """
+    Bump version and merge
+        :param c: invoke context
+    """
+
+    dev_folder = 'src/dbtvault-dev'
+    public_folder = 'src/dbtvault'
+
+    rmtree(public_folder)
+    copytree(src=dev_folder, dst=public_folder, ignore=ignore_patterns('target', 'logs', '*.env'))
 
 
 def check_target(target: str):
