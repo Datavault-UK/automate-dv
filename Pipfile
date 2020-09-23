@@ -23,6 +23,7 @@ mkdocs-git-revision-date-localized-plugin = "*"
 pygments = "==2.6.1"
 pymdown-extensions = "==7.1"
 ruamel-yaml = "*"
+bump2version = "*"
 
 [requires]
 python_version = "3.8"
