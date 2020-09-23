@@ -12,10 +12,10 @@ macros:
         description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
       - name: start_timestamp
         type: string
-        description: '{{ doc("arg__replace_placeholder_with_filter__start_timestamp") }}'
+        description: '{{ doc("arg__period_materialisation__start_timestamp") }}'
       - name: stop_timestamp
         type: string
-        description: '{{ doc("arg__replace_placeholder_with_filter__stop_timestamp") }}'
+        description: '{{ doc("arg__period_materialisation__stop_timestamp") }}'
       - name: offset
         type: integer
         description: '{{ doc("arg__period_materialisation__offset") }}'
