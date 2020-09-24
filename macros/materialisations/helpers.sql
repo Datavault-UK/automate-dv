@@ -157,7 +157,7 @@
 {% endmacro %}
 
 
-{% macro get_start_stop_dates(mat_config, timestamp_field, date_source_models) %}
+{% macro get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
 

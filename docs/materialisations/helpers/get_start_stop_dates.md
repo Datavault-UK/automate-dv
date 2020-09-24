@@ -7,13 +7,6 @@ config options. The config options take precedence if both are provided. A suita
 {% enddocs %}
 
 
-{% docs arg__get_start_stop_dates__mat_config %}
-
-The `config` variable provided to the materialisation macro. 
-
-{% enddocs %}
-
-
 {% docs arg__get_start_stop_dates__date_source_models %}
 
 A list of models to union together and extract min and max dates from, which will be used as the range to load records with. 
