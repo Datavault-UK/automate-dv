@@ -66,12 +66,12 @@ workflows:
   build-test-macros:
     jobs:
       - build
-      - test_macros
+      - test_macros:
           requires:
             - build
   build-test-integration:
     jobs:
       - build
-      - test_integration
+      - test_integration:
           requires:
             - build
