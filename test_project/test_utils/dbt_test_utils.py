@@ -71,9 +71,9 @@ class DBTTestUtils:
             target = None
 
         if target == 'snowflake':
-            if os.getenv('CIRCLE_NODE_INDEX'):
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
-                              f"_{os.getenv('CIRCLE_NODE_INDEX')}"
+                              f"_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 

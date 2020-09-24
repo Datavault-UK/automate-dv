@@ -17,7 +17,7 @@
 {% macro check_model_exists(model_name) %}
 
     {% set schema_name %} 
-        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
     {% endset %}
 
     {%- set source_relation = adapter.get_relation(
@@ -36,7 +36,7 @@
 {%- macro drop_test_schemas() -%}
 
     {% set schema_name %} 
-        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
     {% endset %}
 
     {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
@@ -46,7 +46,7 @@
 {%- macro create_test_schemas() -%}
 
     {% set schema_name %} 
-        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
+        {{ target.schema }}_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') }}{{ env_var('CIRCLE_NODE_INDEX', '') }}
     {% endset %}
 
     {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
