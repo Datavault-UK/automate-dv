@@ -81,6 +81,12 @@ workflows:
   test-macros:
     jobs:
       - macros
+    filters:
+      branches:
+        only: master
   test-integration:
     jobs:
       - integration
+    filters:
+      branches:
+        only: master
