@@ -26,7 +26,7 @@ records_to_insert AS (
     LEFT JOIN {{ this }} AS tgt
     ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'tgt') }}
     WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
-    {%- endif -%}
+    {%- endif %}
 )
 
 SELECT * FROM records_to_insert
