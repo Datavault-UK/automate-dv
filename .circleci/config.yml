@@ -9,7 +9,7 @@ orbs:
 jobs:
   build-and-test:
     executor: python/default
-    parallelism: 15
+    parallelism: 10
     steps:
       - checkout
       - restore_cache:
