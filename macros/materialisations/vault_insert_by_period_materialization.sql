@@ -9,7 +9,7 @@
     {%- set timestamp_field = config.require('timestamp_field') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
-    {%- set start_stop_dates = dbtvault.get_start_stop_dates(config, timestamp_field, date_source_models) | as_native -%}
+    {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
 
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}

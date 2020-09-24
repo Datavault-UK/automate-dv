@@ -99,9 +99,6 @@ macros:
   - name: get_start_stop_dates
     description: '{{ doc("macro__get_start_stop_dates") }}'
     arguments:
-      - name: mat_config
-        type: dict
-        description: '{{ doc("arg__get_start_stop_dates__mat_config") }}'
       - name: timestamp_field
         type: string
         description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
