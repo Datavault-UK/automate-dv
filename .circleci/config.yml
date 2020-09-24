@@ -5,10 +5,9 @@ orbs:
   slack: circleci/slack@3.4.2
   secrethub: secrethub/cli@1.0.1
 
-jobs:
-  build:
-    docker:
-      - image: cimg/python:3.8.5
+commands:
+  build_test_env:
+    description: "Build the test environment"
     steps:
       - checkout
       - restore_cache:
@@ -29,21 +28,38 @@ jobs:
       - run:
           name: Install dbt dependencies in test project
           command: TARGET=snowflake pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub/secrethub_circleci.env
+
+jobs:
+
   test_macros:
     docker:
       - image: cimg/python:3.8.5
     parallelism: 10
     steps:
+      - build_test_env
       - run:
           name: Run snowflake macro tests
           command: |
             circleci tests glob test_project/unit/*/test_*.py | circleci tests split > /tmp/macro-tests-to-run
             TARGET=snowflake pipenv run inv macro-tests -t snowflake -u circleci -e secrethub/secrethub_circleci.env
+      - slack/status:
+          fail_only: false
+          mentions: 'URXTX0XEZ'
+      - store_test_results:
+          path: test_results/integration_tests
+      - store_test_results:
+          path: test_results/macro_tests
+      - store_artifacts:
+          path: test_results/integration_tests
+      - store_artifacts:
+          path: test_results/macro_tests
+
   test_integration:
     docker:
       - image: cimg/python:3.8.5
     parallelism: 15
     steps:
+      - build_test_env
       - run:
           name: Run snowflake integration tests
           command: |
@@ -65,13 +81,7 @@ workflows:
   version: 2
   build-test-macros:
     jobs:
-      - build
-      - test_macros:
-          requires:
-            - build
+      - test_macros
   build-test-integration:
     jobs:
-      - build
-      - test_integration:
-          requires:
-            - build
+      - test_integration
