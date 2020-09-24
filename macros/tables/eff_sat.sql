@@ -48,14 +48,6 @@ stage_slice AS
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
 ),
-links_to_end_date AS (
-    SELECT a.*
-    FROM latest_open_eff AS a
-    LEFT JOIN stage_slice AS b
-    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
-    OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
-),
 new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'stage') }}
@@ -67,6 +59,14 @@ new_open_records AS (
     AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 {%- if is_auto_end_dating %}
+links_to_end_date AS (
+    SELECT a.*
+    FROM latest_open_eff AS a
+    LEFT JOIN stage_slice AS b
+    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
+    WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
+    OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
+),
 new_end_dated_records AS (
     SELECT DISTINCT
         h.{{ src_pk }},
