@@ -30,8 +30,7 @@ commands:
           command: TARGET=snowflake pipenv run inv run-dbt -u circleci -t snowflake -p test -d 'deps' -e secrethub/secrethub_circleci.env
 
 jobs:
-
-  test_macros:
+  macros:
     docker:
       - image: cimg/python:3.8.5
     parallelism: 10
@@ -54,7 +53,7 @@ jobs:
       - store_artifacts:
           path: test_results/macro_tests
 
-  test_integration:
+  integration:
     docker:
       - image: cimg/python:3.8.5
     parallelism: 15
@@ -79,9 +78,9 @@ jobs:
 
 workflows:
   version: 2
-  build-test-macros:
+  test-macros:
     jobs:
-      - test_macros
-  build-test-integration:
+      - macros
+  test-integration:
     jobs:
-      - test_integration
+      - integration
