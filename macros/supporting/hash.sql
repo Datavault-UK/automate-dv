@@ -1,26 +1,14 @@
-{# Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-#}
 {%- macro hash(columns=none, alias=none, is_hashdiff=false) -%}
 
     {% if is_hashdiff is none %}
         {%- set is_hashdiff = false -%}
     {% endif %}
 
-    {{- adapter_macro('dbtvault.hash', columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
+    {{- adapter.dispatch('hash', packages = ['dbtvault'])(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
 
 {%- endmacro %}
 
-{%- macro default__hash(columns, alias, is_hashdiff) -%}
+{%- macro snowflake__hash(columns, alias, is_hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 

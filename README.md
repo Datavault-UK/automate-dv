@@ -51,7 +51,7 @@ Add the following to your `packages.yml`
 packages:
 
   - git: "https://github.com/Datavault-UK/dbtvault"
-    revision: v0.6.2 # Latest stable version
+    revision: v0.7.0 # Latest stable version
 ```
 
 And run 

@@ -1,0 +1,5 @@
+version: 2
+
+macros:
+  - name: materialization_vault_insert_by_period_default
+    description: '{{ doc("materialization__vault_insert_by_period__default") }}'
