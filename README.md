@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="https://dbtvault.readthedocs.io/en/latest/?badge=stable"><img
+  <a href="https://dbtvault.readthedocs.io/en/stable/?badge=stable"><img
     src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
     alt="Documentation Status"
   /></a>
