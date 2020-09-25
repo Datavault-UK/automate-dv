@@ -1,9 +1,0 @@
-version: 2
-
-sources:
-  - name: test_unit
-    database: "{{ env_var('SNOWFLAKE_DB_DATABASE') }}"
-    schema: "TEST_{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' if env_var('CIRCLE_NODE_INDEX', '') != '' }}{{ env_var('CIRCLE_NODE_INDEX', '') }}"
-    tables:
-      - name: source
-        identifier: raw_source_table
