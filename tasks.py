@@ -1,6 +1,5 @@
 import logging
 import os
-from shutil import copytree, ignore_patterns, rmtree
 from pathlib import PurePath, Path
 
 import yaml
@@ -188,6 +187,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         logger.info(f'Env file: {PROJECT_ROOT}/{env_file}\n')
 
         c.run(command)
+
 
 def check_target(target: str):
     """
