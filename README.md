@@ -13,7 +13,7 @@
   /></a>
  
  
-[![CircleCI](https://circleci.com/github/Datavault-UK/dbtvault-dev.svg?style=svg&badge-token=7b9d6cb90833b6953c82493162951aca0b12a75c)](https://app.circleci.com/pipelines/github/Datavault-UK/dbtvault-dev)
+[![CircleCI](https://circleci.com/github/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c)](https://app.circleci.com/pipelines/github/Datavault-UK/dbtvault-dev)
  
 </p>
 
