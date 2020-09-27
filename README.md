@@ -7,7 +7,7 @@
     src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
     alt="Documentation Status"
   /></a>
-  <a href="https://app.circleci.com/settings/project/github/Datavault-UK/dbtvault-dev"><img
+  <a href="https://app.circleci.com/pipelines/github/Datavault-UK"><img
     src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=d906481bf6d28580347365694618e1390952568d" 
     alt="Join our slack"
   /></a>
