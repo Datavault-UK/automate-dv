@@ -12,13 +12,12 @@
     alt="Join our slack"
   /></a>
  
- 
-[![CircleCI](https://circleci.com/github/Datavault-UK/dbtvault-dev.svg?style=shield&circle-token=7b9d6cb90833b6953c82493162951aca0b12a75c)](https://app.circleci.com/pipelines/github/Datavault-UK/dbtvault-dev)
- 
+
 </p>
 
-
 [Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
+
+[![CircleCI](https://circleci.com/github/Datavault-UK/dbtvault-dev.svg?style=svg&circle-token=d906481bf6d28580347365694618e1390952568d)](<LINK>)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
