@@ -45,9 +45,7 @@ Learn quickly with our worked example:
 ## Installation
 
 Check [dbt Hub](https://hub.getdbt.com/datavault-uk/dbtvault/latest/) for the latest installation instructions, 
-or read the docs below for more information on installing packages.
-
-[Read more on package installation](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/#git-packages)
+or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/) for more information on installing packages.
 
 ## Usage
 
