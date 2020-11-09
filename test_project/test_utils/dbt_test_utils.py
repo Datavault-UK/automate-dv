@@ -381,7 +381,8 @@ class DBTTestUtils:
 
         patterns = {
             'md5': {
-                'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5}, 'sha': {
+                'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
+            'sha': {
                 'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
 
         hashed_list = []
