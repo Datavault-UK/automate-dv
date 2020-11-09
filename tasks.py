@@ -61,6 +61,19 @@ def inject_to_file(c, target=None, user=None, from_file='secrethub/secrethub_dev
 
 
 @task
+def create_secrethub_file(c, user=None,
+                          from_file='secrethub/secrethub_tmpl.env',
+                          to_file='secrethub/secrethub_dev.env'):
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    with open(PROJECT_ROOT / from_file, 'rt') as fin:
+        with open(PROJECT_ROOT / to_file, 'wt') as fout:
+            for line in fin:
+                fout.write(line.replace('<user>', str(user)))
+
+
+@task
 def set_defaults(c, target=None, user=None, project=None):
     """
     Generate an 'invoke.yml' file

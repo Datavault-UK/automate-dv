@@ -414,8 +414,9 @@ def t_link(context):
 
     context.hash_mapping_config = {
         'RAW_STAGE': {
-            'TRANSACTION_PK': ['CUSTOMER_ID', 'TRANSACTION_NUMBER'],
-            'CUSTOMER_FK': 'CUSTOMER_ID'
+            'TRANSACTION_PK': ['CUSTOMER_ID', 'ORDER_ID', 'TRANSACTION_NUMBER'],
+            'CUSTOMER_FK': 'CUSTOMER_ID',
+            'ORDER_FK': 'ORDER_ID'
         }
     }
 
@@ -441,6 +442,7 @@ def t_link(context):
         'RAW_STAGE': {
             'column_types': {
                 'CUSTOMER_ID': 'VARCHAR',
+                'ORDER_ID': 'VARCHAR',
                 'TRANSACTION_NUMBER': 'NUMBER(38,0)',
                 'TRANSACTION_DATE': 'DATE',
                 'TYPE': 'VARCHAR',
@@ -453,6 +455,7 @@ def t_link(context):
             'column_types': {
                 'TRANSACTION_PK': 'BINARY(16)',
                 'CUSTOMER_FK': 'BINARY(16)',
+                'ORDER_FK': 'BINARY(16)',
                 'TRANSACTION_NUMBER': 'NUMBER(38,0)',
                 'TRANSACTION_DATE': 'DATE',
                 'TYPE': 'VARCHAR',
