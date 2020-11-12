@@ -435,7 +435,7 @@ class DBTVAULTGenerator:
             't_link': self.t_link
         }
         if vault_structure == 'stage':
-            generator_functions[vault_structure](model_name)
+            generator_functions[vault_structure](model_name=model_name, config=config)
         else:
             generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
@@ -446,11 +446,14 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        template = """
-        {{ dbtvault.stage(include_source_columns=var('include_source_columns', none),
-                          source_model=var('source_model', none),
-                          hashed_columns=var('hashed_columns', none),
-                          derived_columns=var('derived_columns', none)) }}
+        config_string = self.format_config_str(config)
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        {{{{ dbtvault.stage(include_source_columns=var('include_source_columns', none),
+                            source_model=var('source_model', none),
+                            hashed_columns=var('hashed_columns', none),
+                            derived_columns=var('derived_columns', none)) }}}}
         """
 
         self.template_to_file(template, model_name)
