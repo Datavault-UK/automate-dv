@@ -11,7 +11,7 @@ class TestStageMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_from_yaml_with_source_style(self):
         process_logs_stg = self.dbt_test_utils.run_dbt_model(mode='run', model_name='raw_source_table')
@@ -21,7 +21,7 @@ class TestStageMacro(TestCase):
 
         assert 'Done' in process_logs
         assert 'Done' in process_logs_stg
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_for_only_source_columns_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
@@ -29,7 +29,7 @@ class TestStageMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_for_only_source_columns_and_missing_flag_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
@@ -37,7 +37,7 @@ class TestStageMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_for_only_hashing_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
@@ -45,7 +45,7 @@ class TestStageMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_for_only_derived_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
@@ -53,7 +53,7 @@ class TestStageMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
@@ -61,7 +61,7 @@ class TestStageMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_raises_error_with_missing_source(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)

@@ -12,7 +12,7 @@ class TestDeriveColumnsMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_derive_columns_correctly_generates_sql_without_source_columns(self):
         var_dict = {'columns': {'SOURCE': "!STG_BOOKING", 'LOADDATE': 'EFFECTIVE_FROM'}}
@@ -22,7 +22,7 @@ class TestDeriveColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_derive_columns_correctly_generates_sql_with_only_source_columns(self):
         var_dict = {'source_model': 'raw_source'}
@@ -33,4 +33,4 @@ class TestDeriveColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)

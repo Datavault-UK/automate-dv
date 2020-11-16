@@ -10,7 +10,7 @@ class TestHubMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_single_source_multi_nk(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, full_refresh=True)
@@ -18,7 +18,7 @@ class TestHubMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_single_source(self):
         process_logs_first_run = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name,
@@ -29,7 +29,7 @@ class TestHubMacro:
 
         assert 'Done' in process_logs_first_run
         assert 'Done' in process_logs_inc_run
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_single_source_multi_nk(self):
         process_logs_first_run = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name,
@@ -40,7 +40,7 @@ class TestHubMacro:
 
         assert 'Done' in process_logs_first_run
         assert 'Done' in process_logs_inc_run
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_multi_source(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, full_refresh=True)
@@ -48,7 +48,7 @@ class TestHubMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_multi_source(self):
         process_logs_first_run = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name,
@@ -59,7 +59,7 @@ class TestHubMacro:
 
         assert 'Done' in process_logs_first_run
         assert 'Done' in process_logs_inc_run
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hub_macro_correctly_generates_sql_for_incremental_multi_source_multi_nk(self):
         process_logs_first_run = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name,
@@ -70,4 +70,4 @@ class TestHubMacro:
 
         assert 'Done' in process_logs_first_run
         assert 'Done' in process_logs_inc_run
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
