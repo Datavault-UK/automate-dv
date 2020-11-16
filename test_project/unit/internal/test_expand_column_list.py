@@ -12,7 +12,7 @@ class TestExpandColumnListMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_expand_column_list_correctly_generates_list_with_extra_nesting(self):
         var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', ['BOOKING_FK', 'TEST_COLUMN']]]}
@@ -22,7 +22,7 @@ class TestExpandColumnListMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_expand_column_list_correctly_generates_list_with_no_nesting(self):
         var_dict = {'columns': ['CUSTOMER_PK', 'ORDER_FK', 'BOOKING_FK']}
@@ -32,7 +32,7 @@ class TestExpandColumnListMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_expand_column_list_raises_error_with_missing_columns(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)

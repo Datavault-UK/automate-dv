@@ -13,7 +13,7 @@ class TestHashColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns(self):
         var_dict = {
@@ -24,7 +24,7 @@ class TestHashColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns(self):
         var_dict = {
@@ -37,7 +37,7 @@ class TestHashColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns(self):
         var_dict = {
@@ -51,7 +51,7 @@ class TestHashColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
         var_dict = {
@@ -64,7 +64,7 @@ class TestHashColumnsMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sql_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
@@ -72,7 +72,7 @@ class TestHashColumnsMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
@@ -80,7 +80,7 @@ class TestHashColumnsMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_raises_warning_if_mapping_without_hashdiff(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
@@ -90,4 +90,4 @@ class TestHashColumnsMacro:
                           "but did not provide the 'is_hashdiff' flag. Use list syntax for PKs."
 
         assert warning_message in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)

@@ -12,4 +12,4 @@ class TestAsConstantMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        self.assertEqual(actual_sql, expected_sql)
+        self.assertEqual(expected_sql, actual_sql)
