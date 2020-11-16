@@ -26,9 +26,6 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
-SELECT
-
-{# Create relation object from provided source_model -#}
 {% if source_model is mapping and source_model is not none -%}
 
     {%- set source_name = source_model | first -%}
@@ -40,29 +37,53 @@ SELECT
 
     {%- set source_relation = ref(source_model) -%}
 {%- endif -%}
-
-{#- Hash columns, if provided -#}
-{% if hashed_columns is defined and hashed_columns is not none -%}
-    
-    {{ dbtvault.hash_columns(columns=hashed_columns) -}}
-    {{ "," if derived_columns is defined and source_relation is defined and include_source_columns }}
-
-{% endif -%}
-
-{#- Derive additional columns, if provided -#}
-{%- if derived_columns is defined and derived_columns is not none -%}
-
-    {%- if include_source_columns -%}
-    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) }}
-    {%- else -%}
-    {{ dbtvault.derive_columns(columns=derived_columns) }}
-    {%- endif -%}
 {#- If source relation is defined but derived_columns is not, add columns from source model. -#}
-{%- elif source_relation is defined and include_source_columns is true -%}
- 
-    {{ dbtvault.derive_columns(source_relation=source_relation) }}
-{%- endif %}
+WITH stage AS (
+    SELECT
+{% if source_relation is defined  %}
+    {{ dbtvault.derive_columns(source_relation=source_relation) | indent(4) }}
+{% endif %}
+    FROM {{ source_relation }}
+),
 
-FROM {{ source_relation }}
+{# Derive additional columns, if provided -#}
+derived_columns AS (
+    SElECT {% if hashed_columns is defined or include_source_columns is not false -%}
+
+        *
+
+    {%- endif -%}
+    {%- if derived_columns is defined and derived_columns is not none  -%}
+    ,
+
+    {{dbtvault.derive_columns(columns=derived_columns)| indent(4)}}
+
+    {%- endif %}
+
+    FROM stage
+),
+{# Hash columns, if provided #}
+hashed_columns AS (
+    SELECT {% if derived_columns is defined or source_columns is not none -%}
+
+              *
+
+           {%- endif -%}
+    {%- if hashed_columns is defined and hashed_columns is not none -%}
+        {%- if derived_columns is defined or source_columns is not none -%}
+
+            ,
+
+        {%- endif %}
+
+    {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
+
+    {%- endif %}
+
+    FROM derived_columns
+)
+
+SELECT * FROM hashed_columns
+
 
 {%- endmacro -%}

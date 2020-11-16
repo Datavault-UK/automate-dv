@@ -1,5 +1,6 @@
 WITH stage AS (
     SELECT
+
     BOOKING_FK,
     ORDER_FK,
     CUSTOMER_PK,
@@ -19,19 +20,19 @@ WITH stage AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9
 
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_table
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
-
 
 derived_columns AS (
     SElECT *
+
     FROM stage
 ),
 
 hashed_columns AS (
     SELECT *
-    FROM derived_stage
+
+    FROM derived_columns
 )
 
 SELECT * FROM hashed_columns
-
