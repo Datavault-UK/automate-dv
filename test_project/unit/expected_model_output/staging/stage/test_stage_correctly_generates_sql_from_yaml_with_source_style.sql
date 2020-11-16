@@ -1,7 +1,8 @@
 WITH stage AS (
     SELECT
-    CUSTOMER_ID,
+
     LOADDATE,
+    CUSTOMER_ID,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
     NATIONALITY,
@@ -14,19 +15,22 @@ WITH stage AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9
+
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_table
 ),
 
-
 derived_columns AS (
     SElECT *,
+
     'STG_BOOKING' AS SOURCE,
     LOADDATE AS EFFECTIVE_FROM
+
     FROM stage
 ),
 
 hashed_columns AS (
     SELECT *,
+
     CAST((MD5_BINARY(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''))) AS BINARY(16)) AS CUSTOMER_PK,
     CAST(MD5_BINARY(CONCAT(
         IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_DOB AS VARCHAR))), ''), '^^'), '||',
@@ -39,8 +43,7 @@ hashed_columns AS (
         IFNULL(NULLIF(UPPER(TRIM(CAST(PHONE AS VARCHAR))), ''), '^^') ))
     AS BINARY(16)) AS CUSTOMER_HASHDIFF
 
-    FROM derived_stage
+    FROM derived_columns
 )
 
 SELECT * FROM hashed_columns
-
