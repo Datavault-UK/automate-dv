@@ -1,8 +1,9 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-class TestHashMacro:
+class TestHashMacro(TestCase):
 
     def test_hash_single_column_is_successful(self):
         var_dict = {'columns': "CUSTOMER_ID", 'alias': 'CUSTOMER_PK'}

@@ -1,8 +1,9 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-class TestHashColumnsMacro:
+class TestHashColumnsMacro(TestCase):
 
     def test_hash_columns_correctly_generates_hashed_columns_for_single_columns(self):
         var_dict = {
