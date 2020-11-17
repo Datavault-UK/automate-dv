@@ -4,6 +4,7 @@ from unittest import TestCase
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
 class TestAsConstantMacro(TestCase):
+    maxDiff = None
 
     def test_as_constant_single_correctly_generates_string(self):
         var_dict = {'column_str': '!STG_BOOKING'}

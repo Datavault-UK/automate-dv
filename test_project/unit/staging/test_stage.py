@@ -4,6 +4,7 @@ from unittest import TestCase
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database', 'run_seeds')
 class TestStageMacro(TestCase):
+    maxDiff = None
 
     def test_stage_correctly_generates_sql_from_yaml(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
