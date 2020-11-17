@@ -4,6 +4,7 @@ from unittest import TestCase
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database', 'run_seeds')
 class TestDeriveColumnsMacro(TestCase):
+    maxDiff = None
 
     def test_derive_columns_correctly_generates_sql_with_source_columns(self):
         var_dict = {'source_model': 'raw_source', 'columns': {'SOURCE': "!STG_BOOKING", 'EFFECTIVE_FROM': 'LOADDATE'}}

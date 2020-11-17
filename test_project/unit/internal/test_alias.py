@@ -4,6 +4,7 @@ from unittest import TestCase
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
 class TestAliasMacro(TestCase):
+    maxDiff = None
 
     def test_alias_single_correctly_generates_sql(self):
         var_dict = {'alias_config': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
