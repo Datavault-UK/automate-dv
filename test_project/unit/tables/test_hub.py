@@ -1,8 +1,9 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database', 'run_seeds')
-class TestHubMacro:
+class TestHubMacro(TestCase):
 
     def test_hub_macro_correctly_generates_sql_for_single_source(self):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, full_refresh=True)

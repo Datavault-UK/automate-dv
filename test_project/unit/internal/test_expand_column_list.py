@@ -1,8 +1,9 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-class TestExpandColumnListMacro:
+class TestExpandColumnListMacro(TestCase):
 
     def test_expand_column_list_correctly_generates_list_with_nesting(self):
         var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', 'BOOKING_FK']]}
