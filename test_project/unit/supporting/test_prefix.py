@@ -1,8 +1,10 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-class TestPrefixMacro:
+class TestPrefixMacro(TestCase):
+    maxDiff = None
 
     def test_prefix_column_in_single_item_list_is_successful(self):
         var_dict = {'columns': ["CUSTOMER_HASHDIFF"], 'prefix': 'c'}
