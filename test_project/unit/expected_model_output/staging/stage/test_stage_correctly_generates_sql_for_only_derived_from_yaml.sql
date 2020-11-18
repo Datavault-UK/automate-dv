@@ -20,14 +20,14 @@ WITH stage AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9
 
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_table
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
 derived_columns AS (
     SElECT
 
     'STG_BOOKING' AS SOURCE,
-    LOADDATE AS EFFECTIVE_FROM
+    LOAD_DATETIME AS EFFECTIVE_FROM
 
     FROM stage
 ),
