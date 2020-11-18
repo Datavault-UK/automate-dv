@@ -50,15 +50,14 @@ WITH stage AS (
 derived_columns AS (
     SElECT
 
-
     {%- if derived_columns is defined and derived_columns is not none -%}
-        {%- if include_source_columns %}
+        {%- if include_source_columns or hashed_columns is defined and hashed_columns is not none %}
 
     {{  dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns)  | indent(width=4 , first=false) }}
-
-         {%- else %}
+        {%- else %}
 
     {{ dbtvault.derive_columns(columns=derived_columns) | indent(4)}}
+
 
         {%- endif -%}
 
@@ -66,7 +65,7 @@ derived_columns AS (
 
     {%- else -%}
 
-        {{  " " + '*'}}
+        {{ " *" }}
 
     {%- endif %}
 
@@ -76,20 +75,17 @@ derived_columns AS (
 {# Hash columns, if provided -#}
 hashed_columns AS (
     SELECT
-
-
-
-    {%- if derived_columns is defined and derived_columns is not none or include_source_columns -%}
-           {{  " " + '*'}}
-            {%- if hashed_columns is defined and hashed_columns is not none -%}
-                    ,
-            {%- endif %}
-    {%- endif %}
-
     {%- if hashed_columns is defined and hashed_columns is not none %}
+        {{- " *," if include_source_columns -}}
+        {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
+
+    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4)}},
+        {%- endif %}
 
     {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
 
+    {%- else  -%}
+    {{ " *" }}
     {%- endif %}
 
     FROM derived_columns
@@ -99,3 +95,4 @@ SELECT * FROM hashed_columns
 
 
 {%- endmacro -%}
+
