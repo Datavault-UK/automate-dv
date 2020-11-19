@@ -10,13 +10,13 @@ Feature: Staging
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I have hashed columns in the hashed stage model
-      | CUSTOMER_PK | HASHDIFF                                  |
-      | CUSTOMER_ID | CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE |
-    And I have derived columns in the hashed stage model
+    And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
-    When I process the RAW_STAGE table
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I hash the stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE |

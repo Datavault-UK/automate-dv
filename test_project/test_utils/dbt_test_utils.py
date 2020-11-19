@@ -293,6 +293,7 @@ class DBTTestUtils:
         table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
         table_df = table_df.apply(self.calc_hash)
+        table_df = table_df.apply(self.parse_hashdiffs)
 
         table_df = table_df.replace("<null>", NaN)
 
@@ -401,6 +402,26 @@ class DBTTestUtils:
 
         return Series(hashed_list)
 
+    @staticmethod
+    def parse_hashdiffs(columns_as_series) -> Series:
+
+        pattern = r"^(?:hashdiff\(')(.*)(?:'\))"
+
+        columns = []
+
+        for item in columns_as_series:
+
+            if re.search(pattern, item):
+                raw_item = re.findall(pattern, item)[0]
+                split_item = str(raw_item).split(",")
+                hashdiff_dict = {'is_hashdiff': True,
+                                 'columns': split_item}
+                columns.append(hashdiff_dict)
+            else:
+                columns.append(item)
+
+        return Series(columns)
+
 
 class DBTVAULTGenerator:
     """Functions to generate dbtvault Models"""
@@ -439,21 +460,39 @@ class DBTVAULTGenerator:
         else:
             generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
-    def stage(self, model_name, config=None):
+    def stage(self, model_name, source_model: dict, hashed_columns=None, derived_columns=None,
+              include_source_columns=True, config=None):
         """
         Generate a stage model template
             :param model_name: Name of the model file
+            :param source_model: Model to select from
+            :param hashed_columns: Dictionary of hashed columns, can be None
+            :param derived_columns: Dictionary of derived column, can be None
+            :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param config: Optional model config
         """
+
+        if not config:
+            config = {'materialized': 'view'}
+
+        if hashed_columns:
+            hashed_columns = str(hashed_columns)
+        else:
+            hashed_columns = "none"
+
+        if derived_columns:
+            derived_columns = str(derived_columns)
+        else:
+            derived_columns = "none"
 
         config_string = self.format_config_str(config)
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.stage(include_source_columns=var('include_source_columns', none),
-                            source_model=var('source_model', none),
-                            hashed_columns=var('hashed_columns', none),
-                            derived_columns=var('derived_columns', none)) }}}}
+        {{{{ dbtvault.stage(include_source_columns={include_source_columns},
+                            source_model='{source_model}',
+                            hashed_columns={hashed_columns},
+                            derived_columns={derived_columns}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -672,7 +711,8 @@ class DBTVAULTGenerator:
             "models": [{
                 "name": target_model_name, "tests": [{
                     "assert_data_equal_to_expected": {
-                        "expected_seed": expected_output_csv, "unique_id": unique_id,
+                        "expected_seed": expected_output_csv,
+                        "unique_id": unique_id,
                         "compare_columns": compare_columns}}]}]}
 
         return test_yaml

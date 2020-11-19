@@ -3,7 +3,7 @@ from behave import fixture
 from test_project.test_utils.dbt_test_utils import *
 
 """
-The fixtures here are used to supply runtime metadata to tests, in place of metadata usually provided via vars or a YAML config
+The fixtures here are used to supply runtime metadata to tests, which are provided to the model generator.
 """
 
 
@@ -45,6 +45,14 @@ def staging(context):
     Define the structures and metadata to load a hashed staging layer
     """
 
+    context.vault_structure_columns = {
+        'STG_CUSTOMER': {
+            'src_pk': 'CUSTOMER_PK',
+            'columns': ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'LOAD_DATE', 'CUSTOMER_PK', 'HASHDIFF',
+                        'EFFECTIVE_FROM', 'SOURCE']
+        }
+    }
+
     context.seed_config = {
 
         'STG_CUSTOMER': {
@@ -79,7 +87,7 @@ def single_source_hub(context):
     Define the structures and metadata to load single-source hubs
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE': {
             'CUSTOMER_PK': 'CUSTOMER_ID'
         }
@@ -120,7 +128,7 @@ def multi_source_hub(context):
     Define the structures and metadata to load multi-source hubs
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE_PARTS': {
             'PART_PK': 'PART_ID'
         },
@@ -196,7 +204,7 @@ def single_source_link(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE': {
             'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
             'CUSTOMER_FK': 'CUSTOMER_ID',
@@ -243,7 +251,7 @@ def multi_source_link(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE_SAP': {
             'CUSTOMER_NATION_PK': ['CUSTOMER_ID', 'NATION_ID'],
             'CUSTOMER_FK': 'CUSTOMER_ID',
@@ -322,7 +330,7 @@ def satellite(context):
     Define the structures and metadata to load satellites
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE': {
             'CUSTOMER_PK': 'CUSTOMER_ID',
             'HASHDIFF': {'is_hashdiff': True,
@@ -330,7 +338,7 @@ def satellite(context):
         }
     }
 
-    context.derived_mapping = {
+    context.derived_columns = {
         'RAW_STAGE': {
             'EFFECTIVE_FROM': 'LOAD_DATE'
         }
@@ -379,7 +387,7 @@ def satellite_cycle(context):
     Define the structures and metadata to perform load cycles for satellites
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE':
             {'CUSTOMER_PK': 'CUSTOMER_ID',
              'HASHDIFF': {'is_hashdiff': True,
@@ -388,7 +396,7 @@ def satellite_cycle(context):
              }
     }
 
-    context.derived_mapping = {
+    context.derived_columns = {
         'RAW_STAGE': {
             'EFFECTIVE_FROM': 'LOAD_DATE'
         }
@@ -446,7 +454,7 @@ def t_link(context):
     Define the structures and metadata to load transactional links
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE': {
             'TRANSACTION_PK': ['CUSTOMER_ID', 'ORDER_ID', 'TRANSACTION_NUMBER'],
             'CUSTOMER_FK': 'CUSTOMER_ID',
@@ -454,7 +462,7 @@ def t_link(context):
         }
     }
 
-    context.derived_mapping = {
+    context.derived_columns = {
         'RAW_STAGE': {
             'EFFECTIVE_FROM': 'TRANSACTION_DATE'
         }
@@ -508,7 +516,7 @@ def eff_satellite(context):
     Define the structures and metadata to load effectivity satellites
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE': {
             'CUSTOMER_ORDER_PK': ['CUSTOMER_ID', 'ORDER_ID'],
             'CUSTOMER_PK': 'CUSTOMER_ID',
@@ -561,7 +569,7 @@ def eff_satellite_multipart(context):
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE': {
             'CUSTOMER_ORDER_PK': ['CUSTOMER_ID', 'ORDER_ID', 'NATION_ID', 'PLATFORM_ID', 'ORGANISATION_ID'],
             'CUSTOMER_PK': 'CUSTOMER_ID',
@@ -623,7 +631,7 @@ def cycle(context):
     Define the structures and metadata to perform vault load cycles
     """
 
-    context.hash_mapping_config = {
+    context.hashed_columns = {
         'RAW_STAGE_CUSTOMER': {
             'CUSTOMER_PK': 'CUSTOMER_ID',
             'HASHDIFF': {'is_hashdiff': True,
@@ -649,7 +657,7 @@ def cycle(context):
         }
     }
 
-    context.derived_mapping = {
+    context.derived_columns = {
         'RAW_STAGE_CUSTOMER': {
             'EFFECTIVE_FROM': 'LOAD_DATE'
         },
