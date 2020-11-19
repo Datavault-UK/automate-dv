@@ -310,3 +310,21 @@ def expect_data(context, model_name):
     logs = context.dbt_test_utils.run_dbt_command(['dbt', 'test'])
 
     assert '1 of 1 PASS' in logs
+
+
+@step("I have hashed columns in the hashed stage model")
+def hashed_columns(context):
+    context.hashed_mapping_config = context.dbt_test_utils.context_table_to_dict(table=context.table)
+
+
+@step("I have derived columns in the hashed stage model")
+def derive_columns(context):
+    context.derived_mapping = context.dbt_test_utils.context_table_to_dict(table=context.table)
+
+
+@when("I process the RAW_STAGE table")
+def process_raw_stage(context):
+    dbtvault_generator.raw_vault_structure(model_name="STG_CUSTOMER",
+                                           vault_structure="stage",
+                                           config=config,
+                                           **metadata)
