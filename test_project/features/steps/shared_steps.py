@@ -255,32 +255,48 @@ def create_csv(context, raw_stage_model_name):
 
 
 @step("I hash the stage")
-def stage(context):
-    hashed_model_name = f'{context.raw_stage_models}_hashed'
+def stage_processing(context):
+    if hasattr(context, 'hashed_stage_name'):
+        hashed_stage_name = context.hashed_stage_name
+    else:
+        hashed_stage_name = f'{context.raw_stage_models}_hashed'
 
-    dbtvault_generator.stage(hashed_model_name)
+    if hasattr(context, 'exclude_source_columns'):
+        include_source_columns = False
+    else:
+        include_source_columns = True
 
-    stage_args = {
-        'source_model': context.raw_stage_models,
-        'hashed_columns': context.hash_mapping_config[context.raw_stage_model_name]}
+    if hasattr(context, 'hashed_columns'):
+        hashed_columns_dict = context.hashed_columns
+    else:
+        hashed_columns_dict = None
 
-    if hasattr(context, 'derived_mapping'):
-        stage_args['derived_columns'] = context.derived_mapping[context.raw_stage_model_name]
+    if hasattr(context, 'derived_columns'):
+        derived_columns_dict = context.derived_columns
+    else:
+        derived_columns_dict = None
 
+    dbtvault_generator.stage(model_name=hashed_stage_name,
+                             source_model=context.raw_stage_models,
+                             hashed_columns=hashed_columns_dict,
+                             derived_columns=derived_columns_dict,
+                             include_source_columns=include_source_columns)
+
+    stage_args = None
     if hasattr(context, 'hashing'):
         if context.hashing == 'sha':
-            stage_args['hash'] = 'SHA'
+            stage_args = {'hash': 'SHA'}
 
-    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_model_name, args=stage_args)
+    logs = context.dbt_test_utils.run_dbt_model(mode='run', model_name=hashed_stage_name, args=stage_args)
 
     if hasattr(context, 'hashed_stage_model_name'):
 
         context.hashed_stage_model_name = context.dbt_test_utils.process_hashed_stage_names(
             context.hashed_stage_model_name,
-            hashed_model_name)
+            hashed_stage_name)
 
     else:
-        context.hashed_stage_model_name = hashed_model_name
+        context.hashed_stage_model_name = hashed_stage_name
 
     assert 'Completed successfully' in logs
 
@@ -290,7 +306,10 @@ def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                            model_name=f'{model_name}_expected')
 
-    metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
+    if hasattr(context, 'vault_structure_columns'):
+        metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
+    else:
+        metadata = None
 
     ignore_columns = context.dbt_test_utils.find_columns_to_ignore(context.table)
 
@@ -312,19 +331,20 @@ def expect_data(context, model_name):
     assert '1 of 1 PASS' in logs
 
 
-@step("I have hashed columns in the hashed stage model")
-def hashed_columns(context):
-    context.hashed_mapping_config = context.dbt_test_utils.context_table_to_dict(table=context.table)
+@step("I have hashed columns in the {hashed_stage_name} model")
+def hashed_columns(context, hashed_stage_name):
+    context.hashed_stage_name = hashed_stage_name
+    context.hashed_columns = context.dbt_test_utils.context_table_to_dict(table=context.table,
+                                                                          orient="records")[0]
 
 
-@step("I have derived columns in the hashed stage model")
-def derive_columns(context):
-    context.derived_mapping = context.dbt_test_utils.context_table_to_dict(table=context.table)
+@step("I have derived columns in the {hashed_stage_name} model")
+def derive_columns(context, hashed_stage_name):
+    context.hashed_stage_name = hashed_stage_name
+    context.derived_columns = context.dbt_test_utils.context_table_to_dict(table=context.table,
+                                                                           orient="records")[0]
 
 
-@when("I process the RAW_STAGE table")
-def process_raw_stage(context):
-    dbtvault_generator.raw_vault_structure(model_name="STG_CUSTOMER",
-                                           vault_structure="stage",
-                                           config=config,
-                                           **metadata)
+@step("I do not include source columns")
+def source_columns(context):
+    context.exclude_source_columns = False
