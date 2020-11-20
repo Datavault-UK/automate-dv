@@ -845,3 +845,201 @@ def enable_full_refresh(context):
     Enable full refresh for a dbt run
     """
     context.full_refresh = True
+
+
+@fixture
+def staging_hashdiff_of_derived_columns(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.vault_structure_columns = {
+        'STG_CUSTOMER': {
+            'src_pk': 'CUSTOMER_PK',
+            'columns': ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'LOAD_DATE', 'CUSTOMER_PK', 'HASHDIFF',
+                        'CUSTOMER_DOB_UK', 'EFFECTIVE_FROM', 'SOURCE']
+        }
+    }
+
+    context.seed_config = {
+
+        'STG_CUSTOMER': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR',
+                'CUSTOMER_DOB_UK': 'VARCHAR',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'HASHDIFF': 'BINARY(16)',
+                'EFFECTIVE_FROM': 'DATE'
+            }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
+def staging_only_source_columns_and_hashed(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.vault_structure_columns = {
+        'STG_CUSTOMER': {
+            'src_pk': 'CUSTOMER_PK',
+            'columns': ['CUSTOMER_ID', 'CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'LOAD_DATE', 'CUSTOMER_PK',
+                        'HASHDIFF']
+        }
+    }
+
+    context.seed_config = {
+
+        'STG_CUSTOMER': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'HASHDIFF': 'BINARY(16)'
+            }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
+def staging_only_source_and_derived(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.vault_structure_columns = {
+        'STG_CUSTOMER': {
+            'src_pk': 'CUSTOMER_ID',
+            'columns': ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'LOAD_DATE',
+                        'EFFECTIVE_FROM', 'SOURCE']
+        }
+    }
+
+    context.seed_config = {
+
+        'STG_CUSTOMER': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR',
+                'EFFECTIVE_FROM': 'DATE'
+            }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
+def staging_only_derived(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.vault_structure_columns = {
+        'STG_CUSTOMER': {
+            'src_pk': 'EFFECTIVE_FROM',
+            'columns': ['EFFECTIVE_FROM', 'SOURCE']
+        }
+    }
+
+    context.seed_config = {
+
+        'STG_CUSTOMER': {
+            'column_types': {
+                'SOURCE': 'VARCHAR',
+                'EFFECTIVE_FROM': 'DATE'
+            }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
+
+
+@fixture
+def staging_only_hashed(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.vault_structure_columns = {
+        'STG_CUSTOMER': {
+            'src_pk': 'CUSTOMER_PK',
+            'columns': ['CUSTOMER_PK', 'HASHDIFF']
+        }
+    }
+
+    context.seed_config = {
+
+        'STG_CUSTOMER': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR',
+                'CUSTOMER_PK': 'BINARY(16)',
+                'HASHDIFF': 'BINARY(16)'
+
+            }
+        },
+        'RAW_STAGE': {
+            'column_types': {
+                'CUSTOMER_ID': 'VARCHAR',
+                'CUSTOMER_NAME': 'VARCHAR',
+                'CUSTOMER_DOB': 'VARCHAR',
+                'CUSTOMER_PHONE': 'VARCHAR',
+                'LOAD_DATE': 'DATE',
+                'SOURCE': 'VARCHAR'
+            }
+        }
+    }
