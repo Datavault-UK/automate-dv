@@ -24,7 +24,7 @@ Feature: Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_hashdiff_of_derived_columns
+  @fixture.staging
   Scenario: Staging where a derived column is used as a component in the hashdiff
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -47,7 +47,7 @@ Feature: Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018      |
 
-  @fixture.staging_only_source_columns_and_hashed
+  @fixture.staging
   Scenario: Staging with only source and hashed columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -67,7 +67,7 @@ Feature: Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   |
 
-  @fixture.staging_only_source_and_derived
+  @fixture.staging
   Scenario: Staging with only source and derived columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -111,7 +111,7 @@ Feature: Staging
       | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      |
       | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018      |
 
-  @fixture.staging_only_derived
+  @fixture.staging
   Scenario: Staging for only derived columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -132,7 +132,7 @@ Feature: Staging
       | 1993-01-01     | RAW_STAGE |
       | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_only_hashed
+  @fixture.staging
   Scenario: Staging for only hashed columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data

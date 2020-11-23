@@ -647,11 +647,14 @@ class DBTVAULTGenerator:
         if not config:
             config = {'materialized': 'incremental'}
 
+        if isinstance(src_fk, str):
+            src_fk = f"'{src_fk}'"
+
         config_string = self.format_config_str(config)
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.t_link('{src_pk}', '{src_fk}', {src_payload}, '{src_eff}',
+        {{{{ dbtvault.t_link('{src_pk}', {src_fk}, {src_payload}, '{src_eff}',
                              '{src_ldts}', '{src_source}', '{source_model}')   }}}}
         """
 
@@ -698,13 +701,12 @@ class DBTVAULTGenerator:
             yaml.dump(project_file, f)
 
     @staticmethod
-    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata, ignore_columns):
+    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
+                                      ignore_columns):
 
-        meta_to_ignore = ["source_model", "link_model", "src_dfk", "src_sfk"]
+        extracted_compare_columns = [k for k, v in columns_to_compare.items()]
 
-        extracted_compare_columns = [v for k, v in metadata.items() if k not in meta_to_ignore]
-
-        compare_columns = list(
+        columns_to_compare = list(
             [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
 
         test_yaml = {
@@ -713,7 +715,7 @@ class DBTVAULTGenerator:
                     "assert_data_equal_to_expected": {
                         "expected_seed": expected_output_csv,
                         "unique_id": unique_id,
-                        "compare_columns": compare_columns}}]}]}
+                        "compare_columns": columns_to_compare}}]}]}
 
         return test_yaml
 

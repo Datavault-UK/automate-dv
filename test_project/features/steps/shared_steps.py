@@ -28,21 +28,19 @@ def set_stage_metadata(context, model_name) -> dict:
 
     context.hashing = getattr(context, "hashing", "MD5")
 
-    if hasattr(context, "hashed_columns"):
-        if context.hashed_columns.get(model_name, None):
-            context.hashed_columns = context.hashed_columns[model_name]
-        else:
-            context.hashed_columns = dict()
-    else:
+    if not getattr(context, "hashed_columns", None):
         context.hashed_columns = dict()
-
-    if hasattr(context, "derived_columns"):
-        if context.derived_columns.get(model_name, None):
-            context.derived_columns = context.derived_columns[model_name]
-        else:
-            context.derived_columns = dict()
+        context.hashed_columns[model_name] = dict()
     else:
+        if not context.hashed_columns.get(model_name, None):
+            context.hashed_columns[model_name] = dict()
+
+    if not getattr(context, "derived_columns", None):
         context.derived_columns = dict()
+        context.derived_columns[model_name] = dict()
+    else:
+        if not context.derived_columns.get(model_name, None):
+            context.derived_columns[model_name] = dict()
 
     dbt_vars = {
         "include_source_columns": context.include_source_columns,
@@ -305,10 +303,10 @@ def stage_processing(context, processed_stage_name):
 
     args = {k: v for k, v in stage_metadata.items() if k == "hash"}
 
-    dbtvault_generator.stage(model_name=context.processed_stage_name,
+    dbtvault_generator.stage(model_name=processed_stage_name,
                              source_model=context.raw_stage_models,
-                             hashed_columns=context.hashed_columns,
-                             derived_columns=context.derived_columns,
+                             hashed_columns=context.hashed_columns[processed_stage_name],
+                             derived_columns=context.derived_columns[processed_stage_name],
                              include_source_columns=context.include_source_columns)
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
@@ -322,17 +320,15 @@ def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                            model_name=f"{model_name}_expected")
 
-    if hasattr(context, "vault_structure_columns"):
-        metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
-    else:
-        metadata = None
+    columns_to_compare = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="records")[0]
+    unique_id = [k for k, v in columns_to_compare.items()][0]
 
     ignore_columns = context.dbt_test_utils.find_columns_to_ignore(context.table)
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv_name,
-                                                                 unique_id=metadata["src_pk"],
-                                                                 metadata=metadata,
+                                                                 unique_id=unique_id,
+                                                                 columns_to_compare=columns_to_compare,
                                                                  ignore_columns=ignore_columns)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)

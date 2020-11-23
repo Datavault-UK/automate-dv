@@ -18,13 +18,7 @@ fixture_registry = {
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.t_link": t_link,
-    "fixture.cycle": cycle,
-    "fixture.staging_hashdiff_of_derived_columns": staging_hashdiff_of_derived_columns,
-    "fixture.staging_only_source_columns_and_hashed": staging_only_source_columns_and_hashed,
-    "fixture.staging_only_source_and_derived": staging_only_source_and_derived,
-    "fixture.staging_only_derived": staging_only_derived,
-    "fixture.staging_only_hashed": staging_only_hashed
-
+    "fixture.cycle": cycle
 }
 
 
