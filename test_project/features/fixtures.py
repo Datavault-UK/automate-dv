@@ -509,7 +509,7 @@ def eff_satellite(context):
     """
 
     context.hashed_columns = {
-        "RAW_STAGE": {
+        "STG_CUSTOMER": {
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID"
