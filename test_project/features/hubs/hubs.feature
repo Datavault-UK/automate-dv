@@ -437,6 +437,7 @@ Feature: Hubs
       | 1004    | 6           | 3        | 101.40     | 1993-01-02 | SUPP   |
       | 1005    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
+    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
@@ -448,7 +449,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_LINEITEM stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |

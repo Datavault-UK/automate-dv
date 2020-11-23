@@ -13,7 +13,7 @@ Feature: Satellites Loaded using Period Materialization
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                           | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -44,7 +44,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day
     And I use insert_by_period to load the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
@@ -91,7 +91,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -143,7 +143,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | 1013        | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -200,7 +200,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -247,7 +247,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06
     And I use insert_by_period to load the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06
     Then the SATELLITE table should contain expected data
@@ -285,7 +285,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -333,7 +333,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | 1013        | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06
 
     # =============== CHECKS ===================
@@ -391,7 +391,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-05
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -435,7 +435,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -483,7 +483,7 @@ Feature: Satellites Loaded using Period Materialization
       | 1007        | Geoff         | 1990-02-03   | 2019-08-07     | 2019-08-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-08-07     | 2019-08-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-08-07     | 2019-08-07 | *      |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     And I use insert_by_period to load the SATELLITE sat by month
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

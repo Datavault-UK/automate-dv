@@ -24,6 +24,7 @@
       </ENTRIES>
     </EXTENSION>
     <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/links/t_links.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/links/t_links_period_mat.feature" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
