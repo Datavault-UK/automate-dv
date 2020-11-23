@@ -320,17 +320,15 @@ def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                            model_name=f"{model_name}_expected")
 
-    if hasattr(context, "vault_structure_columns"):
-        metadata = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
-    else:
-        metadata = None
+    columns_to_compare = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="records")[0]
+    unique_id = [k for k, v in columns_to_compare.items()][0]
 
     ignore_columns = context.dbt_test_utils.find_columns_to_ignore(context.table)
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv_name,
-                                                                 unique_id=metadata["src_pk"],
-                                                                 metadata=metadata,
+                                                                 unique_id=unique_id,
+                                                                 columns_to_compare=columns_to_compare,
                                                                  ignore_columns=ignore_columns)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
