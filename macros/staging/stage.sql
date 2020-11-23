@@ -53,15 +53,15 @@ derived_columns AS (
     {%- if derived_columns is defined and derived_columns is not none -%}
         {%- if include_source_columns or hashed_columns is defined and hashed_columns is not none %}
 
-    {{  dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns)  | indent(width=4 , first=false) }}
+    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns)  | indent(width=4 , first=false) }}
         {%- else %}
 
-    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4)}}
+    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
 
 
         {%- endif -%}
 
-    {#- If source relation is defined but derived_columns is not-#}
+    {#- If source relation is defined but derived_columns is not -#}
 
     {%- else -%}
 
