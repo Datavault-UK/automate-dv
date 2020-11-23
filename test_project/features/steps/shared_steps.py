@@ -297,7 +297,7 @@ def create_csv(context, raw_stage_model_name):
     assert "Completed successfully" in logs
 
 
-@step("I create the {processed_stage_name} stage(s)")
+@step("I create the {processed_stage_name} stage")
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, model_name=processed_stage_name)
 

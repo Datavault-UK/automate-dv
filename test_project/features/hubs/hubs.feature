@@ -2,7 +2,7 @@
 Feature: Hubs
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Simple load of stage(s) data into an empty hub
+  Scenario: [BASE-LOAD] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -13,7 +13,7 @@ Feature: Hubs
       | 1002        | Bob           | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -23,7 +23,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Simple load of distinct stage(s) data into an empty hub
+  Scenario: [BASE-LOAD] Simple load of distinct stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -34,7 +34,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -45,7 +45,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   @fixture.sha
-  Scenario: [BASE-LOAD-SHA] Simple load of distinct stage(s) data into an empty hub using SHA hashing
+  Scenario: [BASE-LOAD-SHA] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -56,7 +56,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -79,7 +79,7 @@ Feature: Hubs
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       | <null>      | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       |             | Chad          | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -89,7 +89,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD-EMPTY] Simple load of stage(s) data into an empty hub
+  Scenario: [BASE-LOAD-EMPTY] Simple load of stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -97,7 +97,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -107,7 +107,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD-EMPTY] Simple load of distinct stage(s) data into an empty hub
+  Scenario: [BASE-LOAD-EMPTY] Simple load of distinct stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -118,7 +118,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -141,7 +141,7 @@ Feature: Hubs
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       | <null>      | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       |             | Chad          | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -151,7 +151,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [POPULATED-LOAD] Load of stage(s) data into a hub
+  Scenario: [POPULATED-LOAD] Load of stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -162,7 +162,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -172,7 +172,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [POPULATED-LOAD] Load of distinct stage(s) data into a hub
+  Scenario: [POPULATED-LOAD] Load of distinct stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -188,7 +188,7 @@ Feature: Hubs
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -214,7 +214,7 @@ Feature: Hubs
       | 1004        | Dom           | 2018-04-13   | 1993-01-04 | TPCH   |
       | <null>      | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
       |             | Chad          | 2018-04-13   | 1993-01-02 | TPCH   |
-    And I create the STG_CUSTOMER stage(s)
+    And I create the STG_CUSTOMER stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -252,7 +252,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -296,7 +296,7 @@ Feature: Hubs
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
       | 10005    |         | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -336,7 +336,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -379,7 +379,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage
     And I load the HUB hub
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
@@ -402,7 +402,7 @@ Feature: Hubs
       | 10008    | 1008    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-03 | LINE   |
       | 10008    | 1008    | 11          | 1          | 2        | 10.00          | 1.00     | 1993-01-03 | LINE   |
       | 10009    | 1009    | 11          | 1          | 1        | 290.87         | 2.00     | 1993-01-03 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -496,7 +496,7 @@ Feature: Hubs
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
       | 10005    |         | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
-    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
