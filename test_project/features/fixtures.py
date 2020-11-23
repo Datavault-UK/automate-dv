@@ -562,7 +562,7 @@ def eff_satellite_multipart(context):
     """
 
     context.hashed_columns = {
-        "RAW_STAGE": {
+        "STG_CUSTOMER": {
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID", "NATION_ID", "PLATFORM_ID", "ORGANISATION_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "NATION_PK": "NATION_ID",
