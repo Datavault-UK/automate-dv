@@ -2,7 +2,7 @@
 Feature: Staging
 
   @fixture.staging
-  Scenario: Basic Staging
+  Scenario: Staging with derived, hashed and source columns.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -16,7 +16,7 @@ Feature: Staging
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK | HASHDIFF                                              |
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
-    When I hash the stage
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE |
@@ -37,9 +37,9 @@ Feature: Staging
       | EFFECTIVE_FROM | SOURCE     | CUSTOMER_DOB_UK                              |
       | LOAD_DATE      | !RAW_STAGE | TO_VARCHAR(CUSTOMER_DOB::date, 'DD/MM/YYYY') |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                     |
-      | CUSTOMER_ID | CUSTOMER_NAME,CUSTOMER_DOB_UK,CUSTOMER_PHONE |
-    When I hash the stage
+      | CUSTOMER_PK | HASHDIFF                                                 |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB_UK,CUSTOMER_PHONE') |
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_DOB_UK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('24-04-1997\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997      |
@@ -57,9 +57,9 @@ Feature: Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                  |
-      | CUSTOMER_ID | CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE |
-    When I hash the stage
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') |
@@ -79,7 +79,7 @@ Feature: Staging
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
-    When I hash the stage
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
@@ -100,10 +100,10 @@ Feature: Staging
       | EFFECTIVE_FROM | SOURCE     | CUSTOMER_DOB_UK                              |
       | LOAD_DATE      | !RAW_STAGE | TO_VARCHAR(CUSTOMER_DOB::date, 'DD/MM/YYYY') |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                     |
-      | CUSTOMER_ID | CUSTOMER_NAME,CUSTOMER_DOB_UK,CUSTOMER_PHONE |
+      | CUSTOMER_PK | HASHDIFF                                                 |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB_UK,CUSTOMER_PHONE') |
     And I do not include source columns
-    When I hash the stage
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_DOB_UK |
       | md5('1001') | md5('24-04-1997\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997      |
@@ -124,7 +124,7 @@ Feature: Staging
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
     And I do not include source columns
-    When I hash the stage
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | EFFECTIVE_FROM | SOURCE    |
       | 1993-01-01     | RAW_STAGE |
@@ -142,10 +142,10 @@ Feature: Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                  |
-      | CUSTOMER_ID | CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE |
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I do not include source columns
-    When I hash the stage
+    When I create the STG_CUSTOMER stage
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                      |
       | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') |
