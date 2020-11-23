@@ -15,7 +15,14 @@ def set_stage_metadata(context, model_name) -> dict:
         support providing the variables in the command line to dbt instead
     """
 
-    context.processed_stage_name = getattr(context, "processed_stage_name", model_name)
+    if hasattr(context, "processed_stage_name"):
+
+        context.processed_stage_name = context.dbt_test_utils.process_stage_names(
+            context.processed_stage_name,
+            model_name)
+
+    else:
+        context.processed_stage_name = model_name
 
     context.include_source_columns = getattr(context, "include_source_columns", True)
 
@@ -292,7 +299,7 @@ def create_csv(context, raw_stage_model_name):
     assert "Completed successfully" in logs
 
 
-@step("I create the {processed_stage_name} stage")
+@step("I create the {processed_stage_name} stage(s)")
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, model_name=processed_stage_name)
 
@@ -306,15 +313,6 @@ def stage_processing(context, processed_stage_name):
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
                                                 args=args)
-
-    if hasattr(context, "processed_stage_name"):
-
-        context.processed_stage_name = context.dbt_test_utils.process_stage_names(
-            context.processed_stage_name,
-            processed_stage_name)
-
-    else:
-        context.processed_stage_name = processed_stage_name
 
     assert "Completed successfully" in logs
 
