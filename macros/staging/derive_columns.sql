@@ -15,7 +15,7 @@
 
 {%- if columns is mapping and columns is not none -%}
 
-    {#- Add aliases of provided columns to excludes and full SQL to includes -#}
+    {#- Add aliases of derived columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
 
         {% set column_str = dbtvault.as_constant(columns[col]) %}
