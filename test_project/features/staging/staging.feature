@@ -35,7 +35,7 @@ Feature: Staging
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     | CUSTOMER_DOB_UK                              |
-      | LOAD_DATE      | !RAW_STAGE | TO_VARCHAR(CUSTOMER_DOB::date, 'DD/MM/YYYY') |
+      | LOAD_DATE      | !RAW_STAGE | TO_VARCHAR(CUSTOMER_DOB::date, 'DD-MM-YYYY') |
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK | HASHDIFF                                                 |
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB_UK,CUSTOMER_PHONE') |

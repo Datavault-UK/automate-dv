@@ -20,6 +20,18 @@ compare as (
     {%- endfor %}
     WHERE a.{{ unique_id }} IS NULL
     OR b.{{ unique_id }} IS NULL
+),
+compare_order_actual_data as (
+    -- For manual debugging, SELECT * FROM compare_order_actual_data
+    SELECT {{ compare_columns | join(", ") }}
+    FROM actual_data
+    ORDER BY {{ compare_columns | join(", ") }}
+),
+compare_order_expected_data as (
+    -- For manual debugging, SELECT * FROM compare_order_expected_data
+    SELECT {{ compare_columns | join(", ") }}
+    FROM expected_data
+    ORDER BY {{ compare_columns | join(", ") }}
 )
 SELECT COUNT(*) AS differences FROM compare
 {%- endmacro -%}
