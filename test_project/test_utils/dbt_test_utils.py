@@ -356,19 +356,19 @@ class DBTTestUtils:
         return list(df.columns[df.isin(['*']).all()])
 
     @staticmethod
-    def process_hashed_stage_names(hashed_stage_names, hashed_model_name):
+    def process_stage_names(processed_stage_names, processed_stage_name):
 
-        if isinstance(hashed_stage_names, list):
-            hashed_stage_names.append(hashed_model_name)
+        if isinstance(processed_stage_names, list):
+            processed_stage_names.append(processed_stage_name)
         else:
-            hashed_stage_names = [hashed_stage_names] + [hashed_model_name]
+            processed_stage_names = [processed_stage_names] + [processed_stage_name]
 
-        hashed_stage_names = list(set(hashed_stage_names))
+        processed_stage_names = list(set(processed_stage_names))
 
-        if isinstance(hashed_stage_names, list) and len(hashed_stage_names) == 1:
-            hashed_stage_names = hashed_stage_names[0]
+        if isinstance(processed_stage_names, list) and len(processed_stage_names) == 1:
+            processed_stage_names = processed_stage_names[0]
 
-        return hashed_stage_names
+        return processed_stage_names
 
     @staticmethod
     def calc_hash(columns_as_series) -> Series:

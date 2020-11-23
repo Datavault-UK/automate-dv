@@ -88,7 +88,7 @@ def single_source_hub(context):
     """
 
     context.hashed_columns = {
-        "RAW_STAGE": {
+        "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID"
         }
     }

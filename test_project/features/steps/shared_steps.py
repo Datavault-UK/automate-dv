@@ -15,14 +15,14 @@ def set_stage_metadata(context, model_name) -> dict:
         support providing the variables in the command line to dbt instead
     """
 
-    context.processed_stage_name = getattr(context, "processed_stage_name", f"{context.raw_stage_models}_hashed")
+    context.processed_stage_name = getattr(context, "processed_stage_name", model_name)
 
     context.include_source_columns = getattr(context, "include_source_columns", True)
 
     context.hashing = getattr(context, "hashing", "MD5")
 
     if hasattr(context, "hashed_columns"):
-        if getattr(context.hashed_columns, model_name, None):
+        if context.hashed_columns.get(model_name, None):
             context.hashed_columns = context.hashed_columns[model_name]
         else:
             context.hashed_columns = dict()
@@ -30,7 +30,7 @@ def set_stage_metadata(context, model_name) -> dict:
         context.hashed_columns = dict()
 
     if hasattr(context, "derived_columns"):
-        if getattr(context.derived_columns, model_name, None):
+        if context.derived_columns.get(model_name, None):
             context.derived_columns = context.derived_columns[model_name]
         else:
             context.derived_columns = dict()
@@ -156,7 +156,7 @@ def load_populated_table(context, model_name, vault_structure):
 
 @step("I load the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure):
-    metadata = {"source_model": context.hashed_stage_model_name, **context.vault_structure_columns[model_name]}
+    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
 
     config = dbtvault_generator.append_end_date_config(context, dict())
 
@@ -175,7 +175,7 @@ def load_table(context, model_name, vault_structure):
 @step("I use insert_by_period to load the {model_name} {vault_structure} "
       "by {period} with date range: {start_date} to {stop_date}")
 def load_table(context, model_name, vault_structure, period, start_date=None, stop_date=None):
-    metadata = {"source_model": context.hashed_stage_model_name,
+    metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
@@ -203,12 +203,12 @@ def load_table(context, model_name, vault_structure, period, start_date=None, st
 
 @step("I use insert_by_period to load the {model_name} {vault_structure} by {period}")
 def load_table(context, model_name, vault_structure, period):
-    metadata = {"source_model": context.hashed_stage_model_name,
+    metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
               "timestamp_field": "LOAD_DATE",
-              "date_source_models": context.hashed_stage_model_name,
+              "date_source_models": context.processed_stage_name,
               "period": period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
@@ -304,17 +304,17 @@ def stage_processing(context, processed_stage_name):
                              derived_columns=context.derived_columns,
                              include_source_columns=context.include_source_columns)
 
-    logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=context.processed_stage_name,
+    logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
                                                 args=args)
 
-    if hasattr(context, "hashed_stage_model_name"):
+    if hasattr(context, "processed_stage_name"):
 
-        context.hashed_stage_model_name = context.dbt_test_utils.process_hashed_stage_names(
-            context.hashed_stage_model_name,
+        context.processed_stage_name = context.dbt_test_utils.process_stage_names(
+            context.processed_stage_name,
             processed_stage_name)
 
     else:
-        context.hashed_stage_model_name = processed_stage_name
+        context.processed_stage_name = processed_stage_name
 
     assert "Completed successfully" in logs
 
