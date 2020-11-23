@@ -2,7 +2,7 @@
 Feature: Hubs
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Simple load of stage data into an empty hub
+  Scenario: [BASE-LOAD] Simple load of stage(s) data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -13,7 +13,7 @@ Feature: Hubs
       | 1002        | Bob           | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -23,7 +23,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD] Simple load of distinct stage data into an empty hub
+  Scenario: [BASE-LOAD] Simple load of distinct stage(s) data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -34,7 +34,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -45,7 +45,7 @@ Feature: Hubs
 
   @fixture.single_source_hub
   @fixture.sha
-  Scenario: [BASE-LOAD-SHA] Simple load of distinct stage data into an empty hub using SHA hashing
+  Scenario: [BASE-LOAD-SHA] Simple load of distinct stage(s) data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -56,7 +56,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -79,7 +79,7 @@ Feature: Hubs
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       | <null>      | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       |             | Chad          | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -89,7 +89,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD-EMPTY] Simple load of stage data into an empty hub
+  Scenario: [BASE-LOAD-EMPTY] Simple load of stage(s) data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -97,7 +97,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -107,7 +107,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BASE-LOAD-EMPTY] Simple load of distinct stage data into an empty hub
+  Scenario: [BASE-LOAD-EMPTY] Simple load of distinct stage(s) data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -118,7 +118,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -141,7 +141,7 @@ Feature: Hubs
       | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       | <null>      | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
       |             | Chad          | 2018-04-13   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -151,7 +151,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [POPULATED-LOAD] Load of stage data into a hub
+  Scenario: [POPULATED-LOAD] Load of stage(s) data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -162,7 +162,7 @@ Feature: Hubs
       | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -172,7 +172,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [POPULATED-LOAD] Load of distinct stage data into a hub
+  Scenario: [POPULATED-LOAD] Load of distinct stage(s) data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -188,7 +188,7 @@ Feature: Hubs
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
       | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
       | 1004        | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -214,7 +214,7 @@ Feature: Hubs
       | 1004        | Dom           | 2018-04-13   | 1993-01-04 | TPCH   |
       | <null>      | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
       |             | Chad          | 2018-04-13   | 1993-01-02 | TPCH   |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -233,7 +233,6 @@ Feature: Hubs
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-01 | PART   |
       | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-01 | PART   |
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-01 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
@@ -242,7 +241,6 @@ Feature: Hubs
       | 1004    | 6           | 3        | 101.40     | 1993-01-01 | SUPP   |
       | 1005    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
-    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
@@ -254,7 +252,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
-    And I create the STG_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -277,7 +275,6 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-01 | PART   |
       | <null>  | Cover     | other     | L         | 1.50             | 1993-01-01 | PART   |
       |         | Pedal     | other     | L         | 1.50             | 1993-01-01 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
@@ -287,7 +284,6 @@ Feature: Hubs
       | 1005    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
       | <null>  | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
-    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
@@ -300,7 +296,7 @@ Feature: Hubs
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
       | 10005    |         | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
-    And I create the STG_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -321,7 +317,6 @@ Feature: Hubs
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-01 | PART   |
       | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-01 | PART   |
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-01 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
@@ -330,7 +325,6 @@ Feature: Hubs
       | 1004    | 6           | 3        | 101.40     | 1993-01-01 | SUPP   |
       | 1005    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-01 | SUPP   |
-    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
@@ -342,7 +336,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-01 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-01 | LINE   |
-    And I create the STG_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -366,7 +360,6 @@ Feature: Hubs
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-02 | PART   |
       | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-02 | PART   |
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
@@ -375,7 +368,6 @@ Feature: Hubs
       | 1004    | 6           | 3        | 101.40     | 1993-01-02 | SUPP   |
       | 1005    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
-    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
@@ -387,7 +379,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
-    And I create the STG_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     And I load the HUB hub
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
@@ -396,7 +388,6 @@ Feature: Hubs
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-03 | PART   |
       | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-03 | PART   |
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-03 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 5        | 68.00      | 1993-01-03 | SUPP   |
@@ -404,7 +395,6 @@ Feature: Hubs
       | 1002    | 1           | 13       | 110.00     | 1993-01-03 | SUPP   |
       | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
       | 1002    | 1           | 0        | 120.00     | 1993-01-03 | SUPP   |
-    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10007    | 1007    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-03 | LINE   |
@@ -412,7 +402,7 @@ Feature: Hubs
       | 10008    | 1008    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-03 | LINE   |
       | 10008    | 1008    | 11          | 1          | 2        | 10.00          | 1.00     | 1993-01-03 | LINE   |
       | 10009    | 1009    | 11          | 1          | 1        | 290.87         | 2.00     | 1993-01-03 | LINE   |
-    And I create the STG_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -439,7 +429,6 @@ Feature: Hubs
       | 1003    | Seat      | internal  | R         | 27.68            | 1993-01-02 | PART   |
       | 1004    | Aerial    | external  | S         | 10.40            | 1993-01-02 | PART   |
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
@@ -448,7 +437,6 @@ Feature: Hubs
       | 1004    | 6           | 3        | 101.40     | 1993-01-02 | SUPP   |
       | 1005    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
-    And I create the STAGE_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
@@ -460,7 +448,7 @@ Feature: Hubs
       | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
-    And I create the STAGE_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -486,7 +474,6 @@ Feature: Hubs
       | 1005    | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
       | <null>  | Cover     | other     | L         | 1.50             | 1993-01-02 | PART   |
       |         | Door      | other     | L         | 1.50             | 1993-01-02 | PART   |
-    And I create the STG_PARTS stage
     And the RAW_STAGE_SUPPLIER table contains data
       | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
       | 1001    | 9           | 6        | 68.00      | 1993-01-02 | SUPP   |
@@ -496,7 +483,6 @@ Feature: Hubs
       | 1005    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
       | 1006    | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
       | <null>  | 7           | 8        | 10.50      | 1993-01-02 | SUPP   |
-    And I create the STG_SUPPLIER stage
     And the RAW_STAGE_LINEITEM table contains data
       | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
       | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-02 | LINE   |
@@ -509,7 +495,7 @@ Feature: Hubs
       | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | 1993-01-02 | LINE   |
       | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
       | 10005    |         | 7           | 1          | 8        | 106.50         | 21.10    | 1993-01-02 | LINE   |
-    And I create the STG_LINEITEM stage
+    And I create the STG_PARTS, STG_SUPPLIER, STG_LINEITEM stage(s)
     When I load the HUB hub
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
