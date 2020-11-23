@@ -15,27 +15,32 @@ def set_stage_metadata(context, model_name) -> dict:
         support providing the variables in the command line to dbt instead
     """
 
-    context.processed_stage_name = getattr(context, "processed_stage_name", model_name)
+    if hasattr(context, "processed_stage_name"):
+
+        context.processed_stage_name = context.dbt_test_utils.process_stage_names(
+            context.processed_stage_name,
+            model_name)
+
+    else:
+        context.processed_stage_name = model_name
 
     context.include_source_columns = getattr(context, "include_source_columns", True)
 
     context.hashing = getattr(context, "hashing", "MD5")
 
-    if hasattr(context, "hashed_columns"):
-        if context.hashed_columns.get(model_name, None):
-            context.hashed_columns = context.hashed_columns[model_name]
-        else:
-            context.hashed_columns = dict()
-    else:
+    if not getattr(context, "hashed_columns", None):
         context.hashed_columns = dict()
-
-    if hasattr(context, "derived_columns"):
-        if context.derived_columns.get(model_name, None):
-            context.derived_columns = context.derived_columns[model_name]
-        else:
-            context.derived_columns = dict()
+        context.hashed_columns[model_name] = dict()
     else:
+        if not context.hashed_columns.get(model_name, None):
+            context.hashed_columns[model_name] = dict()
+
+    if not getattr(context, "derived_columns", None):
         context.derived_columns = dict()
+        context.derived_columns[model_name] = dict()
+    else:
+        if not context.derived_columns.get(model_name, None):
+            context.derived_columns[model_name] = dict()
 
     dbt_vars = {
         "include_source_columns": context.include_source_columns,
@@ -298,23 +303,14 @@ def stage_processing(context, processed_stage_name):
 
     args = {k: v for k, v in stage_metadata.items() if k == "hash"}
 
-    dbtvault_generator.stage(model_name=context.processed_stage_name,
+    dbtvault_generator.stage(model_name=processed_stage_name,
                              source_model=context.raw_stage_models,
-                             hashed_columns=context.hashed_columns,
-                             derived_columns=context.derived_columns,
+                             hashed_columns=context.hashed_columns[processed_stage_name],
+                             derived_columns=context.derived_columns[processed_stage_name],
                              include_source_columns=context.include_source_columns)
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
                                                 args=args)
-
-    if hasattr(context, "processed_stage_name"):
-
-        context.processed_stage_name = context.dbt_test_utils.process_stage_names(
-            context.processed_stage_name,
-            processed_stage_name)
-
-    else:
-        context.processed_stage_name = processed_stage_name
 
     assert "Completed successfully" in logs
 
