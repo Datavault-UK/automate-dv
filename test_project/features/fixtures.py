@@ -660,29 +660,29 @@ def cycle(context):
 
     context.vault_structure_columns = {
         "HUB_CUSTOMER": {
-            "source_model": ["raw_stage_customer_seed_hashed",
-                             "raw_stage_booking_seed_hashed"],
+            "source_model": ["STG_CUSTOMER",
+                             "STG_BOOKING"],
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "HUB_BOOKING": {
-            "source_model": "raw_stage_booking_seed_hashed",
+            "source_model": "STG_BOOKING",
             "src_pk": "BOOKING_PK",
             "src_nk": "BOOKING_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "LINK_CUSTOMER_BOOKING": {
-            "source_model": "raw_stage_booking_seed_hashed",
+            "source_model": "STG_BOOKING",
             "src_pk": "CUSTOMER_BOOKING_PK",
             "src_fk": ["CUSTOMER_PK", "BOOKING_PK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
-            "source_model": "raw_stage_customer_seed_hashed",
+            "source_model": "STG_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB"],
@@ -691,7 +691,7 @@ def cycle(context):
             "src_source": "SOURCE"
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
-            "source_model": "raw_stage_booking_seed_hashed",
+            "source_model": "STG_BOOKING",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": {"source_column": "HASHDIFF_BOOK_CUSTOMER_DETAILS",
                              "alias": "HASHDIFF"},
@@ -701,7 +701,7 @@ def cycle(context):
             "src_source": "SOURCE"
         },
         "SAT_BOOK_BOOKING_DETAILS": {
-            "source_model": "raw_stage_booking_seed_hashed",
+            "source_model": "STG_BOOKING",
             "src_pk": "BOOKING_PK",
             "src_hashdiff": {"source_column": "HASHDIFF_BOOK_BOOKING_DETAILS",
                              "alias": "HASHDIFF"},
@@ -714,7 +714,7 @@ def cycle(context):
     }
 
     context.stage_columns = {
-        "STG_CUSTOMER":
+        "RAW_STAGE_CUSTOMER":
             ["CUSTOMER_ID",
              "CUSTOMER_NAME",
              "CUSTOMER_DOB",
@@ -722,7 +722,7 @@ def cycle(context):
              "LOAD_DATE",
              "SOURCE"]
         ,
-        "STG_BOOKING":
+        "RAW_STAGE_BOOKING":
             ["BOOKING_ID",
              "CUSTOMER_ID",
              "BOOKING_DATE",

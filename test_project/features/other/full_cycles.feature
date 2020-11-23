@@ -13,14 +13,14 @@ Feature: Full Vault Cycles
 
     # ================ DAY 1 ===================
     And the RAW_STAGE_CUSTOMER is loaded for day 1
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Ronna         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
     And I create the STG_CUSTOMER stage
     And the RAW_STAGE_BOOKING is loaded for day 1
-      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE   | SOURCE |
+      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10034      | 1001        | 2019-05-03   | 100.00 | 2019-09-17     | GBR         | 17-214-233-1214 | BRITISH     | 2019-05-04 | *      |
       | 10035      | 1002        | 2019-05-03   | 80.00  | 2019-09-16     | NLD         | 17-214-200-1214 | DUTCH       | 2019-05-04 | *      |
       | 10070      | 1040        | 2019-05-03   | 90.00  | 2019-09-15     | ZIM         | 17-214-200-4040 | CHINESE     | 2019-05-04 | *      |
@@ -29,13 +29,13 @@ Feature: Full Vault Cycles
 
     # ================ DAY 2 ===================
     And the RAW_STAGE_CUSTOMER is loaded for day 2
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Michael       | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
     And I create the STG_CUSTOMER stage
     And the RAW_STAGE_BOOKING is loaded for day 2
-      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE   | SOURCE |
+      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10036      | 1003        | 2019-05-04   | 70.00  | 2019-09-13     | AUS         | 17-214-555-1214 | AUSTRALIAN  | 2019-05-05 | *      |
       | 10037      | 1004        | 2019-05-04   | 810.00 | 2019-09-18     | DEU         | 17-214-123-1214 | GERMAN      | 2019-05-05 | *      |
     And I create the STG_BOOKING stage
@@ -43,14 +43,14 @@ Feature: Full Vault Cycles
 
     # ================ DAY 3 ===================
     And the RAW_STAGE_CUSTOMER is loaded for day 3
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Harold        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Kevin         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Chris         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
     And I create the STG_CUSTOMER stage
     And the RAW_STAGE_BOOKING is loaded for day 3
-      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE   | SOURCE |
+      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10038      | 1005        | 2019-05-05   | 216.50 | 2019-09-19     | ITA         | 17-214-456-1214 | BRITISH     | 2019-05-06 | *      |
       | 10039      | 1006        | 2019-05-05   | 111.10 | 2019-09-20     | NOR         | 17-214-789-1214 | RUSSIAN     | 2019-05-06 | *      |
     And I create the STG_BOOKING stage
@@ -58,7 +58,7 @@ Feature: Full Vault Cycles
 
     # ================ DAY 4 ===================
     And the RAW_STAGE_CUSTOMER is loaded for day 4
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Bethany       | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1007        | Albert        | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
@@ -72,7 +72,7 @@ Feature: Full Vault Cycles
       | 1015        | Fabiola       | 1985-04-02   | 2019-05-07     | 2019-05-07 | *      |
     And I create the STG_CUSTOMER stage
     And the RAW_STAGE_BOOKING is loaded for day 4
-      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE   | SOURCE |
+      | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10039      | 1006        | 2019-05-05   | 111.10 | 2019-09-20     | AUS         | 17-214-789-1214 | RUSSIAN     | 2019-05-07 | *      |
       | 10040      | 1007        | 2019-05-06   | 832.84 | 2019-09-28     | CHN         | 17-214-577-1215 | TURKISH     | 2019-05-07 | *      |
       | 10041      | 1008        | 2019-05-06   | 947.79 | 2019-10-08     | LUX         | 17-214-577-1216 | UAE         | 2019-05-07 | *      |
@@ -88,7 +88,7 @@ Feature: Full Vault Cycles
 
     # =============== CHECKS ===================
     Then the HUB_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE   | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 2019-05-04 | *      |
       | md5('1002') | 1002        | 2019-05-04 | *      |
       | md5('1003') | 1003        | 2019-05-04 | *      |
@@ -106,7 +106,7 @@ Feature: Full Vault Cycles
       | md5('1015') | 1015        | 2019-05-07 | *      |
       | md5('1040') | 1040        | 2019-05-04 | *      |
     Then the HUB_BOOKING table should contain expected data
-      | BOOKING_PK   | BOOKING_ID | LOAD_DATE   | SOURCE |
+      | BOOKING_PK   | BOOKING_ID | LOAD_DATE  | SOURCE |
       | md5('10034') | 10034      | 2019-05-04 | *      |
       | md5('10035') | 10035      | 2019-05-04 | *      |
       | md5('10036') | 10036      | 2019-05-05 | *      |
@@ -124,7 +124,7 @@ Feature: Full Vault Cycles
       | md5('10048') | 10048      | 2019-05-07 | *      |
       | md5('10070') | 10070      | 2019-05-04 | *      |
     Then the LINK_CUSTOMER_BOOKING table should contain expected data
-      | CUSTOMER_BOOKING_PK  | CUSTOMER_PK | BOOKING_PK   | LOAD_DATE   | SOURCE |
+      | CUSTOMER_BOOKING_PK  | CUSTOMER_PK | BOOKING_PK   | LOAD_DATE  | SOURCE |
       | md5('1001\|\|10034') | md5('1001') | md5('10034') | 2019-05-04 | *      |
       | md5('1002\|\|10035') | md5('1002') | md5('10035') | 2019-05-04 | *      |
       | md5('1003\|\|10036') | md5('1003') | md5('10036') | 2019-05-05 | *      |
@@ -142,7 +142,7 @@ Feature: Full Vault Cycles
       | md5('1015\|\|10048') | md5('1015') | md5('10048') | 2019-05-07 | *      |
       | md5('1040\|\|10070') | md5('1040') | md5('10070') | 2019-05-04 | *      |
     Then the SAT_CUST_CUSTOMER_DETAILS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                               | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | CUSTOMER_PK | HASHDIFF                               | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT')    | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')      | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|JACK')      | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
@@ -165,7 +165,7 @@ Feature: Full Vault Cycles
       | md5('1014') | md5('1999-01-31\|\|1014\|\|SHAYNE')    | Shayne        | 1999-01-31   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1015') | md5('1985-04-02\|\|1015\|\|FABIOLA')   | Fabiola       | 1985-04-02   | 2019-05-07     | 2019-05-07 | *      |
     Then the SAT_BOOK_CUSTOMER_DETAILS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                     | PHONE           | NATIONALITY | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | CUSTOMER_PK | HASHDIFF                                     | PHONE           | NATIONALITY | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|BRITISH\|\|17-214-233-1214')    | 17-214-233-1214 | BRITISH     | 2019-05-03     | 2019-05-04 | *      |
       | md5('1002') | md5('1002\|\|DUTCH\|\|17-214-200-1214')      | 17-214-200-1214 | DUTCH       | 2019-05-03     | 2019-05-04 | *      |
       | md5('1003') | md5('1003\|\|AUSTRALIAN\|\|17-214-555-1214') | 17-214-555-1214 | AUSTRALIAN  | 2019-05-04     | 2019-05-05 | *      |
@@ -183,7 +183,7 @@ Feature: Full Vault Cycles
       | md5('1015') | md5('1015\|\|TAIWANESE\|\|17-214-577-1223')  | 17-214-577-1223 | TAIWANESE   | 2019-05-06     | 2019-05-07 | *      |
       | md5('1040') | md5('1040\|\|CHINESE\|\|17-214-200-4040')    | 17-214-200-4040 | CHINESE     | 2019-05-03     | 2019-05-04 | *      |
     Then the SAT_BOOK_BOOKING_DETAILS table should contain expected data
-      | BOOKING_PK   | HASHDIFF                                                  | PRICE  | BOOKING_DATE | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOAD_DATE   | SOURCE |
+      | BOOKING_PK   | HASHDIFF                                                  | PRICE  | BOOKING_DATE | DEPARTURE_DATE | DESTINATION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('10034') | md5('2019-05-03\|\|10034\|\|2019-09-17\|\|GBR\|\|100.00') | 100.00 | 2019-05-03   | 2019-09-17     | GBR         | 2019-05-03     | 2019-05-04 | *      |
       | md5('10035') | md5('2019-05-03\|\|10035\|\|2019-09-16\|\|NLD\|\|80.00')  | 80.00  | 2019-05-03   | 2019-09-16     | NLD         | 2019-05-03     | 2019-05-04 | *      |
       | md5('10036') | md5('2019-05-04\|\|10036\|\|2019-09-13\|\|AUS\|\|70.00')  | 70.00  | 2019-05-04   | 2019-09-13     | AUS         | 2019-05-04     | 2019-05-05 | *      |
