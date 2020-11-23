@@ -677,14 +677,18 @@ class DBTVAULTGenerator:
             yaml.dump(yaml_dict, f)
 
     @staticmethod
-    def add_seed_config(seed_name: str, seed_config: dict):
+    def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         """
         Append a given dictionary to the end of the dbt_project.yml file
             :param seed_name: Name of seed file to configure
             :param seed_config: Configuration dict for seed file
+            :param include_columns: A list of columns to add to the seed config, All if not provided
         """
 
         yaml = YAML()
+
+        if include_columns:
+            seed_config = {k: v for k, v in seed_config['column_types'].items() if k in include_columns}
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
             project_file = yaml.load(f)
