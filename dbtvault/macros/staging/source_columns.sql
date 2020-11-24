@@ -4,7 +4,7 @@
 
 {%- endmacro %}
 
-{%- macro snowflake__derive_columns(source_relation=none, columns=none) -%}
+{%- macro snowflake__source_columns(source_relation=none, columns=none) -%}
 
 
 {%- set include_columns = [] -%}
@@ -17,9 +17,7 @@
 
  {#- Add all columns from source_model relation -#}
 {%- for source_col in source_model_cols -%}
-    {%- if source_col.column not in exclude_columns -%}
         {%- set _ = include_columns.append(source_col.column) -%}
-    {%- endif -%}
 {%- endfor -%}
 
     {#- Print out all columns in includes -#}
@@ -29,11 +27,7 @@
 
 {%- endfor -%}
 
-{%- if execute -%}
-{{ exceptions.raise_compiler_error("Invalid column configuration:
-expected format: {source_relation: Relation}
-got: {'source_relation': " ~ source_relation ~ "}") }}
-{%- endif %}
+
 
 
 {%- endmacro -%}
