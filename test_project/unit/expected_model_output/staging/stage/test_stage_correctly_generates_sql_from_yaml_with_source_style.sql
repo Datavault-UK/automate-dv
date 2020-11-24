@@ -22,8 +22,6 @@ WITH stage AS (
 derived_columns AS (
     SElECT
 
-    'STG_BOOKING' AS SOURCE,
-    LOADDATE AS EFFECTIVE_FROM,
     LOADDATE,
     CUSTOMER_ID,
     CUSTOMER_DOB,
@@ -38,6 +36,8 @@ derived_columns AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9
+    'STG_BOOKING' AS SOURCE,
+    LOADDATE AS EFFECTIVE_FROM
 
     FROM stage
 ),

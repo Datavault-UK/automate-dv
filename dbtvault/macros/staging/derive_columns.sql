@@ -43,22 +43,6 @@
 {% endif -%}
     {%- endfor -%}
 
-{%- elif columns is none and source_relation is not none -%}
-
-    {#- Add all columns from source_model relation -#}
-    {%- for source_col in source_model_cols -%}
-        {%- if source_col.column not in exclude_columns -%}
-            {%- set _ = include_columns.append(source_col.column) -%}
-        {%- endif -%}
-    {%- endfor -%}
-
-    {#- Print out all columns in includes -#}
-    {%- for col in include_columns -%}
-        {{ col }}
-        {{- ',\n' if not loop.last -}}
-
-    {%- endfor -%}
-
 {%- else -%}
 
 {%- if execute -%}
