@@ -1,3 +1,6 @@
 packages:
   - package: Datavault-UK/dbtvault
     version: 0.7.0
+  # Have to add cause of implicit dbtvault dependency. See https://github.com/Datavault-UK/dbtvault/issues/15
+  - package: fishtown-analytics/dbt_utils
+    version: 0.6.2
