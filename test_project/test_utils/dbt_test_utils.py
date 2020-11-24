@@ -688,7 +688,7 @@ class DBTVAULTGenerator:
         yaml = YAML()
 
         if include_columns:
-            seed_config = {k: v for k, v in seed_config['column_types'].items() if k in include_columns}
+            seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if k in include_columns}
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
             project_file = yaml.load(f)

@@ -2,7 +2,7 @@
 Feature: Transactional Links
 
   @fixture.t_link
-  Scenario: [BASE-LOAD] Load an a non-existent Transactional Link
+  Scenario: [BASE-LOAD] Load a non-existent Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
