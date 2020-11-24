@@ -1,4 +1,4 @@
-name: 'dbtvault'
+name: 'dbtvault_bq'
 
 version: '0.6.2'
 require-dbt-version: [">=0.14.0", "<=0.18.1"]
