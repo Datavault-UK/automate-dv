@@ -31,12 +31,16 @@
 
 {# BQ Change: Added BQ implementaion #}
 {% macro bigquery__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-
+    {# BQ Change: Use dbt_utils cross_db date functions #}
+    {%- set start_timestamp = dbt_utils.safe_cast(start_timestamp, dbt_utils.type_timestamp()) -%}
+    {%- set stop_timestamp = dbt_utils.safe_cast(stop_timestamp, dbt_utils.type_timestamp()) -%}
+    {%- set timestamp_field = dbt_utils.safe_cast(timestamp_field, dbt_utils.type_timestamp()) -%}
     {%- set period_filter -%}
-            {# BQ Change: TO_DATE() -> Date(), reorder date_trunc args and use DATE_ADD instead of + #}
-            (DATE({{ timestamp_field }}) >= DATE_TRUNC(DATE_ADD(DATE('{{ start_timestamp }}'), INTERVAL '{{ offset }} {{ period }}'), '{{ period }}') AND
-             DATE({{ timestamp_field }}) < DATE_TRUNC(DATE_ADD(DATE('{{ start_timestamp }}'), INTERVAL '{{ offset + 1 }} {{ period }}'), '{{ period }}'))
-      AND (DATE({{ timestamp_field }}) >= DATE('{{ start_timestamp }}'))
+          (
+            {{ timestamp_field }} >= {{ dbt_utils.date_trunc(period, dbt_utils.dateadd(period, offset, start_timestamp)) }}
+            AND {{ timestamp_field }} <  {{ dbt_utils.date_trunc(period, dbt_utils.dateadd(period, offset + 1, start_timestamp)) }}
+            AND {{ timestamp_field }} >= '{{ start_timestamp }}'
+          )
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
@@ -45,7 +49,7 @@
 {% endmacro %}
 
 
-{#-- GET_PERIOD_FILTER_SQL #}
+{# GET_PERIOD_FILTER_SQL #}
 
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
     {# BQ Change: Look locally cause of incompatible macro definitions #}
@@ -126,8 +130,9 @@
     {% set period_boundary_sql -%}
         with data as (
             select
-                {# BQ Change: timestamp conversion #}
-                TIMESTAMP(coalesce(max({{ timestamp_field }}), '{{ start_date }}')) as start_timestamp,
+                {# BQ Change: timestamp casting using dbt_utils cross_db cast (with max_timestamp) #}
+                {%- set max_timestamp = 'coalesce(max(' ~ timestamp_field ~ '), ' ~ start_date ~')' -%}
+                {{ dbt_utils.safe_cast(max_timestamp, dbt_utils.type_timestamp()) }} as start_timestamp,
                 coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "TIMESTAMP(nullif('" ~ stop_date ~ "',''))") }},
                          {{ dbt_utils.current_timestamp() }} ) as stop_timestamp
             from {{ target_schema }}.{{ target_table }}
@@ -183,7 +188,15 @@
 
     {% set period_of_load_sql -%}
         {# BQ Change: compatible date logic #}
-        SELECT DATE_TRUNC(DATEADD(DATE('{{start_timestamp}}'), INTERVAL {{ offset }} {{ period }}), '{{ period }}') AS period_of_load
+        SELECT {{
+          dbt_utils.date_trunc(
+            period, dbt_utils.dateadd(
+              period,
+              offset,
+              dbt_utils.safe_cast(start_timestamp, dbt_utils.type_timestamp())
+            )
+          )
+        }} AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}
