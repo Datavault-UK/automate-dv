@@ -11,7 +11,7 @@ Feature: Links
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -36,7 +36,7 @@ Feature: Links
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -56,7 +56,7 @@ Feature: Links
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
       | 1007        | <null>    | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -75,7 +75,7 @@ Feature: Links
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -100,7 +100,7 @@ Feature: Links
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -125,7 +125,7 @@ Feature: Links
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -155,7 +155,7 @@ Feature: Links
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -186,7 +186,7 @@ Feature: Links
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
       | 1007        | <null>    | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CUSTOMER stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -208,14 +208,14 @@ Feature: Links
       | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-    And I hash the stage
+    And I create the STG_SAP stage
     And the RAW_STAGE_CRM table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CRM stage
     And the RAW_STAGE_WEB table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
@@ -223,7 +223,7 @@ Feature: Links
       | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1010        | ITA       | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-    And I hash the stage
+    And I create the STG_WEB stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -248,14 +248,14 @@ Feature: Links
       | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-    And I hash the stage
+    And I create the STG_SAP stage
     And the RAW_STAGE_CRM table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1003        | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CRM stage
     And the RAW_STAGE_WEB table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
@@ -263,7 +263,7 @@ Feature: Links
       | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1010        | ITA       | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-    And I hash the stage
+    And I create the STG_WEB stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -288,14 +288,14 @@ Feature: Links
       | <null>      | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | SAP    |
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-    And I hash the stage
+    And I create the STG_SAP stage
     And the RAW_STAGE_CRM table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1002        | POL       | Bob           | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | <null>      | AUS       | Chris         | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CRM stage
     And the RAW_STAGE_WEB table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
@@ -303,7 +303,7 @@ Feature: Links
       | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | WEB    |
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1010        | <null>    | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-    And I hash the stage
+    And I create the STG_WEB stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -335,7 +335,7 @@ Feature: Links
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1005        | ITA       | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-    And I hash the stage
+    And I create the STG_SAP stage
     And the RAW_STAGE_CRM table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
@@ -345,7 +345,7 @@ Feature: Links
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CRM stage
     And the RAW_STAGE_WEB table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
@@ -359,7 +359,7 @@ Feature: Links
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1010        | ITA       | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-    And I hash the stage
+    And I create the STG_WEB stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -393,7 +393,7 @@ Feature: Links
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1004        | DEU       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | SAP    |
       | 1005        | <null>    | Eric          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | SAP    |
-    And I hash the stage
+    And I create the STG_SAP stage
     And the RAW_STAGE_CRM table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
@@ -403,7 +403,7 @@ Feature: Links
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Grigor        | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I hash the stage
+    And I create the STG_CRM stage
     And the RAW_STAGE_WEB table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | WEB    |
@@ -417,7 +417,7 @@ Feature: Links
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | WEB    |
       | 1010        | <null>    | Jack          | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | WEB    |
-    And I hash the stage
+    And I create the STG_WEB stage
     When I load the LINK link
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |

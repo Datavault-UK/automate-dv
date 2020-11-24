@@ -1,8 +1,10 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-class TestAliasMacro:
+class TestAliasMacro(TestCase):
+    maxDiff = None
 
     def test_alias_single_correctly_generates_sql(self):
         var_dict = {'alias_config': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
@@ -12,7 +14,7 @@ class TestAliasMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(self):
         var_dict = {'alias_config': {}, 'prefix': 'c'}
@@ -49,7 +51,7 @@ class TestAliasMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done.' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_alias_all_correctly_generates_sql_for_partial_alias_list_with_prefix(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "ORDER_HASHDIFF",
@@ -61,7 +63,7 @@ class TestAliasMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done.' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_alias_all_correctly_generates_sql_for_full_alias_list_without_prefix(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
@@ -74,7 +76,7 @@ class TestAliasMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done.' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_alias_all_correctly_generates_sql_for_partial_alias_list_without_prefix(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "ORDER_HASHDIFF",
@@ -86,4 +88,4 @@ class TestAliasMacro:
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done.' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
