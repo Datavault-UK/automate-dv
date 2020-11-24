@@ -150,7 +150,6 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
 
-
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-DFK] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
