@@ -1,22 +1,10 @@
- {#- Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
--#}
+{# BQ Customization: Adding hash_algo t #}
 {%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, hash_algo=none) -%}
     {% if include_source_columns is none %}
         {%- set include_source_columns = true -%}
     {% endif %}
 
-    {{- adapter_macro(
-        'dbtvault.stage',
+    {{- adapter.dispatch('stage')(
         include_source_columns,
         source_model,
         hashed_columns,
@@ -32,7 +20,7 @@
 
     {%- set error_message -%}
     "Staging error: Missing source_model configuration. A source model name must be provided.
-    e.g. 
+    e.g.
     [REF STYLE]
     source_model: model_name
     OR
@@ -40,7 +28,7 @@
     source_model:
     source_name: source_table_name"
     {%- endset -%}
-    
+
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
@@ -61,8 +49,8 @@ SELECT
 
 {#- Hash columns, if provided -#}
 {% if hashed_columns is defined and hashed_columns is not none -%}
-    
-    {{ dbtvault.hash_columns(hashed_columns, hash_algo) -}}
+    {# BQ Customization: Passing hash_algo to hash_columns #}
+    {{ dbtvault_bq.hash_columns(hashed_columns, hash_algo) -}}
     {{ "," if derived_columns is defined and source_relation is defined and include_source_columns }}
 
 {% endif -%}
@@ -77,7 +65,7 @@ SELECT
     {%- endif -%}
 {#- If source relation is defined but derived_columns is not, add columns from source model. -#}
 {%- elif source_relation is defined and include_source_columns is true -%}
- 
+
     {{ dbtvault.derive_columns(source_relation=source_relation) }}
 {%- endif %}
 
