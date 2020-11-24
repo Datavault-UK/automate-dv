@@ -293,6 +293,7 @@ class DBTTestUtils:
         table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
         table_df = table_df.apply(self.calc_hash)
+        table_df = table_df.apply(self.parse_hashdiffs)
 
         table_df = table_df.replace("<null>", NaN)
 
@@ -355,19 +356,19 @@ class DBTTestUtils:
         return list(df.columns[df.isin(['*']).all()])
 
     @staticmethod
-    def process_hashed_stage_names(hashed_stage_names, hashed_model_name):
+    def process_stage_names(processed_stage_names, processed_stage_name):
 
-        if isinstance(hashed_stage_names, list):
-            hashed_stage_names.append(hashed_model_name)
+        if isinstance(processed_stage_names, list):
+            processed_stage_names.append(processed_stage_name)
         else:
-            hashed_stage_names = [hashed_stage_names] + [hashed_model_name]
+            processed_stage_names = [processed_stage_names] + [processed_stage_name]
 
-        hashed_stage_names = list(set(hashed_stage_names))
+        processed_stage_names = list(set(processed_stage_names))
 
-        if isinstance(hashed_stage_names, list) and len(hashed_stage_names) == 1:
-            hashed_stage_names = hashed_stage_names[0]
+        if isinstance(processed_stage_names, list) and len(processed_stage_names) == 1:
+            processed_stage_names = processed_stage_names[0]
 
-        return hashed_stage_names
+        return processed_stage_names
 
     @staticmethod
     def calc_hash(columns_as_series) -> Series:
@@ -381,7 +382,8 @@ class DBTTestUtils:
 
         patterns = {
             'md5': {
-                'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5}, 'sha': {
+                'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
+            'sha': {
                 'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
 
         hashed_list = []
@@ -400,6 +402,26 @@ class DBTTestUtils:
 
         return Series(hashed_list)
 
+    @staticmethod
+    def parse_hashdiffs(columns_as_series) -> Series:
+
+        pattern = r"^(?:hashdiff\(')(.*)(?:'\))"
+
+        columns = []
+
+        for item in columns_as_series:
+
+            if re.search(pattern, item):
+                raw_item = re.findall(pattern, item)[0]
+                split_item = str(raw_item).split(",")
+                hashdiff_dict = {"is_hashdiff": True,
+                                 "columns": split_item}
+                columns.append(hashdiff_dict)
+            else:
+                columns.append(item)
+
+        return Series(columns)
+
 
 class DBTVAULTGenerator:
     """Functions to generate dbtvault Models"""
@@ -411,7 +433,7 @@ class DBTVAULTGenerator:
             :param template: Template string to write
             :param model_name: Name of file to write
         """
-        with open(FEATURE_MODELS_ROOT / f'{model_name}.sql', 'w') as f:
+        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
             f.write(template.strip())
 
     def raw_vault_structure(self, model_name, vault_structure, config=None, **kwargs):
@@ -426,30 +448,51 @@ class DBTVAULTGenerator:
         vault_structure = vault_structure.lower()
 
         generator_functions = {
-            'stage': self.stage,
-            'hub': self.hub,
-            'link': self.link,
-            'sat': self.sat,
-            'eff_sat': self.eff_sat,
-            't_link': self.t_link
+            "stage": self.stage,
+            "hub": self.hub,
+            "link": self.link,
+            "sat": self.sat,
+            "eff_sat": self.eff_sat,
+            "t_link": self.t_link
         }
-        if vault_structure == 'stage':
-            generator_functions[vault_structure](model_name)
+        if vault_structure == "stage":
+            generator_functions[vault_structure](model_name=model_name, config=config)
         else:
             generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
-    def stage(self, model_name, config=None):
+    def stage(self, model_name, source_model: dict, hashed_columns=None, derived_columns=None,
+              include_source_columns=True, config=None):
         """
         Generate a stage model template
             :param model_name: Name of the model file
+            :param source_model: Model to select from
+            :param hashed_columns: Dictionary of hashed columns, can be None
+            :param derived_columns: Dictionary of derived column, can be None
+            :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param config: Optional model config
         """
 
-        template = """
-        {{ dbtvault.stage(include_source_columns=var('include_source_columns', none),
-                          source_model=var('source_model', none),
-                          hashed_columns=var('hashed_columns', none),
-                          derived_columns=var('derived_columns', none)) }}
+        if not config:
+            config = {'materialized': 'view'}
+
+        if hashed_columns:
+            hashed_columns = str(hashed_columns)
+        else:
+            hashed_columns = "none"
+
+        if derived_columns:
+            derived_columns = str(derived_columns)
+        else:
+            derived_columns = "none"
+
+        config_string = self.format_config_str(config)
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
+                            source_model='{source_model}',
+                            hashed_columns={hashed_columns},
+                            derived_columns={derived_columns}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -472,7 +515,7 @@ class DBTVAULTGenerator:
             source_model = f"'{source_model}'"
 
         if not config:
-            config = {'materialized': 'incremental'}
+            config = {"materialized": "incremental"}
 
         config_string = self.format_config_str(config)
 
@@ -502,7 +545,7 @@ class DBTVAULTGenerator:
             source_model = f"'{source_model}'"
 
         if not config:
-            config = {'materialized': 'incremental'}
+            config = {"materialized": "incremental"}
 
         config_string = self.format_config_str(config)
 
@@ -535,7 +578,7 @@ class DBTVAULTGenerator:
             src_hashdiff = f"'{src_hashdiff}'"
 
         if not config:
-            config = {'materialized': 'incremental'}
+            config = {"materialized": "incremental"}
 
         config_string = self.format_config_str(config)
 
@@ -573,7 +616,7 @@ class DBTVAULTGenerator:
             src_sfk = f"'{src_sfk}'"
 
         if not config:
-            config = {'materialized': 'incremental'}
+            config = {"materialized": "incremental"}
 
         config_string = self.format_config_str(config)
 
@@ -604,11 +647,14 @@ class DBTVAULTGenerator:
         if not config:
             config = {'materialized': 'incremental'}
 
+        if isinstance(src_fk, str):
+            src_fk = f"'{src_fk}'"
+
         config_string = self.format_config_str(config)
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.t_link('{src_pk}', '{src_fk}', {src_payload}, '{src_eff}',
+        {{{{ dbtvault.t_link('{src_pk}', {src_fk}, {src_payload}, '{src_eff}',
                              '{src_ldts}', '{src_source}', '{source_model}')   }}}}
         """
 
@@ -631,19 +677,23 @@ class DBTVAULTGenerator:
             yaml.dump(yaml_dict, f)
 
     @staticmethod
-    def add_seed_config(seed_name: str, seed_config: dict):
+    def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         """
         Append a given dictionary to the end of the dbt_project.yml file
             :param seed_name: Name of seed file to configure
             :param seed_config: Configuration dict for seed file
+            :param include_columns: A list of columns to add to the seed config, All if not provided
         """
 
         yaml = YAML()
 
+        if include_columns:
+            seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if k in include_columns}
+
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
             project_file = yaml.load(f)
 
-            project_file['seeds']['dbtvault_test']['temp'] = {seed_name: seed_config}
+            project_file["seeds"]["dbtvault_test"]["temp"] = {seed_name: seed_config}
 
             f.seek(0)
             f.truncate()
@@ -655,21 +705,21 @@ class DBTVAULTGenerator:
             yaml.dump(project_file, f)
 
     @staticmethod
-    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, metadata, ignore_columns):
+    def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
+                                      ignore_columns):
 
-        meta_to_ignore = ['source_model', 'link_model', 'src_dfk', 'src_sfk']
+        extracted_compare_columns = [k for k, v in columns_to_compare.items()]
 
-        extracted_compare_columns = [v for k, v in metadata.items() if k not in meta_to_ignore]
-
-        compare_columns = list(
+        columns_to_compare = list(
             [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
 
         test_yaml = {
             "models": [{
                 "name": target_model_name, "tests": [{
                     "assert_data_equal_to_expected": {
-                        "expected_seed": expected_output_csv, "unique_id": unique_id,
-                        "compare_columns": compare_columns}}]}]}
+                        "expected_seed": expected_output_csv,
+                        "unique_id": unique_id,
+                        "compare_columns": columns_to_compare}}]}]}
 
         return test_yaml
 
@@ -701,9 +751,9 @@ class DBTVAULTGenerator:
         """
 
         # Extract hashdiff column alias
-        if 'src_hashdiff' in structure_dict.keys():
-            if isinstance(structure_dict['src_hashdiff'], dict):
-                structure_dict['src_hashdiff'] = structure_dict['src_hashdiff']['alias']
+        if "src_hashdiff" in structure_dict.keys():
+            if isinstance(structure_dict["src_hashdiff"], dict):
+                structure_dict["src_hashdiff"] = structure_dict["src_hashdiff"]["alias"]
 
         return structure_dict
 
@@ -713,13 +763,13 @@ class DBTVAULTGenerator:
         Append end dating config if attribute is present.
         """
 
-        if hasattr(context, 'auto_end_date'):
+        if hasattr(context, "auto_end_date"):
             if context.auto_end_date:
                 if config:
-                    config['is_auto_end_dating'] = True
+                    config["is_auto_end_dating"] = True
                 else:
-                    config = {'materialized': 'incremental',
-                              'is_auto_end_dating': True}
+                    config = {"materialized": "incremental",
+                              "is_auto_end_dating": True}
 
         return config
 

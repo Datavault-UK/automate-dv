@@ -3,7 +3,7 @@
 A macro to aid in generating a staging layer for the raw vault. Allows users to:
 
 - Create new columns from already existing columns (Derived columns)
-- Create new hashed columns from already existing columns (Hashed columns)
+- Create new hashed columns from already existing columns and provided derived columns (Hashed columns)
 
 [Read more online](https://dbtvault.readthedocs.io/en/latest/macros/#stage)
 

@@ -1,6 +1,5 @@
 import logging
 import os
-from shutil import copytree, ignore_patterns, rmtree
 from pathlib import PurePath, Path
 
 import yaml
@@ -59,6 +58,19 @@ def inject_to_file(c, target=None, user=None, from_file='secrethub/secrethub_dev
     command = f"secrethub inject  -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
 
     c.run(command)
+
+
+@task
+def create_secrethub_file(c, user=None,
+                          from_file='secrethub/secrethub_tmpl.env',
+                          to_file='secrethub/secrethub_dev.env'):
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    with open(PROJECT_ROOT / from_file, 'rt') as fin:
+        with open(PROJECT_ROOT / to_file, 'wt') as fout:
+            for line in fin:
+                fout.write(line.replace('<user>', str(user)))
 
 
 @task
@@ -188,6 +200,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         logger.info(f'Env file: {PROJECT_ROOT}/{env_file}\n')
 
         c.run(command)
+
 
 def check_target(target: str):
     """

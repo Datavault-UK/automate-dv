@@ -1,8 +1,10 @@
 import pytest
+from unittest import TestCase
 
 
 @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-class TestPrefixMacro:
+class TestPrefixMacro(TestCase):
+    maxDiff = None
 
     def test_prefix_column_in_single_item_list_is_successful(self):
         var_dict = {'columns': ["CUSTOMER_HASHDIFF"], 'prefix': 'c'}
@@ -11,7 +13,7 @@ class TestPrefixMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_prefix_multiple_columns_is_successful(self):
         var_dict = {'columns': ["CUSTOMER_HASHDIFF", 'CUSTOMER_PK', 'LOADDATE', 'SOURCE'], 'prefix': 'c'}
@@ -20,7 +22,7 @@ class TestPrefixMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_prefix_aliased_column_is_successful(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOADDATE"]
@@ -31,7 +33,7 @@ class TestPrefixMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_prefix_aliased_column_with_alias_target_as_source_is_successful(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOADDATE"]
@@ -41,7 +43,7 @@ class TestPrefixMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_prefix_aliased_column_with_alias_target_as_target_is_successful(self):
         columns = [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOADDATE"]
@@ -51,7 +53,7 @@ class TestPrefixMacro:
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert actual_sql == expected_sql
+        self.assertEqual(expected_sql, actual_sql)
 
     def test_prefix_with_no_columns_raises_error(self):
         var_dict = {'prefix': 'c'}
