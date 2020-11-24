@@ -41,7 +41,7 @@
 WITH stage AS (
     SELECT
 {% if source_relation is defined  %}
-    {{ dbtvault.derive_columns(source_relation=source_relation) | indent(4) }}
+    {{ dbtvault.source_columns(source_relation=source_relation) | indent(4) }}
 {% endif %}
     FROM {{ source_relation }}
 ),
