@@ -1,7 +1,7 @@
 {# string  -------------------------------------------------     #}
 
 {%- macro type_string() -%}
-  {{ adapter.dispatch('type_string') }}
+  {{ adapter.dispatch('type_string', packages=['dbtvault_bq'])() }}
 {%- endmacro -%}
 
 {% macro default__type_string() %}

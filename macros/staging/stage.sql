@@ -4,7 +4,7 @@
         {%- set include_source_columns = true -%}
     {% endif %}
 
-    {{- adapter.dispatch('stage')(
+    {{- adapter.dispatch('stage', packages=['dbtvault_bq'])(
         include_source_columns,
         source_model,
         hashed_columns,

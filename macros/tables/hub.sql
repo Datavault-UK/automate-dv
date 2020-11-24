@@ -1,6 +1,6 @@
 {%- macro hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
     {# BQ CHANGE: Look at local package cause of incompatible prefix macro call #}
-    {{- adapter.dispatch('hub')(
+    {{- adapter.dispatch('hub', packages=['dbtvault_bq'])(
             src_pk=src_pk, src_nk=src_nk,
             src_ldts=src_ldts, src_source=src_source,
             source_model=source_model
@@ -78,8 +78,8 @@ records_to_insert AS (
     {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
-    {# BQ Change: dbtvault.prefix -> dbtvault.snowflake__prefix #}
-    WHERE {{ dbtvault.snowflake__prefix([src_pk], 'd') }} IS NULL
+    {# BQ Change: dbtvault.prefix -> dbtvault_bq.prefix #}
+    WHERE {{ dbtvault_bq.prefix([src_pk], 'd') }} IS NULL
     {%- endif %}
 )
 

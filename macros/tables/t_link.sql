@@ -1,6 +1,6 @@
 {%- macro t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
     {# BQ Change: Look locally cause of incompatible prefix macro call #}
-    {{- adapter.dispatch('t_link')(
+    {{- adapter.dispatch('t_link', packages=['dbtvault_bq'])(
             src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
             src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
             source_model=source_model
@@ -24,14 +24,14 @@ WITH stage AS (
 ),
 records_to_insert AS (
     {# BQ Change: prefix -> snowflake__prefix #}
-    SELECT DISTINCT {{ dbtvault.snowflake__prefix(source_cols, 'stg') }}
+    SELECT DISTINCT {{ dbtvault_bq.prefix(source_cols, 'stg') }}
     FROM stage AS stg
     {% if is_incremental() -%}
     LEFT JOIN {{ this }} AS tgt
     {# BQ Change: prefix -> snowflake__prefix #}
-    ON {{ dbtvault.snowflake__prefix([src_pk], 'stg') }} = {{ dbtvault.snowflake__prefix([src_pk], 'tgt') }}
+    ON {{ dbtvault_bq.prefix([src_pk], 'stg') }} = {{ dbtvault_bq.prefix([src_pk], 'tgt') }}
     {# BQ Change: prefix -> snowflake__prefix #}
-    WHERE {{ dbtvault.snowflake__prefix([src_pk], 'tgt') }} IS NULL
+    WHERE {{ dbtvault_bq.prefix([src_pk], 'tgt') }} IS NULL
     {%- endif %}
 )
 

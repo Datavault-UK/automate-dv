@@ -85,7 +85,7 @@ CONCAT(
     {%- endset -%}
 
     {# Call the appropriate database adapter hash function -#}
-    {{ adapter.dispatch('hash')(columns_prehash, hash_algo) }} AS {{ alias }}
+    {{ adapter.dispatch('hash', packages=['dbtvault_bq'])(columns_prehash, hash_algo) }} AS {{ alias }}
 {%- endmacro %}
 
 

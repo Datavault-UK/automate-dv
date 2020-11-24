@@ -1,6 +1,6 @@
 {%- macro link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
     {# BQ Change: Look at local package cause of incompatible prefix macro call #}
-    {{- adapter.dispatch('link')(
+    {{- adapter.dispatch('link', packages=['dbtvault_bq'])(
             src_pk=src_pk, src_fk=src_fk,
             src_ldts=src_ldts, src_source=src_source,
             source_model=source_model
@@ -80,7 +80,7 @@ records_to_insert AS (
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
     {# BQ Change: prefix -> snowflake__prefix cause of lack of default macro #}
-    WHERE {{ dbtvault.snowflake__prefix([src_pk], 'd') }} IS NULL
+    WHERE {{ dbtvault_bq.prefix([src_pk], 'd') }} IS NULL
     {%- endif %}
 )
 

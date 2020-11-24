@@ -6,7 +6,7 @@
 
 {%- macro replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
     {# BQ Change: Look locally cause of incompatible macro definitions #}
-    {% set macro = adapter.dispatch('replace_placeholder_with_filter')(
+    {% set macro = adapter.dispatch('replace_placeholder_with_filter', packages=['dbtvault_bq'])(
         core_sql=core_sql,
         timestamp_field=timestamp_field,
         start_timestamp=start_timestamp,
@@ -49,7 +49,7 @@
 
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
     {# BQ Change: Look locally cause of incompatible macro definitions #}
-    {% set macro = adapter.dispatch('get_period_filter_sql')(
+    {% set macro = adapter.dispatch('get_period_filter_sql', packages=['dbtvault_bq'])(
         target_cols_csv=target_cols_csv,
         base_sql=base_sql,
         timestamp_field=timestamp_field,
@@ -79,7 +79,7 @@
 
 {%- macro get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
     {# BQ Change: Look locally cause of incompatible macro definitions #}
-    {% set macro = adapter.dispatch('get_period_boundaries')(
+    {% set macro = adapter.dispatch('get_period_boundaries', packages=['dbtvault_bq'])(
         target_schema=target_schema,
         target_table=target_table,
         timestamp_field=timestamp_field,
@@ -155,7 +155,7 @@
 
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
     {# BQ Change: Look locally cause of incompatible macro definitions #}
-    {% set macro = adapter.dispatch('get_period_of_load')(
+    {% set macro = adapter.dispatch('get_period_of_load', packages=['dbtvault_bq'])(
         period=period,
         offset=offset,
         start_timestamp=start_timestamp
