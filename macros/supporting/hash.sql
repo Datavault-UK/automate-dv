@@ -13,7 +13,7 @@
     '' -> '^^'
     TRUE -> 'TRUE'
 -#}
-    IFNULL(NULLIF(UPPER(TRIM(CAST({{- expr }} AS {{ dbtvault.type_string() }}))), ''), '{{ output_str_if_null }}')
+    IFNULL(NULLIF(UPPER(TRIM(CAST({{- expr }} AS {{ dbtvault_bq.type_string() }}))), ''), '{{ output_str_if_null }}')
 {%- endmacro %}
 
 
@@ -78,7 +78,7 @@
     {%- set columns_prehash -%}
 CONCAT(
         {%- for col in col_list %}
-            {{- dbtvault._standardize_hash_input(col) }}
+            {{- dbtvault_bq._standardize_hash_input(col) }}
             {%- if not loop.last -%}, '||', {%- endif %}
         {%- endfor %}
 )
