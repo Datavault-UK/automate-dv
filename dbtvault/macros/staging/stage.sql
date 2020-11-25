@@ -4,6 +4,7 @@
         {%- set include_source_columns = true -%}
     {% endif %}
 
+
     {{- adapter.dispatch('stage', packages = ['dbtvault'])(include_source_columns=include_source_columns, source_model=source_model, hashed_columns=hashed_columns, derived_columns=derived_columns) -}}
 {%- endmacro -%}
 
@@ -37,12 +38,25 @@
 
     {%- set source_relation = ref(source_model) -%}
 {%- endif -%}
-{#- If source relation is defined but derived_columns is not, add columns from source model. -#}
+
+
+{#- If source relation is defined add columns from source model. -#}
+{%- set include_columns = [] -%}
+
 WITH stage AS (
     SELECT
-{% if source_relation is defined  %}
-    {{ dbtvault.source_columns(source_relation=source_relation) | indent(4) }}
-{% endif %}
+
+{% if source_relation is defined  -%}
+   {%- set  include_columns= dbtvault.source_columns(source_relation=source_relation) -%}
+
+{#- Print source colums -#}
+{%-for col in include_columns -%}
+    {{'    ' }}{{ col }}
+    {{- ',\n' if not loop.last -}}
+{%-endfor -%}
+
+{%- endif %}
+
     FROM {{ source_relation }}
 ),
 
@@ -75,6 +89,8 @@ derived_columns AS (
 {# Hash columns, if provided -#}
 hashed_columns AS (
     SELECT
+
+
     {%- if hashed_columns is defined and hashed_columns is not none %}
         {{- " *," if include_source_columns -}}
         {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
