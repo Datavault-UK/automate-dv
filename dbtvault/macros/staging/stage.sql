@@ -47,13 +47,13 @@ WITH stage AS (
     SELECT
 
 {% if source_relation is defined  -%}
-   {%- set  include_columns= dbtvault.source_columns(source_relation=source_relation) -%}
+   {%- set include_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 
 {#- Print source colums -#}
-{%-for col in include_columns -%}
+{%- for col in include_columns -%}
     {{'    ' }}{{ col }}
     {{- ',\n' if not loop.last -}}
-{%-endfor -%}
+{%- endfor -%}
 
 {%- endif %}
 
