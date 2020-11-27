@@ -101,3 +101,4 @@ class TestStageMacro(TestCase):
 
         assert 'Staging error: Missing source_model configuration. ' \
                'A source model name must be provided.' in process_logs
+
