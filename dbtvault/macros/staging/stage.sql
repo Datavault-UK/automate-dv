@@ -41,19 +41,13 @@
 
 
 {#- If source relation is defined add columns from source model. -#}
-{%- set include_columns = [] -%}
-
 WITH stage AS (
     SELECT
 
 {% if source_relation is defined  -%}
-   {%- set  include_columns= dbtvault.source_columns(source_relation=source_relation) -%}
+   {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 
-{#- Print source colums -#}
-{%-for col in include_columns -%}
-    {{'    ' }}{{ col }}
-    {{- ',\n' if not loop.last -}}
-{%-endfor -%}
+    {{- dbtvault.print_columns(include_columns=included_source_columns) -}}
 
 {%- endif %}
 
@@ -95,8 +89,10 @@ hashed_columns AS (
         {{- " *," if include_source_columns -}}
         {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
 
-    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4)}},
+    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }},
         {%- endif %}
+
+    {%- set hashed_columns = dbtvault.process_exclude(source_relation=source_relation, derived_columns=derived_columns ,columns=hashed_columns) %}
 
     {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
 
@@ -112,3 +108,13 @@ SELECT * FROM hashed_columns
 
 {%- endmacro -%}
 
+
+{%- macro print_columns(include_columns=none) -%}
+
+{#- Print source colums -#}
+{%- for col in include_columns -%}
+    {{'    ' }}{{ col }}
+    {{- ',\n' if not loop.last -}}
+{%- endfor -%}
+
+{%- endmacro -%}

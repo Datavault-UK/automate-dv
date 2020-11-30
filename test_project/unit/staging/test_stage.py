@@ -96,8 +96,17 @@ class TestStageMacro(TestCase):
         assert 'Done' in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
+    def test_stage_correctly_generates_sql_for_only_source_and_hashing_with_exclude_flag(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+
+        assert 'Done' in process_logs
+        self.assertEqual(expected_sql, actual_sql)
+
     def test_stage_raises_error_with_missing_source(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
 
         assert 'Staging error: Missing source_model configuration. ' \
                'A source model name must be provided.' in process_logs
+

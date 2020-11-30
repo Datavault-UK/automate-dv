@@ -11,7 +11,7 @@
 {%- set src_columns = [] -%}
 {%- set der_columns = [] -%}
 
-{%- set source_cols =  dbtvault.source_columns(source_relation=source_relation) -%}
+{%- set source_cols = dbtvault.source_columns(source_relation=source_relation) -%}
 
 {%- if columns is mapping and columns is not none -%}
 
@@ -28,7 +28,7 @@
     {#- Add all columns from source_model relation -#}
     {%- if source_relation is defined and source_relation is not none -%}
 
-        {%- for col in source_cols  -%}
+        {%- for col in source_cols -%}
             {%- if col not in exclude_columns -%}
                 {%- set _ = src_columns.append(col) -%}
             {%- endif -%}
