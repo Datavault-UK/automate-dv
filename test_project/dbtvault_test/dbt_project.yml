@@ -259,6 +259,20 @@ models:
                     - CUSTOMER_PK
                     - LOADDATE
                     - RECORD_SOURCE
+          test_stage_correctly_generates_sql_for_only_source_and_hashing_with_exclude_flag:
+            vars:
+              source_model: raw_source
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUSTOMER_HASHDIFF:
+                  is_hashdiff: true
+                  exclude_flag: true
+                  columns:
+                    - BOOKING_FK
+                    - ORDER_FK
+                    - CUSTOMER_PK
+                    - LOADDATE
+                    - RECORD_SOURCE
       tables:
         hub:
           materialized: incremental
