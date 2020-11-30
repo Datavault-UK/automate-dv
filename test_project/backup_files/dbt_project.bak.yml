@@ -232,17 +232,15 @@ models:
              source_model: raw_source
              hashed_columns:
                CUSTOMER_PK: CUSTOMER_ID
-               CUST_CUSTOMER_HASHDIFF:
-                 CUSTOMER_PK: CUSTOMER_ID
-                 CUSTOMER_HASHDIFF:
-                   is_hashdiff: true
-                   exclude_selection: true
-                   columns:
-                     - BOOKING_FK
-                     - ORDER_FK
-                     - CUSTOMER_PK
-                     - LOADDATE
-                     - RECORD_SOURCE
+               CUSTOMER_HASHDIFF:
+                 is_hashdiff: true
+                 exclude_flag: true
+                 columns:
+                   - BOOKING_FK
+                   - ORDER_FK
+                   - CUSTOMER_PK
+                   - LOADDATE
+                   - RECORD_SOURCE
              derived_columns:
                SOURCE: '!STG_BOOKING'
                EFFECTIVE_FROM: BOOKING_DATE
@@ -254,7 +252,21 @@ models:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUSTOMER_HASHDIFF:
                   is_hashdiff: true
-                  exclude_selection: true
+                  exclude_flag: true
+                  columns:
+                    - BOOKING_FK
+                    - ORDER_FK
+                    - CUSTOMER_PK
+                    - LOADDATE
+                    - RECORD_SOURCE
+          test_stage_correctly_generates_sql_for_only_source_and_hashing_with_exclude_flag:
+            vars:
+              source_model: raw_source
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUSTOMER_HASHDIFF:
+                  is_hashdiff: true
+                  exclude_flag: true
                   columns:
                     - BOOKING_FK
                     - ORDER_FK

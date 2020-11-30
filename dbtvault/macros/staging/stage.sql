@@ -89,10 +89,10 @@ hashed_columns AS (
         {{- " *," if include_source_columns -}}
         {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
 
-    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4)}},
+    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }},
         {%- endif %}
 
-    {{  dbtvault.process_exclude(source_relation=source_releation, derived_columns=none ,columns=hashed_columns)  }}
+    {%- set hashed_columns = dbtvault.process_exclude(source_relation=source_relation, derived_columns=derived_columns ,columns=hashed_columns) %}
 
     {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
 
