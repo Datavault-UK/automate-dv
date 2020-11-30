@@ -1,16 +1,3 @@
-{# Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-#}
-
 {%- macro _standardize_hash_input(expr, output_str_if_null='^^') -%}
 {#-
     Casts any field into a standardized string to prepare for hashing
@@ -26,7 +13,7 @@
     '' -> '^^'
     TRUE -> 'TRUE'
 -#}
-    IFNULL(NULLIF(UPPER(TRIM(CAST({{- expr }} AS {{ dbtvault.type_string() }}))), ''), '{{ output_str_if_null }}')
+    IFNULL(NULLIF(UPPER(TRIM(CAST({{- expr }} AS {{ dbtvault_bq.type_string() }}))), ''), '{{ output_str_if_null }}')
 {%- endmacro %}
 
 
@@ -91,20 +78,20 @@
     {%- set columns_prehash -%}
 CONCAT(
         {%- for col in col_list %}
-            {{- dbtvault._standardize_hash_input(col) }}
+            {{- dbtvault_bq._standardize_hash_input(col) }}
             {%- if not loop.last -%}, '||', {%- endif %}
         {%- endfor %}
 )
     {%- endset -%}
 
     {# Call the appropriate database adapter hash function -#}
-    {{ adapter_macro('dbtvault.hash', columns_prehash, hash_algo) }} AS {{ alias }}
+    {{ adapter.dispatch('hash', packages=['dbtvault_bq'])(columns_prehash, hash_algo) }} AS {{ alias }}
 {%- endmacro %}
 
 
 {% macro default__hash(columns, alias, is_hashdiff, hash_algo) %}
     {%- if execute -%}
-        {{ exceptions.raise_compiler_error("The 'dbtvault.hash' macro does not support your database engine. Supported Databases: Snowflake, Bigquery") }}
+        {{ exceptions.raise_compiler_error("The 'hash' macro does not support your database engine. Supported Databases: Snowflake, Bigquery") }}
     {%- endif -%}
 {%- endmacro %}
 

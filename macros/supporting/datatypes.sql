@@ -1,12 +1,12 @@
 {# string  -------------------------------------------------     #}
 
 {%- macro type_string() -%}
-  {{ adapter_macro('dbtvault.type_string') }}
+  {{ adapter.dispatch('type_string', packages=['dbtvault_bq'])() }}
 {%- endmacro -%}
 
 {% macro default__type_string() %}
     {%- if execute -%}
-        {{ exceptions.raise_compiler_error("The 'dbtvault.type_string' macro does not support your database engine. Supported Databases: Snowflake, Bigquery") }}
+        {{ exceptions.raise_compiler_error("The 'type_string' macro does not support your database engine. Supported Databases: Snowflake, Bigquery") }}
     {%- endif -%}
 {% endmacro %}
 
