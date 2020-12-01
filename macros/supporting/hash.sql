@@ -111,7 +111,7 @@ CONCAT(
         Compilation Error - if an unsupported hashing algorithm is passed in
 -#}
     {%- if hash_algo != 'MD5' and execute -%}
-        {% do exceptions.raise_compiler_error("The '_bigquery_hash_single' macro does not support the hash algorithm ''" ~ hash_algo ~ "''. Supported hash algorithms are: 'MD5'") %}
+        {% do exceptions.raise_compiler_error("The '_bigquery_hash_single' macro does not support the hash algorithm '" ~ hash_algo ~ "'. Supported hash algorithms are: 'MD5'") %}
     {%- endif -%}
     {%- if hash_algo == 'MD5' -%}
 TO_HEX(MD5(

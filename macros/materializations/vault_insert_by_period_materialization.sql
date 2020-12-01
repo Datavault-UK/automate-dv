@@ -1,4 +1,5 @@
-{% materialization vault_insert_by_period, default -%}
+{# BQ Change: Had to add the bigquery arg #}
+{% materialization vault_insert_by_period, adapter='bigquery' -%}
 
     {%- set full_refresh_mode = flags.FULL_REFRESH -%}
 
@@ -10,7 +11,6 @@
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
-
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
 
@@ -31,10 +31,12 @@
 
     {% elif existing_relation.is_view or full_refresh_mode %}
         {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
-        {% set backup_identifier = existing_relation.identifier ~ "__dbt_backup" %}
+        {# BQ Change: __dbt_backup to __dbt_tmp #}
+        {% set backup_identifier = existing_relation.identifier ~ "__dbt_tmp" %}
         {% set backup_relation = existing_relation.incorporate(path={"identifier": backup_identifier}) %}
 
-        {% do adapter.drop_relation(backup_relation) %}
+
+        {% do drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
         {% set filtered_sql = dbtvault_bq.replace_placeholder_with_filter(sql, timestamp_field,
@@ -56,12 +58,11 @@
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
         {%- set loop_vars = {'sum_rows_inserted': 0} -%}
-
         {% for i in range(period_boundaries.num_periods) -%}
 
             {%- set iteration_number = i + 1 -%}
-            {%- set period_of_load = dbtvault_bq.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
 
+            {%- set period_of_load = dbtvault_bq.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
             {% set tmp_relation = make_temp_relation(this) %}
@@ -98,6 +99,8 @@
             {% do adapter.commit() %}
 
         {% endfor %}
+        {# BQ Fixed: https://github.com/Datavault-UK/dbtvault/issues/18 #}
+        {% do to_drop.append(tmp_relation) %}
 
         {% call noop_statement(name='main', status="INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
             -- no-op
@@ -123,7 +126,8 @@
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
     {% for rel in to_drop %}
-        {{ drop_relation_if_exists(backup_relation) }}
+        {# BQ Fixed: https://github.com/Datavault-UK/dbtvault/issues/18 #}
+        {{ drop_relation_if_exists(rel) }}
     {% endfor %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}

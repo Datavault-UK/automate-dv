@@ -1,0 +1,27 @@
+name: 'dbtvault_bq_integration_tests'
+version: '1.0'
+
+profile: 'dbtvault_bq_integration_tests'
+
+config-version: 2
+
+source-paths: ["test_setup"]
+analysis-paths: ["analysis"]
+test-paths: ["tests"]
+data-paths: ["data"]
+macro-paths: ["macros"]
+
+target-path: "target"
+clean-targets:
+    - "target"
+    - "dbt_modules"
+
+require-dbt-version: ">=0.18.1"
+
+quoting:
+    database: true
+    identifier: true
+    schema: true
+
+vars:
+    hash_algo: 'MD5'

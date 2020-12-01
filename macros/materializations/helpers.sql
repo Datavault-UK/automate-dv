@@ -28,19 +28,18 @@
     {% do return(filtered_sql) %}
 {% endmacro %}
 
-
 {# BQ Change: Added BQ implementaion #}
 {% macro bigquery__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
     {# BQ Change: Use dbt_utils cross_db date functions #}
-    {%- set start_timestamp = dbt_utils.safe_cast(start_timestamp, dbt_utils.type_timestamp()) -%}
-    {%- set stop_timestamp = dbt_utils.safe_cast(stop_timestamp, dbt_utils.type_timestamp()) -%}
+    {# TODO: Why is stop_timestamp passed but not used? #}
+    {%- set start_timestamp = dbt_utils.safe_cast(dbt_utils.string_literal(start_timestamp) , dbt_utils.type_timestamp()) -%}
     {%- set timestamp_field = dbt_utils.safe_cast(timestamp_field, dbt_utils.type_timestamp()) -%}
     {%- set period_filter -%}
-          (
-            {{ timestamp_field }} >= {{ dbt_utils.date_trunc(period, dbt_utils.dateadd(period, offset, start_timestamp)) }}
-            AND {{ timestamp_field }} <  {{ dbt_utils.date_trunc(period, dbt_utils.dateadd(period, offset + 1, start_timestamp)) }}
-            AND {{ timestamp_field }} >= '{{ start_timestamp }}'
-          )
+        (
+            {{ timestamp_field }} >= {{ dbt_utils.date_trunc(period, dbtvault_bq.timestamp_add(period, offset, start_timestamp)) }}
+            AND {{ timestamp_field }} <  {{ dbt_utils.date_trunc(period, dbtvault_bq.timestamp_add(period, offset + 1, start_timestamp)) }}
+            AND {{ timestamp_field }} >= {{- start_timestamp -}}
+        )
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
@@ -126,15 +125,20 @@
 
 {# BQ Change: Added BQ implementation #}
 {% macro bigquery__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+    {%- set timestamp_field = dbt_utils.safe_cast(timestamp_field, dbt_utils.type_timestamp()) -%}}
+    {%- set start_date = dbt_utils.safe_cast(dbt_utils.string_literal(start_date), dbt_utils.type_timestamp()) -%}
+    {%- set stop_date =  'NULL' if stop_date is none else dbt_utils.string_literal(stop_date) -%}
+
 
     {% set period_boundary_sql -%}
         with data as (
             select
-                {# BQ Change: timestamp casting using dbt_utils cross_db cast (with max_timestamp) #}
-                {%- set max_timestamp = 'coalesce(max(' ~ timestamp_field ~ '), ' ~ start_date ~')' -%}
-                {{ dbt_utils.safe_cast(max_timestamp, dbt_utils.type_timestamp()) }} as start_timestamp,
-                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "TIMESTAMP(nullif('" ~ stop_date ~ "',''))") }},
-                         {{ dbt_utils.current_timestamp() }} ) as stop_timestamp
+                coalesce(max({{ timestamp_field  }}), {{ start_date }}) as start_timestamp,
+                {#- BQ dbt_utils doesn't support timestamp_add, added custom -#}
+                coalesce(
+                    {{- dbtvault_bq.timestamp_add('DAY', 1, stop_date) -}},
+                    {{- dbt_utils.current_timestamp() -}}
+                ) as stop_timestamp
             from {{ target_schema }}.{{ target_table }}
         )
         select
@@ -148,10 +152,9 @@
 
     {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
 
-    {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
-                                'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
-                                'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
-
+    {% set period_boundaries = {'start_timestamp': period_boundaries_dict['start_timestamp'][0] | string,
+                                'stop_timestamp': period_boundaries_dict['stop_timestamp'][0] | string,
+                                'num_periods': period_boundaries_dict['num_periods'][0] | int} %}
     {% do return(period_boundaries) %}
 {%- endmacro %}
 
@@ -185,15 +188,16 @@
 
 {# BQ Change: Added BQ implementation #}
 {%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
-
-    {% set period_of_load_sql -%}
+    {%- set start_timestamp = dbt_utils.string_literal(start_timestamp) -%}
+    {%- set period_of_load_sql -%}
         {# BQ Change: compatible date logic #}
         SELECT {{
           dbt_utils.date_trunc(
-            period, dbt_utils.dateadd(
+            period,
+            dbtvault_bq.timestamp_add(
               period,
               offset,
-              dbt_utils.safe_cast(start_timestamp, dbt_utils.type_timestamp())
+              start_timestamp
             )
           )
         }} AS period_of_load
@@ -201,7 +205,6 @@
 
     {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}
 
-    {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
-
+    {% set period_of_load = period_of_load_dict['period_of_load'][0] | string %}
     {% do return(period_of_load) %}
 {%- endmacro -%}
