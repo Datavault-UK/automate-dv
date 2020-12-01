@@ -371,12 +371,11 @@ class DBTTestUtils:
         return processed_stage_names
 
     @staticmethod
-    def calc_hash(columns_as_series) -> Series:
+    def calc_hash(columns_as_series: Series) -> Series:
         """
         Calculates the MD5 hash for a given value
             :param columns_as_series: A pandas Series of strings for the hash to be calculated on.
             In the form of "md5('1000')" or "sha('1000')"
-            :type columns_as_series: Series
             :return: Hash (MD5 or SHA) of values as Series (used as column)
         """
 
@@ -403,19 +402,36 @@ class DBTTestUtils:
         return Series(hashed_list)
 
     @staticmethod
-    def parse_hashdiffs(columns_as_series) -> Series:
+    def parse_hashdiffs(columns_as_series: Series) -> Series:
+        """
+        Evaluate strings surrounded with hashdiff() and exclude_hashdiff() to
+        augment the YAML metadata and configure hashdiff columns for staging.
 
-        pattern = r"^(?:hashdiff\(')(.*)(?:'\))"
+            :param columns_as_series: Columns from a context.table in Series form.
+            :return: Modified series
+        """
+
+        standard_pattern = r"^(?:hashdiff\(')(.*)(?:'\))"
+        exclude_pattern = r"^(?:exclude_hashdiff\(')(.*)(?:'\))"
 
         columns = []
 
         for item in columns_as_series:
 
-            if re.search(pattern, item):
-                raw_item = re.findall(pattern, item)[0]
+            if re.search(standard_pattern, item):
+                raw_item = re.findall(standard_pattern, item)[0]
                 split_item = str(raw_item).split(",")
                 hashdiff_dict = {"is_hashdiff": True,
                                  "columns": split_item}
+
+                columns.append(hashdiff_dict)
+            elif re.search(exclude_pattern, item):
+                raw_item = re.findall(exclude_pattern, item)[0]
+                split_item = str(raw_item).split(",")
+                hashdiff_dict = {"is_hashdiff": True,
+                                 "exclude_columns": True,
+                                 "columns": split_item}
+
                 columns.append(hashdiff_dict)
             else:
                 columns.append(item)
