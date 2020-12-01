@@ -208,3 +208,30 @@
     {% set period_of_load = period_of_load_dict['period_of_load'][0] | string %}
     {% do return(period_of_load) %}
 {%- endmacro -%}
+
+
+{# BQ Addition: Extract rows added from load results #}
+{%- macro get_query_rows_affected(load_result) -%}
+  {% set results = adapter.dispatch('get_query_rows_affected', packages=dbtvault_bq._get_dispatch_lookup_packages())(load_result) %}
+  {% do return(results) %}
+{%- endmacro -%}
+
+{% macro bigquery__get_query_rows_affected(load_result) %}
+    {% set status = load_result['status'] %}
+    {% set rows_index_start = status.find('(') + 1 %}
+    {% set rows_index_end = status.find('rows, ') - 1 %}
+    {% set bytes_index_start = rows_index_end + 7 %}
+    {% set bytes_index_end = status.find(' Bytes') %}
+    {% set results = { 'rows': 0, 'bytes': 0 } %}
+    {% if rows_index_start != 0 %}
+      {% do results.update({ 'rows': status[rows_index_start:rows_index_end] }) %}
+    {% endif %}
+    {% if bytes_index_end != -1 %}
+      {% do results.update({ 'bytes': status[bytes_index_start:bytes_index_end] }) %}
+    {% endif %}
+    {% do return(results)  %} #}
+{% endmacro %}
+
+{% macro default__get_query_rows_affected(load_result) %}
+    {% do return(load_result['status'].split(" ")[1] | int) %}
+{% endmacro %}

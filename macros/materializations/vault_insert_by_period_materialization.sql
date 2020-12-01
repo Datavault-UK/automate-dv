@@ -86,8 +86,8 @@
                 );
             {%- endcall %}
 
-            {%- set rows_inserted = (load_result(insert_query_name)['status'].split(" "))[1] | int -%}
-
+            {%- set load_result_output = load_result(insert_query_name) -%}
+            {%- set rows_inserted = dbtvault_bq.get_query_rows_affected(load_result_output).rows | int -%}
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
             {%- set _ = loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
 
@@ -113,7 +113,8 @@
             {{ build_sql }}
         {% endcall %}
 
-        {%- set rows_inserted = (load_result("main")['status'].split(" "))[1] | int -%}
+        {%- set load_result_output = load_result("main") -%}
+        {%- set rows_inserted = dbtvault_bq.get_query_rows_affected(load_result_output).rows | int -%}
 
         {% call noop_statement(name='main', status="BASE LOAD {}".format(rows_inserted)) -%}
             -- no-op
