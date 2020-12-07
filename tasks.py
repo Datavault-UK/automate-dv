@@ -37,7 +37,8 @@ def check_project(c, project='test'):
             f"Project '{project}' is available at: '{Path(available_projects[project]['work_dir']).absolute()}'")
         return available_projects[project]['work_dir']
     else:
-        raise ValueError(f"Unexpected project '{project}', available projects: {', '.join(available_projects)}")
+        logger.error(f"Unexpected project '{project}', available projects: {', '.join(available_projects)}")
+        exit(0)
 
 
 @task
@@ -117,19 +118,7 @@ def setup(c, target=None, user=None, project=None):
         :param project: dbt project to run with (Optional if defaults already set)
     """
 
-    # Get config
-    if not target:
-        target = c.config.get('target', None)
-
-    if not user:
-        user = c.config.get('secrets_user', None)
-
-    if not project:
-        project = c.config.get('project', None)
-
-    if all(v is None for v in [target, user, project]):
-        logger.error('Expected target, user and project configurations, at least one is missing.')
-        exit(0)
+    check_params(c, target=target, project=project, user=user)
 
     logger.info(f'Setting defaults...')
     set_defaults(c, target, user, project)
@@ -139,6 +128,26 @@ def setup(c, target=None, user=None, project=None):
     inject_to_file(c)
     logger.info(f'Checking project directory...')
     check_project(c)
+
+
+@task
+def change_target(c, target):
+    """
+    Change default target platform
+        :param c: invoke context
+        :param target: dbt profile target (Optional if defaults already set)
+    """
+
+    check_target(target)
+
+    dict_file = {
+        'secrets_user': c.config.get('secrets_user', None),
+        'project': c.config.get('project', None),
+        'target': target}
+
+    with open('./invoke.yml', 'w') as file:
+        yaml.dump(dict_file, file)
+        logger.info(f"Target set to '{target}'")
 
 
 @task
@@ -209,19 +218,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         :param env_file: Environment file to use for secrethub
     """
 
-    # Get config
-    if not target:
-        target = c.config.get('target', None)
-
-    if not user:
-        user = c.config.get('secrets_user', None)
-
-    if not project:
-        project = c.config.get('project', None)
-
-    # Raise error if any are null
-    if all(v is None for v in [target, user, project]):
-        raise ValueError('Expected target, user and project configurations, at least one is missing.')
+    check_params(c, target=target, user=user, project=project)
 
     # Select dbt profile
     if check_target(target):
@@ -259,4 +256,30 @@ def check_target(target: str):
     if target in available_targets:
         return True
     else:
-        raise ValueError(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
+        logger.error(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
+        exit(0)
+
+
+def check_params(c, target, user, project):
+    """
+    Validate parameters
+        :param c: invoke context
+        :param target: dbt profile target
+        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param project: dbt project to run with, either core (public dbtvault project),
+    """
+
+    # Get config
+    if not target:
+        target = c.config.get('target', None)
+
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    if not project:
+        project = c.config.get('project', None)
+
+    # Raise error if any are null
+    if all(v is None for v in [target, user, project]):
+        logger.error('Expected target, user and project configurations, at least one is missing.')
+        exit(0)
