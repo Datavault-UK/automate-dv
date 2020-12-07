@@ -16,7 +16,7 @@ dbt_utils = DBTTestUtils()
 
 
 @task
-def check_project(c, project='public'):
+def check_project(c, project='test'):
     """
     Check specified project is available.
         :param c: invoke context
@@ -25,9 +25,12 @@ def check_project(c, project='public'):
     """
 
     available_projects = {
-        'dev': {'work_dir': './'},
-        'test': {'work_dir': './test_project/dbtvault_test'},
+        "dev": {"work_dir": str(PROJECT_ROOT / "dbtvault")},
+        "test": {"work_dir": str(PROJECT_ROOT / "test_project/dbtvault_test")},
     }
+
+    if not project:
+        project = c.config.get('project', None)
 
     if project in available_projects:
         logger.info(
@@ -64,23 +67,30 @@ def inject_to_file(c, target=None, user=None, from_file='secrethub/secrethub_dev
 def create_secrethub_file(c, user=None,
                           from_file='secrethub/secrethub_tmpl.env',
                           to_file='secrethub/secrethub_dev.env'):
+    """
+    Create a secrethub file to configure environment variables with secrethub path reference
+        :param c: invoke context
+        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param from_file: File path (relative to project root) to use as a template for the secrethub configuration
+        :param to_file: Secrethub environment file path (relative to project root) to create
+    """
     if not user:
         user = c.config.get('secrets_user', None)
 
-    with open(PROJECT_ROOT / from_file, 'rt') as fin:
-        with open(PROJECT_ROOT / to_file, 'wt') as fout:
-            for line in fin:
-                fout.write(line.replace('<user>', str(user)))
+    with open(PROJECT_ROOT / from_file, 'rt') as f_in:
+        with open(PROJECT_ROOT / to_file, 'wt') as f_out:
+            for line in f_in:
+                f_out.write(line.replace('<user>', str(user)))
 
 
 @task
 def set_defaults(c, target=None, user=None, project=None):
     """
     Generate an 'invoke.yml' file
-    :param c: invoke context
-    :param target: dbt profile target
-    :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
-    :param project: dbt project to run with, either core (public dbtvault project), dev (dev project) or test (test project)
+        :param c: invoke context
+        :param target: dbt profile target
+        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param project: dbt project to run with
     """
 
     dict_file = {
@@ -94,6 +104,41 @@ def set_defaults(c, target=None, user=None, project=None):
         logger.info(f'secrets_users: {user}')
         logger.info(f'project: {project}')
         logger.info(f'target: {target}')
+
+
+@task()
+def setup(c, target=None, user=None, project=None):
+    """
+    Convenience task which runs all setup tasks in the correct sequence
+        :param c: invoke context
+        :param target: dbt profile target (Optional if defaults already set)
+        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        (Optional if defaults already set)
+        :param project: dbt project to run with (Optional if defaults already set)
+    """
+
+    # Get config
+    if not target:
+        target = c.config.get('target', None)
+
+    if not user:
+        user = c.config.get('secrets_user', None)
+
+    if not project:
+        project = c.config.get('project', None)
+
+    if all(v is None for v in [target, user, project]):
+        logger.error('Expected target, user and project configurations, at least one is missing.')
+        exit(0)
+
+    logger.info(f'Setting defaults...')
+    set_defaults(c, target, user, project)
+    logger.info(f'Creating secrethub file...')
+    create_secrethub_file(c, user=user)
+    logger.info(f'Injecting credentials to pycharm environment file...')
+    inject_to_file(c)
+    logger.info(f'Checking project directory...')
+    check_project(c)
 
 
 @task
