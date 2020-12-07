@@ -1,9 +1,9 @@
 {%- macro process_exclude(source_relation=none, derived_columns=none ,columns=none) -%}
 
-{%- set exclude_columns = [] -%}
+{%- set exclude_columns_list = [] -%}
 {%- set include_columns = [] -%}
-{% if exclude_flag is none %}
-    {%- set exclude_flag = false -%}
+{% if exclude_columns is none %}
+    {%- set exclude_columns = false -%}
 {% endif %}
 
 {#- getting all the source collumns and derived columns -#}
@@ -16,34 +16,17 @@
     {%- for col in columns -%}
 
 
-        {% if columns[col] is mapping and columns[col].exclude_flag -%}
+        {% if columns[col] is mapping and columns[col].exclude_columns -%}
 
 
 
             {%- for flagged_cols in columns[col]['columns'] -%}
 
-                {%- set _ = exclude_columns.append(flagged_cols) -%}
+                {%- set _ = exclude_columns_list.append(flagged_cols) -%}
 
             {%- endfor -%}
 
-            {%- if derived_columns is not none -%}
-                {%- for derived_col in derived_columns -%}
-                    {%- if derived_col not in exclude_columns -%}
-                        {% set column_str = dbtvault.as_constant(derived_columns[derived_col]) %}
-                        {%- set _ = include_columns.append(column_str ~ " AS " ~ derived_col) -%}
-                        {%- set _ = exclude_columns.append(derived_col)  -%}
-                     {%- endif -%}
-                {%- endfor -%}
-
-
-            {%- endif -%}
-
-
-            {%- for source_col in source_columns -%}
-                {%- if source_col not in exclude_columns -%}
-                     {%- set _ = include_columns.append(source_col) -%}
-                 {%- endif -%}
-            {%- endfor -%}
+            {%- set include_columns = dbtvault.process_source_and_derived(primary_set_list=derived_columns, secondary_set_list=source_columns, exclude_columns_list=exclude_columns_list) -%}
 
 
             {%- do columns[col].update({'columns': include_columns}) -%}
@@ -63,32 +46,41 @@
 
 
 
-{%- macro process_source_and_derived(primary_set_list=none, secondary_set_list=none ,exclude_columns=none) -%}
+{%- macro process_source_and_derived(primary_set_list=none, secondary_set_list=none ,exclude_columns_list=none) -%}
 
 {%- set include_columns = [] -%}
 
 {%- if exclude_columns is none -%}
-    {%- set exclude_columns = [] -%}
+    {%- set exclude_columns_list = [] -%}
 {%- endif -%}
-
 
 {%- if primary_set_list is not none -%}
     {%- for primary_col in primary_set_list -%}
-        {%- if primary_col not in exclude_columns -%}
-            {% set column_str = dbtvault.as_constant(derived_columns[derived_col]) %}
-            {%- set _ = include_columns.append(column_str ~ " AS " ~ derived_col) -%}
-            {%- set _ = exclude_columns.append(derived_col)  -%}
+        {%- if primary_col not in exclude_columns_list -%}
+            {%- if primary_set_list is mapping and primary_set_list[primary_col] not in exclude_columns -%}
+                {%- set _ = include_columns.append(primary_set_list[primary_col]) -%}
+                {%- set _ = exclude_columns_list.append(primary_col)  -%}
+            {%- else -%}
+                {%- set _ = include_columns.append(primary_col_col) -%}
+                {%- set _ = exclude_columns_list.append(primary_col) -%}
+            {%- endif -%}
         {%- endif -%}
-    {%- endfor -%}
+    {% endfor -%}
 {%- endif -%}
 
+{%- if secondary_set_list is not none -%}
+    {%- for secondary_col in secondary_set_list -%}
+        {%- if secondary_col not in exclude_columns_list -%}
+            {%- if secondary_set_list is mapping and secondary_set_list[secondary_col] not in exclude_columns -%}
+                {%- set _ = include_columns.append(secondary_set_list[secondary_col]) -%}
+            {%- else -%}
+                {%- set _ = include_columns.append(secondary_col) -%}
+            {%- endif -%}
+        {%- endif -%}
+    {% endfor -%}
+{%- endif -%}
 
-{%- for source_col in source_columns -%}
-    {%- if source_col not in exclude_columns -%}
-        {%- set _ = include_columns.append(source_col) -%}
-    {%- endif -%}
-{%- endfor -%}
-
-{%- do return(columns) -%}
+{%- do return(include_columns) -%}
 
 {%- endmacro -%}
+

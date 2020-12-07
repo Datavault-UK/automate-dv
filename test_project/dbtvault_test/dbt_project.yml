@@ -234,7 +234,7 @@ models:
                CUSTOMER_PK: CUSTOMER_ID
                CUSTOMER_HASHDIFF:
                  is_hashdiff: true
-                 exclude_flag: true
+                 exclude_columns: true
                  columns:
                    - BOOKING_FK
                    - ORDER_FK
@@ -252,7 +252,7 @@ models:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUSTOMER_HASHDIFF:
                   is_hashdiff: true
-                  exclude_flag: true
+                  exclude_columns: true
                   columns:
                     - BOOKING_FK
                     - ORDER_FK
@@ -266,7 +266,7 @@ models:
                 CUSTOMER_PK: CUSTOMER_ID
                 CUSTOMER_HASHDIFF:
                   is_hashdiff: true
-                  exclude_flag: true
+                  exclude_columns: true
                   columns:
                     - BOOKING_FK
                     - ORDER_FK
