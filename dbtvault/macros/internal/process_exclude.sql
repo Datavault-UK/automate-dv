@@ -2,7 +2,7 @@
 
 {%- set exclude_columns_list = [] -%}
 {%- set include_columns = [] -%}
-{% if exclude_columns is none %}
+{%- if exclude_columns is none -%}
     {%- set exclude_columns = false -%}
 {% endif %}
 
@@ -16,7 +16,7 @@
     {%- for col in columns -%}
 
 
-        {% if columns[col] is mapping and columns[col].exclude_columns -%}
+        {%- if columns[col] is mapping and columns[col].exclude_columns -%}
 
 
 
@@ -57,9 +57,10 @@
 {%- if primary_set_list is not none -%}
     {%- for primary_col in primary_set_list -%}
         {%- if primary_col not in exclude_columns_list -%}
-            {%- if primary_set_list is mapping and primary_set_list[primary_col] not in exclude_columns -%}
-                {%- set _ = include_columns.append(primary_set_list[primary_col]) -%}
-                {%- set _ = exclude_columns_list.append(primary_col)  -%}
+            {%- if primary_set_list is mapping -%}
+                {%- set primary_str = dbtvault.as_constant(primary_col) -%}
+                {%- set _ = include_columns.append(primary_str) -%}
+                {%- set _ = exclude_columns_list.append(primary_str)  -%}
             {%- else -%}
                 {%- set _ = include_columns.append(primary_col_col) -%}
                 {%- set _ = exclude_columns_list.append(primary_col) -%}
@@ -71,8 +72,9 @@
 {%- if secondary_set_list is not none -%}
     {%- for secondary_col in secondary_set_list -%}
         {%- if secondary_col not in exclude_columns_list -%}
-            {%- if secondary_set_list is mapping and secondary_set_list[secondary_col] not in exclude_columns -%}
-                {%- set _ = include_columns.append(secondary_set_list[secondary_col]) -%}
+            {%- if secondary_set_list is mapping -%}
+                {%- set secondary_str = dbtvault.as_constant(secondary_col) -%}
+                {%- set _ = include_columns.append(secondary_str) -%}
             {%- else -%}
                 {%- set _ = include_columns.append(secondary_col) -%}
             {%- endif -%}
