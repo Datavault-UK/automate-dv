@@ -40,7 +40,7 @@
 {%- endif -%}
 
 
-{#- If source relation is defined add columns from source model. -#}
+{#- Cte to add source columns from the source model -#}
 WITH stage AS (
     SELECT
 
@@ -54,7 +54,7 @@ WITH stage AS (
     FROM {{ source_relation }}
 ),
 
-{# Derive additional columns, if provided -#}
+{# Derive additional columns,if provided, and carry over source columns from previous cte for use in the hash stage  -#}
 derived_columns AS (
     SElECT
 
@@ -66,31 +66,27 @@ derived_columns AS (
 
     {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
 
-
         {%- endif -%}
 
     {#- If source relation is defined but derived_columns is not -#}
-
     {%- else -%}
-
         {{ " *" }}
-
     {%- endif %}
 
     FROM stage
 ),
 
-{# Hash columns, if provided -#}
+{# Hash columns, if provided, and call any columns included in final stage area  -#}
 hashed_columns AS (
     SELECT
 
-
     {%- if hashed_columns is defined and hashed_columns is not none %}
         {{- " *," if include_source_columns -}}
-        {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
+
+            {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
 
     {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }},
-        {%- endif %}
+            {%- endif %}
 
     {%- set hashed_columns = dbtvault.process_exclude(source_relation=source_relation, derived_columns=derived_columns ,columns=hashed_columns) %}
 
@@ -111,7 +107,7 @@ SELECT * FROM hashed_columns
 
 {%- macro print_columns(include_columns=none) -%}
 
-{#- Print source colums -#}
+{#- Print source colums as a list -#}
 {%- for col in include_columns -%}
     {{'    ' }}{{ col }}
     {{- ',\n' if not loop.last -}}
