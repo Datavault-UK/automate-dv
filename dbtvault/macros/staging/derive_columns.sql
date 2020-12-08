@@ -34,8 +34,9 @@
             {%- endif -%}
         {%- endfor -%}
 
-    {%- endif %}
+    {%- endif -%}
 
+    {#- Makes sure the columns are appended in a logical order. Derived  columns then source columns -#}
     {%- set include_columns = src_columns + der_columns -%}
 
     {#- Print out all columns in includes -#}

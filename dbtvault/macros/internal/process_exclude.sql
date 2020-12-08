@@ -6,7 +6,7 @@
     {%- set exclude_columns = false -%}
 {% endif %}
 
-{#- getting all the source collumns and derived columns -#}
+{#- getting all the source columns -#}
 
 {%- set source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 
@@ -15,10 +15,8 @@
 
     {%- for col in columns -%}
 
-
+        {# Checks if the exclude flag is present and then creates a exclude list to pass to NEED BETTER NAME FOR MACRO #}
         {%- if columns[col] is mapping and columns[col].exclude_columns -%}
-
-
 
             {%- for flagged_cols in columns[col]['columns'] -%}
 
@@ -28,8 +26,9 @@
 
             {%- set include_columns = dbtvault.process_source_and_derived(primary_set_list=derived_columns, secondary_set_list=source_columns, exclude_columns_list=exclude_columns_list) -%}
 
-
+            {#- Updates the the apropriate hashdiff to contain the columns we do want to hash  -#}
             {%- do columns[col].update({'columns': include_columns}) -%}
+            {%- do columns[col].update({'exclude_columns':'false'}) -%}
             {%- set include_columns = [] -%}
             {%- set exclude_columns = [] -%}
 
@@ -47,13 +46,15 @@
 
 
 {%- macro process_source_and_derived(primary_set_list=none, secondary_set_list=none ,exclude_columns_list=none) -%}
-
+{# A Macro which process's two lists to make them a set with the primary_set_list takeing priority over the secondary.
+ A optional exclude list can be included as an argument to further exclude items. (primary_set_list - secondary_set_list) - exclude_columns_list  #}
 {%- set include_columns = [] -%}
 
 {%- if exclude_columns is none -%}
     {%- set exclude_columns_list = [] -%}
 {%- endif -%}
 
+    {#Appending primary list items not in exclude columns  #}
 {%- if primary_set_list is not none -%}
     {%- for primary_col in primary_set_list -%}
         {%- if primary_col not in exclude_columns_list -%}
@@ -66,9 +67,10 @@
                 {%- set _ = exclude_columns_list.append(primary_col) -%}
             {%- endif -%}
         {%- endif -%}
-    {% endfor -%}
+    {%- endfor -%}
 {%- endif -%}
 
+    {# Apending the secondary list items not in the priamry list or the exclude list  #}
 {%- if secondary_set_list is not none -%}
     {%- for secondary_col in secondary_set_list -%}
         {%- if secondary_col not in exclude_columns_list -%}
