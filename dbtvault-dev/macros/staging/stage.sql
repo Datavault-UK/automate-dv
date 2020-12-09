@@ -64,7 +64,7 @@ derived_columns AS (
     {%- if derived_columns is defined and derived_columns is not none -%}
         {%- if include_source_columns or hashed_columns is defined and hashed_columns is not none %}
 
-    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns)  | indent(width=4 , first=false) }}
+    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(width=4, first=false) }}
         {%- else %}
 
     {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
@@ -79,7 +79,7 @@ derived_columns AS (
     FROM stage
 ),
 
-{# Hash columns, if provided, and call any columns included in final stage area -#}
+{# Hash columns, if provided, and process exclusion flags if provided -#}
 hashed_columns AS (
     SELECT
 
@@ -91,7 +91,7 @@ hashed_columns AS (
     {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }},
             {%- endif %}
 
-    {%- set hashed_columns = dbtvault.process_exclude(source_relation=source_relation, derived_columns=derived_columns ,columns=hashed_columns) %}
+    {%- set hashed_columns = dbtvault.process_excludes(source_relation=source_relation, derived_columns=derived_columns, columns=hashed_columns) %}
 
     {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
 

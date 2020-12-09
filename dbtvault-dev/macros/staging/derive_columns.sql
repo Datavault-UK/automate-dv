@@ -20,8 +20,8 @@
 
         {% set column_str = dbtvault.as_constant(columns[col]) %}
 
-        {%- set _ = der_columns.append(column_str ~ " AS " ~ col) -%}
-        {%- set _ = exclude_columns.append(col) -%}
+        {%- do der_columns.append(column_str ~ " AS " ~ col) -%}
+        {%- do exclude_columns.append(col) -%}
 
     {%- endfor -%}
 
@@ -30,7 +30,7 @@
 
         {%- for col in source_cols -%}
             {%- if col not in exclude_columns -%}
-                {%- set _ = src_columns.append(col) -%}
+                {%- do src_columns.append(col) -%}
             {%- endif -%}
         {%- endfor -%}
 
