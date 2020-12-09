@@ -11,9 +11,13 @@
     src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
     alt="Join our slack"
   /></a>
- 
+  <a href="https://circleci.com/gh/Datavault-UK/dbtvault-dev"><img
+    src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield" 
+    alt="CircleCI"
+  /></a>
 </p>
 
+[![CircleCI]()]()
 
 [Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
 
