@@ -5,4 +5,4 @@ packages:
   #    revision: v0.7.0
 
   #Dev
-  - local: "../../dbtvault"
+  - local: "../../dbtvault-dev"
