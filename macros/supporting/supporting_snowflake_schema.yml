@@ -1,0 +1,35 @@
+version: 2
+
+macros:
+  - name: snowflake__hash
+    description: |
+                 {{ doc("macro__hash") }}
+
+                 {{ doc("platform__snowflake") }}
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg__hash__columns") }}'
+      - name: alias
+        type: string
+        description: '{{ doc("arg__hash__alias") }}'
+      - name: is_hashdiff
+        type: boolean
+        description: '{{ doc("arg__hash__is_hashdiff") }}'
+        
+  - name: snowflake__prefix
+    description: |
+                 {{ doc("macro__prefix") }}
+
+                 {{ doc("platform__snowflake") }}
+    arguments:
+      - name: columns
+        type: list
+        description: '{{ doc("arg__prefix__columns") }}'
+      - name: prefix_str
+        type: string
+        description: '{{ doc("arg__prefix__prefix_str") }}'
+      - name: alias_target
+        type: source | target
+        description: '{{ doc("arg__prefix__alias_target") }}'
+    

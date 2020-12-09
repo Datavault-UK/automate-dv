@@ -1,0 +1,96 @@
+version: 2
+
+macros:
+  - name: snowflake__replace_placeholder_with_filter
+    description: |
+                 {{ doc("macro__replace_placeholder_with_filter") }}
+
+                 {{ doc("platform__snowflake") }}
+    arguments:
+      - name: core_sql
+        type: string
+        description: '{{ doc("arg__replace_placeholder_with_filter__core_sql") }}'
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: start_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__start_timestamp") }}'
+      - name: stop_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__stop_timestamp") }}'
+      - name: offset
+        type: integer
+        description: '{{ doc("arg__period_materialisation__offset") }}'
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+
+  - name: snowflake__get_period_filter_sql
+    description: |
+                 {{ doc("macro__get_period_filter_sql") }}
+
+                 {{ doc("platform__snowflake") }}
+    arguments:
+      - name: target_cols_csv
+        type: string
+        description: '{{ doc("arg__get_period_filter_sql__target_cols_csv") }}'
+      - name: base_sql
+        type: string
+        description: '{{ doc("arg__get_period_filter_sql__base_sql") }}'
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+      - name: start_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__start_timestamp") }}'
+      - name: stop_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__stop_timestamp") }}'
+      - name: offset
+        type: string
+        description: '{{ doc("arg__period_materialisation__offset") }}'
+
+  - name: snowflake__get_period_boundaries
+    description: |
+                 {{ doc("macro__get_period_boundaries") }}
+
+                 {{ doc("platform__snowflake") }}
+    arguments:
+      - name: target_schema
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__target_schema") }}'
+      - name: target_table
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__target_table") }}'
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: start_date
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__start_date") }}'
+      - name: stop_date
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__stop_date") }}'
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+
+  - name: snowflake__get_period_of_load
+    description: |
+                 {{ doc("macro__get_period_of_load") }}
+
+                 {{ doc("platform__snowflake") }}
+    arguments:
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+      - name: offset
+        type: string
+        description: '{{ doc("arg__period_materialisation__offset") }}'
+      - name: start_timestamp
+        type: string
+        description: '{{ doc("arg__get_period_of_load__start_timestamp") }}'

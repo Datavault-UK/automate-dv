@@ -1,0 +1,19 @@
+{%- macro source_columns(source_relation=none) -%}
+ {# Macro to generate a list of the source columns from source model #}
+
+    {%- set include_columns = [] -%}
+
+{%- if source_relation is defined and source_relation is not none -%}
+    {%- set source_model_cols = adapter.get_columns_in_relation(source_relation) -%}
+{%- endif %}
+
+ {#- Add all columns from source_model relation -#}
+{%- for source_col in source_model_cols -%}
+        {%- set _ = include_columns.append(source_col.column) -%}
+{%- endfor -%}
+
+
+{%- do return(include_columns) -%}
+
+
+{%- endmacro -%}
