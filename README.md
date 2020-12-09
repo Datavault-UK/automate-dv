@@ -17,8 +17,6 @@
   /></a>
 </p>
 
-[![CircleCI]()]()
-
 [Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
