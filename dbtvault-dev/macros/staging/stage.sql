@@ -4,7 +4,6 @@
         {%- set include_source_columns = true -%}
     {% endif %}
 
-
     {{- adapter.dispatch('stage', packages = ['dbtvault'])(include_source_columns=include_source_columns, source_model=source_model, hashed_columns=hashed_columns, derived_columns=derived_columns) -}}
 {%- endmacro -%}
 
@@ -45,7 +44,7 @@ WITH stage AS (
     SELECT
 
 {% if source_relation is defined  -%}
-   {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
+    {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 
     {{- dbtvault.print_columns(include_columns=included_source_columns) -}}
 
@@ -54,7 +53,7 @@ WITH stage AS (
     FROM {{ source_relation }}
 ),
 
-{# Derive additional columns,if provided, and carry over source columns from previous cte for use in the hash stage  -#}
+{# Derive additional columns, if provided, and carry over source columns from previous CTE for use in the hash stage  -#}
 derived_columns AS (
     SElECT
 
@@ -76,7 +75,7 @@ derived_columns AS (
     FROM stage
 ),
 
-{# Hash columns, if provided, and call any columns included in final stage area  -#}
+{# Hash columns, if provided, and call any columns included in final stage area -#}
 hashed_columns AS (
     SELECT
 
@@ -100,8 +99,6 @@ hashed_columns AS (
 )
 
 SELECT * FROM hashed_columns
-
-
 {%- endmacro -%}
 
 
