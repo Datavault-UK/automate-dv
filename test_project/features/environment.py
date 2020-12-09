@@ -51,6 +51,19 @@ def before_all(context):
     context.dbt_test_utils.replace_test_schema()
 
 
+def after_all(context):
+    """
+    Force Restore of dbt environment
+    """
+
+    DBTTestUtils.clean_csv()
+    DBTTestUtils.clean_models()
+    DBTTestUtils.clean_target()
+
+    DBTVAULTGenerator.clean_test_schema_file()
+    DBTVAULTGenerator.restore_project_yml()
+
+
 def before_scenario(context, scenario):
     context.dbt_test_utils.create_dummy_model()
     context.dbt_test_utils.replace_test_schema()
