@@ -8,7 +8,7 @@
 
 {#- Add all columns from source_model relation -#}
 {%- for source_col in source_model_cols -%}
-    {%- set _ = include_columns.append(source_col.column) -%}
+    {%- do include_columns.append(source_col.column) -%}
 {%- endfor -%}
 
 {%- do return(include_columns) -%}

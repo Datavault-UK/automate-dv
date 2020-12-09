@@ -1,4 +1,4 @@
-{%- macro process_exclude(source_relation=none, derived_columns=none ,columns=none) -%}
+{%- macro process_excludes(source_relation=none, derived_columns=none, columns=none) -%}
 
 {%- set exclude_columns_list = [] -%}
 {%- set include_columns = [] -%}
@@ -19,15 +19,15 @@
 
             {%- for flagged_cols in columns[col]['columns'] -%}
 
-                {%- set _ = exclude_columns_list.append(flagged_cols) -%}
+                {%- do exclude_columns_list.append(flagged_cols) -%}
 
             {%- endfor -%}
 
-            {%- set include_columns = dbtvault.process_source_and_derived(primary_set_list=derived_columns, secondary_set_list=source_columns, exclude_columns_list=exclude_columns_list) -%}
+            {%- set include_columns = dbtvault.process_include_columns(primary_set_list=derived_columns, secondary_set_list=source_columns, exclude_columns_list=exclude_columns_list) -%}
 
             {#- Updates the the apropriate hashdiff to contain the columns we do want to hash  -#}
             {%- do columns[col].update({'columns': include_columns}) -%}
-            {%- do columns[col].update({'exclude_columns':'false'}) -%}
+            {%- do columns[col].pop('exclude_columns') -%}
             {%- set include_columns = [] -%}
             {%- set exclude_columns = [] -%}
 
@@ -41,8 +41,7 @@
 {%- endmacro -%}
 
 
-
-{%- macro process_source_and_derived(primary_set_list=none, secondary_set_list=none, exclude_columns_list=none) -%}
+{%- macro process_include_columns(primary_set_list=none, secondary_set_list=none, exclude_columns_list=none) -%}
 
 {%- set include_columns = [] -%}
 
@@ -59,11 +58,11 @@
 
             {%- if primary_set_list is mapping -%}
                 {%- set primary_str = dbtvault.as_constant(primary_col) -%}
-                {%- set _ = include_columns.append(primary_str) -%}
-                {%- set _ = exclude_columns_list.append(primary_str)  -%}
+                {%- do include_columns.append(primary_str) -%}
+                {%- do exclude_columns_list.append(primary_str)  -%}
             {%- else -%}
-                {%- set _ = include_columns.append(primary_col) -%}
-                {%- set _ = exclude_columns_list.append(primary_col) -%}
+                {%- do include_columns.append(primary_col) -%}
+                {%- do exclude_columns_list.append(primary_col) -%}
             {%- endif -%}
 
         {%- endif -%}
@@ -81,9 +80,9 @@
 
             {%- if secondary_set_list is mapping -%}
                 {%- set secondary_str = dbtvault.as_constant(secondary_col) -%}
-                {%- set _ = include_columns.append(secondary_str) -%}
+                {%- do include_columns.append(secondary_str) -%}
             {%- else -%}
-                {%- set _ = include_columns.append(secondary_col) -%}
+                {%- do include_columns.append(secondary_col) -%}
             {%- endif -%}
 
         {%- endif -%}

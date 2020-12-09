@@ -88,7 +88,7 @@
             {%- set rows_inserted = (load_result(insert_query_name)['status'].split(" "))[1] | int -%}
 
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
-            {%- set _ = loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
+            {%- do loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
 
             {{ dbt_utils.log_info("Ran for {} {} of {} ({}); {} records inserted [{}]".format(period, iteration_number,
                                                                                               period_boundaries.num_periods,
