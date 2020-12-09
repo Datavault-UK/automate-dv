@@ -25,7 +25,7 @@ def check_project(c, project='test'):
     """
 
     available_projects = {
-        "dev": {"work_dir": str(PROJECT_ROOT / "dbtvault")},
+        "dev": {"work_dir": str(PROJECT_ROOT / "dbtvault-dev")},
         "test": {"work_dir": str(PROJECT_ROOT / "test_project/dbtvault_test")},
     }
 
@@ -118,7 +118,7 @@ def setup(c, target=None, user=None, project=None):
         :param project: dbt project to run with (Optional if defaults already set)
     """
 
-    check_params(c, target=target, project=project, user=user)
+    target, user, project = params(c, target=target, project=project, user=user)
 
     logger.info(f'Setting defaults...')
     set_defaults(c, target, user, project)
@@ -218,7 +218,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         :param env_file: Environment file to use for secrethub
     """
 
-    check_params(c, target=target, user=user, project=project)
+    target, user, project = params(c, target=target, user=user, project=project)
 
     # Select dbt profile
     if check_target(target):
@@ -260,13 +260,14 @@ def check_target(target: str):
         exit(0)
 
 
-def check_params(c, target, user, project):
+def params(c, target, user, project):
     """
     Validate parameters
         :param c: invoke context
         :param target: dbt profile target
         :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
-        :param project: dbt project to run with, either core (public dbtvault project),
+        :param project: dbt project to run with, either core (public dbtvault project)
+        :return: tuple of values
     """
 
     # Get config
@@ -283,3 +284,5 @@ def check_params(c, target, user, project):
     if all(v is None for v in [target, user, project]):
         logger.error('Expected target, user and project configurations, at least one is missing.')
         exit(0)
+
+    return target, user, project
