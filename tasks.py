@@ -108,7 +108,7 @@ def set_defaults(c, target=None, user=None, project=None):
 
 
 @task()
-def setup(c, target=None, user=None, project=None):
+def setup(c, target=None, user=None, project=None, secrethub_template='secrethub/secrethub_tmpl.env'):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
@@ -116,6 +116,8 @@ def setup(c, target=None, user=None, project=None):
         :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
         (Optional if defaults already set)
         :param project: dbt project to run with (Optional if defaults already set)
+        :param secrethub_template: Specify secrethub template file. Useful for external contributors not in the
+        Secrethub Datavault org.
     """
 
     target, user, project = params(c, target=target, project=project, user=user)
@@ -123,7 +125,7 @@ def setup(c, target=None, user=None, project=None):
     logger.info(f'Setting defaults...')
     set_defaults(c, target, user, project)
     logger.info(f'Creating secrethub file...')
-    create_secrethub_file(c, user=user)
+    create_secrethub_file(c, user=user, from_file=secrethub_template)
     logger.info(f'Injecting credentials to pycharm environment file...')
     inject_to_file(c)
     logger.info(f'Checking project directory...')
