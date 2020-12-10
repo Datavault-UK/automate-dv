@@ -7,7 +7,7 @@ Please refer to our contribution guidelines over on our [development repository]
 dbtvault is very much a work in progress – we’re constantly adding quality of life improvements and will be adding
 new table types regularly.
 
-Rest assured we’re working on future releases – [our roadmap contains information on what’s coming](roadmap.md).
+Rest assured we’re working on future releases – [our roadmap contains information on what’s coming](https://dbtvault.readthedocs.io/en/latest/roadmap/).
  
 If you spot anything you’d like to bring to our attention, have a request for new features, have spotted an improvement we could make, 
 or want to tell us about a typo or bug, then please don’t hesitate to let us know via [github](https://github.com/Datavault-UK/dbtvault/issues). 
@@ -33,7 +33,3 @@ please feel free to submit ideas and thoughts!
 
 ### If it's an idea, feedback or a general inquiry
 Create a post with as much detail as possible; We'll be happy to reply and work with you.
-
-## Pull requests
-If you've developed something which we can add via a pull request, we're more than happy to consider it, but we'd
-like to discuss the changes first.
