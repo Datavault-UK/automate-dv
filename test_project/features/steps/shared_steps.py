@@ -362,3 +362,8 @@ def derive_columns(context, processed_stage_name):
 @step("I do not include source columns")
 def source_columns(context):
     context.include_source_columns = False
+
+
+# @step("there are no temporary tables")
+# def check_temp_table_exists(context):
+#     raise NotImplementedError(u'STEP: And there are no temporary tables')

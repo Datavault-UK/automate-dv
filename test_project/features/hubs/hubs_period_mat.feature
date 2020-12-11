@@ -23,6 +23,29 @@ Feature: Hubs Loaded using Period Materialization
       | md5('1003') | 1003        | 1993-01-03 | TPCH   |
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
+#  @fixture.single_source_hub
+#  Scenario: [BASE-PERIOD-MAT] Simple load of stage data into an empty hub without temporary tables
+#    Given the HUB table does not exist
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 1993-01-01 | TPCH   |
+#      | 1001        | Alice         | 1993-01-01 | TPCH   |
+#      | 1002        | Bob           | 1993-01-02 | TPCH   |
+#      | 1002        | Bob           | 1993-01-02 | TPCH   |
+#      | 1002        | Bob           | 1993-01-02 | TPCH   |
+#      | 1003        | Chad          | 1993-01-03 | TPCH   |
+#      | 1004        | Dom           | 1993-01-04 | TPCH   |
+#    And I create the STG_CUSTOMER stage
+#    And I use insert_by_period to load the HUB hub by day
+#    And I use insert_by_period to load the HUB hub by day
+#    Then the HUB table should contain expected data
+#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+#      | md5('1002') | 1002        | 1993-01-02 | TPCH   |
+#      | md5('1003') | 1003        | 1993-01-03 | TPCH   |
+#      | md5('1004') | 1004        | 1993-01-04 | TPCH   |
+#    And there are no temporary tables
+
   @fixture.enable_full_refresh
   @fixture.single_source_hub
   Scenario: [PM-BASE] Full refresh of loaded hub
