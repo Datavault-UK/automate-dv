@@ -95,6 +95,7 @@
                                                                                               period_of_load, rows_inserted,
                                                                                               model.unique_id)) }}
 
+            {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
 
         {% endfor %}
@@ -123,7 +124,7 @@
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
     {% for rel in to_drop %}
-        {{ drop_relation_if_exists(backup_relation) }}
+        {{ drop_relation_if_exists(rel) }}
     {% endfor %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
