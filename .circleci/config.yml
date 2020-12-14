@@ -85,9 +85,9 @@ workflows:
             branches:
               only:
                 - master
-                - develop
-                - /fix\/.*/
-                - /feat\/.*/
+                - dev
+                - /^fix-.*/
+                - /^feat-.*/
   test-integration:
     jobs:
       - integration:
@@ -95,6 +95,6 @@ workflows:
             branches:
               only:
                 - master
-                - develop
-                - /fix-\/.*/
-                - /feat-\/.*/
+                - dev
+                - /^fix-.*/
+                - /^feat-.*/
