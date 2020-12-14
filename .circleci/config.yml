@@ -83,10 +83,18 @@ workflows:
       - macros:
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - develop
+                - /fix\/.*/
+                - /feat\/.*/
   test-integration:
     jobs:
       - integration:
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - develop
+                - /fix-\/.*/
+                - /feat-\/.*/
