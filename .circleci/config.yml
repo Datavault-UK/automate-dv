@@ -80,7 +80,21 @@ workflows:
   version: 2
   test-macros:
     jobs:
-      - macros
+      - macros:
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - /^fix-.*/
+                - /^feat-.*/
   test-integration:
     jobs:
-      - integration
+      - integration:
+          filters:
+            branches:
+              only:
+                - master
+                - dev
+                - /^fix-.*/
+                - /^feat-.*/
