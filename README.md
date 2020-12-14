@@ -12,7 +12,7 @@
     alt="Join our slack"
   /></a>
   <a href="https://circleci.com/gh/Datavault-UK/dbtvault-dev"><img
-    src="https://circleci.com/gh/Datavault-UK/dbtvault-dev.svg?style=shield" 
+    src="https://circleci.com/gh/Datavault-UK/dbtvault-dev/tree/master.svg?style=shield" 
     alt="CircleCI"
   /></a>
 </p>
