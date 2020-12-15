@@ -1,0 +1,107 @@
+version: 2
+
+macros:
+  - name: replace_placeholder_with_filter
+    description: '{{ doc("macro__replace_placeholder_with_filter") }}'
+    arguments:
+      - name: core_sql
+        type: string
+        description: '{{ doc("arg__replace_placeholder_with_filter__core_sql") }}'
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: start_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__start_timestamp") }}'
+      - name: stop_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__stop_timestamp") }}'
+      - name: offset
+        type: integer
+        description: '{{ doc("arg__period_materialisation__offset") }}'
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+
+  - name: get_period_filter_sql
+    description: '{{ doc("macro__get_period_filter_sql") }}'
+    arguments:
+      - name: target_cols_csv
+        type: string
+        description: '{{ doc("arg__get_period_filter_sql__target_cols_csv") }}'
+      - name: base_sql
+        type: string
+        description: '{{ doc("arg__get_period_filter_sql__base_sql") }}'
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+      - name: start_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__start_timestamp") }}'
+      - name: stop_timestamp
+        type: string
+        description: '{{ doc("arg__period_materialisation__stop_timestamp") }}'
+      - name: offset
+        type: string
+        description: '{{ doc("arg__period_materialisation__offset") }}'
+
+  - name: get_period_boundaries
+    description: '{{ doc("macro__get_period_boundaries") }}'
+    arguments:
+      - name: target_schema
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__target_schema") }}'
+      - name: target_table
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__target_table") }}'
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: start_date
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__start_date") }}'
+      - name: stop_date
+        type: string
+        description: '{{ doc("arg__get_period_boundaries__stop_date") }}'
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+
+  - name: get_period_of_load
+    description: '{{ doc("macro__get_period_of_load") }}'
+    arguments:
+      - name: period
+        type: string
+        description: '{{ doc("arg__period_materialisation__period") }}'
+      - name: offset
+        type: string
+        description: '{{ doc("arg__period_materialisation__offset") }}'
+      - name: start_timestamp
+        type: string
+        description: '{{ doc("arg__get_period_of_load__start_timestamp") }}'
+
+  - name: is_vault_insert_by_period
+    description: '{{ doc("macro__is_vault_insert_by_period") }}'
+
+  - name: check_placeholder
+    description: '{{ doc("macro__check_placeholder") }}'
+    arguments:
+      - name: model_sql
+        type: string
+        description: '{{ doc("arg__check_placeholder__model_sql") }}'
+      - name: placeholder
+        type: string
+        description: '{{ doc("arg__check_placeholder__placeholder") }}'
+
+  - name: get_start_stop_dates
+    description: '{{ doc("macro__get_start_stop_dates") }}'
+    arguments:
+      - name: timestamp_field
+        type: string
+        description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
+      - name: date_source_models
+        type: string/list
+        description: '{{ doc("arg__get_start_stop_dates__date_source_models") }}'
