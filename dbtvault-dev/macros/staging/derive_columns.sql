@@ -8,10 +8,10 @@
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
+{%- set src_columns = [] -%}
+{%- set der_columns = [] -%}
 
-{%- if source_relation is defined and source_relation is not none -%}
-    {%- set source_model_cols = adapter.get_columns_in_relation(source_relation) -%}
-{%- endif %}
+{%- set source_cols = dbtvault.source_columns(source_relation=source_relation) -%}
 
 {%- if columns is mapping and columns is not none -%}
 
@@ -20,43 +20,30 @@
 
         {% set column_str = dbtvault.as_constant(columns[col]) %}
 
-        {%- set _ = include_columns.append(column_str ~ " AS " ~ col) -%}
-        {%- set _ = exclude_columns.append(col) -%}
+        {%- do der_columns.append(column_str ~ " AS " ~ col) -%}
+        {%- do exclude_columns.append(col) -%}
 
     {%- endfor -%}
 
     {#- Add all columns from source_model relation -#}
     {%- if source_relation is defined and source_relation is not none -%}
 
-        {%- for source_col in source_model_cols -%}
-            {%- if source_col.column not in exclude_columns -%}
-                {%- set _ = include_columns.append(source_col.column) -%}
+        {%- for col in source_cols -%}
+            {%- if col not in exclude_columns -%}
+                {%- do src_columns.append(col) -%}
             {%- endif -%}
         {%- endfor -%}
 
-    {%- endif %}
+    {%- endif -%}
+
+    {#- Makes sure the columns are appended in a logical order. Derived  columns then source columns -#}
+    {%- set include_columns = src_columns + der_columns -%}
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
         {{ col }}
         {%- if not loop.last -%},
 {% endif -%}
-    {%- endfor -%}
-
-{%- elif columns is none and source_relation is not none -%}
-
-    {#- Add all columns from source_model relation -#}
-    {%- for source_col in source_model_cols -%}
-        {%- if source_col.column not in exclude_columns -%}
-            {%- set _ = include_columns.append(source_col.column) -%}
-        {%- endif -%}
-    {%- endfor -%}
-
-    {#- Print out all columns in includes -#}
-    {%- for col in include_columns -%}
-        {{ col }}
-        {{- ',\n' if not loop.last -}}
-
     {%- endfor -%}
 
 {%- else -%}
