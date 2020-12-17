@@ -4,7 +4,7 @@
 
 {%- endmacro -%}
 
-{%- macro snowflake__prefix(columns=none, prefix_str=none, alias_target='source') -%}
+{%- macro default__prefix(columns=none, prefix_str=none, alias_target='source') -%}
 
     {%- if columns and prefix_str -%}
 
