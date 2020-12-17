@@ -1,6 +1,6 @@
 {%- macro alias(alias_config=none, prefix=none) -%}
 
-    {{- adapter.dispatch('alias', packages = ['dbtvault'])(alias_config=alias_config, prefix=prefix) -}}
+    {{- adapter.dispatch('alias', packages = var('adapter_packages', ['dbtvault']))(alias_config=alias_config, prefix=prefix) -}}
 
 {%- endmacro %}
 
