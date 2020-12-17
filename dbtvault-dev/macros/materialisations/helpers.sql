@@ -8,11 +8,11 @@
 
     {% set macro = adapter.dispatch('replace_placeholder_with_filter',
                                     packages = var('adapter_packages', ['dbtvault']))(core_sql=core_sql,
-                                                             timestamp_field=timestamp_field,
-                                                             start_timestamp=start_timestamp,
-                                                             stop_timestamp=stop_timestamp,
-                                                             offset=offset,
-                                                             period=period) %}
+                                                                                      timestamp_field=timestamp_field,
+                                                                                      start_timestamp=start_timestamp,
+                                                                                      stop_timestamp=stop_timestamp,
+                                                                                      offset=offset,
+                                                                                      period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
