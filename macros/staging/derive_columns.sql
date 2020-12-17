@@ -4,7 +4,7 @@
 
 {%- endmacro %}
 
-{%- macro snowflake__derive_columns(source_relation=none, columns=none) -%}
+{%- macro default__derive_columns(source_relation=none, columns=none) -%}
 
 {%- set exclude_columns = [] -%}
 {%- set include_columns = [] -%}
