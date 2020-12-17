@@ -19,4 +19,3 @@ clean-targets:
 models:
   vars:
     hash: MD5
-    adapter_packages: ['dbtvault']
