@@ -29,6 +29,8 @@
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
+        {% do to_drop.append(tmp_relation) %}
+
     {% elif existing_relation.is_view or full_refresh_mode %}
         {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
         {% set backup_identifier = existing_relation.identifier ~ "__dbt_backup" %}
@@ -43,6 +45,7 @@
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
+        {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
     {% else %}
 
@@ -124,7 +127,9 @@
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
     {% for rel in to_drop %}
-        {{ drop_relation_if_exists(rel) }}
+        {% if rel.type is not none %}
+            {% do adapter.drop_relation(rel) %}
+        {% endif %}
     {% endfor %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
