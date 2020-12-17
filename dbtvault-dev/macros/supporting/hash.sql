@@ -8,7 +8,7 @@
 
 {%- endmacro %}
 
-{%- macro snowflake__hash(columns, alias, is_hashdiff) -%}
+{%- macro default__hash(columns, alias, is_hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 

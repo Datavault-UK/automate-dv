@@ -7,7 +7,7 @@
     {{- adapter.dispatch('stage', packages = var('adapter_packages', ['dbtvault']))(include_source_columns=include_source_columns, source_model=source_model, hashed_columns=hashed_columns, derived_columns=derived_columns) -}}
 {%- endmacro -%}
 
-{%- macro snowflake__stage(include_source_columns, source_model, hashed_columns, derived_columns) -%}
+{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
