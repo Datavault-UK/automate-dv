@@ -16,7 +16,7 @@
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro default__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
@@ -45,7 +45,7 @@
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
@@ -73,7 +73,7 @@
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro default__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         with data as (
@@ -114,7 +114,7 @@
     {% do return(macro) %}
 {%- endmacro %}
 
-{%- macro snowflake__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{start_timestamp}}'))) AS period_of_load

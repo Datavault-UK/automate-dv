@@ -1,7 +1,7 @@
 version: 2
 
 macros:
-  - name: snowflake__replace_placeholder_with_filter
+  - name: default__replace_placeholder_with_filter
     description: |
                  {{ doc("macro__replace_placeholder_with_filter") }}
 
@@ -26,7 +26,7 @@ macros:
         type: string
         description: '{{ doc("arg__period_materialisation__period") }}'
 
-  - name: snowflake__get_period_filter_sql
+  - name: default__get_period_filter_sql
     description: |
                  {{ doc("macro__get_period_filter_sql") }}
 
@@ -54,7 +54,7 @@ macros:
         type: string
         description: '{{ doc("arg__period_materialisation__offset") }}'
 
-  - name: snowflake__get_period_boundaries
+  - name: default__get_period_boundaries
     description: |
                  {{ doc("macro__get_period_boundaries") }}
 
@@ -79,7 +79,7 @@ macros:
         type: string
         description: '{{ doc("arg__period_materialisation__period") }}'
 
-  - name: snowflake__get_period_of_load
+  - name: default__get_period_of_load
     description: |
                  {{ doc("macro__get_period_of_load") }}
 
