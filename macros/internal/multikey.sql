@@ -1,6 +1,6 @@
 {%- macro multikey(columns, prefix=none, condition=none, operator='AND') -%}
 
-    {{- adapter.dispatch('multikey', packages = ['dbtvault'])(columns=columns, prefix=prefix, condition=condition, operator=operator) -}}
+    {{- adapter.dispatch('multikey', packages = var('adapter_packages', ['dbtvault']))(columns=columns, prefix=prefix, condition=condition, operator=operator) -}}
 
 {%- endmacro %}
 
