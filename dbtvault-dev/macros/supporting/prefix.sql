@@ -1,10 +1,10 @@
 {%- macro prefix(columns, prefix_str, alias_target) -%}
 
-    {{- adapter.dispatch('prefix', packages = ['dbtvault'])(columns=columns, prefix_str=prefix_str, alias_target=alias_target) -}}
+    {{- adapter.dispatch('prefix', packages = var('adapter_packages', ['dbtvault']))(columns=columns, prefix_str=prefix_str, alias_target=alias_target) -}}
 
 {%- endmacro -%}
 
-{%- macro snowflake__prefix(columns=none, prefix_str=none, alias_target='source') -%}
+{%- macro default__prefix(columns=none, prefix_str=none, alias_target='source') -%}
 
     {%- if columns and prefix_str -%}
 
