@@ -27,6 +27,7 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
+{#- Check for source format or ref format and create relation object from source_model -#}
 {% if source_model is mapping and source_model is not none -%}
 
     {%- set source_name = source_model | first -%}
@@ -38,7 +39,6 @@
 
     {%- set source_relation = ref(source_model) -%}
 {%- endif -%}
-
 
 {#- CTE to add source columns from the source model -#}
 WITH stage AS (
