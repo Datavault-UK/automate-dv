@@ -1,7 +1,7 @@
 version: 2
 
 macros:
-  - name: snowflake__stage
+  - name: default__stage
     description: |
                  {{ doc("macro__stage") }}
 
@@ -20,7 +20,7 @@ macros:
         type: Mapping
         description: '{{ doc("arg__stage__derived_columns") }}'
 
-  - name: snowflake__hash_columns
+  - name: default__hash_columns
     description: |
                  {{ doc("macro__hash_columns") }}
 
@@ -30,7 +30,7 @@ macros:
         type: list
         description: '{{ doc("arg__stage__hashed_columns") }}'
 
-  - name: snowflake__derive_columns
+  - name: default__derive_columns
     description: |
                  {{ doc("macro__derive_columns") }}
 
