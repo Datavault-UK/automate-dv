@@ -7,16 +7,16 @@
 {%- macro replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_filter',
-                                    packages = ['dbtvault'])(core_sql=core_sql,
-                                                             timestamp_field=timestamp_field,
-                                                             start_timestamp=start_timestamp,
-                                                             stop_timestamp=stop_timestamp,
-                                                             offset=offset,
-                                                             period=period) %}
+                                    packages = var('adapter_packages', ['dbtvault']))(core_sql=core_sql,
+                                                                                      timestamp_field=timestamp_field,
+                                                                                      start_timestamp=start_timestamp,
+                                                                                      stop_timestamp=stop_timestamp,
+                                                                                      offset=offset,
+                                                                                      period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro default__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
@@ -35,7 +35,7 @@
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
-                                    packages = ['dbtvault'])(target_cols_csv=target_cols_csv,
+                                    packages = var('adapter_packages', ['dbtvault']))(target_cols_csv=target_cols_csv,
                                                              base_sql=base_sql,
                                                              timestamp_field=timestamp_field,
                                                              period=period,
@@ -45,7 +45,7 @@
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
@@ -63,7 +63,7 @@
 {%- macro get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    packages = ['dbtvault'])(target_schema=target_schema,
+                                    packages = var('adapter_packages', ['dbtvault']))(target_schema=target_schema,
                                                              target_table=target_table,
                                                              timestamp_field=timestamp_field,
                                                              start_date=start_date,
@@ -73,7 +73,7 @@
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro default__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         with data as (
@@ -107,14 +107,14 @@
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set macro = adapter.dispatch('get_period_of_load',
-                                    packages = ['dbtvault'])(period=period,
+                                    packages = var('adapter_packages', ['dbtvault']))(period=period,
                                                              offset=offset,
                                                              start_timestamp=start_timestamp) %}
 
     {% do return(macro) %}
 {%- endmacro %}
 
-{%- macro snowflake__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{start_timestamp}}'))) AS period_of_load

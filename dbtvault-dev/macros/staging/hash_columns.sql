@@ -1,10 +1,10 @@
 {%- macro hash_columns(columns=none) -%}
 
-    {{- adapter.dispatch('hash_columns', packages = ['dbtvault'])(columns=columns) -}}
+    {{- adapter.dispatch('hash_columns', packages = var('adapter_packages', ['dbtvault']))(columns=columns) -}}
 
 {%- endmacro %}
 
-{%- macro snowflake__hash_columns(columns=none) -%}
+{%- macro default__hash_columns(columns=none) -%}
 
 {%- if columns is mapping -%}
 
