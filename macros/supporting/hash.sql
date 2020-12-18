@@ -4,11 +4,11 @@
         {%- set is_hashdiff = false -%}
     {% endif %}
 
-    {{- adapter.dispatch('hash', packages = ['dbtvault'])(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
+    {{- adapter.dispatch('hash', packages = var('adapter_packages', ['dbtvault']))(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
 
 {%- endmacro %}
 
-{%- macro snowflake__hash(columns, alias, is_hashdiff) -%}
+{%- macro default__hash(columns, alias, is_hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 

@@ -1,12 +1,12 @@
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('eff_sat', packages = ['dbtvault'])(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                             src_start_date=src_start_date, src_end_date=src_end_date,
-                                                             src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                                             source_model=source_model) -}}
+    {{- adapter.dispatch('eff_sat', packages = var('adapter_packages', ['dbtvault']))(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+                                                                                      src_start_date=src_start_date, src_end_date=src_end_date,
+                                                                                      src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                                                      source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro snowflake__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}

@@ -1,7 +1,7 @@
 version: 2
 
 macros:
-  - name: snowflake__hash
+  - name: default__hash
     description: |
                  {{ doc("macro__hash") }}
 
@@ -17,7 +17,7 @@ macros:
         type: boolean
         description: '{{ doc("arg__hash__is_hashdiff") }}'
         
-  - name: snowflake__prefix
+  - name: default__prefix
     description: |
                  {{ doc("macro__prefix") }}
 
