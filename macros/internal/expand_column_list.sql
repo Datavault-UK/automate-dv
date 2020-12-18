@@ -14,20 +14,20 @@
 
         {%- if col is string -%}
 
-            {%- set _ = col_list.append(col) -%}
+            {%- do col_list.append(col) -%}
 
         {#- If list of lists -#}
         {%- elif col is iterable and col is not string -%}
 
             {%- if col is mapping -%}
 
-                {%- set _ = col_list.append(col) -%}
+                {%- do col_list.append(col) -%}
 
             {%- else -%}
 
                 {%- for cols in col -%}
 
-                    {%- set _ = col_list.append(cols) -%}
+                    {%- do col_list.append(cols) -%}
 
                 {%- endfor -%}
 
