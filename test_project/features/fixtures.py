@@ -837,3 +837,54 @@ def enable_full_refresh(context):
     Enable full refresh for a dbt run
     """
     context.full_refresh = True
+
+
+@fixture
+def xts(context):
+    """
+    Define the structures and metadata to load xts
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+              "CUSTOMER_PK": "CUSTOMER_ID",
+              "HASHDIFF": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "XTS": {
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_ldts": "LOAD_DATE",
+            "src_satname": "SAT_NAME"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
+        "XTS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SAT_NAME": "VARCHAR"
+            }
+        }
+    }

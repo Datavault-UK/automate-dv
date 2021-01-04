@@ -469,7 +469,8 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link
+            "t_link": self.t_link,
+            "xts": self.xts
         }
         if vault_structure == "stage":
             generator_functions[vault_structure](model_name=model_name, config=config)
@@ -672,6 +673,29 @@ class DBTVAULTGenerator:
         {{{{ config({config_string}) }}}}
         {{{{ dbtvault.t_link('{src_pk}', {src_fk}, {src_payload}, '{src_eff}',
                              '{src_ldts}', '{src_source}', '{source_model}')   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def xts(self, model_name, source_model, src_pk, src_hashdiff, src_ldts, src_satname, config=None):
+        """
+        Generate a XTS template
+        """
+
+        if isinstance(src_hashdiff, dict):
+            src_hashdiff = f"{src_hashdiff}"
+        else:
+            src_hashdiff = f"'{src_hashdiff}'"
+
+        if not config:
+            config = {"materialized": "incremental"}
+
+        config_string = self.format_config_str(config)
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        {{{{ dbtvault.xts('{src_pk}', {src_hashdiff}, '{src_ldts}', '{src_satname}',
+                          '{source_model}')   }}}}
         """
 
         self.template_to_file(template, model_name)
