@@ -18,7 +18,8 @@ fixture_registry = {
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.t_link": t_link,
-    "fixture.cycle": cycle
+    "fixture.cycle": cycle,
+    "fixture.xts": xts
 }
 
 
