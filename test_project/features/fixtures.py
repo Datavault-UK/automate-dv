@@ -824,6 +824,66 @@ def cycle(context):
 
 
 @fixture
+def PIT_load(context):
+    """
+    Define the structures and metadata to perform PIT load
+    """
+
+    context.vault_structure_columns = {
+        "PIT": {
+            "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_payload": {"Sat_App": ["CUSTOMER_PK", "LOAD_DATE"], "Sat_Web": ["CUSTOMER_PK", "LOAD_DATE"],
+                            "Sat_Phone": ["CUSTOMER_PK", "LOAD_DATE"]}
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "Sat_App": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "Location": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "Sat_Web": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "Location": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "Sat_Phone": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "Location": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
 def enable_auto_end_date(context):
     """
     Enable auto end-dating on effectivity satellites
