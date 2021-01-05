@@ -32,3 +32,9 @@ Feature: Hubs
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Washington | 2019-01-03 | Phone  |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Austin     | 2019-01-07 | Phone  |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Fort Worth | 2019-01-15 | Phone  |
+    And the AS_OF_DATES_FOR_PIT table contains data
+      | as_of_date  |
+      | 2019-01-07 |
+      | 2019-01-14 |
+      | 2019-01-21 |
+    When I load the SATELLITE sat
