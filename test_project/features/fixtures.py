@@ -831,10 +831,12 @@ def PIT_load(context):
 
     context.vault_structure_columns = {
         "PIT": {
+            "source_model": "Hub",
             "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_payload": {"Sat_App": ["CUSTOMER_PK", "LOAD_DATE"], "Sat_Web": ["CUSTOMER_PK", "LOAD_DATE"],
-                            "Sat_Phone": ["CUSTOMER_PK", "LOAD_DATE"]}
+            "as_of_dates_table": "AS_OF_DATES_FOR_PIT",
+            "satellite": {"Sat_App": {"source_model": "Sat_App", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
+                          "Sat_Web": {"source_model": "Sat_Web", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
+                          "Sat_Phone": {"source_model": "Sat_Phone", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"}}
         }
     }
 
