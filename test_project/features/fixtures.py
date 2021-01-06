@@ -618,6 +618,57 @@ def eff_satellite_multipart(context):
 
 
 @fixture
+def xts(context):
+    """
+    Define the structures and metadata to load xts
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "XTS": {
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_ldts": "LOAD_DATE",
+            "src_satname": "SAT_NAME"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
+        "XTS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SAT_NAME": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
 def cycle(context):
     """
     Define the structures and metadata to perform vault load cycles
@@ -826,7 +877,7 @@ def cycle(context):
 @fixture
 def enable_auto_end_date(context):
     """
-    Enable auto end-dating on effectivity satellites
+    Indicate that auto end-dating on effectivity satellites should be enabled
     """
     context.auto_end_date = True
 
@@ -834,57 +885,15 @@ def enable_auto_end_date(context):
 @fixture
 def enable_full_refresh(context):
     """
-    Enable full refresh for a dbt run
+    Indicate that a full refresh for a dbt run should be executed
     """
     context.full_refresh = True
 
 
 @fixture
-def xts(context):
+def disable_union(context):
     """
-    Define the structures and metadata to load xts
+    Indicate that a list should not be created if multiple stages are specified in a scenario
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-              "CUSTOMER_PK": "CUSTOMER_ID",
-              "HASHDIFF": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "XTS": {
-            "src_pk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
-            "src_ldts": "LOAD_DATE",
-            "src_satname": "SAT_NAME"
-        }
-    }
-
-    context.seed_config = {
-        "RAW_STAGE": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-            }
-        },
-        "XTS": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SAT_NAME": "VARCHAR"
-            }
-        }
-    }
+    context.disable_union = True
