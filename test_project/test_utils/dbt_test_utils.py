@@ -676,6 +676,27 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def pit(self, model_name, src_pk, satellite, as_of_dates_table, source_model, config=None):
+        """
+        Generate a PIT template
+            :param src_pk: Source pk
+
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+        if not config:
+            config = {"materialized": "incremental"}
+
+        config_string = self.format_config_str(config)
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        {{{{ dbtvault.pit('{src_pk}', '{satellite}', '{as_of_dates_table}',
+                          '{source_model}')   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
         """
