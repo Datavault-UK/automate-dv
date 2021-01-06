@@ -17,9 +17,12 @@ def set_stage_metadata(context, model_name) -> dict:
 
     if hasattr(context, "processed_stage_name"):
 
-        context.processed_stage_name = context.dbt_test_utils.process_stage_names(
-            context.processed_stage_name,
-            model_name)
+        if context.disable_union:
+            context.processed_stage_name = model_name
+        else:
+            context.processed_stage_name = context.dbt_test_utils.process_stage_names(
+                context.processed_stage_name,
+                model_name)
 
     else:
         context.processed_stage_name = model_name
