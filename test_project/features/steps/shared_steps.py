@@ -9,23 +9,13 @@ use_step_matcher("parse")
 dbtvault_generator = DBTVAULTGenerator()
 
 
-def set_stage_metadata(context, model_name) -> dict:
+def set_stage_metadata(context, stage_model_name) -> dict:
     """
         Setup the context to include required staging metadata and return as a dictionary to
         support providing the variables in the command line to dbt instead
     """
 
-    if hasattr(context, "processed_stage_name"):
-
-        if context.disable_union:
-            context.processed_stage_name = model_name
-        else:
-            context.processed_stage_name = context.dbt_test_utils.process_stage_names(
-                context.processed_stage_name,
-                model_name)
-
-    else:
-        context.processed_stage_name = model_name
+    context.processed_stage_name = context.dbt_test_utils.process_stage_names(context, stage_model_name)
 
     context.include_source_columns = getattr(context, "include_source_columns", True)
 
@@ -33,17 +23,17 @@ def set_stage_metadata(context, model_name) -> dict:
 
     if not getattr(context, "hashed_columns", None):
         context.hashed_columns = dict()
-        context.hashed_columns[model_name] = dict()
+        context.hashed_columns[stage_model_name] = dict()
     else:
-        if not context.hashed_columns.get(model_name, None):
-            context.hashed_columns[model_name] = dict()
+        if not context.hashed_columns.get(stage_model_name, None):
+            context.hashed_columns[stage_model_name] = dict()
 
     if not getattr(context, "derived_columns", None):
         context.derived_columns = dict()
-        context.derived_columns[model_name] = dict()
+        context.derived_columns[stage_model_name] = dict()
     else:
-        if not context.derived_columns.get(model_name, None):
-            context.derived_columns[model_name] = dict()
+        if not context.derived_columns.get(stage_model_name, None):
+            context.derived_columns[stage_model_name] = dict()
 
     dbt_vars = {
         "include_source_columns": context.include_source_columns,
