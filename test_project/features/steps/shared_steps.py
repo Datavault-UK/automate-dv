@@ -292,7 +292,7 @@ def create_csv(context, raw_stage_model_name):
 
 @step("I create the {processed_stage_name} stage")
 def stage_processing(context, processed_stage_name):
-    stage_metadata = set_stage_metadata(context, model_name=processed_stage_name)
+    stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
     args = {k: v for k, v in stage_metadata.items() if k == "hash"}
 
