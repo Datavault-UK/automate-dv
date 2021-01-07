@@ -270,11 +270,7 @@ class DBTTestUtils:
         """
         Check context for full refresh
         """
-        if hasattr(context, 'full_refresh'):
-            if context.full_refresh:
-                return True
-
-        return False
+        return getattr(context, 'full_refresh', False)
 
     def replace_test_schema(self):
         """
@@ -356,19 +352,30 @@ class DBTTestUtils:
         return list(df.columns[df.isin(['*']).all()])
 
     @staticmethod
-    def process_stage_names(processed_stage_names, processed_stage_name):
+    def process_stage_names(context, processed_stage_name):
+        """
+        Output a list of stage names if multiple stages are being used, or a single stage name if only one.
+        """
 
-        if isinstance(processed_stage_names, list):
-            processed_stage_names.append(processed_stage_name)
+        if hasattr(context, "processed_stage_name"):
+
+            stage_names = context.processed_stage_name
+
+            if isinstance(stage_names, list):
+                stage_names.append(processed_stage_name)
+            else:
+                stage_names = [stage_names] + [processed_stage_name]
+
+            stage_names = list(set(stage_names))
+
+            if isinstance(stage_names, list) and len(stage_names) == 1:
+                stage_names = stage_names[0]
+
+            return stage_names
+
         else:
-            processed_stage_names = [processed_stage_names] + [processed_stage_name]
-
-        processed_stage_names = list(set(processed_stage_names))
-
-        if isinstance(processed_stage_names, list) and len(processed_stage_names) == 1:
-            processed_stage_names = processed_stage_names[0]
-
-        return processed_stage_names
+            if getattr(context, 'disable_union', False):
+                return processed_stage_name
 
     @staticmethod
     def calc_hash(columns_as_series: Series) -> Series:
