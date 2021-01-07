@@ -357,7 +357,7 @@ class DBTTestUtils:
         Output a list of stage names if multiple stages are being used, or a single stage name if only one.
         """
 
-        if hasattr(context, "processed_stage_name"):
+        if hasattr(context, "processed_stage_name") and not getattr(context, 'disable_union', False):
 
             stage_names = context.processed_stage_name
 
@@ -374,8 +374,7 @@ class DBTTestUtils:
             return stage_names
 
         else:
-            if getattr(context, 'disable_union', False):
-                return processed_stage_name
+            return processed_stage_name
 
     @staticmethod
     def calc_hash(columns_as_series: Series) -> Series:
