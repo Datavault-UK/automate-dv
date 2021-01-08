@@ -1,14 +1,14 @@
-{%- macro xts(src_pk, src_hashdiff, src_ldts, src_satname, source_model) -%}
+{%- macro xts(src_pk, src_ldts, src_satellite, src_source, source_model) -%}
 
     {{- adapter.dispatch('xts', packages = var('adapter_packages', ['dbtvault']))
-                                                ( src_pk=src_pk, src_hashdiff=src_hashdiff, src_ldts=src_ldts,
-                                                  src_satname=src_satname, source_model=source_model           ) -}}
+                                                ( src_pk=src_pk, src_ldts=src_ldts, src_satellite= src_satellite,
+                                                  src_source=src_source, source_model=source_model               ) -}}
 
 {%- endmacro %}
 
-{%- macro default__xts(src_pk, src_hashdiff, src_ldts, src_satname, source_model) -%}
+{%- macro default__xts(src_pk, src_ldts, src_satellite,src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts, src_satname]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_satname, src_ldts, src_source]) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
