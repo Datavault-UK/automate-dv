@@ -628,21 +628,55 @@ def xts(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        },
+        "STG_CUSTOMER_2SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                        "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                        "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]}
+        },
+        "STG_CUSTOMER_FIRST": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        },
+        "STG_CUSTOMER_SECOND": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
         }
     }
 
     context.derived_columns = {
         "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SAT_NAME": "!SAT_SAP_CUSTOMER"
+        },
+        "STG_CUSTOMER_2SAT":{
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SAT1_NAME": "!SAT_SAP_CUSTOMER_1",
+            "SAT2_NAME": "!SAT_SAP_CUSTOMER_2"
+        },
+        "STG_CUSTOMER_FIRST": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SAT_NAME": "!SAT_SAP_CUSTOMER"
+        },
+        "STG_CUSTOMER_SECOND": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SAT_NAME": "!SAT_SAP_CUSTOMER"
         }
     }
 
     context.vault_structure_columns = {
         "XTS": {
             "src_pk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
             "src_ldts": "LOAD_DATE",
-            "src_satname": "SAT_NAME"
+            "src_satellite": {
+                "SAT1": { "HASHDIFF": "HASHDIFF_1" },
+                "SAT2": { "HASHDIFF": "HASHDIFF_2" }
+                },
+            "src_source": "SOURCE"
         }
     }
 
@@ -657,12 +691,46 @@ def xts(context):
                 "SOURCE": "VARCHAR",
             }
         },
+        "RAW_STAGE_2SAT": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME_1": "VARCHAR",
+                "CUSTOMER_DOB_1": "DATE",
+                "CUSTOMER_PHONE_1": "VARCHAR",
+                "CUSTOMER_NAME_2": "VARCHAR",
+                "CUSTOMER_DOB_2": "DATE",
+                "CUSTOMER_PHONE_2": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
+        "FIRST_RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
+        "SECOND_RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
         "XTS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "LOAD_DATE": "DATE",
-                "SAT_NAME": "VARCHAR"
+                "SAT_NAME": "VARCHAR",
+                "SOURCE": "VARCHAR"
             }
         }
     }

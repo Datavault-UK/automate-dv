@@ -683,15 +683,15 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def xts(self, model_name, source_model, src_pk, src_hashdiff, src_ldts, src_satname, config=None):
+    def xts(self, model_name, source_model, src_pk, src_ldts, src_satellite, src_source, config=None):
         """
         Generate a XTS template
         """
 
-        if isinstance(src_hashdiff, dict):
-            src_hashdiff = f"{src_hashdiff}"
+        if isinstance(src_satellite, dict):
+            src_hashdiff = f"{src_satellite}"
         else:
-            src_hashdiff = f"'{src_hashdiff}'"
+            src_hashdiff = f"'{src_satellite}'"
 
         if not config:
             config = {"materialized": "incremental"}
@@ -700,7 +700,7 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.xts('{src_pk}', {src_hashdiff}, '{src_ldts}', '{src_satname}',
+        {{{{ dbtvault.xts('{src_pk}', '{src_ldts}', {src_satellite}, '{src_source}',
                           '{source_model}')   }}}}
         """
 
