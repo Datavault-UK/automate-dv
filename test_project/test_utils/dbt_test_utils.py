@@ -707,7 +707,7 @@ class DBTVAULTGenerator:
         self.template_to_file(template, model_name)
 
     @staticmethod
-    def process_structure_headings(headings):
+    def process_structure_headings(self, headings):
         """
         Extract keys from headings if they are dictionaries
         """
