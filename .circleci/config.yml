@@ -86,8 +86,6 @@ workflows:
               only:
                 - master
                 - dev
-                - /^fix-.*/
-                - /^feat-.*/
   test-integration:
     jobs:
       - integration:
