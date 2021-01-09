@@ -1038,7 +1038,7 @@ def PIT_load(context):
 @fixture
 def enable_auto_end_date(context):
     """
-    Enable auto end-dating on effectivity satellites
+    Indicate that auto end-dating on effectivity satellites should be enabled
     """
     context.auto_end_date = True
 
@@ -1046,6 +1046,15 @@ def enable_auto_end_date(context):
 @fixture
 def enable_full_refresh(context):
     """
-    Enable full refresh for a dbt run
+    Indicate that a full refresh for a dbt run should be executed
     """
     context.full_refresh = True
+
+
+@fixture
+def disable_union(context):
+    """
+    Indicate that a list should not be created if multiple stages are specified in a scenario
+    """
+
+    context.disable_union = True
