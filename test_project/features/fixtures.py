@@ -900,5 +900,4 @@ def disable_union(context):
     """
     Indicate that a list should not be created if multiple stages are specified in a scenario
     """
-
     context.disable_union = True

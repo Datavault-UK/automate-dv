@@ -705,6 +705,7 @@ class DBTVAULTGenerator:
         """
 
         self.template_to_file(template, model_name)
+
     def process_structure_headings(self, headings):
 
         """
