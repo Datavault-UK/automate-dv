@@ -634,7 +634,6 @@ def xts(context):
     context.derived_columns = {
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_SAP_CUSTOMER"
         }
     }
 
@@ -645,7 +644,7 @@ def xts(context):
             "src_satellite": {
                 "SATELLITE_NAME":
                     {"SAT_CUSTOMER_DETAILS": {"HASHDIFF": "HASHDIFF_1"},
-                     "SAT_CUSTOMER_": {"HASHDIFF": "HASHDIFF_2"}
+                     "SAT_CUSTOMER": {"HASHDIFF": "HASHDIFF_2"}
                      }
             },
             "src_source": "SOURCE"
