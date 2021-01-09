@@ -70,7 +70,9 @@ def clear_schema(context):
     for model_name in models:
         headings_dict = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
 
-        headings = list(DBTVAULTGenerator.flatten([v for k, v in headings_dict.items() if k != "source_model"]))
+        headings = [v for k, v in headings_dict.items() if k != "source_model"]
+
+        headings = dbtvault_generator.process_structure_headings(headings)
 
         row = Row(cells=[], headings=headings)
 
@@ -100,7 +102,6 @@ def load_empty_table(context, model_name, vault_structure):
     else:
         headings = [val for key, val in columns[model_name].items()]
         headings = dbtvault_generator.process_structure_headings(headings)
-        headings = list(dbtvault_generator.flatten(headings))
 
     row = Row(cells=[], headings=headings)
 
