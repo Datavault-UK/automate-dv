@@ -13,8 +13,8 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
     And I create the STG_CUSTOMER stage
-    And I use insert_by_period to load the EFF_SAT eff_sat by day
-    And I use insert_by_period to load the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -37,8 +37,8 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | 5000        | EEE      | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | 5000        | <null>   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
     And I create the STG_CUSTOMER stage
-    And I use insert_by_period to load the EFF_SAT eff_sat by day
-    And I use insert_by_period to load the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |

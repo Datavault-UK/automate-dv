@@ -14,8 +14,8 @@ Feature: Hubs Loaded using Period Materialization
       | 1003        | Chad          | 1993-01-03 | TPCH   |
       | 1004        | Dom           | 1993-01-04 | TPCH   |
     And I create the STG_CUSTOMER stage
-    And I use insert_by_period to load the HUB hub by day
-    And I use insert_by_period to load the HUB hub by day
+    And I insert by period into the HUB hub by day
+    And I insert by period into the HUB hub by day
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -34,7 +34,7 @@ Feature: Hubs Loaded using Period Materialization
       | 1003        | Chloe         | 1995-01-02   | 1993-01-02 | TPCH   |
       | 1004        | Daniel        | 1984-01-01   | 1993-01-02 | TPCH   |
     And I create the STG_CUSTOMER stage
-    And I use insert_by_period to load the HUB hub by day
+    And I insert by period into the HUB hub by day
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -60,8 +60,8 @@ Feature: Hubs Loaded using Period Materialization
       | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | 1993-01-03 | LINE   |
       | 10003    | 1004    | 1           | 2          | 1        | 290.87         | 2.00     | 1993-01-04 | LINE   |
     And I create the STG_LINEITEM stage
-    And I use insert_by_period to load the HUB hub by day
-    And I use insert_by_period to load the HUB hub by day
+    And I insert by period into the HUB hub by day
+    And I insert by period into the HUB hub by day
     Then the HUB table should contain expected data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | *      |
