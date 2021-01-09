@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: XTS Customer
 
-#    Single stage, single satellite
+  # Single stage, single satellite
   @fixture.xts
   Scenario: [BASE-LOAD] Load records into an empty XTS
     Given the XTS xts is empty
