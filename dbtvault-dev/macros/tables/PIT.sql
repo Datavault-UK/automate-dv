@@ -1,12 +1,12 @@
-{%- macro PIT(src_pk,satellite,as_of_dates_table,source_model) -%}
+{%- macro PIT(src_pk,source_model,as_of_dates_table,satellite) -%}
 
-    {{- adapter.dispatch('PIT', packages = var('adapter_packages', ['dbtvault']))(src_pk=src_pk, satellite=satellite,
-                                                                                  as_of_dates_table=as_of_dates_table,
-                                                                                  source_model=source_model) -}}
+    {{- adapter.dispatch('PIT', packages = var('adapter_packages', ['dbtvault']))(source_model=source_model,src_pk=src_pk,
+                                                                                   as_of_dates_table=as_of_dates_table,
+                                                                                   satellite=satellite) -}}
 
 {%- endmacro -%}
 
-{%- macro default__PIT(src_pk,satellite,as_of_dates_table,source_model) -%}
+{%- macro default__PIT(src_pk,source_model,as_of_dates_table,satellite) -%}
 
 {% set maxdate = '9999-12-31 23:59:59.999999' %}
 {% set ghost_pk = cast_binary('0000000000000000') %}
@@ -19,7 +19,7 @@ Insert into PIT(
         {{ src_pk }},
         {% for sats in satellites -%}
             coalesce(max({{- sat.pk -}}),ghost_pk) AS {{ sat -}}_PK,
-            coalesce(max({{- sat.LDTS -}}),ghost_date) {{ LDTS -}}_LDTS
+            coalesce(max({{- sat.LDTS -}}),ghost_date) AS {{ LDTS -}}_LDTS
             {{- ',' if not loop.last -}}
         {%- endfor %}
 
