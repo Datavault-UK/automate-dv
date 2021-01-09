@@ -98,7 +98,9 @@ def load_empty_table(context, model_name, vault_structure):
     if vault_structure == "stage":
         headings = context.stage_columns[model_name]
     else:
-        headings = list(DBTVAULTGenerator.flatten([val for key, val in columns[model_name].items()]))
+        headings = [val for key, val in columns[model_name].items()]
+        headings = dbtvault_generator.process_structure_headings(headings)
+        headings = list(dbtvault_generator.flatten(headings))
 
     row = Row(cells=[], headings=headings)
 
