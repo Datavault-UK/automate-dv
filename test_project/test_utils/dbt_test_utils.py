@@ -683,7 +683,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name,source_model, src_pk, as_of_dates_table, satellite, config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellite, config=None):
         """
         Generate a PIT template
             :param src_pk: Source pk
@@ -709,8 +709,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    @staticmethod
-    def process_structure_headings(headings):
+    def process_structure_headings(self, headings):
         """
         Extract keys from headings if they are dictionaries
         """

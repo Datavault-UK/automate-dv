@@ -828,56 +828,66 @@ def PIT_load(context):
     """
     Define the structures and metadata to perform PIT load
     """
+
     context.hashed_columns = {
-        "STG_CUSTOMER_App": {
+        "STG_CUSTOMER_APP": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION",  "CUSTOMER_NAME", "CUSTOMER_PHONE"]
+                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_NAME", "CUSTOMER_PHONE"]
                          }
         },
-        "STG_CUSTOMER_Web": {
+        "STG_CUSTOMER_WEB": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_LOCATION", "CUSTOMER_PHONE", "CUSTOMER_NAME"]
                          }
         },
-        "STG_CUSTOMER_Phone": {
+        "STG_CUSTOMER_PHONE": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_LOCATION", "CUSTOMER_PHONE", "CUSTOMER_NAME"]
                          }
         }
     }
+
     context.derived_columns = {
-        "STG_CUSTOMER_App": {
+        "STG_CUSTOMER_APP": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_Web": {
+        "STG_CUSTOMER_WEB": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_Phone": {
+        "STG_CUSTOMER_PHONE": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
+
     context.vault_structure_columns = {
-        "PIT_Customer": {
+        "PIT_CUSTOMER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
-            "satellite":    {"Sat_App": {"source_model": "SAT_CUSTOMER_DETAILS_App", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
-                          "Sat_Web": {"source_model": "SAT_CUSTOMER_DETAILS_Web", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
-                          "Sat_Phone": {"source_model": "SAT_CUSTOMER_DETAILS_Phone", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"} }
+            "satellite": {"SAT_APP": {"source_model": "SAT_CUSTOMER_DETAILS_APP",
+                                      "PK": "CUSTOMER_PK",
+                                      "LDTS": "LOAD_DATE"},
+                          "SAT_WEB": {"source_model": "SAT_CUSTOMER_DETAILS_WEB",
+                                      "PK": "CUSTOMER_PK",
+                                      "LDTS": "LOAD_DATE"},
+                          "SAT_PHONE": {"source_model": "SAT_CUSTOMER_DETAILS_PHONE",
+                                        "PK": "CUSTOMER_PK",
+                                        "LDTS": "LOAD_DATE"}
+                          }
         },
         "HUB_CUSTOMER": {
-            "source_model": ["STG_CUSTOMER_App",
-                             "STG_CUSTOMER_App",
-                             "STG_CUSTOMER_App"],
+            "source_model": ["STG_CUSTOMER_APP",
+                             "STG_CUSTOMER_APP",
+                             "STG_CUSTOMER_APP"],
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "SAT_CUSTOMER_DETAILS_App": {
+        "SAT_CUSTOMER_DETAILS_APP": {
             "source_model": "STG_CUSTOMER_App",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
@@ -885,8 +895,8 @@ def PIT_load(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
-            },
-        "SAT_CUSTOMER_DETAILS_Web": {
+        },
+        "SAT_CUSTOMER_DETAILS_WEB": {
             "source_model": "STG_CUSTOMER_Web",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
@@ -895,8 +905,8 @@ def PIT_load(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "SAT_CUSTOMER_DETAILS_Phone": {
-            "source_model": "STG_CUSTOMER_Phone",
+        "SAT_CUSTOMER_DETAILS_PHONE": {
+            "source_model": "STG_CUSTOMER_PHONE",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
@@ -905,6 +915,7 @@ def PIT_load(context):
             "src_source": "SOURCE"
         }
     }
+
     context.stage_columns = {
         "RAW_STAGE_APP":
             ["CUSTOMER_ID",
@@ -966,7 +977,7 @@ def PIT_load(context):
                 "CUSTOMER_LOCATION": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
-                }
+            }
         },
         "HUB_CUSTOMER": {
             "column_types": {
@@ -976,7 +987,7 @@ def PIT_load(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "SAT_CUSTOMER_DETAILS_App": {
+        "SAT_CUSTOMER_DETAILS_APP": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
@@ -989,7 +1000,7 @@ def PIT_load(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "SAT_CUSTOMER_DETAILS_Web": {
+        "SAT_CUSTOMER_DETAILS_WEB": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
@@ -1002,7 +1013,7 @@ def PIT_load(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "SAT_CUSTOMER_DETAILS_Phone": {
+        "SAT_CUSTOMER_DETAILS_PHONE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
@@ -1020,16 +1031,16 @@ def PIT_load(context):
                 "as_of_date": "DATE"
             }
         },
-        "PIT_Customer": {
-            "column_types":{
+        "PIT_CUSTOMER": {
+            "column_types": {
                 "AS_OF_DATE": "DATE",
                 "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_App_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_App_LDTS": "DATE",
-                "SAT_CUSTOMER_DETAILS_Web_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_Web_LDTS": "DATE",
-                "SAT_CUSTOMER_DETAILS_Phone_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_Phone_LDTS": "DATE"
+                "SAT_CUSTOMER_DETAILS_APP_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_APP_LDTS": "DATE",
+                "SAT_CUSTOMER_DETAILS_WEB_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_WEB_LDTS": "DATE",
+                "SAT_CUSTOMER_DETAILS_PHONE_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PHONE_LDTS": "DATE"
             }
         }
     }
