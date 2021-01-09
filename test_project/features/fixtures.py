@@ -895,8 +895,8 @@ def PIT_load(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
-        },
-        "SAT_CUSTOMER_DETAILS_WEB": {
+            },
+        "SAT_CUSTOMER_DETAILS_Web": {
             "source_model": "STG_CUSTOMER_Web",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",

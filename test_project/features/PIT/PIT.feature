@@ -70,12 +70,11 @@ Feature: Hubs
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Washington        | md5('WASHINGTON\|\|BOB\|\|17-214-233-1215')   | 2019-01-03     | 2019-01-03 | Phone  |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Austin            | md5('AUSTIN\|\|BOB\|\|17-214-233-1215')       | 2019-01-07     | 2019-01-07 | Phone  |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Fort Worth        | md5('FORT WORTH\|\|BOB\|\|17-214-233-1215')   | 2019-01-15     | 2019-01-15 | Phone  |
-    Then the PIT_Customer table should contain expected data
+    Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_App_LDTS | SAT_CUSTOMER_DETAILS_Web_PK | SAT_CUSTOMER_DETAILS_Web_LDTS | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_Phone_LDTS |
       | 1001        | 2019-01-07 | md5('1001')                   | 2019-01-01                    | md5('1001')                 | 2019-01-04                    | md5('1001')                   | 2019-01-06                      |
       | 1001        | 2019-01-14 | md5('1001')                   | 2019-01-12                    | md5('1001')                 | 2019-01-08                    | md5('1001')                   | 2019-01-10                      |
       | 1001        | 2019-01-21 | md5('1001')                   | 2019-01-16                    | md5('1001')                 | 2019-01-19                    | md5('1001')                   | 2019-01-20                      |
-
       | 1002        | 2019-01-07 | md5('1002')                   | 2019-01-01                    | md5('1002')                 | 2019-01-06                    | md5('1002')                   | 2019-01-03                      |
       | 1002        | 2019-01-14 | md5('1002')                   | 2019-01-08                    | md5('1002')                 | 2019-01-09                    | md5('1002')                   | 2019-01-07                      |
       | 1002        | 2019-01-21 | md5('1002')                   | 2019-01-20                    | md5('1002')                 | 2019-01-19                    | md5('1002')                   | 2019-01-15                      |
@@ -120,7 +119,7 @@ Feature: Hubs
       | 2019-01-14 |
       | 2019-01-21 |
     When I load the vault
-    Then the PIT_Customer table should contain expected data
+    Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_App_LDTS | SAT_CUSTOMER_DETAILS_Web_PK | SAT_CUSTOMER_DETAILS_Web_LDTS | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_Phone_LDTS |
       | 1001        | 2019-01-07 | md5('1001')                   | 2019-01-01                    | md5('1001')                 | 2019-01-04                    | md5('1001')                   | 2019-01-05                      |
       | 1001        | 2019-01-14 | md5('1001')                   | 2019-01-12                    | md5('1001')                 | 2019-01-08                    | md5('1001')                   | 2019-01-06                      |
@@ -171,7 +170,7 @@ Feature: Hubs
       | 2019-01-01 11:00:00 |
       | 2019-01-01 11:30:00 |
     When I load the vault
-    Then the PIT_Customer table should contain expected data
+    Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_App_LDTS | SAT_CUSTOMER_DETAILS_Web_PK | SAT_CUSTOMER_DETAILS_Web_LDTS | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_Phone_LDTS |
       | 1001        | 2019-01-07 | md5('1001')                   | 2019-01-01 10:22:00           | md5('1001')                 | 2019-01-01 10:16:00           | md5('1001')                   | 2019-01-01 10:09:00             |
       | 1001        | 2019-01-14 | md5('1001')                   | 2019-01-01 10:44:00           | md5('1001')                 | 2019-01-01 10:56:00           | md5('1001')                   | 2019-01-01 10:38:00             |
