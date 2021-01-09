@@ -270,11 +270,7 @@ class DBTTestUtils:
         """
         Check context for full refresh
         """
-        if hasattr(context, 'full_refresh'):
-            if context.full_refresh:
-                return True
-
-        return False
+        return getattr(context, 'full_refresh', False)
 
     def replace_test_schema(self):
         """
@@ -301,7 +297,7 @@ class DBTTestUtils:
 
     def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
-        Converts a context table in a feature file into a dictionary
+        Converts a context table in a feature file into CSV format
             :param table: The context.table from a scenario
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
@@ -319,7 +315,7 @@ class DBTTestUtils:
 
     def context_table_to_dict(self, table: Table, orient='index'):
         """
-        Converts a context table in a feature file into a pandas DataFrame
+        Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
             :return: A pandas DataFrame modelled from a context table
@@ -356,19 +352,29 @@ class DBTTestUtils:
         return list(df.columns[df.isin(['*']).all()])
 
     @staticmethod
-    def process_stage_names(processed_stage_names, processed_stage_name):
+    def process_stage_names(context, processed_stage_name):
+        """
+        Output a list of stage names if multiple stages are being used, or a single stage name if only one.
+        """
 
-        if isinstance(processed_stage_names, list):
-            processed_stage_names.append(processed_stage_name)
+        if hasattr(context, "processed_stage_name") and not getattr(context, 'disable_union', False):
+
+            stage_names = context.processed_stage_name
+
+            if isinstance(stage_names, list):
+                stage_names.append(processed_stage_name)
+            else:
+                stage_names = [stage_names] + [processed_stage_name]
+
+            stage_names = list(set(stage_names))
+
+            if isinstance(stage_names, list) and len(stage_names) == 1:
+                stage_names = stage_names[0]
+
+            return stage_names
+
         else:
-            processed_stage_names = [processed_stage_names] + [processed_stage_name]
-
-        processed_stage_names = list(set(processed_stage_names))
-
-        if isinstance(processed_stage_names, list) and len(processed_stage_names) == 1:
-            processed_stage_names = processed_stage_names[0]
-
-        return processed_stage_names
+            return processed_stage_name
 
     @staticmethod
     def calc_hash(columns_as_series: Series) -> Series:
@@ -697,6 +703,23 @@ class DBTVAULTGenerator:
         """
 
         self.template_to_file(template, model_name)
+
+    @staticmethod
+    def process_structure_headings(headings):
+        """
+        Extract keys from headings if they are dictionaries
+        """
+
+        processed_headings = []
+
+        for item in headings:
+
+            if isinstance(item, dict):
+                processed_headings.append(list(item.keys()))
+            else:
+                processed_headings.append(item)
+
+        return processed_headings
 
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
