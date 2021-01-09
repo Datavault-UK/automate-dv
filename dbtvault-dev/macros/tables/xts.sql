@@ -8,75 +8,41 @@
 
 {%- macro default__xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_satname, src_ldts, src_source]) -%}
-
 {{ dbtvault.prepend_generated_by() }}
 
-{{ 'WITH ' -}}
+{{ 'WITH ' }}
+{% for satellite_name in src_satellite["SATELLITE_NAME"] -%}
+{%- set hashdiff = src_satellite["SATELLITE_NAME"][satellite_name]["HASHDIFF"] -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, satellite_name, hashdiff, src_ldts, src_source]) -%}
 
-{%- if not (source_model is iterable and source_model is not string) -%}
-    {%- set source_model = [source_model] -%}
-{%- endif -%}
-
-{%- for src in source_model -%}
-
-{%- set source_number = loop.index | string -%}
-
-rank_{{ source_number }} AS (
+rank_{{ satellite_name }} AS (
     SELECT {{ source_cols | join(', ') }},
         ROW_NUMBER() OVER(
             PARTITION BY {{ src_pk }}
             ORDER BY {{ src_ldts }} ASC
         ) AS row_number
-    FROM {{ ref(src) }}
+    FROM {{ ref(source_model) }}
 ),
-stage_{{ source_number }} AS (
-    SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_{{ source_number }}
+stage_{{ satellite_name }} AS (
+    SELECT DISTINCT {{ source_cols | join(', ')}}
+    FROM rank_{{ satellite_name }}
     WHERE row_number = 1
 ),
 {% endfor -%}
 
 stage_union AS (
-    {%- for src in source_model %}
-    SELECT * FROM stage_{{ loop.index | string }}
+    {%- for satellite_name in src_satellite["SATELLITE_NAME"] %}
+    SELECT * FROM stage_{{ satellite_name }}
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
     {%- endfor %}
 ),
-{%- if model.config.materialized == 'vault_insert_by_period' %}
-stage_period_filter AS (
-    SELECT *
-    FROM stage_union
-    WHERE __PERIOD_FILTER__
-),
-{%- endif %}
-rank_union AS (
-    SELECT *,
-        ROW_NUMBER() OVER(
-            PARTITION BY {{ src_pk }}
-            ORDER BY {{ src_ldts }} ASC
-        ) AS row_number
-    {%- if model.config.materialized == 'vault_insert_by_period' %}
-    FROM stage_period_filter
-    {%- else %}
-    FROM stage_union
-    {%- endif %}
-    WHERE {{ src_pk }} IS NOT NULL
-),
-stage AS (
-    SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_union
-    WHERE row_number = 1
-),
 records_to_insert AS (
-    SELECT stage.* FROM stage
-    {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
+    SELECT stage_union.* FROM stage_union
     LEFT JOIN {{ this }} AS d
     ON stage.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
-    {%- endif %}
 )
 
 SELECT * FROM records_to_insert
