@@ -1,4 +1,5 @@
 import glob
+import io
 import logging
 import os
 import re
@@ -6,12 +7,12 @@ import shutil
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
-
+import textwrap
 import pandas as pd
-from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from ruamel.yaml import YAML
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -688,10 +689,7 @@ class DBTVAULTGenerator:
         Generate a XTS template
         """
 
-        if isinstance(src_satellite, dict):
-            src_hashdiff = f"{src_satellite}"
-        else:
-            src_hashdiff = f"'{src_satellite}'"
+        src_satellite_yaml = self.dict_to_yaml_string(src_satellite)
 
         if not config:
             config = {"materialized": "incremental"}
@@ -699,15 +697,19 @@ class DBTVAULTGenerator:
         config_string = self.format_config_str(config)
 
         template = f"""
+        {{% set src_satellite %}}
+        {src_satellite_yaml}{{% endset %}}
+        
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.xts('{src_pk}', '{src_ldts}', {src_satellite}, '{src_source}',
+        {{{{ dbtvault.xts('{src_pk}', src_satellite, '{src_ldts}', '{src_source}',
                           '{source_model}')   }}}}
         """
+
+        textwrap.dedent(template)
 
         self.template_to_file(template, model_name)
 
     def process_structure_headings(self, headings):
-
         """
         Extract keys from headings if they are dictionaries
         """
@@ -860,3 +862,17 @@ class DBTVAULTGenerator:
         """
 
         shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
+
+    @staticmethod
+    def dict_to_yaml_string(yaml_dict: dict):
+        """
+        Convert a dictionary to YAML and return a string with the YAML
+        """
+
+        yaml = YAML()
+        yaml.indent(sequence=4, offset=2)
+        buf = io.BytesIO()
+        yaml.dump(yaml_dict, buf)
+        yaml_str = buf.getvalue().decode('utf-8')
+
+        return yaml_str
