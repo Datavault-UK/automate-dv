@@ -297,7 +297,7 @@ class DBTTestUtils:
 
     def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
-        Converts a context table in a feature file into a dictionary
+        Converts a context table in a feature file into CSV format
             :param table: The context.table from a scenario
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
@@ -315,7 +315,7 @@ class DBTTestUtils:
 
     def context_table_to_dict(self, table: Table, orient='index'):
         """
-        Converts a context table in a feature file into a pandas DataFrame
+        Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
             :return: A pandas DataFrame modelled from a context table
@@ -705,6 +705,23 @@ class DBTVAULTGenerator:
         """
 
         self.template_to_file(template, model_name)
+
+    @staticmethod
+    def process_structure_headings(headings):
+        """
+        Extract keys from headings if they are dictionaries
+        """
+
+        processed_headings = []
+
+        for item in headings:
+
+            if isinstance(item, dict):
+                processed_headings.append(list(item.keys()))
+            else:
+                processed_headings.append(item)
+
+        return processed_headings
 
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
