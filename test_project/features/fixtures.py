@@ -720,8 +720,8 @@ def cycle(context):
              "CUSTOMER_DOB",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
+
         "RAW_STAGE_BOOKING":
             ["BOOKING_ID",
              "CUSTOMER_ID",
@@ -832,19 +832,19 @@ def PIT_load(context):
         "STG_CUSTOMER_App": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_ID", "CUSTOMER_NAME"]
+                         "columns": ["CUSTOMER_LOCATION",  "CUSTOMER_NAME", "CUSTOMER_PHONE"]
                          }
         },
         "STG_CUSTOMER_Web": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_ID", "CUSTOMER_NAME"]
+                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_PHONE", "CUSTOMER_NAME"]
                          }
         },
         "STG_CUSTOMER_Phone": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_ID", "CUSTOMER_NAME"]
+                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_PHONE", "CUSTOMER_NAME"]
                          }
         }
     }
@@ -860,10 +860,10 @@ def PIT_load(context):
         }
     }
     context.vault_structure_columns = {
-        "PIT": {
+        "PIT_Customer": {
             "source_model": "Hub",
             "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATES_FOR_PIT",
+            "as_of_dates_table": "AS_OF_DATE",
             "satellite": {"Sat_App": {"source_model": "SAT_CUSTOMER_DETAILS_App", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
                           "Sat_Web": {"source_model": "SAT_CUSTOMER_DETAILS_Web", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
                           "Sat_Phone": {"source_model": "SAT_CUSTOMER_DETAILS_Phone", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"}}
@@ -1020,11 +1020,11 @@ def PIT_load(context):
                 "as_of_date": "DATE"
             }
         },
-        "PIT": {
+        "PIT_Customer": {
             "column_types":{
                 "AS_OF_DATE": "DATE",
-                "Customer_PK": "BINARY(16)",
-                "Sat_App_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_APP_PK": "BINARY(16)",
                 "Sat_App_LDTS": "DATE",
                 "Sat_Web_PK": "BINARY(16)",
                 "Sat_Web_LDTS": "DATE",

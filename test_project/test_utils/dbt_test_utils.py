@@ -469,7 +469,8 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link
+            "t_link": self.t_link,
+            "pit": self.pit
         }
         if vault_structure == "stage":
             generator_functions[vault_structure](model_name=model_name, config=config)
@@ -676,7 +677,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, src_pk, satellite, as_of_dates_table, source_model, config=None):
+    def pit(self, model_name,source_model, src_pk, as_of_dates_table, satellite, config=None):
         """
         Generate a PIT template
             :param src_pk: Source pk
@@ -691,8 +692,8 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.pit('{src_pk}', '{satellite}', '{as_of_dates_table}',
-                          '{source_model}')   }}}}
+        {{{{ dbtvault.pit('{source_model}','{src_pk}',  '{as_of_dates_table}','{satellite}'
+                         )   }}}}
         """
 
         self.template_to_file(template, model_name)
