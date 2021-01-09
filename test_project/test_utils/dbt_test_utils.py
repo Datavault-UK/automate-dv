@@ -723,7 +723,7 @@ class DBTVAULTGenerator:
             else:
                 processed_headings.append(item)
 
-        return self.flatten(processed_headings)
+        return list(self.flatten(processed_headings))
 
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
