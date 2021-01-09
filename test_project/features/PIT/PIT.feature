@@ -5,8 +5,8 @@ Feature: Hubs
   Scenario: Load into a pit table where the AS IS table is already established Where the AS_IS table has increments of a week
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                       | T_LINKS | EFF_SATS | PITS         |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS_App   |         |          | PIT_Customer |
+      | HUBS         | LINKS | SATS                       | T_LINKS | EFF_SATS | PIT          |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS_App   |         |          | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_DETAILS_Web   |         |          |              |
       |              |       | SAT_CUSTOMER_DETAILS_Phone |         |          |              |
     And the RAW_STAGE_APP table contains data
@@ -36,7 +36,7 @@ Feature: Hubs
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Austin            | 2019-01-07 | Phone  |
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Fort Worth        | 2019-01-15 | Phone  |
     And I create the STG_CUSTOMER_Phone stage
-    And the AS_OF_DATES table contains data
+    And the AS_OF_DATE table contains data
       | as_of_date |
       | 2019-01-07 |
       | 2019-01-14 |
@@ -116,6 +116,7 @@ Feature: Hubs
     And the AS_OF_DATES table contains data
       | as_of_date |
       | 2019-01-07 |
+      | 2019-01-07 |
       | 2019-01-14 |
       | 2019-01-21 |
     When I load the vault
@@ -124,8 +125,8 @@ Feature: Hubs
       | 1001        | 2019-01-07 | md5('1001')                   | 2019-01-01                    | md5('1001')                 | 2019-01-04                    | md5('1001')                   | 2019-01-05                      |
       | 1001        | 2019-01-14 | md5('1001')                   | 2019-01-12                    | md5('1001')                 | 2019-01-08                    | md5('1001')                   | 2019-01-06                      |
       | 1001        | 2019-01-21 | md5('1001')                   | 2019-01-14                    | md5('1001')                 | 2019-01-19                    | md5('1001')                   | 2019-01-20                      |
-      | 1002        | 2019-01-07 | md5('1002')                   | 2019-01-01                    |                             |                               | md5('1002')                   | 2019-01-03                      |
-      | 1002        | 2019-01-14 | md5('1002')                   | 2019-01-08                    |                             |                               | md5('1002')                   | 2019-01-07                      |
+      | 1002        | 2019-01-07 | md5('1002')                   | 2019-01-01                    |                             |                               | md5('1002')                   | 2019-01-07                      |
+      | 1002        | 2019-01-14 | md5('1002')                   | 2019-01-08                    |                             |                               | md5('1002')                   |                                 |
       | 1002        | 2019-01-21 | md5('1002')                   | 2019-01-20                    | md5('1002')                 | 2019-01-19                    | md5('1002')                   | 2019-01-15                      |
 
 

@@ -691,6 +691,11 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
             :param config: Optional model config
         """
+        if isinstance(satellite, dict):
+            satellite = f"{satellite}"
+        else:
+            satellite = f"'{satellite}'"
+
         if not config:
             config = {"materialized": "incremental"}
 
@@ -698,7 +703,7 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.pit('{source_model}','{src_pk}',  '{as_of_dates_table}','{satellite}'
+        {{{{ dbtvault.pit('{source_model}','{src_pk}',  '{as_of_dates_table}',{satellite}
                          )   }}}}
         """
 
