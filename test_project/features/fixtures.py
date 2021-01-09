@@ -861,12 +861,12 @@ def PIT_load(context):
     }
     context.vault_structure_columns = {
         "PIT_Customer": {
-            "source_model": "Hub",
+            "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
-            "satellite": {"Sat_App": {"source_model": "SAT_CUSTOMER_DETAILS_App", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
+            "satellite":    {"Sat_App": {"source_model": "SAT_CUSTOMER_DETAILS_App", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
                           "Sat_Web": {"source_model": "SAT_CUSTOMER_DETAILS_Web", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"},
-                          "Sat_Phone": {"source_model": "SAT_CUSTOMER_DETAILS_Phone", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"}}
+                          "Sat_Phone": {"source_model": "SAT_CUSTOMER_DETAILS_Phone", "PK": "CUSTOMER_PK", "LDTS": "LOAD_DATE"} }
         },
         "HUB_CUSTOMER": {
             "source_model": ["STG_CUSTOMER_App",
@@ -881,7 +881,7 @@ def PIT_load(context):
             "source_model": "STG_CUSTOMER_App",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
-            "src_payload": ["CUSTOMER_NAME","CUSTOMER_PHONE","CUSTOMER_DOB","CUSTOMER_LOCATION"],
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -1015,7 +1015,7 @@ def PIT_load(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "AS_OF_DATES_FOR_PIT": {
+        "AS_OF_DATE": {
             "column_types": {
                 "as_of_date": "DATE"
             }
@@ -1024,12 +1024,12 @@ def PIT_load(context):
             "column_types":{
                 "AS_OF_DATE": "DATE",
                 "CUSTOMER_PK": "BINARY(16)",
-                "SAT_APP_PK": "BINARY(16)",
-                "Sat_App_LDTS": "DATE",
-                "Sat_Web_PK": "BINARY(16)",
-                "Sat_Web_LDTS": "DATE",
-                "Sat_Phone_PK": "BINARY(16)",
-                "Sat_Phone_LDTS": "DATE"
+                "SAT_CUSTOMER_DETAILS_App_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_App_LDTS": "DATE",
+                "SAT_CUSTOMER_DETAILS_Web_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_Web_LDTS": "DATE",
+                "SAT_CUSTOMER_DETAILS_Phone_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_Phone_LDTS": "DATE"
             }
         }
     }
