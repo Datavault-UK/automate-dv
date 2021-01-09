@@ -6,7 +6,7 @@
 
 {%- endmacro %}
 
-{%- macro default__xts(src_pk, src_ldts, src_satellite,src_source, source_model) -%}
+{%- macro default__xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_satname, src_ldts, src_source]) -%}
 
