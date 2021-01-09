@@ -96,5 +96,3 @@ workflows:
               only:
                 - master
                 - dev
-                - /^fix-.*/
-                - /^feat-.*/
