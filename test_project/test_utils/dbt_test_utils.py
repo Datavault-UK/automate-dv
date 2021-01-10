@@ -701,7 +701,7 @@ class DBTVAULTGenerator:
         {src_satellite_yaml}{{% endset %}}
         
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.xts('{src_pk}', src_satellite, '{src_ldts}', '{src_source}',
+        {{{{ dbtvault.xts('{src_pk}', fromyaml(src_satellite), '{src_ldts}', '{src_source}',
                           '{source_model}')   }}}}
         """
 
