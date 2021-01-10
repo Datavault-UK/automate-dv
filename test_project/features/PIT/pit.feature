@@ -1,7 +1,7 @@
 @fixture.set_workdir
-Feature: PIT
+Feature: pit
 
-  @fixture.PIT_load
+  @fixture.pit
   Scenario: Load into a pit table where the AS IS table is already established Where the AS_IS table has increments of a week
     Given the PIT table does not exist
     And the raw vault contains empty tables
@@ -71,7 +71,7 @@ Feature: PIT
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Austin            | md5('AUSTIN\|\|BOB\|\|17-214-233-1215')       | 2019-01-07     | 2019-01-07 | Phone  |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | Fort Worth        | md5('FORT WORTH\|\|BOB\|\|17-214-233-1215')   | 2019-01-15     | 2019-01-15 | Phone  |
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_Web_PK | SAT_CUSTOMER_DETAILS_Web_LDTS | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_Phone_LDTS |
+      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
       | md5('1001') | 2019-01-07 | md5('1001')                 | 2019-01-01                    | md5('1001')                 | 2019-01-04                    | md5('1001')                   | 2019-01-06                      |
       | md5('1001') | 2019-01-14 | md5('1001')                 | 2019-01-12                    | md5('1001')                 | 2019-01-08                    | md5('1001')                   | 2019-01-10                      |
       | md5('1001') | 2019-01-21 | md5('1001')                 | 2019-01-16                    | md5('1001')                 | 2019-01-19                    | md5('1001')                   | 2019-01-20                      |
@@ -79,7 +79,7 @@ Feature: PIT
       | md5('1002') | 2019-01-14 | md5('1002')                 | 2019-01-08                    | md5('1002')                 | 2019-01-09                    | md5('1002')                   | 2019-01-07                      |
       | md5('1002') | 2019-01-21 | md5('1002')                 | 2019-01-20                    | md5('1002')                 | 2019-01-19                    | md5('1002')                   | 2019-01-15                      |
 
-  @fixture.PIT_load
+  @fixture.pit
   Scenario: Load into a pit table where the AS IS table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
@@ -129,7 +129,7 @@ Feature: PIT
       | 1002        | 2019-01-21 | md5('1002')                   | 2019-01-20                    | md5('1002')                 | 2019-01-19                    | md5('1002')                   | 2019-01-15                      |
 
 
-  @fixture.PIT_load
+  @fixture.pit
   Scenario: Load into a pit table where the AS IS table is already established and the AS IS table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
@@ -171,7 +171,7 @@ Feature: PIT
       | 2019-01-01 11:30:00 |
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_App_LDTS | SAT_CUSTOMER_DETAILS_Web_PK | SAT_CUSTOMER_DETAILS_Web_LDTS | SAT_CUSTOMER_DETAILS_Phone_PK | SAT_CUSTOMER_DETAILS_Phone_LDTS |
+      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
       | 1001        | 2019-01-07 | md5('1001')                   | 2019-01-01 10:22:00           | md5('1001')                 | 2019-01-01 10:16:00           | md5('1001')                   | 2019-01-01 10:09:00             |
       | 1001        | 2019-01-14 | md5('1001')                   | 2019-01-01 10:44:00           | md5('1001')                 | 2019-01-01 10:56:00           | md5('1001')                   | 2019-01-01 10:38:00             |
       | 1001        | 2019-01-21 | md5('1001')                   | 2019-01-01 11:12:00           | md5('1001')                 | 2019-01-01 11:22:00           | md5('1001')                   | 2019-01-01 11:08:00             |

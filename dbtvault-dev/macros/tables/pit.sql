@@ -1,4 +1,4 @@
-{%- macro pit(src_pk,source_model,as_of_dates_table,satellite) -%}
+{%- macro pit(src_pk, as_of_dates_table, satellite, source_model) -%}
 
     {{- adapter.dispatch('pit', packages = var('adapter_packages', ['dbtvault']))(source_model=source_model,src_pk=src_pk,
                                                                                    as_of_dates_table=as_of_dates_table,
@@ -6,7 +6,7 @@
 
 {%- endmacro -%}
 
-{%- macro default__pit(src_pk,source_model,as_of_dates_table,satellite) -%}
+{%- macro default__pit(src_pk, as_of_dates_table, satellite, source_model) -%}
 
 {# Set deafualts and obtain source model paths #}
 {% set maxdate = '9999-12-31 23:59:59.999999' %}
@@ -20,7 +20,7 @@
 {%- set source_relation = ref(source_model) %}
 {%- set as_of_dates_table = ref(as_of_dates_table) -%}
 {% for sat in satelites -%}
-    {%- set sat_src= dbtvault.prefix(columns=sat,prefix='_src') -%}
+    {%- set sat_src = dbtvault.prefix(columns=sat, prefix='_src') -%}
     {%- set sat_src = ref(sat) %}
 {% endfor %}
 
@@ -29,12 +29,12 @@ SELECT
     {{ as_of_dates_table -}}.as_of_date,
     {{ src_pk }},
     {% for sats in satellites -%}
-        coalesce(max({{- sat ~'_src' -}}.{{- sat[pk] -}}),Cast(ghost_pk AS BINARY) AS {{ sat -}}_PK,
-        coalesce(max({{- sat ~'_src' -}}.{{- sat[LDTS] -}}),ghost_date) AS {{ sat -}}_LDTS
+        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[pk] -}}), CAST(ghost_pk AS BINARY) AS {{ sat -}}_PK,
+        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[LDTS] -}}), ghost_date) AS {{ sat -}}_LDTS
         {{- ',' if not loop.last -}}
     {%- endfor %}
 
-From {{ source_relation }} AS h
+FROM {{ source_relation }} AS h
 
 INNER JOIN {{ as_of_dates_table }} AS x
     ON (1=1)
@@ -48,7 +48,7 @@ INNER JOIN {{ as_of_dates_table }} AS x
 
 GROUP BY
 x.as_of_date, h.{{- src_pk }},
-ORDER BY 1,2;
+ORDER BY 1, 2;
 
 
 {%- endmacro -%}
