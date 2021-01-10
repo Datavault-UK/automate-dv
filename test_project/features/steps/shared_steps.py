@@ -299,11 +299,12 @@ def stage_processing(context, processed_stage_name):
 
     args = {k: v for k, v in stage_metadata.items() if k == "hash"}
 
-    dbtvault_generator.stage(model_name=processed_stage_name,
-                             source_model=context.raw_stage_models,
-                             hashed_columns=context.hashed_columns[processed_stage_name],
-                             derived_columns=context.derived_columns[processed_stage_name],
-                             include_source_columns=context.include_source_columns)
+    dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
+                                           vault_structure="stage",
+                                           source_model=context.raw_stage_models,
+                                           hashed_columns=context.hashed_columns[processed_stage_name],
+                                           derived_columns=context.derived_columns[processed_stage_name],
+                                           include_source_columns=context.include_source_columns)
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
                                                 args=args)
