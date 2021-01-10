@@ -475,7 +475,8 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link
+            "t_link": self.t_link,
+            "oos_sat": self.oos_sat
         }
         if vault_structure == "stage":
             generator_functions[vault_structure](model_name=model_name, config=config)
@@ -679,6 +680,42 @@ class DBTVAULTGenerator:
         {{{{ dbtvault.t_link('{src_pk}', {src_fk}, {src_payload}, '{src_eff}',
                              '{src_ldts}', '{src_source}', '{source_model}')   }}}}
         """
+
+        self.template_to_file(template, model_name)
+
+    def oos_sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
+                out_of_sequence, config=None):
+        """
+        Generate a satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_hashdiff: Source hashdiff
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param out_of_sequence: Dictionary of metadata required for out of sequence sat
+            :param config: Optional model config
+        """
+
+        if isinstance(src_hashdiff, dict):
+            src_hashdiff = f"{src_hashdiff}"
+        else:
+            src_hashdiff = f"'{src_hashdiff}'"
+
+        if not config:
+            config = {"materialized": "incremental"}
+
+        config_string = self.format_config_str(config)
+
+        template = f"""
+        {{{{ config({config_string}) }}}}
+        SELECT 1
+        """
+        # {{{{ dbtvault.oos_sat('{src_pk}', {src_hashdiff}, {src_payload},
+        #                       '{src_eff}', '{src_ldts}', '{src_source}',
+        #                       '{source_model}', '{out_of_sequence}')   }}}}
 
         self.template_to_file(template, model_name)
 
