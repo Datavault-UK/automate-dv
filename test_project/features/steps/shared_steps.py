@@ -72,7 +72,7 @@ def clear_schema(context):
 
         headings = [v for k, v in headings_dict.items() if k != "source_model"]
 
-        headings = dbtvault_generator.process_structure_headings(headings)
+        headings = dbtvault_generator.process_structure_headings(context, model_name, headings)
 
         row = Row(cells=[], headings=headings)
 
@@ -101,7 +101,7 @@ def load_empty_table(context, model_name, vault_structure):
         headings = context.stage_columns[model_name]
     else:
         headings = [val for key, val in columns[model_name].items()]
-        headings = dbtvault_generator.process_structure_headings(headings)
+        headings = dbtvault_generator.process_structure_headings(context, model_name, headings)
 
     row = Row(cells=[], headings=headings)
 

@@ -824,10 +824,12 @@ def cycle(context):
 
 
 @fixture
-def PIT_load(context):
+def pit(context):
     """
     Define the structures and metadata to perform PIT load
     """
+
+    context.vault_structure_type = "pit"
 
     context.hashed_columns = {
         "STG_CUSTOMER_APP": {
@@ -904,18 +906,26 @@ def PIT_load(context):
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
             "satellites":
-                [{"satellite": "SAT_CUSTOMER_DETAILS_APP",
-                  "pk": "CUSTOMER_PK",
-                  "ldts": "LOAD_DATE"
-                  },
-                 {"satellite": "SAT_CUSTOMER_DETAILS_WEB",
-                  "pk": "CUSTOMER_PK",
-                  "ldts": "LOAD_DATE"
-                  },
-                 {"satellite": "SAT_CUSTOMER_DETAILS_PHONE",
-                  "pk": "CUSTOMER_PK",
-                  "ldts": "LOAD_DATE"
-                  }]
+                {
+                    "SAT_CUSTOMER_DETAILS_APP": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_DETAILS_WEB": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_DETAILS_PHONE": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                }
         }
     }
 

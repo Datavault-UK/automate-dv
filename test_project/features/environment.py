@@ -20,7 +20,7 @@ fixture_registry = {
     "fixture.disable_union": disable_union,
     "fixture.t_link": t_link,
     "fixture.cycle": cycle,
-    "fixture.PIT_load": PIT_load
+    "fixture.pit": pit
 }
 
 
