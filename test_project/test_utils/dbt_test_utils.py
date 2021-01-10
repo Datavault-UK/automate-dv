@@ -1,5 +1,6 @@
 import glob
 import io
+import json
 import logging
 import os
 import re
@@ -689,7 +690,7 @@ class DBTVAULTGenerator:
         Generate a XTS template
         """
 
-        src_satellite_yaml = self.dict_to_yaml_string(src_satellite)
+        src_satellite = json.dumps(src_satellite, indent=4)
 
         if not config:
             config = {"materialized": "incremental"}
@@ -697,11 +698,10 @@ class DBTVAULTGenerator:
         config_string = self.format_config_str(config)
 
         template = f"""
-        {{% set src_satellite %}}
-        {src_satellite_yaml}{{% endset %}}
+        {{% set src_satellite = {src_satellite} %}}
         
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.xts('{src_pk}', fromyaml(src_satellite), '{src_ldts}', '{src_source}',
+        {{{{ dbtvault.xts('{src_pk}', src_satellite, '{src_ldts}', '{src_source}',
                           '{source_model}')   }}}}
         """
 
