@@ -683,7 +683,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellite, config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, config=None):
         """
         Generate a PIT template
             :param model_name:
@@ -692,10 +692,10 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
             :param config: Optional model config
         """
-        if isinstance(satellite, dict):
-            satellite = f"{satellite}"
+        if isinstance(satellites, dict):
+            satellites = f"{satellites}"
         else:
-            satellite = f"'{satellite}'"
+            satellites = f"'{satellites}'"
 
         if not config:
             config = {"materialized": "incremental"}
@@ -704,7 +704,7 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.pit('{source_model}', '{src_pk}', '{as_of_dates_table}', {satellite})   }}}}
+        {{{{ dbtvault.pit('{source_model}', '{src_pk}', '{as_of_dates_table}', {satellites})   }}}}
         """
 
         self.template_to_file(template, model_name)
