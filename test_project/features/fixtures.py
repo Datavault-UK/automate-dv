@@ -863,21 +863,6 @@ def PIT_load(context):
     }
 
     context.vault_structure_columns = {
-        "PIT_CUSTOMER": {
-            "source_model": "HUB_CUSTOMER",
-            "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATE",
-            "satellite": {"SAT_APP": {"source_model": "SAT_CUSTOMER_DETAILS_APP",
-                                      "PK": "CUSTOMER_PK",
-                                      "LDTS": "LOAD_DATE"},
-                          "SAT_WEB": {"source_model": "SAT_CUSTOMER_DETAILS_WEB",
-                                      "PK": "CUSTOMER_PK",
-                                      "LDTS": "LOAD_DATE"},
-                          "SAT_PHONE": {"source_model": "SAT_CUSTOMER_DETAILS_PHONE",
-                                        "PK": "CUSTOMER_PK",
-                                        "LDTS": "LOAD_DATE"}
-                          }
-        },
         "HUB_CUSTOMER": {
             "source_model": ["STG_CUSTOMER_APP",
                              "STG_CUSTOMER_APP",
@@ -888,16 +873,16 @@ def PIT_load(context):
             "src_source": "SOURCE"
         },
         "SAT_CUSTOMER_DETAILS_APP": {
-            "source_model": "STG_CUSTOMER_App",
+            "source_model": "STG_CUSTOMER_APP",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
-            },
-        "SAT_CUSTOMER_DETAILS_Web": {
-            "source_model": "STG_CUSTOMER_Web",
+        },
+        "SAT_CUSTOMER_DETAILS_WEB": {
+            "source_model": "STG_CUSTOMER_WEB",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
@@ -913,6 +898,24 @@ def PIT_load(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "PIT_CUSTOMER": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                [{"satellite": "SAT_CUSTOMER_DETAILS_APP",
+                  "pk": "CUSTOMER_PK",
+                  "ldts": "LOAD_DATE"
+                  },
+                 {"satellite": "SAT_CUSTOMER_DETAILS_WEB",
+                  "pk": "CUSTOMER_PK",
+                  "ldts": "LOAD_DATE"
+                  },
+                 {"satellite": "SAT_CUSTOMER_DETAILS_PHONE",
+                  "pk": "CUSTOMER_PK",
+                  "ldts": "LOAD_DATE"
+                  }]
         }
     }
 
