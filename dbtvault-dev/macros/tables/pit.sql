@@ -1,12 +1,12 @@
-{%- macro pit(src_pk, as_of_dates_table, satellite, source_model) -%}
+{%- macro pit(src_pk, as_of_dates_table, satellites, source_model) -%}
 
     {{- adapter.dispatch('pit', packages = var('adapter_packages', ['dbtvault']))(source_model=source_model,src_pk=src_pk,
                                                                                    as_of_dates_table=as_of_dates_table,
-                                                                                   satellite=satellite) -}}
+                                                                                   satellites=satellites) -}}
 
 {%- endmacro -%}
 
-{%- macro default__pit(src_pk, as_of_dates_table, satellite, source_model) -%}
+{%- macro default__pit(src_pk, as_of_dates_table, satellites, source_model) -%}
 
 {# Set deafualts and obtain source model paths #}
 {% set maxdate = '9999-12-31 23:59:59.999999' %}
@@ -17,24 +17,25 @@
     Loop throught the dict and call the 1st key or have a source model key pair in the sub dict
     Not in loop i can get the hub source relation #}
 
-{%- set source_relation = ref(source_model) %}
 {%- set as_of_dates_table = ref(as_of_dates_table) -%}
 {% for sat in satelites -%}
     {%- set sat_src = dbtvault.prefix(columns=sat, prefix='_src') -%}
-    {%- set sat_src = ref(sat) %}
-{% endfor %}
+    {%- set sat_src = ref( [sat_src]) %}
 
+{% endfor %}
 
 SELECT
     {{ as_of_dates_table -}}.as_of_date,
     {{ src_pk }},
-    {% for sats in satellites -%}
-        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[pk] -}}), CAST(ghost_pk AS BINARY) AS {{ sat -}}_PK,
-        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[LDTS] -}}), ghost_date) AS {{ sat -}}_LDTS
+    {% for sat in satellites -%}
+        {%- set sat_key = dbtvault.as_constant([sat]['pk']) -%}
+        {%- set sat_ldts = dbtvault.as_constant([sat]['ldts']) -%}
+        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[pk] -}}), CAST(ghost_pk AS BINARY) AS {{ sat -}}_{{- sat_key -}},
+        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[LDTS] -}}), ghost_date) AS {{ sat -}}_{{ sat_ldts }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
 
-FROM {{ source_relation }} AS h
+FROM {{ ref(source_model) }} AS h
 
 INNER JOIN {{ as_of_dates_table }} AS x
     ON (1=1)
@@ -52,3 +53,6 @@ ORDER BY 1, 2;
 
 
 {%- endmacro -%}
+
+satellite_columns_hk = [f"{sat}_{list(item[sat]['pk'].keys())[0]}" ]
+satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
