@@ -21,10 +21,15 @@ WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {% endif %}
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    WHERE __RANK_FILTER__
-    {% endif %}
 ),
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+rank_col AS (
+    SELECT * FROM source_data
+    WHERE __RANK_FILTER__
+),
+{% endif -%}
+
 {% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
 
 update_records AS (
@@ -50,7 +55,11 @@ stage AS (
 
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    FROM rank_col AS e
+    {% else %}
     FROM source_data AS e
+    {% endif -%}
     {% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
     LEFT JOIN stage
     ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
