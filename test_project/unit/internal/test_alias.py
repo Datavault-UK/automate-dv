@@ -14,6 +14,7 @@ class TestAliasMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
+        assert 'error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(self):

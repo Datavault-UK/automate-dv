@@ -17,7 +17,7 @@
 
     {#- Add aliases of derived columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
-        {%- if columns[col] is iterable and columns[col] is not string -%}
+        {%- if dbtvault.is_list(columns[col]) -%}
             {%- set column_list = [] -%}
 
             {%- for concat_component in columns[col] -%}
