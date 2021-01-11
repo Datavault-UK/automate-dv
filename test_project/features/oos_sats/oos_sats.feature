@@ -12,7 +12,7 @@ Feature: Out of Sequence Satellites
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1215') | SAT_SAP_CUSTOMER | 1993-01-06 | *      |
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1216') | SAT_SAP_CUSTOMER | 1993-01-07 | *      |
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | SAT_SAP_CUSTOMER | 1993-01-08 | *      |
-    Given the SAT_CUSTOMER oos_sat is already populated with data
+    Given the SAT_CUSTOMER_OOS oos_sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1215') | Alice         | 1997-04-24   | 17-214-233-1215 | 1993-01-06 | 1993-01-06     | *      |
@@ -22,8 +22,8 @@ Feature: Out of Sequence Satellites
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
     And I create the STG_CUSTOMER stage
-    When I load the SAT_CUSTOMER oos_sat
-    Then the SAT_CUSTOMER table should contain expected data
+    When I load the SAT_CUSTOMER_OOS oos_sat
+    Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1215') | Alice         | 1997-04-24   | 17-214-233-1215 | 1993-01-06 | 1993-01-06     | *      |
@@ -41,7 +41,7 @@ Feature: Out of Sequence Satellites
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1215') | SAT_SAP_CUSTOMER | 1993-01-06 | *      |
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1216') | SAT_SAP_CUSTOMER | 1993-01-07 | *      |
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | SAT_SAP_CUSTOMER | 1993-01-08 | *      |
-    Given the SAT_CUSTOMER oos_sat is already populated with data
+    Given the SAT_CUSTOMER_OOS oos_sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|CHRIS\|\|17-214-233-1214') | Chris         | 1997-04-24   | 17-214-233-1214 | 1993-01-04 | 1993-01-04     | *      |
@@ -53,8 +53,8 @@ Feature: Out of Sequence Satellites
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Chris         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
     And I create the STG_CUSTOMER stage
-    When I load the SAT_CUSTOMER oos_sat
-    Then the SAT_CUSTOMER table should contain expected data
+    When I load the SAT_CUSTOMER_OOS oos_sat
+    Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|CHRIS\|\|17-214-233-1214') | Chris         | 1997-04-24   | 17-214-233-1214 | 1993-01-04 | 1993-01-04     | *      |
@@ -75,7 +75,7 @@ Feature: Out of Sequence Satellites
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1215') | SAT_SAP_CUSTOMER | 1993-01-06 | *      |
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1216') | SAT_SAP_CUSTOMER | 1993-01-07 | *      |
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | SAT_SAP_CUSTOMER | 1993-01-08 | *      |
-    Given the SAT_CUSTOMER oos_sat is already populated with data
+    Given the SAT_CUSTOMER_OOS oos_sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1215') | Alice         | 1997-04-24   | 17-214-233-1215 | 1993-01-06 | 1993-01-06     | *      |
@@ -85,8 +85,8 @@ Feature: Out of Sequence Satellites
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Chris         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
     And I create the STG_CUSTOMER stage
-    When I load the SAT_CUSTOMER oos_sat
-    Then the SAT_CUSTOMER table should contain expected data
+    When I load the SAT_CUSTOMER_OOS oos_sat
+    Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|CHRIS\|\|17-214-233-1214') | Chris         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
