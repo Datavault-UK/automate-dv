@@ -633,7 +633,7 @@ class DBTVAULTGenerator:
         self.template_to_file(template, model_name)
 
     def oos_sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
-                out_of_sequence, config=None):
+                out_of_sequence=None, config=None):
         """
         Generate a out of sequence satellite model template
             :param model_name: Name of the model file
@@ -644,7 +644,7 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
-            :param out_of_sequence: Dictionary of metadata required for out of sequence sat
+            :param out_of_sequence: Optional dictionary of metadata required for out of sequence sat
             :param config: Optional model config
         """
 
