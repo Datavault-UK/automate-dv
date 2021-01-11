@@ -2,7 +2,7 @@
 Feature: Satellites Loaded using Rank Materialization
 
   @fixture.satellite
-  Scenario: [SAT-RANK-MAT] Base load of a satellite should load all records
+  Scenario: [SAT-RANK-MAT] Base load of a satellite with one vale in rank column should load all records
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -11,7 +11,7 @@ Feature: Satellites Loaded using Rank Materialization
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I create the STG_CUSTOMER stage
-    And I insert by rank into the SATELLITE sat
+    And I insert by rank into the SATELLITE sat ordering by LOAD_DATE and partitioning by LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01     | 1993-01-01 | *      |
