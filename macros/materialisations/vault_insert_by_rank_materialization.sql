@@ -23,6 +23,7 @@
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, partition_by_column, order_by_column, 1) %}
 
+        {% do log("existing relation", true) %}
         {% do log("filtered sql: " ~ filtered_sql, true) %}
 
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
@@ -39,10 +40,15 @@
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, partition_by_column, order_by_column, 1) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+
+        {% do log("re-create", true) %}
         {% do log("filtered sql: " ~ filtered_sql, true) %}
+
         {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
     {% else %}
+
+        {% do log("iterate", true) %}
 
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}

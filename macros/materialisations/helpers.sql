@@ -48,7 +48,7 @@
     {%- endset -%}
 
     {%- set rank_filter -%}
-    dbtvault__RANK::INTEGER == {{ rank_iteration }}::INTEGER
+    dbtvault__RANK::INTEGER = {{ rank_iteration }}::INTEGER
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__RANK_COLUMN__", rank_column) | replace("__RANK_FILTER__", rank_filter) -%}
