@@ -17,42 +17,58 @@
     Loop throught the dict and call the 1st key or have a source model key pair in the sub dict
     Not in loop i can get the hub source relation #}
 
-{%- set as_of_dates_table = ref(as_of_dates_table) -%}
+
+{% if as_of_dates_table is mapping and as_of_dates_table is not none -%}
+
+    {%- set source_name = as_of_dates_table | first -%}
+    {%- set source_table_name = as_of_dates_table[source_name] -%}
+
+    {%- set source_relation = source(source_name, source_table_name) -%}
+
+{%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
+
+    {%- set source_relation = as_of_dates_table -%}
+{%- endif -%}
+
+
 {% for sat in satelites -%}
     {%- set sat_src = dbtvault.prefix(columns=sat, prefix='_src') -%}
-    {%- set sat_src = ref( [sat_src]) %}
-
+    {%- set sat_src = ref( sat_src) %}
+{{ log("sat_src: " ~ sat_src , true )}}
 {% endfor %}
 
+{{ log("satellites: " ~ satellites , true )}}
+
 SELECT
-    {{ as_of_dates_table -}}.as_of_date,
+    {{ as_of_dates_table_src -}}.as_of_date,
     {{ src_pk }},
     {% for sat in satellites -%}
-        {%- set sat_key = dbtvault.as_constant([sat]['pk']) -%}
-        {%- set sat_ldts = dbtvault.as_constant([sat]['ldts']) -%}
-        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[pk] -}}), CAST(ghost_pk AS BINARY) AS {{ sat -}}_{{- sat_key -}},
-        COALESCE(MAX({{- sat ~ '_src' -}}.{{- sat[LDTS] -}}), ghost_date) AS {{ sat -}}_{{ sat_ldts }}
+
+        {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
+        {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0] -%}
+        {{ log("sat_ldts: " ~ sat_ldts , true )}}
+        COALESCE(MAX({{- sat ~ '_src' -}}.{{- satellites[sat]['pk'][sat_key] -}}), CAST( ghost_pk AS BINARY)) AS {{ sat -}}_{{- sat_key -}},
+        COALESCE(MAX({{- sat ~ '_src' -}}.{{- satellites[sat]['ldts'][sat_ldts] -}}), ghost_date) AS {{ sat -}}_{{ sat_ldts }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
 
 FROM {{ ref(source_model) }} AS h
 
-INNER JOIN {{ as_of_dates_table }} AS x
+INNER JOIN {{ as_of_dates_table_src }} AS x
     ON (1=1)
 
 
 {% for sat in satelites -%}
+    {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
+    {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0] -%}
     LEFT JOIN {{- sat ~'_src' -}}
-        ON {{ h.src_pk }} = {{ sat -}}.{{ sat.pk }},
-    WHERE {{ sat -}}.LDTS <= x.as_of_date
+        ON {{ h.src_pk }} = {{ sat -}}.{{ satellites[sat]['pk'][sat_key] }},
+    WHERE {{ sat -}}.{{ satellites[sat]['ldts'][sat_key] }} <= x.as_of_date
 {% endfor %}
 
 GROUP BY
-x.as_of_date, h.{{- src_pk }},
-ORDER BY 1, 2;
+x.as_of_date , h.{{- src_pk }}
+ORDER BY (1, 2)
 
 
 {%- endmacro -%}
-
-satellite_columns_hk = [f"{sat}_{list(item[sat]['pk'].keys())[0]}" ]
-satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
