@@ -229,14 +229,15 @@ def load_table(context, model_name, vault_structure, period):
     assert "Completed successfully" in logs
 
 
-@step("I insert by rank into the {model_name} {vault_structure}")
-def rank_insert(context, model_name, vault_structure):
+@step("I insert by rank into the {model_name} {vault_structure} ordering by {order_by_column} "
+      "and partitioning by {partition_by_column}")
+def rank_insert(context, model_name, vault_structure, order_by_column, partition_by_column):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_rank",
-              "partition_by_column": "LOAD_DATE",
-              "order_by_column": "LOAD_DATE"}
+              "order_by_column": order_by_column,
+              "partition_by_column": partition_by_column}
 
     context.vault_structure_metadata = metadata
 
