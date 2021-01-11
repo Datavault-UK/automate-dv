@@ -1,13 +1,13 @@
-{%- macro sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence=None) -%}
+{%- macro oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence=None) -%}
 
-    {{- adapter.dispatch('sat', packages = var('adapter_packages', ['dbtvault']))(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                                                                                  src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
-                                                                                  src_source=src_source, source_model=source_model) -}}
+    {{- adapter.dispatch('oos_sat', packages = var('adapter_packages', ['dbtvault']))(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                                                                      src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
+                                                                                      src_source=src_source, source_model=source_model,
+                                                                                      out_of_sequence=out_of_sequence) -}}
 
 {%- endmacro %}
 
-{%- macro default__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
-
+{%- macro default__oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- if out_of_sequence is not none %}
 {%- set xts_model = out_of_sequence["source_xts"] %}
@@ -45,7 +45,7 @@ stage AS (
     WHERE d.latest = 'Y'
 ),
 {% endif -%}
-{%- if out_of_sequence %}
+{%- if out_of_sequence is not none and is_incremental() %}
 sat_stg AS (
   SELECT
     {{ dbtvault.prefix(source_cols, 'a') }}
@@ -53,7 +53,7 @@ sat_stg AS (
   , {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
   FROM {{ this }} AS a
   LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
-  WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE({{ insert_date }})
+  WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE('{{ insert_date }}')
 ),
 xts_stg AS (
   SELECT
@@ -65,7 +65,7 @@ xts_stg AS (
                                                          ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF
   , LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
                                                           ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
-  FROM {{ ref(source_xts) }} AS a
+  FROM DBTVAULT_DEV.TEST_XTS_SCHEMA.TEST_XTS AS a
   INNER JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
   WHERE a.SATELLITE_NAME = 'SAT_SAP_CUSTOMER'
   ORDER BY {{ dbtvault.prefix([src_pk], 'a') }}, {{ dbtvault.prefix([src_ldts], 'b') }}
@@ -79,7 +79,7 @@ out_of_sequence_inserts AS (
   AND ({{ dbtvault.prefix([src_ldts], 'c') }} BETWEEN c.XTS_LOAD_DATE AND c.NEXT_RECORD_DATE)
   UNION
   SELECT
-    {{ dbvault.prefix([src_pk, src_hashdiff], 'd')}}
+    {{ dbtvault.prefix([src_pk, src_hashdiff], 'd')}}
   , {{ dbtvault.prefix(src_payload, 'd') }}
   , c.NEXT_RECORD_DATE AS {{ src_ldts }}
   , c.NEXT_RECORD_DATE AS {{ src_eff }}
@@ -98,11 +98,14 @@ records_to_insert AS (
     LEFT JOIN stage
     ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} IS NULL
+    {% if out_of_sequence is not none -%}
+    AND {{ dbtvault.prefix([src_ldts], 'e') }} <> DATE('{{ insert_date }}')
+    {% endif %}
     {% endif %}
 )
 
 SELECT * FROM records_to_insert
-{% if out_of_sequence is not none -%}
+{% if out_of_sequence is not none and is_incremental()-%}
 UNION
 SELECT * FROM out_of_sequence_inserts
 {% endif -%}
