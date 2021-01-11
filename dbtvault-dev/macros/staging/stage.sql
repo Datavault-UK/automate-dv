@@ -41,8 +41,8 @@
     {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 {%- endif -%}
 
-{%- set derived_column_names = dbtvault.extract_column_names() -%}
-{%- set hashed_column_names = dbtvault.extract_column_names() -%}
+{%- set derived_column_names = dbtvault.extract_column_names(derived_columns) -%}
+{%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) -%}
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
 {%- do log("derived_column_names: " ~ derived_column_names, true) -%}

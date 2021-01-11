@@ -129,5 +129,18 @@
 
 {%- macro extract_column_names(columns_dict=none) -%}
 
+{%- set extracted_column_names = [] -%}
+
+{%- do log("columns_dict: " ~ columns_dict, true) -%}
+
+{%- if columns_dict is none -%}
+    {%- do return([]) -%}
+{%- elif columns_dict is mapping -%}
+    {%- for key, value in columns_dict.items() -%}
+        {%- do extracted_column_names.append(key) -%}
+    {%- endfor -%}
+
+    {%- do return(extracted_column_names) -%}
+{%- endif -%}
 
 {%- endmacro -%}
