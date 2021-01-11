@@ -34,26 +34,16 @@
     {%- set source_table_name = source_model[source_name] -%}
 
     {%- set source_relation = source(source_name, source_table_name) -%}
-
+    {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 {%- elif source_model is not mapping and source_model is not none -%}
 
     {%- set source_relation = ref(source_model) -%}
+    {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 {%- endif -%}
 
 {#- CTE to add source columns from the source model -#}
 WITH stage AS (
-    SELECT
-
-{% if source_relation is defined  -%}
-    {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
-
-    {%- for col in included_source_columns -%}
-        {{ '    ' ~ col }}
-        {{- ',\n' if not loop.last -}}
-    {%- endfor -%}
-
-{%- endif %}
-
+    SELECT *
     FROM {{ source_relation }}
 ),
 
@@ -61,21 +51,18 @@ WITH stage AS (
 derived_columns AS (
     SElECT
 
-    {%- if derived_columns is defined and derived_columns is not none -%}
-        {%- if include_source_columns or hashed_columns is defined and hashed_columns is not none %}
+    {%- if derived_columns is defined and derived_columns is not none and derived_columns -%}
+        {%- if include_source_columns or hashed_columns is defined and hashed_columns is not none -%}
 
-    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(width=4, first=false) }}
-        {%- else %}
+            {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(width=4, first=false) -}}
+        {%- else -%}
 
-    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
-
+            {{- dbtvault.derive_columns(columns=derived_columns) | indent(4) -}}
         {%- endif -%}
-
     {#- If source relation is defined but derived_columns is not -#}
     {%- else -%}
-        {{ " *" }}
+        {{- " *" -}}
     {%- endif %}
-
     FROM stage
 ),
 
@@ -83,17 +70,18 @@ derived_columns AS (
 hashed_columns AS (
     SELECT
 
-    {%- if hashed_columns is defined and hashed_columns is not none %}
-        {{- " *," if include_source_columns -}}
+    {% if hashed_columns is defined and hashed_columns is not none -%}
+        {%- if include_source_columns -%}
+        {{- included_source_columns | join (",\n    ") -}}
+        {%- endif -%}
 
             {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false %}
+                {{- dbtvault.derive_columns(columns=derived_columns) | indent(4) -}},
+            {%- endif -%}
 
-    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }},
-            {%- endif %}
+    {%- set hashed_columns = dbtvault.process_excludes(source_columns=included_source_columns, derived_columns=derived_columns, columns=hashed_columns) %}
 
-    {%- set hashed_columns = dbtvault.process_excludes(source_relation=source_relation, derived_columns=derived_columns, columns=hashed_columns) %}
-
-    {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
+    {{- ",\n\n    " ~ dbtvault.hash_columns(columns=hashed_columns) | indent(4) -}}
 
     {%- else  -%}
     {{ " *" }}
