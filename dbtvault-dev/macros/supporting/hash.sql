@@ -29,7 +29,7 @@
 {%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" %}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
-{%- if is_hashdiff and columns is iterable and columns is not string -%}
+{%- if is_hashdiff and dbtvault.is_list(columns) -%}
     {%- set columns = columns|sort -%}
 {%- endif -%}
 
