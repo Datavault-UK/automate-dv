@@ -14,6 +14,7 @@ class TestDeriveColumnsMacro(TestCase):
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done' in process_logs
+        assert 'error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_derive_columns_correctly_generates_sql_without_source_columns(self):
@@ -24,6 +25,7 @@ class TestDeriveColumnsMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
+        assert 'error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_derive_columns_raises_error_with_only_source_columns(self):

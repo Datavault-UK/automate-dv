@@ -6,7 +6,7 @@
 
 {%- macro default__hash_columns(columns=none) -%}
 
-{%- if columns is mapping -%}
+{%- if columns is mapping and columns is not none -%}
 
     {%- for col in columns -%}
 
@@ -37,5 +37,11 @@
 {% endif %}
     {%- endfor -%}
 
-{%- endif -%}
+{%- else -%}
+
+{%- if execute -%}
+{{ exceptions.raise_compiler_error("Invalid column configuration provided to hash_columns macro.") }}
+{%- endif %}
+
+{%- endif %}
 {%- endmacro -%}
