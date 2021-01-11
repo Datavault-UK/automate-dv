@@ -1,21 +1,21 @@
 name: 'dbtvault'
 version: '0.7.1'
-require-dbt-version: [">=0.18.0", "<0.19.0"]
+require-dbt-version: [ ">=0.18.0", "<0.19.0" ]
+config-version: 2
 
 profile: 'dbtvault'
 
-source-paths: ["models", "models_test"]
-analysis-paths: ["analysis"] 
-test-paths: ["tests"]
-data-paths: ["data"]
-macro-paths: ["macros"]
-docs-paths: ["docs"]
+source-paths: [ "models", "models_test" ]
+analysis-paths: [ "analysis" ]
+test-paths: [ "tests" ]
+data-paths: [ "data" ]
+macro-paths: [ "macros" ]
+docs-paths: [ "docs" ]
 
 target-path: "target"
 clean-targets:
-    - "target"
-    - "dbt_modules"
+  - "target"
+  - "dbt_modules"
 
-models:
-  vars:
-    hash: MD5
+vars:
+  hash: MD5
