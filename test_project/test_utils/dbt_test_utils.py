@@ -635,7 +635,7 @@ class DBTVAULTGenerator:
     def oos_sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
                 out_of_sequence, config=None):
         """
-        Generate a satellite model template
+        Generate a out of sequence satellite model template
             :param model_name: Name of the model file
             :param src_pk: Source pk
             :param src_hashdiff: Source hashdiff
@@ -648,23 +648,12 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(src_hashdiff, dict):
-            src_hashdiff = f"{src_hashdiff}"
-        else:
-            src_hashdiff = f"'{src_hashdiff}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        SELECT 1
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.oos_sat({src_pk}, {src_hashdiff}, {src_payload},
+                              {src_eff}, {src_ldts}, {src_source},
+                              {source_model}, {out_of_sequence}) }}}}
         """
-        # {{{{ dbtvault.oos_sat('{src_pk}', {src_hashdiff}, {src_payload},
-        #                       '{src_eff}', '{src_ldts}', '{src_source}',
-        #                       '{source_model}', '{out_of_sequence}')   }}}}
 
         self.template_to_file(template, model_name)
 
@@ -711,6 +700,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
+            "oos_sat": "incremental"
         }
 
         if not config:
