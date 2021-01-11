@@ -124,3 +124,10 @@
     {%- do return(columns_to_select) -%}
 
 {%- endmacro -%}
+
+
+
+{%- macro extract_column_names(columns_dict=none) -%}
+
+
+{%- endmacro -%}

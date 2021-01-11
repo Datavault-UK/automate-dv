@@ -41,7 +41,7 @@
 {#- Else a list of columns to hash -#}
 {%- else -%}
 
-    {{- "CAST(" ~ hash_alg ~ "(CONCAT_WS('" ~ concat_string ~ "', " | indent(4) -}}
+    {{- "CAST(" ~ hash_alg ~ "(CONCAT_WS('" ~ concat_string ~ "'," | indent(4) -}}
 
     {%- for column in columns -%}
 
