@@ -1,5 +1,5 @@
 name: dbtvault_test
-version: '0.7'
+version: '0.7.1'
 require-dbt-version: ['>=0.18.0', <0.19.0]
 config-version: 1
 
@@ -19,8 +19,7 @@ clean-targets:
 models:
   dbtvault_test:
     unit:
-      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX',\
-        \ '') if env_var('CIRCLE_NODE_INDEX', '') }}"
+      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') }}"
       staging:
         hash_columns:
           vars:
@@ -392,14 +391,12 @@ models:
               src_ldts: LOADDATE
               src_source: RECORD_SOURCE
     feature:
-      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX',\
-        \ '') if env_var('CIRCLE_NODE_INDEX', '') }}"
+      schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') }}"
   vars:
     max_date: TO_DATE("9999-12-31")
 
 seeds:
-  schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '')\
-    \ if env_var('CIRCLE_NODE_INDEX', '') }}"
+  schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') }}"
   quote_columns: true
   dbtvault_test:
     raw_source:
@@ -414,15 +411,3 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
-    temp:
-      stg_customer_expected_seed:
-        column_types:
-          CUSTOMER_ID: VARCHAR
-          CUSTOMER_NAME: VARCHAR
-          CUSTOMER_DOB: VARCHAR
-          CUSTOMER_PHONE: VARCHAR
-          LOAD_DATE: DATE
-          SOURCE: VARCHAR
-          CUSTOMER_PK: BINARY(16)
-          HASHDIFF: BINARY(16)
-          EFFECTIVE_FROM: DATE

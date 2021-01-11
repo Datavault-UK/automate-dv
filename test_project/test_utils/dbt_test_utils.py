@@ -6,7 +6,7 @@ import shutil
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
-
+from typing import List
 import pandas as pd
 from ruamel.yaml import YAML
 from behave.model import Table
@@ -443,27 +443,34 @@ class DBTTestUtils:
         return Series(columns)
 
     @staticmethod
-    def parse_lists_in_dicts(dicts_with_lists: list):
+    def parse_lists_in_dicts(dicts_with_lists: List[dict]):
         """
         Convert string representations of lists in dict values, in a list of dicts
             :param dicts_with_lists: A list of dictionaries
         """
 
-        processed_dicts = []
+        if isinstance(dicts_with_lists, list):
 
-        for i, col in enumerate(dicts_with_lists):
-            processed_dicts.append(dict())
+            processed_dicts = []
 
-            for k, v in col.items():
+            for i, col in enumerate(dicts_with_lists):
+                processed_dicts.append(dict())
 
-                if {"[", "]"}.issubset(set(v)):
-                    v = v.replace("[", "")
-                    v = v.replace("]", "")
-                    v = [k.strip() for k in v.split(",")]
+                if isinstance(col, dict):
+                    for k, v in col.items():
 
-                processed_dicts[i][k] = v
+                        if {"[", "]"}.issubset(set(v)):
+                            v = v.replace("[", "")
+                            v = v.replace("]", "")
+                            v = [k.strip() for k in v.split(",")]
 
-        return processed_dicts
+                        processed_dicts[i][k] = v
+                else:
+                    return dicts_with_lists
+
+            return processed_dicts
+        else:
+            return dicts_with_lists
 
 
 class DBTVAULTGenerator:
