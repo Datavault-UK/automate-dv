@@ -229,6 +229,30 @@ def load_table(context, model_name, vault_structure, period):
     assert "Completed successfully" in logs
 
 
+@step("I insert by rank into the {model_name} {vault_structure}")
+def rank_insert(context, model_name, vault_structure):
+    metadata = {"source_model": context.processed_stage_name,
+                **context.vault_structure_columns[model_name]}
+
+    config = {"materialized": "vault_insert_by_rank",
+              "partition_by_column": "LOAD_DATE",
+              "order_by_column": "LOAD_DATE"}
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
+
+    logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name,
+                                                full_refresh=is_full_refresh)
+
+    assert "Completed successfully" in logs
+
+
 @step("I load the vault")
 def load_vault(context):
     models = [name for name in DBTVAULTGenerator.flatten([v for k, v in context.vault_model_names.items()]) if name]

@@ -23,7 +23,7 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
@@ -39,7 +39,7 @@
         {% do adapter.drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
