@@ -1,4 +1,4 @@
-{%- macro process_excludes(source_relation=none, derived_columns=none, columns=none) -%}
+{%- macro process_excludes(source_columns=none, derived_columns=none, columns=none) -%}
 
 {%- set exclude_columns_list = [] -%}
 {%- set include_columns = [] -%}
@@ -7,8 +7,6 @@
 {% endif %}
 
 {#- getting all the source columns -#}
-
-{%- set source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 
 {%- if columns is mapping -%}
 
@@ -36,7 +34,6 @@
 {%- endif -%}
 
 {%- do return(columns) -%}
-
 
 {%- endmacro -%}
 
