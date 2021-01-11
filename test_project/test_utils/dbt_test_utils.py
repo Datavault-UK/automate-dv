@@ -314,12 +314,14 @@ class DBTTestUtils:
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
-            :return: A pandas DataFrame modelled from a context table
+            :return: A dictionary modelled from a context table
         """
 
         table_df = self.context_table_to_df(table)
 
         table_dict = table_df.to_dict(orient=orient)
+
+        table_dict = self.parse_lists_in_dicts(table_dict)
 
         return table_dict
 
@@ -439,6 +441,29 @@ class DBTTestUtils:
                 columns.append(item)
 
         return Series(columns)
+
+    @staticmethod
+    def parse_lists_in_dicts(dicts_with_lists: list):
+        """
+        Convert string representations of lists in dict values, in a list of dicts
+            :param dicts_with_lists: A list of dictionaries
+        """
+
+        processed_dicts = []
+
+        for i, col in enumerate(dicts_with_lists):
+            processed_dicts.append(dict())
+
+            for k, v in col.items():
+
+                if {"[", "]"}.issubset(set(v)):
+                    v = v.replace("[", "")
+                    v = v.replace("]", "")
+                    v = [k.strip() for k in v.split(",")]
+
+                processed_dicts[i][k] = v
+
+        return processed_dicts
 
 
 class DBTVAULTGenerator:
