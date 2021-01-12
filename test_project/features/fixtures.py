@@ -966,7 +966,7 @@ def pit(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_LOCATION": "VARCHAR",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -977,7 +977,7 @@ def pit(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_LOCATION": "VARCHAR",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -988,7 +988,7 @@ def pit(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_LOCATION": "VARCHAR",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1008,8 +1008,8 @@ def pit(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_LOCATION": "VARCHAR",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1021,8 +1021,8 @@ def pit(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_LOCATION": "VARCHAR",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1034,26 +1034,26 @@ def pit(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_LOCATION": "VARCHAR",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
         "AS_OF_DATE": {
             "column_types": {
-                "as_of_date": "DATE"
+                "AS_OF_DATE": "DATETIME"
             }
         },
         "PIT_CUSTOMER": {
             "column_types": {
-                "AS_OF_DATE": "DATE",
+                "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_APP_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_APP_LDTS": "DATE",
+                "SAT_CUSTOMER_DETAILS_APP_LDTS": "DATETIME",
                 "SAT_CUSTOMER_DETAILS_WEB_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_WEB_LDTS": "DATE",
+                "SAT_CUSTOMER_DETAILS_WEB_LDTS": "DATETIME",
                 "SAT_CUSTOMER_DETAILS_PHONE_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PHONE_LDTS": "DATE"
+                "SAT_CUSTOMER_DETAILS_PHONE_LDTS": "DATETIME"
             }
         }
     }
