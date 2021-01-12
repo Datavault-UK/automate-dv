@@ -62,19 +62,16 @@ WITH stage AS (
 derived_columns AS (
     SELECT
 
-    {% if dbtvault.is_nothing(derived_columns) -%}
+    {% if dbtvault.is_nothing(derived_columns) and include_source_columns -%}
         {{- " *" -}}
-    {#- If source relation is defined but derived_columns is not -#}
+
+    {%- elif include_source_columns or dbtvault.is_something(hashed_columns) -%}
+
+        {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(width=4, first=false) -}}
     {%- else -%}
-        {%- if include_source_columns or hashed_columns is defined and hashed_columns is not none -%}
 
-            {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(width=4, first=false) -}}
-        {%- else -%}
-
-            {{- dbtvault.derive_columns(columns=derived_columns) | indent(4) -}}
-        {%- endif -%}
-
-    {%- endif %}
+        {{- dbtvault.derive_columns(columns=derived_columns) | indent(4) -}}
+    {%- endif -%}
 
     FROM stage
 ),

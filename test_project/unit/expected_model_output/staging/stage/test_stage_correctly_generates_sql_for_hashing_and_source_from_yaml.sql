@@ -1,9 +1,20 @@
 WITH stage AS (
+    SELECT *
+
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+),
+
+derived_columns AS (
+    SElECT *
+
+    FROM stage
+),
+
+hashed_columns AS (
     SELECT
 
     BOOKING_FK,
     ORDER_FK,
-    CUSTOMER_PK,
     CUSTOMER_ID,
     LOADDATE,
     RECORD_SOURCE,
@@ -18,19 +29,7 @@ WITH stage AS (
     TEST_COLUMN_6,
     TEST_COLUMN_7,
     TEST_COLUMN_8,
-    TEST_COLUMN_9
-
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-),
-
-derived_columns AS (
-    SElECT *
-
-    FROM stage
-),
-
-hashed_columns AS (
-    SELECT *,
+    TEST_COLUMN_9,
 
     CAST((MD5_BINARY(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''))) AS BINARY(16)) AS CUSTOMER_PK,
     CAST(MD5_BINARY(CONCAT(
