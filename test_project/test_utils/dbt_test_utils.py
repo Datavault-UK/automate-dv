@@ -709,9 +709,12 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def process_structure_headings(self, headings):
+    def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
+            :param context: Fixture context
+            :param model_name: Name of model which headers are being processed for
+            :param headings: Headings to process
         """
 
         processed_headings = []
@@ -719,7 +722,15 @@ class DBTVAULTGenerator:
         for item in headings:
 
             if isinstance(item, dict):
-                processed_headings.append(list(item.keys()))
+
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit_" in model_name.lower():
+
+                    satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
+                    satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
+
+                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+                else:
+                    processed_headings.append(list(item.keys()))
             else:
                 processed_headings.append(item)
 
