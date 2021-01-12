@@ -623,6 +623,8 @@ def xts(context):
     Define the structures and metadata to load xts
     """
 
+    context.vault_structure_type = "xts"
+
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -632,9 +634,9 @@ def xts(context):
         "STG_CUSTOMER_2SAT": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
             "HASHDIFF_2": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]}
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]}
         }
     }
 
@@ -692,7 +694,26 @@ def xts(context):
                 "CUSTOMER_DOB_2": "DATE",
                 "CUSTOMER_PHONE_2": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "STG_CUSTOMER_2SAT": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF_1": "BINARY(16)",
+                "HASHDIFF_2": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "SATELLITE_1": "VARCHAR",
+                "SATELLITE_2": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME_1": "VARCHAR",
+                "CUSTOMER_DOB_1": "DATE",
+                "CUSTOMER_PHONE_1": "VARCHAR",
+                "CUSTOMER_NAME_2": "VARCHAR",
+                "CUSTOMER_DOB_2": "DATE",
+                "CUSTOMER_PHONE_2": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
             }
         },
         "XTS": {
@@ -707,15 +728,14 @@ def xts(context):
         "XTS_2SAT": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
                 "LOAD_DATE": "DATE",
-                "SATELLITE_1": "VARCHAR",
-                "HASHDIFF_1": "BINARY(16)",
-                "SATELLITE_2": "VARCHAR",
-                "HASHDIFF_2": "BINARY(16)",
                 "SOURCE": "VARCHAR"
             }
         }
     }
+
 
 @fixture
 def cycle(context):
