@@ -723,7 +723,7 @@ class DBTVAULTGenerator:
 
             if isinstance(item, dict):
 
-                if getattr(context, "vault_structure_type", None) == "pit" and "pit_" in model_name.lower():
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
 
                     satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
