@@ -14,7 +14,7 @@
 
 {%- macro is_nothing(obj) -%}
 
-    {%- if obj is none and obj is undefined and not obj -%}
+    {%- if obj is none or obj is undefined or not obj -%}
         {%- do return(true) -%}
     {%- else -%}
         {%- do return(false) -%}
