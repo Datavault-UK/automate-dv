@@ -86,10 +86,10 @@ hashed_columns AS (
     {%- if dbtvault.is_nothing(hashed_columns) and dbtvault.is_something(derived_columns) -%}
         {{- " *" -}}
     {%- else -%}
-        {{- "\n\n    " ~ columns_to_select | join (",\n    ") -}}
+        {{- "\n\n    " ~ columns_to_select | join(",\n    ") -}}
 
-        {%- if derived_columns is defined and derived_columns is not none and include_source_columns is false -%}
-            {{- dbtvault.derive_columns(columns=derived_columns) | indent(4) -}},
+        {%- if dbtvault.is_something(derived_columns) and include_source_columns is false -%}
+            {{- ",\n    " ~ dbtvault.derive_columns(columns=derived_columns) | indent(4) -}}
         {%- endif -%}
 
         {{- ",\n\n    " ~ dbtvault.hash_columns(columns=hashed_columns) | indent(4) -}}
