@@ -1,6 +1,6 @@
 WITH stage AS (
     SELECT *
-    FROM DBTVAULT_DEV.TEST_ALEX_HIGGS.raw_source
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
 derived_columns AS (
