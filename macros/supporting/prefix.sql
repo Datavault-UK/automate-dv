@@ -1,6 +1,8 @@
 {%- macro prefix(columns, prefix_str, alias_target) -%}
 
-    {{- adapter.dispatch('prefix', packages = var('adapter_packages', ['dbtvault']))(columns=columns, prefix_str=prefix_str, alias_target=alias_target) -}}
+    {{- adapter.dispatch('prefix', packages = get_dbtvault_namespaces())(columns=columns,
+                                                                         prefix_str=prefix_str,
+                                                                         alias_target=alias_target) -}}
 
 {%- endmacro -%}
 
