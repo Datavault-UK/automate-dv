@@ -14,7 +14,7 @@ class TestExpandColumnListMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_expand_column_list_correctly_generates_list_with_extra_nesting(self):
@@ -25,7 +25,7 @@ class TestExpandColumnListMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_expand_column_list_correctly_generates_list_with_no_nesting(self):
@@ -36,7 +36,7 @@ class TestExpandColumnListMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_expand_column_list_raises_error_with_missing_columns(self):

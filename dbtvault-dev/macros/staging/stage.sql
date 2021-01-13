@@ -9,6 +9,8 @@
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns) -%}
 
+{%- do log("-----------------------" ~ this.identifier ~ "-----------------------" , true) -%}
+
 {{ dbtvault.prepend_generated_by() }}
 
 {% if (source_model is none) and execute %}
@@ -45,10 +47,10 @@
 {%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) -%}
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
-{%- do log("derived_column_names: " ~ derived_column_names, true) -%}
-{%- do log("hashed_column_names: " ~ hashed_column_names, true) -%}
-{%- do log("exclude_column_names: " ~ exclude_column_names, true) -%}
-{%- do log("included_source_columns: " ~ included_source_columns, true) -%}
+{%- do log("[stage]: derived_column_names: " ~ derived_column_names, true) -%}
+{%- do log("[stage]: hashed_column_names: " ~ hashed_column_names, true) -%}
+{%- do log("[stage]: exclude_column_names: " ~ exclude_column_names, true) -%}
+{%- do log("[stage]: included_source_columns: " ~ included_source_columns, true) -%}
 
 {%- set columns_to_select = dbtvault.process_columns_to_select(included_source_columns, exclude_column_names) -%}
 
@@ -60,11 +62,17 @@ WITH stage AS (
 
 {# Derive additional columns, if provided, and carry over source columns from previous CTE for use in the hash stage -#}
 derived_columns AS (
-    SELECT *
+    SELECT
 
-    {% if not include_source_columns and dbtvault.is_something(derived_columns) -%}
-        {{- "," -}}
-        {{- dbtvault.derive_columns(columns=derived_columns) | indent(4) -}}
+    {%- if include_source_columns -%}
+        {{- "\n\n    " -}}
+        {{- (columns_to_select | join(",\n")) | indent(4) -}},
+    {%- else -%}
+        {{- "\n" -}}
+    {%- endif -%}
+
+    {%- if dbtvault.is_something(derived_columns) -%}
+        {{- ("\n" ~ dbtvault.derive_columns(columns=derived_columns)) | indent(4) -}}
     {%- endif %}
 
     FROM stage
@@ -74,13 +82,15 @@ derived_columns AS (
 hashed_columns AS (
     SELECT
 
-    {% if dbtvault.is_something(derived_columns) -%}
-    {{- (derived_column_names | join(",\n")) | indent(4) -}}
+    {%- if dbtvault.is_something(derived_columns) or include_source_columns -%}
+        {{- " *" -}}
     {%- endif %}
 
-    {{- "," if dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) }}
+    {{- ",\n\n" if dbtvault.is_something(hashed_columns) -}}
 
-    {{ dbtvault.hash_columns(columns=hashed_columns) | indent(4) }}
+    {{- (derived_column_names | join(",\n")) | indent(4f) if dbtvault.is_something(derived_columns) -}},
+
+    {{- ("\n" ~ dbtvault.hash_columns(columns=hashed_columns)) | indent(4) }}
 
     FROM derived_columns
 )
