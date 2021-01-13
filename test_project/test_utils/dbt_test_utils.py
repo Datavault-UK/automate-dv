@@ -61,13 +61,9 @@ class DBTTestUtils:
             self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
         else:
-
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET', '').lower() == 'snowflake':
-            target = 'snowflake'
-        elif not os.getenv('TARGET', None):
-            print('TARGET not set. Target set to snowflake.')
+        if os.getenv('TARGET', '').lower() == 'snowflake' or not os.getenv('TARGET', None):
             target = 'snowflake'
         else:
             target = None
@@ -320,12 +316,14 @@ class DBTTestUtils:
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
-            :return: A pandas DataFrame modelled from a context table
+            :return: A dictionary modelled from a context table
         """
 
         table_df = self.context_table_to_df(table)
 
         table_dict = table_df.to_dict(orient=orient)
+
+        table_dict = self.parse_lists_in_dicts(table_dict)
 
         return table_dict
 
@@ -446,19 +444,32 @@ class DBTTestUtils:
 
         return Series(columns)
 
+    @staticmethod
+    def parse_lists_in_dicts(dicts_with_lists: list):
+        """
+        Convert string representations of lists in dict values, in a list of dicts
+            :param dicts_with_lists: A list of dictionaries
+        """
+
+        processed_dicts = []
+
+        for i, col in enumerate(dicts_with_lists):
+            processed_dicts.append(dict())
+
+            for k, v in col.items():
+
+                if {"[", "]"}.issubset(set(v)):
+                    v = v.replace("[", "")
+                    v = v.replace("]", "")
+                    v = [k.strip() for k in v.split(",")]
+
+                processed_dicts[i][k] = v
+
+        return processed_dicts
+
 
 class DBTVAULTGenerator:
     """Functions to generate dbtvault Models"""
-
-    @staticmethod
-    def template_to_file(template, model_name):
-        """
-        Write a template to a file
-            :param template: Template string to write
-            :param model_name: Name of file to write
-        """
-        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
-            f.write(template.strip())
 
     def raw_vault_structure(self, model_name, vault_structure, config=None, **kwargs):
         """
@@ -480,10 +491,11 @@ class DBTVAULTGenerator:
             "t_link": self.t_link,
             "xts": self.xts
         }
-        if vault_structure == "stage":
-            generator_functions[vault_structure](model_name=model_name, config=config)
-        else:
-            generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
+
+        processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
+                                                             config=config, **kwargs)
+
+        generator_functions[vault_structure](**processed_metadata)
 
     def stage(self, model_name, source_model: dict, hashed_columns=None, derived_columns=None,
               include_source_columns=True, config=None):
@@ -497,32 +509,17 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if not config:
-            config = {'materialized': 'view'}
-
-        if hashed_columns:
-            hashed_columns = str(hashed_columns)
-        else:
-            hashed_columns = "none"
-
-        if derived_columns:
-            derived_columns = str(derived_columns)
-        else:
-            derived_columns = "none"
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
+        {{{{ config({config}) }}}}
         {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
-                            source_model='{source_model}',
+                            source_model={source_model},
                             hashed_columns={hashed_columns},
                             derived_columns={derived_columns}) }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config=None):
+    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config):
         """
         Generate a hub model template
             :param model_name: Name of the model file
@@ -531,28 +528,18 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
-            :param config: Optional model config
+            :param config: Optional model config string
         """
 
-        if isinstance(source_model, list):
-            source_model = f"{source_model}"
-        else:
-            source_model = f"'{source_model}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
-                          '{src_source}', {source_model})   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
+                          {src_source}, {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config=None):
+    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config):
         """
         Generate a link model template
             :param model_name: Name of the model file
@@ -564,26 +551,17 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(source_model, list):
-            source_model = f"{source_model}"
-        else:
-            source_model = f"'{source_model}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.link('{src_pk}', {src_fk}, '{src_ldts}',
-                           '{src_source}', {source_model})   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.link({src_pk}, {src_fk}, {src_ldts},
+                           {src_source}, {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
-            config=None):
+    def sat(self, model_name, src_pk, src_hashdiff, src_payload,
+            src_eff, src_ldts, src_source, source_model,
+            config):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -597,28 +575,18 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(src_hashdiff, dict):
-            src_hashdiff = f"{src_hashdiff}"
-        else:
-            src_hashdiff = f"'{src_hashdiff}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
-                          '{src_eff}', '{src_ldts}', '{src_source}', 
-                          '{source_model}')   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.sat({src_pk}, {src_hashdiff}, {src_payload},
+                          {src_eff}, {src_ldts}, {src_source}, 
+                          {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
 
     def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
                 src_start_date, src_end_date, src_eff, src_ldts, src_source,
-                source_model, config=None):
+                source_model, config):
         """
         Generate an effectivity satellite model template
             :param model_name: Name of the model file
@@ -634,28 +602,17 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(src_dfk, str):
-            src_dfk = f"'{src_dfk}'"
-
-        if isinstance(src_sfk, str):
-            src_sfk = f"'{src_sfk}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.eff_sat('{src_pk}', {src_dfk}, {src_sfk},
-                              '{src_start_date}', '{src_end_date}',
-                              '{src_eff}', '{src_ldts}', '{src_source}',
-                              '{source_model}') }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.eff_sat({src_pk}, {src_dfk}, {src_sfk},
+                              {src_start_date}, {src_end_date},
+                              {src_eff}, {src_ldts}, {src_source},
+                              {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, config=None):
+    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, config):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -669,18 +626,10 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if not config:
-            config = {'materialized': 'incremental'}
-
-        if isinstance(src_fk, str):
-            src_fk = f"'{src_fk}'"
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.t_link('{src_pk}', {src_fk}, {src_payload}, '{src_eff}',
-                             '{src_ldts}', '{src_source}', '{source_model}')   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
+                             {src_ldts}, {src_source}, {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -740,6 +689,55 @@ class DBTVAULTGenerator:
                 processed_headings.append(item)
 
         return list(self.flatten(processed_headings))
+
+    def process_structure_metadata(self, vault_structure, model_name, config, **kwargs):
+        """
+        Format metadata into a format suitable for injecting into a model string.
+            :param vault_structure: THe type of vault structure the metadata is for (hub, link, sat etc.)
+            :param model_name: Name of the model the metadata is for
+            :param config: A config dictionary to be converted to a string
+            :param kwargs: Metadata keys for various vault structures (src_pk, src_hashdiff, etc.)
+        """
+
+        default_materialisations = {
+            "stage": "view",
+            "hub": "incremental",
+            "link": "incremental",
+            "sat": "incremental",
+            "eff_sat": "incremental",
+            "t_link": "incremental",
+        }
+
+        if not config:
+            config = {"materialized": default_materialisations[vault_structure]}
+
+        if vault_structure == "stage":
+            if not kwargs.get("hashed_columns", None):
+                kwargs["hashed_columns"] = "none"
+
+            if not kwargs.get("derived_columns", None):
+                kwargs["derived_columns"] = "none"
+
+        config = self.format_config_str(config)
+
+        processed_string_values = {key: f"'{val}'" for key, val in kwargs.items() if isinstance(val, str)
+                                   and val != "none"}
+        processed_list_dict_values = {key: f"{val}" for key, val in kwargs.items() if isinstance(val, list)
+                                      or isinstance(val, dict)}
+
+        return {**kwargs, **processed_string_values,
+                **processed_list_dict_values, "config": config,
+                "model_name": model_name}
+
+    @staticmethod
+    def template_to_file(template, model_name):
+        """
+        Write a template to a file
+            :param template: Template string to write
+            :param model_name: Name of file to write
+        """
+        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
+            f.write(template.strip())
 
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
