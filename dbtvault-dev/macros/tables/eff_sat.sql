@@ -1,6 +1,6 @@
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('eff_sat', packages = get_dbtvault_namespaces())(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+    {{- adapter.dispatch('eff_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                                                           src_start_date=src_start_date, src_end_date=src_end_date,
                                                                           src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
                                                                           source_model=source_model) -}}
