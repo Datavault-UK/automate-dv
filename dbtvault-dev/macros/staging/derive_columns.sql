@@ -53,9 +53,7 @@
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
-        {{ col }}
-        {%- if not loop.last -%},
-{% endif -%}
+        {{- col | indent(4) -}}{{ ",\n" if not loop.last }}
     {%- endfor -%}
 
 {%- else -%}
