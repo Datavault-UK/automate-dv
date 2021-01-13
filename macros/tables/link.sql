@@ -1,6 +1,6 @@
 {%- macro link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('link', packages = get_dbtvault_namespaces())(src_pk=src_pk, src_fk=src_fk,
+    {{- adapter.dispatch('link', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_fk=src_fk,
                                                                        src_ldts=src_ldts, src_source=src_source,
                                                                        source_model=source_model) -}}
 
