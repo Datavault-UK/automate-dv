@@ -652,7 +652,7 @@ class DBTVAULTGenerator:
             satellites = f"'{satellites}'"
 
         if not config:
-            config = {"materialized": "incremental"}
+            config = {"materialized": "table"}
 
         config_string = self.format_config_str(config)
 
@@ -706,6 +706,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
+            "pit": "table",
         }
 
         if not config:
