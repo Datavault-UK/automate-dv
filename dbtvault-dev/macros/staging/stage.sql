@@ -62,8 +62,7 @@ WITH stage AS (
 
 {# Derive additional columns, if provided, and carry over source columns from previous CTE for use in the hash stage -#}
 derived_columns AS (
-    SELECT *
-    {{- "," if dbtvault.is_something(derived_columns) and not include_source_columns -}}
+    SELECT{{- " *" if include_source_columns and not dbtvault.is_something(derived_columns) and not dbtvault.is_something(hashed_columns) -}}
 
     {%- if include_source_columns and dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n    " -}}
@@ -82,7 +81,7 @@ derived_columns AS (
 
 {# Hash columns, if provided, and process exclusion flags if provided -#}
 hashed_columns AS (
-    SELECT {{- " *" if include_source_columns and derived_columns -}}{{- "," if dbtvault.is_something(hashed_columns) }}
+    SELECT {{- " *" if include_source_columns or dbtvault.is_something(derived_columns) -}}{{- "," if dbtvault.is_something(hashed_columns) }}
 
     {%- if dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n" -}}
