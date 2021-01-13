@@ -4,7 +4,7 @@ WITH stage AS (
 ),
 
 derived_columns AS (
-    SELECT *,
+    SELECT
 
     'STG_BOOKING' AS SOURCE,
     BOOKING_DATE AS EFFECTIVE_FROM

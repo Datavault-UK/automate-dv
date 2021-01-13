@@ -1,17 +1,15 @@
 {%- macro source_columns(source_relation=none) -%}
 
-{%- set include_columns = [] -%}
+    {%- if dbtvault.is_something(source_relation) -%}
+        {%- set source_model_cols = adapter.get_columns_in_relation(source_relation) -%}
 
-{%- if source_relation is defined and source_relation is not none -%}
-    {%- set source_model_cols = adapter.get_columns_in_relation(source_relation) -%}
+        {%- set column_list = [] -%}
 
-    {#- Add all columns from source_model relation -#}
-    {%- for source_col in source_model_cols -%}
-        {%- do include_columns.append(source_col.column) -%}
-    {%- endfor -%}
+        {%- for source_col in source_model_cols -%}
+            {%- do column_list.append(source_col.column) -%}
+        {%- endfor -%}
 
-    {%- do return(include_columns) -%}
-
-{%- endif %}
+        {%- do return(column_list) -%}
+    {%- endif %}
 
 {%- endmacro -%}

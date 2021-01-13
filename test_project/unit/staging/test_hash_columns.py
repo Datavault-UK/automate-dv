@@ -15,7 +15,7 @@ class TestHashColumnsMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns(self):
@@ -27,7 +27,7 @@ class TestHashColumnsMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_composite_columns(self):
@@ -41,7 +41,7 @@ class TestHashColumnsMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sorted_hashed_columns_for_multiple_composite_columns(self):
@@ -56,7 +56,7 @@ class TestHashColumnsMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_columns_mapping(self):
@@ -70,7 +70,7 @@ class TestHashColumnsMacro(TestCase):
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sql_from_yaml(self):
@@ -79,7 +79,7 @@ class TestHashColumnsMacro(TestCase):
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(self):
@@ -88,7 +88,7 @@ class TestHashColumnsMacro(TestCase):
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
 
         assert 'Done' in process_logs
-        assert 'error' not in process_logs
+        assert 'SQL compilation error' not in process_logs
         self.assertEqual(expected_sql, actual_sql)
 
     def test_hash_columns_raises_warning_if_mapping_without_hashdiff(self):
