@@ -996,7 +996,7 @@ def pit(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
