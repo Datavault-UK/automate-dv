@@ -11,7 +11,7 @@
 
     {%- endif -%}
 
-    {%- if columns_list is not none and columns_list and exclude_columns_list is not none and exclude_columns_list -%}
+    {%- if dbtvault.is_something(columns_list) and dbtvault.is_something(exclude_columns_list) -%}
 
         {%- for col in columns_list -%}
 

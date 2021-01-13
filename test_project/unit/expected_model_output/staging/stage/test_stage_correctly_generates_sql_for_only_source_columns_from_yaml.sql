@@ -1,11 +1,10 @@
 WITH stage AS (
     SELECT *
-
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
 derived_columns AS (
-    SElECT *
+    SELECT *
 
     FROM stage
 ),
