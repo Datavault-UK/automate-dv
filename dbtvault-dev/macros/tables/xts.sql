@@ -9,24 +9,37 @@
 {%- macro default__xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
 
 {{ dbtvault.prepend_generated_by() }}
-{{ 'WITH ' }}
-{% for satellite_name in src_satellite['SATELLITE_NAME'] -%}
-{# these variables agree with the vault_structure columns in the yaml. However the seedconfig has no such format #}
-{%- set hashdiff = src_satellite['HASHDIFF'][loop.index - 1] + ' AS HASHDIFF'-%}
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, hashdiff, satellite_name + ' AS SATELLITE_NAME', src_ldts, src_source]) -%}
 
-satellite_{{ satellite_name }} AS (
+{%- if not (source_model is iterable and source_model is not string) -%}
+    {%- set source_model = [source_model] -%}
+{%- endif %}
+
+
+{{ 'WITH ' }}
+{%- for src in source_model %}
+    {%- for satellite_name in src_satellite['SATELLITE_NAME'] -%}
+        {%- set hashdiff = src_satellite['HASHDIFF'][loop.index - 1] + ' AS HASHDIFF'-%}
+        {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, hashdiff, satellite_name + ' AS SATELLITE_NAME', src_ldts, src_source]) %}
+
+satellite_{{ satellite_name }}_{{ src }} AS (
     SELECT {{ source_cols | join(', ') }}
-    FROM {{ ref(source_model) }}
+    FROM {{ ref(src) }}
+    WHERE {{ src_pk }} IS NOT NULL
 ),
+    {% endfor -%}
 {% endfor -%}
 
 union_satellites AS (
-    {%- for satellite_name in src_satellite["SATELLITE_NAME"] %}
-    SELECT * FROM satellite_{{ satellite_name }}
-    {%- if not loop.last %}
+    {%- for src in source_model %}
+        {%- for satellite_name in src_satellite["SATELLITE_NAME"] %}
+    SELECT * FROM satellite_{{ satellite_name }}_{{ src }}
+            {%- if not loop.last %}
     UNION ALL
-    {%- endif %}
+            {%- endif %}
+        {%- endfor %}
+        {%- if not loop.last %}
+    UNION ALL
+        {%- endif %}
     {%- endfor %}
 ),
 records_to_insert AS (

@@ -241,34 +241,33 @@ Feature: XTS
 
 #    Many stages, one satellite
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from numerous stages each containing feeds to one satellite
-    Given I will have a RAW_STAGE raw stage and I have a STG_CUSTOMER processed stage
-    And the XTS xts is empty
-    And the FIRST_RAW_STAGE table contains data
+  Scenario: [BASE-LOAD] Loads from numerous stages each containing feeds to one satellite.
+    Given the XTS xts is empty
+    And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_FIRST stage
-    And the SECOND_RAW_STAGE table contains data
+    And I create the STG_CUSTOMER_1 stage
+    And the RAW_STAGE_2 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Anabelle      | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Billy         | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Charlie       | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | David         | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_SECOND stage
+    And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_CUSTOMER | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER | 1993-01-01 | *      |
 
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from two stages each containing feeds to one satellite with repeats between stages

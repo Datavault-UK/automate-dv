@@ -775,6 +775,20 @@ def xts(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "SATELLITE_NAME": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "STG_CUSTOMER_2SAT": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
