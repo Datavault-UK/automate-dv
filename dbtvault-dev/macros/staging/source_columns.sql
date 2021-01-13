@@ -1,6 +1,6 @@
 {%- macro source_columns(source_relation=none) -%}
 
-    {%- if dbtvault.is_something(source_relation) -%}
+    {%- if source_relation -%}
         {%- set source_model_cols = adapter.get_columns_in_relation(source_relation) -%}
 
         {%- set column_list = [] -%}

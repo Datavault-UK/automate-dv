@@ -1,16 +1,13 @@
 WITH stage AS (
     SELECT *
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_table
 ),
 
 derived_columns AS (
     SELECT
 
-    BOOKING_FK,
-    ORDER_FK,
-    CUSTOMER_ID,
     LOADDATE,
-    RECORD_SOURCE,
+    CUSTOMER_ID,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
     NATIONALITY,
@@ -23,12 +20,9 @@ derived_columns AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-    BOOKING_DATE,
-    SOURCE,
-    EFFECTIVE_FROM,
 
     'STG_BOOKING' AS SOURCE,
-    BOOKING_DATE AS EFFECTIVE_FROM
+    LOADDATE AS EFFECTIVE_FROM
 
     FROM stage
 ),
