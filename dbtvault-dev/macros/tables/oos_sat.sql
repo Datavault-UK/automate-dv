@@ -47,13 +47,16 @@ stage AS (
 {% endif -%}
 {%- if out_of_sequence is not none and is_incremental() %}
 sat_stg AS (
-  SELECT
+  SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
   , {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE
   , {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
   FROM {{ this }} AS a
   LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE('{{ insert_date }}')
+),
+distinct_stage AS (
+  SELECT DISTINCT * FROM {{ ref(source_model) }}
 ),
 xts_stg AS (
   SELECT
@@ -66,9 +69,9 @@ xts_stg AS (
   , LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
                                                           ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
   FROM DBTVAULT_DEV.TEST_XTS_SCHEMA.TEST_XTS AS a
-  INNER JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
+  INNER JOIN distinct_stage AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
   WHERE a.SATELLITE_NAME = 'SAT_SAP_CUSTOMER'
-  ORDER BY {{ dbtvault.prefix([src_pk], 'a') }}, {{ dbtvault.prefix([src_ldts], 'b') }}
+  ORDER BY {{ src_pk }}, XTS_LOAD_DATE
 ),
 out_of_sequence_inserts AS (
   SELECT
