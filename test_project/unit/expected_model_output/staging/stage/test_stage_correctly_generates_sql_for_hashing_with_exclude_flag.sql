@@ -24,7 +24,6 @@ derived_columns AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-
     'STG_BOOKING' AS SOURCE,
     LOADDATE AS EFFECTIVE_FROM
 

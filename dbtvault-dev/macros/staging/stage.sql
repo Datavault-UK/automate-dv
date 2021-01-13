@@ -62,14 +62,23 @@ WITH stage AS (
 
 {# Derive additional columns, if provided, and carry over source columns from previous CTE for use in the hash stage -#}
 derived_columns AS (
-    SELECT{{- " *," if dbtvault.is_something(hashed_columns) -}}
+    SELECT{{- " *," if dbtvault.is_something(derived_columns) -}}
+
+    {%- if include_source_columns or dbtvault.is_something(derived_columns) or dbtvault.is_something(hashed_columns) %}
+        {{- "\n\n" -}}
+    {%- endif -%}
 
     {%- if include_source_columns and dbtvault.is_something(derived_columns) -%}
-        {{- "\n\n" -}}
+
         {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4, first=true) -}}
-    {%- elif not include_source_columns and dbtvault.is_something(derived_columns) or dbtvault.is_something(hashed_columns) -%}
-        {{- "\n\n" -}}
+    {%- elif not include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) -%}
+
         {{- dbtvault.derive_columns(columns=derived_columns) | indent(4, first=true) -}}
+    {%- elif dbtvault.is_nothing(derived_columns) -%}
+
+        {%- for col_name in source_columns_to_select -%}
+            {{- col_name | indent(4, first=true) -}}{{- ",\n" if not loop.last -}}
+        {%- endfor -%}
     {%- endif %}
 
     FROM stage
@@ -77,7 +86,7 @@ derived_columns AS (
 
 {# Hash columns, if provided, and process exclusion flags if provided -#}
 hashed_columns AS (
-    SELECT
+    SELECT {{- " *," if dbtvault.is_nothing(derived_columns) and include_source_columns -}}
 
     {%- if dbtvault.is_something(derived_columns) and not include_source_columns -%}
         {{- "\n\n" -}}
