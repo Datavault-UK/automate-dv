@@ -11,7 +11,7 @@
 {# Set deafualts and obtain source model paths #}
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk =   ('0000000000000000') -%}
-{%- set ghost_date = '9999-12-31 00:00:00.000000' -%}
+{%- set ghost_date = '0000-01-01 00:00:00.000000' -%}
 
     {#-  Loop to get the source relatiosn using source relation macro and can specify refs i think
     Loop throught the dict and call the 1st key or have a source model key pair in the sub dict
