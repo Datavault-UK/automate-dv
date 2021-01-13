@@ -18,6 +18,8 @@
 
 {% macro default__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
+
+
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
              TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
@@ -79,7 +81,7 @@
         with data as (
             select
                 coalesce(max({{ timestamp_field }}), '{{ start_date }}')::timestamp as start_timestamp,
-                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date ~ "','')::timestamp") }},
+                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')::timestamp") }},
                          {{ dbt_utils.current_timestamp() }} ) as stop_timestamp
             from {{ target_schema }}.{{ target_table }}
         )
@@ -163,6 +165,10 @@
 
         {%- set start_date = config.get('start_date') -%}
         {%- set stop_date = config.get('stop_date', default=none) -%}
+
+        {%- do log("start_date: " ~ start_date, true) %}
+        {%- do log("stop_date: " ~ stop_date, true) %}
+        {%- do log("stop_date: " ~ dbt_utils.current_timestamp(), true) %}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
