@@ -5,13 +5,7 @@ WITH stage AS (
 ),
 
 derived_columns AS (
-    SElECT *
-
-    FROM stage
-),
-
-hashed_columns AS (
-    SELECT
+    SElECT
 
     BOOKING_FK,
     ORDER_FK,
@@ -29,7 +23,13 @@ hashed_columns AS (
     TEST_COLUMN_6,
     TEST_COLUMN_7,
     TEST_COLUMN_8,
-    TEST_COLUMN_9,
+    TEST_COLUMN_9
+
+    FROM stage
+),
+
+hashed_columns AS (
+    SELECT *,
 
     CAST((MD5_BINARY(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''))) AS BINARY(16)) AS CUSTOMER_PK,
     CAST(MD5_BINARY(CONCAT(
