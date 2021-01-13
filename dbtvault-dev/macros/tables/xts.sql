@@ -30,11 +30,11 @@ union_satellites AS (
     {%- endfor %}
 ),
 records_to_insert AS (
-    SELECT union_satellites.* FROM union_satellites
+    SELECT DISTINCT union_satellites.* FROM union_satellites
     {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON union_satellites.{{ src_pk }} = d.{{ src_pk }}
-    WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
+    ON ( union_satellites.{{ 'HASHDIFF' }} = d.{{ 'HASHDIFF' }} AND union_satellites.{{ src_ldts }} = d.{{ src_ldts }} AND union_satellites.{{ 'SATELLITE_NAME' }} = d.{{ 'SATELLITE_NAME' }} )
+    WHERE {{ dbtvault.prefix(['HASHDIFF'], 'd') }} IS NULL AND {{ dbtvault.prefix([ src_ldts ], 'd') }} IS NULL AND {{ dbtvault.prefix([ 'SATELLITE_NAME' ], 'd') }} IS NULL
     {%- endif %}
 )
 
