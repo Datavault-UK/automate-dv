@@ -692,6 +692,11 @@ class DBTVAULTGenerator:
 
         src_satellite = json.dumps(src_satellite, indent=4)
 
+        if isinstance(source_model, list):
+            source_model = f"{source_model}"
+        else:
+            source_model = f"'{source_model}'"
+
         if not config:
             config = {"materialized": "incremental"}
 
@@ -702,7 +707,7 @@ class DBTVAULTGenerator:
         
         {{{{ config({config_string}) }}}}
         {{{{ dbtvault.xts('{src_pk}', src_satellite, '{src_ldts}', '{src_source}',
-                          '{source_model}')   }}}}
+                          {source_model})   }}}}
         """
 
         textwrap.dedent(template)
