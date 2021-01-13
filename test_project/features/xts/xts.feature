@@ -151,7 +151,7 @@ Feature: XTS
       | CUSTOMER_ID | CUSTOMER_NAME_1 | CUSTOMER_DOB_1 | CUSTOMER_PHONE_1 | CUSTOMER_NAME_2 | CUSTOMER_DOB_2 | CUSTOMER_PHONE_2 | LOAD_DATE  | SOURCE |
       | 1001        | Alice           | 1997-04-24     | 17-214-233-1214  | Anabelle        | 1997-04-24     | 17-214-233-1214  | 1993-01-01 | *      |
       | 1002        | Bob             | 2006-04-17     | 17-214-233-1215  | Billy           | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
-      | 1003        | Chad            | 2013-02-04     | 17-214-233-1216  | Billy           | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
+      | 1002        | Chad            | 2013-02-04     | 17-214-233-1216  | Billy           | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
       | 1004        | Dom             | 2018-04-13     | 17-214-233-1217  | David           | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
     And I create the STG_CUSTOMER_2SAT stage
     When I load the XTS_2SAT xts
@@ -159,11 +159,11 @@ Feature: XTS
       | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER         | 1993-01-01 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER         | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER         | 1993-01-01 | *      |
+      | md5('1002') | md5('2013-02-04\|\|1002\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER         | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER         | 1993-01-01 | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
-      | md5('1003') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
@@ -259,70 +259,70 @@ Feature: XTS
     And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from two stages each containing feeds to one satellite with repeats between stages
     Given the XTS xts is empty
-    And the FIRST_RAW_STAGE table contains data
+    And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_FIRST stage
-    And the SECOND_RAW_STAGE table contains data
+    And I create the STG_CUSTOMER_1 stage
+    And the RAW_STAGE_2 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Billy         | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | David         | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_SECOND stage
+    And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from two stages each containing feeds to one satellite with repeated records in the first stage
     Given the XTS xts is empty
-    And the FIRST_RAW_STAGE table contains data
+    And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_FIRST stage
-    And the SECOND_RAW_STAGE table contains data
+    And I create the STG_CUSTOMER_1 stage
+    And the RAW_STAGE_2 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Anabelle      | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Billy         | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Charlie       | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | David         | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_SECOND stage
+    And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from numerous stages each containing feeds to one satellite with repeated records in both stages
@@ -343,32 +343,32 @@ Feature: XTS
     And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                                | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')     | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')     | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                                | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
 
   @fixture.disable_union
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from numerous stages each containing feeds to multiple satellites
     Given the XTS xts is empty
-    And the FIRST_RAW_STAGE table contains data
+    And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME_1 | CUSTOMER_DOB_1 | CUSTOMER_PHONE_1 | CUSTOMER_NAME_2 | CUSTOMER_DOB_2 | CUSTOMER_PHONE_2 | LOAD_DATE  | SOURCE |
       | 1001        | Alice           | 1997-04-24     | 17-214-233-1214  | Alice           | 1997-04-24     | 17-214-233-1214  | 1993-01-01 | *      |
       | 1002        | Bob             | 2006-04-17     | 17-214-233-1215  | Bob             | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
       | 1003        | Chad            | 2013-02-04     | 17-214-233-1216  | Chad            | 2013-02-04     | 17-214-233-1216  | 1993-01-01 | *      |
       | 1004        | Dom             | 2018-04-13     | 17-214-233-1217  | Dom             | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
-    And the SECOND_RAW_STAGE table contains data
+    And I create the STG_CUSTOMER_1 stage
+    And the RAW_STAGE_2 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME_1 | CUSTOMER_DOB_1 | CUSTOMER_PHONE_1 | CUSTOMER_NAME_2 | CUSTOMER_DOB_2 | CUSTOMER_PHONE_2 | LOAD_DATE  | SOURCE |
       | 1001        | Anabelle        | 1997-04-24     | 17-214-233-1214  | Anabelle        | 1997-04-24     | 17-214-233-1214  | 1993-01-01 | *      |
       | 1002        | Billy           | 2006-04-17     | 17-214-233-1215  | Billy           | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
       | 1003        | Charlie         | 2013-02-04     | 17-214-233-1216  | Charlie         | 2013-02-04     | 17-214-233-1216  | 1993-01-01 | *      |
       | 1004        | David           | 2018-04-13     | 17-214-233-1217  | David           | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
@@ -470,8 +470,8 @@ Feature: XTS
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Subsequent loads with no timeline change into a pre-populated XTS
     Given the XTS xts is already populated with data
-      | CUSTOMER_PK | HASHDIFF                                            | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213') | SAT_SAP_CUSTOMER | 1992-12-31 | *      |
+      | CUSTOMER_PK | HASHDIFF                                            | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213') | SAT_CUSTOMER   | 1992-12-31 | *      |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1000        | Zak           | 1992-12-25   | 17-214-233-1213 | 1993-01-01 | *      |
@@ -495,16 +495,16 @@ Feature: XTS
     And I create the STG_CUSTOMER stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213')   | SAT_SAP_CUSTOMER | 1992-12-31 | *      |
-      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213')   | SAT_SAP_CUSTOMER | 1993-01-02 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1993-01-02 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-01-02 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1993-01-03 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-01-03 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_SAP_CUSTOMER | 1993-01-03 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213')   | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1000') | md5('1992-12-25\|\|1000\|\|ZAK\|\|17-214-233-1213')   | SAT_CUSTOMER   | 1993-01-02 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-02 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER   | 1993-01-02 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-03 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER   | 1993-01-03 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-03 | *      |
 
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Loads from a single stage to multiple satellites and a pre-populated xts
@@ -514,16 +514,16 @@ Feature: XTS
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER         | 1992-12-31 | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER_DETAILS | 1992-12-31 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER_DETAILS | 1992-12-31 | *      |
-    And the RAW_STAGE table contains data
+    And the RAW_STAGE_2SAT table contains data
       | CUSTOMER_ID | CUSTOMER_NAME_1 | CUSTOMER_DOB_1 | CUSTOMER_PHONE_1 | CUSTOMER_NAME_2 | CUSTOMER_DOB_2 | CUSTOMER_PHONE_2 | LOAD_DATE  | SOURCE |
       | 1001        | Alice           | 1997-04-24     | 17-214-233-1214  | Anabelle        | 1997-04-24     | 17-214-233-1214  | 1993-01-01 | *      |
       | 1002        | Bob             | 2006-04-17     | 17-214-233-1215  | Billy           | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
       | 1003        | Chad            | 2013-02-04     | 17-214-233-1216  | Charlie         | 2013-02-04     | 17-214-233-1216  | 1993-01-01 | *      |
       | 1004        | Dom             | 2018-04-13     | 17-214-233-1217  | David           | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
       | 1004        | Dom             | 2018-04-13     | 17-214-233-1217  | David           | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
-    When I load the XTS xts
-    Then the XTS table should contain expected data
+    And I create the STG_CUSTOMER_SAT stage
+    When I load the XTS_2SAT xts
+    Then the XTS_2SAT table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER         | 1992-12-31 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER         | 1992-12-31 | *      |
@@ -541,11 +541,11 @@ Feature: XTS
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Loads from numerous stages each containing feeds to one satellite and a pre-populated xts
     Given the XTS xts is already populated with data
-      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER | 1992-12-31 | *      |
+      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER   | 1992-12-31 | *      |
     And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
@@ -562,19 +562,19 @@ Feature: XTS
     And I create the STG_CUSTOMER_2 stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER | 1992-12-31 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ANABELLE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHARLIE\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.disable_union
   @fixture.xts
@@ -583,22 +583,22 @@ Feature: XTS
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER         | 1992-12-31 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215') | SAT_CUSTOMER_DETAILS | 1992-12-31 | *      |
-    And the FIRST_RAW_STAGE table contains data
+    And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME_1 | CUSTOMER_DOB_1 | CUSTOMER_PHONE_1 | CUSTOMER_NAME_2 | CUSTOMER_DOB_2 | CUSTOMER_PHONE_2 | LOAD_DATE  | SOURCE |
       | 1001        | Alice           | 1997-04-24     | 17-214-233-1214  | Alice           | 1997-04-24     | 17-214-233-1214  | 1993-01-01 | *      |
       | 1002        | Bob             | 2006-04-17     | 17-214-233-1215  | Bob             | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
       | 1003        | Chad            | 2013-02-04     | 17-214-233-1216  | Chad            | 2013-02-04     | 17-214-233-1216  | 1993-01-01 | *      |
       | 1004        | Dom             | 2018-04-13     | 17-214-233-1217  | Dom             | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
-    And the SECOND_RAW_STAGE table contains data
+    And I create the STG_CUSTOMER_1 stage
+    And the RAW_STAGE_2 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME_1 | CUSTOMER_DOB_1 | CUSTOMER_PHONE_1 | CUSTOMER_NAME_2 | CUSTOMER_DOB_2 | CUSTOMER_PHONE_2 | LOAD_DATE  | SOURCE |
       | 1001        | Anabelle        | 1997-04-24     | 17-214-233-1214  | Anabelle        | 1997-04-24     | 17-214-233-1214  | 1993-01-01 | *      |
       | 1002        | Billy           | 2006-04-17     | 17-214-233-1215  | Billy           | 2006-04-17     | 17-214-233-1215  | 1993-01-01 | *      |
       | 1003        | Charlie         | 2013-02-04     | 17-214-233-1216  | Charlie         | 2013-02-04     | 17-214-233-1216  | 1993-01-01 | *      |
       | 1004        | David           | 2018-04-13     | 17-214-233-1217  | David           | 2018-04-13     | 17-214-233-1217  | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
-    When I load the XTS xts
-    Then the XTS table should contain expected data
+    And I create the STG_CUSTOMER_2 stage
+    When I load the XTS_2SAT xts
+    Then the XTS_2SAT table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                 | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')    | SAT_CUSTOMER         | 1992-12-31 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BILLY\|\|17-214-233-1215')    | SAT_CUSTOMER_DETAILS | 1992-12-31 | *      |
@@ -622,9 +622,9 @@ Feature: XTS
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Null unique identifier values are not loaded into an pre-populated XTS
     Given the XTS xts is already populated with data
-      | CUSTOMER_PK | HASHDIFF                                              | SAT_NAME         | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1992-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-12-31 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1992-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER   | 1993-12-31 | *      |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | <null>      | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
@@ -634,9 +634,9 @@ Feature: XTS
     And I create the STG_CUSTOMER stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | SAT_NAME         | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_SAP_CUSTOMER | 1992-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-12-31 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_SAP_CUSTOMER | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER  | 1992-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER  | 1993-12-31 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_CUSTOMER  | 1993-01-01 | *      |
