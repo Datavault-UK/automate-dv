@@ -4,15 +4,6 @@ WITH stage AS (
 ),
 
 derived_columns AS (
-    SELECT *,
-
-    'STG_BOOKING' AS SOURCE,
-    BOOKING_DATE AS EFFECTIVE_FROM
-
-    FROM stage
-),
-
-hashed_columns AS (
     SELECT
 
     BOOKING_FK,
@@ -35,6 +26,15 @@ hashed_columns AS (
     BOOKING_DATE,
     SOURCE,
     EFFECTIVE_FROM,
+
+    'STG_BOOKING' AS SOURCE,
+    BOOKING_DATE AS EFFECTIVE_FROM
+
+    FROM stage
+),
+
+hashed_columns AS (
+    SELECT *,
 
     CAST((MD5_BINARY(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''))) AS BINARY(16)) AS CUSTOMER_PK,
     CAST(MD5_BINARY(CONCAT_WS('||',

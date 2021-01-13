@@ -13,10 +13,7 @@ derived_columns AS (
 ),
 
 hashed_columns AS (
-    SELECT
-
-    SOURCE,
-    EFFECTIVE_FROM,
+    SELECT *,
 
     CAST((MD5_BINARY(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''))) AS BINARY(16)) AS CUSTOMER_PK,
     CAST(MD5_BINARY(CONCAT_WS('||',
