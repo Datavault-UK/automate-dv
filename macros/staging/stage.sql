@@ -52,7 +52,7 @@
 {%- do log("[stage]: exclude_column_names: " ~ exclude_column_names, true) -%}
 {%- do log("[stage]: included_source_columns: " ~ included_source_columns, true) -%}
 
-{%- set columns_to_select = dbtvault.process_columns_to_select(included_source_columns, exclude_column_names) -%}
+{%- set source_columns_to_select = dbtvault.process_columns_to_select(included_source_columns, exclude_column_names) -%}
 
 {#- CTE to add source columns from the source model -#}
 WITH stage AS (
@@ -62,17 +62,19 @@ WITH stage AS (
 
 {# Derive additional columns, if provided, and carry over source columns from previous CTE for use in the hash stage -#}
 derived_columns AS (
-    SELECT
+    SELECT *
+    {{- "," if dbtvault.is_something(derived_columns) and not include_source_columns -}}
 
-    {%- if include_source_columns -%}
+    {%- if include_source_columns and dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n    " -}}
-        {{- (columns_to_select | join(",\n")) | indent(4) -}},
-    {%- else -%}
-        {{- "\n" -}}
+        {%- for col in source_columns_to_select -%}
+            {{- col | indent(4) -}}{{ ",\n    " if not loop.last -}}
+        {%- endfor -%}
     {%- endif -%}
 
-    {%- if dbtvault.is_something(derived_columns) -%}
-        {{- ("\n" ~ dbtvault.derive_columns(columns=derived_columns)) | indent(4) -}}
+    {%- if include_source_columns and dbtvault.is_something(derived_columns) -%}
+        {{- ",\n\n" -}}
+        {{- dbtvault.derive_columns(columns=derived_columns) | indent(4, first=true) -}}
     {%- endif %}
 
     FROM stage
@@ -80,17 +82,12 @@ derived_columns AS (
 
 {# Hash columns, if provided, and process exclusion flags if provided -#}
 hashed_columns AS (
-    SELECT
+    SELECT {{- " *" if include_source_columns and derived_columns -}}{{- "," if dbtvault.is_something(hashed_columns) }}
 
-    {%- if dbtvault.is_something(derived_columns) or include_source_columns -%}
-        {{- " *" -}}
+    {%- if dbtvault.is_something(hashed_columns) -%}
+        {{- "\n\n" -}}
+        {{- dbtvault.hash_columns(columns=hashed_columns) | indent(4, first=true) -}}
     {%- endif %}
-
-    {{- ",\n\n" if dbtvault.is_something(hashed_columns) -}}
-
-    {{- (derived_column_names | join(",\n")) | indent(4f) if dbtvault.is_something(derived_columns) -}},
-
-    {{- ("\n" ~ dbtvault.hash_columns(columns=hashed_columns)) | indent(4) }}
 
     FROM derived_columns
 )
