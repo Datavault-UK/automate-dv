@@ -4,7 +4,7 @@
         {%- set is_hashdiff = false -%}
     {% endif %}
 
-    {{- adapter.dispatch('hash', packages = var('adapter_packages', ['dbtvault']))(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
+    {{- adapter.dispatch('hash', packages = dbtvault.get_dbtvault_namespaces())(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
 
 {%- endmacro %}
 

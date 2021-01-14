@@ -7,12 +7,12 @@
 {%- macro replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_filter',
-                                    packages = var('adapter_packages', ['dbtvault']))(core_sql=core_sql,
-                                                                                      timestamp_field=timestamp_field,
-                                                                                      start_timestamp=start_timestamp,
-                                                                                      stop_timestamp=stop_timestamp,
-                                                                                      offset=offset,
-                                                                                      period=period) %}
+                                    packages = dbtvault.get_dbtvault_namespaces())(core_sql=core_sql,
+                                                                          timestamp_field=timestamp_field,
+                                                                          start_timestamp=start_timestamp,
+                                                                          stop_timestamp=stop_timestamp,
+                                                                          offset=offset,
+                                                                          period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
@@ -35,7 +35,7 @@
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
-                                    packages = var('adapter_packages', ['dbtvault']))(target_cols_csv=target_cols_csv,
+                                    packages = dbtvault.get_dbtvault_namespaces())(target_cols_csv=target_cols_csv,
                                                              base_sql=base_sql,
                                                              timestamp_field=timestamp_field,
                                                              period=period,
@@ -63,7 +63,7 @@
 {%- macro get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    packages = var('adapter_packages', ['dbtvault']))(target_schema=target_schema,
+                                    packages = dbtvault.get_dbtvault_namespaces())(target_schema=target_schema,
                                                              target_table=target_table,
                                                              timestamp_field=timestamp_field,
                                                              start_date=start_date,
@@ -107,7 +107,7 @@
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set macro = adapter.dispatch('get_period_of_load',
-                                    packages = var('adapter_packages', ['dbtvault']))(period=period,
+                                    packages = dbtvault.get_dbtvault_namespaces())(period=period,
                                                              offset=offset,
                                                              start_timestamp=start_timestamp) %}
 
