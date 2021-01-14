@@ -107,8 +107,7 @@ hashed_columns AS (
     {%- if dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n" -}}
         {%- set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
-        {% do log("[stage]: processed_hash_columns: " ~ processed_hash_columns, true) %}
-        {{- dbtvault.hash_columns(columns=hashed_columns) | indent(4, first=true) -}}
+        {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4, first=true) -}}
     {%- endif %}
 
     FROM derived_columns
