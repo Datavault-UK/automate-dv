@@ -8,6 +8,27 @@
 
 {%- macro default__pit(src_pk, as_of_dates_table, satellites, source_model) -%}
 
+{% if (as_of_dates_table is none) and execute %}
+
+    {%- set error_message -%}
+    "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
+    {%- endset -%}
+
+    {{- exceptions.raise_compiler_error(error_message) -}}
+{%- endif -%}
+
+{% if as_of_dates_table[0] != 'AS_OF_DATE' %}
+
+    {%- set error_message -%}
+    "pit error: as_of_table column must be called 'AS_OF_DATE'."
+    {%- endset -%}
+
+    {{- exceptions.raise_compiler_error(error_message) -}}
+{%- endif -%} -%}
+
+
+
+
 {# Set deafualts and obtain source model paths #}
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk =   ('0000000000000000') -%}
@@ -30,12 +51,6 @@
     {%- set source_relation = as_of_dates_table -%}
 {%- endif -%}
 
-    {#-
-{% for sat in satelites -%}
-    {%- set sat_src = dbtvault.prefix(columns=sat, prefix='_src') -%}
-    {%- set sat ~ '_src' = ref(sat) %}
-{% endfor %}
--#}
 
 SELECT
         h.{{ src_pk }},
