@@ -5,9 +5,9 @@
     {% endif %}
 
     {{- adapter.dispatch('stage', packages = dbtvault.get_dbtvault_namespaces())(include_source_columns=include_source_columns,
-                                                                        source_model=source_model,
-                                                                        hashed_columns=hashed_columns,
-                                                                        derived_columns=derived_columns) -}}
+                                                                                 source_model=source_model,
+                                                                                 hashed_columns=hashed_columns,
+                                                                                 derived_columns=derived_columns) -}}
 {%- endmacro -%}
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns) -%}
