@@ -44,8 +44,6 @@
 
 {%- macro process_hash_column_excludes(hash_columns=none, source_columns=none) -%}
 
-    {% do log("[process_hash_column_excludes]: hash_columns: " ~ hash_columns, true) %}
-
     {% set processed_hash_columns = {} %}
 
     {% for col, col_mapping in hash_columns.items() %}
@@ -53,11 +51,14 @@
         {% if col_mapping is mapping %}
             {% if col_mapping.exclude_columns %}
 
+                {% set columns_to_hash = dbtvault.process_columns_to_select(source_columns, col_mapping.columns) %}
+
                 {% do hash_columns[col].pop('exclude_columns') %}
-
-
+                {% do hash_columns[col].update({'columns': columns_to_hash}) %}
 
                 {% do processed_hash_columns.update({col: hash_columns[col]}) %}
+            {% else %}
+                {% do processed_hash_columns.update({col: col_mapping}) %}
             {% endif %}
         {% else %}
             {% do processed_hash_columns.update({col: col_mapping}) %}
