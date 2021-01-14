@@ -146,7 +146,7 @@ models:
               source_model: raw_source
               derived_columns:
                 SOURCE: '!STG_BOOKING'
-                EFFECTIVE_FROM: LOAD_DATETIME
+                EFFECTIVE_FROM: LOADDATE
           test_stage_correctly_generates_sql_for_only_hashing_from_yaml:
             vars:
               include_source_columns: false
@@ -182,25 +182,6 @@ models:
                     - CUSTOMER_ID
                     - NATIONALITY
                     - PHONE
-          test_stage_raises_error_with_missing_source:
-            vars:
-              hashed_columns:
-                CUSTOMER_PK: CUSTOMER_ID
-                CUST_CUSTOMER_HASHDIFF:
-                  is_hashdiff: true
-                  columns:
-                    - CUSTOMER_DOB
-                    - CUSTOMER_ID
-                    - CUSTOMER_NAME
-                CUSTOMER_HASHDIFF:
-                  is_hashdiff: true
-                  columns:
-                    - CUSTOMER_ID
-                    - NATIONALITY
-                    - PHONE
-              derived_columns:
-                SOURCE: '!STG_BOOKING'
-                EFFECTIVE_FROM: LOADDATE
           test_stage_correctly_generates_sql_for_derived_and_source_from_yaml:
             vars:
               source_model: raw_source
@@ -274,6 +255,25 @@ models:
                     - CUSTOMER_PK
                     - LOADDATE
                     - RECORD_SOURCE
+          test_stage_raises_error_with_missing_source:
+            vars:
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUST_CUSTOMER_HASHDIFF:
+                  is_hashdiff: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
+                CUSTOMER_HASHDIFF:
+                  is_hashdiff: true
+                  columns:
+                    - CUSTOMER_ID
+                    - NATIONALITY
+                    - PHONE
+              derived_columns:
+                SOURCE: '!STG_BOOKING'
+                EFFECTIVE_FROM: LOADDATE
       tables:
         hub:
           materialized: incremental
