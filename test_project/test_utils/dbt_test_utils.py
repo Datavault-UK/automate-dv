@@ -451,19 +451,28 @@ class DBTTestUtils:
 
         processed_dicts = []
 
-        for i, col in enumerate(dicts_with_lists):
-            processed_dicts.append(dict())
+        check_dicts = [k for k in processed_dicts if isinstance(k, dict)]
 
-            for k, v in col.items():
+        if not check_dicts:
+            return dicts_with_lists
+        else:
 
-                if {"[", "]"}.issubset(set(v)):
-                    v = v.replace("[", "")
-                    v = v.replace("]", "")
-                    v = [k.strip() for k in v.split(",")]
+            for i, col in enumerate(dicts_with_lists):
+                processed_dicts.append(dict())
 
-                processed_dicts[i][k] = v
+                if isinstance(col, dict):
+                    for k, v in col.items():
 
-        return processed_dicts
+                        if {"[", "]"}.issubset(set(v)):
+                            v = v.replace("[", "")
+                            v = v.replace("]", "")
+                            v = [k.strip() for k in v.split(",")]
+
+                        processed_dicts[i][k] = v
+                else:
+                    processed_dicts[i] = {col: dicts_with_lists[col]}
+
+            return processed_dicts
 
 
 class DBTVAULTGenerator:
@@ -486,8 +495,13 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link
+            "t_link": self.t_link,
+            "pit": self.pit
         }
+        if vault_structure == "stage":
+            generator_functions[vault_structure](model_name=model_name, config=config, source_model=kwargs["source_model"])
+        else:
+            generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
                                                              config=config, **kwargs)
@@ -626,7 +640,25 @@ class DBTVAULTGenerator:
         template = f"""
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
-                             {src_ldts}, {src_source}, {source_model})   }}}}
+                             {src_ldts}, {src_source}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, config=None):
+        """
+        Generate a PIT template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param satellites: Dictionary of satellite reference mappings
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -674,6 +706,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
+            "pit": "table",
         }
 
         if not config:
