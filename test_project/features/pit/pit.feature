@@ -353,7 +353,7 @@ Feature: pit
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS_APP   |         |          | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_DETAILS_WEB   |         |          |              |
       |              |       | SAT_CUSTOMER_DETAILS_PHONE |         |          |              |
-    When the RAW_STAGE_APP is loaded for day 1
+    When the RAW_STAGE_APP is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Portsmouth        | 2019-01-01 00:00:00.000000 | App    |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Liverpool         | 2019-01-02 00:00:00.000000 | App    |
@@ -362,7 +362,7 @@ Feature: pit
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Phoenix           | 2019-01-02 00:00:00.000000 | App    |
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | San Diego         | 2019-01-03 00:00:00.000000 | App    |
     And I create the STG_CUSTOMER_APP stage
-    When the RAW_STAGE_WEB is loaded for day 1
+    When the RAW_STAGE_WEB is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | London            | 2019-01-01 00:00:00.000000 | WEB    |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Birmingham        | 2019-01-02 00:00:00.000000 | WEB    |
@@ -371,7 +371,7 @@ Feature: pit
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | El Paso           | 2019-01-02 00:00:00.000000 | WEB    |
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Las Vegas         | 2019-01-03 00:00:00.000000 | WEB    |
     And I create the STG_CUSTOMER_WEB stage
-    When the RAW_STAGE_PHONE is loaded for day 1
+    When the RAW_STAGE_PHONE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Swansea           | 2019-01-01 00:00:00.000000 | Phone  |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Manchester        | 2019-01-02 00:00:00.000000 | Phone  |
@@ -380,7 +380,7 @@ Feature: pit
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Austin            | 2019-01-02 00:00:00.000000 | Phone  |
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Fort Worth        | 2019-01-03 00:00:00.000000 | Phone  |
     And I create the STG_CUSTOMER_PHONE stage
-    When the AS_OF_DATE is loaded for day 1
+    When the AS_OF_DATE is loaded
       | AS_OF_DATE                 |
       | 2019-01-01 00:00:00.000000 |
       | 2019-01-02 00:00:00.000000 |
@@ -395,22 +395,22 @@ Feature: pit
       | md5('1001') | 2019-01-01 00:00:00.000000 | md5('1001')                 | 2019-01-01 00:00:00.000000    | md5('1001')                 | 2019-01-01 00:00:00.000000    | md5('1001')                   | 2019-01-01 00:00:00.000000      |
       | md5('1001') | 2019-01-02 00:00:00.000000 | md5('1001')                 | 2019-01-02 00:00:00.000000    | md5('1001')                 | 2019-01-02 00:00:00.000000    | md5('1001')                   | 2019-01-02 00:00:00.000000      |
       | md5('1001') | 2019-01-03 00:00:00.000000 | md5('1001')                 | 2019-01-03 00:00:00.000000    | md5('1001')                 | 2019-01-03 00:00:00.000000    | md5('1001')                   | 2019-01-03 00:00:00.000000      |
-    When the RAW_STAGE_APP is loaded for day 2
+    When the RAW_STAGE_APP is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Portsmouth        | 2019-01-01 00:00:00.000000 | App    |
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | New York          | 2019-01-01 00:00:00.000000 | App    |
     And I create the STG_CUSTOMER_APP stage
-    When the RAW_STAGE_WEB is loaded for day 2
+    When the RAW_STAGE_WEB is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | London            | 2019-01-01 00:00:00.000000 | WEB    |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Birmingham        | 2019-01-02 00:00:00.000000 | WEB    |
     And I create the STG_CUSTOMER_WEB stage
-    When the RAW_STAGE_PHONE is loaded for day 2
+    When the RAW_STAGE_PHONE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | Swansea           | 2019-01-01 00:00:00.000000 | Phone  |
       | 1002        | Bob           | 17-214-233-1215 | 2006-04-17   | Washington        | 2019-01-01 00:00:00.000000 | Phone  |
     And I create the STG_CUSTOMER_PHONE stage
-    When the AS_OF_DATE is loaded for day 2
+    When the AS_OF_DATE is loaded
       | AS_OF_DATE                 |
       | 2019-01-02 00:00:00.000000 |
       | 2019-01-03 00:00:00.000000 |
