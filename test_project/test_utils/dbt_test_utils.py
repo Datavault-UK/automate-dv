@@ -648,23 +648,11 @@ class DBTVAULTGenerator:
         Generate a XTS template
         """
 
-        src_satellite = json.dumps(src_satellite, indent=4)
-
-        if isinstance(source_model, list):
-            source_model = f"{source_model}"
-        else:
-            source_model = f"'{source_model}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
         {{% set src_satellite = {src_satellite} %}}
         
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.xts('{src_pk}', src_satellite, '{src_ldts}', '{src_source}',
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
                           {source_model})   }}}}
         """
 
@@ -715,6 +703,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
+            "xts": "incremental",
         }
 
         if not config:
