@@ -189,7 +189,7 @@ Feature: pit
       | md5('1002') | 2019-01-01 11:30:00 | md5('1002')                 | 2019-01-01 11:01:00           | md5('1002')                 | 2019-01-01 11:28:00           | md5('1002')                   | 2019-01-01 11:17:00             |
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table dates are before the satallites have received any entry's
+  Scenario: Load into a pit table where the AS IS table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                       | T_LINKS | EFF_SATS | PITS         |
