@@ -5,7 +5,7 @@ WITH stage AS (
 ),
 
 derived_columns AS (
-    SElECT
+    SELECT
 
     BOOKING_FK,
     ORDER_FK,
