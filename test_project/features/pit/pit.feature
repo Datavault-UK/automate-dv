@@ -39,7 +39,7 @@ Feature: pit
       | 2019-01-07 00:00:00.000000 |
       | 2019-01-14 00:00:00.000000 |
       | 2019-01-21 00:00:00.000000 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
@@ -117,7 +117,7 @@ Feature: pit
       | 2019-01-07 00:00:00.000000 |
       | 2019-01-14 00:00:00.000000 |
       | 2019-01-21 00:00:00.000000 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the SAT_CUSTOMER_DETAILS_APP table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_LOCATION | HASHDIFF                                      | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
@@ -177,7 +177,7 @@ Feature: pit
       | 2019-01-01 10:30:00 |
       | 2019-01-01 11:00:00 |
       | 2019-01-01 11:30:00 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE          | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
@@ -228,7 +228,7 @@ Feature: pit
       | 2018-01-01 10:30:00 |
       | 2018-01-01 11:00:00 |
       | 2018-01-01 11:30:00 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE          | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
@@ -280,7 +280,7 @@ Feature: pit
       | 2019-01-02 10:30:00 |
       | 2019-01-02 11:00:00 |
       | 2019-01-02 11:30:00 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE          | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
@@ -331,7 +331,7 @@ Feature: pit
       | 2019-01-07 00:00:00.000000 |
       | 2019-01-14 00:00:00.000000 |
       | 2019-01-21 00:00:00.000000 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
@@ -385,7 +385,7 @@ Feature: pit
       | 2019-01-01 00:00:00.000000 |
       | 2019-01-02 00:00:00.000000 |
       | 2019-01-03 00:00:00.000000 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
@@ -415,7 +415,7 @@ Feature: pit
       | 2019-01-02 00:00:00.000000 |
       | 2019-01-03 00:00:00.000000 |
       | 2019-01-04 00:00:00.000000 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_APP_PK | SAT_CUSTOMER_DETAILS_APP_LDTS | SAT_CUSTOMER_DETAILS_WEB_PK | SAT_CUSTOMER_DETAILS_WEB_LDTS | SAT_CUSTOMER_DETAILS_PHONE_PK | SAT_CUSTOMER_DETAILS_PHONE_LDTS |
@@ -466,7 +466,7 @@ Feature: pit
       | 2019-01-07 00:00:00.000000 |
       | 2019-01-14 00:00:00.000000 |
       | 2019-01-21 00:00:00.000000 |
-    And I create the AS_OF_DATE stage
+    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | CUSTOMER_ADDRESS_FK                     | CUSTOMER_ADDRESS_LDTS      | LOCATION_FK       | LOCATION_LDTS              | METHOD_OF_CONTACT_PK | METHOD_OF_CONTACT_LDTS     |
