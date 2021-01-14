@@ -161,7 +161,23 @@ Feature: Out of Sequence Satellites
       | md5('1002') | md5('1999-12-07\|\|1002\|\|CHAD\|\|17-214-233-1216')  | Chad          | 1999-12-07   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1002') | md5('1999-12-07\|\|1002\|\|DOM\|\|17-214-233-1216')   | Dom           | 1999-12-07   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
+  @fixture.out_of_sequence_satellite
   Scenario: Empty xts, empty sat fed by staging should result in one line in sat.
+    #Given the XTS xts is empty
+    Given the SAT_CUSTOMER_OOS oos_sat is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
+      | 1002        | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
+      | 1002        | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
+    And I create the STG_CUSTOMER stage
+    When I load the SAT_CUSTOMER_OOS oos_sat
+    Then the SAT_CUSTOMER_OOS table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
+      | md5('1002') | md5('1999-12-07\|\|1002\|\|CHAD\|\|17-214-233-1214')  | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
 
   Scenario: Late arriving sat is on 1992-12-31 is the same, pre-populated sat as above. Row inserted.
 
