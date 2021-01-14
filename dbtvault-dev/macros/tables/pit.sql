@@ -1,7 +1,7 @@
 {%- macro pit(src_pk, as_of_dates_table, satellites, source_model) -%}
 
-    {{- adapter.dispatch('pit', packages = var('adapter_packages', ['dbtvault']))(source_model=source_model,src_pk=src_pk,
-                                                                                   as_of_dates_table=as_of_dates_table,
+    {{- adapter.dispatch('pit', packages = var('adapter_packages', ['dbtvault']))(source_model=source_model, src_pk=src_pk,
+                                                                                  as_of_dates_table=as_of_dates_table,
                                                                                   satellites=satellites) -}}
 
 {%- endmacro -%}
@@ -29,7 +29,7 @@
 
 
 
-{# Set deafualts and obtain source model paths #}
+{# Set defaults and obtain source model paths #}
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk =   ('0000000000000000') -%}
 {%- set ghost_date = '0000-01-01 00:00:00.000000' -%}
@@ -48,7 +48,7 @@
 
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
 
-    {%- set source_relation = as_of_dates_table -%}
+    {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
 
