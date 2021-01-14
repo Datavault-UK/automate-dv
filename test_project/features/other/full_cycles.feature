@@ -12,14 +12,14 @@ Feature: Full Vault Cycles
     And the RAW_STAGE_BOOKING stage is empty
 
     # ================ DAY 1 ===================
-    And the RAW_STAGE_CUSTOMER is loaded for day 1
+    And the RAW_STAGE_CUSTOMER is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Ronna         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
     And I create the STG_CUSTOMER stage
-    And the RAW_STAGE_BOOKING is loaded for day 1
+    And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10034      | 1001        | 2019-05-03   | 100.00 | 2019-09-17     | GBR         | 17-214-233-1214 | BRITISH     | 2019-05-04 | *      |
       | 10035      | 1002        | 2019-05-03   | 80.00  | 2019-09-16     | NLD         | 17-214-200-1214 | DUTCH       | 2019-05-04 | *      |
@@ -28,13 +28,13 @@ Feature: Full Vault Cycles
     And I load the vault
 
     # ================ DAY 2 ===================
-    And the RAW_STAGE_CUSTOMER is loaded for day 2
+    And the RAW_STAGE_CUSTOMER is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Michael       | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
     And I create the STG_CUSTOMER stage
-    And the RAW_STAGE_BOOKING is loaded for day 2
+    And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10036      | 1003        | 2019-05-04   | 70.00  | 2019-09-13     | AUS         | 17-214-555-1214 | AUSTRALIAN  | 2019-05-05 | *      |
       | 10037      | 1004        | 2019-05-04   | 810.00 | 2019-09-18     | DEU         | 17-214-123-1214 | GERMAN      | 2019-05-05 | *      |
@@ -42,14 +42,14 @@ Feature: Full Vault Cycles
     And I load the vault
 
     # ================ DAY 3 ===================
-    And the RAW_STAGE_CUSTOMER is loaded for day 3
+    And the RAW_STAGE_CUSTOMER is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Harold        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Kevin         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Chris         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
     And I create the STG_CUSTOMER stage
-    And the RAW_STAGE_BOOKING is loaded for day 3
+    And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10038      | 1005        | 2019-05-05   | 216.50 | 2019-09-19     | ITA         | 17-214-456-1214 | BRITISH     | 2019-05-06 | *      |
       | 10039      | 1006        | 2019-05-05   | 111.10 | 2019-09-20     | NOR         | 17-214-789-1214 | RUSSIAN     | 2019-05-06 | *      |
@@ -57,7 +57,7 @@ Feature: Full Vault Cycles
     And I load the vault
 
     # ================ DAY 4 ===================
-    And the RAW_STAGE_CUSTOMER is loaded for day 4
+    And the RAW_STAGE_CUSTOMER is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Bethany       | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
@@ -71,7 +71,7 @@ Feature: Full Vault Cycles
       | 1014        | Shayne        | 1999-01-31   | 2019-05-07     | 2019-05-07 | *      |
       | 1015        | Fabiola       | 1985-04-02   | 2019-05-07     | 2019-05-07 | *      |
     And I create the STG_CUSTOMER stage
-    And the RAW_STAGE_BOOKING is loaded for day 4
+    And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10039      | 1006        | 2019-05-05   | 111.10 | 2019-09-20     | AUS         | 17-214-789-1214 | RUSSIAN     | 2019-05-07 | *      |
       | 10040      | 1007        | 2019-05-06   | 832.84 | 2019-09-28     | CHN         | 17-214-577-1215 | TURKISH     | 2019-05-07 | *      |

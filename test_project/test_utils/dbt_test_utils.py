@@ -453,19 +453,28 @@ class DBTTestUtils:
 
         processed_dicts = []
 
-        for i, col in enumerate(dicts_with_lists):
-            processed_dicts.append(dict())
+        check_dicts = [k for k in processed_dicts if isinstance(k, dict)]
 
-            for k, v in col.items():
+        if not check_dicts:
+            return dicts_with_lists
+        else:
 
-                if {"[", "]"}.issubset(set(v)):
-                    v = v.replace("[", "")
-                    v = v.replace("]", "")
-                    v = [k.strip() for k in v.split(",")]
+            for i, col in enumerate(dicts_with_lists):
+                processed_dicts.append(dict())
 
-                processed_dicts[i][k] = v
+                if isinstance(col, dict):
+                    for k, v in col.items():
 
-        return processed_dicts
+                        if {"[", "]"}.issubset(set(v)):
+                            v = v.replace("[", "")
+                            v = v.replace("]", "")
+                            v = [k.strip() for k in v.split(",")]
+
+                        processed_dicts[i][k] = v
+                else:
+                    processed_dicts[i] = {col: dicts_with_lists[col]}
+
+            return processed_dicts
 
 
 class DBTVAULTGenerator:
@@ -629,7 +638,7 @@ class DBTVAULTGenerator:
         template = f"""
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
-                             {src_ldts}, {src_source}, {source_model})   }}}}
+                             {src_ldts}, {src_source}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
