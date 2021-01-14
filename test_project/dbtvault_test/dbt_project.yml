@@ -146,7 +146,7 @@ models:
               source_model: raw_source
               derived_columns:
                 SOURCE: '!STG_BOOKING'
-                EFFECTIVE_FROM: LOAD_DATETIME
+                EFFECTIVE_FROM: LOADDATE
           test_stage_correctly_generates_sql_for_only_hashing_from_yaml:
             vars:
               include_source_columns: false

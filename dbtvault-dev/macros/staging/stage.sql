@@ -68,11 +68,22 @@ derived_columns AS (
     {{- " *" if dbtvault.is_nothing(derived_columns) and dbtvault.is_nothing(hashed_columns) and include_source_columns -}}
     {{- " *" if dbtvault.is_nothing(derived_columns) and not include_source_columns -}}
 
-    {%- if include_source_columns and (dbtvault.is_something(derived_columns) or dbtvault.is_something(hashed_columns)) %}
-        {{- "\n\n" -}}
-    {%- endif -%}
-
     {%- if include_source_columns and dbtvault.is_something(derived_columns) -%}
+        {{- "\n\n" -}}
+
+        {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4, first=true) -}}
+    {%- elif not include_source_columns and dbtvault.is_nothing(hashed_columns) and dbtvault.is_something(derived_columns) -%}
+        {{- "\n\n" -}}
+
+        {{- dbtvault.derive_columns(columns=derived_columns) | indent(4, first=true) -}}
+    {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_something(hashed_columns) -%}
+        {{- "\n\n" -}}
+
+        {%- for col_name in included_source_columns -%}
+            {{- col_name | indent(4, first=true) -}}{{- ",\n" if not loop.last -}}
+        {%- endfor -%}
+    {%- elif not include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) -%}
+        {{- "\n\n" -}}
 
         {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4, first=true) -}}
     {%- endif %}
@@ -94,6 +105,14 @@ hashed_columns AS (
             {{- "," if dbtvault.is_something(hashed_columns) and loop.last -}}
         {%- endfor -%}
 
+    {%- elif not include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) %}
+        {{- "\n\n" -}}
+
+        {%- for col_name in derived_column_names -%}
+            {{- col_name | indent(4, first=true) -}}{{- ",\n" if not loop.last -}}
+            {{- "," if dbtvault.is_something(hashed_columns) and loop.last -}}
+        {%- endfor -%}
+
     {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_nothing(hashed_columns) %}
         {{- "\n\n" -}}
 
@@ -102,7 +121,28 @@ hashed_columns AS (
             {{- "," if dbtvault.is_something(hashed_columns) and loop.last -}}
         {%- endfor -%}
 
-    {%- endif -%}
+    {%- elif not include_source_columns and dbtvault.is_nothing(hashed_columns) and dbtvault.is_something(derived_columns) -%}
+        {{- "\n\n" -}}
+
+        {%- for col_name in derived_column_names -%}
+            {{- col_name | indent(4, first=true) -}}{{- ",\n" if not loop.last -}}
+        {%- endfor -%}
+
+    {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_something(hashed_columns) -%}
+        {{- "\n\n" -}}
+
+        {%- for col_name in source_columns_to_select -%}
+            {{- col_name | indent(4, first=true) -}}{{- ",\n" if not loop.last -}}
+            {{- "," if dbtvault.is_something(hashed_columns) and loop.last -}}
+        {%- endfor -%}
+    {%- elif include_source_columns and dbtvault.is_nothing(hashed_columns) and dbtvault.is_something(derived_columns) -%}
+        {{- "\n\n" -}}
+
+        {%- for col_name in derived_and_source -%}
+            {{- col_name | indent(4, first=true) -}}{{- ",\n" if not loop.last -}}
+            {{- "," if dbtvault.is_something(hashed_columns) and loop.last -}}
+        {%- endfor -%}
+    {%- endif %}
 
     {%- if dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n" -}}
