@@ -30,6 +30,9 @@ update_records AS (
     FROM {{ this }} as a
     JOIN source_data as b
     ON a.{{ src_pk }} = b.{{ src_pk }}
+    {%- if out_of_sequence is not none %}
+    WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE('{{ insert_date }}')
+    {%- endif %}
 ),
 rank AS (
     SELECT {{ dbtvault.prefix(source_cols, 'c', alias_target='target') }},
@@ -101,9 +104,6 @@ records_to_insert AS (
     LEFT JOIN stage
     ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} IS NULL
-    {% if out_of_sequence is not none -%}
-    AND {{ dbtvault.prefix([src_ldts], 'e') }} <> DATE('{{ insert_date }}')
-    {% endif %}
     {% endif %}
 )
 
