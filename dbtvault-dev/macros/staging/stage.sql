@@ -9,8 +9,6 @@
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns) -%}
 
-{%- do log("-----------------------" ~ this.identifier ~ "-----------------------" , true) -%}
-
 {{ dbtvault.prepend_generated_by() }}
 
 {% if (source_model is none) and execute %}
@@ -36,24 +34,18 @@
     {%- set source_table_name = source_model[source_name] -%}
 
     {%- set source_relation = source(source_name, source_table_name) -%}
-    {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
+    {%- set all_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 {%- elif source_model is not mapping and source_model is not none -%}
 
     {%- set source_relation = ref(source_model) -%}
-    {%- set included_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
+    {%- set all_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
 {%- endif -%}
 
 {%- set derived_column_names = dbtvault.extract_column_names(derived_columns) -%}
 {%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) -%}
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
-{%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
-{%- do log("[stage]: derived_column_names: " ~ derived_column_names, true) -%}
-{%- do log("[stage]: hashed_column_names: " ~ hashed_column_names, true) -%}
-{%- do log("[stage]: exclude_column_names: " ~ exclude_column_names, true) -%}
-{%- do log("[stage]: included_source_columns: " ~ included_source_columns, true) -%}
-
-{%- set source_columns_to_select = dbtvault.process_columns_to_select(included_source_columns, exclude_column_names) -%}
+{%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
 
 {#- CTE to add source columns from the source model -#}
 WITH stage AS (
@@ -77,7 +69,7 @@ derived_columns AS (
 
         {{- dbtvault.derive_columns(columns=derived_columns) | indent(4, first=true) -}}
     {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_something(hashed_columns) -%}
-        {{- dbtvault.print_list(included_source_columns, trailing_comma=false) -}}
+        {{- dbtvault.print_list(all_source_columns, trailing_comma=false) -}}
     {%- elif not include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n" -}}
         {{- dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4, first=true) -}}
@@ -100,7 +92,7 @@ hashed_columns AS (
         {{- dbtvault.print_list(derived_column_names, trailing_comma=true) -}}
     {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_nothing(hashed_columns) %}
 
-        {{- dbtvault.print_list(included_source_columns, trailing_comma=false) -}}
+        {{- dbtvault.print_list(all_source_columns, trailing_comma=false) -}}
     {%- elif not include_source_columns and dbtvault.is_nothing(hashed_columns) and dbtvault.is_something(derived_columns) -%}
 
         {{- dbtvault.print_list(derived_column_names, trailing_comma=false) -}}
@@ -114,6 +106,8 @@ hashed_columns AS (
 
     {%- if dbtvault.is_something(hashed_columns) -%}
         {{- "\n\n" -}}
+        {%- set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
+        {% do log("[stage]: processed_hash_columns: " ~ processed_hash_columns, true) %}
         {{- dbtvault.hash_columns(columns=hashed_columns) | indent(4, first=true) -}}
     {%- endif %}
 

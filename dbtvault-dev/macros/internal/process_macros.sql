@@ -1,8 +1,5 @@
 {%- macro process_columns_to_select(columns_list=none, exclude_columns_list=none) -%}
 
-    {%- do log("[process_columns_to_select]: columns_list: " ~ columns_list, true) -%}
-    {%- do log("[process_columns_to_select]: exclude_columns_list: " ~ exclude_columns_list, true) -%}
-
     {% set columns_to_select = [] %}
 
     {% if not dbtvault.is_list(columns_list) or not dbtvault.is_list(exclude_columns_list)  %}
@@ -23,7 +20,6 @@
 
     {%- endif -%}
 
-    {%- do log("[process_columns_to_select]: columns_to_select: " ~ columns_to_select, true) -%}
     {%- do return(columns_to_select) -%}
 
 {%- endmacro -%}
@@ -31,25 +27,51 @@
 
 {%- macro extract_column_names(columns_dict=none) -%}
 
-{%- set extracted_column_names = [] -%}
+    {%- set extracted_column_names = [] -%}
 
-{%- do log("[extract_column_names]: columns_dict: " ~ columns_dict, true) -%}
+    {%- if columns_dict is none -%}
+        {%- do return([]) -%}
+    {%- elif columns_dict is mapping -%}
+        {%- for key, value in columns_dict.items() -%}
+            {%- do extracted_column_names.append(key) -%}
+        {%- endfor -%}
 
-{%- if columns_dict is none -%}
-    {%- do return([]) -%}
-{%- elif columns_dict is mapping -%}
-    {%- for key, value in columns_dict.items() -%}
-        {%- do extracted_column_names.append(key) -%}
-    {%- endfor -%}
-
-    {%- do return(extracted_column_names) -%}
-{%- endif -%}
+        {%- do return(extracted_column_names) -%}
+    {%- endif -%}
 
 {%- endmacro -%}
 
 
+{%- macro process_hash_column_excludes(hash_columns=none, source_columns=none) -%}
+
+    {% do log("[process_hash_column_excludes]: hash_columns: " ~ hash_columns, true) %}
+
+    {% set processed_hash_columns = {} %}
+
+    {% for col, col_mapping in hash_columns.items() %}
+        
+        {% if col_mapping is mapping %}
+            {% if col_mapping.exclude_columns %}
+
+                {% do hash_columns[col].pop('exclude_columns') %}
+
+
+
+                {% do processed_hash_columns.update({col: hash_columns[col]}) %}
+            {% endif %}
+        {% else %}
+            {% do processed_hash_columns.update({col: col_mapping}) %}
+        {% endif %}
+
+    {% endfor %}
+
+    {% do return(processed_hash_columns) %}
+
+{%- endmacro -%}
+
 
 {%- macro print_list(list_to_print=none, indent=4, trailing_comma=false) -%}
+
     {{- "\n\n" -}}
     {%- for col_name in list_to_print -%}
         {{- col_name | indent(indent, first=true) -}}{{- ",\n" if not loop.last -}}
