@@ -498,10 +498,6 @@ class DBTVAULTGenerator:
             "t_link": self.t_link,
             "pit": self.pit
         }
-        if vault_structure == "stage":
-            generator_functions[vault_structure](model_name=model_name, config=config, source_model=kwargs["source_model"])
-        else:
-            generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
                                                              config=config, **kwargs)
