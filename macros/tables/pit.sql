@@ -17,7 +17,7 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
-{% if as_of_dates_table[0] != 'AS_OF_DATE' %}
+{% if (as_of_dates_table[0] != 'AS_OF_DATE') and execute %}
 
     {%- set error_message -%}
     "pit error: as_of_table column must be called 'AS_OF_DATE'."
@@ -34,11 +34,7 @@
 {%- set ghost_pk =   ('0000000000000000') -%}
 {%- set ghost_date = '0000-01-01 00:00:00.000000' -%}
 
-    {#-  Loop to get the source relatiosn using source relation macro and can specify refs i think
-    Loop throught the dict and call the 1st key or have a source model key pair in the sub dict
-    Not in loop i can get the hub source relation -#}
-
-
+{#- Aquiring the source reltion for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
 
     {%- set source_name = as_of_dates_table | first -%}
