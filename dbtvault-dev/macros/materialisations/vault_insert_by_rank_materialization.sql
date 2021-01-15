@@ -6,13 +6,14 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(this) -%}
 
-    {%- set partition_by_column = config.require('partition_by_column') -%}
-    {%- set order_by_column = config.require('order_by_column') -%}
+    {%- set rank_column = config.require('rank_column') -%}
+    {%- set rank_source_models = config.require('rank_source_models') -%}
+
+    {%- set min_max_ranks = dbtvault.get_min_max_ranks(rank_column, rank_source_models) | as_native -%}
 
     {%- set to_drop = [] -%}
 
     {%- do dbtvault.check_placeholder(sql, "__RANK_FILTER__") -%}
-    {%- do dbtvault.check_placeholder(sql, "__RANK_COLUMN__") -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
@@ -21,10 +22,7 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, partition_by_column, order_by_column, 1) %}
-
-        {% do log("existing relation", true) %}
-        {% do log("filtered sql: " ~ filtered_sql, true) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
 
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
@@ -38,21 +36,50 @@
         {% do adapter.drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, partition_by_column, order_by_column, 1) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
-
-        {% do log("re-create", true) %}
-        {% do log("filtered sql: " ~ filtered_sql, true) %}
 
         {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
     {% else %}
 
-        {% do log("iterate", true) %}
-
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
         {%- set loop_vars = {'sum_rows_inserted': 0} -%}
+
+        {% for i in range(min_max_ranks.max_rank | int ) -%}
+
+            {%- set iteration_number = i + 1 -%}
+
+            {%- set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
+
+            {% set tmp_relation = make_temp_relation(this) %}
+
+            {% call statement() -%}
+                {{ dbt.create_table_as(True, tmp_relation, filtered_sql) }}
+            {%- endcall %}
+
+            {{ adapter.expand_target_column_types(from_relation=tmp_relation,
+                                                  to_relation=target_relation) }}
+
+            {%- set insert_query_name = 'main-' ~ i -%}
+            {% call statement(insert_query_name, fetch_result=True) -%}
+                insert into {{ target_relation }} ({{ target_cols_csv }})
+                (
+                    select {{ target_cols_csv }}
+                    from {{ tmp_relation.include(schema=True) }}
+                );
+            {%- endcall %}
+
+            {%- set rows_inserted = (load_result(insert_query_name)['status'].split(" "))[1] | int -%}
+
+            {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
+            {%- do loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
+
+            {% do to_drop.append(tmp_relation) %}
+            {% do adapter.commit() %}
+
+        {% endfor %}
 
         {% call noop_statement(name='main', status="INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
             -- no-op

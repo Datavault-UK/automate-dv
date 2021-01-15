@@ -7,15 +7,14 @@ use_step_matcher("parse")
 dbtvault_generator = DBTVAULTGenerator()
 
 
-@step("I insert by rank into the {model_name} {vault_structure} ordering by {order_by_column} "
-      "and partitioning by {partition_by_column}")
-def rank_insert(context, model_name, vault_structure, order_by_column, partition_by_column):
+@step("I insert by rank into the {model_name} {vault_structure} with a {rank_column} rank column")
+def rank_insert(context, model_name, vault_structure, rank_column):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_rank",
-              "order_by_column": order_by_column,
-              "partition_by_column": partition_by_column}
+              "rank_column": rank_column,
+              "rank_source_models": context.processed_stage_name}
 
     context.vault_structure_metadata = metadata
 

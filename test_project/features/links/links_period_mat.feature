@@ -12,8 +12,8 @@ Feature: Links Loaded using Period Materialization
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-03 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-04 | CRM    |
     And I create the STG_CUSTOMER stage
-    And I use insert_by_period to load the LINK link by day
-    And I use insert_by_period to load the LINK link by day
+    And I insert by period into the LINK link by day
+    And I insert by period into the LINK link by day
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -45,8 +45,8 @@ Feature: Links Loaded using Period Materialization
       | 1008        | AUS       | Hal           | 2013-02-04   | 17-214-233-1215 | 1993-01-04 | WEB    |
       | 1009        | DEU       | Ingrid        | 2018-04-13   | 17-214-233-1216 | 1993-01-04 | WEB    |
     And I create the STG_WEB stage
-    And I use insert_by_period to load the LINK link by day
-    And I use insert_by_period to load the LINK link by day
+    And I insert by period into the LINK link by day
+    And I insert by period into the LINK link by day
     Then the LINK table should contain expected data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | SAP    |
