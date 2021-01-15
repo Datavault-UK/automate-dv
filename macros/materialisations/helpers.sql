@@ -18,8 +18,6 @@
 
 {% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
-
-
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
              TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
@@ -192,10 +190,6 @@
 
         {%- set start_date = config.get('start_date') -%}
         {%- set stop_date = config.get('stop_date', default=none) -%}
-
-        {%- do log("start_date: " ~ start_date, true) %}
-        {%- do log("stop_date: " ~ stop_date, true) %}
-        {%- do log("stop_date: " ~ dbt_utils.current_timestamp(), true) %}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
