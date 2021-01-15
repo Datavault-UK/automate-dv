@@ -1,4 +1,9 @@
 WITH stage AS (
+    SELECT *
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+),
+
+derived_columns AS (
     SELECT
 
     BOOKING_FK,
@@ -18,13 +23,16 @@ WITH stage AS (
     TEST_COLUMN_6,
     TEST_COLUMN_7,
     TEST_COLUMN_8,
-    TEST_COLUMN_9
+    TEST_COLUMN_9,
+    BOOKING_DATE,
+    'STG_BOOKING' AS SOURCE,
+    BOOKING_DATE AS EFFECTIVE_FROM
 
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+    FROM stage
 ),
 
-derived_columns AS (
-    SElECT
+hashed_columns AS (
+    SELECT
 
     BOOKING_FK,
     ORDER_FK,
@@ -44,14 +52,9 @@ derived_columns AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-    'STG_BOOKING' AS SOURCE,
-    BOOKING_DATE AS EFFECTIVE_FROM
-
-    FROM stage
-),
-
-hashed_columns AS (
-    SELECT *
+    BOOKING_DATE,
+    SOURCE,
+    EFFECTIVE_FROM
 
     FROM derived_columns
 )
