@@ -495,8 +495,7 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link,
-            "pit": self.pit
+            "t_link": self.t_link
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -641,24 +640,6 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, config=None):
-        """
-        Generate a PIT template
-            :param model_name: Name of the model file
-            :param src_pk: Source pk
-            :param as_of_dates_table: Name for the AS_OF table
-            :param satellites: Dictionary of satellite reference mappings
-            :param source_model: Model name to select from
-            :param config: Optional model config
-        """
-
-        template = f"""
-        {{{{ config({config}) }}}}
-        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites}, {source_model}) }}}}
-        """
-
-        self.template_to_file(template, model_name)
-
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
@@ -673,7 +654,7 @@ class DBTVAULTGenerator:
 
             if isinstance(item, dict):
 
-                if getattr(context, "vault_structure_type", None) == "pit" and "pit_" in model_name.lower():
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
 
                     satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
@@ -701,8 +682,7 @@ class DBTVAULTGenerator:
             "link": "incremental",
             "sat": "incremental",
             "eff_sat": "incremental",
-            "t_link": "incremental",
-            "pit": "table",
+            "t_link": "incremental"
         }
 
         if not config:
