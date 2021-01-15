@@ -284,6 +284,20 @@ class DBTTestUtils:
 
         self.run_dbt_operation(macro_name='recreate_current_schemas')
 
+    def create_test_schemas(self):
+        """
+        Create TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='create_test_schemas')
+
+    def drop_test_schemas(self):
+        """
+        Drop TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='drop_test_schemas')
+
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
