@@ -449,7 +449,7 @@ class DBTTestUtils:
             :param dicts_with_lists: A list of dictionaries
         """
 
-        if isinstance(dicts_with_lists, list):
+        processed_dicts = []
 
         check_dicts = [k for k in processed_dicts if isinstance(k, dict)]
 
@@ -470,7 +470,7 @@ class DBTTestUtils:
 
                         processed_dicts[i][k] = v
                 else:
-                    processed_dicts[i] = {col: dicts_with_lists[col]}
+                    processed_dicts[i] = {col: dicts_with_lists[i]}
 
             return processed_dicts
 
