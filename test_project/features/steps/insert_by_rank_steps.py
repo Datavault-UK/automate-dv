@@ -7,7 +7,7 @@ use_step_matcher("parse")
 dbtvault_generator = DBTVAULTGenerator()
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure} "
+@step("I insert by period into the {model_name} {vault_structure} "
       "by {period} with date range: {start_date} to {stop_date}")
 def load_table(context, model_name, vault_structure, period, start_date=None, stop_date=None):
     metadata = {"source_model": context.processed_stage_name,
@@ -36,7 +36,7 @@ def load_table(context, model_name, vault_structure, period, start_date=None, st
     assert "Completed successfully" in logs
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure} "
+@step("I insert by period into the {model_name} {vault_structure} "
       "by {period} with start date: {start_date}")
 def load_table(context, model_name, vault_structure, period, start_date=None):
     metadata = {"source_model": context.processed_stage_name,
@@ -64,7 +64,7 @@ def load_table(context, model_name, vault_structure, period, start_date=None):
     assert "Completed successfully" in logs
 
 
-@step("I use insert_by_period to load the {model_name} {vault_structure} by {period}")
+@step("I insert by period into the {model_name} {vault_structure} by {period}")
 def load_table(context, model_name, vault_structure, period):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}

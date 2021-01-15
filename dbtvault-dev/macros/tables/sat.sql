@@ -14,9 +14,6 @@
 
 WITH source_data AS (
     SELECT *
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    __RANK_COLUMN__
-    {% endif %}
     FROM {{ ref(source_model) }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
