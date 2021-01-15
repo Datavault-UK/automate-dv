@@ -1,11 +1,9 @@
 name: 'dbtvault'
-version: '0.7.0'
+version: '0.7.1'
 require-dbt-version: [">=0.18.0", "<0.19.0"]
 config-version: 2
 
-profile: 'dbtvault'
-
-source-paths: ["models", "models_test"]
+source-paths: ["models"]
 analysis-paths: ["analysis"] 
 test-paths: ["tests"]
 data-paths: ["data"]

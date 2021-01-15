@@ -1,6 +1,6 @@
 {%- macro derive_columns(source_relation=none, columns=none) -%}
 
-    {{- adapter.dispatch('derive_columns', packages = var('adapter_packages', ['dbtvault']))(source_relation=source_relation, columns=columns) -}}
+    {{- adapter.dispatch('derive_columns', packages = dbtvault.get_dbtvault_namespaces())(source_relation=source_relation, columns=columns) -}}
 
 {%- endmacro %}
 
@@ -17,7 +17,7 @@
 
     {#- Add aliases of derived columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
-        {%- if columns[col] is iterable and columns[col] is not string -%}
+        {%- if dbtvault.is_list(columns[col]) -%}
             {%- set column_list = [] -%}
 
             {%- for concat_component in columns[col] -%}
@@ -53,9 +53,7 @@
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
-        {{ col }}
-        {%- if not loop.last -%},
-{% endif -%}
+        {{- col | indent(4) -}}{{ ",\n" if not loop.last }}
     {%- endfor -%}
 
 {%- else -%}
