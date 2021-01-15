@@ -66,16 +66,25 @@ class DBTTestUtils:
         else:
             target = None
 
+        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+
+    @staticmethod
+    def set_dynamic_properties_for_comparison(target):
+        """
+        Database and schema for generated SQL during macro tests changes based on user.
+        This function works out what those names need to be for downstream comparisons to use instead.
+        """
+
         if target == 'snowflake':
-            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB'):
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
-                              f"_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            self.EXPECTED_PARAMETERS = {
+            return {
                 'SCHEMA_NAME': schema_name,
-                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE')
+                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
             }
         else:
             raise ValueError('TARGET not set')
