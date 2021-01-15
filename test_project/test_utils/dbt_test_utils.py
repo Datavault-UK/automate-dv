@@ -451,7 +451,7 @@ class DBTTestUtils:
 
         processed_dicts = []
 
-        check_dicts = [k for k in processed_dicts if isinstance(k, dict)]
+        check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
 
         if not check_dicts:
             return dicts_with_lists
