@@ -18,6 +18,8 @@
 
 {% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
+
+
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
              TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
@@ -62,7 +64,7 @@
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
-                                    packages = var('adapter_packages', ['dbtvault']))(target_cols_csv=target_cols_csv,
+                                    packages = dbtvault.get_dbtvault_namespaces())(target_cols_csv=target_cols_csv,
                                                              base_sql=base_sql,
                                                              timestamp_field=timestamp_field,
                                                              period=period,
@@ -90,7 +92,7 @@
 {%- macro get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    packages = var('adapter_packages', ['dbtvault']))(target_schema=target_schema,
+                                    packages = dbtvault.get_dbtvault_namespaces())(target_schema=target_schema,
                                                              target_table=target_table,
                                                              timestamp_field=timestamp_field,
                                                              start_date=start_date,
@@ -106,7 +108,7 @@
         with data as (
             select
                 coalesce(max({{ timestamp_field }}), '{{ start_date }}')::timestamp as start_timestamp,
-                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date ~ "','')::timestamp") }},
+                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')::timestamp") }},
                          {{ dbt_utils.current_timestamp() }} ) as stop_timestamp
             from {{ target_schema }}.{{ target_table }}
         )
@@ -134,7 +136,7 @@
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set macro = adapter.dispatch('get_period_of_load',
-                                    packages = var('adapter_packages', ['dbtvault']))(period=period,
+                                    packages = dbtvault.get_dbtvault_namespaces())(period=period,
                                                              offset=offset,
                                                              start_timestamp=start_timestamp) %}
 
@@ -190,6 +192,10 @@
 
         {%- set start_date = config.get('start_date') -%}
         {%- set stop_date = config.get('stop_date', default=none) -%}
+
+        {%- do log("start_date: " ~ start_date, true) %}
+        {%- do log("stop_date: " ~ stop_date, true) %}
+        {%- do log("stop_date: " ~ dbt_utils.current_timestamp(), true) %}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
