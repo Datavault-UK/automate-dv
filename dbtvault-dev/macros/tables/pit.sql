@@ -7,7 +7,7 @@
 {%- endmacro -%}
 
 {%- macro default__pit(src_pk, as_of_dates_table, satellites, source_model) -%}
-
+    {#
 {% if (as_of_dates_table is none) and execute %}
 
     {%- set error_message -%}
@@ -26,7 +26,7 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%} -%}
 
-
+#}
 
 
 {# Set defaults and obtain source model paths #}
