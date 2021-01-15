@@ -1,4 +1,15 @@
 WITH stage AS (
+    SELECT *
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+),
+
+derived_columns AS (
+    SELECT *
+
+    FROM stage
+),
+
+hashed_columns AS (
     SELECT
 
     BOOKING_FK,
@@ -18,19 +29,8 @@ WITH stage AS (
     TEST_COLUMN_6,
     TEST_COLUMN_7,
     TEST_COLUMN_8,
-    TEST_COLUMN_9
-
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-),
-
-derived_columns AS (
-    SElECT *
-
-    FROM stage
-),
-
-hashed_columns AS (
-    SELECT *
+    TEST_COLUMN_9,
+    BOOKING_DATE
 
     FROM derived_columns
 )
