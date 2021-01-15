@@ -720,8 +720,8 @@ def cycle(context):
              "CUSTOMER_DOB",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
+
         "RAW_STAGE_BOOKING":
             ["BOOKING_ID",
              "CUSTOMER_ID",
@@ -821,7 +821,6 @@ def cycle(context):
             }
         }
     }
-
 
 @fixture
 def enable_auto_end_date(context):

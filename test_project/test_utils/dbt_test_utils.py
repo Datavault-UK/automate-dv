@@ -449,9 +449,13 @@ class DBTTestUtils:
             :param dicts_with_lists: A list of dictionaries
         """
 
-        if isinstance(dicts_with_lists, list):
+        processed_dicts = []
 
-            processed_dicts = []
+        check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+
+        if not check_dicts:
+            return dicts_with_lists
+        else:
 
             for i, col in enumerate(dicts_with_lists):
                 processed_dicts.append(dict())
@@ -466,11 +470,9 @@ class DBTTestUtils:
 
                         processed_dicts[i][k] = v
                 else:
-                    return dicts_with_lists
+                    processed_dicts[i] = {col: dicts_with_lists[i]}
 
             return processed_dicts
-        else:
-            return dicts_with_lists
 
 
 class DBTVAULTGenerator:
@@ -633,7 +635,7 @@ class DBTVAULTGenerator:
         template = f"""
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
-                             {src_ldts}, {src_source}, {source_model})   }}}}
+                             {src_ldts}, {src_source}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -652,7 +654,7 @@ class DBTVAULTGenerator:
 
             if isinstance(item, dict):
 
-                if getattr(context, "vault_structure_type", None) == "pit" and "pit_" in model_name.lower():
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
 
                     satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
@@ -680,7 +682,7 @@ class DBTVAULTGenerator:
             "link": "incremental",
             "sat": "incremental",
             "eff_sat": "incremental",
-            "t_link": "incremental",
+            "t_link": "incremental"
         }
 
         if not config:
