@@ -1,14 +1,14 @@
 {%- macro alias(alias_config=none, prefix=none) -%}
 
-    {{- adapter.dispatch('alias', packages = var('adapter_packages', ['dbtvault']))(alias_config=alias_config, prefix=prefix) -}}
+    {{- adapter.dispatch('alias', packages = dbtvault.get_dbtvault_namespaces())(alias_config=alias_config, prefix=prefix) -}}
 
 {%- endmacro %}
 
 {%- macro default__alias(alias_config=none, prefix=none) -%}
 
-{%- if alias_config -%}
+{%- if alias_config is defined and alias_config is not none and alias_config -%}
 
-    {%- if alias_config is iterable and alias_config is not string -%}
+    {%- if alias_config is mapping -%}
 
         {%- if alias_config['source_column'] and alias_config['alias'] -%}
 
