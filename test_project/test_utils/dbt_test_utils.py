@@ -449,30 +449,34 @@ class DBTTestUtils:
             :param dicts_with_lists: A list of dictionaries
         """
 
-        processed_dicts = []
+        if isinstance(dicts_with_lists, list):
 
-        check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+            processed_dicts = []
 
-        if not check_dicts:
-            return dicts_with_lists
+            check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+
+            if not check_dicts:
+                return dicts_with_lists
+            else:
+
+                for i, col in enumerate(dicts_with_lists):
+                    processed_dicts.append(dict())
+
+                    if isinstance(col, dict):
+                        for k, v in col.items():
+
+                            if {"[", "]"}.issubset(set(v)):
+                                v = v.replace("[", "")
+                                v = v.replace("]", "")
+                                v = [k.strip() for k in v.split(",")]
+
+                            processed_dicts[i][k] = v
+                    else:
+                        processed_dicts[i] = {col: dicts_with_lists[i]}
+
+                return processed_dicts
         else:
-
-            for i, col in enumerate(dicts_with_lists):
-                processed_dicts.append(dict())
-
-                if isinstance(col, dict):
-                    for k, v in col.items():
-
-                        if {"[", "]"}.issubset(set(v)):
-                            v = v.replace("[", "")
-                            v = v.replace("]", "")
-                            v = [k.strip() for k in v.split(",")]
-
-                        processed_dicts[i][k] = v
-                else:
-                    processed_dicts[i] = {col: dicts_with_lists[i]}
-
-            return processed_dicts
+            return dicts_with_lists
 
 
 class DBTVAULTGenerator:
