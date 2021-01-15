@@ -6,7 +6,7 @@ import shutil
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
-
+from typing import List
 import pandas as pd
 from ruamel.yaml import YAML
 from behave.model import Table
@@ -66,16 +66,25 @@ class DBTTestUtils:
         else:
             target = None
 
+        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+
+    @staticmethod
+    def set_dynamic_properties_for_comparison(target):
+        """
+        Database and schema for generated SQL during macro tests changes based on user.
+        This function works out what those names need to be for downstream comparisons to use instead.
+        """
+
         if target == 'snowflake':
-            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB'):
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
-                              f"_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            self.EXPECTED_PARAMETERS = {
+            return {
                 'SCHEMA_NAME': schema_name,
-                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE')
+                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
             }
         else:
             raise ValueError('TARGET not set')
@@ -275,6 +284,20 @@ class DBTTestUtils:
 
         self.run_dbt_operation(macro_name='recreate_current_schemas')
 
+    def create_test_schemas(self):
+        """
+        Create TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='create_test_schemas')
+
+    def drop_test_schemas(self):
+        """
+        Drop TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='drop_test_schemas')
+
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
@@ -314,12 +337,14 @@ class DBTTestUtils:
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
-            :return: A pandas DataFrame modelled from a context table
+            :return: A dictionary modelled from a context table
         """
 
         table_df = self.context_table_to_df(table)
 
         table_dict = table_df.to_dict(orient=orient)
+
+        table_dict = self.parse_lists_in_dicts(table_dict)
 
         return table_dict
 
@@ -439,6 +464,42 @@ class DBTTestUtils:
                 columns.append(item)
 
         return Series(columns)
+
+    @staticmethod
+    def parse_lists_in_dicts(dicts_with_lists: List[dict]):
+        """
+        Convert string representations of lists in dict values, in a list of dicts
+            :param dicts_with_lists: A list of dictionaries
+        """
+
+        if isinstance(dicts_with_lists, list):
+
+            processed_dicts = []
+
+            check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+
+            if not check_dicts:
+                return dicts_with_lists
+            else:
+
+                for i, col in enumerate(dicts_with_lists):
+                    processed_dicts.append(dict())
+
+                    if isinstance(col, dict):
+                        for k, v in col.items():
+
+                            if {"[", "]"}.issubset(set(v)):
+                                v = v.replace("[", "")
+                                v = v.replace("]", "")
+                                v = [k.strip() for k in v.split(",")]
+
+                            processed_dicts[i][k] = v
+                    else:
+                        processed_dicts[i] = {col: dicts_with_lists[i]}
+
+                return processed_dicts
+        else:
+            return dicts_with_lists
 
 
 class DBTVAULTGenerator:
@@ -601,7 +662,7 @@ class DBTVAULTGenerator:
         template = f"""
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
-                             {src_ldts}, {src_source}, {source_model})   }}}}
+                             {src_ldts}, {src_source}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -620,7 +681,7 @@ class DBTVAULTGenerator:
 
             if isinstance(item, dict):
 
-                if getattr(context, "vault_structure_type", None) == "pit" and "pit_" in model_name.lower():
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
 
                     satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
@@ -648,7 +709,7 @@ class DBTVAULTGenerator:
             "link": "incremental",
             "sat": "incremental",
             "eff_sat": "incremental",
-            "t_link": "incremental",
+            "t_link": "incremental"
         }
 
         if not config:
