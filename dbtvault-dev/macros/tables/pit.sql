@@ -48,7 +48,7 @@
 
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
 
-    {%- set source_relation = ref(as_of_dates_table) -%}
+    {%- set source_relation_AS_OF = ref(as_of_dates_table) -%}
 {%- endif -%}
 
 
@@ -65,7 +65,7 @@ SELECT
 
 FROM {{ ref(source_model) }} AS h
 
-INNER JOIN {{ ref(as_of_dates_table) }} AS x
+INNER JOIN {{ source_relation_AS_OF}} AS x
     ON (1=1)
 
 {% for sat in satellites -%}

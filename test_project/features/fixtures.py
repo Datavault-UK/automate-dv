@@ -832,71 +832,71 @@ def pit(context):
     context.vault_structure_type = "pit"
 
     context.hashed_columns = {
-        "STG_CUSTOMER_APP": {
+        "STG_CUSTOMER_DETAILS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_NAME", "CUSTOMER_PHONE"]
+                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
                          }
         },
-        "STG_CUSTOMER_WEB": {
+        "STG_CUSTOMER_LOGIN": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_PHONE", "CUSTOMER_NAME"]
+                         "columns": ["DEVICE_USED", "LAST_LOGIN_DATE"]
                          }
         },
-        "STG_CUSTOMER_PHONE": {
+        "STG_CUSTOMER_PROFILE": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_LOCATION", "CUSTOMER_PHONE", "CUSTOMER_NAME"]
+                         "columns": ["DASHBOARD_COLOUR", "DISPLAY_NAME"]
                          }
         }
     }
 
     context.derived_columns = {
-        "STG_CUSTOMER_APP": {
+        "STG_CUSTOMER_DETAILS": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_WEB": {
+        "STG_CUSTOMER_LOGIN": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_PHONE": {
+        "STG_CUSTOMER_PROFILE": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
 
     context.vault_structure_columns = {
         "HUB_CUSTOMER": {
-            "source_model": ["STG_CUSTOMER_APP",
-                             "STG_CUSTOMER_APP",
-                             "STG_CUSTOMER_APP"],
+            "source_model": ["STG_CUSTOMER_DETAILS",
+                             "STG_CUSTOMER_LOGIN",
+                             "STG_CUSTOMER_PROFILE"],
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "SAT_CUSTOMER_DETAILS_APP": {
-            "source_model": "STG_CUSTOMER_APP",
+        "SAT_CUSTOMER_DETAILS": {
+            "source_model": "STG_CUSTOMER_DETAILS",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "SAT_CUSTOMER_DETAILS_WEB": {
-            "source_model": "STG_CUSTOMER_WEB",
+        "SAT_CUSTOMER_LOGIN": {
+            "source_model": "STG_CUSTOMER_LOGIN",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
+            "src_payload": ["LAST_LOGIN_DATE", "DEVICE_USED"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "SAT_CUSTOMER_DETAILS_PHONE": {
-            "source_model": "STG_CUSTOMER_PHONE",
+        "SAT_CUSTOMER_PROFILE": {
+            "source_model": "STG_CUSTOMER_PROFILE",
             "src_pk": "CUSTOMER_PK",
             "src_hashdiff": "HASHDIFF",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB", "CUSTOMER_LOCATION"],
+            "src_payload": ["DASHBOARD_COLOUR", "DISPLAY_NAME"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -907,19 +907,19 @@ def pit(context):
             "as_of_dates_table": "AS_OF_DATE",
             "satellites":
                 {
-                    "SAT_CUSTOMER_DETAILS_APP": {
+                    "SAT_CUSTOMER_DETAILS": {
                         "pk":
                             {"PK": "CUSTOMER_PK"},
                         "ldts":
                             {"LDTS": "LOAD_DATE"}
                     },
-                    "SAT_CUSTOMER_DETAILS_WEB": {
+                    "SAT_CUSTOMER_LOGIN": {
                         "pk":
                             {"PK": "CUSTOMER_PK"},
                         "ldts":
                             {"LDTS": "LOAD_DATE"}
                     },
-                    "SAT_CUSTOMER_DETAILS_PHONE": {
+                    "SAT_CUSTOMER_PROFILE": {
                         "pk":
                             {"PK": "CUSTOMER_PK"},
                         "ldts":
@@ -930,64 +930,54 @@ def pit(context):
     }
 
     context.stage_columns = {
-        "RAW_STAGE_APP":
+        "RAW_STAGE_DETAILS":
             ["CUSTOMER_ID",
              "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
+             "CUSTOMER_ADDRESS",
              "CUSTOMER_DOB",
-             "CUSTOMER_LOCATION",
              "LOAD_DATE",
              "SOURCE"]
         ,
-        "RAW_STAGE_WEB":
+        "RAW_STAGE_LOGIN":
             ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
-             "CUSTOMER_DOB",
-             "CUSTOMER_LOCATION",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
              "LOAD_DATE",
              "SOURCE"]
         ,
-        "RAW_STAGE_PHONE":
+        "RAW_STAGE_PROFILE":
             ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
-             "CUSTOMER_DOB",
-             "CUSTOMER_LOCATION",
+             "DASHBOARD_COLOUR",
+             "DISPLAY_NAME",
              "LOAD_DATE",
              "SOURCE"]
     }
 
     context.seed_config = {
-        "RAW_STAGE_APP": {
+        "RAW_STAGE_DETAILS": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_LOCATION": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
-        "RAW_STAGE_WEB": {
+        "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_LOCATION": "VARCHAR",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "DEVICE_USED": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
-        "RAW_STAGE_PHONE": {
+        "RAW_STAGE_PROFILE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_LOCATION": "VARCHAR",
+                "DASHBOARD_COLOUR": "VARCHAR",
+                "DISPLAY_NAME": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -1000,40 +990,35 @@ def pit(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "SAT_CUSTOMER_DETAILS_APP": {
+        "SAT_CUSTOMER_DETAILS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_LOCATION": "VARCHAR",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
-        "SAT_CUSTOMER_DETAILS_WEB": {
+        "SAT_CUSTOMER_LOGIN": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_LOCATION": "VARCHAR",
+                "DEVICE_USED": "VARCHAR",
+                "LAST_LOGIN_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
-        "SAT_CUSTOMER_DETAILS_PHONE": {
+        "SAT_CUSTOMER_PROFILE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_LOCATION": "VARCHAR",
+                "DASHBOARD_COLOUR": "VARCHAR",
+                "DISPLAY_NAME": "VARCHAR",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
@@ -1048,12 +1033,12 @@ def pit(context):
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_APP_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_APP_LDTS": "DATETIME",
-                "SAT_CUSTOMER_DETAILS_WEB_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_WEB_LDTS": "DATETIME",
-                "SAT_CUSTOMER_DETAILS_PHONE_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PHONE_LDTS": "DATETIME"
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME",
+                "SAT_CUSTOMER_PROFILE_PK": "BINARY(16)",
+                "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME"
             }
         }
     }
