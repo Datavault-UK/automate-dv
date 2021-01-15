@@ -1,4 +1,4 @@
-{#-- Helper macros for custom materializations #}
+{#-- Helper macros for period materializations #}
 
 {#-- MULTI-DISPATCH MACROS #}
 
@@ -29,33 +29,6 @@
     {% do return(filtered_sql) %}
 {% endmacro %}
 
-{#-- REPLACE_PLACEHOLDER_WITH_RANK_FILTER #}
-
-{%- macro replace_placeholder_with_rank_filter(core_sql, partition_by_column, order_by_column, rank_iteration) -%}
-
-    {% set macro = adapter.dispatch('replace_placeholder_with_rank_filter',
-                                    packages = var('adapter_packages', ['dbtvault']))(core_sql=core_sql,
-                                                                                      partition_by_column=partition_by_column,
-                                                                                      order_by_column=order_by_column,
-                                                                                      rank_iteration=rank_iteration) %}
-    {% do return(macro) %}
-{%- endmacro %}
-
-{% macro default__replace_placeholder_with_rank_filter(core_sql, partition_by_column, order_by_column, rank_iteration) %}
-
-    {%- set rank_column -%}
-    , RANK() OVER (PARTITION BY {{ partition_by_column }} ORDER BY {{ order_by_column }}) AS dbtvault__RANK
-    {%- endset -%}
-
-    {%- set rank_filter -%}
-    dbtvault__RANK::INTEGER = {{ rank_iteration }}::INTEGER
-    {%- endset -%}
-
-    {%- set filtered_sql = core_sql | replace("__RANK_COLUMN__", rank_column) | replace("__RANK_FILTER__", rank_filter) -%}
-
-    {% do return(filtered_sql) %}
-{% endmacro %}
-
 
 {#-- GET_PERIOD_FILTER_SQL #}
 
@@ -63,12 +36,12 @@
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
                                     packages = dbtvault.get_dbtvault_namespaces())(target_cols_csv=target_cols_csv,
-                                                             base_sql=base_sql,
-                                                             timestamp_field=timestamp_field,
-                                                             period=period,
-                                                             start_timestamp=start_timestamp,
-                                                             stop_timestamp=stop_timestamp,
-                                                             offset=offset) %}
+                                                                                   base_sql=base_sql,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   period=period,
+                                                                                   start_timestamp=start_timestamp,
+                                                                                   stop_timestamp=stop_timestamp,
+                                                                                   offset=offset) %}
     {% do return(macro) %}
 {%- endmacro %}
 
@@ -77,10 +50,10 @@
     {%- set filtered_sql = {'sql': base_sql} -%}
 
     {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_period_filter(filtered_sql.sql,
-                                                                                timestamp_field,
-                                                                                start_timestamp,
-                                                                                stop_timestamp,
-                                                                                offset, period)}) -%}
+                                                                                       timestamp_field,
+                                                                                       start_timestamp,
+                                                                                       stop_timestamp,
+                                                                                       offset, period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
 
@@ -91,11 +64,11 @@
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     packages = dbtvault.get_dbtvault_namespaces())(target_schema=target_schema,
-                                                             target_table=target_table,
-                                                             timestamp_field=timestamp_field,
-                                                             start_date=start_date,
-                                                             stop_date=stop_date,
-                                                             period=period) %}
+                                                                                   target_table=target_table,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   start_date=start_date,
+                                                                                   stop_date=stop_date,
+                                                                                   period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -135,8 +108,8 @@
 
     {% set macro = adapter.dispatch('get_period_of_load',
                                     packages = dbtvault.get_dbtvault_namespaces())(period=period,
-                                                             offset=offset,
-                                                             start_timestamp=start_timestamp) %}
+                                                                                   offset=offset,
+                                                                                   start_timestamp=start_timestamp) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -169,18 +142,6 @@
                       and model.config.materialized == 'vault_insert_by_period'
                       and not flags.FULL_REFRESH) }}
     {% endif %}
-{% endmacro %}
-
-
-{% macro check_placeholder(model_sql, placeholder='__PERIOD_FILTER__') %}
-
-    {%- if model_sql.find(placeholder) == -1 -%}
-        {%- set error_message -%}
-            Model '{{ model.unique_id }}' does not include the required string '{{ placeholder }}' in its sql
-        {%- endset -%}
-        {{ exceptions.raise_compiler_error(error_message) }}
-    {%- endif -%}
-
 {% endmacro %}
 
 
@@ -219,7 +180,7 @@
 
     {% else %}
         {%- if execute -%}
-            {{ exceptions.raise_compiler_error("Invalid 'vault_insert_by_period' configuration. Must provide 'start_date' and 'stop_date' and/or 'date_source_models' options.") }}
+            {{ exceptions.raise_compiler_error("Invalid 'vault_insert_by_period' configuration. Must provide 'start_date' and 'stop_date', just 'stop_date', and/or 'date_source_models' options.") }}
         {%- endif -%}
     {% endif %}
 
