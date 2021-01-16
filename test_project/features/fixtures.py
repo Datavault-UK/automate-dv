@@ -390,12 +390,7 @@ def satellite(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
-        "STG_CUSTOMER_WITH_RANK": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
-        },
-        "STG_CUSTOMER_WITH_RANK_TS": {
+        "STG_CUSTOMER_TS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
@@ -406,11 +401,7 @@ def satellite(context):
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_WITH_RANK": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "DBTVAULT_RANK": "RANK() OVER (PARTITION BY SOURCE ORDER BY LOAD_DATE)"
-        },
-        "STG_CUSTOMER_WITH_RANK_TS": {
+        "STG_CUSTOMER_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME",
             "DBTVAULT_RANK": "RANK() OVER (PARTITION BY SOURCE ORDER BY LOAD_DATETIME)"
         }
