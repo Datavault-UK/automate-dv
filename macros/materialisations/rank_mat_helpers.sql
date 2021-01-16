@@ -25,6 +25,8 @@
 {% endmacro %}
 
 
+{#-- OTHER MACROS #}
+
 {% macro get_min_max_ranks(rank_column, rank_source_models) %}
 
     {% if rank_source_models is not none %}
@@ -58,4 +60,19 @@
         {%- endif -%}
     {% endif %}
 
+{% endmacro %}
+
+
+{% macro is_vault_insert_by_rank() %}
+    {#-- do not run introspective queries in parsing #}
+    {% if not execute %}
+        {{ return(False) }}
+    {% else %}
+        {% set relation = adapter.get_relation(this.database, this.schema, this.table) %}
+
+            {{ return(relation is not none
+                      and relation.type == 'table'
+                      and model.config.materialized == 'vault_insert_by_rank'
+                      and not flags.FULL_REFRESH) }}
+    {% endif %}
 {% endmacro %}
