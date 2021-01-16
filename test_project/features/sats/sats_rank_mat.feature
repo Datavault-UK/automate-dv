@@ -107,7 +107,7 @@ Feature: Satellites Loaded using Rank Materialization
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-RANK-MAT] Base load of a satellite with multiple timestamps in the same day in rank column loads all records
+  Scenario: [SAT-RANK-MAT] Incremental load of a satellite with multiple timestamps in the same day in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
