@@ -53,6 +53,8 @@
 
             {%- set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
 
+            {{ dbt_utils.log_info("Running for {} {} of {} on column '{}' [{}]".format('rank', iteration_number, min_max_ranks.max_rank, rank_column, model.unique_id)) }}
+
             {% set tmp_relation = make_temp_relation(this) %}
 
             {% call statement() -%}
@@ -75,6 +77,12 @@
 
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
             {%- do loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
+
+            {{ dbt_utils.log_info("Ran for {} {} of {}; {} records inserted [{}]".format('rank', iteration_number,
+                                                                                          min_max_ranks.max_rank,
+                                                                                          rows_inserted,
+                                                                                          model.unique_id)) }}
+
 
             {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
