@@ -220,7 +220,7 @@ Feature: pit
 
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table dates are after the most recent satallite entry's
+  Scenario: Load into a pit table where the AS IS table dates are after the most recent satellite entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PITS         |
@@ -269,7 +269,7 @@ Feature: pit
 
 
   @fixture.pit
-  Scenario: Load into a pit table over several cycles
+  Scenario: Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the PIT table does not exist
     And the RAW_STAGE_DETAILS stage is empty
     And the RAW_STAGE_DETAILS stage is empty
