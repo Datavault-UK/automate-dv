@@ -27,7 +27,7 @@ rank_col AS (
 ),
 {% endif -%}
 
-{% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() -%}
+{%- if load_relation(this) %}
 
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
