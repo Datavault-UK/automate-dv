@@ -1,9 +1,8 @@
 @fixture.set_workdir
 Feature: XTS
 
-  # Single stage, single satellite
   @fixture.xts
-  Scenario: [BASE-LOAD] Load records into an empty XTS
+  Scenario: [BASE-LOAD] Load one stage of records into an empty single satellite XTS
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -21,7 +20,7 @@ Feature: XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Load data into a non-existent XTS
+  Scenario: [BASE-LOAD] Load one stage of data into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -39,7 +38,7 @@ Feature: XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Load duplicated data into a non-existent XTS
+  Scenario: [BASE-LOAD] Load duplicated data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -52,7 +51,7 @@ Feature: XTS
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Load duplicated data into a non-existent XTS
+  Scenario: [BASE-LOAD] Load duplicated data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -70,9 +69,8 @@ Feature: XTS
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  # Multiple stage single satellite
   @fixture.xts
-  Scenario: Subsequent loads with no timeline change
+  Scenario: [INCREMENTAL-LOAD] Load multiple subsequent stages into a single stage XTS with no timeline change
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -97,9 +95,8 @@ Feature: XTS
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | SAT_CUSTOMER   | 1993-01-02 | *      |
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | SAT_CUSTOMER   | 1993-01-03 | *      |
 
-  # Single stage with two satellites
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from a single stage to 2 satellites.
+  Scenario: [BASE-LOAD] Loads records from a single stage to an XTS linked to two satellites.
     Given I will have a RAW_STAGE_2SAT raw stage and I have a STG_CUSTOMER_2SAT processed stage
     And the XTS_2SAT xts is empty
     Given the RAW_STAGE_2SAT table contains data
@@ -122,7 +119,7 @@ Feature: XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from a single stage to 2 satellites with repeating records in the first satellite
+  Scenario: [BASE-LOAD] Loads from a single stage to an XTS linked to two satellites with repeating records in the first satellite
     Given I will have a RAW_STAGE_2SAT raw stage and I have a STG_CUSTOMER_2SAT processed stage
     And the XTS_2SAT xts is empty
     And the RAW_STAGE_2SAT table contains data
@@ -144,7 +141,7 @@ Feature: XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from a single stage to 2 satellites with repeating records in the second satellite
+  Scenario: [BASE-LOAD] Loads data from a single stage to an XTS linked to two satellites with repeating records in the second satellite
     Given I will have a RAW_STAGE_2SAT raw stage and I have a STG_CUSTOMER_2SAT processed stage
     And the XTS_2SAT xts is empty
     And the RAW_STAGE_2SAT table contains data
@@ -167,7 +164,7 @@ Feature: XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from a single stage to 2 satellites with repeating records in the both satellites
+  Scenario: [BASE-LOAD] Loads from a single stage to an XTS linked to two satellites with repeating records in the both satellites
     Given I will have a RAW_STAGE_2SAT raw stage and I have a STG_CUSTOMER_2SAT processed stage
     And the XTS_2SAT xts is empty
     And the RAW_STAGE_2SAT table contains data
@@ -188,7 +185,7 @@ Feature: XTS
       | md5('1002') | md5('2018-04-13\|\|1002\|\|DAVID\|\|17-214-233-1217')    | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from a single stage to 2 satellites with duplicate payloads
+  Scenario: [BASE-LOAD] Loads records from a single stage to an XTS with two satellites with duplicate payloads
     Given I will have a RAW_STAGE_2SAT raw stage and I have a STG_CUSTOMER_2SAT processed stage
     And the XTS_2SAT xts is empty
     And the RAW_STAGE_2SAT table contains data
@@ -211,9 +208,8 @@ Feature: XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
 
-#    Single stage with many satellites
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from a single stage to multiple satellites
+  Scenario: [BASE-LOAD] Loads records from a single stage to an XTS linked to three satellites
     Given I will have a RAW_STAGE_3SAT raw stage and I have a STG_CUSTOMER_3SAT processed stage
     And the XTS_3SAT xts is empty
     And the RAW_STAGE_3SAT table contains data
@@ -239,9 +235,9 @@ Feature: XTS
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CISCO\|\|17-214-233-1216')    | SAT_CUSTOMER_OTHER   | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DONALD\|\|17-214-233-1217')   | SAT_CUSTOMER_OTHER   | 1993-01-01 | *      |
 
-#    Many stages, one satellite per stage
+
   @fixture.xts
-  Scenario: [BASE-LOAD] Loads from numerous stages each containing feeds to one satellite.
+  Scenario: [BASE-LOAD] Loads data from two simultaneous stages in an XTS accepting feeds to a single satellite
     Given the XTS xts is empty
     And the RAW_STAGE_1 table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -422,8 +418,6 @@ Feature: XTS
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')  | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')  | SAT_CUSTOMER   | 1993-01-01 | *      |
-
-### Pre-populated xts satellite tests: ###
 
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Load record into a pre-populated XTS
