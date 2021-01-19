@@ -45,7 +45,7 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
       | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by SOURCE and ordered by LOAD_DATE
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I create the STG_CUSTOMER stage
     And I insert by rank into the EFF_SAT eff_sat
     And I insert by rank into the EFF_SAT eff_sat
