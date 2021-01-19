@@ -4,10 +4,9 @@
                                                                                   src_ldts=src_ldts,
                                                                                   src_source=src_source,
                                                                                   source_model=source_model) -}}
-{%- endmacro %}
+{%- endmacro -%}
 
 {%- macro default__xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
-
 {{ dbtvault.prepend_generated_by() }}
 
 {%- if not (source_model is iterable and source_model is not string) -%}
@@ -17,20 +16,20 @@
 
 {{ 'WITH ' }}
 {%- for src in source_model %}
-    {%- for satellite_name in src_satellite['SATELLITE_NAME'] -%}
-        {%- set hashdiff = src_satellite['HASHDIFF'][loop.index0] + ' AS HASHDIFF'-%}
-        {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, hashdiff, satellite_name + ' AS SATELLITE_NAME', src_ldts, src_source]) %}
+    {%- for satellite in src_satellite.items() -%}
+        {%- set satellite_name = satellite[1]['sat_name'] -%}
+        {%- set hashdiff = satellite[1]['hashdiff'] -%}
 satellite_{{ satellite_name }}_from_{{ src }} AS (
-    SELECT {{ source_cols | join(', ') }}
+    SELECT {{ src_pk }}, {{ satellite_name }} AS SATELLITE_NAME, {{ hashdiff }} AS HASHDIFF, {{ src_ldts }}, {{ src_source }}
     FROM {{ ref(src) }}
     WHERE {{ src_pk }} IS NOT NULL
 ),
-    {% endfor -%}
-{%- endfor -%}
+    {%- endfor %}
+{%- endfor %}
 union_satellites AS (
     {%- for src in source_model %}
-        {%- for satellite_name in src_satellite["SATELLITE_NAME"] %}
-    SELECT * FROM satellite_{{ satellite_name }}_from_{{ src }}
+        {%- for satellite in src_satellite.items() %}
+    SELECT * FROM satellite_{{ satellite[1]['sat_name'] }}_from_{{ src }}
             {%- if not loop.last %}
     UNION ALL
             {%- endif %}

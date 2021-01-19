@@ -714,8 +714,10 @@ def xts(context):
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
-                "SATELLITE_NAME": ["SATELLITE_NAME"],
-                "HASHDIFF": ["HASHDIFF"]
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": "SATELLITE_NAME",
+                    "hashdiff": "HASHDIFF"
+                }
             },
             "src_source": "SOURCE"
         },
@@ -723,8 +725,14 @@ def xts(context):
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
-                "SATELLITE_NAME": ["SATELLITE_1", "SATELLITE_2"],
-                "HASHDIFF": ["HASHDIFF_1", "HASHDIFF_2"]
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": "SATELLITE_1",
+                    "hashdiff": "HASHDIFF_1"
+                },
+                "SATELLITE_CUSTOMER_DETAILS": {
+                    "sat_name": "SATELLITE_2",
+                    "hashdiff": "HASHDIFF_2"
+                }
             },
             "src_source": "SOURCE"
         },
@@ -732,8 +740,18 @@ def xts(context):
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
-                "SATELLITE_NAME": ["SATELLITE_1", "SATELLITE_2", "SATELLITE_3"],
-                "HASHDIFF": ["HASHDIFF_1", "HASHDIFF_2", "HASHDIFF_3"]
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": "SATELLITE_1",
+                    "hashdiff": "HASHDIFF_1"
+                },
+                "SATELLITE_CUSTOMER_DETAILS": {
+                    "sat_name": "SATELLITE_2",
+                    "hashdiff": "HASHDIFF_2"
+                },
+                "SATELLITE_CUSTOMER_OTHER": {
+                    "sat_name": "SATELLITE_3",
+                    "hashdiff": "HASHDIFF_3"
+                }
             },
             "src_source": "SOURCE"
         }

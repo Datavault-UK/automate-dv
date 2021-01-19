@@ -682,6 +682,14 @@ class DBTVAULTGenerator:
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
                 else:
                     processed_headings.append(list(item.keys()))
+
+                if getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns_sat_name = [f"{item[col]['sat_name']}" for col in item.keys()]
+                    satellite_columns_hashdiff = [f"{item[col]['hashdiff']}" for col in item.keys()]
+
+                    processed_headings.extend(satellite_columns_sat_name + satellite_columns_hashdiff)
+                else:
+                    processed_headings.append(list(item.keys()))
             else:
                 processed_headings.append(item)
 
