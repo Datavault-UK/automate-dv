@@ -9,11 +9,12 @@
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
+{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT *
+    SELECT {{ source_cols | join(", ") }}
     FROM {{ ref(source_model) }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
@@ -36,7 +37,7 @@ update_records AS (
     ON a.{{ src_pk }} = b.{{ src_pk }}
 ),
 rank AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'c', alias_target='target') }},
+    SELECT {{ dbtvault.prefix(rank_cols, 'c', alias_target='target') }},
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
@@ -44,7 +45,7 @@ rank AS (
     FROM update_records as c
 ),
 stage AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'd', alias_target='target') }}
+    SELECT {{ dbtvault.prefix(rank_cols + ['latest'], 'd', alias_target='target') }}
     FROM rank AS d
     WHERE d.latest = 'Y'
 ),
@@ -57,7 +58,7 @@ records_to_insert AS (
     {% else %}
     FROM source_data AS e
     {% endif -%}
-    {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() -%}
+    {% if load_relation(this) -%}
     LEFT JOIN stage
     ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} IS NULL
