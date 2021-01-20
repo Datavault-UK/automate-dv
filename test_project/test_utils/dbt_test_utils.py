@@ -488,7 +488,7 @@ class DBTTestUtils:
                     if isinstance(col, dict):
                         for k, v in col.items():
 
-                            if {"[", "]"}.issubset(set(v)):
+                            if {"[", "]"}.issubset(set(str(v))):
                                 v = v.replace("[", "")
                                 v = v.replace("]", "")
                                 v = [k.strip() for k in v.split(",")]
@@ -687,6 +687,10 @@ class DBTVAULTGenerator:
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
 
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+
+                elif item.get("source_column", None) and item.get("alias", None):
+
+                    processed_headings.append(item['source_column'])
                 else:
                     processed_headings.append(list(item.keys()))
             else:
