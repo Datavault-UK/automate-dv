@@ -182,6 +182,27 @@ models:
                     - CUSTOMER_ID
                     - NATIONALITY
                     - PHONE
+          test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_single_hash:
+            vars:
+              source_model: raw_source
+              hashed_columns:
+                CUST_CUSTOMER_HASHDIFF:
+                  is_hashdiff: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
+          test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_single_hash_and_include:
+            vars:
+              source_model: raw_source
+              include_source_columns: true
+              hashed_columns:
+                HASHDIFF:
+                  is_hashdiff: true
+                  columns:
+                    - CUSTOMER_DOB
+                    - CUSTOMER_ID
+                    - CUSTOMER_NAME
           test_stage_correctly_generates_sql_for_derived_and_source_from_yaml:
             vars:
               source_model: raw_source
@@ -226,6 +247,17 @@ models:
                     - CUSTOMER_PK
                     - LOADDATE
                     - RECORD_SOURCE
+          test_stage_correctly_generates_sql_for_hashing_with_exclude_flag_no_columns:
+            vars:
+              source_model: raw_source
+              derived_columns:
+                SOURCE: '!STG_BOOKING'
+                EFFECTIVE_FROM: LOADDATE
+              hashed_columns:
+                CUSTOMER_PK: CUSTOMER_ID
+                CUSTOMER_HASHDIFF:
+                  is_hashdiff: true
+                  exclude_columns: true
           test_stage_correctly_generates_sql_for_only_hashing_with_exclude_flag:
             vars:
               include_source_columns: false
