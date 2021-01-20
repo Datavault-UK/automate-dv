@@ -14,8 +14,8 @@
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT {{ source_cols | join(", ") }}
-    FROM {{ ref(source_model) }}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {% endif %}

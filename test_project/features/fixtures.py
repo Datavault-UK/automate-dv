@@ -394,6 +394,11 @@ def satellite(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_CYCLE": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]}
         }
     }
 
@@ -404,7 +409,20 @@ def satellite(context):
         "STG_CUSTOMER_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME",
             "DBTVAULT_RANK": "RANK() OVER (PARTITION BY SOURCE ORDER BY LOAD_DATETIME)"
+        },
+        "STG_CUSTOMER_CYCLE": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
         }
+    }
+
+    context.stage_columns = {
+        "RAW_STAGE_CYCLE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_DOB",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"]
     }
 
     context.vault_structure_columns = {
@@ -422,6 +440,14 @@ def satellite(context):
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "SATELLITE_CYCLE": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
     }
@@ -444,6 +470,16 @@ def satellite(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_CYCLE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -470,64 +506,8 @@ def satellite(context):
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
-        }
-    }
-
-
-@fixture
-def satellite_cycle(context):
-    """
-    Define the structures and metadata to perform load cycles for satellites
-    """
-
-    context.hashed_columns = {
-        "STG_CUSTOMER":
-            {"CUSTOMER_PK": "CUSTOMER_ID",
-             "HASHDIFF": {"is_hashdiff": True,
-                          "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
-                          }
-             }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        }
-    }
-
-    context.stage_columns = {
-        "RAW_STAGE":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_DOB",
-             "EFFECTIVE_FROM",
-             "LOAD_DATE",
-             "SOURCE"]
-    }
-
-    context.vault_structure_columns = {
-        "SATELLITE": {
-            "src_pk": "CUSTOMER_PK",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB"],
-            "src_hashdiff": "HASHDIFF",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
-
-    context.seed_config = {
-        "RAW_STAGE": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
         },
-        "SATELLITE": {
+        "SATELLITE_CYCLE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
