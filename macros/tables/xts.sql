@@ -17,8 +17,8 @@
 {{ 'WITH ' }}
 {%- for src in source_model %}
     {%- for satellite in src_satellite.items() -%}
-        {%- set satellite_name = satellite[1]['sat_name'] -%}
-        {%- set hashdiff = satellite[1]['hashdiff'] -%}
+        {%- set satellite_name = (satellite[1]['sat_name'].values() | list) [0] -%}
+        {%- set hashdiff = (satellite[1]['hashdiff'].values() | list) [0] -%}
 satellite_{{ satellite_name }}_from_{{ src }} AS (
     SELECT {{ src_pk }}, {{ satellite_name }} AS SATELLITE_NAME, {{ hashdiff }} AS HASHDIFF, {{ src_ldts }}, {{ src_source }}
     FROM {{ ref(src) }}
@@ -29,7 +29,7 @@ satellite_{{ satellite_name }}_from_{{ src }} AS (
 union_satellites AS (
     {%- for src in source_model %}
         {%- for satellite in src_satellite.items() %}
-    SELECT * FROM satellite_{{ satellite[1]['sat_name'] }}_from_{{ src }}
+    SELECT * FROM satellite_{{ (satellite[1]['sat_name'].values() | list) [0] }}_from_{{ src }}
             {%- if not loop.last %}
     UNION ALL
             {%- endif %}
