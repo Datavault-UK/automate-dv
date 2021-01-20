@@ -11,6 +11,7 @@
 {%- macro default__hash(columns, alias, is_hashdiff) -%}
 
 {%- set concat_string = "||" -%}
+{%- set null_placeholder_string = "^^" -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
@@ -36,20 +37,37 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST((" ~ hash_alg ~ "(" ~ standardise | replace('[EXPRESSION]', column_str) ~ ")) AS BINARY(" ~ hash_size ~ ")) AS " ~ alias | indent(4) -}}
+    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), hash_size, alias) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
+    {%- set all_null = [] -%}
 
-    {{- "CAST(" ~ hash_alg ~ "(CONCAT_WS('" ~ concat_string ~ "'," | indent(4) -}}
+    {%- if is_hashdiff -%}
+        {{- "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+    {%- else -%}
+        {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+    {%- endif -%}
 
     {%- for column in columns -%}
 
+        {%- do all_null.append(null_placeholder_string) -%}
+
         {%- set column_str = dbtvault.as_constant(column) -%}
-            {{- "\n    IFNULL(" ~ (standardise | replace('[EXPRESSION]', column_str)) ~ ", '^^')" | indent(4) -}}
-            {{- "," if not loop.last -}}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+        {{- "," if not loop.last -}}
+
         {%- if loop.last -%}
-            {{- "\n)) AS BINARY(" ~ hash_size ~ ")) AS " ~ alias -}}
+
+            {% if is_hashdiff %}
+                {{- "\n)) AS BINARY({})) AS {}".format(hash_size, alias) -}}
+            {%- else -%}
+                {{- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, alias) -}}
+            {%- endif -%}
+        {%- else -%}
+
+            {%- do all_null.append(concat_string) -%}
+
         {%- endif -%}
 
     {%- endfor -%}
@@ -57,4 +75,3 @@
 {%- endif -%}
 
 {%- endmacro -%}
-
