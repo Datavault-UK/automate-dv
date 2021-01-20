@@ -21,10 +21,22 @@ WITH source_data AS (
     WHERE __PERIOD_FILTER__
     {% endif %}
 ),
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+rank_col AS (
+    SELECT * FROM source_data
+    WHERE __RANK_FILTER__
+),
+{% endif -%}
+
 {%- if load_relation(this) is none %}
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    FROM rank_col AS e
+    {% else %}
     FROM source_data AS e
+    {% endif -%}
 )
 {%- else %}
 latest_eff AS
@@ -46,7 +58,7 @@ latest_open_eff AS
 stage_slice AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM source_data AS stage
+    FROM  {{ "rank_col" if model.config.materialized == 'vault_insert_by_rank' else "source_data" }} AS stage
 ),
 new_open_records AS (
     SELECT DISTINCT

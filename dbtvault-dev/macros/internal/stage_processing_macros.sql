@@ -29,14 +29,14 @@
 
     {%- set extracted_column_names = [] -%}
 
-    {%- if columns_dict is none -%}
-        {%- do return([]) -%}
-    {%- elif columns_dict is mapping -%}
+    {%- if columns_dict is mapping -%}
         {%- for key, value in columns_dict.items() -%}
             {%- do extracted_column_names.append(key) -%}
         {%- endfor -%}
 
         {%- do return(extracted_column_names) -%}
+    {%- else -%}
+        {%- do return([]) -%}
     {%- endif -%}
 
 {%- endmacro -%}
@@ -51,12 +51,21 @@
         {% if col_mapping is mapping %}
             {% if col_mapping.exclude_columns %}
 
-                {% set columns_to_hash = dbtvault.process_columns_to_select(source_columns, col_mapping.columns) %}
+                {% if col_mapping.columns %}
 
-                {% do hash_columns[col].pop('exclude_columns') %}
-                {% do hash_columns[col].update({'columns': columns_to_hash}) %}
+                    {% set columns_to_hash = dbtvault.process_columns_to_select(source_columns, col_mapping.columns) %}
 
-                {% do processed_hash_columns.update({col: hash_columns[col]}) %}
+                    {% do hash_columns[col].pop('exclude_columns') %}
+                    {% do hash_columns[col].update({'columns': columns_to_hash}) %}
+
+                    {% do processed_hash_columns.update({col: hash_columns[col]}) %}
+                {% else %}
+
+                    {% do hash_columns[col].pop('exclude_columns') %}
+                    {% do hash_columns[col].update({'columns': source_columns}) %}
+
+                    {% do processed_hash_columns.update({col: hash_columns[col]}) %}
+                {% endif %}
             {% else %}
                 {% do processed_hash_columns.update({col: col_mapping}) %}
             {% endif %}
