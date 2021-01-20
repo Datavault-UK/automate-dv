@@ -2,7 +2,7 @@
 Feature: pit
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table is already established and the AS_IS table has increments of a week
+  Scenario: Load into a pit table where the AS IS table is already established and the AS_IS table has increments of a day
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PIT          |
