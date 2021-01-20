@@ -488,7 +488,7 @@ class DBTTestUtils:
                     if isinstance(col, dict):
                         for k, v in col.items():
 
-                            if {"[", "]"}.issubset(set(str(v))):
+                            if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
                                 v = v.replace("[", "")
                                 v = v.replace("]", "")
                                 v = [k.strip() for k in v.split(",")]
