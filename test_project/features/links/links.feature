@@ -198,6 +198,28 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
+  @fixture.single_source_link
+  Scenario: [POPULATED-LOAD] Load a stage table where a primary keys components are all NULL, no link is inserted
+    Given the LINK link is already populated with data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
+      | <null>      | <null>    | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+    And I create the STG_CUSTOMER stage
+    When I load the LINK link
+    Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
+      | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
+      | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
+      | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
+
   @fixture.multi_source_link
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a link which does not exist
     Given the LINK table does not exist
