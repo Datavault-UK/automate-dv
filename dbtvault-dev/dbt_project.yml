@@ -12,8 +12,8 @@ docs-paths: ["docs"]
 
 target-path: "target"
 clean-targets:
-    - "target"
-    - "dbt_modules"
+  - "target"
+  - "dbt_modules"
 
 vars:
   hash: MD5
