@@ -715,9 +715,13 @@ def xts(context):
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
-                    "sat_name": "SATELLITE_NAME",
-                    "hashdiff": "HASHDIFF"
-                }
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
             },
             "src_source": "SOURCE"
         },
@@ -726,12 +730,20 @@ def xts(context):
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
-                    "sat_name": "SATELLITE_1",
-                    "hashdiff": "HASHDIFF_1"
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_1"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_1"
+                    }
                 },
                 "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": "SATELLITE_2",
-                    "hashdiff": "HASHDIFF_2"
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_2"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_2"
+                    }
                 }
             },
             "src_source": "SOURCE"
@@ -741,16 +753,28 @@ def xts(context):
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
-                    "sat_name": "SATELLITE_1",
-                    "hashdiff": "HASHDIFF_1"
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_1"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_1"
+                    }
                 },
                 "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": "SATELLITE_2",
-                    "hashdiff": "HASHDIFF_2"
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_2"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_2"
+                    }
                 },
                 "SATELLITE_CUSTOMER_OTHER": {
-                    "sat_name": "SATELLITE_3",
-                    "hashdiff": "HASHDIFF_3"
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_3"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_3"
+                    }
                 }
             },
             "src_source": "SOURCE"
