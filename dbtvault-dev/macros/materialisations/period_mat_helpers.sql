@@ -1,24 +1,22 @@
-{#-- Helper macros for custom materializations #}
+{#-- Helper macros for period materializations #}
 
 {#-- MULTI-DISPATCH MACROS #}
 
-{#-- REPLACE_PLACEHOLDER_WITH_FILTER #}
+{#-- REPLACE_PLACEHOLDER_WITH_PERIOD_FILTER #}
 
-{%- macro replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
+{%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
 
-    {% set macro = adapter.dispatch('replace_placeholder_with_filter',
-                                    packages = dbtvault.get_dbtvault_namespaces())(core_sql=core_sql,
-                                                                          timestamp_field=timestamp_field,
-                                                                          start_timestamp=start_timestamp,
-                                                                          stop_timestamp=stop_timestamp,
-                                                                          offset=offset,
-                                                                          period=period) %}
+    {% set macro = adapter.dispatch('replace_placeholder_with_period_filter',
+                                    packages = var('adapter_packages', ['dbtvault']))(core_sql=core_sql,
+                                                                                      timestamp_field=timestamp_field,
+                                                                                      start_timestamp=start_timestamp,
+                                                                                      stop_timestamp=stop_timestamp,
+                                                                                      offset=offset,
+                                                                                      period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro default__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-
-
+{% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
@@ -38,12 +36,12 @@
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
                                     packages = dbtvault.get_dbtvault_namespaces())(target_cols_csv=target_cols_csv,
-                                                             base_sql=base_sql,
-                                                             timestamp_field=timestamp_field,
-                                                             period=period,
-                                                             start_timestamp=start_timestamp,
-                                                             stop_timestamp=stop_timestamp,
-                                                             offset=offset) %}
+                                                                                   base_sql=base_sql,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   period=period,
+                                                                                   start_timestamp=start_timestamp,
+                                                                                   stop_timestamp=stop_timestamp,
+                                                                                   offset=offset) %}
     {% do return(macro) %}
 {%- endmacro %}
 
@@ -51,11 +49,11 @@
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
-    {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_filter(filtered_sql.sql,
-                                                                                timestamp_field,
-                                                                                start_timestamp,
-                                                                                stop_timestamp,
-                                                                                offset, period)}) -%}
+    {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_period_filter(filtered_sql.sql,
+                                                                                       timestamp_field,
+                                                                                       start_timestamp,
+                                                                                       stop_timestamp,
+                                                                                       offset, period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
 
@@ -66,11 +64,11 @@
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     packages = dbtvault.get_dbtvault_namespaces())(target_schema=target_schema,
-                                                             target_table=target_table,
-                                                             timestamp_field=timestamp_field,
-                                                             start_date=start_date,
-                                                             stop_date=stop_date,
-                                                             period=period) %}
+                                                                                   target_table=target_table,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   start_date=start_date,
+                                                                                   stop_date=stop_date,
+                                                                                   period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -110,8 +108,8 @@
 
     {% set macro = adapter.dispatch('get_period_of_load',
                                     packages = dbtvault.get_dbtvault_namespaces())(period=period,
-                                                             offset=offset,
-                                                             start_timestamp=start_timestamp) %}
+                                                                                   offset=offset,
+                                                                                   start_timestamp=start_timestamp) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -147,28 +145,12 @@
 {% endmacro %}
 
 
-{% macro check_placeholder(model_sql, placeholder='__PERIOD_FILTER__') %}
-
-    {%- if model_sql.find(placeholder) == -1 -%}
-        {%- set error_message -%}
-            Model '{{ model.unique_id }}' does not include the required string '__PERIOD_FILTER__' in its sql
-        {%- endset -%}
-        {{ exceptions.raise_compiler_error(error_message) }}
-    {%- endif -%}
-
-{% endmacro %}
-
-
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
 
         {%- set start_date = config.get('start_date') -%}
         {%- set stop_date = config.get('stop_date', default=none) -%}
-
-        {%- do log("start_date: " ~ start_date, true) %}
-        {%- do log("stop_date: " ~ stop_date, true) %}
-        {%- do log("stop_date: " ~ dbt_utils.current_timestamp(), true) %}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
@@ -198,7 +180,7 @@
 
     {% else %}
         {%- if execute -%}
-            {{ exceptions.raise_compiler_error("Invalid 'vault_insert_by_period' configuration. Must provide 'start_date' and 'stop_date' and/or 'date_source_models' options.") }}
+            {{ exceptions.raise_compiler_error("Invalid 'vault_insert_by_period' configuration. Must provide 'start_date' and 'stop_date', just 'stop_date', and/or 'date_source_models' options.") }}
         {%- endif -%}
     {% endif %}
 
