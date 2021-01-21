@@ -29,14 +29,14 @@
 
     {%- set extracted_column_names = [] -%}
 
-    {%- if columns_dict is none -%}
-        {%- do return([]) -%}
-    {%- elif columns_dict is mapping -%}
+    {%- if columns_dict is mapping -%}
         {%- for key, value in columns_dict.items() -%}
             {%- do extracted_column_names.append(key) -%}
         {%- endfor -%}
 
         {%- do return(extracted_column_names) -%}
+    {%- else -%}
+        {%- do return([]) -%}
     {%- endif -%}
 
 {%- endmacro -%}

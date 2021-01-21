@@ -16,6 +16,16 @@ class TestStageMacro(TestCase):
 
         self.assertEqual(expected_sql, actual_sql)
 
+    def test_stage_correctly_generates_sql_from_yaml_with_composite_pk(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+
+        assert 'Done' in process_logs
+        assert 'SQL compilation error' not in process_logs
+
+        self.assertEqual(expected_sql, actual_sql)
+
     def test_stage_correctly_generates_sql_from_yaml_with_source_style(self):
         process_logs_stg = self.dbt_test_utils.run_dbt_model(mode='run', model_name='raw_source_table')
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
@@ -88,6 +98,16 @@ class TestStageMacro(TestCase):
         self.assertEqual(expected_sql, actual_sql)
 
     def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_single_hash_and_include(self):
+        process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
+        actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
+        expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
+
+        assert 'Done' in process_logs
+        assert 'SQL compilation error' not in process_logs
+
+        self.assertEqual(expected_sql, actual_sql)
+
+    def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml_for_multi_hash_and_include(self):
         process_logs = self.dbt_test_utils.run_dbt_model(mode='run', model_name=self.current_test_name)
         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
