@@ -1,17 +1,20 @@
 import glob
+import io
 import logging
 import os
 import re
 import shutil
+import textwrap
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 from typing import List
+
 import pandas as pd
-from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from ruamel.yaml import YAML
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -522,7 +525,8 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link
+            "t_link": self.t_link,
+            "xts": self.xts
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -667,6 +671,23 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def xts(self, model_name, source_model, src_pk, src_ldts, src_satellite, src_source, config=None):
+        """
+        Generate a XTS template
+        """
+
+        template = f"""
+        {{% set src_satellite = {src_satellite} %}}
+        
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
+                          {source_model})   }}}}
+        """
+
+        textwrap.dedent(template)
+
+        self.template_to_file(template, model_name)
+
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
@@ -688,9 +709,15 @@ class DBTVAULTGenerator:
 
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
+                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
+
+                    processed_headings.extend(satellite_columns)
+
                 elif item.get("source_column", None) and item.get("alias", None):
 
                     processed_headings.append(item['source_column'])
+
                 else:
                     processed_headings.append(list(item.keys()))
             else:
@@ -712,6 +739,7 @@ class DBTVAULTGenerator:
             "hub": "incremental",
             "link": "incremental",
             "sat": "incremental",
+            "xts": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental"
         }
@@ -884,3 +912,17 @@ class DBTVAULTGenerator:
         """
 
         shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
+
+    @staticmethod
+    def dict_to_yaml_string(yaml_dict: dict):
+        """
+        Convert a dictionary to YAML and return a string with the YAML
+        """
+
+        yaml = YAML()
+        yaml.indent(sequence=4, offset=2)
+        buf = io.BytesIO()
+        yaml.dump(yaml_dict, buf)
+        yaml_str = buf.getvalue().decode('utf-8')
+
+        return yaml_str
