@@ -1,55 +1,55 @@
 @fixture.set_workdir
 Feature: Satellites Loaded in cycles using separate manual loads
 
-  @fixture.satellite
-  Scenario: [SAT-CYCLE] SATELLITE_CYCLE load over several cycles
-    Given the RAW_STAGE_CYCLE stage is empty
-    And the SATELLITE_CYCLE sat is empty
+  @fixture.satellite_cycles
+  Scenario: [SAT-CYCLE] SATELLITE load over several cycles
+    Given the RAW_STAGE stage is empty
+    And the SATELLITE sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_CYCLE is loaded
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Jenny         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
-    When the RAW_STAGE_CYCLE is loaded
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
-    When the RAW_STAGE_CYCLE is loaded
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
-    When the RAW_STAGE_CYCLE is loaded
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # =============== CHECKS ===================
-    Then the SATELLITE_CYCLE table should contain expected data
+    Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')    | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
@@ -69,56 +69,56 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
-  @fixture.satellite
+  @fixture.satellite_cycles
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] SATELLITE_CYCLE load over several cycles
-    Given the RAW_STAGE_CYCLE stage is empty
-    And the SATELLITE_CYCLE sat is empty
+  Scenario: [SAT-CYCLE-SHA] SATELLITE load over several cycles
+    Given the RAW_STAGE stage is empty
+    And the SATELLITE sat is empty
 
     # ================ DAY 1 ===================
-    And the RAW_STAGE_CYCLE is loaded
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Jenny         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
-    And the RAW_STAGE_CYCLE is loaded
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
-    And the RAW_STAGE_CYCLE is loaded
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
-    And the RAW_STAGE_CYCLE is loaded
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER_CYCLE stage
-    And I load the SATELLITE_CYCLE sat
+    And I create the STG_CUSTOMER stage
+    And I load the SATELLITE sat
 
     # =============== CHECKS ===================
-    Then the SATELLITE_CYCLE table should contain expected data
+    Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | sha('1001') | sha('1990-02-03\|\|1001\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | sha('1002') | sha('1995-08-07\|\|1002\|\|BETH')    | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
