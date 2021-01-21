@@ -629,47 +629,47 @@ def xts(context):
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
         },
         "STG_CUSTOMER_1": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
         },
         "STG_CUSTOMER_2": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
         },
         "STG_CUSTOMER_2SAT": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
             "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]}
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
         },
         "STG_CUSTOMER_2SAT_1": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
             "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]}
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
         },
         "STG_CUSTOMER_2SAT_2": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
             "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]}
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
         },
         "STG_CUSTOMER_3SAT": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_1", "CUSTOMER_DOB_1", "CUSTOMER_PHONE_1"]},
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
             "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_2", "CUSTOMER_DOB_2", "CUSTOMER_PHONE_2"]},
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
             "HASHDIFF_3": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_NAME_3", "CUSTOMER_DOB_3", "CUSTOMER_PHONE_3"]}
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
         }
     }
 
@@ -705,7 +705,7 @@ def xts(context):
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_1": "!SAT_CUSTOMER",
             "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-            "SATELLITE_3": "!SAT_CUSTOMER_OTHER",
+            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
         }
     }
 
@@ -768,7 +768,7 @@ def xts(context):
                         "HASHDIFF": "HASHDIFF_2"
                     }
                 },
-                "SATELLITE_CUSTOMER_OTHER": {
+                "SATELLITE_CUSTOMER_LOCATION": {
                     "sat_name": {
                         "SATELLITE_NAME": "SATELLITE_3"
                     },
@@ -785,9 +785,12 @@ def xts(context):
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -795,9 +798,12 @@ def xts(context):
         "RAW_STAGE_1": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -805,9 +811,12 @@ def xts(context):
         "RAW_STAGE_2": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -815,56 +824,53 @@ def xts(context):
         "RAW_STAGE_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME_1": "VARCHAR",
-                "CUSTOMER_DOB_1": "DATE",
-                "CUSTOMER_PHONE_1": "VARCHAR",
-                "CUSTOMER_NAME_2": "VARCHAR",
-                "CUSTOMER_DOB_2": "DATE",
-                "CUSTOMER_PHONE_2": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
             }
         },
         "RAW_STAGE_2SAT_1": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME_1": "VARCHAR",
-                "CUSTOMER_DOB_1": "DATE",
-                "CUSTOMER_PHONE_1": "VARCHAR",
-                "CUSTOMER_NAME_2": "VARCHAR",
-                "CUSTOMER_DOB_2": "DATE",
-                "CUSTOMER_PHONE_2": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
             }
         },
         "RAW_STAGE_2SAT_2": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME_1": "VARCHAR",
-                "CUSTOMER_DOB_1": "DATE",
-                "CUSTOMER_PHONE_1": "VARCHAR",
-                "CUSTOMER_NAME_2": "VARCHAR",
-                "CUSTOMER_DOB_2": "DATE",
-                "CUSTOMER_PHONE_2": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
             }
         },
         "RAW_STAGE_3SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME_1": "VARCHAR",
-                "CUSTOMER_DOB_1": "DATE",
-                "CUSTOMER_PHONE_1": "VARCHAR",
-                "CUSTOMER_NAME_2": "VARCHAR",
-                "CUSTOMER_DOB_2": "DATE",
-                "CUSTOMER_PHONE_2": "VARCHAR",
-                "CUSTOMER_NAME_3": "VARCHAR",
-                "CUSTOMER_DOB_3": "DATE",
-                "CUSTOMER_PHONE_3": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
             }
         },
         "STG_CUSTOMER": {
@@ -874,9 +880,12 @@ def xts(context):
                 "EFFECTIVE_FROM": "DATE",
                 "SATELLITE_NAME": "VARCHAR",
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -890,12 +899,12 @@ def xts(context):
                 "SATELLITE_1": "VARCHAR",
                 "SATELLITE_2": "VARCHAR",
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME_1": "VARCHAR",
-                "CUSTOMER_DOB_1": "DATE",
-                "CUSTOMER_PHONE_1": "VARCHAR",
-                "CUSTOMER_NAME_2": "VARCHAR",
-                "CUSTOMER_DOB_2": "DATE",
-                "CUSTOMER_PHONE_2": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -911,15 +920,12 @@ def xts(context):
                 "SATELLITE_2": "VARCHAR",
                 "SATELLITE_3": "VARCHAR",
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME_1": "VARCHAR",
-                "CUSTOMER_DOB_1": "DATE",
-                "CUSTOMER_PHONE_1": "VARCHAR",
-                "CUSTOMER_NAME_2": "VARCHAR",
-                "CUSTOMER_DOB_2": "DATE",
-                "CUSTOMER_PHONE_2": "VARCHAR",
-                "CUSTOMER_NAME_3": "VARCHAR",
-                "CUSTOMER_DOB_3": "DATE",
-                "CUSTOMER_PHONE_3": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
