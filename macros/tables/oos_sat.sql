@@ -13,7 +13,10 @@
 
 {%- if out_of_sequence is not none %}
     {%- set xts_model = out_of_sequence["source_xts"] %}
+    {%- set sat_name_col = out_of_sequence["sat_name_col"] %}
     {%- set insert_date = out_of_sequence["insert_date"] %}
+    -- depends_on: {{ ref(xts_model) }}
+    -- depends_on: {{ this }}
 {% endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
@@ -76,10 +79,10 @@ xts_stg AS (
     LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }})
     OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
     ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
-  FROM DBTVAULT_DEV.TEST_XTS_SCHEMA.TEST_XTS AS a
+  FROM {{ ref(xts_model) }} AS a
   INNER JOIN distinct_stage AS b
   ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
-  WHERE a.SATELLITE_NAME = 'SAT_SAP_CUSTOMER'
+  WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this }}'
   ORDER BY {{ src_pk }}, XTS_LOAD_DATE
 ),
 out_of_sequence_inserts AS (
