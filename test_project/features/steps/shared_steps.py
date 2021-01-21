@@ -21,6 +21,13 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.hashing = getattr(context, "hashing", "MD5")
 
+    if not getattr(context, "ranked_columns", None):
+        context.ranked_columns = dict()
+        context.ranked_columns[stage_model_name] = dict()
+    else:
+        if not context.ranked_columns.get(stage_model_name, None):
+            context.ranked_columns[stage_model_name] = dict()
+
     if not getattr(context, "hashed_columns", None):
         context.hashed_columns = dict()
         context.hashed_columns[stage_model_name] = dict()
@@ -134,7 +141,6 @@ def load_empty_table(context, model_name, vault_structure):
 
 @given("I will have a {raw_stage_name} raw stage and I have a {processed_stage_name} processed stage")
 def create_empty_stage(context, raw_stage_name, processed_stage_name):
-
     stage_source_column_headings = list(context.seed_config[raw_stage_name]["column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
@@ -276,6 +282,7 @@ def stage_processing(context, processed_stage_name):
                                            source_model=context.raw_stage_models,
                                            hashed_columns=context.hashed_columns[processed_stage_name],
                                            derived_columns=context.derived_columns[processed_stage_name],
+                                           ranked_columns=context.ranked_columns[processed_stage_name],
                                            include_source_columns=context.include_source_columns)
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,

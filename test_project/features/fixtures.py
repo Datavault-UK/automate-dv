@@ -402,8 +402,7 @@ def satellite(context):
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TS": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME",
-            "DBTVAULT_RANK": "RANK() OVER (PARTITION BY SOURCE ORDER BY LOAD_DATETIME)"
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
         }
     }
 
