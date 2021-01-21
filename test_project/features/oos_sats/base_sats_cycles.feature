@@ -71,7 +71,7 @@ Feature: Satellites Loaded using separate manual loads
 
   @fixture.satellite_cycle
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] Satellite load over several cycles
+  Scenario: [OOS-SAT-CYCLE-SHA] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE oos_sat is empty
 

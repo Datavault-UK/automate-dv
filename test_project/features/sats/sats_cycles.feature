@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Satellites Loaded in cycles using separate manual loads
 
-  @fixture.satellite_cycles
+  @fixture.satellite_cycle
   Scenario: [SAT-CYCLE] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -69,7 +69,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
-  @fixture.satellite_cycles
+  @fixture.satellite_cycle
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
