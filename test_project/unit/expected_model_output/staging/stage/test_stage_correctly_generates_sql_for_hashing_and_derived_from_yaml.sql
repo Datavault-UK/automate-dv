@@ -50,6 +50,14 @@ hashed_columns AS (
     )) AS BINARY(16)) AS CUSTOMER_HASHDIFF
 
     FROM derived_columns
+),
+
+ranked_columns AS (
+
+    SELECT *
+
+    FROM hashed_columns
+
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM ranked_columns
