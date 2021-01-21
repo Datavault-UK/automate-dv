@@ -151,7 +151,7 @@ class DBTTestUtils:
             model_name = f'+{model_name}'
 
         if full_refresh:
-            command = ['dbt', mode, '--full-refresh', '-m', model_name]
+            command = ['dbt', mode, '-m', model_name, '--full-refresh']
         else:
             command = ['dbt', mode, '-m', model_name]
 
