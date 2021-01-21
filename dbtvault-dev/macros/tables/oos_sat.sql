@@ -8,10 +8,12 @@
 {%- endmacro %}
 
 {%- macro default__oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
+
 {%- if out_of_sequence is not none %}
-{%- set xts_model = out_of_sequence["source_xts"] %}
-{%- set insert_date = out_of_sequence["insert_date"] %}
+    {%- set xts_model = out_of_sequence["source_xts"] %}
+    {%- set insert_date = out_of_sequence["insert_date"] %}
 {% endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
@@ -51,11 +53,11 @@ stage AS (
 {%- if out_of_sequence is not none and is_incremental() %}
 sat_stg AS (
   SELECT DISTINCT
-    {{ dbtvault.prefix(source_cols, 'a') }}
-  , {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE
-  , {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
+    {{ dbtvault.prefix(source_cols, 'a') }},
+    {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE,
+    {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
   FROM {{ this }} AS a
-  LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
+  LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE('{{ insert_date }}')
 ),
 distinct_stage AS (
@@ -63,16 +65,20 @@ distinct_stage AS (
 ),
 xts_stg AS (
   SELECT
-    {{ dbtvault.prefix(source_cols, 'b') }}
-  , {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE
-  , LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-                                                      ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE
-  , LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-                                                         ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF
-  , LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-                                                          ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
+    {{ dbtvault.prefix(source_cols, 'b') }},
+    {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
+    LEAD({{ dbtvault.prefix([src_ldts], 'a') }})
+    OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE,
+    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }})
+    OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF,
+    LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }})
+    OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
   FROM DBTVAULT_DEV.TEST_XTS_SCHEMA.TEST_XTS AS a
-  INNER JOIN distinct_stage AS b ON {{ dbtvault.prefix([src_pk], 'a') }}={{ dbtvault.prefix([src_pk], 'b') }}
+  INNER JOIN distinct_stage AS b
+  ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
   WHERE a.SATELLITE_NAME = 'SAT_SAP_CUSTOMER'
   ORDER BY {{ src_pk }}, XTS_LOAD_DATE
 ),
@@ -80,20 +86,28 @@ out_of_sequence_inserts AS (
   SELECT
     {{ dbtvault.prefix(source_cols, 'c') }}
   FROM xts_stg AS c
-  WHERE (({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF)
-          OR ({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF AND {{ dbtvault.prefix([src_hashdiff], 'c') }} = c.NEXT_RECORD_HASHDIFF))
-  AND ({{ dbtvault.prefix([src_ldts], 'c') }} BETWEEN c.XTS_LOAD_DATE AND c.NEXT_RECORD_DATE)
+  WHERE (({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF
+          AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF)
+          OR ({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF
+          AND {{ dbtvault.prefix([src_hashdiff], 'c') }} = c.NEXT_RECORD_HASHDIFF))
+  AND ({{ dbtvault.prefix([src_ldts], 'c') }}
+  BETWEEN c.XTS_LOAD_DATE
+  AND c.NEXT_RECORD_DATE)
   UNION
   SELECT
-    {{ dbtvault.prefix([src_pk, src_hashdiff], 'd')}}
-  , {{ dbtvault.prefix(src_payload, 'd') }}
-  , c.NEXT_RECORD_DATE AS {{ src_ldts }}
-  , c.NEXT_RECORD_DATE AS {{ src_eff }}
-  , {{ dbtvault.prefix([src_source], 'd') }}
+    {{ dbtvault.prefix([src_pk, src_hashdiff], 'd')}},
+    {{ dbtvault.prefix(src_payload, 'd') }},
+    c.NEXT_RECORD_DATE AS {{ src_ldts }},
+    c.NEXT_RECORD_DATE AS {{ src_eff }},
+    {{ dbtvault.prefix([src_source], 'd') }}
   FROM xts_stg AS c
-  INNER JOIN sat_stg AS d ON {{dbtvault.prefix([src_pk], 'c') }}={{dbtvault.prefix([src_pk], 'd') }}
-  WHERE ({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF)
-  AND ({{ dbtvault.prefix([src_ldts], 'c') }} BETWEEN c.XTS_LOAD_DATE AND c.NEXT_RECORD_DATE)
+  INNER JOIN sat_stg AS d
+  ON {{dbtvault.prefix([src_pk], 'c') }} = {{dbtvault.prefix([src_pk], 'd') }}
+  WHERE ({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF
+  AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF)
+  AND ({{ dbtvault.prefix([src_ldts], 'c') }}
+  BETWEEN c.XTS_LOAD_DATE
+  AND c.NEXT_RECORD_DATE)
 ),
 {%- endif %}
 
