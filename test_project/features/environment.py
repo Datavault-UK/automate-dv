@@ -12,6 +12,7 @@ fixture_registry = {
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
     "fixture.satellite": satellite,
+    "fixture.satellite_cycles": satellite_cycle,
     "fixture.eff_satellite": eff_satellite,
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.enable_auto_end_date": enable_auto_end_date,
