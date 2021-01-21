@@ -1,16 +1,19 @@
-{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none) -%}
+{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, ranked_columns=none) -%}
 
     {% if include_source_columns is none %}
         {%- set include_source_columns = true -%}
     {% endif %}
 
+    {%- do log("ranked_columns: " ~ ranked_columns) -%}
+
     {{- adapter.dispatch('stage', packages = dbtvault.get_dbtvault_namespaces())(include_source_columns=include_source_columns,
                                                                                  source_model=source_model,
                                                                                  hashed_columns=hashed_columns,
-                                                                                 derived_columns=derived_columns) -}}
+                                                                                 derived_columns=derived_columns,
+                                                                                 ranked_columns=ranked_columns) -}}
 {%- endmacro -%}
 
-{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns) -%}
+{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, ranked_columns) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -46,6 +49,7 @@
 
 {%- set derived_column_names = dbtvault.extract_column_names(derived_columns) -%}
 {%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) -%}
+{%- set ranked_column_names = dbtvault.extract_column_names(ranked_columns) -%}
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
@@ -115,7 +119,18 @@ hashed_columns AS (
     {%- endif %}
 
     FROM derived_columns
+),
+
+{# Add ranked columns if provided -#}
+ranked_columns AS (
+
+    SELECT  {{- " *,\n" if dbtvault.is_something(ranked_columns) else " *" -}}
+
+    {{- dbtvault.rank_columns(columns=ranked_columns) | indent(4) if dbtvault.is_something(ranked_columns) }}
+
+    FROM hashed_columns
+
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM ranked_columns
 {%- endmacro -%}
