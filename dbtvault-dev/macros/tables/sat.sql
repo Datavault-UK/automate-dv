@@ -14,8 +14,11 @@
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT {{ source_cols | join(", ") }}
-    FROM {{ ref(source_model) }}
+    {%- if model.config.materialized == 'vault_insert_by_rank' -%}
+        {%- set source_cols = source_cols + [config.get('rank_column')] -%}
+    {%- endif %}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {% endif %}
@@ -28,7 +31,7 @@ rank_col AS (
 ),
 {% endif -%}
 
-{%- if load_relation(this) %}
+{% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() -%}
 
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
@@ -58,7 +61,7 @@ records_to_insert AS (
     {% else %}
     FROM source_data AS e
     {% endif -%}
-    {% if load_relation(this) -%}
+    {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() -%}
     LEFT JOIN stage
     ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} IS NULL

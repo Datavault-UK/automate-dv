@@ -1,10 +1,10 @@
 @fixture.set_workdir
-Feature: Satellites Loaded in cycles using separate manual loads
+Feature: Satellites Loaded using separate manual loads
 
-  @fixture.satellite_cycles
-  Scenario: [SAT-CYCLE] SATELLITE load over several cycles
+  @fixture.satellite_cycle
+  Scenario: [SAT-CYCLE] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
-    And the SATELLITE sat is empty
+    And the SATELLITE oos_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -15,7 +15,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1010        | Jenny         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE is loaded
@@ -25,7 +25,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE is loaded
@@ -35,7 +35,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1005        | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE is loaded
@@ -69,11 +69,11 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
-  @fixture.satellite_cycles
+  @fixture.satellite_cycle
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] SATELLITE load over several cycles
+  Scenario: [SAT-CYCLE-SHA] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
-    And the SATELLITE sat is empty
+    And the SATELLITE oos_sat is empty
 
     # ================ DAY 1 ===================
     And the RAW_STAGE is loaded
@@ -84,7 +84,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1010        | Jenny         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # ================ DAY 2 ===================
     And the RAW_STAGE is loaded
@@ -94,7 +94,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # ================ DAY 3 ===================
     And the RAW_STAGE is loaded
@@ -104,7 +104,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1005        | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # ================ DAY 4 ===================
     And the RAW_STAGE is loaded
@@ -115,7 +115,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
     And I create the STG_CUSTOMER stage
-    And I load the SATELLITE sat
+    And I load the SATELLITE oos_sat
 
     # =============== CHECKS ===================
     Then the SATELLITE table should contain expected data
