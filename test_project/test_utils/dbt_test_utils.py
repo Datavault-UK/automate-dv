@@ -1,14 +1,15 @@
 import glob
 import io
-import json
 import logging
 import os
 import re
 import shutil
+import textwrap
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 from typing import List
+
 import pandas as pd
 from behave.model import Table
 from numpy import NaN
@@ -738,6 +739,7 @@ class DBTVAULTGenerator:
             "hub": "incremental",
             "link": "incremental",
             "sat": "incremental",
+            "xts": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental"
         }
