@@ -526,7 +526,7 @@ class DBTVAULTGenerator:
             "sat": self.sat,
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
-            "xts": self.xts
+            "xts": self.xts,
             "oos_sat": self.oos_sat
         }
 
@@ -759,17 +759,15 @@ class DBTVAULTGenerator:
             :param config: A config dictionary to be converted to a string
             :param kwargs: Metadata keys for various vault structures (src_pk, src_hashdiff, etc.)
         """
-
         default_materialisations = {
             "stage": "view",
             "hub": "incremental",
             "link": "incremental",
             "sat": "incremental",
             "xts": "incremental",
+            "oos_sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental"
-            "t_link": "incremental",
-            "oos_sat": "incremental"
         }
 
         if not config:
