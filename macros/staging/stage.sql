@@ -115,9 +115,9 @@ hashed_columns AS (
 {# Add ranked columns if provided -#}
 ranked_columns AS (
 
-    SELECT  {{- " *,\n\n" if dbtvault.is_something(ranked_columns) else " *" -}}
+    SELECT  {{- " *," if dbtvault.is_something(ranked_columns) and include_source_columns -}}
 
-    {{ dbtvault.rank_columns(columns=ranked_columns) | indent(4, first=true) if dbtvault.is_something(ranked_columns) }}
+    {{ "\n\n" ~ dbtvault.rank_columns(columns=ranked_columns) | indent(4, first=true) if dbtvault.is_something(ranked_columns) }}
 
     FROM hashed_columns
 
