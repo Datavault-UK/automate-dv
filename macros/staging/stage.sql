@@ -4,8 +4,6 @@
         {%- set include_source_columns = true -%}
     {% endif %}
 
-    {%- do log("ranked_columns: " ~ ranked_columns) -%}
-
     {{- adapter.dispatch('stage', packages = dbtvault.get_dbtvault_namespaces())(include_source_columns=include_source_columns,
                                                                                  source_model=source_model,
                                                                                  hashed_columns=hashed_columns,
@@ -87,9 +85,6 @@ derived_columns AS (
 
 {# Hash columns, if provided, and process exclusion flags if provided -#}
 hashed_columns AS (
-    {%- do log("[{}] ranked_columns: {}".format(this, ranked_columns), true) -%}
-    {%- do log("[{}] hashed_columns: {}".format(this, hashed_columns), true) -%}
-    {%- do log("[{}] include_source_columns: {}".format(this, include_source_columns), true) %}
     SELECT {{- " *" if dbtvault.is_something(ranked_columns) and dbtvault.is_nothing(hashed_columns) and not include_source_columns -}}
 
     {%- set derived_and_source = source_columns_to_select + derived_column_names -%}
@@ -127,7 +122,7 @@ hashed_columns AS (
 {# Add ranked columns if provided -#}
 ranked_columns AS (
 
-    SELECT  {{- " *,\n\n" if dbtvault.is_something(ranked_columns) else " *\n" -}}
+    SELECT  {{- " *,\n\n" if dbtvault.is_something(ranked_columns) else " *" -}}
 
     {{ dbtvault.rank_columns(columns=ranked_columns) | indent(4, first=true) if dbtvault.is_something(ranked_columns) }}
 
