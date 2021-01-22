@@ -1,8 +1,8 @@
 {%- macro pit(src_pk, as_of_dates_table, satellites, source_model) -%}
 
-    {{- adapter.dispatch('pit', packages = var('adapter_packages', ['dbtvault']))(source_model=source_model, src_pk=src_pk,
-                                                                                  as_of_dates_table=as_of_dates_table,
-                                                                                  satellites=satellites) -}}
+    {{- adapter.dispatch('pit', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
+                                                                               as_of_dates_table=as_of_dates_table,
+                                                                               satellites=satellites) -}}
 
 {%- endmacro -%}
 
