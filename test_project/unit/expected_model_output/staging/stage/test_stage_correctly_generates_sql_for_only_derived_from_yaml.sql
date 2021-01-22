@@ -13,10 +13,7 @@ derived_columns AS (
 ),
 
 hashed_columns AS (
-    SELECT
-
-    SOURCE,
-    EFFECTIVE_FROM
+    SELECT *
 
     FROM derived_columns
 ),
