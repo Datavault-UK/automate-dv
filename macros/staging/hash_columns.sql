@@ -1,12 +1,12 @@
 {%- macro hash_columns(columns=none) -%}
 
-    {{- adapter.dispatch('hash_columns', packages = var('adapter_packages', ['dbtvault']))(columns=columns) -}}
+    {{- adapter.dispatch('hash_columns', packages = dbtvault.get_dbtvault_namespaces())(columns=columns) -}}
 
 {%- endmacro %}
 
 {%- macro default__hash_columns(columns=none) -%}
 
-{%- if columns is mapping -%}
+{%- if columns is mapping and columns is not none -%}
 
     {%- for col in columns -%}
 
@@ -18,8 +18,8 @@
 
         {%- elif columns[col] is not mapping -%}
 
-            {{- dbtvault.hash(columns=columns[col], 
-                              alias=col, 
+            {{- dbtvault.hash(columns=columns[col],
+                              alias=col,
                               is_hashdiff=false) -}}
         
         {%- elif columns[col] is mapping and not columns[col].is_hashdiff -%}
@@ -28,14 +28,12 @@
                 {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'is_hashdiff' flag. Use list syntax for PKs.") -%}
             {% endif %}
 
-            {{- dbtvault.hash(columns=columns[col]['columns'], 
-                              alias=col) -}}
+            {{- dbtvault.hash(columns=columns[col]['columns'], alias=col) -}}
 
         {%- endif -%}
 
-        {%- if not loop.last -%},
-{% endif %}
+        {{- ",\n" if not loop.last -}}
     {%- endfor -%}
 
-{%- endif -%}
+{%- endif %}
 {%- endmacro -%}
