@@ -187,6 +187,14 @@ models:
                     - CUSTOMER_ID
                     - NATIONALITY
                     - PHONE
+          test_stage_correctly_generates_sql_for_only_ranked_from_yaml:
+            vars:
+              include_source_columns: false
+              source_model: raw_source
+              ranked_columns:
+                DBTVAULT_RANK:
+                  partition_by: CUSTOMER_ID
+                  order_by: LOADDATE
           test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml:
             vars:
               source_model: raw_source

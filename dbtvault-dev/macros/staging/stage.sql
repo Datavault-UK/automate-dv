@@ -87,7 +87,7 @@ derived_columns AS (
 
 {# Hash columns, if provided, and process exclusion flags if provided -#}
 hashed_columns AS (
-    SELECT
+    SELECT {{- " *" if dbtvault.is_something(ranked_columns) and dbtvault.is_nothing(hashed_columns) and not include_source_columns -}}
 
     {%- set derived_and_source = source_columns_to_select + derived_column_names -%}
 
