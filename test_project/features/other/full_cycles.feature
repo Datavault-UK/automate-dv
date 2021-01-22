@@ -4,10 +4,10 @@ Feature: Full Vault Cycles
   @fixture.cycle
   Scenario: [VAULT-CYCLE] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
-      | HUBS         | LINKS                 | SATS                      | T_LINKS | EFF_SATS |
-      | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |         |          |
-      | HUB_BOOKING  |                       | SAT_BOOK_CUSTOMER_DETAILS |         |          |
-      |              |                       | SAT_BOOK_BOOKING_DETAILS  |         |          |
+      | HUBS         | LINKS                 | SATS                      |
+      | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |
+      | HUB_BOOKING  |                       | SAT_BOOK_CUSTOMER_DETAILS |
+      |              |                       | SAT_BOOK_BOOKING_DETAILS  |
     And the RAW_STAGE_CUSTOMER stage is empty
     And the RAW_STAGE_BOOKING stage is empty
 
