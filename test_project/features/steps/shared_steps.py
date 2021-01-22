@@ -21,6 +21,13 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.hashing = getattr(context, "hashing", "MD5")
 
+    if not getattr(context, "ranked_columns", None):
+        context.ranked_columns = dict()
+        context.ranked_columns[stage_model_name] = dict()
+    else:
+        if not context.ranked_columns.get(stage_model_name, None):
+            context.ranked_columns[stage_model_name] = dict()
+
     if not getattr(context, "hashed_columns", None):
         context.hashed_columns = dict()
         context.hashed_columns[stage_model_name] = dict()
@@ -115,14 +122,45 @@ def load_empty_table(context, model_name, vault_structure):
 
     logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
+    if getattr(context, "create_empty_stage", False) and getattr(context, "empty_stage_name", False):
+        source_model_name = context.empty_stage_name
+    else:
+        source_model_name = seed_file_name
+
     if not vault_structure == "stage":
-        metadata = {"source_model": seed_file_name, **context.vault_structure_columns[model_name]}
+        metadata = {"source_model": source_model_name, **context.vault_structure_columns[model_name]}
 
         context.vault_structure_metadata = metadata
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
         logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name)
+
+    assert "Completed successfully" in logs
+
+
+@given("I will have a {raw_stage_name} raw stage and I have a {processed_stage_name} processed stage")
+def create_empty_stage(context, raw_stage_name, processed_stage_name):
+    stage_source_column_headings = list(context.seed_config[raw_stage_name]["column_types"].keys())
+    stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
+    stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
+    stage_headings = stage_source_column_headings + stage_hashed_column_headings + stage_derived_column_headings
+
+    row = Row(cells=[], headings=stage_headings)
+
+    empty_table = Table(headings=stage_headings, rows=row)
+
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+                                                                 model_name=processed_stage_name)
+
+    context.create_empty_stage = True
+
+    context.empty_stage_name = seed_file_name
+
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                       seed_config=context.seed_config[processed_stage_name])
+
+    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     assert "Completed successfully" in logs
 
@@ -244,6 +282,7 @@ def stage_processing(context, processed_stage_name):
                                            source_model=context.raw_stage_models,
                                            hashed_columns=context.hashed_columns[processed_stage_name],
                                            derived_columns=context.derived_columns[processed_stage_name],
+                                           ranked_columns=context.ranked_columns[processed_stage_name],
                                            include_source_columns=context.include_source_columns)
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
