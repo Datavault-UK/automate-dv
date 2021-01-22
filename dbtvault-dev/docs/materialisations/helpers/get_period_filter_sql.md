@@ -1,6 +1,6 @@
 {% docs macro__get_period_filter_sql %}
 
-A wrapper around the `replace_placeholder_with_filter` macro which creates a query designed to
+A wrapper around the `replace_placeholder_with_period_filter` macro which creates a query designed to
 build a temporary table, to select the necessary records for the given load cycle. 
 
 {% enddocs %}

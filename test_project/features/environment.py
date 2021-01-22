@@ -12,15 +12,14 @@ fixture_registry = {
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
     "fixture.satellite": satellite,
-    "fixture.satellite_cycle": satellite_cycle,
+    "fixture.satellite_cycles": satellite_cycle,
     "fixture.eff_satellite": eff_satellite,
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
     "fixture.t_link": t_link,
-    "fixture.cycle": cycle,
-    "fixture.pit": pit
+    "fixture.cycle": cycle
 }
 
 
@@ -55,28 +54,15 @@ def before_all(context):
 
 def after_all(context):
     """
-    Force Restore of dbt environment
+    Force Restore of dbt_project.yml
     """
 
-    DBTTestUtils.clean_csv()
-    DBTTestUtils.clean_models()
-    DBTTestUtils.clean_target()
-
-    DBTVAULTGenerator.clean_test_schema_file()
     DBTVAULTGenerator.restore_project_yml()
 
 
 def before_scenario(context, scenario):
     context.dbt_test_utils.create_dummy_model()
     context.dbt_test_utils.replace_test_schema()
-
-
-def after_scenario(context, scenario):
-    """
-    Clean generated files after every scenario
-        :param context: behave context
-        :param scenario: Current scenario
-    """
 
     DBTTestUtils.clean_csv()
     DBTTestUtils.clean_models()

@@ -1,15 +1,15 @@
 version: 2
 
 macros:
-  - name: default__replace_placeholder_with_filter
+  - name: default__replace_placeholder_with_period_filter
     description: |
-                 {{ doc("macro__replace_placeholder_with_filter") }}
+                 {{ doc("macro__replace_placeholder_with_period_filter") }}
 
                  {{ doc("platform__snowflake") }}
     arguments:
       - name: core_sql
         type: string
-        description: '{{ doc("arg__replace_placeholder_with_filter__core_sql") }}'
+        description: '{{ doc("arg__replace_placeholder_with_period_filter__core_sql") }}'
       - name: timestamp_field
         type: string
         description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
