@@ -319,22 +319,3 @@ def expect_data(context, model_name):
     logs = context.dbt_test_utils.run_dbt_command(["dbt", "test"])
 
     assert "1 of 1 PASS" in logs
-
-
-@step("I have hashed columns in the {processed_stage_name} model")
-def hashed_columns(context, processed_stage_name):
-    context.processed_stage_name = processed_stage_name
-    context.hashed_columns = {processed_stage_name: context.dbt_test_utils.context_table_to_dict(table=context.table,
-                                                                                                 orient="records")[0]}
-
-
-@step("I have derived columns in the {processed_stage_name} model")
-def derive_columns(context, processed_stage_name):
-    context.processed_stage_name = processed_stage_name
-    context.derived_columns = {processed_stage_name: context.dbt_test_utils.context_table_to_dict(table=context.table,
-                                                                                                  orient="records")[0]}
-
-
-@step("I do not include source columns")
-def source_columns(context):
-    context.include_source_columns = False
