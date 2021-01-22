@@ -33,6 +33,14 @@ hashed_columns AS (
     BOOKING_DATE
 
     FROM derived_columns
+),
+
+ranked_columns AS (
+
+    SELECT *
+
+    FROM hashed_columns
+
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM ranked_columns

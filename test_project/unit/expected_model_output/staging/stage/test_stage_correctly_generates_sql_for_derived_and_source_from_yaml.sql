@@ -57,6 +57,14 @@ hashed_columns AS (
     EFFECTIVE_FROM
 
     FROM derived_columns
+),
+
+ranked_columns AS (
+
+    SELECT *
+
+    FROM hashed_columns
+
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM ranked_columns

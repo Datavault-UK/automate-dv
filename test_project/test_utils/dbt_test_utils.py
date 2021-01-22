@@ -1,17 +1,20 @@
 import glob
+import io
 import logging
 import os
 import re
 import shutil
+import textwrap
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 from typing import List
+
 import pandas as pd
-from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from ruamel.yaml import YAML
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -530,14 +533,15 @@ class DBTVAULTGenerator:
 
         generator_functions[vault_structure](**processed_metadata)
 
-    def stage(self, model_name, source_model: dict, hashed_columns=None, derived_columns=None,
-              include_source_columns=True, config=None):
+    def stage(self, model_name, source_model: dict, derived_columns=None, hashed_columns=None,
+              ranked_columns=None, include_source_columns=True, config=None):
         """
         Generate a stage model template
             :param model_name: Name of the model file
             :param source_model: Model to select from
-            :param hashed_columns: Dictionary of hashed columns, can be None
             :param derived_columns: Dictionary of derived column, can be None
+            :param hashed_columns: Dictionary of hashed columns, can be None
+            :param ranked_columns: Dictionary of ranked columns, can be None
             :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param config: Optional model config
         """
@@ -546,8 +550,9 @@ class DBTVAULTGenerator:
         {{{{ config({config}) }}}}
         {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
                             source_model={source_model},
+                            derived_columns={derived_columns},
                             hashed_columns={hashed_columns},
-                            derived_columns={derived_columns}) }}}}
+                            ranked_columns={ranked_columns}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -688,9 +693,15 @@ class DBTVAULTGenerator:
 
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
+                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
+
+                    processed_headings.extend(satellite_columns)
+
                 elif item.get("source_column", None) and item.get("alias", None):
 
                     processed_headings.append(item['source_column'])
+
                 else:
                     processed_headings.append(list(item.keys()))
             else:
@@ -706,7 +717,6 @@ class DBTVAULTGenerator:
             :param config: A config dictionary to be converted to a string
             :param kwargs: Metadata keys for various vault structures (src_pk, src_hashdiff, etc.)
         """
-
         default_materialisations = {
             "stage": "view",
             "hub": "incremental",
@@ -884,3 +894,17 @@ class DBTVAULTGenerator:
         """
 
         shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
+
+    @staticmethod
+    def dict_to_yaml_string(yaml_dict: dict):
+        """
+        Convert a dictionary to YAML and return a string with the YAML
+        """
+
+        yaml = YAML()
+        yaml.indent(sequence=4, offset=2)
+        buf = io.BytesIO()
+        yaml.dump(yaml_dict, buf)
+        yaml_str = buf.getvalue().decode('utf-8')
+
+        return yaml_str

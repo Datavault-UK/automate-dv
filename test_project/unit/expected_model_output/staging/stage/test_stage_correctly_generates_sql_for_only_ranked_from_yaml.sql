@@ -4,26 +4,23 @@ WITH stage AS (
 ),
 
 derived_columns AS (
-    SELECT
-
-    'STG_BOOKING' AS SOURCE,
-    LOADDATE AS EFFECTIVE_FROM
+    SELECT *
 
     FROM stage
 ),
 
 hashed_columns AS (
-    SELECT
-
-    SOURCE,
-    EFFECTIVE_FROM
+    SELECT *
 
     FROM derived_columns
 ),
 
 ranked_columns AS (
 
-    SELECT *
+    SELECT *,
+
+    RANK() OVER (PARTITION BY CUSTOMER_ID ORDER BY LOADDATE) AS DBTVAULT_RANK,
+    RANK() OVER (PARTITION BY CUSTOMER_ID ORDER BY LOADDATE) AS SAT_LOAD_RANK
 
     FROM hashed_columns
 
