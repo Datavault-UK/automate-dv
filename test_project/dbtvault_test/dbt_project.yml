@@ -195,6 +195,9 @@ models:
                 DBTVAULT_RANK:
                   partition_by: CUSTOMER_ID
                   order_by: LOADDATE
+                SAT_LOAD_RANK:
+                  partition_by: CUSTOMER_ID
+                  order_by: LOADDATE
           test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml:
             vars:
               source_model: raw_source
