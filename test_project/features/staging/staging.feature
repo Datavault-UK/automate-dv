@@ -177,6 +177,27 @@ Feature: Staging
       | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   |
 
   @fixture.staging
+  Scenario: Staging for only ranked columns
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    And I do not include source columns
+    When I create the STG_CUSTOMER stage
+    Then the STG_CUSTOMER table should contain expected data
+      | DBTVAULT_RANK |
+      | 1             |
+      | 1             |
+      | 1             |
+      | 1             |
+
+  @fixture.staging
   Scenario: Staging with derived, source columns and hashed with exclude flag.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
