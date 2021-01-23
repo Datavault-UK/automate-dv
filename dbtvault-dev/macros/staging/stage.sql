@@ -1,8 +1,8 @@
 {%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, ranked_columns=none) -%}
 
-    {% if include_source_columns is none %}
+    {%- if include_source_columns is none -%}
         {%- set include_source_columns = true -%}
-    {% endif %}
+    {%- endif -%}
 
     {{- adapter.dispatch('stage', packages = dbtvault.get_dbtvault_namespaces())(include_source_columns=include_source_columns,
                                                                                  source_model=source_model,
@@ -77,10 +77,11 @@ derived_columns AS (
 {% if dbtvault.is_something(hashed_columns) -%},
 
 hashed_columns AS (
+
     SELECT *,
 
-    {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) %}
-    {{ dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
+    {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
+    {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "hashed_columns" %}
@@ -90,17 +91,20 @@ hashed_columns AS (
 {% if dbtvault.is_something(ranked_columns) -%},
 
 ranked_columns AS (
+
     SELECT *,
 
     {{ dbtvault.rank_columns(columns=ranked_columns) if dbtvault.is_something(ranked_columns) }}
 
-    FROM hashed_columns
+    FROM {{ last_cte }}
     {%- set last_cte = "ranked_columns" %}
 )
-{%- endif %}
+{%- endif -%}
 
-, columns_to_select AS (
-    {% set final_columns_to_select = [] %}
+,
+
+columns_to_select AS (
+    {%- set final_columns_to_select = [] %}
 
     SELECT
 
@@ -123,7 +127,6 @@ ranked_columns AS (
     {{- dbtvault.print_list(final_columns_to_select) }}
 
     FROM {{ last_cte }}
-
 )
 
 SELECT * FROM columns_to_select

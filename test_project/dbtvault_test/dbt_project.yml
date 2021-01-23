@@ -522,7 +522,7 @@ seeds:
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
     temp:
-      raw_stage_seed:
+      stg_customer_expected_seed:
         column_types:
           CUSTOMER_ID: VARCHAR
           CUSTOMER_NAME: VARCHAR
@@ -530,3 +530,5 @@ seeds:
           CUSTOMER_PHONE: VARCHAR
           LOAD_DATE: DATE
           SOURCE: VARCHAR
+          CUSTOMER_PK: BINARY(16)
+          HASHDIFF: BINARY(16)
