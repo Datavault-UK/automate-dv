@@ -46,7 +46,9 @@
 {%- endif -%}
 
 {%- set derived_column_names = dbtvault.extract_column_names(derived_columns) -%}
-{%- set exclude_column_names = derived_column_names + dbtvault.extract_column_names(hashed_columns) %}
+{%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) -%}
+{%- set ranked_column_names = dbtvault.extract_column_names(ranked_columns) -%}
+{%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
 
@@ -97,5 +99,32 @@ ranked_columns AS (
 )
 {%- endif %}
 
-SELECT * FROM {{ last_cte }}
+, columns_to_select AS (
+    {% set final_columns_to_select = [] %}
+
+    SELECT
+
+    {% if include_source_columns -%}
+        {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
+    {%- endif -%}
+
+    {%- if dbtvault.is_something(derived_columns) -%}
+        {%- set final_columns_to_select = final_columns_to_select + derived_column_names -%}
+    {%- endif -%}
+
+    {%- if dbtvault.is_something(hashed_columns) -%}
+        {%- set final_columns_to_select = final_columns_to_select + hashed_column_names -%}
+    {%- endif -%}
+
+    {%- if dbtvault.is_something(ranked_columns) -%}
+        {%- set final_columns_to_select = final_columns_to_select + ranked_column_names -%}
+    {%- endif -%}
+
+    {{- dbtvault.print_list(final_columns_to_select) }}
+
+    FROM {{ last_cte }}
+
+)
+
+SELECT * FROM columns_to_select
 {%- endmacro -%}
