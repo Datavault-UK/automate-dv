@@ -50,78 +50,52 @@
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
 
-{#- CTE to add source columns from the source model -#}
-WITH stage AS (
+
+WITH source_data AS (
+
     SELECT *
+
     FROM {{ source_relation }}
-),
-
-{# Derive additional columns, if provided, and carry over source columns from previous CTE for use in the hash stage -#}
-derived_columns AS (
-    SELECT
-    {#- Re-factor to avoid so many IF statements -#}
-    {{- " *" if dbtvault.is_nothing(derived_columns) and dbtvault.is_nothing(hashed_columns) and include_source_columns -}}
-    {{- " *" if dbtvault.is_nothing(derived_columns) and not include_source_columns -}}
-
-    {%- if include_source_columns and dbtvault.is_something(derived_columns) -%}
-
-        {{ "\n\n" ~ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4, first=true) -}}
-    {%- elif not include_source_columns and dbtvault.is_nothing(hashed_columns) and dbtvault.is_something(derived_columns) -%}
-
-        {{ "\n\n" ~ dbtvault.derive_columns(columns=derived_columns) | indent(4, first=true) -}}
-    {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_something(hashed_columns) -%}
-
-        {{- dbtvault.print_list(all_source_columns, trailing_comma=false) -}}
-    {%- elif not include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) -%}
-
-        {{ "\n\n" ~ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4, first=true) -}}
-    {%- endif %}
-
-    FROM stage
-),
-
-{# Hash columns, if provided, and process exclusion flags if provided -#}
-hashed_columns AS (
-    SELECT
-
-    {{- " *" if dbtvault.is_something(ranked_columns) and dbtvault.is_nothing(hashed_columns) and not include_source_columns -}}
-    {{- " *" if dbtvault.is_something(derived_columns) and dbtvault.is_nothing(hashed_columns) -}}
-
-    {%- set derived_and_source = source_columns_to_select + derived_column_names -%}
-
-    {#- Re-factor to avoid so many IF statements -#}
-    {%- if include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) %}
-
-        {{- dbtvault.print_list(derived_and_source, trailing_comma=true) -}}
-    {%- elif not include_source_columns and dbtvault.is_something(derived_columns) and dbtvault.is_something(hashed_columns) %}
-
-        {{- dbtvault.print_list(derived_column_names, trailing_comma=true) -}}
-    {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_nothing(hashed_columns) %}
-
-        {{- dbtvault.print_list(all_source_columns, trailing_comma=false) -}}
-    {%- elif include_source_columns and dbtvault.is_nothing(derived_columns) and dbtvault.is_something(hashed_columns) -%}
-
-        {{- dbtvault.print_list(source_columns_to_select, trailing_comma=true) -}}
-    {%- endif %}
-
-    {%- if dbtvault.is_something(hashed_columns) -%}
-        {%- set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
-        {{- "\n\n" ~ dbtvault.hash_columns(columns=processed_hash_columns) | indent(4, first=true) -}}
-    {%- endif %}
-
-    FROM derived_columns
-),
-
-{# Add ranked columns if provided -#}
-ranked_columns AS (
-
-    SELECT  {{- " *," if dbtvault.is_something(ranked_columns) and include_source_columns -}}
-
-    {{ "\n\n" ~ dbtvault.rank_columns(columns=ranked_columns) | indent(4, first=true) if dbtvault.is_something(ranked_columns) }}
-
-    FROM hashed_columns
-
+    {%- set last_cte = "source_data" %}
 )
 
-SELECT * FROM ranked_columns
+{%- if dbtvault.is_something(derived_columns) -%},
+
+derived_columns AS (
+
+    SELECT
+
+    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4) }}
+
+    FROM {{ last_cte }}
+    {%- set last_cte = "derived_columns" %}
+)
+{%- endif -%}
+
+{% if dbtvault.is_something(hashed_columns) -%},
+
+hashed_columns AS (
+    SELECT *,
+
+    {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) %}
+    {{ dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
+
+    FROM {{ last_cte }}
+    {%- set last_cte = "hashed_columns" %}
+)
+{%- endif -%}
+
+{% if dbtvault.is_something(ranked_columns) -%},
+
+ranked_columns AS (
+    SELECT *,
+
+    {{ dbtvault.rank_columns(columns=ranked_columns) if dbtvault.is_something(ranked_columns) }}
+
+    FROM hashed_columns
+    {%- set last_cte = "ranked_columns" %}
+)
+{%- endif %}
+
+SELECT * FROM {{ last_cte }}
 {%- endmacro -%}
