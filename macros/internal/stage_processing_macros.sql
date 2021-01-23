@@ -82,15 +82,15 @@
 
 {%- macro print_list(list_to_print=none, indent=4, trailing_comma=false) -%}
 
-    {{- "\n\n" -}}
     {%- for col_name in list_to_print -%}
-        {{- col_name | indent(indent, first=true) -}}{{- ",\n" if not loop.last -}}
+        {{- col_name | indent(indent) -}}{{- ",\n" if not loop.last -}}
         {{- "," if trailing_comma and loop.last -}}
     {%- endfor -%}
 
 {%- endmacro -%}
 
-{%- macro check_source %}
+
+{% macro compile_final_selection() %}
 
 
-
+{% endmacro %}
