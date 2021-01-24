@@ -14,10 +14,11 @@
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    {%- if model.config.materialized == 'vault_insert_by_rank' -%}
-        {%- set source_cols = source_cols + [config.get('rank_column')] -%}
-    {%- endif %}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ dbtvault.prefix(source_cols + [config.get('rank_column')], 'a', alias_target='source') }}
+    {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    {%- endif %}
     FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
