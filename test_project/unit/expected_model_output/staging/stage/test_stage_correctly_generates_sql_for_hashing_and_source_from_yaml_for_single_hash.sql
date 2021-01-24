@@ -1,9 +1,5 @@
-WITH stage AS (
-    SELECT *
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-),
+WITH source_data AS (
 
-derived_columns AS (
     SELECT
 
     BOOKING_FK,
@@ -26,10 +22,24 @@ derived_columns AS (
     TEST_COLUMN_9,
     BOOKING_DATE
 
-    FROM stage
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
 hashed_columns AS (
+
+    SELECT *,
+
+    CAST(MD5_BINARY(CONCAT_WS('||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_DOB AS VARCHAR))), ''), '^^'),
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''), '^^'),
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_NAME AS VARCHAR))), ''), '^^')
+    )) AS BINARY(16)) AS CUST_CUSTOMER_HASHDIFF
+
+    FROM source_data
+),
+
+columns_to_select AS (
+
     SELECT
 
     BOOKING_FK,
@@ -51,22 +61,9 @@ hashed_columns AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9,
     BOOKING_DATE,
-
-    CAST(MD5_BINARY(CONCAT_WS('||',
-        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_DOB AS VARCHAR))), ''), '^^'),
-        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''), '^^'),
-        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_NAME AS VARCHAR))), ''), '^^')
-    )) AS BINARY(16)) AS CUST_CUSTOMER_HASHDIFF
-
-    FROM derived_columns
-),
-
-ranked_columns AS (
-
-    SELECT *
+    CUST_CUSTOMER_HASHDIFF
 
     FROM hashed_columns
-
 )
 
-SELECT * FROM ranked_columns
+SELECT * FROM columns_to_select

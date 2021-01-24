@@ -803,7 +803,10 @@ class DBTVAULTGenerator:
 
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
-                                      ignore_columns):
+                                      ignore_columns=None):
+
+        if ignore_columns is None:
+            ignore_columns = []
 
         extracted_compare_columns = [k for k, v in columns_to_compare.items()]
 
