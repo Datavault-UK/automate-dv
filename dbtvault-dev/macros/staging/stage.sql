@@ -51,7 +51,19 @@
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
-{%- set final_columns_to_select = [] %}
+{%- set final_columns_to_select = [] -%}
+
+{#- Include source columns in final column selection if true -#}
+{%- if include_source_columns -%}
+    {%- if dbtvault.is_nothing(derived_columns)
+           and dbtvault.is_nothing(hashed_columns)
+           and dbtvault.is_nothing(ranked_columns) -%}
+        {%- set final_columns_to_select = final_columns_to_select + all_source_columns -%}
+    {%- else -%}
+        {#- Only include non-overriden columns if not just source columns -#}
+        {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
+    {%- endif -%}
+{%- endif %}
 
 WITH source_data AS (
 
@@ -110,20 +122,9 @@ ranked_columns AS (
 
 columns_to_select AS (
 
-
     SELECT
 
-    {%- if include_source_columns -%}
-        {%- if dbtvault.is_nothing(derived_columns)
-               and dbtvault.is_nothing(hashed_columns)
-               and dbtvault.is_nothing(ranked_columns) -%}
-            {%- set final_columns_to_select = final_columns_to_select + all_source_columns -%}
-        {%- else -%}
-            {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
-        {%- endif -%}
-    {%- endif %}
-
-    {{ dbtvault.print_list(final_columns_to_select) if final_columns_to_select }}
+    {{ dbtvault.print_list(final_columns_to_select) }}
 
     FROM {{ last_cte }}
 )
