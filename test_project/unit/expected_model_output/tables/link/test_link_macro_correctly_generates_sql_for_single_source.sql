@@ -4,7 +4,7 @@ WITH row_rank_1 AS (
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE ASC
            ) AS row_number
-    FROM DBTVAULT_DEV.TEST_ALEX_HIGGS.raw_source
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 stage_1 AS (
     SELECT DISTINCT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE
