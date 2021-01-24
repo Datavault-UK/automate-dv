@@ -18,6 +18,9 @@ WITH stage AS (
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {%- endif %}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    WHERE __RANK_FILTER__
+    {%- endif %}
 ),
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.prefix(source_cols, 'stg') }}

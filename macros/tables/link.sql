@@ -23,13 +23,24 @@
 
 {%- set source_number = (loop.index | string) -%}
 
+{%- if model.config.materialized == 'vault_insert_by_rank' -%}
+rank_col_{{ source_number }} AS (
+    SELECT * FROM {{ ref(src) }}
+    WHERE __RANK_FILTER__
+),
+{% endif -%}
+
 rank_{{ source_number }} AS (
     SELECT {{ source_cols | join(', ') }},
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    FROM rank_col_{{ source_number }}
+    {% else %}
     FROM {{ ref(src) }}
+    {%- endif -%}
 ),
 stage_{{ source_number }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
