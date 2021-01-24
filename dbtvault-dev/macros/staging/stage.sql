@@ -55,7 +55,9 @@
 
 WITH source_data AS (
 
-    SELECT *
+    SELECT
+
+    {{- "\n\n    " ~ dbtvault.print_list(source_columns_to_select) if source_columns_to_select else " *" }}
 
     FROM {{ source_relation }}
     {%- set last_cte = "source_data" %}
@@ -65,9 +67,9 @@ WITH source_data AS (
 
 derived_columns AS (
 
-    SELECT
+    SELECT *,
 
-    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4) }}
+    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "derived_columns" %}
@@ -94,7 +96,7 @@ ranked_columns AS (
 
     SELECT *,
 
-    {{ dbtvault.rank_columns(columns=ranked_columns) if dbtvault.is_something(ranked_columns) }}
+    {{ dbtvault.rank_columns(columns=ranked_columns) | indent(4) if dbtvault.is_something(ranked_columns) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "ranked_columns" %}
@@ -108,8 +110,14 @@ columns_to_select AS (
 
     SELECT
 
-    {% if include_source_columns -%}
-        {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
+    {%- if include_source_columns -%}
+        {%- if dbtvault.is_nothing(derived_columns)
+               and dbtvault.is_nothing(hashed_columns)
+               and dbtvault.is_nothing(ranked_columns) -%}
+            {%- set final_columns_to_select = final_columns_to_select + all_source_columns -%}
+        {%- else -%}
+            {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
+        {%- endif -%}
     {%- endif -%}
 
     {%- if dbtvault.is_something(derived_columns) -%}
@@ -122,9 +130,9 @@ columns_to_select AS (
 
     {%- if dbtvault.is_something(ranked_columns) -%}
         {%- set final_columns_to_select = final_columns_to_select + ranked_column_names -%}
-    {%- endif -%}
+    {%- endif %}
 
-    {{- dbtvault.print_list(final_columns_to_select) }}
+    {{ dbtvault.print_list(final_columns_to_select) if final_columns_to_select }}
 
     FROM {{ last_cte }}
 )
