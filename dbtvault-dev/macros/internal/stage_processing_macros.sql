@@ -87,9 +87,3 @@
     {%- endfor -%}
 
 {%- endmacro -%}
-
-
-{% macro compile_final_selection() %}
-
-
-{% endmacro %}
