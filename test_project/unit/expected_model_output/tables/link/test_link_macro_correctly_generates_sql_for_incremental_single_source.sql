@@ -1,4 +1,4 @@
-WITH rank_1 AS (
+WITH row_rank_1 AS (
     SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
@@ -8,13 +8,13 @@ WITH rank_1 AS (
 ),
 stage_1 AS (
     SELECT DISTINCT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE
-    FROM rank_1
+    FROM row_rank_1
     WHERE row_number = 1
 ),
 stage_union AS (
     SELECT * FROM stage_1
 ),
-rank_union AS (
+row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
@@ -26,7 +26,7 @@ rank_union AS (
 ),
 stage AS (
     SELECT DISTINCT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE
-    FROM rank_union
+    FROM row_rank_union
     WHERE row_number = 1
 ),
 records_to_insert AS (

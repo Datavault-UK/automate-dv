@@ -30,7 +30,7 @@ rank_col_{{ source_number }} AS (
 ),
 {% endif -%}
 
-rank_{{ source_number }} AS (
+row_rank_{{ source_number }} AS (
     SELECT {{ source_cols | join(', ') }},
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
@@ -40,11 +40,11 @@ rank_{{ source_number }} AS (
     FROM rank_col_{{ source_number }}
     {% else %}
     FROM {{ ref(src) }}
-    {%- endif -%}
+    {%- endif %}
 ),
 stage_{{ source_number }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_{{ source_number }}
+    FROM row_rank_{{ source_number }}
     WHERE row_number = 1
 ),
 {% endfor -%}
@@ -64,7 +64,7 @@ stage_period_filter AS (
     WHERE __PERIOD_FILTER__
 ),
 {%- endif %}
-rank_union AS (
+row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
@@ -79,7 +79,7 @@ rank_union AS (
 ),
 stage AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_union
+    FROM row_rank_union
     WHERE row_number = 1
 ),
 records_to_insert AS (
