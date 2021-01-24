@@ -39,7 +39,7 @@ row_rank_{{ source_number }} AS (
     FROM rank_col_{{ source_number }}
     {% else %}
     FROM {{ ref(src) }}
-    {% endif -%}
+    {%- endif %}
 ),
 stage_{{ source_number }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
