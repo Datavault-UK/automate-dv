@@ -22,17 +22,28 @@
 
 {%- set source_number = loop.index | string -%}
 
-rank_{{ source_number }} AS (
+{%- if model.config.materialized == 'vault_insert_by_rank' -%}
+rank_col_{{ source_number }} AS (
+    SELECT * FROM {{ ref(src) }}
+    WHERE __RANK_FILTER__
+),
+{% endif -%}
+
+row_rank_{{ source_number }} AS (
     SELECT {{ source_cols | join(', ') }},
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    FROM rank_col_{{ source_number }}
+    {% else %}
     FROM {{ ref(src) }}
+    {% endif -%}
 ),
 stage_{{ source_number }} AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_{{ source_number }}
+    FROM row_rank_{{ source_number }}
     WHERE row_number = 1
 ),
 {% endfor -%}
@@ -52,12 +63,12 @@ stage_period_filter AS (
     WHERE __PERIOD_FILTER__
 ),
 {%- endif %}
-rank_union AS (
+row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
-           ) AS row_number
+           ) AS row_rank_number
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     FROM stage_period_filter
     {%- else %}
@@ -67,8 +78,8 @@ rank_union AS (
 ),
 stage AS (
     SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_union
-    WHERE row_number = 1
+    FROM row_rank_union
+    WHERE row_rank_number = 1
 ),
 records_to_insert AS (
     SELECT stage.* FROM stage
