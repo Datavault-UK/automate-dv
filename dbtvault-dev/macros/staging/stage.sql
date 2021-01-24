@@ -51,7 +51,7 @@
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
-
+{%- set final_columns_to_select = [] %}
 
 WITH source_data AS (
 
@@ -72,7 +72,8 @@ derived_columns AS (
     {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
 
     FROM {{ last_cte }}
-    {%- set last_cte = "derived_columns" %}
+    {%- set last_cte = "derived_columns" -%}
+    {%- set final_columns_to_select = final_columns_to_select + derived_column_names %}
 )
 {%- endif -%}
 
@@ -86,7 +87,8 @@ hashed_columns AS (
     {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
 
     FROM {{ last_cte }}
-    {%- set last_cte = "hashed_columns" %}
+    {%- set last_cte = "hashed_columns" -%}
+    {%- set final_columns_to_select = final_columns_to_select + hashed_column_names %}
 )
 {%- endif -%}
 
@@ -99,14 +101,15 @@ ranked_columns AS (
     {{ dbtvault.rank_columns(columns=ranked_columns) | indent(4) if dbtvault.is_something(ranked_columns) }}
 
     FROM {{ last_cte }}
-    {%- set last_cte = "ranked_columns" %}
+    {%- set last_cte = "ranked_columns" -%}
+    {%- set final_columns_to_select = final_columns_to_select + ranked_column_names %}
 )
 {%- endif -%}
 
 ,
 
 columns_to_select AS (
-    {%- set final_columns_to_select = [] %}
+
 
     SELECT
 
@@ -118,18 +121,6 @@ columns_to_select AS (
         {%- else -%}
             {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
         {%- endif -%}
-    {%- endif -%}
-
-    {%- if dbtvault.is_something(derived_columns) -%}
-        {%- set final_columns_to_select = final_columns_to_select + derived_column_names -%}
-    {%- endif -%}
-
-    {%- if dbtvault.is_something(hashed_columns) -%}
-        {%- set final_columns_to_select = final_columns_to_select + hashed_column_names -%}
-    {%- endif -%}
-
-    {%- if dbtvault.is_something(ranked_columns) -%}
-        {%- set final_columns_to_select = final_columns_to_select + ranked_column_names -%}
     {%- endif %}
 
     {{ dbtvault.print_list(final_columns_to_select) if final_columns_to_select }}
