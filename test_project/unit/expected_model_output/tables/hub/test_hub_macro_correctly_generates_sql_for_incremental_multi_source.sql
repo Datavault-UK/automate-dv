@@ -1,4 +1,4 @@
-WITH rank_1 AS (
+WITH row_rank_1 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
@@ -8,10 +8,10 @@ WITH rank_1 AS (
 ),
 stage_1 AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE
-    FROM rank_1
+    FROM row_rank_1
     WHERE row_number = 1
 ),
-rank_2 AS (
+row_rank_2 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
@@ -21,7 +21,7 @@ rank_2 AS (
 ),
 stage_2 AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE
-    FROM rank_2
+    FROM row_rank_2
     WHERE row_number = 1
 ),
 stage_union AS (
@@ -29,19 +29,19 @@ stage_union AS (
     UNION ALL
     SELECT * FROM stage_2
 ),
-rank_union AS (
+row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE, RECORD_SOURCE ASC
-           ) AS row_number
+           ) AS row_rank_number
     FROM stage_union
     WHERE CUSTOMER_PK IS NOT NULL
 ),
 stage AS (
     SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE
-    FROM rank_union
-    WHERE row_number = 1
+    FROM row_rank_union
+    WHERE row_rank_number = 1
 ),
 records_to_insert AS (
     SELECT stage.* FROM stage
