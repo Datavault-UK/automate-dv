@@ -7,7 +7,7 @@
 
     {% if source_relation %}
         {%- do adapter.drop_relation(source_relation) -%}
-        {% do log('Successfully dropped model ' ~ "'" ~ model_name ~ "'", true) %}
+        {% do log("Successfully dropped model '{}'".format(model_name), true) %}
     {% else %}
         {% do log('Nothing to drop', true) %}
     {% endif %}
@@ -19,6 +19,7 @@
     {% set schema_name %} 
         {{- target.schema -}}_{{- env_var('SNOWFLAKE_DB_USER') -}}{{- '_' ~ env_var('CIRCLE_BRANCH', '') if env_var('CIRCLE_BRANCH', '') -}}{{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}{{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
     {% endset %}
+    {% set schema_name = schema_name | replace('-','_') | replace('.','_') -%}
 
     {%- set source_relation = adapter.get_relation(
           database=target.database,
@@ -38,10 +39,10 @@
     {% set schema_name %} 
         {{- target.schema -}}_{{- env_var('SNOWFLAKE_DB_USER') -}}{{- '_' ~ env_var('CIRCLE_BRANCH', '') if env_var('CIRCLE_BRANCH', '') -}}{{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}{{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
     {% endset %}
-
+    {% set schema_name = schema_name | replace('-','_') | replace('.','_') %}
 
     {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
-    {% do log("Schema '" ~ schema_name ~ "' dropped.", true) %}
+    {% do log("Schema '{}' dropped.".format(schema_name), true) %}
 
 {% endmacro %}
 
@@ -50,10 +51,10 @@
     {% set schema_name %} 
         {{- target.schema -}}_{{- env_var('SNOWFLAKE_DB_USER') -}}{{- '_' ~ env_var('CIRCLE_BRANCH', '') if env_var('CIRCLE_BRANCH', '') -}}{{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}{{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
     {% endset %}
-
+    {% set schema_name = schema_name | replace('-','_') | replace('.','_') %}
 
     {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
-    {% do log("Schema '" ~ schema_name ~ "' created.", true) %}
+    {% do log("Schema '{}' created.".format(schema_name), true) %}
 
 {%- endmacro -%}
 
