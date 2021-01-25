@@ -1,9 +1,9 @@
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- adapter.dispatch('eff_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                                          src_start_date=src_start_date, src_end_date=src_end_date,
-                                                                          src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                                                          source_model=source_model) -}}
+                                                                                   src_start_date=src_start_date, src_end_date=src_end_date,
+                                                                                   src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                                                   source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
@@ -20,26 +20,24 @@ WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {% endif %}
+    {%- set source_cte = "source_data" %}
 ),
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
 rank_col AS (
     SELECT * FROM source_data
     WHERE __RANK_FILTER__
+    {%- set source_cte = "rank_col" %}
 ),
 {% endif -%}
 
 {%- if load_relation(this) is none %}
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    FROM rank_col AS e
-    {% else %}
-    FROM source_data AS e
-    {% endif -%}
+    FROM {{ source_cte }} AS e
 )
 {%- else %}
-latest_eff AS
+latest_open_eff AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
@@ -47,13 +45,8 @@ latest_eff AS
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_number
     FROM {{ this }} AS b
-),
-latest_open_eff AS
-(
-    SELECT {{ dbtvault.alias_all(source_cols, 'a') }}
-    FROM latest_eff AS a
     WHERE TO_DATE(a.{{ src_end_date }}) = TO_DATE('9999-12-31')
-    AND a.row_number = 1
+    QUALIFY row_number = 1
 ),
 stage_slice AS
 (
