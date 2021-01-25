@@ -1,9 +1,5 @@
-WITH stage AS (
-    SELECT *
-    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-),
+WITH source_data AS (
 
-derived_columns AS (
     SELECT
 
     BOOKING_FK,
@@ -26,10 +22,11 @@ derived_columns AS (
     TEST_COLUMN_9,
     BOOKING_DATE
 
-    FROM stage
+    FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
 hashed_columns AS (
+
     SELECT
 
     BOOKING_FK,
@@ -69,7 +66,35 @@ hashed_columns AS (
         IFNULL(NULLIF(UPPER(TRIM(CAST(TEST_COLUMN_9 AS VARCHAR))), ''), '^^')
     )) AS BINARY(16)) AS CUSTOMER_HASHDIFF
 
-    FROM derived_columns
+    FROM source_data
+),
+
+columns_to_select AS (
+
+    SELECT
+
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_ID,
+    LOADDATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
+    TEST_COLUMN_2,
+    TEST_COLUMN_3,
+    TEST_COLUMN_4,
+    TEST_COLUMN_5,
+    TEST_COLUMN_6,
+    TEST_COLUMN_7,
+    TEST_COLUMN_8,
+    TEST_COLUMN_9,
+    BOOKING_DATE,
+    CUSTOMER_PK,
+    CUSTOMER_HASHDIFF
+
+    FROM hashed_columns
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM columns_to_select
