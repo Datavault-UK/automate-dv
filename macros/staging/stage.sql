@@ -43,14 +43,19 @@
 
     {%- set source_relation = ref(source_model) -%}
     {%- set all_source_columns = dbtvault.source_columns(source_relation=source_relation) -%}
+{%- else -%}
+
+    {%- set all_source_columns = [] -%}
 {%- endif -%}
 
 {%- set derived_column_names = dbtvault.extract_column_names(derived_columns) -%}
 {%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) -%}
 {%- set ranked_column_names = dbtvault.extract_column_names(ranked_columns) -%}
 {%- set exclude_column_names = derived_column_names + hashed_column_names %}
+{%- set source_and_derived_column_names = all_source_columns + derived_column_names %}
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
+{%- set derived_columns_to_select = dbtvault.process_columns_to_select(source_and_derived_column_names, hashed_column_names) | unique | list -%}
 {%- set final_columns_to_select = [] -%}
 
 {#- Include source columns in final column selection if true -#}
@@ -69,7 +74,7 @@ WITH source_data AS (
 
     SELECT
 
-    {{- "\n\n    " ~ dbtvault.print_list(source_columns_to_select) if source_columns_to_select else " *" }}
+    {{- "\n\n    " ~ dbtvault.print_list(all_source_columns) if all_source_columns else " *" }}
 
     FROM {{ source_relation }}
     {%- set last_cte = "source_data" %}
@@ -79,9 +84,9 @@ WITH source_data AS (
 
 derived_columns AS (
 
-    SELECT *,
+    SELECT
 
-    {{ dbtvault.derive_columns(columns=derived_columns) | indent(4) }}
+    {{ dbtvault.derive_columns(source_relation=source_relation, columns=derived_columns) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "derived_columns" -%}
@@ -93,7 +98,9 @@ derived_columns AS (
 
 hashed_columns AS (
 
-    SELECT *,
+    SELECT
+
+    {{ dbtvault.print_list(derived_columns_to_select) }},
 
     {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
     {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
