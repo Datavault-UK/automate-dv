@@ -90,7 +90,7 @@
         {% endfor %}
 
         {% call noop_statement(name='main', status="INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
-            {{ tmp_table_sql }}
+            {{ filtered_sql }}
         {%- endcall %}
 
     {% endif %}
