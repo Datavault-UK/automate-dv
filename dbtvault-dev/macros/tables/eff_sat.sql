@@ -45,7 +45,7 @@ latest_open_eff AS
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_number
     FROM {{ this }} AS b
-    WHERE TO_DATE(a.{{ src_end_date }}) = TO_DATE('9999-12-31')
+    WHERE TO_DATE(b.{{ src_end_date }}) = TO_DATE('9999-12-31')
     QUALIFY row_number = 1
 ),
 stage_slice AS
