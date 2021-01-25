@@ -25,7 +25,7 @@ WITH source_data AS (
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
-hashed_columns AS (
+derived_columns AS (
 
     SELECT
 
@@ -48,14 +48,59 @@ hashed_columns AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9,
     BOOKING_DATE,
+    'STG_BOOKING' AS SOURCE,
+    BOOKING_DATE AS EFFECTIVE_FROM
 
+    FROM source_data
+),
+
+hashed_columns AS (
+
+    SELECT
+
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_ID,
+    LOADDATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
+    TEST_COLUMN_2,
+    TEST_COLUMN_3,
+    TEST_COLUMN_4,
+    TEST_COLUMN_5,
+    TEST_COLUMN_6,
+    TEST_COLUMN_7,
+    TEST_COLUMN_8,
+    TEST_COLUMN_9,
+    BOOKING_DATE,
+    SOURCE,
+    EFFECTIVE_FROM,
+
+    CAST((MD5_BINARY(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''))) AS BINARY(16)) AS CUSTOMER_PK,
     CAST(MD5_BINARY(CONCAT_WS('||',
         IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_DOB AS VARCHAR))), ''), '^^'),
         IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''), '^^'),
         IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_NAME AS VARCHAR))), ''), '^^')
-    )) AS BINARY(16)) AS CUST_CUSTOMER_HASHDIFF
+    )) AS BINARY(16)) AS CUST_CUSTOMER_HASHDIFF,
+    CAST(MD5_BINARY(CONCAT_WS('||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''), '^^'),
+        IFNULL(NULLIF(UPPER(TRIM(CAST(NATIONALITY AS VARCHAR))), ''), '^^'),
+        IFNULL(NULLIF(UPPER(TRIM(CAST(PHONE AS VARCHAR))), ''), '^^')
+    )) AS BINARY(16)) AS CUSTOMER_HASHDIFF
 
-    FROM source_data
+    FROM derived_columns
+),
+
+ranked_columns AS (
+
+    SELECT *,
+
+    RANK() OVER (PARTITION BY CUSTOMER_ID ORDER BY LOADDATE) AS DBTVAULT_RANK
+
+    FROM hashed_columns
 ),
 
 columns_to_select AS (
@@ -64,7 +109,6 @@ columns_to_select AS (
 
     BOOKING_FK,
     ORDER_FK,
-    CUSTOMER_PK,
     CUSTOMER_ID,
     LOADDATE,
     RECORD_SOURCE,
@@ -81,9 +125,14 @@ columns_to_select AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9,
     BOOKING_DATE,
-    CUST_CUSTOMER_HASHDIFF
+    SOURCE,
+    EFFECTIVE_FROM,
+    CUSTOMER_PK,
+    CUST_CUSTOMER_HASHDIFF,
+    CUSTOMER_HASHDIFF,
+    DBTVAULT_RANK
 
-    FROM hashed_columns
+    FROM ranked_columns
 )
 
 SELECT * FROM columns_to_select

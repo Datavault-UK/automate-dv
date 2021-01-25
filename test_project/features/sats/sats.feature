@@ -127,7 +127,7 @@ Feature: Satellites
       | md5('1006') | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated satellite where all records load and some hashdiffs are a hash of all NULLs
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where all records load and some hashdiffs are a hash of all NULLs
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
