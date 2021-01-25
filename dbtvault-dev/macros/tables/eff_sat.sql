@@ -32,11 +32,13 @@ rank_col AS (
 {% endif -%}
 
 {%- if load_relation(this) is none %}
+
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
     FROM {{ source_cte }} AS e
 )
 {%- else %}
+
 latest_open_eff AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
@@ -48,11 +50,13 @@ latest_open_eff AS
     WHERE TO_DATE(b.{{ src_end_date }}) = TO_DATE('9999-12-31')
     QUALIFY row_number = 1
 ),
+
 stage_slice AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM  {{ "rank_col" if model.config.materialized == 'vault_insert_by_rank' else "source_data" }} AS stage
+    FROM {{ "rank_col" if model.config.materialized == 'vault_insert_by_rank' else "source_data" }} AS stage
 ),
+
 new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'stage') }}
@@ -64,6 +68,7 @@ new_open_records AS (
     AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 {%- if is_auto_end_dating %}
+
 links_to_end_date AS (
     SELECT a.*
     FROM latest_open_eff AS a
@@ -72,6 +77,7 @@ links_to_end_date AS (
     WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
     OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
 ),
+
 new_end_dated_records AS (
     SELECT DISTINCT
         h.{{ src_pk }},
@@ -81,6 +87,7 @@ new_end_dated_records AS (
     INNER JOIN links_to_end_date AS g
     ON g.{{ src_pk }} = h.{{ src_pk }}
 ),
+
 amended_end_dated_records AS (
     SELECT DISTINCT
         a.{{ src_pk }},
@@ -95,6 +102,7 @@ amended_end_dated_records AS (
     AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 {%- endif %}
+
 records_to_insert AS (
     SELECT * FROM new_open_records
     {%- if is_auto_end_dating %}
