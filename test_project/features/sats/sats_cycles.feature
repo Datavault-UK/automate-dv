@@ -1,13 +1,13 @@
 @fixture.set_workdir
-Feature: Satellites Loaded using separate manual loads
+Feature: Satellites Loaded in cycles using separate manual loads
 
   @fixture.satellite_cycle
-  Scenario: [SAT-CYCLE] Satellite load over several cycles
+  Scenario: [SAT-CYCLE] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE is loaded for day 1
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
@@ -18,7 +18,7 @@ Feature: Satellites Loaded using separate manual loads
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
-    When the RAW_STAGE is loaded for day 2
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
@@ -28,7 +28,7 @@ Feature: Satellites Loaded using separate manual loads
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
-    When the RAW_STAGE is loaded for day 3
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
@@ -38,7 +38,7 @@ Feature: Satellites Loaded using separate manual loads
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
-    When the RAW_STAGE is loaded for day 4
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
@@ -71,12 +71,12 @@ Feature: Satellites Loaded using separate manual loads
 
   @fixture.satellite_cycle
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] Satellite load over several cycles
+  Scenario: [SAT-CYCLE-SHA] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
     # ================ DAY 1 ===================
-    And the RAW_STAGE is loaded for day 1
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
@@ -87,7 +87,7 @@ Feature: Satellites Loaded using separate manual loads
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
-    And the RAW_STAGE is loaded for day 2
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
@@ -97,7 +97,7 @@ Feature: Satellites Loaded using separate manual loads
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
-    And the RAW_STAGE is loaded for day 3
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 1995-08-07   | 2019-05-06     | 2019-05-06 | *      |
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
@@ -107,7 +107,7 @@ Feature: Satellites Loaded using separate manual loads
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
-    And the RAW_STAGE is loaded for day 4
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 1995-08-07   | 2019-05-07     | 2019-05-07 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |

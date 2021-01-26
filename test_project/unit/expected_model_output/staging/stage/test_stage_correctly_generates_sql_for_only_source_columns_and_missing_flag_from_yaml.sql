@@ -1,4 +1,5 @@
-WITH stage AS (
+WITH source_data AS (
+
     SELECT
 
     BOOKING_FK,
@@ -18,21 +19,37 @@ WITH stage AS (
     TEST_COLUMN_6,
     TEST_COLUMN_7,
     TEST_COLUMN_8,
-    TEST_COLUMN_9
+    TEST_COLUMN_9,
+    BOOKING_DATE
 
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
-derived_columns AS (
-    SElECT *
+columns_to_select AS (
 
-    FROM stage
-),
+    SELECT
 
-hashed_columns AS (
-    SELECT *
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_PK,
+    CUSTOMER_ID,
+    LOADDATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
+    TEST_COLUMN_2,
+    TEST_COLUMN_3,
+    TEST_COLUMN_4,
+    TEST_COLUMN_5,
+    TEST_COLUMN_6,
+    TEST_COLUMN_7,
+    TEST_COLUMN_8,
+    TEST_COLUMN_9,
+    BOOKING_DATE
 
-    FROM derived_columns
+    FROM source_data
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM columns_to_select

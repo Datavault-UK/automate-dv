@@ -110,7 +110,7 @@ Feature: Transactional Links
       | 1238        | 1244     | 12345691           | 2019-09-20       | CR   | 4578.34  | 2019-09-22 | SAP    |
     And I create the STG_CUSTOMER stage
     And I load the T_LINK t_link
-    And the RAW_STAGE is loaded for day 1
+    And the RAW_STAGE is loaded
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
       | 1234        | 1245     | 12345692           | 2019-09-21       | CR   | 234.56   | 2019-09-23 | SAP    |
       | 1234        | 1246     | 12345693           | 2019-09-21       | DR   | 30.00    | 2019-09-23 | SAP    |
