@@ -1,41 +1,32 @@
 WITH stage AS (
-    SELECT
-
-    BOOKING_FK,
-    ORDER_FK,
-    CUSTOMER_PK,
-    CUSTOMER_ID,
-    LOADDATE,
-    RECORD_SOURCE,
-    CUSTOMER_DOB,
-    CUSTOMER_NAME,
-    NATIONALITY,
-    PHONE,
-    TEST_COLUMN_2,
-    TEST_COLUMN_3,
-    TEST_COLUMN_4,
-    TEST_COLUMN_5,
-    TEST_COLUMN_6,
-    TEST_COLUMN_7,
-    TEST_COLUMN_8,
-    TEST_COLUMN_9
-
+    SELECT *
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
 
 derived_columns AS (
-    SElECT
+    SELECT
 
     'STG_BOOKING' AS SOURCE,
-    LOAD_DATETIME AS EFFECTIVE_FROM
+    LOADDATE AS EFFECTIVE_FROM
 
     FROM stage
 ),
 
 hashed_columns AS (
-    SELECT *
+    SELECT
+
+    SOURCE,
+    EFFECTIVE_FROM
 
     FROM derived_columns
+),
+
+ranked_columns AS (
+
+    SELECT *
+
+    FROM hashed_columns
+
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM ranked_columns
