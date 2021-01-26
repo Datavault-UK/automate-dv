@@ -1,17 +1,20 @@
 import glob
+import io
 import logging
 import os
 import re
 import shutil
+import textwrap
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
+from typing import List
 
 import pandas as pd
-from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from ruamel.yaml import YAML
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -59,27 +62,35 @@ class DBTTestUtils:
             self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
         else:
-
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET', '').lower() == 'snowflake':
-            target = 'snowflake'
-        elif not os.getenv('TARGET', None):
-            print('TARGET not set. Target set to snowflake.')
+        if os.getenv('TARGET', '').lower() == 'snowflake' or not os.getenv('TARGET', None):
             target = 'snowflake'
         else:
             target = None
 
+        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+
+    @staticmethod
+    def set_dynamic_properties_for_comparison(target):
+        """
+        Database and schema for generated SQL during macro tests changes based on user.
+        This function works out what those names need to be for downstream comparisons to use instead.
+        """
+
         if target == 'snowflake':
-            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB'):
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
-                              f"_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            self.EXPECTED_PARAMETERS = {
+            schema_name = schema_name.replace("-", "_")
+            schema_name = schema_name.replace(".", "_")
+
+            return {
                 'SCHEMA_NAME': schema_name,
-                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE')
+                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
             }
         else:
             raise ValueError('TARGET not set')
@@ -146,7 +157,7 @@ class DBTTestUtils:
             model_name = f'+{model_name}'
 
         if full_refresh:
-            command = ['dbt', mode, '--full-refresh', '-m', model_name]
+            command = ['dbt', mode, '-m', model_name, '--full-refresh']
         else:
             command = ['dbt', mode, '-m', model_name]
 
@@ -270,11 +281,7 @@ class DBTTestUtils:
         """
         Check context for full refresh
         """
-        if hasattr(context, 'full_refresh'):
-            if context.full_refresh:
-                return True
-
-        return False
+        return getattr(context, 'full_refresh', False)
 
     def replace_test_schema(self):
         """
@@ -282,6 +289,20 @@ class DBTTestUtils:
         """
 
         self.run_dbt_operation(macro_name='recreate_current_schemas')
+
+    def create_test_schemas(self):
+        """
+        Create TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='create_test_schemas')
+
+    def drop_test_schemas(self):
+        """
+        Drop TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='drop_test_schemas')
 
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
@@ -301,7 +322,7 @@ class DBTTestUtils:
 
     def context_table_to_csv(self, table: Table, model_name: str) -> str:
         """
-        Converts a context table in a feature file into a dictionary
+        Converts a context table in a feature file into CSV format
             :param table: The context.table from a scenario
             :param model_name: Name of the model to create
             :return: Name of csv file (minus extension)
@@ -319,15 +340,17 @@ class DBTTestUtils:
 
     def context_table_to_dict(self, table: Table, orient='index'):
         """
-        Converts a context table in a feature file into a pandas DataFrame
+        Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
-            :return: A pandas DataFrame modelled from a context table
+            :return: A dictionary modelled from a context table
         """
 
         table_df = self.context_table_to_df(table)
 
         table_dict = table_df.to_dict(orient=orient)
+
+        table_dict = self.parse_lists_in_dicts(table_dict)
 
         return table_dict
 
@@ -356,19 +379,29 @@ class DBTTestUtils:
         return list(df.columns[df.isin(['*']).all()])
 
     @staticmethod
-    def process_stage_names(processed_stage_names, processed_stage_name):
+    def process_stage_names(context, processed_stage_name):
+        """
+        Output a list of stage names if multiple stages are being used, or a single stage name if only one.
+        """
 
-        if isinstance(processed_stage_names, list):
-            processed_stage_names.append(processed_stage_name)
+        if hasattr(context, "processed_stage_name") and not getattr(context, 'disable_union', False):
+
+            stage_names = context.processed_stage_name
+
+            if isinstance(stage_names, list):
+                stage_names.append(processed_stage_name)
+            else:
+                stage_names = [stage_names] + [processed_stage_name]
+
+            stage_names = list(set(stage_names))
+
+            if isinstance(stage_names, list) and len(stage_names) == 1:
+                stage_names = stage_names[0]
+
+            return stage_names
+
         else:
-            processed_stage_names = [processed_stage_names] + [processed_stage_name]
-
-        processed_stage_names = list(set(processed_stage_names))
-
-        if isinstance(processed_stage_names, list) and len(processed_stage_names) == 1:
-            processed_stage_names = processed_stage_names[0]
-
-        return processed_stage_names
+            return processed_stage_name
 
     @staticmethod
     def calc_hash(columns_as_series: Series) -> Series:
@@ -438,19 +471,45 @@ class DBTTestUtils:
 
         return Series(columns)
 
+    @staticmethod
+    def parse_lists_in_dicts(dicts_with_lists: List[dict]):
+        """
+        Convert string representations of lists in dict values, in a list of dicts
+            :param dicts_with_lists: A list of dictionaries
+        """
+
+        if isinstance(dicts_with_lists, list):
+
+            processed_dicts = []
+
+            check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+
+            if not check_dicts:
+                return dicts_with_lists
+            else:
+
+                for i, col in enumerate(dicts_with_lists):
+                    processed_dicts.append(dict())
+
+                    if isinstance(col, dict):
+                        for k, v in col.items():
+
+                            if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
+                                v = v.replace("[", "")
+                                v = v.replace("]", "")
+                                v = [k.strip() for k in v.split(",")]
+
+                            processed_dicts[i][k] = v
+                    else:
+                        processed_dicts[i] = {col: dicts_with_lists[i]}
+
+                return processed_dicts
+        else:
+            return dicts_with_lists
+
 
 class DBTVAULTGenerator:
     """Functions to generate dbtvault Models"""
-
-    @staticmethod
-    def template_to_file(template, model_name):
-        """
-        Write a template to a file
-            :param template: Template string to write
-            :param model_name: Name of file to write
-        """
-        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
-            f.write(template.strip())
 
     def raw_vault_structure(self, model_name, vault_structure, config=None, **kwargs):
         """
@@ -469,51 +528,42 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link
+            "t_link": self.t_link,
+            "xts": self.xts,
+            "oos_sat": self.oos_sat
         }
-        if vault_structure == "stage":
-            generator_functions[vault_structure](model_name=model_name, config=config)
-        else:
-            generator_functions[vault_structure](model_name=model_name, config=config, **kwargs)
 
-    def stage(self, model_name, source_model: dict, hashed_columns=None, derived_columns=None,
-              include_source_columns=True, config=None):
+        processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
+                                                             config=config, **kwargs)
+
+        generator_functions[vault_structure](**processed_metadata)
+
+    def stage(self, model_name, source_model: dict, derived_columns=None, hashed_columns=None,
+              ranked_columns=None, include_source_columns=True, config=None):
         """
         Generate a stage model template
             :param model_name: Name of the model file
             :param source_model: Model to select from
             :param hashed_columns: Dictionary of hashed columns, can be None
             :param derived_columns: Dictionary of derived column, can be None
+            :param hashed_columns: Dictionary of hashed columns, can be None
+            :param ranked_columns: Dictionary of ranked columns, can be None
             :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param config: Optional model config
         """
 
-        if not config:
-            config = {'materialized': 'view'}
-
-        if hashed_columns:
-            hashed_columns = str(hashed_columns)
-        else:
-            hashed_columns = "none"
-
-        if derived_columns:
-            derived_columns = str(derived_columns)
-        else:
-            derived_columns = "none"
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
+        {{{{ config({config}) }}}}
         {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
-                            source_model='{source_model}',
+                            source_model={source_model},
+                            derived_columns={derived_columns},
                             hashed_columns={hashed_columns},
-                            derived_columns={derived_columns}) }}}}
+                            ranked_columns={ranked_columns}) }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config=None):
+    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config):
         """
         Generate a hub model template
             :param model_name: Name of the model file
@@ -522,28 +572,18 @@ class DBTVAULTGenerator:
             :param src_ldts: Source load date timestamp
             :param src_source: Source record source column
             :param source_model: Model name to select from
-            :param config: Optional model config
+            :param config: Optional model config string
         """
 
-        if isinstance(source_model, list):
-            source_model = f"{source_model}"
-        else:
-            source_model = f"'{source_model}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.hub('{src_pk}', '{src_nk}', '{src_ldts}',
-                          '{src_source}', {source_model})   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
+                          {src_source}, {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config=None):
+    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config):
         """
         Generate a link model template
             :param model_name: Name of the model file
@@ -555,26 +595,17 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(source_model, list):
-            source_model = f"{source_model}"
-        else:
-            source_model = f"'{source_model}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.link('{src_pk}', {src_fk}, '{src_ldts}',
-                           '{src_source}', {source_model})   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.link({src_pk}, {src_fk}, {src_ldts},
+                           {src_source}, {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
-            config=None):
+    def sat(self, model_name, src_pk, src_hashdiff, src_payload,
+            src_eff, src_ldts, src_source, source_model,
+            config):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -588,28 +619,18 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(src_hashdiff, dict):
-            src_hashdiff = f"{src_hashdiff}"
-        else:
-            src_hashdiff = f"'{src_hashdiff}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.sat('{src_pk}', {src_hashdiff}, {src_payload},
-                          '{src_eff}', '{src_ldts}', '{src_source}', 
-                          '{source_model}')   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.sat({src_pk}, {src_hashdiff}, {src_payload},
+                          {src_eff}, {src_ldts}, {src_source}, 
+                          {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
 
     def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
                 src_start_date, src_end_date, src_eff, src_ldts, src_source,
-                source_model, config=None):
+                source_model, config):
         """
         Generate an effectivity satellite model template
             :param model_name: Name of the model file
@@ -625,28 +646,17 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if isinstance(src_dfk, str):
-            src_dfk = f"'{src_dfk}'"
-
-        if isinstance(src_sfk, str):
-            src_sfk = f"'{src_sfk}'"
-
-        if not config:
-            config = {"materialized": "incremental"}
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.eff_sat('{src_pk}', {src_dfk}, {src_sfk},
-                              '{src_start_date}', '{src_end_date}',
-                              '{src_eff}', '{src_ldts}', '{src_source}',
-                              '{source_model}') }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.eff_sat({src_pk}, {src_dfk}, {src_sfk},
+                              {src_start_date}, {src_end_date},
+                              {src_eff}, {src_ldts}, {src_source},
+                              {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, config=None):
+    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, config):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -660,21 +670,142 @@ class DBTVAULTGenerator:
             :param config: Optional model config
         """
 
-        if not config:
-            config = {'materialized': 'incremental'}
-
-        if isinstance(src_fk, str):
-            src_fk = f"'{src_fk}'"
-
-        config_string = self.format_config_str(config)
-
         template = f"""
-        {{{{ config({config_string}) }}}}
-        {{{{ dbtvault.t_link('{src_pk}', {src_fk}, {src_payload}, '{src_eff}',
-                             '{src_ldts}', '{src_source}', '{source_model}')   }}}}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
+                             {src_ldts}, {src_source}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
+
+    def xts(self, model_name, source_model, src_pk, src_ldts, src_satellite, src_source, config=None):
+        """
+        Generate a XTS template
+        """
+
+        template = f"""
+        {{% set src_satellite = {src_satellite} %}}
+
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
+                          {source_model})   }}}}
+        """
+
+        textwrap.dedent(template)
+
+        self.template_to_file(template, model_name)
+
+    def oos_sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
+                out_of_sequence=None, config=None):
+        """
+        Generate a out of sequence satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_hashdiff: Source hashdiff
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param out_of_sequence: Optional dictionary of metadata required for out of sequence sat
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.oos_sat({src_pk}, {src_hashdiff}, {src_payload},
+                              {src_eff}, {src_ldts}, {src_source},
+                              {source_model}, {out_of_sequence}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def process_structure_headings(self, context, model_name: str, headings: list):
+        """
+        Extract keys from headings if they are dictionaries
+            :param context: Fixture context
+            :param model_name: Name of model which headers are being processed for
+            :param headings: Headings to process
+        """
+
+        processed_headings = []
+
+        for item in headings:
+
+            if isinstance(item, dict):
+
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
+
+                    satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
+                    satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
+
+                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+
+                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
+
+                    processed_headings.extend(satellite_columns)
+
+                elif item.get("source_column", None) and item.get("alias", None):
+
+                    processed_headings.append(item['source_column'])
+
+                else:
+                    processed_headings.append(list(item.keys()))
+            else:
+                processed_headings.append(item)
+
+        return list(self.flatten(processed_headings))
+
+    def process_structure_metadata(self, vault_structure, model_name, config, **kwargs):
+        """
+        Format metadata into a format suitable for injecting into a model string.
+            :param vault_structure: THe type of vault structure the metadata is for (hub, link, sat etc.)
+            :param model_name: Name of the model the metadata is for
+            :param config: A config dictionary to be converted to a string
+            :param kwargs: Metadata keys for various vault structures (src_pk, src_hashdiff, etc.)
+        """
+        default_materialisations = {
+            "stage": "view",
+            "hub": "incremental",
+            "link": "incremental",
+            "sat": "incremental",
+            "oos_sat": "incremental",
+            "xts": "incremental",
+            "eff_sat": "incremental",
+            "t_link": "incremental"
+        }
+
+        if not config:
+            config = {"materialized": default_materialisations[vault_structure]}
+
+        if vault_structure == "stage":
+            if not kwargs.get("hashed_columns", None):
+                kwargs["hashed_columns"] = "none"
+
+            if not kwargs.get("derived_columns", None):
+                kwargs["derived_columns"] = "none"
+
+        config = self.format_config_str(config)
+
+        processed_string_values = {key: f"'{val}'" for key, val in kwargs.items() if isinstance(val, str)
+                                   and val != "none"}
+        processed_list_dict_values = {key: f"{val}" for key, val in kwargs.items() if isinstance(val, list)
+                                      or isinstance(val, dict)}
+
+        return {**kwargs, **processed_string_values,
+                **processed_list_dict_values, "config": config,
+                "model_name": model_name}
+
+    @staticmethod
+    def template_to_file(template, model_name):
+        """
+        Write a template to a file
+            :param template: Template string to write
+            :param model_name: Name of file to write
+        """
+        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
+            f.write(template.strip())
 
     @staticmethod
     def append_dict_to_schema_yml(yaml_dict):
@@ -722,7 +853,10 @@ class DBTVAULTGenerator:
 
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
-                                      ignore_columns):
+                                      ignore_columns=None):
+
+        if ignore_columns is None:
+            ignore_columns = []
 
         extracted_compare_columns = [k for k, v in columns_to_compare.items()]
 
@@ -813,3 +947,17 @@ class DBTVAULTGenerator:
         """
 
         shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
+
+    @staticmethod
+    def dict_to_yaml_string(yaml_dict: dict):
+        """
+        Convert a dictionary to YAML and return a string with the YAML
+        """
+
+        yaml = YAML()
+        yaml.indent(sequence=4, offset=2)
+        buf = io.BytesIO()
+        yaml.dump(yaml_dict, buf)
+        yaml_str = buf.getvalue().decode('utf-8')
+
+        return yaml_str
