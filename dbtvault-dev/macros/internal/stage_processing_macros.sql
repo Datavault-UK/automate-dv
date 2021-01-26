@@ -29,14 +29,14 @@
 
     {%- set extracted_column_names = [] -%}
 
-    {%- if columns_dict is none -%}
-        {%- do return([]) -%}
-    {%- elif columns_dict is mapping -%}
+    {%- if columns_dict is mapping -%}
         {%- for key, value in columns_dict.items() -%}
             {%- do extracted_column_names.append(key) -%}
         {%- endfor -%}
 
         {%- do return(extracted_column_names) -%}
+    {%- else -%}
+        {%- do return([]) -%}
     {%- endif -%}
 
 {%- endmacro -%}
@@ -44,42 +44,46 @@
 
 {%- macro process_hash_column_excludes(hash_columns=none, source_columns=none) -%}
 
-    {% set processed_hash_columns = {} %}
+    {%- set processed_hash_columns = {} -%}
 
-    {% for col, col_mapping in hash_columns.items() %}
+    {%- for col, col_mapping in hash_columns.items() -%}
         
-        {% if col_mapping is mapping %}
-            {% if col_mapping.exclude_columns %}
+        {%- if col_mapping is mapping -%}
+            {%- if col_mapping.exclude_columns -%}
 
-                {% set columns_to_hash = dbtvault.process_columns_to_select(source_columns, col_mapping.columns) %}
+                {%- if col_mapping.columns -%}
 
-                {% do hash_columns[col].pop('exclude_columns') %}
-                {% do hash_columns[col].update({'columns': columns_to_hash}) %}
+                    {%- set columns_to_hash = dbtvault.process_columns_to_select(source_columns, col_mapping.columns) -%}
 
-                {% do processed_hash_columns.update({col: hash_columns[col]}) %}
-            {% else %}
-                {% do processed_hash_columns.update({col: col_mapping}) %}
-            {% endif %}
-        {% else %}
-            {% do processed_hash_columns.update({col: col_mapping}) %}
-        {% endif %}
+                    {%- do hash_columns[col].pop('exclude_columns') -%}
+                    {%- do hash_columns[col].update({'columns': columns_to_hash}) -%}
 
-    {% endfor %}
+                    {%- do processed_hash_columns.update({col: hash_columns[col]}) -%}
+                {%- else -%}
 
-    {% do return(processed_hash_columns) %}
+                    {%- do hash_columns[col].pop('exclude_columns') -%}
+                    {%- do hash_columns[col].update({'columns': source_columns}) -%}
+
+                    {%- do processed_hash_columns.update({col: hash_columns[col]}) -%}
+                {%- endif -%}
+            {%- else -%}
+                {%- do processed_hash_columns.update({col: col_mapping}) -%}
+            {%- endif -%}
+        {%- else -%}
+            {%- do processed_hash_columns.update({col: col_mapping}) -%}
+        {%- endif -%}
+
+    {%- endfor -%}
+
+    {%- do return(processed_hash_columns) -%}
 
 {%- endmacro -%}
 
 
-{%- macro print_list(list_to_print=none, indent=4, trailing_comma=false) -%}
+{%- macro print_list(list_to_print=none, indent=4) -%}
 
-    {{- "\n\n" -}}
     {%- for col_name in list_to_print -%}
-        {{- col_name | indent(indent, first=true) -}}{{- ",\n" if not loop.last -}}
-        {{- "," if trailing_comma and loop.last -}}
+        {{- col_name | indent(indent) -}}{{ ",\n    " if not loop.last }}
     {%- endfor -%}
 
 {%- endmacro -%}
-
-
-

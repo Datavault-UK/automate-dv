@@ -1,9 +1,27 @@
-WITH stage AS (
-    SELECT *
+WITH source_data AS (
+
+    SELECT
+
+    LOADDATE,
+    CUSTOMER_ID,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
+    TEST_COLUMN_2,
+    TEST_COLUMN_3,
+    TEST_COLUMN_4,
+    TEST_COLUMN_5,
+    TEST_COLUMN_6,
+    TEST_COLUMN_7,
+    TEST_COLUMN_8,
+    TEST_COLUMN_9
+
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_table
 ),
 
 derived_columns AS (
+
     SELECT
 
     LOADDATE,
@@ -23,10 +41,11 @@ derived_columns AS (
     'STG_BOOKING' AS SOURCE,
     LOADDATE AS EFFECTIVE_FROM
 
-    FROM stage
+    FROM source_data
 ),
 
 hashed_columns AS (
+
     SELECT
 
     LOADDATE,
@@ -59,6 +78,33 @@ hashed_columns AS (
     )) AS BINARY(16)) AS CUSTOMER_HASHDIFF
 
     FROM derived_columns
+),
+
+columns_to_select AS (
+
+    SELECT
+
+    LOADDATE,
+    CUSTOMER_ID,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
+    TEST_COLUMN_2,
+    TEST_COLUMN_3,
+    TEST_COLUMN_4,
+    TEST_COLUMN_5,
+    TEST_COLUMN_6,
+    TEST_COLUMN_7,
+    TEST_COLUMN_8,
+    TEST_COLUMN_9,
+    SOURCE,
+    EFFECTIVE_FROM,
+    CUSTOMER_PK,
+    CUST_CUSTOMER_HASHDIFF,
+    CUSTOMER_HASHDIFF
+
+    FROM hashed_columns
 )
 
-SELECT * FROM hashed_columns
+SELECT * FROM columns_to_select

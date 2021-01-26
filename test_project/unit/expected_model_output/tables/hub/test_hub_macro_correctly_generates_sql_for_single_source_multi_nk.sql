@@ -1,35 +1,16 @@
-WITH rank_1 AS (
+WITH row_rank_1 AS (
     SELECT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
                ORDER BY LOADDATE ASC
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+    QUALIFY row_number = 1
 ),
-stage_1 AS (
-    SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE
-    FROM rank_1
-    WHERE row_number = 1
-),
-stage_union AS (
-    SELECT * FROM stage_1
-),
-rank_union AS (
-    SELECT *,
-           ROW_NUMBER() OVER(
-               PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE, RECORD_SOURCE ASC
-           ) AS row_number
-    FROM stage_union
-    WHERE CUSTOMER_PK IS NOT NULL
-),
-stage AS (
-    SELECT DISTINCT CUSTOMER_PK, CUSTOMER_ID, CUSTOMER_NAME, LOADDATE, RECORD_SOURCE
-    FROM rank_union
-    WHERE row_number = 1
-),
+
 records_to_insert AS (
-    SELECT stage.* FROM stage
+    SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.CUSTOMER_NAME, a.LOADDATE, a.RECORD_SOURCE
+    FROM row_rank_1 AS a
 )
 
 SELECT * FROM records_to_insert
