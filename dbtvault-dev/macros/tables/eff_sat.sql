@@ -1,9 +1,9 @@
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- adapter.dispatch('eff_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                                          src_start_date=src_start_date, src_end_date=src_end_date,
-                                                                          src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                                                          source_model=source_model) -}}
+                                                                                   src_start_date=src_start_date, src_end_date=src_end_date,
+                                                                                   src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                                                   source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
@@ -20,14 +20,26 @@ WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {% endif %}
+    {%- set source_cte = "source_data" %}
 ),
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+rank_col AS (
+    SELECT * FROM source_data
+    WHERE __RANK_FILTER__
+    {%- set source_cte = "rank_col" %}
+),
+{% endif -%}
+
 {%- if load_relation(this) is none %}
+
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM source_data AS e
+    FROM {{ source_cte }} AS e
 )
 {%- else %}
-latest_eff AS
+
+latest_open_eff AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
@@ -35,19 +47,16 @@ latest_eff AS
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_number
     FROM {{ this }} AS b
+    WHERE TO_DATE(b.{{ src_end_date }}) = TO_DATE('9999-12-31')
+    QUALIFY row_number = 1
 ),
-latest_open_eff AS
-(
-    SELECT {{ dbtvault.alias_all(source_cols, 'a') }}
-    FROM latest_eff AS a
-    WHERE TO_DATE(a.{{ src_end_date }}) = TO_DATE('9999-12-31')
-    AND a.row_number = 1
-),
+
 stage_slice AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM source_data AS stage
+    FROM {{ "rank_col" if model.config.materialized == 'vault_insert_by_rank' else "source_data" }} AS stage
 ),
+
 new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'stage') }}
@@ -59,6 +68,7 @@ new_open_records AS (
     AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 {%- if is_auto_end_dating %}
+
 links_to_end_date AS (
     SELECT a.*
     FROM latest_open_eff AS a
@@ -67,6 +77,7 @@ links_to_end_date AS (
     WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
     OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
 ),
+
 new_end_dated_records AS (
     SELECT DISTINCT
         h.{{ src_pk }},
@@ -76,6 +87,7 @@ new_end_dated_records AS (
     INNER JOIN links_to_end_date AS g
     ON g.{{ src_pk }} = h.{{ src_pk }}
 ),
+
 amended_end_dated_records AS (
     SELECT DISTINCT
         a.{{ src_pk }},
@@ -90,6 +102,7 @@ amended_end_dated_records AS (
     AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 {%- endif %}
+
 records_to_insert AS (
     SELECT * FROM new_open_records
     {%- if is_auto_end_dating %}
