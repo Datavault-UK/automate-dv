@@ -23,11 +23,13 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+
+        {% do to_drop.append(tmp_relation) %}
 
     {% elif existing_relation.is_view or full_refresh_mode %}
         {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
@@ -37,12 +39,13 @@
         {% do adapter.drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
+        {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
     {% else %}
 
@@ -95,12 +98,13 @@
                                                                                               period_of_load, rows_inserted,
                                                                                               model.unique_id)) }}
 
+            {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
 
         {% endfor %}
 
         {% call noop_statement(name='main', status="INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
-            -- no-op
+            {{ tmp_table_sql }}
         {%- endcall %}
 
     {% endif %}
@@ -113,7 +117,7 @@
         {%- set rows_inserted = (load_result("main")['status'].split(" "))[1] | int -%}
 
         {% call noop_statement(name='main', status="BASE LOAD {}".format(rows_inserted)) -%}
-            -- no-op
+            {{ build_sql }}
         {%- endcall %}
 
         -- `COMMIT` happens here
@@ -123,7 +127,9 @@
     {{ run_hooks(post_hooks, inside_transaction=True) }}
 
     {% for rel in to_drop %}
-        {{ drop_relation_if_exists(backup_relation) }}
+        {% if rel.type is not none %}
+            {% do adapter.drop_relation(rel) %}
+        {% endif %}
     {% endfor %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}

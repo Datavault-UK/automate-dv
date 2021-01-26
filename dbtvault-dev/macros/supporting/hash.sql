@@ -4,11 +4,14 @@
         {%- set is_hashdiff = false -%}
     {% endif %}
 
-    {{- adapter.dispatch('hash', packages = ['dbtvault'])(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
+    {{- adapter.dispatch('hash', packages = dbtvault.get_dbtvault_namespaces())(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
 
 {%- endmacro %}
 
-{%- macro snowflake__hash(columns, alias, is_hashdiff) -%}
+{%- macro default__hash(columns, alias, is_hashdiff) -%}
+
+{%- set concat_string = "||" -%}
+{%- set null_placeholder_string = "^^" -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
@@ -27,33 +30,48 @@
 {%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" %}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
-{%- if is_hashdiff and columns is iterable and columns is not string -%}
+{%- if is_hashdiff and dbtvault.is_list(columns) -%}
     {%- set columns = columns|sort -%}
 {%- endif -%}
 
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    CAST(({{ hash_alg }}({{ standardise | replace('[EXPRESSION]', column_str) }})) AS BINARY({{ hash_size }})) AS {{ alias }}
+    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), hash_size, alias) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
+    {%- set all_null = [] -%}
 
-CAST({{ hash_alg }}(CONCAT(
+    {%- if is_hashdiff -%}
+        {{- "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+    {%- else -%}
+        {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+    {%- endif -%}
 
-{%- for column in columns %}
+    {%- for column in columns -%}
 
-{%- set column_str = dbtvault.as_constant(column) -%}
+        {%- do all_null.append(null_placeholder_string) -%}
 
-{%- if not loop.last %}
-    IFNULL({{ standardise | replace('[EXPRESSION]', column_str) }}, '^^'), '||',
-{%- else %}
-    IFNULL({{ standardise | replace('[EXPRESSION]', column_str) }}, '^^') ))
-AS BINARY({{ hash_size }})) AS {{ alias }}
-{%- endif -%}
+        {%- set column_str = dbtvault.as_constant(column) -%}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+        {{- "," if not loop.last -}}
 
-{%- endfor -%}
+        {%- if loop.last -%}
+
+            {% if is_hashdiff %}
+                {{- "\n)) AS BINARY({})) AS {}".format(hash_size, alias) -}}
+            {%- else -%}
+                {{- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, alias) -}}
+            {%- endif -%}
+        {%- else -%}
+
+            {%- do all_null.append(concat_string) -%}
+
+        {%- endif -%}
+
+    {%- endfor -%}
+
 {%- endif -%}
 
 {%- endmacro -%}
-
