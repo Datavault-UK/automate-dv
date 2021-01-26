@@ -1,17 +1,20 @@
 import glob
+import io
 import logging
 import os
 import re
 import shutil
+import textwrap
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
+from typing import List
 
 import pandas as pd
-from ruamel.yaml import YAML
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from ruamel.yaml import YAML
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -66,16 +69,25 @@ class DBTTestUtils:
         else:
             target = None
 
+        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+
+    @staticmethod
+    def set_dynamic_properties_for_comparison(target):
+        """
+        Database and schema for generated SQL during macro tests changes based on user.
+        This function works out what those names need to be for downstream comparisons to use instead.
+        """
+
         if target == 'snowflake':
-            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB'):
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
-                              f"_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            self.EXPECTED_PARAMETERS = {
+            return {
                 'SCHEMA_NAME': schema_name,
-                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE')
+                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
             }
         else:
             raise ValueError('TARGET not set')
@@ -142,7 +154,7 @@ class DBTTestUtils:
             model_name = f'+{model_name}'
 
         if full_refresh:
-            command = ['dbt', mode, '--full-refresh', '-m', model_name]
+            command = ['dbt', mode, '-m', model_name, '--full-refresh']
         else:
             command = ['dbt', mode, '-m', model_name]
 
@@ -274,6 +286,20 @@ class DBTTestUtils:
         """
 
         self.run_dbt_operation(macro_name='recreate_current_schemas')
+
+    def create_test_schemas(self):
+        """
+        Create TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='create_test_schemas')
+
+    def drop_test_schemas(self):
+        """
+        Drop TEST schemas
+        """
+
+        self.run_dbt_operation(macro_name='drop_test_schemas')
 
     def context_table_to_df(self, table: Table) -> pd.DataFrame:
         """
@@ -443,36 +469,40 @@ class DBTTestUtils:
         return Series(columns)
 
     @staticmethod
-    def parse_lists_in_dicts(dicts_with_lists: list):
+    def parse_lists_in_dicts(dicts_with_lists: List[dict]):
         """
         Convert string representations of lists in dict values, in a list of dicts
             :param dicts_with_lists: A list of dictionaries
         """
 
-        processed_dicts = []
+        if isinstance(dicts_with_lists, list):
 
-        check_dicts = [k for k in processed_dicts if isinstance(k, dict)]
+            processed_dicts = []
 
-        if not check_dicts:
-            return dicts_with_lists
+            check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+
+            if not check_dicts:
+                return dicts_with_lists
+            else:
+
+                for i, col in enumerate(dicts_with_lists):
+                    processed_dicts.append(dict())
+
+                    if isinstance(col, dict):
+                        for k, v in col.items():
+
+                            if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
+                                v = v.replace("[", "")
+                                v = v.replace("]", "")
+                                v = [k.strip() for k in v.split(",")]
+
+                            processed_dicts[i][k] = v
+                    else:
+                        processed_dicts[i] = {col: dicts_with_lists[i]}
+
+                return processed_dicts
         else:
-
-            for i, col in enumerate(dicts_with_lists):
-                processed_dicts.append(dict())
-
-                if isinstance(col, dict):
-                    for k, v in col.items():
-
-                        if {"[", "]"}.issubset(set(v)):
-                            v = v.replace("[", "")
-                            v = v.replace("]", "")
-                            v = [k.strip() for k in v.split(",")]
-
-                        processed_dicts[i][k] = v
-                else:
-                    processed_dicts[i] = {col: dicts_with_lists[col]}
-
-            return processed_dicts
+            return dicts_with_lists
 
 
 class DBTVAULTGenerator:
@@ -495,8 +525,7 @@ class DBTVAULTGenerator:
             "link": self.link,
             "sat": self.sat,
             "eff_sat": self.eff_sat,
-            "t_link": self.t_link,
-            "pit": self.pit
+            "t_link": self.t_link
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -504,14 +533,15 @@ class DBTVAULTGenerator:
 
         generator_functions[vault_structure](**processed_metadata)
 
-    def stage(self, model_name, source_model: dict, hashed_columns=None, derived_columns=None,
-              include_source_columns=True, config=None):
+    def stage(self, model_name, source_model: dict, derived_columns=None, hashed_columns=None,
+              ranked_columns=None, include_source_columns=True, config=None):
         """
         Generate a stage model template
             :param model_name: Name of the model file
             :param source_model: Model to select from
-            :param hashed_columns: Dictionary of hashed columns, can be None
             :param derived_columns: Dictionary of derived column, can be None
+            :param hashed_columns: Dictionary of hashed columns, can be None
+            :param ranked_columns: Dictionary of ranked columns, can be None
             :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param config: Optional model config
         """
@@ -520,8 +550,9 @@ class DBTVAULTGenerator:
         {{{{ config({config}) }}}}
         {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
                             source_model={source_model},
+                            derived_columns={derived_columns},
                             hashed_columns={hashed_columns},
-                            derived_columns={derived_columns}) }}}}
+                            ranked_columns={ranked_columns}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -641,24 +672,6 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, config=None):
-        """
-        Generate a PIT template
-            :param model_name: Name of the model file
-            :param src_pk: Source pk
-            :param as_of_dates_table: Name for the AS_OF table
-            :param satellites: Dictionary of satellite reference mappings
-            :param source_model: Model name to select from
-            :param config: Optional model config
-        """
-
-        template = f"""
-        {{{{ config({config}) }}}}
-        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites}, {source_model}) }}}}
-        """
-
-        self.template_to_file(template, model_name)
-
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
@@ -673,12 +686,22 @@ class DBTVAULTGenerator:
 
             if isinstance(item, dict):
 
-                if getattr(context, "vault_structure_type", None) == "pit" and "pit_" in model_name.lower():
+                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
 
                     satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
 
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+
+                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
+
+                    processed_headings.extend(satellite_columns)
+
+                elif item.get("source_column", None) and item.get("alias", None):
+
+                    processed_headings.append(item['source_column'])
+
                 else:
                     processed_headings.append(list(item.keys()))
             else:
@@ -694,15 +717,13 @@ class DBTVAULTGenerator:
             :param config: A config dictionary to be converted to a string
             :param kwargs: Metadata keys for various vault structures (src_pk, src_hashdiff, etc.)
         """
-
         default_materialisations = {
             "stage": "view",
             "hub": "incremental",
             "link": "incremental",
             "sat": "incremental",
             "eff_sat": "incremental",
-            "t_link": "incremental",
-            "pit": "table",
+            "t_link": "incremental"
         }
 
         if not config:
@@ -873,3 +894,17 @@ class DBTVAULTGenerator:
         """
 
         shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
+
+    @staticmethod
+    def dict_to_yaml_string(yaml_dict: dict):
+        """
+        Convert a dictionary to YAML and return a string with the YAML
+        """
+
+        yaml = YAML()
+        yaml.indent(sequence=4, offset=2)
+        buf = io.BytesIO()
+        yaml.dump(yaml_dict, buf)
+        yaml_str = buf.getvalue().decode('utf-8')
+
+        return yaml_str

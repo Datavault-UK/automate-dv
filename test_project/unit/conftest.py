@@ -37,7 +37,7 @@ def clean_database(request):
 
     test_utils = DBTTestUtils()
 
-    test_utils.replace_test_schema()
+    test_utils.drop_test_schemas()
 
 
 @pytest.fixture(autouse=True, scope='session')

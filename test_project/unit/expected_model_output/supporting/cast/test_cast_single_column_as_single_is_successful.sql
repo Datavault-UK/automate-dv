@@ -1,1 +1,0 @@
-CUSTOMER_ID
