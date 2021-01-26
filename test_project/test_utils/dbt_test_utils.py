@@ -770,6 +770,8 @@ class DBTVAULTGenerator:
             "hub": "incremental",
             "link": "incremental",
             "sat": "incremental",
+            "oos_sat": "incremental",
+            "xts": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental"
         }
