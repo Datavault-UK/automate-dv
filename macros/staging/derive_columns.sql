@@ -1,6 +1,6 @@
 {%- macro derive_columns(source_relation=none, columns=none) -%}
 
-    {{- adapter.dispatch('derive_columns', packages = var('adapter_packages', ['dbtvault']))(source_relation=source_relation, columns=columns) -}}
+    {{- adapter.dispatch('derive_columns', packages = dbtvault.get_dbtvault_namespaces())(source_relation=source_relation, columns=columns) -}}
 
 {%- endmacro %}
 
@@ -17,11 +17,23 @@
 
     {#- Add aliases of derived columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
+        {%- if dbtvault.is_list(columns[col]) -%}
+            {%- set column_list = [] -%}
 
-        {% set column_str = dbtvault.as_constant(columns[col]) %}
+            {%- for concat_component in columns[col] -%}
+                {%- set column_str = dbtvault.as_constant(concat_component) -%}
+                {%- do column_list.append(column_str) -%}
+            {%- endfor -%}
 
-        {%- do der_columns.append(column_str ~ " AS " ~ col) -%}
-        {%- do exclude_columns.append(col) -%}
+            {%- set concat_string = "CONCAT_WS(" ~ "'||', " ~ column_list | join(", ") ~ ") AS " ~ col -%}
+
+            {%- do der_columns.append(concat_string) -%}
+            {%- set exclude_columns = exclude_columns + columns[col] -%}
+        {% else %}
+            {%- set column_str = dbtvault.as_constant(columns[col]) -%}
+            {%- do der_columns.append(column_str ~ " AS " ~ col) -%}
+            {%- do exclude_columns.append(col) -%}
+        {% endif %}
 
     {%- endfor -%}
 
@@ -36,14 +48,12 @@
 
     {%- endif -%}
 
-    {#- Makes sure the columns are appended in a logical order. Derived  columns then source columns -#}
+    {#- Makes sure the columns are appended in a logical order. Derived columns then source columns -#}
     {%- set include_columns = src_columns + der_columns -%}
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
-        {{ col }}
-        {%- if not loop.last -%},
-{% endif -%}
+        {{- col | indent(4) -}}{{ ",\n" if not loop.last }}
     {%- endfor -%}
 
 {%- else -%}
