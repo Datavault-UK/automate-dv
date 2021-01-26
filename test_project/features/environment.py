@@ -12,13 +12,15 @@ fixture_registry = {
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
     "fixture.satellite": satellite,
-    "fixture.satellite_cycles": satellite_cycle,
+    "fixture.satellite_cycle": satellite_cycle,
     "fixture.eff_satellite": eff_satellite,
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
     "fixture.t_link": t_link,
+    "fixture.xts": xts,
+    "fixture.out_of_sequence_satellite": out_of_sequence_satellite,
     "fixture.cycle": cycle
 }
 
