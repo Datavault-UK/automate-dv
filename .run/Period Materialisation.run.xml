@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Sats PM" type="PyBehaveRunConfigurationType" factoryName="Behave">
+  <configuration default="false" name="Sat Mats" type="PyBehaveRunConfigurationType" factoryName="Behave">
     <module name="dbtvault-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -24,6 +24,7 @@
       </ENTRIES>
     </EXTENSION>
     <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/sats/sats_period_mat.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/sats/sats_rank_mat.feature" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
