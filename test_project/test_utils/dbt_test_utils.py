@@ -678,6 +678,48 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def xts(self, model_name, source_model, src_pk, src_ldts, src_satellite, src_source, config=None):
+        """
+        Generate a XTS template
+        """
+
+        template = f"""
+        {{% set src_satellite = {src_satellite} %}}
+
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
+                          {source_model})   }}}}
+        """
+
+        textwrap.dedent(template)
+
+        self.template_to_file(template, model_name)
+
+    def oos_sat(self, model_name, src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model,
+                out_of_sequence=None, config=None):
+        """
+        Generate a out of sequence satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_hashdiff: Source hashdiff
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param out_of_sequence: Optional dictionary of metadata required for out of sequence sat
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.oos_sat({src_pk}, {src_hashdiff}, {src_payload},
+                              {src_eff}, {src_ldts}, {src_source},
+                              {source_model}, {out_of_sequence}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
