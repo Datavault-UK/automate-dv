@@ -1,8 +1,8 @@
 @fixture.set_workdir
-Feature: Satellites Loaded using separate manual loads
+Feature: Satellites Loaded in cycles using separate manual loads
 
   @fixture.satellite_cycle
-  Scenario: [SAT-CYCLE] Satellite load over several cycles
+  Scenario: [SAT-CYCLE] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -71,7 +71,7 @@ Feature: Satellites Loaded using separate manual loads
 
   @fixture.satellite_cycle
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] Satellite load over several cycles
+  Scenario: [SAT-CYCLE-SHA] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 

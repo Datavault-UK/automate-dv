@@ -1,12 +1,12 @@
 version: 2
 
 macros:
-  - name: replace_placeholder_with_filter
-    description: '{{ doc("macro__replace_placeholder_with_filter") }}'
+  - name: replace_placeholder_with_period_filter
+    description: '{{ doc("macro__replace_placeholder_with_period_filter") }}'
     arguments:
       - name: core_sql
         type: string
-        description: '{{ doc("arg__replace_placeholder_with_filter__core_sql") }}'
+        description: '{{ doc("arg__replace_placeholder_with_period_filter__core_sql") }}'
       - name: timestamp_field
         type: string
         description: '{{ doc("arg__period_materialisation__timestamp_field") }}'
