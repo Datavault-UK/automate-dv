@@ -1,9 +1,9 @@
 {%- macro xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
-    {{- adapter.dispatch('xts', packages = var('adapter_packages', ['dbtvault']))(src_pk=src_pk,
-                                                                                  src_satellite=src_satellite,
-                                                                                  src_ldts=src_ldts,
-                                                                                  src_source=src_source,
-                                                                                  source_model=source_model) -}}
+    {{- adapter.dispatch('xts', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk,
+                                                                               src_satellite=src_satellite,
+                                                                               src_ldts=src_ldts,
+                                                                               src_source=src_source,
+                                                                               source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
