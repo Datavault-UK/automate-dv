@@ -21,7 +21,8 @@ fixture_registry = {
     "fixture.t_link": t_link,
     "fixture.xts": xts,
     "fixture.out_of_sequence_satellite": out_of_sequence_satellite,
-    "fixture.cycle": cycle
+    "fixture.cycle": cycle,
+    "fixture.pit": pit
 }
 
 
