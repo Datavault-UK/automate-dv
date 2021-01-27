@@ -530,7 +530,8 @@ class DBTVAULTGenerator:
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
             "xts": self.xts,
-            "oos_sat": self.oos_sat
+            "oos_sat": self.oos_sat,
+            "pit": self.pit
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -720,6 +721,24 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, config=None):
+        """
+        Generate a PIT template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param satellites: Dictionary of satellite reference mappings
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
@@ -773,7 +792,8 @@ class DBTVAULTGenerator:
             "oos_sat": "incremental",
             "xts": "incremental",
             "eff_sat": "incremental",
-            "t_link": "incremental"
+            "t_link": "incremental",
+            "pit": "table",
         }
 
         if not config:
