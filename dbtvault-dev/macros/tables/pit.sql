@@ -47,7 +47,7 @@ as_of_dates_PK_join AS (
 satellites_cte AS (
 
     SELECT
-        a.CUSTOMER_PK,
+        a.{{ src_pk }},
         a.AS_OF_DATE,
         {%- for sat in satellites -%}
             {%- filter indent(width=8) -%}
@@ -79,5 +79,3 @@ satellites_cte AS (
 
 SELECT * FROM satellites_cte
 {%- endmacro -%}
-    COALESCE(MAX({{  sat -}}_SRC.{{- satellites[sat]['pk'][sat_key] -}}), CAST( '{{ ghost_pk }}' AS BINARY)) AS {{ sat -}}_{{- sat_key -}},
-            COALESCE(MAX({{  sat -}}_SRC.{{- satellites[sat]['ldts'][sat_ldts] -}}),TO_TIMESTAMP('{{ ghost_date }}')) AS {{ sat -}}_{{ sat_ldts }}
