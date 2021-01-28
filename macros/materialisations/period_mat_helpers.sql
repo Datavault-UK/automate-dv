@@ -1,22 +1,22 @@
-{#-- Helper macros for custom materializations #}
+{#-- Helper macros for period materializations #}
 
 {#-- MULTI-DISPATCH MACROS #}
 
-{#-- REPLACE_PLACEHOLDER_WITH_FILTER #}
+{#-- REPLACE_PLACEHOLDER_WITH_PERIOD_FILTER #}
 
-{%- macro replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
+{%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
 
-    {% set macro = adapter.dispatch('replace_placeholder_with_filter',
-                                    packages = ['dbtvault'])(core_sql=core_sql,
-                                                             timestamp_field=timestamp_field,
-                                                             start_timestamp=start_timestamp,
-                                                             stop_timestamp=stop_timestamp,
-                                                             offset=offset,
-                                                             period=period) %}
+    {% set macro = adapter.dispatch('replace_placeholder_with_period_filter',
+                                    packages = dbtvault.get_dbtvault_namespaces())(core_sql=core_sql,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   start_timestamp=start_timestamp,
+                                                                                   stop_timestamp=stop_timestamp,
+                                                                                   offset=offset,
+                                                                                   period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__replace_placeholder_with_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
             (TO_DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
@@ -35,25 +35,25 @@
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
-                                    packages = ['dbtvault'])(target_cols_csv=target_cols_csv,
-                                                             base_sql=base_sql,
-                                                             timestamp_field=timestamp_field,
-                                                             period=period,
-                                                             start_timestamp=start_timestamp,
-                                                             stop_timestamp=stop_timestamp,
-                                                             offset=offset) %}
+                                    packages = dbtvault.get_dbtvault_namespaces())(target_cols_csv=target_cols_csv,
+                                                                                   base_sql=base_sql,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   period=period,
+                                                                                   start_timestamp=start_timestamp,
+                                                                                   stop_timestamp=stop_timestamp,
+                                                                                   offset=offset) %}
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
-    {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_filter(filtered_sql.sql,
-                                                                                timestamp_field,
-                                                                                start_timestamp,
-                                                                                stop_timestamp,
-                                                                                offset, period)}) -%}
+    {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_period_filter(filtered_sql.sql,
+                                                                                       timestamp_field,
+                                                                                       start_timestamp,
+                                                                                       stop_timestamp,
+                                                                                       offset, period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
 
@@ -63,23 +63,23 @@
 {%- macro get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    packages = ['dbtvault'])(target_schema=target_schema,
-                                                             target_table=target_table,
-                                                             timestamp_field=timestamp_field,
-                                                             start_date=start_date,
-                                                             stop_date=stop_date,
-                                                             period=period) %}
+                                    packages = dbtvault.get_dbtvault_namespaces())(target_schema=target_schema,
+                                                                                   target_table=target_table,
+                                                                                   timestamp_field=timestamp_field,
+                                                                                   start_date=start_date,
+                                                                                   stop_date=stop_date,
+                                                                                   period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
 
-{% macro snowflake__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro default__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         with data as (
             select
                 coalesce(max({{ timestamp_field }}), '{{ start_date }}')::timestamp as start_timestamp,
-                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date ~ "','')::timestamp") }},
+                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')::timestamp") }},
                          {{ dbt_utils.current_timestamp() }} ) as stop_timestamp
             from {{ target_schema }}.{{ target_table }}
         )
@@ -107,14 +107,14 @@
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set macro = adapter.dispatch('get_period_of_load',
-                                    packages = ['dbtvault'])(period=period,
-                                                             offset=offset,
-                                                             start_timestamp=start_timestamp) %}
+                                    packages = dbtvault.get_dbtvault_namespaces())(period=period,
+                                                                                   offset=offset,
+                                                                                   start_timestamp=start_timestamp) %}
 
     {% do return(macro) %}
 {%- endmacro %}
 
-{%- macro snowflake__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{start_timestamp}}'))) AS period_of_load
@@ -142,18 +142,6 @@
                       and model.config.materialized == 'vault_insert_by_period'
                       and not flags.FULL_REFRESH) }}
     {% endif %}
-{% endmacro %}
-
-
-{% macro check_placeholder(model_sql, placeholder='__PERIOD_FILTER__') %}
-
-    {%- if model_sql.find(placeholder) == -1 -%}
-        {%- set error_message -%}
-            Model '{{ model.unique_id }}' does not include the required string '__PERIOD_FILTER__' in its sql
-        {%- endset -%}
-        {{ exceptions.raise_compiler_error(error_message) }}
-    {%- endif -%}
-
 {% endmacro %}
 
 
@@ -192,7 +180,7 @@
 
     {% else %}
         {%- if execute -%}
-            {{ exceptions.raise_compiler_error("Invalid 'vault_insert_by_period' configuration. Must provide 'start_date' and 'stop_date' and/or 'date_source_models' options.") }}
+            {{ exceptions.raise_compiler_error("Invalid 'vault_insert_by_period' configuration. Must provide 'start_date' and 'stop_date', just 'stop_date', and/or 'date_source_models' options.") }}
         {%- endif -%}
     {% endif %}
 

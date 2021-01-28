@@ -1,14 +1,18 @@
 {%- macro hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('hub', packages = ['dbtvault'])(src_pk=src_pk, src_nk=src_nk,
-                                                         src_ldts=src_ldts, src_source=src_source,
-                                                         source_model=source_model) -}}
+    {{- adapter.dispatch('hub', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_nk=src_nk,
+                                                                               src_ldts=src_ldts, src_source=src_source,
+                                                                               source_model=source_model) -}}
 
 {%- endmacro -%}
 
-{%- macro snowflake__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
+{%- macro default__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+{%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -18,63 +22,73 @@
     {%- set source_model = [source_model] -%}
 {%- endif -%}
 
+{%- set ns = namespace(last_cte= "") -%}
+
 {%- for src in source_model -%}
 
 {%- set source_number = loop.index | string -%}
 
-rank_{{ source_number }} AS (
+row_rank_{{ source_number }} AS (
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ source_cols_with_rank | join(', ') }},
+    {%- else %}
     SELECT {{ source_cols | join(', ') }},
+    {%- endif %}
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
     FROM {{ ref(src) }}
-),
-stage_{{ source_number }} AS (
-    SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_{{ source_number }}
-    WHERE row_number = 1
-),
+    QUALIFY row_number = 1
+    {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
+),{{ "\n" if not loop.last }}
 {% endfor -%}
-
+{% if source_model | length > 1 %}
 stage_union AS (
     {%- for src in source_model %}
-    SELECT * FROM stage_{{ loop.index | string }}
+    SELECT * FROM row_rank_{{ loop.index | string }}
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
     {%- endfor %}
+    {%- set ns.last_cte = "stage_union" %}
 ),
+{%- endif -%}
 {%- if model.config.materialized == 'vault_insert_by_period' %}
-stage_period_filter AS (
+stage_mat_filter AS (
     SELECT *
-    FROM stage_union
+    FROM {{ ns.last_cte }}
     WHERE __PERIOD_FILTER__
+    {%- set ns.last_cte = "stage_mat_filter" %}
 ),
-{%- endif %}
-rank_union AS (
+{%- elif model.config.materialized == 'vault_insert_by_rank' %}
+stage_mat_filter AS (
+    SELECT *
+    FROM {{ ns.last_cte }}
+    WHERE __RANK_FILTER__
+    {%- set ns.last_cte = "stage_mat_filter" %}
+),
+{%- endif -%}
+{%- if source_model | length > 1 %}
+
+row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
-           ) AS row_number
-    {%- if model.config.materialized == 'vault_insert_by_period' %}
-    FROM stage_period_filter
-    {%- else %}
-    FROM stage_union
-    {%- endif %}
+           ) AS row_rank_number
+    FROM {{ ns.last_cte }}
     WHERE {{ src_pk }} IS NOT NULL
+    QUALIFY row_rank_number = 1
+    {%- set ns.last_cte = "row_rank_union" %}
 ),
-stage AS (
-    SELECT DISTINCT {{ source_cols | join(', ') }}
-    FROM rank_union
-    WHERE row_number = 1
-),
+{% endif %}
 records_to_insert AS (
-    SELECT stage.* FROM stage
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
+    FROM {{ ns.last_cte }} AS a
     {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON stage.{{ src_pk }} = d.{{ src_pk }}
+    ON a.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
     {%- endif %}
 )

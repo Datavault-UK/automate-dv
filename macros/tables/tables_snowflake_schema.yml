@@ -1,7 +1,7 @@
 version: 2
 
 macros:
-  - name: snowflake__hub
+  - name: default__hub
     description: |
                  {{ doc("macro__hub") }}
 
@@ -23,7 +23,7 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: snowflake__link
+  - name: default__link
     description: |
                  {{ doc("macro__link") }}
 
@@ -45,7 +45,7 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: snowflake__sat
+  - name: default__sat
     description: |
                  {{ doc("macro__sat") }}
 
@@ -73,7 +73,7 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: snowflake__t_link
+  - name: default__t_link
     description: |
                  {{ doc("macro__t_link") }}
 
@@ -101,7 +101,7 @@ macros:
         type: string
         description: '{{ doc("arg__tables__source_model") }}'
 
-  - name: snowflake__eff_sat
+  - name: default__eff_sat
     description: |
                  {{ doc("macro__eff_sat") }}
 

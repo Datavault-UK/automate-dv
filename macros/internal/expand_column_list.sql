@@ -8,34 +8,41 @@
 
 {%- set col_list = [] -%}
 
-{%- if columns is iterable -%}
+{%- if dbtvault.is_list(columns) -%}
 
     {%- for col in columns -%}
 
         {%- if col is string -%}
 
-            {%- set _ = col_list.append(col) -%}
+            {%- do col_list.append(col) -%}
 
         {#- If list of lists -#}
-        {%- elif col is iterable and col is not string -%}
+        {%- elif dbtvault.is_list(col) -%}
 
-            {%- if col is mapping -%}
+            {%- for cols in col -%}
 
-                {%- set _ = col_list.append(col) -%}
+                {%- do col_list.append(cols) -%}
 
-            {%- else -%}
+            {%- endfor -%}
+        {%- elif col is mapping -%}
 
-                {%- for cols in col -%}
+            {%- do col_list.append(col) -%}
 
-                    {%- set _ = col_list.append(cols) -%}
+        {%- else -%}
 
-                {%- endfor -%}
-
-            {%- endif -%}
+            {%- if execute -%}
+                {{ exceptions.raise_compiler_error("Invalid columns object provided. Must be a list of lists, dictionaries or strings.") }}
+            {%- endif %}
 
         {%- endif -%}
 
     {%- endfor -%}
+{%- else -%}
+
+    {%- if execute -%}
+        {{ exceptions.raise_compiler_error("Invalid columns object provided. Must be a list.") }}
+    {%- endif %}
+
 {%- endif -%}
 
 {% do return(col_list) %}
