@@ -6,13 +6,13 @@ verify_ssl = true
 [dev-packages]
 pytest = "*"
 pytest-xdist = "*"
-pytest-clarity = "*"
+pytest-clarity = "==0.3.0a0"
 invoke = "*"
+bump2version = "*"
 
 [packages]
 urllib3 = "==1.24.3"
 requests = "==2.22.0"
-dbt = "==0.18.1"
 behave = "==1.2.6"
 pandas = "==1.0.3"
 boto3 = "==1.11.17"
@@ -20,10 +20,10 @@ mkdocs = "==1.1.2"
 mkdocs-material = "==5.2.1"
 mkdocs-minify-plugin = "==0.2.3"
 mkdocs-git-revision-date-localized-plugin = "*"
-pygments = "==2.6.1"
+Pygments = "==2.6.1"
 pymdown-extensions = "==7.1"
-ruamel-yaml = "*"
-bump2version = "*"
+"ruamel.yaml" = "*"
+dbt = "==0.19.0"
 
 [requires]
 python_version = "3.8"
