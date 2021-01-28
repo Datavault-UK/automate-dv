@@ -1,12 +1,12 @@
 {%- macro t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('t_link', packages = ['dbtvault'])(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
-                                                            src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                                            source_model=source_model) -}}
+    {{- adapter.dispatch('t_link', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
+                                                                         src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                                         source_model=source_model) -}}
 
 {%- endmacro %}
 
-{%- macro snowflake__t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_payload, src_eff, src_ldts, src_source]) -%}
 
@@ -17,6 +17,9 @@ WITH stage AS (
     FROM {{ ref(source_model) }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
+    {%- endif %}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    WHERE __RANK_FILTER__
     {%- endif %}
 ),
 records_to_insert AS (

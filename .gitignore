@@ -10,3 +10,4 @@ invoke.yml
 Pipfile
 Pipfile.lock
 tasks.py
+.idea/
