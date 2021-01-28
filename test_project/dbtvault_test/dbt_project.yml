@@ -22,21 +22,12 @@ vars:
 models:
   dbtvault_test:
     unit:
-      +schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_BRANCH', '') | replace('-','_') | replace('.','_') if env_var('CIRCLE_BRANCH', '') }}{{ '_' ~ env_var('CIRCLE_JOB',\
-        \ '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') }}"
       tables:
         hub:
           +materialized: incremental
         link:
           +materialized: incremental
-    feature:
-      +schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_BRANCH', '') | replace('-','_') | replace('.','_') if env_var('CIRCLE_BRANCH', '') }}{{ '_' ~ env_var('CIRCLE_JOB',\
-        \ '') if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') }}"
-
-
 seeds:
-  +schema: "{{ env_var('SNOWFLAKE_DB_USER') }}{{ '_' ~ env_var('CIRCLE_BRANCH', '') | replace('-','_') | replace('.','_') if env_var('CIRCLE_BRANCH', '') }}{{ '_' ~ env_var('CIRCLE_JOB', '')\
-    \ if env_var('CIRCLE_JOB', '') }}{{ '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') }}"
   +quote_columns: true
   dbtvault_test:
     raw_source:
