@@ -1,9 +1,9 @@
 {%- macro oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence=None) -%}
 
-    {{- adapter.dispatch('oos_sat', packages = var('adapter_packages', ['dbtvault']))(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                                                                                      src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
-                                                                                      src_source=src_source, source_model=source_model,
-                                                                                      out_of_sequence=out_of_sequence) -}}
+    {{- adapter.dispatch('oos_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                                                                   src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
+                                                                                   src_source=src_source, source_model=source_model,
+                                                                                   out_of_sequence=out_of_sequence) -}}
 
 {%- endmacro %}
 
