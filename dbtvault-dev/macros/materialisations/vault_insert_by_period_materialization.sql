@@ -88,7 +88,13 @@
                 );
             {%- endcall %}
 
-            {%- set rows_inserted = (load_result(insert_query_name)['status'].split(" "))[1] | int -%}
+            {% set result = load_result(insert_query_name) %}
+
+            {% if 'response' in result.keys() %} {# added in v0.19.0 #}
+                {% set rows_inserted = result['response']['rows_affected'] %}
+            {% else %} {# older versions #}
+                {% set rows_inserted = result['status'].split(" ")[2] | int %}
+            {% endif %}
 
             {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
             {%- do loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
@@ -103,7 +109,7 @@
 
         {% endfor %}
 
-        {% call noop_statement(name='main', status="INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
+        {% call noop_statement('main', "INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
             {{ tmp_table_sql }}
         {%- endcall %}
 
@@ -114,9 +120,15 @@
             {{ build_sql }}
         {% endcall %}
 
-        {%- set rows_inserted = (load_result("main")['status'].split(" "))[1] | int -%}
+        {% set result = load_result('main') %}
 
-        {% call noop_statement(name='main', status="BASE LOAD {}".format(rows_inserted)) -%}
+        {% if 'response' in result.keys() %} {# added in v0.19.0 #}
+            {% set rows_inserted = result['response']['rows_affected'] %}
+        {% else %} {# older versions #}
+            {% set rows_inserted = result['status'].split(" ")[2] | int %}
+        {% endif %}
+
+        {% call noop_statement('main', "BASE LOAD {}".format(rows_inserted)) -%}
             {{ build_sql }}
         {%- endcall %}
 
