@@ -30,10 +30,10 @@ def sha(context):
 
         for k, v in config.items():
 
-            for c, t in config[k]["column_types"].items():
+            for c, t in config[k]["+column_types"].items():
 
                 if t == "BINARY(16)":
-                    config[k]["column_types"][c] = "BINARY(32)"
+                    config[k]["+column_types"][c] = "BINARY(32)"
 
     else:
         raise ValueError("sha fixture used before vault structure fixture.")
@@ -48,7 +48,7 @@ def staging(context):
     context.seed_config = {
 
         "STG_CUSTOMER": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
@@ -61,7 +61,7 @@ def staging(context):
             }
         },
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
@@ -96,7 +96,7 @@ def single_source_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -104,7 +104,7 @@ def single_source_hub(context):
             }
         },
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -146,7 +146,7 @@ def multi_source_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "column_types": {
+            "+column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -154,7 +154,7 @@ def multi_source_hub(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "column_types": {
+            "+column_types": {
                 "PART_ID": "VARCHAR",
                 "PART_NAME": "VARCHAR",
                 "PART_TYPE": "VARCHAR",
@@ -165,7 +165,7 @@ def multi_source_hub(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "column_types": {
+            "+column_types": {
                 "PART_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
@@ -175,7 +175,7 @@ def multi_source_hub(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "column_types": {
+            "+column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PART_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
@@ -215,7 +215,7 @@ def single_source_link(context):
 
     context.seed_config = {
         "LINK": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
@@ -224,7 +224,7 @@ def single_source_link(context):
             }
         },
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -272,7 +272,7 @@ def multi_source_link(context):
 
     context.seed_config = {
         "LINK": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
@@ -281,7 +281,7 @@ def multi_source_link(context):
             }
         },
         "RAW_STAGE_SAP": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -292,7 +292,7 @@ def multi_source_link(context):
             }
         },
         "RAW_STAGE_CRM": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -303,7 +303,7 @@ def multi_source_link(context):
             }
         },
         "RAW_STAGE_WEB": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -350,7 +350,7 @@ def t_link(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
@@ -362,7 +362,7 @@ def t_link(context):
             }
         },
         "T_LINK": {
-            "column_types": {
+            "+column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
@@ -427,7 +427,7 @@ def satellite(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -437,7 +437,7 @@ def satellite(context):
             }
         },
         "RAW_STAGE_TS": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -447,7 +447,7 @@ def satellite(context):
             }
         },
         "SATELLITE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -459,7 +459,7 @@ def satellite(context):
             }
         },
         "SATELLITE_TS": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -517,7 +517,7 @@ def satellite_cycle(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
@@ -527,7 +527,7 @@ def satellite_cycle(context):
             }
         },
         "SATELLITE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
@@ -569,7 +569,7 @@ def eff_satellite(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "ORDER_ID": "VARCHAR",
                 "START_DATE": "DATE",
@@ -579,7 +579,7 @@ def eff_satellite(context):
             }
         },
         "EFF_SAT": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
@@ -625,7 +625,7 @@ def eff_satellite_multipart(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "NATION_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
@@ -638,7 +638,7 @@ def eff_satellite_multipart(context):
             }
         },
         "EFF_SAT": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
                 "PLATFORM_PK": "BINARY(16)",
@@ -1267,7 +1267,7 @@ def cycle(context):
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
@@ -1277,7 +1277,7 @@ def cycle(context):
             }
         },
         "RAW_STAGE_BOOKING": {
-            "column_types": {
+            "+column_types": {
                 "BOOKING_ID": "VARCHAR",
                 "CUSTOMER_ID": "VARCHAR",
                 "PRICE": "NUMBER(38,2)",
@@ -1291,7 +1291,7 @@ def cycle(context):
             }
         },
         "HUB_CUSTOMER": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -1299,7 +1299,7 @@ def cycle(context):
             }
         },
         "HUB_BOOKING": {
-            "column_types": {
+            "+column_types": {
                 "BOOKING_PK": "BINARY(16)",
                 "BOOKING_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -1307,7 +1307,7 @@ def cycle(context):
             }
         },
         "LINK_CUSTOMER_BOOKING": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_BOOKING_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "BOOKING_PK": "BINARY(16)",
@@ -1316,7 +1316,7 @@ def cycle(context):
             }
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -1327,7 +1327,7 @@ def cycle(context):
             }
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "PHONE": "VARCHAR",
@@ -1338,7 +1338,7 @@ def cycle(context):
             }
         },
         "SAT_BOOK_BOOKING_DETAILS": {
-            "column_types": {
+            "+column_types": {
                 "BOOKING_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "PRICE": "NUMBER(38,2)",
