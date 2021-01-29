@@ -16,10 +16,8 @@
 
 {% macro check_model_exists(model_name) %}
 
-    {% set schema_name %} 
-        {{- target.schema -}}_{{- env_var('SNOWFLAKE_DB_USER') -}}{{- '_' ~ env_var('CIRCLE_BRANCH', '') if env_var('CIRCLE_BRANCH', '') -}}{{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}{{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
-    {% endset %}
-    {% set schema_name = schema_name | replace('-','_') | replace('.','_') -%}
+    {% set schema_name = model['schema'] %}
+    {% do log("schema_name: " ~ schema_name, true) %}
 
     {%- set source_relation = adapter.get_relation(
           database=target.database,
@@ -36,31 +34,25 @@
 
 {%- macro drop_test_schemas() -%}
 
-    {% set schema_name %} 
-        {{- target.schema -}}_{{- env_var('SNOWFLAKE_DB_USER') -}}{{- '_' ~ env_var('CIRCLE_BRANCH', '') if env_var('CIRCLE_BRANCH', '') -}}{{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}{{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
-    {% endset %}
-    {% set schema_name = schema_name | replace('-','_') | replace('.','_') %}
+    {% set schema_name = get_schema_name() %}
 
-    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
+    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
     {% do log("Schema '{}' dropped.".format(schema_name), true) %}
 
 {% endmacro %}
 
 {%- macro create_test_schemas() -%}
 
-    {% set schema_name %} 
-        {{- target.schema -}}_{{- env_var('SNOWFLAKE_DB_USER') -}}{{- '_' ~ env_var('CIRCLE_BRANCH', '') if env_var('CIRCLE_BRANCH', '') -}}{{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}{{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
-    {% endset %}
-    {% set schema_name = schema_name | replace('-','_') | replace('.','_') %}
+    {% set schema_name = get_schema_name() %}
 
-    {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name )) %}
+    {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
     {% do log("Schema '{}' created.".format(schema_name), true) %}
 
 {%- endmacro -%}
 
 {%- macro recreate_current_schemas() -%}
 
-{% do drop_test_schemas() %}
-{% do create_test_schemas() %}
+    {% do drop_test_schemas() %}
+    {% do create_test_schemas() %}
 
 {%- endmacro -%}
