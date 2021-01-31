@@ -10,6 +10,11 @@
 {%- macro default__oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
+{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+{%- endif -%}
 
 {%- if out_of_sequence is not none %}
     {%- set xts_model = out_of_sequence["source_xts"] %}
@@ -22,13 +27,27 @@
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT *
-    FROM {{ ref(source_model) }}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+    {%- else %}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    {%- endif %}
+    FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
     {% endif %}
+    {%- set source_cte = "source_data" %}
 ),
-{% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+rank_col AS (
+    SELECT * FROM source_data
+    WHERE __RANK_FILTER__
+    {%- set source_cte = "rank_col" %}
+),
+{% endif -%}
+
+{% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
 
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
@@ -39,21 +58,18 @@ update_records AS (
     WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE('{{ insert_date }}')
     {%- endif %}
 ),
-rank AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'c', alias_target='target') }},
+
+latest_records AS (
+    SELECT {{ dbtvault.prefix(rank_cols, 'c', alias_target='target') }},
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
     THEN 'Y' ELSE 'N' END AS latest
     FROM update_records as c
+    QUALIFY latest = 'Y'
 ),
-stage AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'd', alias_target='target') }}
-    FROM rank AS d
-    WHERE d.latest = 'Y'
-),
-{% endif -%}
-{%- if out_of_sequence is not none and is_incremental() %}
+{%- if out_of_sequence is not none %}
+
 sat_stg AS (
   SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }},
@@ -63,28 +79,31 @@ sat_stg AS (
   LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < DATE('{{ insert_date }}')
 ),
+
 distinct_stage AS (
   SELECT DISTINCT * FROM {{ ref(source_model) }}
 ),
+
 xts_stg AS (
   SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
     {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
-    LEAD({{ dbtvault.prefix([src_ldts], 'a') }})
-    OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE,
-    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }})
-    OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF,
-    LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }})
-    OVER(PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
+    LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE,
+    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF,
+    LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
   FROM {{ ref(xts_model) }} AS a
   INNER JOIN distinct_stage AS b
   ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
   WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this }}'
   ORDER BY {{ src_pk }}, XTS_LOAD_DATE
 ),
+
 out_of_sequence_inserts AS (
   SELECT
     {{ dbtvault.prefix(source_cols, 'c') }}
@@ -114,20 +133,22 @@ out_of_sequence_inserts AS (
 ),
 {%- endif %}
 
+{%- endif %}
+
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM source_data AS e
-    {% if dbtvault.is_vault_insert_by_period() or is_incremental() -%}
-    LEFT JOIN stage
-    ON {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} IS NULL
-    {% endif %}
+    FROM {{ source_cte }} AS e
+    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
+    LEFT JOIN latest_records
+    ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {% if out_of_sequence is not none -%}
+    UNION
+    SELECT * FROM out_of_sequence_inserts
+    {%- endif %}
+    {%- endif %}
 )
 
 SELECT * FROM records_to_insert
-{% if out_of_sequence is not none and is_incremental()-%}
-UNION
-SELECT * FROM out_of_sequence_inserts
-{% endif -%}
 
 {%- endmacro -%}
