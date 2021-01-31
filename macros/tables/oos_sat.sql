@@ -69,6 +69,7 @@ latest_records AS (
     QUALIFY latest = 'Y'
 ),
 {%- if out_of_sequence is not none %}
+
 sat_stg AS (
   SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }},
@@ -87,15 +88,15 @@ xts_stg AS (
   SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
     {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
-    LEAD({{ dbtvault.prefix([src_ldts], 'a') }})
-    OVER( PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE,
-    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }})
-    OVER( PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF,
-    LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }})
-    OVER( PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-    ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
+    LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE,
+    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF,
+    LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
   FROM {{ ref(xts_model) }} AS a
   INNER JOIN distinct_stage AS b
   ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
@@ -141,6 +142,10 @@ records_to_insert AS (
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {% if out_of_sequence is not none -%}
+    UNION
+    SELECT * FROM out_of_sequence_inserts
+    {%- endif %}
     {%- endif %}
 )
 
