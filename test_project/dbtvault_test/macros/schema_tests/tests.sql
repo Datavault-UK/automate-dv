@@ -44,5 +44,6 @@ compare as (
 -- For manual debugging
 // SELECT * FROM compare_order_expected_data
 // SELECT * FROM compare_order_actual_data
+// SELECT * FROM compare
 SELECT COUNT(*) AS differences FROM compare
 {%- endmacro -%}
