@@ -16,8 +16,7 @@
 
 {% macro check_model_exists(model_name) %}
 
-    {% set schema_name = model['schema'] %}
-    {% do log("schema_name: " ~ schema_name, true) %}
+    {% set schema_name = get_schema_name() %}
 
     {%- set source_relation = adapter.get_relation(
           database=target.database,
