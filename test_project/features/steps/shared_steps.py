@@ -141,7 +141,7 @@ def load_empty_table(context, model_name, vault_structure):
 
 @given("I will have a {raw_stage_name} raw stage and I have a {processed_stage_name} processed stage")
 def create_empty_stage(context, raw_stage_name, processed_stage_name):
-    stage_source_column_headings = list(context.seed_config[raw_stage_name]["column_types"].keys())
+    stage_source_column_headings = list(context.seed_config[raw_stage_name]["+column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
     stage_headings = stage_source_column_headings + stage_hashed_column_headings + stage_derived_column_headings
