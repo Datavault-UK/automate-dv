@@ -1491,7 +1491,7 @@ def pit(context):
 
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
@@ -1501,7 +1501,7 @@ def pit(context):
             }
         },
         "RAW_STAGE_LOGIN": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "LAST_LOGIN_DATE": "DATETIME",
                 "DEVICE_USED": "VARCHAR",
@@ -1510,7 +1510,7 @@ def pit(context):
             }
         },
         "RAW_STAGE_PROFILE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "DASHBOARD_COLOUR": "VARCHAR",
                 "DISPLAY_NAME": "VARCHAR",
@@ -1519,7 +1519,7 @@ def pit(context):
             }
         },
         "HUB_CUSTOMER": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
@@ -1527,7 +1527,7 @@ def pit(context):
             }
         },
         "SAT_CUSTOMER_DETAILS": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -1539,7 +1539,7 @@ def pit(context):
             }
         },
         "SAT_CUSTOMER_LOGIN": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "DEVICE_USED": "VARCHAR",
@@ -1550,7 +1550,7 @@ def pit(context):
             }
         },
         "SAT_CUSTOMER_PROFILE": {
-            "column_types": {
+            "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "DASHBOARD_COLOUR": "VARCHAR",
@@ -1561,12 +1561,12 @@ def pit(context):
             }
         },
         "AS_OF_DATE": {
-            "column_types": {
+            "+column_types": {
                 "AS_OF_DATE": "DATETIME"
             }
         },
         "PIT_CUSTOMER": {
-            "column_types": {
+            "+column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
