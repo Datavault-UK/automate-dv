@@ -2,7 +2,7 @@
 Feature: Out of Sequence Satellites
 
   @fixture.out_of_sequence_satellite
-  Scenario: Inserts no new records if hashdiff matches previous loaddate's hashdiff
+  Scenario: Inserts no new records if hashdiff matches previous loaddate hashdiff
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-01 | *      |
@@ -50,7 +50,7 @@ Feature: Out of Sequence Satellites
       | md5('1002') | md5('1999-12-07\|\|1002\|\|DOM\|\|17-214-233-1216')   | Dom           | 1999-12-07   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
   @fixture.out_of_sequence_satellite
-  Scenario: Inserts a record if hashdiff does not matches previous loaddate's hashdiff but matches the next loaddate's hashdiff
+  Scenario: Inserts a record if hashdiff does not matches previous loaddate hashdiff but matches the next loaddate hashdiff
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-01 | *      |
@@ -108,7 +108,7 @@ Feature: Out of Sequence Satellites
       | md5('1002') | md5('1999-12-07\|\|1002\|\|ETHAN\|\|17-214-233-1214') | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
 
   @fixture.out_of_sequence_satellite
-  Scenario: Inserts a record if hashdiff doesn't matches previous loaddate's hashdiff and the previous loaddate's hashdiff matches the next loaddate's hashdiff
+  Scenario: Inserts a record if hashdiff does not match previous loaddate hashdiff and the previous loaddate hashdiff matches the next loaddate hashdiff
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-01 | *      |
