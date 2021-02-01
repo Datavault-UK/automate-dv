@@ -90,17 +90,17 @@ xts_stg AS (
     {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
     LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_DATE,
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_DATE,
     LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS PREV_RECORD_HASHDIFF,
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_HASHDIFF,
     LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'b') }}) AS NEXT_RECORD_HASHDIFF
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
   FROM {{ ref(xts_model) }} AS a
   INNER JOIN distinct_stage AS b
   ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
-  WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this }}'
+  WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this.identifier }}'
   ORDER BY {{ src_pk }}, XTS_LOAD_DATE
 ),
 
