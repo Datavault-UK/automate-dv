@@ -20,7 +20,7 @@
         {%- set satellite_name = (satellite[1]['sat_name'].values() | list) [0] -%}
         {%- set hashdiff = (satellite[1]['hashdiff'].values() | list) [0] -%}
 satellite_{{ satellite_name }}_from_{{ src }} AS (
-    SELECT {{ src_pk }}, {{ satellite_name }} AS SATELLITE_NAME, {{ hashdiff }} AS HASHDIFF, {{ src_ldts }}, {{ src_source }}
+    SELECT {{ src_pk }}, {{ hashdiff }} AS HASHDIFF, {{ satellite_name }} AS SATELLITE_NAME, {{ src_ldts }}, {{ src_source }}
     FROM {{ ref(src) }}
     WHERE {{ src_pk }} IS NOT NULL
 ),
