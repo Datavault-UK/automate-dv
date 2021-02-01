@@ -136,8 +136,8 @@ class DBTTestUtils:
 
         return self.run_dbt_command(command)
 
-    def run_dbt_model(self, *, mode='compile', model_name: str, args=None, full_refresh=False, include_model_deps=False,
-                      include_tag=False) -> str:
+    def run_dbt_model(self, *, mode='compile', model_name: str, args=None, full_refresh=False,
+                      include_model_deps=False, include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
 
@@ -160,6 +160,33 @@ class DBTTestUtils:
             command = ['dbt', mode, '-m', model_name, '--full-refresh']
         else:
             command = ['dbt', mode, '-m', model_name]
+
+        if args:
+            if not any(x in str(args) for x in ['(', ')']):
+                yaml_str = str(args).replace('\'', '"')
+            else:
+                yaml_str = str(args)
+            command.extend(['--vars', yaml_str])
+
+        return self.run_dbt_command(command)
+
+    def run_dbt_models(self, *, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
+        """
+        Run or Compile a specific dbt model, with optionally provided variables.
+
+            :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
+            :param model_names: List of model names to run
+            :param args: variable dictionary to provide to dbt
+            :param full_refresh: Run a full refresh
+            :return Log output of dbt run operation
+        """
+
+        model_name_string = " ".join(model_names)
+
+        if full_refresh:
+            command = ['dbt', mode, '-m', model_name_string, '--full-refresh']
+        else:
+            command = ['dbt', mode, '-m', model_name_string]
 
         if args:
             if not any(x in str(args) for x in ['(', ')']):
@@ -855,7 +882,8 @@ class DBTVAULTGenerator:
         yaml = YAML()
 
         if include_columns:
-            seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if k in include_columns}
+            seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if
+                                            k in include_columns}
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
             project_file = yaml.load(f)

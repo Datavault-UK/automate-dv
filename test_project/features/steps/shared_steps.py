@@ -224,12 +224,12 @@ def load_vault(context):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
+    is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
 
-        logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name,
-                                                    full_refresh=is_full_refresh)
+    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=models,
+                                                 full_refresh=is_full_refresh)
 
-        assert "Completed successfully" in logs
+    assert "Completed successfully" in logs
 
 
 @given("the {raw_stage_model_name} table contains data")
