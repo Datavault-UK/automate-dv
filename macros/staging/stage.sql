@@ -51,21 +51,20 @@ SELECT
 {% if hashed_columns is defined and hashed_columns is not none -%}
     {# BQ Customization: Passing hash_algo to hash_columns #}
     {{ dbtvault_bq.hash_columns(hashed_columns, hash_algo) -}}
-    {# BQ Fixed: https://github.com/Datavault-UK/dbtvault/issues/17 #}
-    {{ "," if derived_columns is defined and source_relation is defined }}
 {% endif -%}
 
 {#- Derive additional columns, if provided -#}
 {%- if derived_columns is defined and derived_columns is not none -%}
-    {%- if include_source_columns -%}
+    {# BQ FIX: Added comma to fix missing comma when include_source_columns = false #}
+    ,{%- if include_source_columns -%}
     {{ dbtvault.snowflake__derive_columns(source_relation=source_relation, columns=derived_columns) }}
     {%- else -%}
     {{ dbtvault.snowflake__derive_columns(columns=derived_columns) }}
     {%- endif -%}
 {#- If source relation is defined but derived_columns is not, add columns from source model. -#}
 {%- elif source_relation is defined and include_source_columns is true -%}
-
-    {{ dbtvault.snowflake__derive_columns(source_relation=source_relation) }}
+    {# BQ FIX: Added comma to fix missing comma when include_source_columns = false #}
+    ,{{ dbtvault.snowflake__derive_columns(source_relation=source_relation) }}
 {%- endif %}
 
 FROM {{ source_relation }}
