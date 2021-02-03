@@ -28,7 +28,7 @@
 
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk = ('0000000000000000') -%}
-{%- set ghost_date = '0000-01-01 00:00:00.000000' %}
+{%- set ghost_date = '1990-01-01 00:00:00.000000' %}
 WITH hub AS (
 
 	SELECT * FROM {{ ref(source_model) }}
