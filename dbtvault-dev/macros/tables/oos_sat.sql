@@ -24,6 +24,10 @@
     -- depends_on: {{ this }}
 {% endif -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
+                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
+
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
