@@ -1381,3 +1381,11 @@ def disable_union(context):
     Indicate that a list should not be created if multiple stages are specified in a scenario
     """
     context.disable_union = True
+
+
+@fixture
+def disable_payload(context):
+    """
+    Indicate that a src_payload key should be removed from the provided metadata
+    """
+    context.disable_payload = True

@@ -199,6 +199,8 @@ def load_table(context, model_name, vault_structure):
 
     config = dbtvault_generator.append_end_date_config(context, dict())
 
+    metadata = context.dbt_test_utils.filter_metadata(context, metadata)
+
     context.vault_structure_metadata = metadata
 
     dbtvault_generator.raw_vault_structure(model_name=model_name,
