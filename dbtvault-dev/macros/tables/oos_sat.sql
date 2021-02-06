@@ -101,19 +101,14 @@ matching_xts_stg_records AS (
   INNER JOIN distinct_stage AS b
   ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
   WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this.identifier }}'
+  QUALIFY ((PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
+           AND PREV_RECORD_HASHDIFF = NEXT_RECORD_HASHDIFF)
+           OR (PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
+           AND NEXT_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}))
+  AND {{ dbtvault.prefix([src_ldts], 'b') }}
+  BETWEEN XTS_LOAD_DATE
+  AND NEXT_RECORD_DATE
   ORDER BY {{ src_pk }}, XTS_LOAD_DATE
-),
-records_from_stg AS (
-  SELECT
-    {{ dbtvault.prefix(source_cols, 'c') }}
-  FROM matching_xts_stg_records AS c
-  WHERE (({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF
-          AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF)
-          OR ({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF
-          AND {{ dbtvault.prefix([src_hashdiff], 'c') }} = c.NEXT_RECORD_HASHDIFF))
-  AND ({{ dbtvault.prefix([src_ldts], 'c') }}
-  BETWEEN c.XTS_LOAD_DATE
-  AND c.NEXT_RECORD_DATE)
 ),
 records_from_sat AS (
   SELECT
@@ -125,14 +120,9 @@ records_from_sat AS (
   FROM matching_xts_stg_records AS c
   INNER JOIN sat_records_before_insert_date AS d
   ON {{dbtvault.prefix([src_pk], 'c') }} = {{dbtvault.prefix([src_pk], 'd') }}
-  WHERE ({{ dbtvault.prefix([src_hashdiff], 'c') }} != c.PREV_RECORD_HASHDIFF
-  AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF)
-  AND ({{ dbtvault.prefix([src_ldts], 'c') }}
-  BETWEEN c.XTS_LOAD_DATE
-  AND c.NEXT_RECORD_DATE)
 ),
 out_of_sequence_inserts AS (
-  SELECT * FROM records_from_stg
+  SELECT {{ dbtvault.prefix(source_cols, 'c') }} FROM matching_xts_stg_records AS c
   UNION
   SELECT * FROM records_from_sat
 ),
