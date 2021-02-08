@@ -29,6 +29,8 @@
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+    {%- elif out_of_sequence is not none %}
+    SELECT DISTINCT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
@@ -80,10 +82,6 @@ sat_records_before_insert_date AS (
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < {{ dbtvault.date_timestamp(out_of_sequence) }}
 ),
 
-distinct_stage AS (
-  SELECT DISTINCT * FROM {{ ref(source_model) }}
-),
-
 matching_xts_stg_records AS (
   SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -98,7 +96,7 @@ matching_xts_stg_records AS (
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
   FROM {{ ref(xts_model) }} AS a
-  INNER JOIN distinct_stage AS b
+  INNER JOIN source_data AS b
   ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
   WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this.identifier }}'
   QUALIFY ((PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
