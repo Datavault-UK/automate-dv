@@ -3,7 +3,7 @@ Feature: Multi Active Satellites
 
   # For development purposes only
   @fixture.multi_active_satellite
-  Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
+  Scenario: Dev purposes only
     Given the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
