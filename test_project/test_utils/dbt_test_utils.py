@@ -439,7 +439,6 @@ class DBTTestUtils:
         """
 
         if getattr(context, 'disable_payload', False):
-
             metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
 
         return metadata
@@ -571,7 +570,8 @@ class DBTVAULTGenerator:
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
             "xts": self.xts,
-            "oos_sat": self.oos_sat
+            "oos_sat": self.oos_sat,
+            "msat": self.msat
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -757,6 +757,31 @@ class DBTVAULTGenerator:
         {{{{ dbtvault.oos_sat({src_pk}, {src_hashdiff}, {src_payload},
                               {src_eff}, {src_ldts}, {src_source},
                               {source_model}, {out_of_sequence}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def msat(self, model_name, src_pk, src_hashdiff, src_payload,
+             src_eff, src_ldts, src_source, source_model,
+             config):
+        """
+        Generate a multi active satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_hashdiff: Source hashdiff
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.msat({src_pk}, {src_hashdiff}, {src_payload},
+                          {src_eff}, {src_ldts}, {src_source}, 
+                          {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)

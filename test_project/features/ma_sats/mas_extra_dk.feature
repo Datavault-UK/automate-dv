@@ -5,19 +5,19 @@ Feature: Multi Active Satellites
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 123        | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1224 | 124        | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 123        | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 133        | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 134        | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 135        | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 123        | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 123        | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 123        | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 123        | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 123        | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 123        | 1993-01-01 | *      |
     And I create the STG_CUSTOMER stage
     When I load the MULTI_ACTIVE_SATELLITE msat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
