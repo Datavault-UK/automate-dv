@@ -3,7 +3,7 @@ Feature: Multi Active Satellites
 
   # For development purposes only
   @fixture.multi_active_satellite
-  Scenario: Dev purposes only
+  Scenario: Dev p
     Given the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
