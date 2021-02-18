@@ -1161,12 +1161,12 @@ def multi_active_satellite(context):
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
-            "CUSTOMER_PK": ["CUSTOMER_ID", "CUSTOMER_PHONE"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
         "STG_CUSTOMER_TS": {
-            "CUSTOMER_PK": ["CUSTOMER_ID", "CUSTOMER_PHONE"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         }
