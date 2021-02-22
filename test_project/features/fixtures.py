@@ -1158,6 +1158,7 @@ def multi_active_satellite(context):
     """
     Define the structures and metadata to load multi active satellites
     """
+    context.vault_structure_type = "ma_sat"
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -1182,7 +1183,7 @@ def multi_active_satellite(context):
     }
 
     context.vault_structure_columns = {
-        "SATELLITE": {
+        "MULTI_ACTIVE_SATELLITE": {
             "src_pk": "CUSTOMER_PK",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE"],
             "src_hashdiff": "HASHDIFF",
@@ -1190,7 +1191,7 @@ def multi_active_satellite(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "SATELLITE_TS": {
+        "MULTI_ACTIVE_SATELLITE_TS": {
             "src_pk": "CUSTOMER_PK",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE"],
             "src_hashdiff": "HASHDIFF",
@@ -1219,7 +1220,7 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "SATELLITE": {
+        "MULTI_ACTIVE_SATELLITE": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -1230,7 +1231,7 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "SATELLITE_TS": {
+        "MULTI_ACTIVE_SATELLITE_TS": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
