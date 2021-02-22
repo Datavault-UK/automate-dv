@@ -571,7 +571,7 @@ class DBTVAULTGenerator:
             "t_link": self.t_link,
             "xts": self.xts,
             "oos_sat": self.oos_sat,
-            "msat": self.msat
+            "ma_sat": self.ma_sat
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -761,7 +761,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def msat(self, model_name, src_pk, src_hashdiff, src_payload,
+    def ma_sat(self, model_name, src_pk, src_hashdiff, src_payload,
              src_eff, src_ldts, src_source, source_model,
              config):
         """
@@ -839,7 +839,8 @@ class DBTVAULTGenerator:
             "oos_sat": "incremental",
             "xts": "incremental",
             "eff_sat": "incremental",
-            "t_link": "incremental"
+            "t_link": "incremental",
+            "ma_sat": "incremental"
         }
 
         if not config:
