@@ -779,7 +779,7 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.msat({src_pk}, {src_hashdiff}, {src_payload},
+        {{{{ dbtvault.ma_sat({src_pk}, {src_hashdiff}, {src_payload},
                           {src_eff}, {src_ldts}, {src_source}, 
                           {source_model})   }}}}
         """
