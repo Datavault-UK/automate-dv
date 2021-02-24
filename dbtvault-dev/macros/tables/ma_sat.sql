@@ -64,7 +64,7 @@ latest_records AS (
 
 changes AS (
     SELECT DISTINCT
-     COALESCE(ls."CUSTOMER_PK", stg."CUSTOMER_PK") AS "CUSTOMER_PK"
+     COALESCE({{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }}) AS "CUSTOMER_PK"
     FROM {{ source_cte }} AS stg
     FULL OUTER JOIN latest_records AS ls
     ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
@@ -82,8 +82,6 @@ records_to_insert AS (
     FROM {{ source_cte }} AS e
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     LEFT JOIN latest_records
-{#    ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}#}
-{#    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL#}
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     AND {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'e') }}
     AND {{ dbtvault.prefix([src_dk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_dk], 'e') }}
