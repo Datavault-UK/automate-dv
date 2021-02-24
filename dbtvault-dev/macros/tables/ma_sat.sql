@@ -63,13 +63,31 @@ latest_records AS (
 ),
 {%- endif %}
 
+changes AS (
+    SELECT DISTINCT
+     COALESCE(ls."CUSTOMER_PK", stg."CUSTOMER_PK") AS "CUSTOMER_PK"
+    FROM {{ source_cte }} AS stg
+    FULL OUTER JOIN latest_records AS ls
+    ON stg."CUSTOMER_PK" = ls."CUSTOMER_PK"
+    AND stg."CUSTOMER_PHONE" = ls."CUSTOMER_PHONE"
+    WHERE stg."HASHDIFF" IS null -- existent entry in ma sat not found in stage
+    OR ls."HASHDIFF" IS null -- new entry in stage not found in latest set of ma sat
+    OR stg."HASHDIFF" != ls."HASHDIFF" -- entry is modified
+),
+
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
     FROM {{ source_cte }} AS e
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     LEFT JOIN latest_records
-    ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+{#    ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}#}
+{#    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL#}
+    ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
+    AND ON {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'e') }}
+    AND ON {{ dbtvault.prefix(['CUSTOMER_PHONE'], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix(['CUSTOMER_PHONE'], 'e') }}
+    LEFT JOIN changes
+    ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
+    WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     {%- endif %}
 )
 
