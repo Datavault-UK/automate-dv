@@ -761,13 +761,14 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def ma_sat(self, model_name, src_pk, src_hashdiff, src_payload,
+    def ma_sat(self, model_name, src_pk, src_dk, src_hashdiff, src_payload,
              src_eff, src_ldts, src_source, source_model,
              config):
         """
         Generate a multi active satellite model template
             :param model_name: Name of the model file
             :param src_pk: Source pk
+            :param src_dk: Source dk
             :param src_hashdiff: Source hashdiff
             :param src_payload: Source payload
             :param src_eff: Source effective from
@@ -779,7 +780,7 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.ma_sat({src_pk}, {src_hashdiff}, {src_payload},
+        {{{{ dbtvault.ma_sat({src_pk}, {src_dk}, {src_hashdiff}, {src_payload},
                           {src_eff}, {src_ldts}, {src_source}, 
                           {source_model})   }}}}
         """

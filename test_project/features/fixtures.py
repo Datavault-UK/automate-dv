@@ -1185,6 +1185,7 @@ def multi_active_satellite(context):
     context.vault_structure_columns = {
         "MULTI_ACTIVE_SATELLITE": {
             "src_pk": "CUSTOMER_PK",
+            "src_dk": "CUSTOMER_PHONE",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
@@ -1193,6 +1194,7 @@ def multi_active_satellite(context):
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "src_pk": "CUSTOMER_PK",
+            "src_dk": "CUSTOMER_PHONE",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
