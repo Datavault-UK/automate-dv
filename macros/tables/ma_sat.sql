@@ -1,15 +1,15 @@
-{%- macro ma_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro ma_sat(src_pk, src_dk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('ma_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_hashdiff=src_hashdiff,
+    {{- adapter.dispatch('ma_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_dk=src_dk, src_hashdiff=src_hashdiff,
                                                                                   src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
                                                                                   src_source=src_source, source_model=source_model) -}}
 
 {%- endmacro %}
 
-{%- macro default__ma_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__ma_sat(src_pk, src_dk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_dk=src_dk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                                        src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
@@ -53,7 +53,7 @@ update_records AS (
 ),
 
 latest_records AS (
-    SELECT c."CUSTOMER_PHONE", {{ dbtvault.prefix(rank_cols, 'c', alias_target='target') }},
+    SELECT {{ dbtvault.prefix([src_dk], 'c', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'c', alias_target='target') }},
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
@@ -86,7 +86,7 @@ records_to_insert AS (
 {#    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL#}
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     AND {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'e') }}
-    AND {{ dbtvault.prefix(['CUSTOMER_PHONE'], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix(['CUSTOMER_PHONE'], 'e') }}
+    AND {{ dbtvault.prefix([src_dk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_dk], 'e') }}
     LEFT JOIN changes
     ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
