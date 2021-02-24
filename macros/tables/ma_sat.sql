@@ -67,11 +67,11 @@ changes AS (
      COALESCE(ls."CUSTOMER_PK", stg."CUSTOMER_PK") AS "CUSTOMER_PK"
     FROM {{ source_cte }} AS stg
     FULL OUTER JOIN latest_records AS ls
-    ON stg."CUSTOMER_PK" = ls."CUSTOMER_PK"
-    AND stg."CUSTOMER_PHONE" = ls."CUSTOMER_PHONE"
-    WHERE stg."HASHDIFF" IS null -- existent entry in ma sat not found in stage
-    OR ls."HASHDIFF" IS null -- new entry in stage not found in latest set of ma sat
-    OR stg."HASHDIFF" != ls."HASHDIFF" -- entry is modified
+    ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
+    AND {{ dbtvault.prefix([src_dk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_dk], 'ls', alias_target='target') }}
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null -- existent entry in ma sat not found in stage
+    OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat
+    OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} -- entry is modified
 ),
 
 {%- endif %}
