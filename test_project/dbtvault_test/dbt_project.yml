@@ -43,10 +43,12 @@ seeds:
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
     temp:
-      xts_seed:
+      multi_active_satellite_expected_seed:
         +column_types:
           CUSTOMER_PK: BINARY(16)
-          LOAD_DATE: DATE
-          SATELLITE_NAME: VARCHAR
+          CUSTOMER_NAME: VARCHAR
+          CUSTOMER_PHONE: VARCHAR
           HASHDIFF: BINARY(16)
+          EFFECTIVE_FROM: DATE
+          LOAD_DATE: DATE
           SOURCE: VARCHAR
