@@ -1248,6 +1248,75 @@ def multi_active_satellite(context):
 
 
 @fixture
+def multi_active_satellite_cycle(context):
+    """
+    Define the structures and metadata to perform load cycles for multi active satellites
+    """
+    context.vault_structure_type = "ma_sat"
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_PHONE"]}
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        }
+    }
+
+    context.stage_columns = {
+        "RAW_STAGE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"]
+    }
+
+    context.vault_structure_columns = {
+        "MULTI_ACTIVE_SATELLITE": {
+            "src_pk": "CUSTOMER_PK",
+            "src_dk": "CUSTOMER_PHONE",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+
+@fixture
 def cycle(context):
     """
     Define the structures and metadata to perform vault load cycles
