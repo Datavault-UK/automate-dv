@@ -1258,7 +1258,7 @@ def multi_active_satellite_cycle(context):
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME", "CUSTOMER_PHONE"]}
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         }
     }
 
