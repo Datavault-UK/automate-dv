@@ -23,7 +23,8 @@ fixture_registry = {
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
     "fixture.disable_payload": disable_payload,
-    "fixture.multi_active_satellite": multi_active_satellite
+    "fixture.multi_active_satellite": multi_active_satellite,
+    "fixture.multi_active_satellite_cycle": multi_active_satellite_cycle
 }
 
 
