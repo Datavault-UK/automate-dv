@@ -88,6 +88,7 @@ records_to_insert AS (
     LEFT JOIN changes
     ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
+    OR {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'e') }} IS NULL
     {%- endif %}
 )
 
