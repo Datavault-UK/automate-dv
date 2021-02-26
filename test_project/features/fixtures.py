@@ -1166,6 +1166,11 @@ def multi_active_satellite(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
+        "STG_CUSTOMER_TWO_DK": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
+        },
         "STG_CUSTOMER_TS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
@@ -1175,6 +1180,9 @@ def multi_active_satellite(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_TWO_DK": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TS": {
@@ -1192,6 +1200,15 @@ def multi_active_satellite(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "MULTI_ACTIVE_SATELLITE_TWO_DK": {
+            "src_pk": "CUSTOMER_PK",
+            "src_dk": ["CUSTOMER_PHONE", "EXTENSION"],
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "EXTENSION"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "src_pk": "CUSTOMER_PK",
             "src_dk": "CUSTOMER_PHONE",
@@ -1201,6 +1218,7 @@ def multi_active_satellite(context):
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         }
+
     }
 
     context.seed_config = {
@@ -1209,6 +1227,16 @@ def multi_active_satellite(context):
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TWO_DK": {
+            "+column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMBER(38, 0)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1227,6 +1255,18 @@ def multi_active_satellite(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_DK": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMBER(38, 0)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
