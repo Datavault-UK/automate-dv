@@ -68,7 +68,9 @@ changes AS (
     FROM {{ source_cte }} AS stg
     FULL OUTER JOIN latest_records AS ls
     ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
-    AND {{ dbtvault.prefix([src_dk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_dk], 'ls', alias_target='target') }}
+    {% for cols in src_dk %}
+        AND {{ dbtvault.prefix([cols], 'stg', alias_target='target') }} = {{ dbtvault.prefix([cols], 'ls', alias_target='target') }}
+    {%  endfor %}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null -- existent entry in ma sat not found in stage
     OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat
     OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} -- entry is modified
@@ -84,7 +86,9 @@ records_to_insert AS (
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     AND {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'e') }}
-    AND {{ dbtvault.prefix([src_dk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_dk], 'e') }}
+    {% for cols in src_dk %}
+        AND {{ dbtvault.prefix([cols], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([cols], 'e', alias_target='target') }}
+    {%  endfor %}
     LEFT JOIN changes
     ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
