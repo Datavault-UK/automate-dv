@@ -1169,7 +1169,7 @@ def multi_active_satellite(context):
         "STG_CUSTOMER_TWO_DK": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME",  "EXTENSION"]}
         },
         "STG_CUSTOMER_TS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
