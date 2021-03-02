@@ -15,6 +15,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set dk_cols = dbtvault.expand_column_list(columns=[src_dk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -53,7 +54,7 @@ update_records AS (
 ),
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(src_dk, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
+    SELECT {{ dbtvault.prefix(dk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
@@ -64,14 +65,14 @@ latest_records AS (
 
 changes AS (
     SELECT DISTINCT
-     COALESCE({{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }}) AS "CUSTOMER_PK"
+    COALESCE({{ dbtvault.prefix([src_pk], 'ls') }}, {{ dbtvault.prefix([src_pk], 'stg') }}) AS {{ src_pk }}
     FROM {{ source_cte }} AS stg
     FULL OUTER JOIN latest_records AS ls
-    ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
+    ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'ls') }}
     AND {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'ls', condition='IS NOT NULL') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null
-    OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null
-    OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }}
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg') }} IS NULL
+    OR {{ dbtvault.prefix([src_hashdiff], 'ls') }} IS NULL
+    OR {{ dbtvault.prefix([src_hashdiff], 'stg') }} != {{ dbtvault.prefix([src_hashdiff], 'ls') }}
 ),
 
 {%- endif %}
@@ -81,13 +82,13 @@ records_to_insert AS (
     FROM {{ source_cte }} AS stg
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     LEFT JOIN latest_records
-    ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    AND {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}
+    ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
+    AND {{ dbtvault.prefix([src_ldts], 'latest_records') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}
     AND {{ dbtvault.multikey(src_dk, 'latest_records', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }}
     LEFT JOIN changes
-    ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    OR {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL
+    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
+    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
+    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL
     {%- endif %}
 )
 
