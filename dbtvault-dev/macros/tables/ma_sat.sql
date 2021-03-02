@@ -22,7 +22,6 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-{# rename a to something better #}
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
@@ -46,7 +45,6 @@ rank_col AS (
 
 {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
 
-{# rename a and b to something better #}
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
     FROM {{ this }} as a
@@ -64,7 +62,6 @@ latest_records AS (
     QUALIFY latest = 'Y'
 ),
 
-{# MAYBE rename stg and ls to something better; OR simply use "source" and "latest_records" #}
 changes AS (
     SELECT DISTINCT
      COALESCE({{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }}) AS "CUSTOMER_PK"
@@ -72,14 +69,13 @@ changes AS (
     FULL OUTER JOIN latest_records AS ls
     ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
     AND {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'ls', condition='IS NOT NULL') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null -- existent entry in ma sat not found in stage
-    OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat
-    OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} -- entry is modified
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null
+    OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null
+    OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }}
 ),
 
 {%- endif %}
 
-{# MAYBE rename stg to something like source; if you gave latest_records an alias in changes then give it the same in records_to_insert #}
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}
     FROM {{ source_cte }} AS stg
