@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites  - Actual multi active satellite behaviour
+Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e. changes of records) - One DK
 
   @fixture.multi_active_satellite
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have fewer records
