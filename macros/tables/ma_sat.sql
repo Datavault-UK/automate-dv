@@ -1,15 +1,15 @@
-{%- macro ma_sat(src_pk, src_dk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('ma_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_dk=src_dk, src_hashdiff=src_hashdiff,
+    {{- adapter.dispatch('ma_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff,
                                                                                   src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
                                                                                   src_source=src_source, source_model=source_model) -}}
 
 {%- endmacro %}
 
-{%- macro default__ma_sat(src_pk, src_dk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_dk=src_dk, src_hashdiff=src_hashdiff, src_payload=src_payload,
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                                        src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
@@ -55,7 +55,7 @@ update_records AS (
 ),
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(src_dk, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
+    SELECT {{ dbtvault.prefix(src_cdk, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
@@ -71,7 +71,7 @@ changes AS (
     FROM {{ source_cte }} AS stg
     FULL OUTER JOIN latest_records AS ls
     ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
-    AND {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'ls', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'ls', condition='IS NOT NULL') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null -- existent entry in ma sat not found in stage
     OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat
     OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} -- entry is modified
@@ -87,7 +87,7 @@ records_to_insert AS (
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
     AND {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}
-    AND {{ dbtvault.multikey(src_dk, 'latest_records', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_cdk, 'latest_records', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}
     LEFT JOIN changes
     ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
     WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
