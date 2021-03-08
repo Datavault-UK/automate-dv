@@ -15,6 +15,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set dk_cols = dbtvault.expand_column_list(columns=[src_dk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -22,7 +23,6 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-{# rename a to something better #}
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
@@ -46,7 +46,6 @@ rank_col AS (
 
 {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
 
-{# rename a and b to something better #}
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
     FROM {{ this }} as a
@@ -55,7 +54,7 @@ update_records AS (
 ),
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(src_cdk, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
+    SELECT {{ dbtvault.prefix(src_dk, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
            CASE WHEN RANK()
            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
            ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
@@ -64,14 +63,13 @@ latest_records AS (
     QUALIFY latest = 'Y'
 ),
 
-{# MAYBE rename stg and ls to something better; OR simply use "source" and "latest_records" #}
 changes AS (
     SELECT DISTINCT
-     COALESCE({{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }}) AS "CUSTOMER_PK"
+    COALESCE({{ dbtvault.prefix([src_pk], 'ls') }}, {{ dbtvault.prefix([src_pk], 'stg') }}) AS {{ src_pk }}
     FROM {{ source_cte }} AS stg
     FULL OUTER JOIN latest_records AS ls
     ON {{ dbtvault.prefix([src_pk], 'stg', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'ls', alias_target='target') }}
-    AND {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'ls', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'ls', condition='IS NOT NULL') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} IS null -- existent entry in ma sat not found in stage
     OR {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat
     OR {{ dbtvault.prefix([src_hashdiff], 'stg', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'ls', alias_target='target') }} -- entry is modified
@@ -79,7 +77,6 @@ changes AS (
 
 {%- endif %}
 
-{# MAYBE rename stg to something like source; if you gave latest_records an alias in changes then give it the same in records_to_insert #}
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}
     FROM {{ source_cte }} AS stg
@@ -87,11 +84,11 @@ records_to_insert AS (
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
     AND {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}
-    AND {{ dbtvault.multikey(src_cdk, 'latest_records', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_dk, 'latest_records', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_dk, 'stg', condition='IS NOT NULL') }}
     LEFT JOIN changes
-    ON {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    OR {{ dbtvault.prefix([src_pk], 'changes', alias_target='target') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL
+    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
+    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
+    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL
     {%- endif %}
 )
 
