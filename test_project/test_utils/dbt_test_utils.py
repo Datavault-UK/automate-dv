@@ -766,7 +766,7 @@ class DBTVAULTGenerator:
                 src_start_date, src_end_date, src_eff, src_ldts, src_source,
                 source_model, config):
         """
-        Generate an effectivity satellite model template
+        Generate a bridge model template
             :param model_name: Name of the model file
             :param src_pk: Source pk
             :param src_dfk: Source driving foreign key
