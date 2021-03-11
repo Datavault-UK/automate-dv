@@ -2,7 +2,7 @@
 Feature: Bridge
 
   @fixture.bridge
-  Scenario: Load into a pit table where the AS IS table is already established and the AS_IS table has increments of a day
+  Scenario: Load into a bridge table where the AS IS table is already established and the AS_IS table has increments of a day
     Given the BRIDGE table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PIT          |
