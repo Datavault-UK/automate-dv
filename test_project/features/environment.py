@@ -26,7 +26,7 @@ fixture_registry = {
     "fixture.xts": xts,
     "fixture.out_of_sequence_satellite": out_of_sequence_satellite,
     "fixture.cycle": cycle,
-    "fixture.pit": pit
+    "fixture.pit": pit,
     "fixture.disable_payload": disable_payload,
     "fixture.bridge": bridge
 }
