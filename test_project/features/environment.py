@@ -22,7 +22,8 @@ fixture_registry = {
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
-    "fixture.disable_payload": disable_payload
+    "fixture.disable_payload": disable_payload,
+    "fixture.bridge": bridge
 }
 
 

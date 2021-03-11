@@ -1222,6 +1222,11 @@ def out_of_sequence_satellite(context):
 
 
 @fixture
+def bridge(context):
+    pass
+
+
+@fixture
 def cycle(context):
     """
     Define the structures and metadata to perform vault load cycles
