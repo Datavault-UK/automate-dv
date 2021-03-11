@@ -571,7 +571,8 @@ class DBTVAULTGenerator:
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
             "xts": self.xts,
-            "oos_sat": self.oos_sat
+            "oos_sat": self.oos_sat,
+            "bridge": self.bridge
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -757,6 +758,34 @@ class DBTVAULTGenerator:
         {{{{ dbtvault.oos_sat({src_pk}, {src_hashdiff}, {src_payload},
                               {src_eff}, {src_ldts}, {src_source},
                               {source_model}, {out_of_sequence}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def bridge(self, model_name, src_pk, src_dfk, src_sfk,
+                src_start_date, src_end_date, src_eff, src_ldts, src_source,
+                source_model, config):
+        """
+        Generate an effectivity satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_dfk: Source driving foreign key
+            :param src_sfk: Source surrogate foreign key
+            :param src_eff: Source effective from
+            :param src_start_date: Source start date
+            :param src_end_date: Source end date
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {src_dfk}, {src_sfk},
+                              {src_start_date}, {src_end_date},
+                              {src_eff}, {src_ldts}, {src_source},
+                              {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
