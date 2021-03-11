@@ -251,6 +251,36 @@ def create_csv(context, raw_stage_model_name):
     assert "Completed successfully" in logs
 
 
+@given("the {table_name} table is created and populated with data")
+def create_csv(context, table_name):
+    """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
+
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+                                                                 model_name=table_name)
+
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                       seed_config=context.seed_config[table_name])
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
+
+    args = {k: v for k, v in stage_metadata.items() if k == "hash"}
+
+    dbtvault_generator.raw_vault_structure(model_name=table_name,
+                                           vault_structure='stage',
+                                           source_model=seed_file_name,
+                                           config={'materialized': 'table'})
+
+    run_logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=table_name,
+                                                    args=args, full_refresh=True)
+
+    context.raw_stage_models = seed_file_name
+
+    assert "Completed successfully" in seed_logs
+    assert "Completed successfully" in run_logs
+
+
 @step("the {raw_stage_model_name} is loaded")
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
@@ -287,25 +317,6 @@ def stage_processing(context, processed_stage_name):
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
                                                 args=args)
-
-    assert "Completed successfully" in logs
-
-
-@step("I create the {as_of_date_name} as of date table")
-def stage_processing(context, as_of_date_name):
-    stage_metadata = set_stage_metadata(context, stage_model_name=as_of_date_name)
-
-    args = {k: v for k, v in stage_metadata.items() if k == "hash"}
-
-    dbtvault_generator.raw_vault_structure(model_name=as_of_date_name,
-                                           vault_structure="stage",
-                                           source_model=context.raw_stage_models,
-                                           hashed_columns=context.hashed_columns[as_of_date_name],
-                                           derived_columns=context.derived_columns[as_of_date_name],
-                                           include_source_columns=context.include_source_columns)
-
-    logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=as_of_date_name,
-                                                args=args, full_refresh=True)
 
     assert "Completed successfully" in logs
 
