@@ -572,7 +572,7 @@ class DBTVAULTGenerator:
             "t_link": self.t_link,
             "xts": self.xts,
             "oos_sat": self.oos_sat,
-            "bridge": self.bridge
+            "bridge": self.bridge,
             "pit": self.pit
         }
 
