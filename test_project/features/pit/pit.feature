@@ -2,13 +2,13 @@
 Feature: pit
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table is already established and the AS_IS table has increments of a day
+  Scenario: Load into a pit table where the AS OF table is already established with increments of a day
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS |         |          | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |         |          |              |
-      |              |       | SAT_CUSTOMER_PROFILE |         |          |              |
+      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |       | SAT_CUSTOMER_LOGIN   |              |
+      |              |       | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -33,12 +33,11 @@ Feature: pit
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000000 | *      |
     And I create the STG_CUSTOMER_PROFILE stage
-    And the AS_OF_DATE table contains data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2019-01-02 00:00:00.000000 |
       | 2019-01-03 00:00:00.000000 |
       | 2019-01-04 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
@@ -53,7 +52,7 @@ Feature: pit
       | CUSTOMER_PK | LAST_LOGIN_DATE            | DEVICE_USED | HASHDIFF                                 | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
       | md5('1001') | 2019-01-01 02:00:00.000000 | Phone       | md5('PHONE\|\|2019-01-01 02:00:00.000')  | 2019-01-02 00:00:00.000000 | 2019-01-02 00:00:00.000000 | *      |
       | md5('1001') | 2019-01-02 03:00:00.000000 | Phone       | md5('PHONE\|\|2019-01-02 03:00:00.000')  | 2019-01-03 00:00:00.000000 | 2019-01-03 00:00:00.000000 | *      |
-      | md5('1001') | 2019-01-03 01:00:00.000000 | Laptop      | md5('LAPTOP\|\|2019-01-03 01:00:00.000')  | 2019-01-04 00:00:00.000000 | 2019-01-04 00:00:00.000000 | *      |
+      | md5('1001') | 2019-01-03 01:00:00.000000 | Laptop      | md5('LAPTOP\|\|2019-01-03 01:00:00.000') | 2019-01-04 00:00:00.000000 | 2019-01-04 00:00:00.000000 | *      |
       | md5('1002') | 2019-01-01 05:00:00.000000 | Tablet      | md5('TABLET\|\|2019-01-01 05:00:00.000') | 2019-01-02 00:00:00.000000 | 2019-01-02 00:00:00.000000 | *      |
       | md5('1002') | 2019-01-02 06:00:00.000000 | Tablet      | md5('TABLET\|\|2019-01-02 06:00:00.000') | 2019-01-03 00:00:00.000000 | 2019-01-03 00:00:00.000000 | *      |
       | md5('1002') | 2019-01-03 08:00:00.000000 | Tablet      | md5('TABLET\|\|2019-01-03 08:00:00.000') | 2019-01-04 00:00:00.000000 | 2019-01-04 00:00:00.000000 | *      |
@@ -79,10 +78,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS IS table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PITS         |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS |         |          | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |         |          |              |
-      |              |       | SAT_CUSTOMER_PROFILE |         |          |              |
+      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |       | SAT_CUSTOMER_LOGIN   |              |
+      |              |       | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -105,12 +104,11 @@ Feature: pit
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000000 | *      |
     And I create the STG_CUSTOMER_PROFILE stage
-    And the AS_OF_DATE table contains data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2019-01-02 00:00:00.000000 |
       | 2019-01-03 00:00:00.000000 |
       | 2019-01-04 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS    | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
@@ -126,10 +124,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS IS table is already established and the AS IS table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PITS         |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS |         |          | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |         |          |              |
-      |              |       | SAT_CUSTOMER_PROFILE |         |          |              |
+      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |       | SAT_CUSTOMER_LOGIN   |              |
+      |              |       | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -154,12 +152,11 @@ Feature: pit
       | 1002        | yellow           | ef56         | 2019-01-01 10:45:00 | *      |
       | 1002        | pink             | ef56         | 2019-01-01 11:15:00 | *      |
     And I create the STG_CUSTOMER_PROFILE stage
-    And the AS_OF_DATE table contains data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE          |
       | 2019-01-01 10:15:00 |
       | 2019-01-01 10:45:00 |
       | 2019-01-01 11:15:00 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE          | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS |
@@ -171,13 +168,13 @@ Feature: pit
       | md5('1002') | 2019-01-01 11:15:00 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-01 11:15:00     | md5('1002')             | 2019-01-01 11:15:00       |
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table dates are before the satellites have received any entry's
+  Scenario: Load into a pit table where the AS OF table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PITS         |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS |         |          | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |         |          |              |
-      |              |       | SAT_CUSTOMER_PROFILE |         |          |              |
+      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |       | SAT_CUSTOMER_LOGIN   |              |
+      |              |       | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -202,12 +199,11 @@ Feature: pit
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000000 | *      |
     And I create the STG_CUSTOMER_PROFILE stage
-    And the AS_OF_DATE table contains data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2017-01-02 00:00:00.000000 |
       | 2017-01-03 00:00:00.000000 |
       | 2017-01-04 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS    | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
@@ -220,13 +216,13 @@ Feature: pit
 
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table dates are after the most recent satellite entry's
+  Scenario: Load into a pit table where the AS OF table dates are after the most recent satellite entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PITS         |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS |         |          | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |         |          |              |
-      |              |       | SAT_CUSTOMER_PROFILE |         |          |              |
+      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |       | SAT_CUSTOMER_LOGIN   |              |
+      |              |       | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -251,12 +247,11 @@ Feature: pit
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000000 | *      |
     And I create the STG_CUSTOMER_PROFILE stage
-    And the AS_OF_DATE table contains data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2019-01-05 00:00:00.000000 |
       | 2019-01-06 00:00:00.000000 |
       | 2019-01-07 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS    | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
@@ -275,10 +270,10 @@ Feature: pit
     And the RAW_STAGE_DETAILS stage is empty
     And the RAW_STAGE_LOGIN stage is empty
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | T_LINKS | EFF_SATS | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS |         |          | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |         |          |              |
-      |              |       | SAT_CUSTOMER_PROFILE |         |          |              |
+      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |       | SAT_CUSTOMER_LOGIN   |              |
+      |              |       | SAT_CUSTOMER_PROFILE |              |
     When the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -308,7 +303,6 @@ Feature: pit
       | 2019-01-02 00:00:00.000000 |
       | 2019-01-03 00:00:00.000000 |
       | 2019-01-04 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS    | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
@@ -318,7 +312,6 @@ Feature: pit
       | md5('1002') | 2019-01-02 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-02 00:00:00.000000 | md5('1002')             | 2019-01-02 00:00:00.000000 |
       | md5('1002') | 2019-01-03 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-03 00:00:00.000000 | md5('1002')             | 2019-01-03 00:00:00.000000 |
       | md5('1002') | 2019-01-04 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
-
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE |
       | 1001        | 2019-01-04 06:00:00.000000 | Tablet      | 2019-01-05 00:00:00.000000 | *      |
@@ -334,7 +327,6 @@ Feature: pit
       | 2019-01-03 00:00:00.000000 |
       | 2019-01-04 00:00:00.000000 |
       | 2019-01-05 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS    | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
@@ -365,7 +357,6 @@ Feature: pit
       | 2019-01-04 00:00:00.000000 |
       | 2019-01-05 00:00:00.000000 |
       | 2019-01-06 00:00:00.000000 |
-    And I create the AS_OF_DATE as of date table
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS    | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
