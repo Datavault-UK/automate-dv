@@ -293,20 +293,34 @@ def stage_processing(context, processed_stage_name):
     assert "Completed successfully" in logs
 
 
-@step("I create the {as_of_date_name} as of date table")
-def stage_processing(context, as_of_date_name):
-    stage_metadata = set_stage_metadata(context, stage_model_name=as_of_date_name)
+@step("I create the {as_of_date_table_name} as of date table")
+def stage_processing(context, as_of_date_table_name):
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=as_of_date_table_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[as_of_date_table_name])
+    #
+    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    #
+    # context.raw_stage_models = seed_file_name
+    #
+    # context.raw_stage_model_name = raw_stage_model_name
+    #
+    # assert "Completed successfully" in logs
+    #
+    stage_metadata = set_stage_metadata(context, stage_model_name=as_of_date_table_name)
 
     args = {k: v for k, v in stage_metadata.items() if k == "hash"}
 
-    dbtvault_generator.raw_vault_structure(model_name=as_of_date_name,
+    dbtvault_generator.raw_vault_structure(model_name=as_of_date_table_name,
                                            vault_structure="stage",
                                            source_model=context.raw_stage_models,
-                                           hashed_columns=context.hashed_columns[as_of_date_name],
-                                           derived_columns=context.derived_columns[as_of_date_name],
+                                           hashed_columns=context.hashed_columns[as_of_date_table_name],
+                                           derived_columns=context.derived_columns[as_of_date_table_name],
                                            include_source_columns=context.include_source_columns)
 
-    logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=as_of_date_name,
+    logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=as_of_date_table_name,
                                                 args=args, full_refresh=True)
 
     assert "Completed successfully" in logs
