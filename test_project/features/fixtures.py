@@ -1223,8 +1223,97 @@ def out_of_sequence_satellite(context):
 
 @fixture
 def bridge(context):
-    pass
+    """
+    Define the structures and metadata to perform bridge load
+    """
 
+    context.vault_structure_type = "bridge"
+
+    context.hashed_columns = {
+        "STG_CUSTOMER_ORDER_NATION": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "NATION_PK": "NATION_ID",
+            "CUSTOMER_NATION_PK": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "NATION_ID"]
+                         },
+            "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
+                                   "columns": ["CUSTOMER_ID", "ORDER_ID"]
+                                   }
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER_ORDER_NATION": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "START_DATE": "LOAD_DATE"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB_CUSTOMER": {
+            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "LINK_CUSTOMER_ORDER": {
+            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "LINK_CUSTOMER_NATION": {
+            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_PK", "NATION_PK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_CUSTOMER_ORDER": {
+            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_CUSTOMER_NATION": {
+            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_PK", "NATION_PK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "BRIDGE_CUSTOMER": {
+            "hubs": "HUB_CUSTOMER",
+            "links": ["LINK_CUSTOMER_ORDER", "LINK_CUSTOMER_NATION"],
+            "eff_satellites": {
+                "EFF_SAT_CUSTOMER_ORDER": {
+                    "pk":
+                        {"PK": "CUSTOMER_PK"},
+                    "ldts":
+                        {"LDTS": "LOAD_DATE"}
+                },
+                "EFF_SAT_CUSTOMER_NATION": {
+                    "pk":
+                        {"PK": "CUSTOMER_PK"},
+                    "ldts":
+                        {"LDTS": "LOAD_DATE"}
+                }
+            },
+            "src_pk": "CUSTOMER_PK",
+            "as_of_date_table": "AS_OF_DATE",
+            "as_of_date"
+        }
+    }
 
 @fixture
 def cycle(context):
