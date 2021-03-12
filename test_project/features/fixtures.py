@@ -1293,27 +1293,126 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "BRIDGE_CUSTOMER": {
-            "hubs": "HUB_CUSTOMER",
-            "links": ["LINK_CUSTOMER_ORDER", "LINK_CUSTOMER_NATION"],
+            "hubs": {
+                "HUB_CUSTOMER": {
+                    "pk":
+                        {"PK": "CUSTOMER_PK"}
+                }
+            },
+            "links": {
+                "LINK_CUSTOMER_ORDER": {
+                    "pk" :
+                        {"PK": "CUSTOMER_ORDER_PK"},
+                },
+                "LINK_CUSTOMER_NATION": {
+                    "pk":
+                        {"PK": "CUSTOMER_NATION_PK"},
+                }
+            },
             "eff_satellites": {
                 "EFF_SAT_CUSTOMER_ORDER": {
                     "pk":
-                        {"PK": "CUSTOMER_PK"},
-                    "ldts":
-                        {"LDTS": "LOAD_DATE"}
+                        {"PK": "CUSTOMER_ORDER_PK"},
+                    "end_date":
+                        {"ENDDATE": "END_DATE"}
                 },
                 "EFF_SAT_CUSTOMER_NATION": {
                     "pk":
-                        {"PK": "CUSTOMER_PK"},
-                    "ldts":
-                        {"LDTS": "LOAD_DATE"}
+                        {"PK": "CUSTOMER_NATION_PK"},
+                    "end_date":
+                        {"ENDDATE": "END_DATE"}
                 }
             },
-            "src_pk": "CUSTOMER_PK",
-            "as_of_date_table": "AS_OF_DATE",
-            "as_of_date"
+            "as_of_date_table": "AS_OF_DATE"
         }
     }
+
+    context.stage_columns = {
+        "RAW_CUSTOMER_ORDER_NATION":
+            ["CUSTOMER_ID",
+             "ORDER_ID",
+             "NATION_ID",
+             "LOAD_DATE",
+             "SOURCE"]
+    }
+
+    context.seed_config = {
+        "RAW_CUSTOMER_ORDER_NATION": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "LINK_CUSTOMER_ORDER": {
+            "+column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "LINK_CUSTOMER_NATION": {
+            "+column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_CUSTOMER_ORDER": {
+            "+column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_CUSTOMER_NATION": {
+            "+column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "AS_OF_DATE": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME"
+            }
+        },
+        "BRIDGE_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME",
+                "LINK_CO_PK": "BINARY(16)",
+                "EFF_CO_END_DATE": "DATETIME",
+                "LINK_CN_PK": "BINARY(16)",
+                "EFF_CN_END_DATE": "DATETIME"
+            }
+        }
+    }
+
 
 @fixture
 def cycle(context):
