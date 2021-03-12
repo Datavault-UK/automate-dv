@@ -1,11 +1,11 @@
-{%- macro bridge(hubs, links, eff_satellites, as_of_date_table) -%}
+{%- macro bridge(source_model, src_pk, links, eff_satellites, as_of_date_table) -%}
 
-    {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(hubs=hubs, links=links,
-                                                                                  eff_satellites=eff_satellites,
+    {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
+                                                                                  links=links, eff_satellites=eff_satellites,
                                                                                   as_of_date_table=as_of_date_table) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(hubs, links, eff_satellites, as_of_date_table) -%}
+{%- macro default__bridge(source_model, src_pk, links, eff_satellites, as_of_date_table) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -50,52 +50,43 @@ WITH
 
 BRIDGE_WALK AS (
     SELECT
-        {%-  for hub in hubs.keys() -%}
-             {%- filter indent(width=8) -%}
-             {% set hub_key = (hub['pk'].keys() | list )[0] -%}
-             {{- "\n" -}}
-             a.hubs[hub]['pk'][hub_key]
-             {{- ',' if not loop.last -}}
-             {% endfilter %}
-        {%- endfor -%}
+        a.{{ src_pk }},
         b."AS_OF_DATE",
-        {# THIS BIT NEEDS TO BE DONE AFTER THE FROM BIT AS YOU NEED THE CORRECT ALIASES #}
-        {%-  for link in links -%}
-             {%- filter indent(width=8) -%}
-             {% set link_key = (links[link]['pk'].keys() | list )[0] -%}
-             {{- "\n" -}}
-             a.links[link]['pk'][link_key]
-             {{- ',' if not loop.last -}}
-             {% endfilter %}
+        {%- for link in links -%}
+            {%- filter indent(width=8) -%}
+            {% set link_key = (links[link]['pk'].keys() | list )[0] -%}
+            {{- "\n" -}}
+            {{ 'COALESCE(MAX('~ link ~'_SRC.'~ links[link]['pk'][link_key]~'), CAST( '"'"~ghost_pk~"'"' AS BINARY)) AS '~ link ~'_'~ link_key ~','  }}
+            {% endfilter %}
         {%- endfor %}
-        COALESCE(MAX(c."LINK_CUSTOMER_NATION_PK"), $ghost_pk) AS LINK1_PK,
-        COALESCE(MAX(e."ORDER_CUSTOMER_PK"), $ghost_pk) AS LINK2_PK,
-        COALESCE(MAX(efs1."END_DATE"), $ghost_date) AS EFF1_END_DATE,
-        COALESCE(MAX(efs2."END_DATE"), $ghost_date) AS EFF2_END_DATE
-
+        {%-  for eff_sat in eff_satellites -%}
+            {%- filter indent(width=8) -%}
+            {% set eff_sat_key = (eff_satellites[eff_sat]['end_date'].keys() | list )[0] -%}
+            {{- "\n" -}}
+            {{ 'COALESCE(MAX('~ eff_sat ~'_SRC.'~ eff_satellites[eff_sat]['pk'][eff_sat_key]~'), CAST( '"'"~ghost_date~"'"' AS BINARY)) AS '~ eff_sat ~'_'~ eff_sat_key ~','  }}
+            {{- ',' if not loop.last -}}
+            {% endfilter %}
+        {%- endfor %}
 
     FROM
-    {# IN ORDER TO GET RID OF THE FOR LOOP - IF WE INDEED ARE GOING TO USE ONLY ONE HUB AT MOST #}
-    {# THEN WE NEED TO DEFINE SPLIT "hubs" INTO "hub" : "HUB_..." & "src_pk": "..._PK" #}
-        {%-  for hub in hubs.keys() -%}
-             {%- filter indent(width=8) -%}
-             {{- "\n" -}}
-             {{ ref(hub) }}
-             {{- ',' if not loop.last -}}
-             {% endfilter %}
-        {%- endfor %}
+    {{ ref(source_model) }} AS a
     INNER JOIN AS_OF_DATES_FOR_BRIDGE AS b
         ON (1=1)
 
     {# THINK OF HOW YOU CAN WRITE AS FEW LOOPS FOR THIS NEXT SECTION #}
-    LEFT JOIN "SANDBOX"."NORBERT_ACATRINEI"."LINK_CUSTOMER_NATION" AS c
-        ON c."CUSTOMER_PK" = a."CUSTOMER_PK"
+    {% for link in links -%}
+        {% set link_key = (links[link]['pk'].keys() | list )[0] -%}
+        LEFT JOIN {{ ref(link) }} AS {{  link -}}_SRC
+            ON a.{{- src_pk }} = {{ link -}}_SRC.{{ links[link]['pk'][link_key] }}
+    {% endfor %}
+    {%-  for eff_sat in eff_satellites -%}
+        {% set eff_sat_key = (eff_satellites[eff_sat]['end_date'].keys() | list )[0] -%}
+        INNER JOIN {{ ref(eff_sat) }} AS {{  eff_sat -}}_SRC
+            ON a.{{- src_pk }} = {{ link -}}_SRC.{{ links[link]['pk'][link_key] }}
+        {%- endfor %}
     INNER JOIN "SANDBOX"."NORBERT_ACATRINEI".EFF_SAT_CUSTOMER_NATION AS efs1
         ON c."LINK_CUSTOMER_NATION_PK" = efs1."LINK_CUSTOMER_NATION_PK"
         AND efs1."LOAD_DATE" <= b."AS_OF_DATE"
-
-    LEFT JOIN "SANDBOX"."NORBERT_ACATRINEI"."LINK_CUSTOMER_ORDER" AS e
-        ON c."CUSTOMER_PK" = e."CUSTOMER_PK"
     INNER JOIN "SANDBOX"."NORBERT_ACATRINEI".EFF_SAT_CUSTOMER_ORDER AS efs2
         ON e."ORDER_CUSTOMER_PK" = efs2."ORDER_CUSTOMER_PK"
         AND efs2."LOAD_DATE" <= b."AS_OF_DATE"

@@ -1293,12 +1293,8 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "BRIDGE_CUSTOMER": {
-            "hubs": {
-                "HUB_CUSTOMER": {
-                    "pk":
-                        {"PK": "CUSTOMER_PK"}
-                }
-            },
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
             "links": {
                 "LINK_CUSTOMER_ORDER": {
                     "pk" :
@@ -1314,13 +1310,13 @@ def bridge(context):
                     "pk":
                         {"PK": "CUSTOMER_ORDER_PK"},
                     "end_date":
-                        {"ENDDATE": "END_DATE"}
+                        {"END_DATE": "END_DATE"}
                 },
                 "EFF_SAT_CUSTOMER_NATION": {
                     "pk":
                         {"PK": "CUSTOMER_NATION_PK"},
                     "end_date":
-                        {"ENDDATE": "END_DATE"}
+                        {"END_DATE": "END_DATE"}
                 }
             },
             "as_of_date_table": "AS_OF_DATE"
