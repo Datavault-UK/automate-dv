@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites Loaded in cycles using separate manual loads
+Feature: Multi Active Satellites Loaded in cycles using separate manual loads - One DK
 
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
