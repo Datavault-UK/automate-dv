@@ -54,45 +54,84 @@ update_records AS (
 ),
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(cdk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
-           CASE WHEN RANK()
-           OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
-           ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
-    THEN 'Y' ELSE 'N' END AS latest
+    SELECT {{ dbtvault.prefix(cdk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }}
+        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'update_records') }} )
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}) AS target_count
+        ,CASE WHEN RANK()
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
+            ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
+        THEN 'Y' ELSE 'N' END AS latest
     FROM update_records
     QUALIFY latest = 'Y'
 ),
 
-changes AS (
-    SELECT DISTINCT
-    COALESCE({{ dbtvault.prefix([src_pk], 'latest', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg') }}) AS {{ src_pk }}
-    FROM {{ source_cte }} AS stg
-    FULL OUTER JOIN latest_records AS latest
-    ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'latest', alias_target='target') }}
-    AND {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg') }} IS null -- existent entry in ma sat not found in stage
-    OR {{ dbtvault.prefix([src_hashdiff], 'latest', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat
-    OR {{ dbtvault.prefix([src_hashdiff], 'stg') }} != {{ dbtvault.prefix([src_hashdiff], 'latest', alias_target='target') }} -- entry is modified
+matching_records AS (
+    SELECT { dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
+    	,COUNT(*) AS match_count
+    FROM {{ source_cte }} AS stage
+    INNER JOIN latest_records
+        ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }}
+        AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
+     GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
 ),
+
+{##}
+{#changes AS (#}
+{#    SELECT DISTINCT#}
+{#    COALESCE({{ dbtvault.prefix([src_pk], 'latest', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg') }}) AS {{ src_pk }}#}
+{#    FROM {{ source_cte }} AS stg#}
+{#    FULL OUTER JOIN latest_records AS latest#}
+{#    ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'latest', alias_target='target') }}#}
+{#    AND {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }}#}
+{#    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg') }} IS null -- existent entry in ma sat not found in stage#}
+{#    OR {{ dbtvault.prefix([src_hashdiff], 'latest', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat#}
+{#    OR {{ dbtvault.prefix([src_hashdiff], 'stg') }} != {{ dbtvault.prefix([src_hashdiff], 'latest', alias_target='target') }} -- entry is modified#}
+{#),#}
 
 {%- endif %}
 
+records_to_update AS (
+    SELECT {{ dbtvault.prefix(src_pk, 'matching_records', alias_target='target') }}
+    FROM matching_records
+    INNER JOIN latest_records
+        ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+        AND matching_records.match_count !=  latest_records.target_count
+
+{#    AND {{ dbtvault.prefix([src_ldts], 'latest') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}#}
+{#    AND {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}#}
+{#    LEFT JOIN changes#}
+{#    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
+{#    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
+{#    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL#}
+),
+
 records_to_insert AS (
-    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}
-    FROM {{ source_cte }} AS stg
-    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
-    LEFT JOIN latest_records AS latest
-    ON {{ dbtvault.prefix([src_pk], 'latest') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    AND {{ dbtvault.prefix([src_ldts], 'latest') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}
-    AND {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}
-    LEFT JOIN changes
-    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}
-    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL
-    {%- endif %}
+    SELECT {{ dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
+    FROM {{ source_cte }} AS stage
+    LEFT OUTER JOIN latest_records
+        ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+    WHERE {{ dbtvault.prefix([src_pk], 'latest_records') }} IS NULL
 )
 
-SELECT * FROM records_to_insert
+{#records_to_insert AS (#}
+{#    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}#}
+{#    FROM {{ source_cte }} AS stg#}
+{#    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}#}
+{#    LEFT JOIN latest_records AS latest#}
+{#    ON {{ dbtvault.prefix([src_pk], 'latest') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
+{#    AND {{ dbtvault.prefix([src_ldts], 'latest') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}#}
+{#    AND {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}#}
+{#    LEFT JOIN changes#}
+{#    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
+{#    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
+{#    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL#}
+{#    {%- endif %}#}
+{#)#}
+
+
+
+    SELECT *
+    FROM records_to_insert
 
 
 {%- endmacro -%}
