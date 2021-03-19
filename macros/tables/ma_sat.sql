@@ -66,12 +66,13 @@ latest_records AS (
 ),
 
 matching_records AS (
-    SELECT { dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
+    SELECT {{ dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
     	,COUNT(*) AS match_count
     FROM {{ source_cte }} AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }}
         AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
+        AND {{ dbtvault.prefix([src_cdk], 'stage') }} = {{ dbtvault.prefix([src_cdk], 'latest_records', alias_target='target') }}
      GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
 ),
 
@@ -90,7 +91,7 @@ matching_records AS (
 
 {%- endif %}
 
-records_to_update AS (
+satellite_update AS (
     SELECT {{ dbtvault.prefix(src_pk, 'matching_records', alias_target='target') }}
     FROM matching_records
     INNER JOIN latest_records
@@ -105,7 +106,7 @@ records_to_update AS (
 {#    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL#}
 ),
 
-records_to_insert AS (
+satellite_insert AS (
     SELECT {{ dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
     FROM {{ source_cte }} AS stage
     LEFT OUTER JOIN latest_records
@@ -128,10 +129,16 @@ records_to_insert AS (
 {#    {%- endif %}#}
 {#)#}
 
+    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}
+    FROM {{ source_cte }} AS stage
+    INNER JOIN satellite_update
+        ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
 
+    UNION
 
-    SELECT *
-    FROM records_to_insert
-
+    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}
+    FROM {{ source_cte }} AS stage
+    INNER JOIN satellite_insert
+        ON {{ dbtvault.prefix([src_pk], 'satellite_insert') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
 
 {%- endmacro -%}
