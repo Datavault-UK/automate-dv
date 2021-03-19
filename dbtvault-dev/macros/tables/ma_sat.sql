@@ -53,6 +53,7 @@ update_records AS (
     ON a.{{ src_pk }} = b.{{ src_pk }}
 ),
 
+{#Select latest records from satellite together with count of distinct hashdiffs for each hashkey#}
 latest_records AS (
     SELECT {{ dbtvault.prefix(cdk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }}
         ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'update_records') }} )
@@ -65,9 +66,11 @@ latest_records AS (
     QUALIFY latest = 'Y'
 ),
 
+{#Select PKs and hashdiff counts for matching stage and sat records#}
+{#Matching by hashkey + hashdiff + cdk#}
 matching_records AS (
     SELECT {{ dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
-    	,COUNT(*) AS match_count
+    	,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'stage') }}) AS match_count
     FROM {{ source_cte }} AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }}
@@ -76,36 +79,16 @@ matching_records AS (
      GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
 ),
 
-{##}
-{#changes AS (#}
-{#    SELECT DISTINCT#}
-{#    COALESCE({{ dbtvault.prefix([src_pk], 'latest', alias_target='target') }}, {{ dbtvault.prefix([src_pk], 'stg') }}) AS {{ src_pk }}#}
-{#    FROM {{ source_cte }} AS stg#}
-{#    FULL OUTER JOIN latest_records AS latest#}
-{#    ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'latest', alias_target='target') }}#}
-{#    AND {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }}#}
-{#    WHERE {{ dbtvault.prefix([src_hashdiff], 'stg') }} IS null -- existent entry in ma sat not found in stage#}
-{#    OR {{ dbtvault.prefix([src_hashdiff], 'latest', alias_target='target') }} IS null -- new entry in stage not found in latest set of ma sat#}
-{#    OR {{ dbtvault.prefix([src_hashdiff], 'stg') }} != {{ dbtvault.prefix([src_hashdiff], 'latest', alias_target='target') }} -- entry is modified#}
-{#),#}
-
-{%- endif %}
-
+{#Select PKs where PKs exist in sat but match counts differ#}
 satellite_update AS (
     SELECT {{ dbtvault.prefix(src_pk, 'matching_records', alias_target='target') }}
     FROM matching_records
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
         AND matching_records.match_count !=  latest_records.target_count
-
-{#    AND {{ dbtvault.prefix([src_ldts], 'latest') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}#}
-{#    AND {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}#}
-{#    LEFT JOIN changes#}
-{#    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
-{#    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
-{#    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL#}
 ),
 
+{#Select PKs which do not exist in sat yet#}
 satellite_insert AS (
     SELECT {{ dbtvault.prefix(src_pk, 'stage', alias_target='target') }}
     FROM {{ source_cte }} AS stage
@@ -114,23 +97,13 @@ satellite_insert AS (
     WHERE {{ dbtvault.prefix([src_pk], 'latest_records') }} IS NULL
 )
 
-{#records_to_insert AS (#}
-{#    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}#}
-{#    FROM {{ source_cte }} AS stg#}
-{#    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}#}
-{#    LEFT JOIN latest_records AS latest#}
-{#    ON {{ dbtvault.prefix([src_pk], 'latest') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
-{#    AND {{ dbtvault.prefix([src_ldts], 'latest') }} = {{ dbtvault.prefix([src_ldts], 'stg') }}#}
-{#    AND {{ dbtvault.multikey(src_cdk, 'latest', condition='IS NOT NULL') }} = {{ dbtvault.multikey(src_cdk, 'stg', condition='IS NOT NULL') }}#}
-{#    LEFT JOIN changes#}
-{#    ON {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
-{#    WHERE {{ dbtvault.prefix([src_pk], 'changes') }} = {{ dbtvault.prefix([src_pk], 'stg') }}#}
-{#    OR {{ dbtvault.prefix([src_pk], 'changes') }} IS NULL AND {{ dbtvault.prefix([src_pk], 'stg') }} IS NULL#}
-{#    {%- endif %}#}
-{#)#}
+{%- endif %}
 
+    {#Select stage records#}
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stg') }}
     FROM {{ source_cte }} AS stage
+    {#Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs#}
+    {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     INNER JOIN satellite_update
         ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
 
@@ -140,5 +113,6 @@ satellite_insert AS (
     FROM {{ source_cte }} AS stage
     INNER JOIN satellite_insert
         ON {{ dbtvault.prefix([src_pk], 'satellite_insert') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
+    {%- endif %}
 
 {%- endmacro -%}
