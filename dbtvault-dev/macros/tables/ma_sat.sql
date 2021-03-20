@@ -29,6 +29,8 @@ WITH source_data AS (
     {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
+    ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a') }} )
+        OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
     FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
@@ -81,11 +83,22 @@ matching_records AS (
 
 {#Select PKs where PKs exist in sat but match counts differ#}
 satellite_update AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'matching_records', alias_target='target') }}
-    FROM matching_records
-    INNER JOIN latest_records
-        ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
-        AND matching_records.match_count !=  latest_records.target_count
+SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
+FROM source_data AS stage
+INNER JOIN latest_records
+    ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
+LEFT OUTER JOIN matching_records
+    ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+WHERE
+    (
+    stage.source_count != latest_records.target_count
+    AND
+    COALESCE(matching_records.match_count, 0) = latest_records.target_count
+    )
+    OR
+    (
+    COALESCE (matching_records.match_count, 0) != latest_records.target_count
+    )
 ),
 
 {#Select PKs which do not exist in sat yet#}
