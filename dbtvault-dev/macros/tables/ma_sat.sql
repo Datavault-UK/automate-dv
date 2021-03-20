@@ -97,7 +97,7 @@ WHERE
     )
     OR
     (
-    COALESCE (matching_records.match_count, 0) != latest_records.target_count
+    COALESCE(matching_records.match_count, 0) != latest_records.target_count
     )
 ),
 
