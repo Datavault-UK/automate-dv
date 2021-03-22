@@ -67,11 +67,11 @@ duplicates_not_in_actual AS (
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_actual)
 ),
 compare AS (
-    SELECT *, 'E_TO_A' AS "ERROR_SOURCE" FROM compare_e_to_a
+    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM compare_e_to_a
     UNION ALL
-    SELECT *, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
+    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
     UNION ALL
-    SELECT CUSTOMER_FK, CUSTOMER_NATION_PK, LOAD_DATE, NATION_FK, SOURCE, 'MISSING_DUPLICATE' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
+    SELECT {{ columns_string }}, 'MISSING_DUPLICATE' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
 )
 
 -- For manual debugging
