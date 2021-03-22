@@ -77,7 +77,7 @@ matching_records AS (
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }}
         AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
-    {%- for child_key in listsrc_cdk) %}
+    {%- for child_key in src_cdk %}
         AND {{ dbtvault.multikey(child_key, 'stage', condition='IS  NOT NULL') }} = {{ dbtvault.multikey(child_key, 'latest_records', condition='IS  NOT NULL') }}
     {%- endfor %}
     GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
