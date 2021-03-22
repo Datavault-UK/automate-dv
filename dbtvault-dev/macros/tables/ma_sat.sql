@@ -84,7 +84,7 @@ matching_records AS (
 {#Select PKs where PKs exist in sat but match counts differ#}
 satellite_update AS (
 SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
-FROM source_data AS stage
+FROM {{ source_cte }} AS stage
 INNER JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
 LEFT OUTER JOIN matching_records
