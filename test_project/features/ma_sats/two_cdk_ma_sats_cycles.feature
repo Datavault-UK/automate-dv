@@ -3,11 +3,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
 
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with sets of records keeping the count of records the same while having one or more records changed - Two CDKs
-    Given the RAW_STAGE_TWO_DK stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat is empty
+    Given the RAW_STAGE_TWO_CDK stage is empty
+    And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 12301     | 2019-01-01     | 2019-01-01 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-01     | 2019-01-01 | *      |
@@ -22,11 +22,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1010        | Jenny         | 17-214-233-1224 | 12331     | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 12331     | 2019-01-01     | 2019-01-01 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 12301     | 2019-01-02     | 2019-01-02 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-02     | 2019-01-02 | *      |
@@ -35,11 +35,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1003        | Charley       | 17-214-233-1223 | 12321     | 2019-01-02     | 2019-01-02 | *      |
       | 1003        | Charley       | 17-214-233-1243 | 12321     | 2019-01-02     | 2019-01-02 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12314     | 2019-01-03     | 2019-01-03 | *      |
@@ -48,11 +48,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1010        | Jenny         | 17-214-233-1244 | 12331     | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_DK table should contain expected data
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                           | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|12301')  | Albert        | 17-214-233-1211 | 12301     | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|12302')  | Albert        | 17-214-233-1211 | 12302     | 2019-01-01     | 2019-01-01 | *      |
@@ -83,11 +83,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
 
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
-    Given the RAW_STAGE_TWO_DK stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat is empty
+    Given the RAW_STAGE_TWO_CDK stage is empty
+    And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 12301     | 2019-01-01     | 2019-01-01 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-01     | 2019-01-01 | *      |
@@ -104,12 +104,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1012        | Albert        | 17-214-233-1215 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
     # Albert(hd), Beah (hd-), Chris (hd-), David (new), Jenny (+), Albert (hd)
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1311 | 12301     | 2019-01-02     | 2019-01-02 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-02     | 2019-01-02 | *      |
@@ -127,12 +127,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1012        | Albert        | 17-214-233-1215 | 92341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 17-214-233-1212 | 92301     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12302     | 2019-01-03     | 2019-01-03 | *      |
@@ -143,12 +143,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
     # Beah (hd), Charley (hd), David (+), Freia (hd), Jenny (hd),
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 17-214-233-1312 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | 1002        | Beah          | 17-214-233-1212 | 12311     | 2019-01-04     | 2019-01-04 | *      |
@@ -163,11 +163,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1010        | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_DK table should contain expected data
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                           | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|12301')  | Albert        | 17-214-233-1211 | 12301     | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|12302')  | Albert        | 17-214-233-1211 | 12302     | 2019-01-01     | 2019-01-01 | *      |
@@ -221,11 +221,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
 
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps - Two CDKs
-    Given the RAW_STAGE_TWO_DK_TS stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_DK_TS ma_sat is empty
+    Given the RAW_STAGE_TWO_CDK_TS stage is empty
+    And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_TWO_DK_TS is loaded
+    When the RAW_STAGE_TWO_CDK_TS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 12301     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
@@ -242,12 +242,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1012        | Albert        | 17-214-233-1215 | 12341     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
-    And I create the STG_CUSTOMER_TWO_DK_TS stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK_TS ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 2 ===================
     # Albert(hd), Beah (hd-), Chris (hd-), David (new), Jenny (+), Albert (hd)
-    When the RAW_STAGE_TWO_DK_TS is loaded
+    When the RAW_STAGE_TWO_CDK_TS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | Albert        | 17-214-233-1311 | 12301     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
@@ -265,12 +265,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1012        | Albert        | 17-214-233-1215 | 92341     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
-    And I create the STG_CUSTOMER_TWO_DK_TS stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK_TS ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
-    When the RAW_STAGE_TWO_DK_TS is loaded
+    When the RAW_STAGE_TWO_CDK_TS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1002        | Beth          | 17-214-233-1212 | 92301     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12302     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
@@ -281,12 +281,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK_TS stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK_TS ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 4 ===================
     # Beah (hd), Charley (hd), David (+), Freia (hd), Jenny (hd),
-    When the RAW_STAGE_TWO_DK_TS is loaded
+    When the RAW_STAGE_TWO_CDK_TS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1002        | Beah          | 17-214-233-1312 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | 1002        | Beah          | 17-214-233-1212 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
@@ -301,11 +301,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1010        | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | 1010        | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK_TS stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK_TS ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_DK_TS table should contain expected data
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                           | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|12301')  | Albert        | 17-214-233-1211 | 12301     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|12302')  | Albert        | 17-214-233-1211 | 12302     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
@@ -361,11 +361,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
   @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
-    Given the RAW_STAGE_TWO_DK stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat is empty
+    Given the RAW_STAGE_TWO_CDK stage is empty
+    And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 12301     | 2019-01-01     | 2019-01-01 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-01     | 2019-01-01 | *      |
@@ -382,12 +382,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1012        | Albert        | 17-214-233-1215 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
     # Albert(hd), Beah (hd-), Chris (hd-), David (new), Jenny (+), Albert (hd)
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1311 | 12301     | 2019-01-02     | 2019-01-02 | *      |
       | 1001        | Albert        | 17-214-233-1211 | 12302     | 2019-01-02     | 2019-01-02 | *      |
@@ -405,12 +405,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1012        | Albert        | 17-214-233-1215 | 92341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beth          | 17-214-233-1212 | 92301     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12302     | 2019-01-03     | 2019-01-03 | *      |
@@ -421,12 +421,12 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
     # Beah (hd), Charley (hd), David (+), Freia (hd), Jenny (hd),
-    When the RAW_STAGE_TWO_DK is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 17-214-233-1312 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | 1002        | Beah          | 17-214-233-1212 | 12311     | 2019-01-04     | 2019-01-04 | *      |
@@ -441,11 +441,11 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1010        | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_TWO_DK stage
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_DK table should contain expected data
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                           | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | sha('1001') | sha('1001\|\|ALBERT\|\|17-214-233-1211\|\|12301')  | Albert        | 17-214-233-1211 | 12301     | 2019-01-01     | 2019-01-01 | *      |
       | sha('1001') | sha('1001\|\|ALBERT\|\|17-214-233-1211\|\|12302')  | Albert        | 17-214-233-1211 | 12302     | 2019-01-01     | 2019-01-01 | *      |
