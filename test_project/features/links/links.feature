@@ -46,6 +46,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
+  # TODO: FAILING
   @fixture.single_source_link
   Scenario: [BASE-LOAD] Load a simple stage table into a non-existent link and exclude records with NULL foreign keys
     Given the LINK table does not exist
@@ -167,6 +168,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
+  # TODO: FAILING
   @fixture.single_source_link
   Scenario: [POPULATED-LOAD] Load a stage table where a foreign key is NULL, no link is inserted
     Given the LINK link is already populated with data
@@ -198,6 +200,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
+  # TODO: FAILING
   @fixture.single_source_link
   Scenario: [POPULATED-LOAD] Load a stage table where a primary keys components are all NULL, no link is inserted
     Given the LINK link is already populated with data

@@ -33,6 +33,7 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  # TODO: FAILING
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD-PM] 2 loads, Link is Changed Back Again
