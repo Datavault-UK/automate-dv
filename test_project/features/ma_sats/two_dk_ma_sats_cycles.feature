@@ -1,8 +1,8 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites Loaded in cycles using separate manual loads - Two DK
+Feature: Multi Active Satellites Loaded in cycles using separate manual loads - Two CDKs
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with sets of records keeping the count of records the same while having one or more records changed
+  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with sets of records keeping the count of records the same while having one or more records changed - Two CDKs
     Given the RAW_STAGE_TWO_DK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat is empty
 
@@ -82,7 +82,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
 
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
+  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
     Given the RAW_STAGE_TWO_DK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat is empty
 
@@ -220,7 +220,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps
+  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps - Two CDKs
     Given the RAW_STAGE_TWO_DK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_DK_TS ma_sat is empty
 
@@ -360,7 +360,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
 
   @fixture.multi_active_satellite_cycle
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
+  Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
     Given the RAW_STAGE_TWO_DK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_DK ma_sat is empty
 
