@@ -24,6 +24,7 @@ Feature: Hubs Loaded using Rank Materialization
       | md5('1003') | 1003        | 1993-01-03 | TPCH   |
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
+  # TODO: FAILING
   @fixture.enable_full_refresh
   @fixture.single_source_hub
   Scenario: [RANK-BASE] Full refresh of loaded hub
