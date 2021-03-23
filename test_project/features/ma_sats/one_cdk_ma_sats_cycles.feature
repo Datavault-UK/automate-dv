@@ -73,7 +73,85 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1003') | md5('1003\|\|CHARLIE\|\|17-214-233-1333') | Charlie       | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles - One CDK
+  Scenario: [SAT-CYCLE-NULLS] MULTI_ACTIVE_SATELLITE load over several cycles with NULL records - One CDK
+    Given the RAW_STAGE stage is empty
+    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+
+    # ================ DAY 1 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
+      | 1001        | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
+      | 1001        | Albert        | 17-214-233-1231 | 2019-01-01     | 2019-01-01 | *      |
+      | 1002        | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
+      | 1002        | Beth          | 17-214-233-1222 | 2019-01-01     | 2019-01-01 | *      |
+      | 1002        | Beth          | 17-214-233-1232 | 2019-01-01     | 2019-01-01 | *      |
+      | 1003        | Charley       | 17-214-233-1213 | 2019-01-01     | 2019-01-01 | *      |
+      | 1003        | Charley       | 17-214-233-1223 | 2019-01-01     | 2019-01-01 | *      |
+      | 1003        | Charley       | 17-214-233-1233 | 2019-01-01     | 2019-01-01 | *      |
+    And I create the STG_CUSTOMER stage
+    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # ================ DAY 2 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | <null>      | <null>        | <null>          | 2019-01-02     | 2019-01-02 | *      |
+      | <null>      | <null>        | 17-214-233-1311 | 2019-01-02     | 2019-01-02 | *      |
+      | <null>      | Albert        | 17-214-233-1321 | 2019-01-02     | 2019-01-02 | *      |
+      | 1001        | <null>        | 17-214-233-1311 | 2019-01-02     | 2019-01-02 | *      |
+      | 1001        | Albert        | 17-214-233-1331 | 2019-01-02     | 2019-01-02 | *      |
+    And I create the STG_CUSTOMER stage
+    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # ================ DAY 3 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | <null>      | <null>        | <null>          | 2019-01-03     | 2019-01-03 | *      |
+      | <null>      | Beth          | <null>          | 2019-01-03     | 2019-01-03 | *      |
+      | 1002        | Beth          | <null>          | 2019-01-03     | 2019-01-03 | *      |
+      | 1002        | <null>        | 17-214-233-1322 | 2019-01-03     | 2019-01-03 | *      |
+      | 1002        | Beth          | 17-214-233-1332 | 2019-01-03     | 2019-01-03 | *      |
+
+    And I create the STG_CUSTOMER stage
+    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # ================ DAY 4 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | <null>      | <null>        | <null>          | 2019-01-04     | 2019-01-04 | *      |
+      | <null>      | Charley       | <null>          | 2019-01-04     | 2019-01-04 | *      |
+      | <null>      | <null>        | 17-214-233-1313 | 2019-01-04     | 2019-01-04 | *      |
+      | 1003        | <null>        | <null>          | 2019-01-04     | 2019-01-04 | *      |
+      | 1003        | <null>        | 17-214-233-1313 | 2019-01-04     | 2019-01-04 | *      |
+      | 1003        | <null>        | 17-214-233-1323 | 2019-01-04     | 2019-01-04 | *      |
+      | 1003        | <null>        | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
+
+    And I create the STG_CUSTOMER stage
+    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # =============== CHECKS ===================
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1231')  | Albert        | 17-214-233-1231 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1212')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1222')    | Beth          | 17-214-233-1222 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1232')    | Beth          | 17-214-233-1232 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1213') | Charley       | 17-214-233-1213 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1223') | Charley       | 17-214-233-1223 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1233') | Charley       | 17-214-233-1233 | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1001') | md5('1001\|\|^^\|\|17-214-233-1311')      | <null>        | 17-214-233-1311 | 2019-01-02     | 2019-01-02 | *      |
+      | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1331')  | Albert        | 17-214-233-1331 | 2019-01-02     | 2019-01-02 | *      |
+      | md5('1002') | md5('1002\|\|^^\|\|17-214-233-1322')      | <null>        | 17-214-233-1322 | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1332')    | Beth          | 17-214-233-1332 | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1313')      | <null>        | 17-214-233-1313 | 2019-01-04     | 2019-01-04 | *      |
+      | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1323')      | <null>        | 17-214-233-1323 | 2019-01-04     | 2019-01-04 | *      |
+      | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1333')      | <null>        | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
+
+
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with a mix of record change cases - One CDK
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
