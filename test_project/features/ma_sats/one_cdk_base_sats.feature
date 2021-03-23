@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
+Feature: Multi Active Satellites - Base Satellite Behaviour - One CDK
 
   @fixture.multi_active_satellite
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
@@ -60,9 +60,8 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')    | 1993-01-01     | 1993-01-01 | *      |
 
-  #TODO: FAILING (NULL RECORD SHOULD NOT APPEAR IN THE EXPECTED DATA)
   @fixture.multi_active_satellite
-  Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some hashdiffs are a hash of all NULLs
+  Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some records have NULL PK(s), CDK(s) and Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -70,7 +69,12 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+      | 1005        | <null>        | 17-214-233-1218 | 1993-01-01 | *      |
+      | 1006        | Jenny         | <null>          | 1993-01-01 | *      |
+      | <null>      | <null>        | 17-214-233-1219 | 1993-01-01 | *      |
+      | <null>      | Frida         | <null>          | 1993-01-01 | *      |
       | <null>      | <null>        | <null>          | 1993-01-01 | *      |
+
     And I create the STG_CUSTOMER stage
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -79,7 +83,7 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
-      | <null>      | <null>        | <null>          | md5('^^\|\|^^\|\|^^')                   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1005') | <null>        | 17-214-233-1218 | md5('1005\|\|^^\|\|17-214-233-1218')    | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
   Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty multi-active satellite
@@ -127,13 +131,54 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | md5('1005') | Eric          | 17-214-233-1217 | md5('1005\|\|ERIC\|\|17-214-233-1217')  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
-  #TODO: FAILING (NULL RECORD SHOULD NOT APPEAR IN THE EXPECTED DATA)   
   @fixture.multi_active_satellite
-  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where all records load and some hashdiffs are a hash of all NULLs
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1212 | md5('1002\|\|BOB\|\|17-214-233-1212')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1008') | Jenny         | 17-214-233-1218 | md5('1008\|\|JENNY\|\|17-214-233-1218') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>        | 17-214-233-1212 | 1993-01-02 | *      |
+      | <null>      | Dom           | 17-214-233-1214 | 1993-01-02 | *      |
+      | 1006        | <null>        | <null>          | 1993-01-02 | *      |
+      | 1008        | Jenny         | <null>          | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER stage
+    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | Bob           | 17-214-233-1212 | md5('1002\|\|BOB\|\|17-214-233-1212')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1008') | Jenny         | 17-214-233-1218 | md5('1008\|\|JENNY\|\|17-214-233-1218') | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
+    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>        | 17-214-233-1213 | 1993-01-02 | *      |
+      | <null>      | Dan           | 17-214-233-1215 | 1993-01-02 | *      |
+      | 1007        | <null>        | <null>          | 1993-01-02 | *      |
+      | 1009        | Jenna         | <null>          | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER stage
+    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
+    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE | LOAD_DATE  | SOURCE |
       | <null>      | <null>        | <null>         | 1993-01-02 | *      |
@@ -141,10 +186,8 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
-      | <null>      | <null>        | <null>          | md5('^^\|\|^^\|\|^^')                   | 1993-01-02     | 1993-01-02 | *      |
-
+      | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some records overlap
