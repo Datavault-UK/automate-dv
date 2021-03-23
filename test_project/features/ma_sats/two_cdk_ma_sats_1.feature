@@ -293,3 +293,103 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1214 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Fridax        | 17-214-233-1224 | 12341     | md5('1006\|\|FRIDAX\|\|17-214-233-1224\|\|12341')| 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1234\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
+    Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | Bob           | 17-214-233-1212 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1212\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1222 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1222\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1232 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1232\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12321     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12321')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12322     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12322')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12323     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12323')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1008') | Jenny         | 17-214-233-1218 | 12311     | md5('1008\|\|JENNY\|\|17-214-233-1218\|\|12311') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE_TWO_CDK table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
+      | 1002        | <null>        | <null>          | <null>    | 1993-01-02 | *      |
+      | <null>      | <null>        | <null>          | 12311     | 1993-01-02 | *      |
+      | <null>      | <null>        | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+      | <null>      | Bob           | <null>          | <null>    | 1993-01-02 | *      |
+      | 1002        | Bob           | <null>          | <null>    | 1993-01-02 | *      |
+      | <null>      | <null>        | 17-214-233-1212 | 12311     | 1993-01-02 | *      |
+      | 1002        | <null>        | <null>          | 12311     | 1993-01-02 | *      |
+      | <null>      | Bob           | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+      | 1002        | Bob           | <null>          | 12311     | 1993-01-02 | *      |
+      | 1002        | <null>        | 17-214-233-1212 | 12311     | 1993-01-02 | *      |
+      | <null>      | Bob           | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | Bob           | 17-214-233-1212 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1212\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1222 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1222\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1232 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1232\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12321     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12321')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12322     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12322')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12323     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12323')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1008') | Jenny         | 17-214-233-1218 | 12311     | md5('1008\|\|JENNY\|\|17-214-233-1218\|\|12311') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | <null>        | 17-214-233-1212 | 12311     | md5('1002\|\|^^\|\|17-214-233-1212\|\|12311')    | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
+    Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1224 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1224\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1234 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1234\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12321     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12321') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE_TWO_CDK table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
+      | 1002        | <null>        | <null>          | <null>    | 1993-01-02 | *      |
+      | <null>      | <null>        | <null>          | 12311     | 1993-01-02 | *      |
+      | <null>      | <null>        | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+      | <null>      | Bob           | <null>          | <null>    | 1993-01-02 | *      |
+      | 1002        | Bob           | <null>          | <null>    | 1993-01-02 | *      |
+      | <null>      | <null>        | 17-214-233-1212 | 12311     | 1993-01-02 | *      |
+      | 1002        | <null>        | <null>          | 12311     | 1993-01-02 | *      |
+      | <null>      | Bob           | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+      | 1002        | Bob           | <null>          | 12311     | 1993-01-02 | *      |
+      | 1002        | <null>        | 17-214-233-1212 | 12311     | 1993-01-02 | *      |
+      | <null>      | Bob           | 17-214-233-1212 | <null>    | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1224 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1224\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1234 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1234\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12321     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12321') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | <null>        | 17-214-233-1212 | 12311     | md5('1002\|\|^^\|\|17-214-233-1212\|\|12311')    | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
+    Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1224 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1224\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1234 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1234\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12321     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12321') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1226 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1236 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE_TWO_CDK table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE | EXTENSION | LOAD_DATE  | SOURCE |
+      | <null>      | <null>        | <null>         | <null>    | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1214 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1224 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1224\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1234 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1234\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1216 | 12321     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12321') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1226 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1236 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
