@@ -31,7 +31,8 @@ row_rank_union AS (
                ORDER BY LOADDATE, RECORD_SOURCE ASC
            ) AS row_rank_number
     FROM stage_union
-    WHERE ORDER_FK IS NOT NULL
+    WHERE CUSTOMER_PK IS NOT NULL
+    AND ORDER_FK IS NOT NULL
     AND BOOKING_FK IS NOT NULL
     QUALIFY row_rank_number = 1
 ),

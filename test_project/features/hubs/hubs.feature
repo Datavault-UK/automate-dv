@@ -65,7 +65,6 @@ Feature: Hubs
       | sha('1003') | 1003        | 1993-01-01 | TPCH   |
       | sha('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  # TODO: FAILING
   @fixture.single_source_hub
   Scenario: [BASE-LOAD] Keys with NULL or empty values are not loaded into empty hub that does not exist
     Given the HUB hub is empty
@@ -128,7 +127,6 @@ Feature: Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  # TODO: FAILING
   @fixture.single_source_hub
   Scenario: [BASE-LOAD-EMPTY] Keys with NULL or empty values are not loaded into an empty hub
     Given the HUB hub is empty
@@ -199,7 +197,6 @@ Feature: Hubs
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
-  # TODO: FAILING
   @fixture.single_source_hub
   Scenario: [POPULATED-LOAD] Keys with NULL or empty values are not loaded into a hub
     Given the HUB hub is already populated with data

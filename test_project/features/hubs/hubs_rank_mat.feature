@@ -24,7 +24,6 @@ Feature: Hubs Loaded using Rank Materialization
       | md5('1003') | 1003        | 1993-01-03 | TPCH   |
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
-  # TODO: FAILING
   @fixture.enable_full_refresh
   @fixture.single_source_hub
   Scenario: [RANK-BASE] Full refresh of loaded hub
@@ -42,6 +41,8 @@ Feature: Hubs Loaded using Rank Materialization
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-02 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.multi_source_hub
   Scenario: [BASE-UNION-RANK-MAT] Simple load of stage data from multiple sources into an empty hub
