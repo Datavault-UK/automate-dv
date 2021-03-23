@@ -30,6 +30,9 @@ WITH source_data AS (
     FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
+    AND {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    {% elif model.config.materialized != 'vault_insert_by_rank' and model.config.materialized != 'vault_insert_by_period' %}
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     {% endif %}
     {%- set source_cte = "source_data" %}
 ),
@@ -38,6 +41,7 @@ WITH source_data AS (
 rank_col AS (
     SELECT * FROM source_data
     WHERE __RANK_FILTER__
+    AND {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     {%- set source_cte = "rank_col" %}
 ),
 {% endif -%}

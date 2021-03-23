@@ -2,7 +2,7 @@
 
 {%- if not columns -%}
     {%- if execute -%}
-         {{ exceptions.raise_compiler_error("Expected a list of columns, got: " ~ columns) }}
+         {{- exceptions.raise_compiler_error("Expected a list of columns, got: " ~ columns) -}}
     {%- endif -%}
 {%- endif -%}
 
@@ -31,7 +31,7 @@
         {%- else -%}
 
             {%- if execute -%}
-                {{ exceptions.raise_compiler_error("Invalid columns object provided. Must be a list of lists, dictionaries or strings.") }}
+                {{- exceptions.raise_compiler_error("Invalid columns object provided. Must be a list of lists, dictionaries or strings.") -}}
             {%- endif %}
 
         {%- endif -%}
@@ -40,11 +40,11 @@
 {%- else -%}
 
     {%- if execute -%}
-        {{ exceptions.raise_compiler_error("Invalid columns object provided. Must be a list.") }}
+        {{- exceptions.raise_compiler_error("Invalid columns object provided. Must be a list.") -}}
     {%- endif %}
 
 {%- endif -%}
 
-{% do return(col_list) %}
+{%- do return(col_list) -%}
 
 {%- endmacro -%}
