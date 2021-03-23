@@ -43,7 +43,7 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ src_ldts }}
            ) AS row_number
     FROM {{ ref(src) }}
-    WHERE {{ src_pk }} IS NOT NULL
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
@@ -83,7 +83,7 @@ row_rank_union AS (
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
            ) AS row_rank_number
     FROM {{ ns.last_cte }}
-    WHERE {{ src_pk }} IS NOT NULL
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
