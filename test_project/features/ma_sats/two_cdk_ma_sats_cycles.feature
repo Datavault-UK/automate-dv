@@ -80,7 +80,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1254\|\|12331')   | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
 
-
+  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
     Given the RAW_STAGE_TWO_CDK stage is empty
@@ -219,6 +219,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1334\|\|12331')   | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
+  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps - Two CDKs
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
@@ -453,6 +454,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1222\|\|12312')    | Beth          | 17-214-233-1222 | 12312     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1232\|\|12313')    | Beah          | 17-214-233-1232 | 12313     | 2019-01-03     | 2019-01-03 | *      |
 
+  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
