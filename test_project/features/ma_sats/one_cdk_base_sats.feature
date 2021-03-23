@@ -60,6 +60,7 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')    | 1993-01-01     | 1993-01-01 | *      |
 
+  #TODO: FAILING (NULL RECORD SHOULD NOT APPEAR IN THE EXPECTED DATA)
   @fixture.multi_active_satellite
   Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some hashdiffs are a hash of all NULLs
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -79,7 +80,6 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
       | <null>      | <null>        | <null>          | md5('^^\|\|^^\|\|^^')                   | 1993-01-01     | 1993-01-01 | *      |
-
 
   @fixture.multi_active_satellite
   Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty multi-active satellite
@@ -127,6 +127,7 @@ Feature: Multi Active Satellites - Base Satellite Behaviour - One DK
       | md5('1005') | Eric          | 17-214-233-1217 | md5('1005\|\|ERIC\|\|17-214-233-1217')  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
+  #TODO: FAILING (NULL RECORD SHOULD NOT APPEAR IN THE EXPECTED DATA)   
   @fixture.multi_active_satellite
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where all records load and some hashdiffs are a hash of all NULLs
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
