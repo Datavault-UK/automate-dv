@@ -45,7 +45,7 @@ row_rank_{{ source_number }} AS (
            ) AS row_number
     FROM {{ ref(src) }}
     {%- if source_model | length == 1 %}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }} IS NOT NULL
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
     {%- endif %}
     QUALIFY row_number = 1
