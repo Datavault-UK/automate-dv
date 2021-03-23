@@ -61,11 +61,13 @@ update_records AS (
 
 {# Select latest records from satellite together with count of distinct hashdiffs for each hashkey #}
 latest_records AS (
-    SELECT {{ dbtvault.prefix(cdk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }},
-           CASE WHEN RANK()
-           OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
-           ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
-    THEN 'Y' ELSE 'N' END AS latest
+    SELECT {{ dbtvault.prefix(cdk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }}
+        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'update_records') }} )
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}) AS target_count
+        ,CASE WHEN RANK()
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
+            ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
+        THEN 'Y' ELSE 'N' END AS latest
     FROM update_records
     QUALIFY latest = 'Y'
 ),
