@@ -149,7 +149,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1323')      | <null>        | 17-214-233-1323 | 2019-01-04     | 2019-01-04 | *      |
       | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1333')      | <null>        | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
-
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with a mix of record change cases - One CDK
     Given the RAW_STAGE stage is empty
