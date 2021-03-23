@@ -40,9 +40,10 @@ row_rank_{{ source_number }} AS (
     {%- endif %}
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
-               ORDER BY {{ src_ldts }} ASC
+               ORDER BY {{ src_ldts }}
            ) AS row_number
     FROM {{ ref(src) }}
+    WHERE {{ src_pk }} IS NOT NULL
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
