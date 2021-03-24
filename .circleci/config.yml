@@ -86,7 +86,8 @@ workflows:
               only:
                 - master
                 - dev
-                - /^int-.*/
+                - pre
+                - /^int.*/
   test-integration:
     jobs:
       - integration:
@@ -95,4 +96,5 @@ workflows:
               only:
                 - master
                 - dev
-                - /^int-.*/
+                - pre
+                - /^int.*/
