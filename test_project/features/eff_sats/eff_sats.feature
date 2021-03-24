@@ -104,7 +104,7 @@ Feature: Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
-  Scenario: [INCREMENTAL-LOAD] 2 loads, Link is Changed Back Again
+  Scenario: [INCREMENTAL-LOAD] 2 loads, Link is Changed Back Again, driving key is ORDER_PK
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
