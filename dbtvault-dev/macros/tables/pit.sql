@@ -31,13 +31,13 @@
 {%- set ghost_date = '1990-01-01 00:00:00.000000' %}
 WITH hub AS (
 
-	SELECT * FROM {{ ref(source_model) }}
+    SELECT * FROM {{ ref(source_model) }}
 
 ),
 as_of_dates_PK_join AS (
     SELECT
         hub.{{ src_pk }},
-        as_of.AS_OF_DATE
+        as_of.AS_OF_DATE AS AS_OF_DATE
     FROM hub
 
     INNER JOIN {{ source_relation_AS_OF}} AS as_of
