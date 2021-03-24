@@ -431,6 +431,20 @@ class DBTTestUtils:
             return processed_stage_name
 
     @staticmethod
+    def filter_metadata(context, metadata: dict) -> dict:
+        """
+        Remove metadata indicated by fixtures
+            :param context: Behave context
+            :param metadata: Metadata dictionary containing macro parameters
+        """
+
+        if getattr(context, 'disable_payload', False):
+
+            metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
+
+        return metadata
+
+    @staticmethod
     def calc_hash(columns_as_series: Series) -> Series:
         """
         Calculates the MD5 hash for a given value
@@ -683,7 +697,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, config):
+    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config, src_payload=None):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -699,8 +713,8 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload}, {src_eff},
-                             {src_ldts}, {src_source}, {source_model}) }}}}
+        {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload if src_payload else 'none'}, 
+                             {src_eff}, {src_ldts}, {src_source}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
