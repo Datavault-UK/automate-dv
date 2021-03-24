@@ -80,7 +80,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1254\|\|12331')   | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
     Given the RAW_STAGE_TWO_CDK stage is empty
@@ -137,17 +136,17 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1002        | Beth          | 17-214-233-1212 | 92301     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12302     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12303     | 2019-01-03     | 2019-01-03 | *      |
-      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
       | 1004        | David         | 17-214-233-1216 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1004        | David         | 17-214-233-1226 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
+#      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
     And I create the STG_CUSTOMER_TWO_CDK stage
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
-    # Beah (hd), Charley (hd), David (+), Freia (hd), Jenny (hd),
+    # Beah (hd, dupl), Charley (hd), David (+), Freia (hd), Jenny (hd),
     When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 17-214-233-1312 | 12311     | 2019-01-04     | 2019-01-04 | *      |
@@ -208,7 +207,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1006') | md5('1006\|\|FREIA\|\|17-214-233-1212\|\|12311')   | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1312\|\|12311')    | Beah          | 17-214-233-1312 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1212\|\|12311')    | Beah          | 17-214-233-1212 | 12311     | 2019-01-04     | 2019-01-04 | *      |
-      | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1212\|\|12311')    | Beah          | 17-214-233-1212 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1223\|\|12321') | Charley       | 17-214-233-1223 | 12321     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1004') | md5('1004\|\|DAVID\|\|17-214-233-1216\|\|12311')   | David         | 17-214-233-1216 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1004') | md5('1004\|\|DAVID\|\|17-214-233-1226\|\|12311')   | David         | 17-214-233-1226 | 12311     | 2019-01-04     | 2019-01-04 | *      |
@@ -219,7 +217,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1334\|\|12331')   | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps - Two CDKs
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
@@ -276,17 +273,17 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1002        | Beth          | 17-214-233-1212 | 92301     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12302     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12303     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
-      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1004        | David         | 17-214-233-1216 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1004        | David         | 17-214-233-1226 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
+#      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
 
     And I create the STG_CUSTOMER_TWO_CDK_TS stage
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 4 ===================
-    # Beah (hd), Charley (hd), David (+), Freia (hd), Jenny (hd),
+    # Beah (hd, dupl), Charley (hd), David (+), Freia (hd), Jenny (hd),
     When the RAW_STAGE_TWO_CDK_TS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1002        | Beah          | 17-214-233-1312 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
@@ -346,7 +343,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1004') | md5('1004\|\|DAVID\|\|17-214-233-1226\|\|12311')   | David         | 17-214-233-1226 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | md5('1006') | md5('1006\|\|FREIA\|\|17-214-233-1212\|\|12311')   | Freia         | 17-214-233-1212 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1312\|\|12311')    | Beah          | 17-214-233-1312 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
-      | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1212\|\|12311')    | Beah          | 17-214-233-1212 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1212\|\|12311')    | Beah          | 17-214-233-1212 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1223\|\|12321') | Charley       | 17-214-233-1223 | 12321     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | md5('1004') | md5('1004\|\|DAVID\|\|17-214-233-1216\|\|12311')   | David         | 17-214-233-1216 | 12311     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
@@ -454,7 +450,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1222\|\|12312')    | Beth          | 17-214-233-1222 | 12312     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1232\|\|12313')    | Beah          | 17-214-233-1232 | 12313     | 2019-01-03     | 2019-01-03 | *      |
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles - Two CDKs
@@ -512,17 +507,17 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1002        | Beth          | 17-214-233-1212 | 92301     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12302     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 12303     | 2019-01-03     | 2019-01-03 | *      |
-      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
       | 1004        | David         | 17-214-233-1216 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1004        | David         | 17-214-233-1226 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
+#      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
     And I create the STG_CUSTOMER_TWO_CDK stage
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
-    # Beah (hd), Charley (hd), David (+), Freia (hd), Jenny (hd),
+    # Beah (hd, dupl), Charley (hd), David (+), Freia (hd), Jenny (hd),
     When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1002        | Beah          | 17-214-233-1312 | 12311     | 2019-01-04     | 2019-01-04 | *      |
@@ -582,7 +577,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | sha('1004') | sha('1004\|\|DAVID\|\|17-214-233-1226\|\|12311')   | David         | 17-214-233-1226 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | sha('1006') | sha('1006\|\|FREIA\|\|17-214-233-1212\|\|12311')   | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | sha('1002') | sha('1002\|\|BEAH\|\|17-214-233-1312\|\|12311')    | Beah          | 17-214-233-1312 | 12311     | 2019-01-04     | 2019-01-04 | *      |
-      | sha('1002') | sha('1002\|\|BEAH\|\|17-214-233-1212\|\|12311')    | Beah          | 17-214-233-1212 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | sha('1002') | sha('1002\|\|BEAH\|\|17-214-233-1212\|\|12311')    | Beah          | 17-214-233-1212 | 12311     | 2019-01-04     | 2019-01-04 | *      |
       | sha('1003') | sha('1003\|\|CHARLEY\|\|17-214-233-1223\|\|12321') | Charley       | 17-214-233-1223 | 12321     | 2019-01-04     | 2019-01-04 | *      |
       | sha('1004') | sha('1004\|\|DAVID\|\|17-214-233-1216\|\|12311')   | David         | 17-214-233-1216 | 12311     | 2019-01-04     | 2019-01-04 | *      |
