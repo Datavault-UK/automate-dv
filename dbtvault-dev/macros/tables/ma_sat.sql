@@ -89,7 +89,7 @@ matching_records AS (
 
 {# Select PKs where PKs exist in sat but match counts differ #}
 satellite_update AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
+    SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}, {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }}
     FROM {{ source_cte }} AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
@@ -127,7 +127,7 @@ records_to_insert AS (
     {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     INNER JOIN satellite_update
         ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
-
+        AND {{ dbtvault.prefix([src_hashdiff], 'satellite_update') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
     UNION
 
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
