@@ -48,7 +48,10 @@ latest_open_eff AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
-                PARTITION BY b.{{ src_pk }}
+                PARTITION BY
+                {%- for driving_key in src_dfk %}
+                    {{ driving_key }}{{ ", " if not loop.last else "" }}
+                {%- endfor %}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_number
     FROM {{ this }} AS b
