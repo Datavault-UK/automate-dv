@@ -15,6 +15,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
+{%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
 {{- dbtvault.prepend_generated_by() }}
@@ -49,8 +50,8 @@ latest_open_eff AS
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY
-                {%- for driving_key in src_dfk %}
-                    {{ driving_key }}{{ ", " if not loop.last else "" }}
+                {%- for driving_key in dfk_cols %}
+                    {{ driving_key }}{{ ", " if not loop.last }}
                 {%- endfor %}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_number
