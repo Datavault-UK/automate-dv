@@ -17,13 +17,11 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1224 | md5('1006\|\|FRIDA\|\|17-214-233-1224') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
-
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1235 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
-
     And I create the STG_CUSTOMER stage
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -60,7 +58,6 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1224 | md5('1006\|\|FRIDA\|\|17-214-233-1224') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
-
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
@@ -72,7 +69,6 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
-
     And I create the STG_CUSTOMER stage
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -115,7 +111,6 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1224 | md5('1006\|\|FRIDA\|\|17-214-233-1224') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
-
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
@@ -124,7 +119,6 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
-
     And I create the STG_CUSTOMER stage
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -164,7 +158,6 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1224 | md5('1006\|\|FRIDA\|\|17-214-233-1224') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
-
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chud          | 17-214-233-1316 | 1993-01-02 | *      |
@@ -218,7 +211,6 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1224 | md5('1006\|\|FRIDA\|\|17-214-233-1224') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
-
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1993-01-02 | *      |
