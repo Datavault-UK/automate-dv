@@ -1,7 +1,6 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites Loaded in cycles using separate manual loads - One DK
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
@@ -70,7 +69,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1007') | md5('1007\|\|GEOFF\|\|17-214-233-1219')   | Geoff         | 17-214-233-1219   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217   | 2019-05-07     | 2019-05-07 | *      |
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
