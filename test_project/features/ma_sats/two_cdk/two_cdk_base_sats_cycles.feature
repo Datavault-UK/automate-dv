@@ -1,7 +1,6 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites Loaded in cycles using separate manual loads - Two DK
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE-LD] MULTI_ACTIVE_SATELLITE load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
@@ -70,7 +69,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1007') | md5('1007\|\|GEOFF\|\|17-214-233-1219\|\|123')   | 123       | Geoff         | 17-214-233-1219   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217\|\|123')   | 123       | Karen         | 17-214-233-1217   | 2019-05-07     | 2019-05-07 | *      |
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE-TS] MULTI_ACTIVE_SATELLITE load over several cycles with TimeStamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
@@ -139,7 +137,6 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1007') | md5('1007\|\|GEOFF\|\|17-214-233-1219\|\|123')   | 123       | Geoff         | 17-214-233-1219  | 2019-05-07 11:14:54.396 | 2019-05-07 11:14:54.396 | *      |
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217\|\|123')   | 123       | Karen         | 17-214-233-1217  | 2019-05-07 11:14:54.396 | 2019-05-07 11:14:54.396 | *      |
 
-  # TODO: Failing
   @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
