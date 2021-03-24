@@ -141,6 +141,8 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
       | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
+      | 1003        | Chris         | 17-214-233-1224 | 12321     | 2019-01-03     | 2019-01-03 | *      |
+      | 1003        | Chriss        | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
     And I create the STG_CUSTOMER_TWO_CDK stage
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
@@ -216,6 +218,8 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1324\|\|12331')   | Jenny         | 17-214-233-1324 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1334\|\|12331')   | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
+      | md5('1003') | md5('1003\|\|CHRIS\|\|17-214-233-1224\|\|12321')   | Chris         | 17-214-233-1224 | 12321     | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1003') | md5('1003\|\|CHRISS\|\|17-214-233-1223\|\|12321')  | Chriss        | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps - Two CDKs
