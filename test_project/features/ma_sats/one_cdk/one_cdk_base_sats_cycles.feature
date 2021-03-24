@@ -45,6 +45,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1007        | Geoff         | 17-214-233-1219  | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 17-214-233-1217  | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 17-214-233-1216  | 2019-05-07     | 2019-05-07 | *      |
+      | 1010        | Jenny         | 17-214-233-1218  | 2019-05-07     | 2019-05-07 | *      |
     And I create the STG_CUSTOMER stage
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
@@ -68,6 +69,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1213') | Charley       | 17-214-233-1213   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1007') | md5('1007\|\|GEOFF\|\|17-214-233-1219')   | Geoff         | 17-214-233-1219   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217   | 2019-05-07     | 2019-05-07 | *      |
+      | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218')   | Jenny         | 17-214-233-1218   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.multi_active_satellite_cycle
   @fixture.sha
