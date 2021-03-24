@@ -8,6 +8,10 @@
 
 {%- macro default__link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
+                                       src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
@@ -40,6 +44,10 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ src_ldts }} ASC
            ) AS row_number
     FROM {{ ref(src) }}
+    {%- if source_model | length == 1 %}
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
+    {%- endif %}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
@@ -79,7 +87,8 @@ row_rank_union AS (
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
            ) AS row_rank_number
     FROM {{ ns.last_cte }}
-    WHERE {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
+    WHERE {{ src_pk }} IS NOT NULL
+    AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
     QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),

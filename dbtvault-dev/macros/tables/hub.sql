@@ -8,6 +8,10 @@
 
 {%- macro default__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_nk=src_nk,
+                                       src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
@@ -36,9 +40,10 @@ row_rank_{{ source_number }} AS (
     {%- endif %}
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
-               ORDER BY {{ src_ldts }} ASC
+               ORDER BY {{ src_ldts }}
            ) AS row_number
     FROM {{ ref(src) }}
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
@@ -78,7 +83,7 @@ row_rank_union AS (
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
            ) AS row_rank_number
     FROM {{ ns.last_cte }}
-    WHERE {{ src_pk }} IS NOT NULL
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),

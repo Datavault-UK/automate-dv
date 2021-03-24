@@ -557,7 +557,7 @@ def eff_satellite(context):
     context.vault_structure_columns = {
         "EFF_SAT": {
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": "ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
@@ -1007,6 +1007,11 @@ def out_of_sequence_satellite(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_TIMESTAMP": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         }
     }
 
@@ -1014,6 +1019,10 @@ def out_of_sequence_satellite(context):
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_NAME": "!SAT_CUSTOMER_OOS"
+        },
+        "STG_CUSTOMER_TIMESTAMP": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME",
+            "SATELLITE_NAME": "!SAT_CUSTOMER_OOS_TIMESTAMP"
         }
     }
 
@@ -1065,11 +1074,39 @@ def out_of_sequence_satellite(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "SAT_CUSTOMER_OOS_TIMESTAMP": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE",
+            "out_of_sequence": {
+                "source_xts": "XTS_TIMESTAMP",
+                "sat_name_col": "SATELLITE_NAME",
+                "insert_timestamp": "1993-01-01 01:01:03"
+            }
+        },
         "XTS": {
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
                 "SAT_CUSTOMER_OOS": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
+            },
+            "src_source": "SOURCE"
+        },
+        "XTS_TIMESTAMP": {
+            "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATETIME",
+            "src_satellite": {
+                "SAT_CUSTOMER_OOS_TIMESTAMP": {
                     "sat_name": {
                         "SATELLITE_NAME": "SATELLITE_NAME"
                     },
@@ -1090,6 +1127,16 @@ def out_of_sequence_satellite(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TIMESTAMP": {
+            "+column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1141,10 +1188,31 @@ def out_of_sequence_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "SAT_CUSTOMER_OOS_TIMESTAMP": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "XTS": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
+                "SATELLITE_NAME": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "XTS_TIMESTAMP": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SATELLITE_NAME": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",
                 "SOURCE": "VARCHAR"
@@ -1602,3 +1670,11 @@ def disable_union(context):
     Indicate that a list should not be created if multiple stages are specified in a scenario
     """
     context.disable_union = True
+
+
+@fixture
+def disable_payload(context):
+    """
+    Indicate that a src_payload key should be removed from the provided metadata
+    """
+    context.disable_payload = True
