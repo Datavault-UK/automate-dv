@@ -5,6 +5,9 @@ WITH row_rank_1 AS (
                ORDER BY LOADDATE ASC
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
+    WHERE CUSTOMER_PK IS NOT NULL
+    AND ORDER_FK IS NOT NULL
+    AND BOOKING_FK IS NOT NULL
     QUALIFY row_number = 1
 ),
 
