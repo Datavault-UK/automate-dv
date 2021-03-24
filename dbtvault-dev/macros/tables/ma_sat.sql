@@ -87,12 +87,14 @@ matching_records AS (
     GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
 ),
 
-{# Select PKs where PKs exist in sat but match counts differ #}
+{# Select stage records with PKs that exist in sat where hashdiffs differ #}
+{# either where total counts differ or where match counts differ  #}
 satellite_update AS (
     SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
     FROM {{ source_cte }} AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
+        AND {{ dbtvault.prefix([src_hashdiff], 'latest_records') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
     LEFT OUTER JOIN matching_records
         ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
     WHERE
@@ -109,7 +111,7 @@ satellite_update AS (
         )
 ),
 
-{# Select PKs which do not exist in sat yet #}
+{# Select stage records with PKs that do not exist in sat #}
 satellite_insert AS (
     SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
     FROM {{ source_cte }} AS stage

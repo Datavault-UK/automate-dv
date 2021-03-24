@@ -44,7 +44,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads - 
       | 1003        | Charley       | 17-214-233-1213  | 123       | 2019-05-07     | 2019-05-07 | *      |
       | 1007        | Geoff         | 17-214-233-1219  | 123       | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 17-214-233-1217  | 123       | 2019-05-07     | 2019-05-07 | *      |
-#      | 1010        | Jenny         | 17-214-233-1216  | 123       | 2019-05-07     | 2019-05-07 | *      |
+      | 1010        | Jenny         | 17-214-233-1216  | 123       | 2019-05-07     | 2019-05-07 | *      |
     And I create the STG_CUSTOMER_TWO_CDK stage
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
