@@ -1230,21 +1230,21 @@ def bridge(context):
     context.vault_structure_type = "bridge"
 
     context.hashed_columns = {
-        "STG_CUSTOMER_ORDER_NATION": {
+        "STG_CUSTOMER_ORDER_PRODUCT": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
-            "NATION_PK": "NATION_ID",
-            "CUSTOMER_NATION_PK": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "NATION_ID"]
-                         },
+            "PRODUCT_PK": "PRODUCT_ID",
             "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
-                                   "columns": ["CUSTOMER_ID", "ORDER_ID"]
-                                   }
+                        "columns": ["CUSTOMER_ID", "ORDER_ID"]
+                        },
+            "ORDER_PRODUCT_PK": {"is_hashdiff": True,
+                             "columns": ["ORDER_ID", "PRODUCT_ID"]
+                        }
         }
     }
 
     context.derived_columns = {
-        "STG_CUSTOMER_ORDER_NATION": {
+        "STG_CUSTOMER_ORDER_PRODUCT": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "START_DATE": "LOAD_DATE"
         }
@@ -1252,40 +1252,39 @@ def bridge(context):
 
     context.vault_structure_columns = {
         "HUB_CUSTOMER": {
-            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "LINK_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "LINK_CUSTOMER_NATION": {
-            "source_model": "STG_CUSTOMER_ORDER_NATION",
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_PK", "NATION_PK"],
+        "LINK_ORDER_PRODUCT": {
+            "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
+            "src_pk": "ORDER_PRODUCT_PK",
+            "src_fk": ["ORDER_PK", "PRODUCT_PK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "EFF_SAT_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER_NATION",
+            "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "EFF_SAT_CUSTOMER_NATION": {
-            "source_model": "STG_CUSTOMER_ORDER_NATION",
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_PK", "NATION_PK"],
+        "EFF_SAT_ORDER_PRODUCT": {
+            "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
+            "src_pk": "ORDER_PRODUCT_PK",
+            "src_fk": ["ORDER_PK", "PRODUCT_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1295,26 +1294,16 @@ def bridge(context):
         "BRIDGE_CUSTOMER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
-            "links": {
-                "LINK_CUSTOMER_ORDER": {
-                    "pk" :
-                        {"PK": "CUSTOMER_ORDER_PK"},
-                },
-                "LINK_CUSTOMER_NATION": {
-                    "pk":
-                        {"PK": "CUSTOMER_NATION_PK"},
-                }
-            },
-            "eff_satellites": {
-                "EFF_SAT_CUSTOMER_ORDER": {
+            "links_and_eff_sats": {
+                "CUSTOMER_ORDER": {
                     "pk":
                         {"PK": "CUSTOMER_ORDER_PK"},
                     "end_date":
                         {"END_DATE": "END_DATE"}
                 },
-                "EFF_SAT_CUSTOMER_NATION": {
+                "ORDER_PRODUCT": {
                     "pk":
-                        {"PK": "CUSTOMER_NATION_PK"},
+                        {"PK": "ORDER_PRODUCT_PK"},
                     "end_date":
                         {"END_DATE": "END_DATE"}
                 }
