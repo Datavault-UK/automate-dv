@@ -14,7 +14,7 @@ def load_table(context, model_name, vault_structure, period, start_date=None, st
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": "LOAD_DATE",
+              "target_timestamp_field": "LOAD_DATE",
               "start_date": start_date,
               "stop_date": stop_date,
               "period": period}
@@ -43,7 +43,7 @@ def load_table(context, model_name, vault_structure, period, start_date=None):
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": "LOAD_DATE",
+              "target_timestamp_field": "LOAD_DATE",
               "start_date": start_date,
               "period": period}
 
@@ -70,7 +70,7 @@ def load_table(context, model_name, vault_structure, period):
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": "LOAD_DATE",
+              "target_timestamp_field": "LOAD_DATE",
               "date_source_models": context.processed_stage_name,
               "period": period}
 
