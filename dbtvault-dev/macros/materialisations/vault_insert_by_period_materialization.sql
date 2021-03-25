@@ -6,10 +6,11 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(this) -%}
 
-    {%- set timestamp_field = config.require('timestamp_field') -%}
+    {%- set target_timestamp_field = config.require('target_timestamp_field') -%}
+    {%- set ds_timestamp_field = config.get('date_source_timestamp_field', default=target_timestamp_field) -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
-    {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
+    {%- set start_stop_dates = dbtvault.get_start_stop_dates(ds_timestamp_field, date_source_models) | as_native -%}
 
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
@@ -23,10 +24,10 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
-                                                                       start_stop_dates.start_date,
-                                                                       start_stop_dates.stop_date,
-                                                                       0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, target_timestamp_field,
+                                                                              start_stop_dates.start_date,
+                                                                              start_stop_dates.stop_date,
+                                                                              0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
@@ -39,10 +40,10 @@
         {% do adapter.drop_relation(backup_relation) %}
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
-                                                                       start_stop_dates.start_date,
-                                                                       start_stop_dates.stop_date,
-                                                                       0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, target_timestamp_field,
+                                                                              start_stop_dates.start_date,
+                                                                              start_stop_dates.stop_date,
+                                                                              0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
@@ -51,7 +52,7 @@
 
         {% set period_boundaries = dbtvault.get_period_boundaries(schema,
                                                                   target_relation.name,
-                                                                  timestamp_field,
+                                                                  target_timestamp_field,
                                                                   start_stop_dates.start_date,
                                                                   start_stop_dates.stop_date,
                                                                   period) %}
@@ -68,7 +69,7 @@
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
             {% set tmp_relation = make_temp_relation(this) %}
-            {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
+            {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv, sql, target_timestamp_field, period,
                                                                   period_boundaries.start_timestamp,
                                                                   period_boundaries.stop_timestamp, i) %}
 
