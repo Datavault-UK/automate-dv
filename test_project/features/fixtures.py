@@ -115,6 +115,118 @@ def single_source_hub(context):
 
 
 @fixture
+def single_source_hub_waterlevel(context):
+    """
+    Define the structures and metadata to load single-source hubs via period materialisation and waterlevel
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB_WL_1": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_WL_2": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "HUB_WL_3": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.mat_config = {
+        "HUB_WL_1": {
+            "materialized": "vault_insert_by_period",
+            "target_timestamp_field": "LOAD_DATE",
+            "date_source_models": ["HUB_WATERLEVEL"],
+            "period": "day"
+        },
+        "HUB_WL_2": {
+            "materialized": "vault_insert_by_period",
+            "target_timestamp_field": "LOAD_DATETIME",
+            "date_source_timestamp_field": "LOAD_DATE",
+            "date_source_models": ["HUB_WATERLEVEL"],
+            "period": "day"
+        },
+        "HUB_WL_3": {
+            "materialized": "vault_insert_by_period",
+            "target_timestamp_field": "LOAD_DATE",
+            "date_source_timestamp_field": "LOAD_DATETIME",
+            "date_source_models": ["HUB_WATERLEVEL_LDTS"],
+            "period": "day"
+        }
+    }
+
+    context.seed_config = {
+        "HUB_WL_1": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_WL_2": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_WL_3": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_LDTS": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_WATERLEVEL": {
+            "+column_types": {
+                "TYPE": "VARCHAR",
+                "LOAD_DATE": "DATE"
+            }
+        },
+        "HUB_WATERLEVEL_LDTS": {
+            "+column_types": {
+                "TYPE": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME"
+            }
+        },
+    }
+
+
+@fixture
 def multi_source_hub(context):
     """
     Define the structures and metadata to load multi-source hubs
