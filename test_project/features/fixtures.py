@@ -1231,9 +1231,9 @@ def bridge(context):
 
     context.hashed_columns = {
         "STG_CUSTOMER_ORDER_PRODUCT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID",
-            "PRODUCT_PK": "PRODUCT_ID",
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "ORDER_FK": "ORDER_ID",
+            "PRODUCT_FK": "PRODUCT_ID",
             "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
                         "columns": ["CUSTOMER_ID", "ORDER_ID"]
                         },
@@ -1295,31 +1295,47 @@ def bridge(context):
         "BRIDGE_CUSTOMER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
-            "links":
+            "as_of_date_table": "AS_OF_DATE",
+            "links_and_eff_sats":
                 {
-                    "LINK_CUSTOMER_ORDER": {
+                    "CUSTOMER_ORDER": {
                         "pk":
                             {"PK": "CUSTOMER_ORDER_PK"},
+                        "end_date":
+                            {"ENDDATE": "END_DATE"}
                     },
-                    "LINK_ORDER_PRODUCT": {
+                    "ORDER_PRODUCT": {
                         "pk":
-                            {"PK": "ORDER_PRODUCT_PK"}
-                    }
-            },
-            "eff_sats":
-                {
-                    "EFF_SAT_CUSTOMER_ORDER": {
+                            {"PK": "ORDER_PRODUCT_PK"},
                         "end_date":
-                            {"END_DATE": "END_DATE"}
-                    },
-                    "EFF_SAT_ORDER_PRODUCT": {
-                        "end_date":
-                            {"END_DATE": "END_DATE"}
+                            {"ENDDATE": "END_DATE"}
                     }
-                },
-            "as_of_date_table": "AS_OF_DATE"
+                }
+            }
+            # "links":
+            #     {
+            #         "LINK_CUSTOMER_ORDER": {
+            #             "pk":
+            #                 {"PK": "CUSTOMER_ORDER_PK"},
+            #         },
+            #         "LINK_ORDER_PRODUCT": {
+            #             "pk":
+            #                 {"PK": "ORDER_PRODUCT_PK"}
+            #         }
+            # },
+            # "eff_sats":
+            #     {
+            #         "EFF_SAT_CUSTOMER_ORDER": {
+            #             "end_date":
+            #                 {"ENDDATE": "END_DATE"}
+            #         },
+            #         "EFF_SAT_ORDER_PRODUCT": {
+            #             "end_date":
+            #                 {"ENDDATE": "END_DATE"}
+            #         }
+            #     },
+
         }
-    }
 
     context.stage_columns = {
         "RAW_CUSTOMER_ORDER_PRODUCT":
@@ -1400,9 +1416,9 @@ def bridge(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
-                "EFF_SAT_CUSTOMER_ORDER_END_DATE": "DATETIME",
+                "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
-                "EFF_SAT_ORDER_PRODUCT_END_DATE": "DATETIME"
+                "EFF_SAT_ORDER_PRODUCT_ENDDATE": "DATETIME"
             }
         }
     }

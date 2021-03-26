@@ -763,30 +763,20 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def bridge(self, model_name, src_pk, src_dfk, src_sfk,
-                src_start_date, src_end_date, src_eff, src_ldts, src_source,
-                source_model, config):
+    def bridge(self, model_name, src_pk, links_and_eff_sats, as_of_date_table, source_model, config):
         """
         Generate a bridge model template
             :param model_name: Name of the model file
             :param src_pk: Source pk
-            :param src_dfk: Source driving foreign key
-            :param src_sfk: Source surrogate foreign key
-            :param src_eff: Source effective from
-            :param src_start_date: Source start date
-            :param src_end_date: Source end date
-            :param src_ldts: Source load date timestamp
-            :param src_source: Source record source column
+            :param as_of_date_table: Name for the AS_OF table
+            :param links_and_eff_sats: Dictionary of links and effectivity satellite reference mappings
             :param source_model: Model name to select from
             :param config: Optional model config
         """
 
         template = f"""
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.bridge({src_pk}, {src_dfk}, {src_sfk},
-                              {src_start_date}, {src_end_date},
-                              {src_eff}, {src_ldts}, {src_source},
-                              {source_model}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {as_of_date_table}, {links_and_eff_sats}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -835,6 +825,13 @@ class DBTVAULTGenerator:
 
                     processed_headings.extend(satellite_columns)
 
+                elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
+
+                    link_columns_hk = [f"LINK_{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
+                    eff_satellite_columns_end_date = [f"EFF_SAT_{col}_{list(item[col]['end_date'].keys())[0]}" for col in item.keys()]
+
+                    processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
+
                 elif item.get("source_column", None) and item.get("alias", None):
 
                     processed_headings.append(item['source_column'])
@@ -864,6 +861,7 @@ class DBTVAULTGenerator:
             "eff_sat": "incremental",
             "t_link": "incremental",
             "pit": "table",
+            "bridge": "table"
         }
 
         if not config:
