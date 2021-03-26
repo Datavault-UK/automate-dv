@@ -42,6 +42,7 @@ Feature: Satellites
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [BASE-LOAD-EMPTY] Load data into an empty satellite
     Given the SATELLITE sat is empty
@@ -60,6 +61,7 @@ Feature: Satellites
       | md5('1003') | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [BASE-LOAD-EMPTY-NULLS] Load data into an empty satellite where payload/hashdiff data is all null and PKs are NULL
     Given the SATELLITE sat is empty
@@ -80,6 +82,7 @@ Feature: Satellites
       | md5('1003') | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [BASE-LOAD-EMPTY] Load data into an empty satellite where payload/hashdiff data is partially null and some PKs are NULL
     Given the SATELLITE sat is empty
@@ -102,6 +105,7 @@ Feature: Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | <null>        | 17-214-233-1218 | 2018-04-16   | md5('2018-04-16\|\|1007\|\|^^\|\|17-214-233-1218')    | 1993-01-01     | 1993-01-01 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty satellite
     Given the SATELLITE sat is empty
@@ -125,6 +129,7 @@ Feature: Satellites
       | md5('1003') | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [INCREMENTAL-LOAD] Load data into a populated satellite where all records load
     Given the SATELLITE sat is already populated with data
@@ -165,6 +170,7 @@ Feature: Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [INCREMENTAL-LOAD] Load data into a populated satellite where some records overlap
     Given the SATELLITE sat is already populated with data
