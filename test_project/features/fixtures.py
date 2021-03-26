@@ -1235,11 +1235,11 @@ def bridge(context):
             "ORDER_FK": "ORDER_ID",
             "PRODUCT_FK": "PRODUCT_ID",
             "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
-                        "columns": ["CUSTOMER_ID", "ORDER_ID"]
-                        },
+                                  "columns": ["CUSTOMER_ID", "ORDER_ID"]
+                                  },
             "ORDER_PRODUCT_PK": {"is_hashdiff": True,
-                             "columns": ["ORDER_ID", "PRODUCT_ID"]
-                        }
+                                 "columns": ["ORDER_ID", "PRODUCT_ID"]
+                                 }
         }
     }
 
@@ -1275,7 +1275,8 @@ def bridge(context):
         "EFF_SAT_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_dfk": ["ORDER_FK"],
+            "src_sfk": ["CUSTOMER_FK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1285,7 +1286,8 @@ def bridge(context):
         "EFF_SAT_ORDER_PRODUCT": {
             "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
-            "src_fk": ["ORDER_FK", "PRODUCT_FK"],
+            "src_dfk": ["PRODUCT_FK"],
+            "src_sfk": ["ORDER_FK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1311,31 +1313,31 @@ def bridge(context):
                             {"ENDDATE": "END_DATE"}
                     }
                 }
-            }
-            # "links":
-            #     {
-            #         "LINK_CUSTOMER_ORDER": {
-            #             "pk":
-            #                 {"PK": "CUSTOMER_ORDER_PK"},
-            #         },
-            #         "LINK_ORDER_PRODUCT": {
-            #             "pk":
-            #                 {"PK": "ORDER_PRODUCT_PK"}
-            #         }
-            # },
-            # "eff_sats":
-            #     {
-            #         "EFF_SAT_CUSTOMER_ORDER": {
-            #             "end_date":
-            #                 {"ENDDATE": "END_DATE"}
-            #         },
-            #         "EFF_SAT_ORDER_PRODUCT": {
-            #             "end_date":
-            #                 {"ENDDATE": "END_DATE"}
-            #         }
-            #     },
-
         }
+        # "links":
+        #     {
+        #         "LINK_CUSTOMER_ORDER": {
+        #             "pk":
+        #                 {"PK": "CUSTOMER_ORDER_PK"},
+        #         },
+        #         "LINK_ORDER_PRODUCT": {
+        #             "pk":
+        #                 {"PK": "ORDER_PRODUCT_PK"}
+        #         }
+        # },
+        # "eff_sats":
+        #     {
+        #         "EFF_SAT_CUSTOMER_ORDER": {
+        #             "end_date":
+        #                 {"ENDDATE": "END_DATE"}
+        #         },
+        #         "EFF_SAT_ORDER_PRODUCT": {
+        #             "end_date":
+        #                 {"ENDDATE": "END_DATE"}
+        #         }
+        #     },
+
+    }
 
     context.stage_columns = {
         "RAW_CUSTOMER_ORDER_PRODUCT":
