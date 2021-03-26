@@ -61,7 +61,7 @@ Feature: Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BASE-LOAD-EMPTY] Load data into an empty satellite where payload/hashdiff data is all null and PKs are NULL
+  Scenario: [BASE-LOAD-EMPTY-NULLS] Load data into an empty satellite where payload/hashdiff data is all null and PKs are NULL
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
