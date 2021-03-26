@@ -14,6 +14,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -73,6 +74,7 @@ records_to_insert AS (
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    AND {{ dbtvault.multikey(pk_cols, condition='=', prefix=['latest_records', 'e']) }}
     {%- endif %}
 )
 
