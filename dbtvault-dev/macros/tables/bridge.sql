@@ -1,7 +1,7 @@
-{%- macro bridge(source_model, src_pk, links_and_eff_sats, as_of_date_table) -%}
+{%- macro bridge(source_model, src_pk, links, eff_sats, as_of_date_table) -%}
 
     {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
-                                                                                  links_and_eff_sats=links_and_eff_sats,
+                                                                                  links=links, eff_sats=eff_sats,
                                                                                   as_of_date_table=as_of_date_table) -}}
 {%- endmacro -%}
 
@@ -72,15 +72,15 @@ BRIDGE_WALK AS (
             {%- filter indent(width=8) -%}
             {% set link_key = links_and_eff_sats[link_and_eff_sat]['pk']['PK'] -%}
             {% set eff_sat_end_date = links_and_eff_sats[link_and_eff_sat]['end_date']['END_DATE'] -%}
-        {% if loop.first  %}
-        LEFT JOIN {{  ref('LINK_' ~ link_and_eff_sat) }} AS LINK_{{-  link_and_eff_sat -}}_SRC
-            ON a.{{- src_pk }} = LINK_{{-  link_and_eff_sat -}}_SRC.{{ link_key }}
-        {% else %}
-        LEFT JOIN {{  ref('LINK_' ~ link_and_eff_sat) }} AS LINK_{{-  link_and_eff_sat -}}_SRC
-{#            {% if previous_link_eff_sat.split('_')[-1] == link_and_eff_sat.split('_')[0]  %}#}
-            {% set common_hub = previous_link_eff_sat.split('_')[-1] %}
-            ON LINK_{{-  previous_link_eff_sat -}}_SRC.{{ common_hub }}_FK = LINK_{{-  link_and_eff_sat -}}_SRC.{{ common_hub }}_FK
-
+            {% if loop.first  %}
+            LEFT JOIN {{  ref('LINK_' ~ link_and_eff_sat) }} AS LINK_{{-  link_and_eff_sat -}}_SRC
+                ON a.{{- src_pk }} = LINK_{{-  link_and_eff_sat -}}_SRC.{{ link_key }}
+            {% else %}
+            LEFT JOIN {{  ref('LINK_' ~ link_and_eff_sat) }} AS LINK_{{-  link_and_eff_sat -}}_SRC
+{#                {% if previous_link_eff_sat.split('_')[-1] == link_and_eff_sat.split('_')[0]  %}#}
+                {% set common_hub = previous_link_eff_sat.split('_')[-1] %}
+                ON LINK_{{-  previous_link_eff_sat -}}_SRC.{{ common_hub }}_FK = LINK_{{-  link_and_eff_sat -}}_SRC.{{ common_hub }}_FK
+            {% endif %}
         INNER JOIN {{ ref('EFF_SAT_' ~ link_and_eff_sat) }} AS EFF_SAT_{{-  link_and_eff_sat -}}_SRC
             ON EFF_SAT_{{-  link_and_eff_sat -}}_SRC.{{ link_key }} = LINK_{{-  link_and_eff_sat -}}_SRC.{{ link_key }}
             AND EFF_SAT_{{-  link_and_eff_sat -}}_SRC.LOAD_DATE <= b.AS_OF_DATE

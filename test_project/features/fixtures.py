@@ -1261,20 +1261,21 @@ def bridge(context):
         "LINK_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "LINK_ORDER_PRODUCT": {
             "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
-            "src_fk": ["ORDER_PK", "PRODUCT_PK"],
+            "src_fk": ["ORDER_FK", "PRODUCT_FK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "EFF_SAT_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "CUSTOMER_ORDER_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1284,7 +1285,7 @@ def bridge(context):
         "EFF_SAT_ORDER_PRODUCT": {
             "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
-            "src_fk": ["ORDER_PK", "PRODUCT_PK"],
+            "src_fk": ["ORDER_FK", "PRODUCT_FK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1294,39 +1295,47 @@ def bridge(context):
         "BRIDGE_CUSTOMER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
-            "links_and_eff_sats": {
-                "CUSTOMER_ORDER": {
-                    "pk":
-                        {"PK": "CUSTOMER_ORDER_PK"},
-                    "end_date":
-                        {"END_DATE": "END_DATE"}
-                },
-                "ORDER_PRODUCT": {
-                    "pk":
-                        {"PK": "ORDER_PRODUCT_PK"},
-                    "end_date":
-                        {"END_DATE": "END_DATE"}
-                }
+            "links":
+                {
+                    "LINK_CUSTOMER_ORDER": {
+                        "pk":
+                            {"PK": "CUSTOMER_ORDER_PK"},
+                    },
+                    "LINK_ORDER_PRODUCT": {
+                        "pk":
+                            {"PK": "ORDER_PRODUCT_PK"}
+                    }
             },
+            "eff_sats":
+                {
+                    "EFF_SAT_CUSTOMER_ORDER": {
+                        "end_date":
+                            {"END_DATE": "END_DATE"}
+                    },
+                    "EFF_SAT_ORDER_PRODUCT": {
+                        "end_date":
+                            {"END_DATE": "END_DATE"}
+                    }
+                },
             "as_of_date_table": "AS_OF_DATE"
         }
     }
 
     context.stage_columns = {
-        "RAW_CUSTOMER_ORDER_NATION":
+        "RAW_CUSTOMER_ORDER_PRODUCT":
             ["CUSTOMER_ID",
              "ORDER_ID",
-             "NATION_ID",
+             "PRODUCT_ID",
              "LOAD_DATE",
              "SOURCE"]
     }
 
     context.seed_config = {
-        "RAW_CUSTOMER_ORDER_NATION": {
+        "RAW_CUSTOMER_ORDER_PRODUCT": {
             "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
+                "PRODUCT_ID": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -1348,11 +1357,11 @@ def bridge(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "LINK_CUSTOMER_NATION": {
+        "LINK_ORDER_PRODUCT": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "ORDER_PRODUCT_PK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "PRODUCT_FK": "BINARY(16)",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -1369,11 +1378,11 @@ def bridge(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "EFF_SAT_CUSTOMER_NATION": {
+        "EFF_SAT_ORDER_PRODUCT": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "ORDER_PRODUCT_PK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "PRODUCT_FK": "BINARY(16)",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -1390,10 +1399,10 @@ def bridge(context):
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME",
-                "LINK_CO_PK": "BINARY(16)",
-                "EFF_CO_END_DATE": "DATETIME",
-                "LINK_CN_PK": "BINARY(16)",
-                "EFF_CN_END_DATE": "DATETIME"
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "EFF_SAT_CUSTOMER_ORDER_END_DATE": "DATETIME",
+                "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
+                "EFF_SAT_ORDER_PRODUCT_END_DATE": "DATETIME"
             }
         }
     }
