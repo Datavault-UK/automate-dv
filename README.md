@@ -11,6 +11,10 @@
     src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
     alt="Join our slack"
   /></a>
+  <a href="https://circleci.com/gh/Datavault-UK/dbtvault"><img
+    src="https://circleci.com/gh/Datavault-UK/dbtvault/tree/develop.svg?style=shield" 
+    alt="CircleCI"
+  /></a>
 </p>
 
 
