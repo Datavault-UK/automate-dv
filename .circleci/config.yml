@@ -84,9 +84,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
-                - dev
-                - pre
+                - develop
                 - /^int.*/
   test-integration:
     jobs:
@@ -94,7 +92,5 @@ workflows:
           filters:
             branches:
               only:
-                - master
-                - dev
-                - pre
+                - develop
                 - /^int.*/
