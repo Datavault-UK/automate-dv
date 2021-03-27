@@ -8,8 +8,14 @@
 
 {%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+                                       src_start_date=src_start_date, src_end_date=src_end_date,
+                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
+{%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
 {{- dbtvault.prepend_generated_by() }}
@@ -43,7 +49,10 @@ latest_open_eff AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
-                PARTITION BY b.{{ src_pk }}
+                PARTITION BY
+                {%- for driving_key in dfk_cols %}
+                    {{ driving_key }}{{ ", " if not loop.last }}
+                {%- endfor %}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_number
     FROM {{ this }} AS b
