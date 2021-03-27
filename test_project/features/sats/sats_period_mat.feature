@@ -116,7 +116,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID') | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
 
   # INFERRED DATE RANGE (DAILY)
-
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite
     Given the SATELLITE table does not exist
@@ -163,6 +163,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
@@ -209,6 +210,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates.
     Given the RAW_STAGE stage is empty
@@ -262,6 +264,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1013') | md5('1995-06-16\|\|1013\|\|ZACH')    | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates.
     Given the RAW_STAGE stage is empty
@@ -349,7 +352,7 @@ Feature: Satellites Loaded using Period Materialization
 #      | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY')   | Jenny         | 1991-03-25   | 2021-01-12     | 2021-01-12 | *      |
 
   # PROVIDED DATE RANGE [START-AND-STOP] (DAILY)
-
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
@@ -387,6 +390,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN')  | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')  | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
     Given the RAW_STAGE stage is empty
@@ -532,7 +536,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY')   | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
 
   # ABORTED LOADS
-
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Simulate a restart of an aborted load
     Given the RAW_STAGE stage is empty
@@ -584,7 +588,7 @@ Feature: Satellites Loaded using Period Materialization
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
   # INFERRED DATE RANGE (MONTHLY)
-
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-PERIOD-MAT] Satellite load over several monthly cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
