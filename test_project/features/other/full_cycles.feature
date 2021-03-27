@@ -1,7 +1,6 @@
 @fixture.set_workdir
 Feature: Full Vault Cycles
 
-  # TODO: Failing
   @fixture.cycle
   Scenario: [VAULT-CYCLE] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
