@@ -11,10 +11,6 @@
     src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
     alt="Join our slack"
   /></a>
-  <a href="https://circleci.com/gh/Datavault-UK/dbtvault-dev"><img
-    src="https://circleci.com/gh/Datavault-UK/dbtvault-dev/tree/master.svg?style=shield" 
-    alt="CircleCI"
-  /></a>
 </p>
 
 
@@ -57,10 +53,16 @@ or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-m
 3. Call the appropriate template macro
 
 ```bash
-{{- config(...)                                                           -}}
+# Configure model
+{{- config(...)                          -}}
 
-{{ dbtvault.hub(var('src_pk'), var('src_nk'), var('src_ldts'),
-                var('src_source'), var('source_model'))                    }}
+# Set metadata
+{%- set src_pk = ...                     -%}
+...
+
+# Call the macro
+{{ dbtvault.hub(src_pk, src_nk, src_ldts,
+                src_source, source_model) }}
 ```
 
 ## Join our Slack Channel
