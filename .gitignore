@@ -1,13 +1,2 @@
-/profiles/
-/secrethub/
-/test_project/
-/test_results/
-/.run/
-/.circleci/
 
-.bumpversion.cfg
-invoke.yml
-Pipfile
-Pipfile.lock
-tasks.py
 .idea/
