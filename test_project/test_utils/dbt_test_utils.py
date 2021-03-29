@@ -808,10 +808,6 @@ class DBTVAULTGenerator:
 
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
-                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
-                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
-
-                    processed_headings.extend(satellite_columns)
 
                 elif item.get("source_column", None) and item.get("alias", None):
 
@@ -837,8 +833,6 @@ class DBTVAULTGenerator:
             "hub": "incremental",
             "link": "incremental",
             "sat": "incremental",
-            "oos_sat": "incremental",
-            "xts": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
             "ma_sat": "incremental"
