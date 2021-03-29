@@ -16,13 +16,13 @@
 
     {%- if condition in ['<>', '!=', '='] -%}
         {%- for col in columns -%}
-            {{ prefix[0] ~ '.' if prefix }}{{ col }} {{ condition }} {{ prefix[1] ~ '.' if prefix }}{{ col }}
+            {{ (prefix[0] ~ '.') if prefix }}{{ col }} {{ condition }} {{ (prefix[1] ~ '.') if prefix }}{{ col }}
             {%- if not loop.last %} {{ operator }} {% endif %}
         {% endfor -%}
     {%- else -%}
         {%- if dbtvault.is_list(columns) -%}
             {%- for col in columns -%}
-                {{ prefix[0] ~ '.' if prefix }}{{ col }} {{ condition if condition else '' }}
+                {{ (prefix[0] ~ '.') if prefix }}{{ col }} {{ condition if condition else '' }}
                 {%- if not loop.last -%} {{ "\n    " ~ operator }} {% endif -%}
             {%- endfor -%}
         {%- else -%}
