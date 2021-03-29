@@ -82,7 +82,7 @@ matching_records AS (
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }}
         AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
     {%- for child_key in src_cdk %}
-        AND {{ dbtvault.multikey(child_key, 'stage', condition='IS NOT NULL') }} = {{ dbtvault.multikey(child_key, 'latest_records', condition='IS NOT NULL') }}
+        AND {{ dbtvault.prefix([child_key], 'stage') }} = {{ dbtvault.prefix([child_key], 'latest_records') }}
     {%- endfor %}
     GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
 ),
