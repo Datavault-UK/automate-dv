@@ -19,8 +19,6 @@ fixture_registry = {
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
     "fixture.t_link": t_link,
-    "fixture.xts": xts,
-    "fixture.out_of_sequence_satellite": out_of_sequence_satellite,
     "fixture.cycle": cycle,
     "fixture.pit": pit,
     "fixture.disable_payload": disable_payload,
