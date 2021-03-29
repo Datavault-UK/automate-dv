@@ -2,8 +2,8 @@ version: 2.1
 
 
 orbs:
-  slack: circleci/slack@4.3.1
-  secrethub: secrethub/cli@1.1.0
+  slack: circleci/slack@3.4.2
+  secrethub: secrethub/cli@1.0.1
 
 commands:
   build_test_env:
@@ -41,10 +41,8 @@ jobs:
           command: |
             circleci tests glob test_project/unit/*/test_*.py | circleci tests split > /tmp/macro-tests-to-run
             TARGET=snowflake pipenv run inv macro-tests -t snowflake -u circleci -e secrethub/secrethub_circleci.env
-      - slack/notify:
-          channel: circleci
-          branch_pattern: develop
-          event: fail
+      - slack/status:
+          fail_only: false
           mentions: 'URXTX0XEZ'
       - store_test_results:
           path: test_results/integration_tests
@@ -66,10 +64,8 @@ jobs:
           command: |
             circleci tests glob test_project/features/*/*.feature | circleci tests split > /tmp/feature-tests-to-run
             TARGET=snowflake pipenv run inv integration-tests -t snowflake -u circleci -e secrethub/secrethub_circleci.env
-      - slack/notify:
-          channel: circleci
-          branch_pattern: develop
-          event: fail
+      - slack/status:
+          fail_only: false
           mentions: 'URXTX0XEZ'
       - store_test_results:
           path: test_results/integration_tests

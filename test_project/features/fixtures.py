@@ -394,6 +394,11 @@ def satellite(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_G": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         }
     }
 
@@ -403,6 +408,9 @@ def satellite(context):
         },
         "STG_CUSTOMER_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME"
+        },
+        "STG_CUSTOMER_G": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
 
@@ -557,7 +565,7 @@ def eff_satellite(context):
     context.vault_structure_columns = {
         "EFF_SAT": {
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": "ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",

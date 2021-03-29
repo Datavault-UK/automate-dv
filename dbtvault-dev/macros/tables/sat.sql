@@ -14,6 +14,7 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -30,6 +31,9 @@ WITH source_data AS (
     FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
+    AND {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    {% elif model.config.materialized != 'vault_insert_by_rank' and model.config.materialized != 'vault_insert_by_period' %}
+    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     {% endif %}
     {%- set source_cte = "source_data" %}
 ),
@@ -38,6 +42,7 @@ WITH source_data AS (
 rank_col AS (
     SELECT * FROM source_data
     WHERE __RANK_FILTER__
+    AND {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     {%- set source_cte = "rank_col" %}
 ),
 {% endif -%}
@@ -67,8 +72,9 @@ records_to_insert AS (
     FROM {{ source_cte }} AS e
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     LEFT JOIN latest_records
-    ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'e') }}
+        OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
     {%- endif %}
 )
 
