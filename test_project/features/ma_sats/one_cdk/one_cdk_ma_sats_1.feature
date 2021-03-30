@@ -348,3 +348,88 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1226 | md5('1006\|\|FRIDA\|\|17-214-233-1226') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1236 | md5('1006\|\|FRIDA\|\|17-214-233-1236') | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where hashdiff does not include CDKs
+    Given the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1226 | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    When I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1246 | md5('1003\|\|CHAD') | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
+    Given the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    When I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1246 | md5('1003\|\|CHAD') | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where hashdiff does not include PKs nor CDKs
+    Given the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1226 | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    When I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1246 | md5('CHAD') | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PKs nor CDKs
+    Given the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    When I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1246 | md5('CHAD') | 1993-01-02     | 1993-01-02 | *      |
+
