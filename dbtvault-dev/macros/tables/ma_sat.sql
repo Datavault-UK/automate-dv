@@ -54,16 +54,21 @@ rank_col AS (
 
 {# Select latest records from satellite together with count of distinct hashdiffs for each hashkey #}
 latest_records AS (
-    SELECT {{ dbtvault.prefix(cdk_cols, 'update_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'update_records', alias_target='target') }}
-        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'update_records') }}, {{ dbtvault.prefix(cdk_cols, 'update_records') }} )
-            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}) AS target_count
-        ,CASE WHEN RANK()
-            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'update_records') }}
-            ORDER BY {{ dbtvault.prefix([src_ldts], 'update_records') }} DESC) = 1
-        THEN 'Y' ELSE 'N' END AS latest
-    FROM {{ this }} AS update_records
-    WHERE EXISTS (SELECT 1 FROM {{ source_cte }} AS source_data WHERE {{ dbtvault.prefix([src_pk], 'source_data') }} = {{ dbtvault.prefix([src_pk], 'update_records') }})
-    QUALIFY latest = 'Y'
+    SELECT *, COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'latest') }}, {{ dbtvault.prefix(cdk_cols, 'latest') }} )
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'latest') }}) AS target_count
+    FROM (
+        SELECT {{ dbtvault.prefix(cdk_cols, 'target_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
+            ,CASE WHEN RANK()
+                OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
+                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) = 1
+            THEN 'Y' ELSE 'N' END AS latest
+        FROM {{ this }} AS target_records
+        INNER JOIN
+            (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
+            FROM {{ source_cte }} AS source_pks) AS source_data
+                ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_data') }}
+        QUALIFY latest = 'Y'
+    ) AS latest
 ),
 
 {# Select PKs and hashdiff counts for matching stage and sat records #}
