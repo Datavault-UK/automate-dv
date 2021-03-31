@@ -76,9 +76,9 @@ compare AS (
     UNION ALL
     SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'MISSING_DUPLICATE_A' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'MISSING_DUPLICATE_E' AS "ERROR_SOURCE" FROM duplicates_not_in_expected
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -89,6 +89,7 @@ compare AS (
 // SELECT * FROM duplicates_actual
 // SELECT * FROM duplicates_expected
 // SELECT * FROM duplicates_not_in_actual
+// SELECT * FROM duplicates_not_in_expected
 // SELECT * FROM compare
 
 SELECT COUNT(*) AS differences FROM compare
