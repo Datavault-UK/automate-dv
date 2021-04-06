@@ -1,5 +1,112 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e. changes of records) - Two DK
+Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour with two CDKs
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where all records load
+    Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | Dom           | 17-214-233-1217 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1217\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1227 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1237 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1214 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1214 | 12342     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12342') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1214 | 12343     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12343') | 1993-01-01     | 1993-01-01 | *      |
+
+    And the RAW_STAGE_TWO_CDK table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 12301     | 1993-01-02 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 12302     | 1993-01-02 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 12303     | 1993-01-02 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 12303     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12311     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12312     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12313     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12313     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 12321     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1226 | 12321     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1226 | 12321     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1236 | 12321     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1217 | 12331     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1227 | 12331     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1237 | 12331     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1237 | 12331     | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | Alice         | 17-214-233-1214 | 12301     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12301') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1001') | Alice         | 17-214-233-1214 | 12302     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12302') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1001') | Alice         | 17-214-233-1214 | 12303     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12303') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12312     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12312')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12313     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12313')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12321     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12321')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | 12321     | md5('1003\|\|CHAD\|\|17-214-233-1226\|\|12321')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | 12321     | md5('1003\|\|CHAD\|\|17-214-233-1236\|\|12321')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1004') | Dom           | 17-214-233-1217 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1217\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1227 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1237 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1005') | Eric          | 17-214-233-1217 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1217\|\|12331')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1005') | Eric          | 17-214-233-1227 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1227\|\|12331')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1005') | Eric          | 17-214-233-1237 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1237\|\|12331')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1006') | Frida         | 17-214-233-1214 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1214 | 12342     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12342') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1214 | 12343     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12343') | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some records overlap
+    Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12312     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12312')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12313     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12313')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12321     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12321')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12322     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12322')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12323     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12323')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1217 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1217\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1227 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1237 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1218 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1218\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1228 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1228\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1238 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1238\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE_TWO_CDK table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 12301     | 1993-01-02 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 12302     | 1993-01-02 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 12303     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12311     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12312     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12313     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 12313     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 12321     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 12322     | 1993-01-02 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 12323     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1217 | 12331     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1227 | 12331     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1237 | 12331     | 1993-01-02 | *      |
+      | 1005        | Eric          | 17-214-233-1237 | 12331     | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER_TWO_CDK stage
+    When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | Alice         | 17-214-233-1214 | 12301     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12301') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1001') | Alice         | 17-214-233-1214 | 12302     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12302') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1001') | Alice         | 17-214-233-1214 | 12303     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12303') | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12312     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12312')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1215 | 12313     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12313')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12321     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12321')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12322     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12322')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | 12323     | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|12323')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1217 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1217\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1227 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 17-214-233-1237 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1005') | Eric          | 17-214-233-1217 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1217\|\|12331')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1005') | Eric          | 17-214-233-1227 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1227\|\|12331')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1005') | Eric          | 17-214-233-1237 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1237\|\|12331')  | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1006') | Frida         | 17-214-233-1218 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1218\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1228 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1228\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1006') | Frida         | 17-214-233-1238 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1238\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have fewer records
@@ -102,7 +209,7 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1004') | Dom           | 17-214-233-1257 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1257\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets have the same number of records after records have been added and removed in the stage
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets maintain group size after records have been added and removed in the stage
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -163,7 +270,7 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
       | md5('1006') | Frida         | 17-214-233-1254 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1254\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets have the same number of records but some records have different hashdiffs
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets maintain group size but some records have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -218,7 +325,7 @@ Feature: Multi Active Satellites  - Actual multi active satellite behaviour (i.e
 
 
   @fixture.multi_active_satellite
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some sets of records are missing an entry, some have an extra entry and some have different hashdiffs
+  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have varying group size and some have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |

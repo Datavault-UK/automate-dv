@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites - Base Satellite Behaviour - Two CDKs
+Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
 
   @fixture.multi_active_satellite
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite

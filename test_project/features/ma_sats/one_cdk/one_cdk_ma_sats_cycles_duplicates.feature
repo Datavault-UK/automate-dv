@@ -1,10 +1,10 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites Loaded in cycles using separate manual loads with duplicates - One CDK
+Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with duplicates and one CDK
   This is a series of 4 day loading cycles testing different duplicate record loads
   and different hashdiff configurations, i.e. incl. PK and CDK, excl. CDK, excl. PK and CDK
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with a mix of duplicate record change cases - One CDK
+  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -113,7 +113,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads wi
 
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases - One CDK
+  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is empty
 
@@ -221,7 +221,7 @@ Feature: Multi Active Satellites Loaded in cycles using separate manual loads wi
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases - One CDK
+  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
 
