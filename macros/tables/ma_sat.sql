@@ -54,21 +54,19 @@ rank_col AS (
 
 {# Select latest records from satellite together with count of distinct hashdiffs for each hashkey #}
 latest_records AS (
-    SELECT *, COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'latest') }}, {{ dbtvault.prefix(cdk_cols, 'latest') }} )
-            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'latest') }}) AS target_count
+    SELECT *, COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'latest_selection') }}, {{ dbtvault.prefix(cdk_cols, 'latest_selection') }} )
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'latest_selection') }}) AS target_count
     FROM (
         SELECT {{ dbtvault.prefix(cdk_cols, 'target_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
-            ,CASE WHEN RANK()
-                OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
-                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) = 1
-            THEN 'Y' ELSE 'N' END AS latest
+            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
+                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS rank_value
         FROM {{ this }} AS target_records
         INNER JOIN
             (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
-            FROM {{ source_cte }} AS source_pks) AS source_data
-                ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_data') }}
-        QUALIFY latest = 'Y'
-    ) AS latest
+            FROM {{ source_cte }} AS source_pks) AS source_records
+                ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
+        QUALIFY rank_value = 1
+    ) AS latest_selection
 ),
 
 {# Select PKs and hashdiff counts for matching stage and sat records #}
