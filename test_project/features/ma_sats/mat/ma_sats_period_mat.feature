@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites Loaded using Period Materialization
+Feature: Multi Active Satellites - Loading using Period Materialization
 
   @fixture.multi_active_satellite
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite

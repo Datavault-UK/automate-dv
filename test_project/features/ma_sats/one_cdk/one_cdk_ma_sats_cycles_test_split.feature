@@ -1,8 +1,9 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites Loaded in cycles using separate manual loads - One CDK
-  This is test of loading cycles over an increasing number of days, i.e. one to four days
+Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with one CDK
+  This file includes tests for debugging purposes
+  It tests a series of loading cycles over an increasing number of days, i.e. one to four days
 
-   @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle
   Scenario: [SAT-CYCLE] 1-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
