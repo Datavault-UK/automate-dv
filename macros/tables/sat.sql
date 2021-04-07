@@ -47,7 +47,7 @@ rank_col AS (
 ),
 {% endif -%}
 
-{% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
+{% if dbtvault.is_any_incremental() %}
 
 update_records AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
@@ -70,7 +70,7 @@ latest_records AS (
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
     FROM {{ source_cte }} AS e
-    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
+    {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'e') }}
