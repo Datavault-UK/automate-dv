@@ -84,8 +84,7 @@ class DBTTestUtils:
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            schema_name = schema_name.replace("-", "_")
-            schema_name = schema_name.replace(".", "_")
+            schema_name = schema_name.replace("-", "_").replace(".", "_").replace("/", "_")
 
             return {
                 'SCHEMA_NAME': schema_name,
