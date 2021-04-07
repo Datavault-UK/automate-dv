@@ -89,8 +89,7 @@ workflows:
             branches:
               only:
                 - develop
-                - /^int.*/
-                - /^fix.*/
+                - pre
   test-integration:
     jobs:
       - integration:
@@ -98,5 +97,4 @@ workflows:
             branches:
               only:
                 - develop
-                - /^int.*/
-                - /^fix.*/
+                - pre
