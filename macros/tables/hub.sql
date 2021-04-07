@@ -40,7 +40,6 @@ row_rank_{{ source_number }} AS (
     {%- endif %}
     FROM {{ ref(src) }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
