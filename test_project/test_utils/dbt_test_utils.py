@@ -729,7 +729,7 @@ class DBTVAULTGenerator:
         self.template_to_file(template, model_name)
 
     def ma_sat(self, model_name, src_pk, src_cdk, src_hashdiff, src_payload,
-               src_eff, src_ldts, src_source, source_model, config=None):
+               src_eff, src_ldts, src_source, source_model, config):
         """
         Generate a multi active satellite model template
             :param model_name: Name of the model file
@@ -773,6 +773,7 @@ class DBTVAULTGenerator:
                     satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
 
                     processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+
 
                 elif item.get("source_column", None) and item.get("alias", None):
 

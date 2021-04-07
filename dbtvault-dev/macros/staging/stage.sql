@@ -25,13 +25,7 @@
     OR
     [SOURCES STYLE]
     source_model:
-        source_name: source_table_name
-    
-    Please check:
-    - If using variables with var(), that your variable is scoped/provided correctly.
-    - That you are only providing the metadata as shown above. dbtvault converts this to
-      ref() or source() internally, you only need to provide strings!
-
+        source_name: source_table_name"
     {%- endset -%}
 
     {{- exceptions.raise_compiler_error(error_message) -}}
