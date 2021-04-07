@@ -1,21 +1,11 @@
 WITH row_rank_1 AS (
-    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE,
-           ROW_NUMBER() OVER(
-               PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE ASC
-           ) AS row_number
+    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
-    QUALIFY row_number = 1
 ),
 
 row_rank_2 AS (
-    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE,
-           ROW_NUMBER() OVER(
-               PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE ASC
-           ) AS row_number
+    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_2
-    QUALIFY row_number = 1
 ),
 
 stage_union AS (
