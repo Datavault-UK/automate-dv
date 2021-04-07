@@ -50,7 +50,7 @@ rank_col AS (
 ),
 {% endif -%}
 
-{% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
+{% if dbtvault.is_any_incremental() %}
 
 {# Select latest records from satellite together with count of distinct hashdiffs for each hashkey #}
 latest_records AS (
@@ -109,7 +109,7 @@ satellite_insert AS (
 {%- endif %}
 
 records_to_insert AS (
-    SELECT {% if not (dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental()) %} DISTINCT {% endif %} {{ dbtvault.alias_all(source_cols, 'stage') }}
+    SELECT {% if not dbtvault.is_any_incremental() %} DISTINCT {% endif %} {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM {{ source_cte }} AS stage
     {# Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
     {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
