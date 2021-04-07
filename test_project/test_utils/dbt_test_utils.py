@@ -715,7 +715,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, config=None):
         """
         Generate a PIT template
             :param model_name: Name of the model file
@@ -728,7 +728,7 @@ class DBTVAULTGenerator:
 
         template = f"""
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites}, {source_model}) }}}}
+        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites},{stage_tables},{src_ldts}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -748,11 +748,11 @@ class DBTVAULTGenerator:
             if isinstance(item, dict):
 
                 if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
-
-                    satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
-                    satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-
-                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+                    dict_check = [next(iter(item))][0]
+                    if isinstance(item[dict_check], dict):
+                        satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
+                        satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
+                        processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
 
                 elif item.get("source_column", None) and item.get("alias", None):
@@ -781,7 +781,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
-            "pit": "table",
+            "pit": "incremental",
         }
 
         if not config:
