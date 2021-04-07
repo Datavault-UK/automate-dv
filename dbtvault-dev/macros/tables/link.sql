@@ -35,20 +35,15 @@
 
 row_rank_{{ source_number }} AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ source_cols_with_rank | join(', ') }},
+    SELECT {{ source_cols_with_rank | join(', ') }}
     {%- else %}
-    SELECT {{ source_cols | join(', ') }},
+    SELECT {{ source_cols | join(', ') }}
     {%- endif %}
-           ROW_NUMBER() OVER(
-               PARTITION BY {{ src_pk }}
-               ORDER BY {{ src_ldts }} ASC
-           ) AS row_number
     FROM {{ ref(src) }}
     {%- if source_model | length == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
     {%- endif %}
-    QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
@@ -96,7 +91,7 @@ row_rank_union AS (
 records_to_insert AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
     FROM {{ ns.last_cte }} AS a
-    {%- if dbtvault.is_vault_insert_by_period() or is_incremental() %}
+    {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
     ON a.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
