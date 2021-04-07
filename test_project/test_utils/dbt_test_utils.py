@@ -4,7 +4,6 @@ import logging
 import os
 import re
 import shutil
-import textwrap
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
@@ -85,8 +84,7 @@ class DBTTestUtils:
             else:
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            schema_name = schema_name.replace("-", "_")
-            schema_name = schema_name.replace(".", "_")
+            schema_name = schema_name.replace("-", "_").replace(".", "_").replace("/", "_")
 
             return {
                 'SCHEMA_NAME': schema_name,
