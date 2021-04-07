@@ -971,7 +971,14 @@ def pit(context):
                         "ldts":
                             {"LDTS": "LOAD_DATE"}
                     }
-                }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                    "STG_CUSTOMER_LOGIN": "LOAD_DATE",
+                    "STG_CUSTOMER_PROFILE": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
         }
     }
 
