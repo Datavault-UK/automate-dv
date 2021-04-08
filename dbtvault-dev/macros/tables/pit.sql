@@ -27,13 +27,17 @@
     {%- set source_relation_AS_OF = ref(as_of_dates_table) -%}
 {%- endif -%}
 
+{# Setting Ghost values to replace NULLS #}
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk = ('0000000000000000') -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
+{# Stating the dependancys on the stage tables outside of the If STATEMENT #}
+{%- for stg in stage_tables -%}
+    -- depends_on: {{ ref(stg) }}
+{%- endfor %}
 
 WITH hub AS (
-
 	SELECT * FROM {{ ref(source_model) }}
 ),
 
@@ -41,14 +45,14 @@ as_of AS (
     SELECT * FROM {{ source_relation_AS_OF}}
 ),
 
-{% if is_incremental()  -%}
+{% if is_incremental() -%}
 
     last_safe_load_datetime AS (
     	SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
         {%- filter indent(width=8) -%}
-        {%- for sat in satellites -%}
-            {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0]  -%}
-            {{ "SELECT MAX("~satellites[sat]['ldts'][sat_ldts]~") AS LOAD_DATETIME FROM "~ ref(sat) }}
+        {%- for stg in stage_tables -%}
+            {%- set stage_ldts =(stage_tables[stg])  -%}
+            {{ "SELECT MAX("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
             {{ 'UNION ALL' if not loop.last }}
         {% endfor -%}
         {%- endfilter -%}
@@ -94,7 +98,7 @@ as_of AS (
     new_hubs AS (
         SELECT {{ src_pk }}
     	FROM hub AS h
-    	WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    	WHERE h.{{ src_ldts }} > (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     	),
 
     new_row_as_of AS (
