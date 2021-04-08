@@ -237,38 +237,170 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
 
-
-
     ###################################################################
 
-  @fixture.multi_active_satellite
-  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loads of identical data into a satellite with one value in rank column loads first rank
-    Given the MULTI_ACTIVE_SATELLITE table does not exist
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loading in cycles: identical data into a satellite with one value in rank column loads first rank only and once only
+#    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    Given the RAW_STAGE stage is empty
+    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+
+    # ================ DAY 1 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I create the STG_CUSTOMER stage
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
+
+    # ================ DAY 2 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I create the STG_CUSTOMER stage
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loading in cycles: overlapping data into a satellite with one value in rank column loads first rank only and once only
+#    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    Given the RAW_STAGE stage is empty
+    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+
+    # ================ DAY 1 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I create the STG_CUSTOMER stage
+    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # ================ DAY 2 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+      | 1005        | Egbert        | 17-214-233-1218 | 1993-01-02     | 1993-01-02 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I create the STG_CUSTOMER stage
+    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                 | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')  | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')    | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')   | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')    | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1005') | md5('1005\|\|EGBERT\|\|17-214-233-1218') | Egbert        | 17-214-233-1218 | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SAT-RANK-MAT-BASE-CYCLE-2] Loading in cycles: partially overlapping data into a satellite with one value in rank column loads first rank only and once only
+#    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    Given the RAW_STAGE stage is empty
+    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+
+    # ================ DAY 1 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I create the STG_CUSTOMER stage
+    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # ================ DAY 2 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1299 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+      | 1005        | Egbert        | 17-214-233-1218 | 1993-01-02     | 1993-01-02 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I create the STG_CUSTOMER stage
+    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                 | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')  | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')  | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')    | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')   | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')    | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1005') | md5('1005\|\|EGBERT\|\|17-214-233-1218') | Egbert        | 17-214-233-1218 | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')  | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1299')  | Alice         | 17-214-233-1299 | 1993-01-02     | 1993-01-02 | *      |
+
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SAT-RANK-MAT-BASE-CYCLE-3] Loading in cycles: partially overlapping data into a satellite with one value in rank column loads first rank only and once only
+    Given the RAW_STAGE stage is empty
+    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+
+    # ================ DAY 1 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I create the STG_CUSTOMER stage
+    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
+    # ================ DAY 2 ===================
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1299 | 1993-01-01     | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+      | 1005        | Egbert        | 17-214-233-1218 | 1993-01-02     | 1993-01-02 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I create the STG_CUSTOMER stage
+    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                 | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')  | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')    | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')   | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')    | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1299')  | Alice         | 17-214-233-1299 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1005') | md5('1005\|\|EGBERT\|\|17-214-233-1218') | Egbert        | 17-214-233-1218 | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')  | Alice         | 17-214-233-1214 | 1993-01-02     | 1993-01-02 | *      |

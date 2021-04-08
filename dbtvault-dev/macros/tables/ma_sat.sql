@@ -29,8 +29,10 @@ WITH source_data AS (
     {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
+    {%- if not model.config.materialized == 'vault_insert_by_rank' %}
     ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} )
         OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
+    {%- endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
     {%- for child_key in src_cdk %}
@@ -44,7 +46,10 @@ WITH source_data AS (
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
 rank_col AS (
-    SELECT * FROM source_data
+    SELECT *
+    ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'source_data') }}, {{ dbtvault.prefix(cdk_cols, 'source_data') }} )
+        OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'source_data') }}) AS source_count
+    FROM source_data
     WHERE __RANK_FILTER__
     {%- set source_cte = "rank_col" %}
 ),
