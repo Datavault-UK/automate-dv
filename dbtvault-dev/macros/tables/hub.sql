@@ -34,12 +34,17 @@
 
 row_rank_{{ source_number }} AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ source_cols_with_rank | join(', ') }}
+    SELECT {{ source_cols_with_rank | join(', ') }},
     {%- else %}
-    SELECT {{ source_cols | join(', ') }}
+    SELECT {{ source_cols | join(', ') }},
     {%- endif %}
+           ROW_NUMBER() OVER(
+               PARTITION BY {{ src_pk }}
+               ORDER BY {{ src_ldts }}
+           ) AS row_number
     FROM {{ ref(src) }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
