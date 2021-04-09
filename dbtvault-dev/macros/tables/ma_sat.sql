@@ -29,10 +29,8 @@ WITH source_data AS (
     {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
-    {%- if not model.config.materialized == 'vault_insert_by_rank' %}
     ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} )
         OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
-    {%- endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
     {%- for child_key in src_cdk %}
@@ -40,20 +38,10 @@ WITH source_data AS (
     {%- endfor %}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
         AND __PERIOD_FILTER__
+    {% elif model.config.materialized == 'vault_insert_by_rank' %}
+        AND __RANK_FILTER__
     {% endif %}
-    {%- set source_cte = "source_data" %}
 ),
-
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-rank_col AS (
-    SELECT *
-    ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'source_data') }}, {{ dbtvault.prefix(cdk_cols, 'source_data') }} )
-        OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'source_data') }}) AS source_count
-    FROM source_data
-    WHERE __RANK_FILTER__
-    {%- set source_cte = "rank_col" %}
-),
-{% endif -%}
 
 {% if dbtvault.is_any_incremental() %}
 
@@ -68,7 +56,7 @@ latest_records AS (
         FROM {{ this }} AS target_records
         INNER JOIN
             (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
-            FROM {{ source_cte }} AS source_pks) AS source_records
+            FROM source_data AS source_pks) AS source_records
                 ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
         QUALIFY rank_value = 1
     ) AS latest_selection
@@ -79,7 +67,7 @@ latest_records AS (
 matching_records AS (
     SELECT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
         ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'stage') }}, {{ dbtvault.prefix(cdk_cols, 'stage') }}) AS match_count
-    FROM {{ source_cte }} AS stage
+    FROM source_data AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }}
         AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
@@ -93,7 +81,7 @@ matching_records AS (
 {# either where total counts differ or where match counts differ  #}
 satellite_update AS (
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
-    FROM {{ source_cte }} AS stage
+    FROM source_data AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
     LEFT OUTER JOIN matching_records
@@ -105,7 +93,7 @@ satellite_update AS (
 {# Select stage records with PKs that do not exist in sat #}
 satellite_insert AS (
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
-    FROM {{ source_cte }} AS stage
+    FROM source_data AS stage
     LEFT OUTER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
     WHERE {{ dbtvault.prefix([src_pk], 'latest_records') }} IS NULL
@@ -115,7 +103,7 @@ satellite_insert AS (
 
 records_to_insert AS (
     SELECT {% if not dbtvault.is_any_incremental() %} DISTINCT {% endif %} {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM {{ source_cte }} AS stage
+    FROM source_data AS stage
     {# Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
     {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     INNER JOIN satellite_update
@@ -124,7 +112,7 @@ records_to_insert AS (
     UNION
 
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM {{ source_cte }} AS stage
+    FROM source_data AS stage
     INNER JOIN satellite_insert
         ON {{ dbtvault.prefix([src_pk], 'satellite_insert') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
     {%- endif %}
