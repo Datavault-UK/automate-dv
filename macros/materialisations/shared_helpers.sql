@@ -11,7 +11,7 @@
 
 
 {%- macro is_any_incremental() -%}
-    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() -%}
+    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() or dbtvault.is_pit_incremental() -%}
         {{- return(true) -}}
     {%- else -%}
         {{- return(false) -}}
