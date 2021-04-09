@@ -781,7 +781,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
-            "pit": "incremental",
+            "pit": "pit_incremental",
         }
 
         if not config:
