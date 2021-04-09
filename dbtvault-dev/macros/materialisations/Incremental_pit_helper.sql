@@ -7,7 +7,7 @@
 
             {{ return(relation is not none
                       and relation.type == 'table'
-                      and model.config.materialized == 'incremental_pit'
+                      and model.config.materialized == 'pit_incremental'
                       and not flags.FULL_REFRESH) }}
     {% endif %}
 {% endmacro %}
