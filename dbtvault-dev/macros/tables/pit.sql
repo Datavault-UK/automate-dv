@@ -45,7 +45,7 @@ as_of AS (
     SELECT * FROM {{ source_relation_AS_OF}}
 ),
 
-{% if is_incremental() -%}
+{% if dbtvault.is_any_incremental() -%}
 
     last_safe_load_datetime AS (
     	SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
