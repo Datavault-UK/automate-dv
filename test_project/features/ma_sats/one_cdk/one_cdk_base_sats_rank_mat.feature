@@ -240,9 +240,9 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
 
-  # recently added
+  # todo: when it does the incremental loading (due to line 258), it pulls both Doms again rather than just the last one
   @fixture.multi_active_satellite
-  Scenario: [SAT-RANK-MAT-INC] Base load of a satellite with one value in rank column loads first rank
+  Scenario: [SAT-RANK-MAT-INC] Incremental load of a satellite with one value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
