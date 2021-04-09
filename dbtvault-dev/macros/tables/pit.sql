@@ -111,7 +111,9 @@ as_of AS (
     ),
 
     overlap AS (
-        SELECT * FROM old_pit AS p
+        SELECT p.* FROM old_pit AS p
+        INNER JOIN hub as h
+        ON p.{{ src_pk }} = h.{{ src_pk }}
     	WHERE  P.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
     	AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     	AND p.AS_OF_DATE NOT IN (SELECT * FROM as_of_grain_lost_entries)
@@ -127,7 +129,7 @@ as_of AS (
           ON (1=1)
     ),
 
-    bf_satellites AS (
+    backfill AS (
         SELECT
             bf.{{ src_pk }},
             bf.AS_OF_DATE,
@@ -158,9 +160,6 @@ as_of AS (
                 bf.{{- src_pk }}, bf.AS_OF_DATE
             ORDER BY (1, 2)
     ),
-    backfill AS (
-        SELECT * FROM bf_satellites
-    ),
 
 {% else %}
     new_row_as_of AS(
@@ -173,12 +172,11 @@ new_as_of_dates_PK_join AS (
         hub.{{ src_pk }},
         x.AS_OF_DATE
     FROM hub
-
     INNER JOIN new_row_as_of AS x
     ON (1=1)
 ),
 
-new_row_satellites_cte AS (
+new_rows AS (
 
     SELECT
         a.{{ src_pk }},
@@ -194,7 +192,6 @@ new_row_satellites_cte AS (
             {{- ',' if not loop.last -}}
             {% endfilter %}
         {%- endfor %}
-
     FROM new_as_of_dates_PK_join AS a
 
     {% for sat in satellites -%}
@@ -210,17 +207,17 @@ new_row_satellites_cte AS (
     ORDER BY (1, 2)
 ),
 
-new_rows AS(
-    SELECT * FROM new_row_satellites_cte
-)
-
+PIT AS (
 SELECT * FROM new_rows
-{% if is_incremental()  -%}
+{% if dbtvault.is_any_incremental() -%}
     UNION ALL
     SELECT * FROM overlap
     UNION ALL
     SELECT * FROM backfill
-{%- endif -%}
 
+{%- endif -%}
+)
+
+SELECT * FROM PIT
 
 {%- endmacro -%}
