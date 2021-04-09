@@ -25,7 +25,7 @@
       {% do to_drop.append(backup_relation) %}
   {% else %}
 
-   {% set tmp_relation = make_temp_relation(target_relation) %}
+      {% set tmp_relation = make_temp_relation(target_relation) %}
       {% do run_query(create_table_as(True, tmp_relation, sql)) %}
       {% do adapter.expand_target_column_types(
              from_relation=tmp_relation,
