@@ -12,7 +12,13 @@
 
         {%- if columns[col] is mapping and columns[col].partition_by and columns[col].order_by -%}
 
-            {{- "RANK() OVER (PARTITION BY {} ORDER BY {}) AS {}".format(columns[col].partition_by, columns[col].order_by, col) | indent(4) -}}
+            {%- if dbtvault.is_list(columns[col].order_by) -%}
+                {%- set order_by_str = columns[col].order_by | join(", ") -%}
+            {%- else -%}
+                {%- set order_by_str = columns[col].order_by -%}
+            {%- endif -%}
+
+            {{- "RANK() OVER (PARTITION BY {} ORDER BY {}) AS {}".format(columns[col].partition_by, order_by_str, col) | indent(4) -}}
 
         {%- endif -%}
 

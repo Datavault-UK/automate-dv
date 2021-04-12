@@ -85,6 +85,13 @@ def single_source_hub(context):
         }
     }
 
+    context.ranked_columns = {
+        "STG_CUSTOMER": {
+            "RANK_TEST": {"partition_by": "CUSTOMER_ID",
+                          "order_by": ["CUSTOMER_ID", "LOAD_DATE"]}
+        }
+    }
+
     context.vault_structure_columns = {
         "HUB": {
             "src_pk": "CUSTOMER_PK",

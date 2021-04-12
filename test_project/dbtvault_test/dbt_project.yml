@@ -42,3 +42,10 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
+    temp:
+      raw_stage_seed:
+        +column_types:
+          CUSTOMER_ID: VARCHAR
+          CUSTOMER_NAME: VARCHAR
+          LOAD_DATE: DATE
+          SOURCE: VARCHAR
