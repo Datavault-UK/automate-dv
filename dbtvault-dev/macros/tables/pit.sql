@@ -37,11 +37,9 @@
     -- depends_on: {{ ref(stg) }}
 {%- endfor %}
 
-WITH hub AS (
-	SELECT * FROM {{ ref(source_model) }}
-),
 
-as_of AS (
+
+WITH as_of AS (
     SELECT * FROM {{ source_relation_AS_OF}}
 ),
 
@@ -59,12 +57,8 @@ as_of AS (
         )
     ),
 
-    old_pit AS (
-        SELECT * FROM {{ this }}
-    ),
-
     old_as_of_grain AS (
-        SELECT DISTINCT AS_OF_DATE FROM old_pit
+        SELECT DISTINCT AS_OF_DATE FROM {{ this }}
     ),
 
     as_of_grain_lost_entries AS (
@@ -72,16 +66,15 @@ as_of AS (
         FROM old_as_of_grain AS a
         LEFT OUTER JOIN as_of AS b
     	ON a.AS_OF_DATE = b.AS_OF_DATE
-    	AND a.AS_OF_DATE < (SELECT MIN(AS_OF_DATE) FROM as_of)
+    	WHERE b.AS_OF_DATE IS NULL
     ),
 
     as_of_grain_new_entries AS (
         SELECT a.AS_OF_DATE
         FROM as_of AS a
         LEFT OUTER JOIN old_as_of_grain AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-        AND a.AS_OF_DATE > (SELECT LAST_SAFE_LOAD_DATETIME from last_safe_load_datetime)
-
+    	ON a.AS_OF_DATE = b.AS_OF_DATE
+    	WHERE b.AS_OF_DATE IS NULL
     ),
 
     min_date AS(
@@ -92,27 +85,27 @@ as_of AS (
     backfill_as_of AS (
         SELECT AS_OF_DATE
     	from as_of
-    	WHERE as_of.AS_OF_DATE <= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    	WHERE as_of.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     ),
 
     new_hubs AS (
         SELECT {{ src_pk }}
-    	FROM hub AS h
-    	WHERE h.{{ src_ldts }} > (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    	FROM {{ ref(source_model) }} AS h
+    	WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     	),
 
     new_row_as_of AS (
         SELECT AS_OF_DATE
     	FROM as_of
-    	WHERE as_of.AS_OF_DATE > (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    	WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     	UNION
     	SELECT as_of_date
     	FROM as_of_grain_new_entries
     ),
 
     overlap AS (
-        SELECT p.* FROM old_pit AS p
-        INNER JOIN hub as h
+        SELECT p.* FROM {{ this }} AS p
+        INNER JOIN {{ ref(source_model) }} as h
         ON p.{{ src_pk }} = h.{{ src_pk }}
     	WHERE  P.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
     	AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
@@ -171,7 +164,7 @@ new_as_of_dates_PK_join AS (
     SELECT
         hub.{{ src_pk }},
         x.AS_OF_DATE
-    FROM hub
+    FROM {{ ref(source_model) }} hub
     INNER JOIN new_row_as_of AS x
     ON (1=1)
 ),
