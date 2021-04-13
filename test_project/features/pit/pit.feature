@@ -369,8 +369,7 @@ Feature: pit
 
      @fixture.pit
   Scenario: Load into a pit table where the as_of_dates table changes
-    Given the PIT table does not exist
-    And the raw vault contains empty tables
+    Given the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
