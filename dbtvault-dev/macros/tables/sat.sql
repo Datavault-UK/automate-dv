@@ -47,12 +47,18 @@ update_records AS (
 ),
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(rank_cols, 'target', alias_target='target') }},
-    RANK() OVER (
-            PARTITION BY {{ dbtvault.prefix([src_pk], 'target') }}
-            ORDER BY {{ dbtvault.prefix([src_ldts], 'target') }} DESC
-        ) AS rank
-    FROM update_records AS target
+
+    SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
+           RANK() OVER (
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
+           ) AS rank
+    FROM {{ this }} AS current_records
+    JOIN (
+        SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}
+        FROM source_data
+    ) AS source_records
+    ON {{ dbtvault.prefix([src_pk], 'current_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
     QUALIFY rank = 1
 ),
 {%- endif %}
