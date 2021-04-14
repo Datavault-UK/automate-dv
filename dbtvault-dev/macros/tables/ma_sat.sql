@@ -38,9 +38,9 @@ WITH source_data AS (
     {%- endfor %}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
         AND __PERIOD_FILTER__
-    {% elif model.config.materialized == 'vault_insert_by_rank' %}
+    {%- elif model.config.materialized == 'vault_insert_by_rank' %}
         AND __RANK_FILTER__
-    {% endif %}
+    {%- endif %}
 ),
 
 {% if dbtvault.is_any_incremental() %}
@@ -107,8 +107,8 @@ satellite_insert AS (
 records_to_insert AS (
     SELECT {% if not dbtvault.is_any_incremental() %} DISTINCT {% endif %} {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
-    {# Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
-    {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
+    {#- Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
+    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     INNER JOIN satellite_update
         ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
 

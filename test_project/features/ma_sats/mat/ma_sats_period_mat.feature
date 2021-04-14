@@ -192,7 +192,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
-# TODO: "timestamp_field" in insert "And I insert by period into the MULTI_ACTIVE_SATELLITE_TS ma_sat by day with date range: 1993-01-01 to 1993-01-01" step in insert_by_period_steps.py needs to allow for "LOAD_DATETIME" as well
+# TODO: "timestamp_field" in the "And I insert by period into the MULTI_ACTIVE_SATELLITE_TS ma_sat by day with date range: 1993-01-01 to 1993-01-01" step in insert_by_period_steps.py needs to allow for "LOAD_DATETIME" as well
 #  @fixture.multi_active_satellite_cycle
 #  Scenario: [SAT-RANK-MAT-BASE-CYCLE-TS] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
 #    Given the RAW_STAGE_TS stage is empty
