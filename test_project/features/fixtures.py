@@ -795,27 +795,12 @@ def multi_active_satellite(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
-        "STG_CUSTOMER_TWO_CDK": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
-        },
         "STG_CUSTOMER_TS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
-        "STG_CUSTOMER_TWO_CDK_TS": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
-        },
         "STG_CUSTOMER_NO_CDK_HASHDIFF": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME"]}
-        },
-        "STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_NAME"]}
@@ -824,6 +809,21 @@ def multi_active_satellite(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_TWO_CDK": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
+        },
+        "STG_CUSTOMER_TWO_CDK_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
+        },
+        "STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME"]}
         },
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -836,22 +836,22 @@ def multi_active_satellite(context):
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_TWO_CDK": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        },
         "STG_CUSTOMER_TS": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME"
-        },
-        "STG_CUSTOMER_TWO_CDK_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME"
         },
         "STG_CUSTOMER_NO_CDK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF": {
+        "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
-        "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
+        "STG_CUSTOMER_TWO_CDK": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_TWO_CDK_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
+        },
+        "STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
@@ -869,27 +869,9 @@ def multi_active_satellite(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "src_pk": "CUSTOMER_PK",
-            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
-            "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": "HASHDIFF",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE"],
-            "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": "HASHDIFF",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "src_pk": "CUSTOMER_PK",
-            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
@@ -905,7 +887,16 @@ def multi_active_satellite(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
             "src_payload": ["CUSTOMER_NAME"],
@@ -914,9 +905,18 @@ def multi_active_satellite(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
             "src_pk": "CUSTOMER_PK",
-            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
@@ -944,6 +944,15 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_TS": {
+            "+column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "RAW_STAGE_TWO_CDK": {
             "+column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
@@ -951,15 +960,6 @@ def multi_active_satellite(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMBER(38, 0)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "RAW_STAGE_TS": {
-            "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -984,35 +984,11 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
@@ -1030,7 +1006,18 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -1042,11 +1029,24 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMBER(38, 0)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMBER(38, 0)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -1081,6 +1081,21 @@ def multi_active_satellite_cycle(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
+        "STG_CUSTOMER_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_NO_CDK_HASHDIFF": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_NAME"]}
+        },
         "STG_CUSTOMER_TWO_CDK": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
@@ -1091,20 +1106,10 @@ def multi_active_satellite_cycle(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
         },
-        "STG_CUSTOMER_NO_CDK_HASHDIFF": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_NAME"]}
-        },
         "STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_NAME"]}
-        },
-        "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
         },
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -1117,19 +1122,22 @@ def multi_active_satellite_cycle(context):
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
+        "STG_CUSTOMER_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
+        },
+        "STG_CUSTOMER_NO_CDK_HASHDIFF": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
         "STG_CUSTOMER_TWO_CDK": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TWO_CDK_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME"
         },
-        "STG_CUSTOMER_NO_CDK_HASHDIFF": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        },
         "STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        },
-        "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
@@ -1144,6 +1152,14 @@ def multi_active_satellite_cycle(context):
              "CUSTOMER_PHONE",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
              "SOURCE"],
 
         "RAW_STAGE_TWO_CDK":
@@ -1175,6 +1191,33 @@ def multi_active_satellite_cycle(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "MULTI_ACTIVE_SATELLITE_TS": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
@@ -1193,27 +1236,9 @@ def multi_active_satellite_cycle(context):
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
-        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "src_pk": "CUSTOMER_PK",
-            "src_cdk": ["CUSTOMER_PHONE"],
-            "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": "HASHDIFF",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
-            "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": "HASHDIFF",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "src_pk": "CUSTOMER_PK",
-            "src_cdk": ["CUSTOMER_PHONE"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
@@ -1239,6 +1264,16 @@ def multi_active_satellite_cycle(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "+column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1275,6 +1310,39 @@ def multi_active_satellite_cycle(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "MULTI_ACTIVE_SATELLITE_TS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -1299,34 +1367,12 @@ def multi_active_satellite_cycle(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
