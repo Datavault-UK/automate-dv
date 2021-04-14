@@ -395,7 +395,7 @@ def satellite(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
-        "STG_CUSTOMER_G": {
+        "STG_CUSTOMER_NO_PK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
@@ -409,7 +409,7 @@ def satellite(context):
         "STG_CUSTOMER_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME"
         },
-        "STG_CUSTOMER_G": {
+        "STG_CUSTOMER_NO_PK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
@@ -493,11 +493,19 @@ def satellite_cycle(context):
              "HASHDIFF": {"is_hashdiff": True,
                           "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
                           }
-             }
+             },
+        "STG_CUSTOMER_NO_PK_HASHDIFF": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_NAME", "CUSTOMER_DOB"]}
+            }
     }
 
     context.derived_columns = {
         "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_NO_PK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
