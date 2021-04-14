@@ -17,18 +17,18 @@
     {%- if condition in ['<>', '!=', '='] -%}
         {%- for col in columns -%}
             {%- if prefix -%}
-            {{ dbtvault.prefix([col], prefix[0], alias_target='target') }} {{ condition }} {{ dbtvault.prefix([col], prefix[1]) }}
+                {{- dbtvault.prefix([col], prefix[0], alias_target='target') }} {{ condition }} {{ dbtvault.prefix([col], prefix[1]) -}}
             {%- endif %}
             {%- if not loop.last %} {{ operator }} {% endif %}
         {% endfor -%}
     {%- else -%}
         {%- if dbtvault.is_list(columns) -%}
             {%- for col in columns -%}
-                {{ dbtvault.prefix([col], prefix[0]) }}
+                {{ (prefix[0] ~ '.') if prefix }}{{ col }} {{ condition if condition else '' }}
                 {%- if not loop.last -%} {{ "\n    " ~ operator }} {% endif -%}
             {%- endfor -%}
         {%- else -%}
-            {{ dbtvault.prefix([columns], prefix[0]) }}
+            {{ prefix[0] ~ '.' if prefix }}{{ columns }} {{ condition if condition else '' }}
         {%- endif -%}
     {%- endif -%}
 
