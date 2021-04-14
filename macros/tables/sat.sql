@@ -39,19 +39,20 @@ WITH source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-latest_records AS (
+update_records AS (
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
+    FROM {{ this }} as a
+    JOIN source_data as b
+    ON a.{{ src_pk }} = b.{{ src_pk }}
+),
 
-    SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
-           RANK() OVER (
-               PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
-               ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
-           ) AS rank
-    FROM {{ this }} AS current_records
-    INNER JOIN (
-        SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}
-        FROM source_data
-    ) AS source_records
-    ON {{ dbtvault.prefix([src_pk], 'current_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
+latest_records AS (
+    SELECT {{ dbtvault.prefix(rank_cols, 'target', alias_target='target') }},
+    RANK() OVER (
+            PARTITION BY {{ dbtvault.prefix([src_pk], 'target') }}
+            ORDER BY {{ dbtvault.prefix([src_ldts], 'target') }} DESC
+        ) AS rank
+    FROM update_records AS target
     QUALIFY rank = 1
 ),
 {%- endif %}
