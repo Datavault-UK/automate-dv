@@ -59,7 +59,7 @@ latest_records AS (
             FROM source_data AS source_pks) AS source_records
                 ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
         QUALIFY rank_value = 1
-    ) AS latest_selection
+        ) AS latest_selection
 ),
 
 {# Select PKs and hashdiff counts for matching stage and sat records #}
@@ -86,8 +86,11 @@ satellite_update AS (
         ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
     LEFT OUTER JOIN matching_records
         ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
-    WHERE stage.source_count != latest_records.target_count
-        OR COALESCE(matching_records.match_count, 0) != latest_records.target_count
+    WHERE (stage.source_count != latest_records.target_count
+        OR COALESCE(matching_records.match_count, 0) != latest_records.target_count)
+    {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
+        AND {{ dbtvault.prefix([src_ldts], 'stage') }} >= {{ dbtvault.prefix([src_ldts], 'latest_records') }}
+    {%- endif %}
 ),
 
 {# Select stage records with PKs that do not exist in sat #}
