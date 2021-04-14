@@ -47,7 +47,7 @@ latest_records AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
            ) AS rank
     FROM {{ this }} AS current_records
-    INNER JOIN (
+    JOIN (
         SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}
         FROM source_data
     ) AS source_records
