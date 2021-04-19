@@ -39,13 +39,6 @@ WITH source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-update_records AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
-    FROM {{ this }} as a
-    JOIN source_data as b
-    ON a.{{ src_pk }} = b.{{ src_pk }}
-),
-
 latest_records AS (
 
     SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
