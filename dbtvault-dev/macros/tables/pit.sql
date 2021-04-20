@@ -50,7 +50,7 @@ WITH as_of AS (
         {%- filter indent(width=8) -%}
         {%- for stg in stage_tables -%}
             {%- set stage_ldts =(stage_tables[stg])  -%}
-            {{ "SELECT MAX("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
+            {{ "SELECT MIN("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
             {{ 'UNION ALL' if not loop.last }}
         {% endfor -%}
         {%- endfilter -%}
@@ -131,9 +131,9 @@ WITH as_of AS (
                 {% set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
                 {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0]  -%}
                 {{- "\n" -}}
-                {{ 'CAST( '"'"~ghost_pk~"'"' AS BINARY) AS '~ sat ~'_'~ sat_key ~','  }}
+                {{ "'"~ghost_pk~"'"'::BINARY(16) AS '~ sat ~'_'~ sat_key ~','  }}
                 {{- "\n" -}}
-                {{ 'TO_TIMESTAMP( '"'"~ghost_date~"'"') AS '~ sat ~'_'~ sat_ldts  }}
+                {{ "'"~ghost_date~"'"'::TIMESTAMP_NTZ AS '~ sat ~'_'~ sat_ldts  }}
                 {{- ',' if not loop.last -}}
                 {% endfilter %}
             {%- endfor %}S
@@ -179,9 +179,9 @@ new_rows AS (
             {% set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
             {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0]  -%}
             {{- "\n" -}}
-            {{ 'COALESCE(MAX('~ sat ~'_SRC.'~ satellites[sat]['pk'][sat_key]~'), CAST( '"'"~ghost_pk~"'"' AS BINARY)) AS '~ sat ~'_'~ sat_key ~','  }}
+            {{ 'COALESCE(MAX('~ sat ~'_SRC.'~ satellites[sat]['pk'][sat_key]~'), '"'"~ghost_pk~"'"'::BINARY(16)) AS '~ sat ~'_'~ sat_key ~','  }}
             {{- "\n" -}}
-            {{ 'COALESCE(MAX('~ sat ~'_SRC.'~ satellites[sat]['ldts'][sat_ldts]~'), TO_TIMESTAMP( '"'"~ghost_date~"'"')) AS '~ sat ~'_'~ sat_ldts  }}
+            {{ 'COALESCE(MAX('~ sat ~'_SRC.'~ satellites[sat]['ldts'][sat_ldts]~'), '"'"~ghost_date~"'"'::TIMESTAMP_NTZ) AS '~ sat ~'_'~ sat_ldts  }}
             {{- ',' if not loop.last -}}
             {% endfilter %}
         {%- endfor %}
