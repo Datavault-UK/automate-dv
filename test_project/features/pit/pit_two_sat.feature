@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: pit
+Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two satellites
 
 #todo: write a pit_two_sat fixture
 
