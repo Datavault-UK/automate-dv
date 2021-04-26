@@ -1,11 +1,11 @@
-{%- macro bridge(source_model, src_pk, links, eff_sats, as_of_dates_table) -%}
+{%- macro bridge(src_pk, as_of_dates_table, links_and_eff_sats, source_model) -%}
 
     {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
-                                                                                  links=links, eff_sats=eff_sats,
+                                                                                  links_and_eff_sats=links_and_eff_sats,
                                                                                   as_of_dates_table=as_of_dates_table) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(source_model, src_pk, links, eff_sats, as_of_dates_table) -%}
+{%- macro default__bridge(src_pk, as_of_dates_table, links_and_eff_sats, source_model) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
