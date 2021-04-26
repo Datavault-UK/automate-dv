@@ -739,7 +739,7 @@ def bridge(context):
         "BRIDGE_CUSTOMER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
-            "as_of_date_table": "AS_OF_DATE",
+            "as_of_dates_table": "AS_OF_DATE",
             "links_and_eff_sats":
                 {
                     "CUSTOMER_ORDER": {
