@@ -740,46 +740,23 @@ def bridge(context):
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
             "as_of_date_table": "AS_OF_DATE",
-            "links":
+            "links_and_eff_sats":
                 {
-                    "LINK_CUSTOMER_ORDER": {
+                    "CUSTOMER_ORDER": {
                         "pk":
-                            {"PK": "CUSTOMER_ORDER_PK"},
+                            {"PK": "LINK_CUSTOMER_ORDER_PK"},
+                        "end_date":
+                            {"ENDDATE": "EFF_SAT_CUSTOMER_ORDER_ENDDATE"}
                     },
-                    "LINK_ORDER_PRODUCT": {
+                    "ORDER_PRODUCT": {
                         "pk":
-                            {"PK": "ORDER_PRODUCT_PK"}
-                    }
-                },
-            "eff_sats":
-                {
-                    "EFF_SAT_CUSTOMER_ORDER": {
+                            {"PK": "LINK_ORDER_PRODUCT_PK"},
                         "end_date":
-                            {"ENDDATE": "END_DATE"}
-                    },
-                    "EFF_SAT_ORDER_PRODUCT": {
-                        "end_date":
-                            {"ENDDATE": "END_DATE"}
+                            {"ENDDATE": "EFF_SAT_ORDER_PRODUCT_ENDDATE"}
                     }
                 }
-            #     "links_and_eff_sats":
-            #         {
-            #             "CUSTOMER_ORDER": {
-            #                 "pk":
-            #                     {"PK": "CUSTOMER_ORDER_PK"},
-            #                 "end_date":
-            #                     {"ENDDATE": "END_DATE"}
-            #             },
-            #             "ORDER_PRODUCT": {
-            #                 "pk":
-            #                     {"PK": "ORDER_PRODUCT_PK"},
-            #                 "end_date":
-            #                     {"ENDDATE": "END_DATE"}
-            #             }
-            #         }
-            # }
         }
-    }
+   }
 
     context.stage_columns = {
         "RAW_CUSTOMER_ORDER_PRODUCT":

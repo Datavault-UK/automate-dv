@@ -8,6 +8,7 @@ Feature: Bridge
       | HUB          | LINK                | EFF_SAT                | BRIDGE          |
       | HUB_CUSTOMER | LINK_ORDER_PRODUCT  | EFF_SAT_ORDER_PRODUCT  | BRIDGE_CUSTOMER |
       |              | LINK_CUSTOMER_ORDER | EFF_SAT_CUSTOMER_ORDER |                 |
+# TODO The next step fails ""LINK_CUSTOMER_ORDER_PK" does not match the name of any column in this table. in macro materialization_seed_default (macros/materializations/seed/seed.sql) called by seed bridge_customer_seed (data/temp/bridge_customer_seed.csv)"
     And the RAW_CUSTOMER_ORDER_PRODUCT table contains data
       | CUSTOMER_ID | ORDER_ID | PRODUCT_ID | LOAD_DATE                  | SOURCE |
       | 1001        | 100      | AAA        | 2018-06-01 00:00:00.000000 | *      |

@@ -775,10 +775,8 @@ class DBTVAULTGenerator:
 
                 elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
 
-                    if item == 'links':
-                        link_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
-                    elif item == 'eff_sats':
-                        eff_satellite_columns_end_date = [f"{col}_{list(item[col]['end_date'].keys())[0]}" for col in item.keys()]
+                    link_columns_hk = [item[col]['pk']['PK'] for col in item.keys()]
+                    eff_satellite_columns_end_date = [item[col]['end_date']['ENDDATE'] for col in item.keys()]
 
                     processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
 
