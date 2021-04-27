@@ -1098,6 +1098,7 @@ def pit(context):
 
 
 @fixture
+@fixture
 def pit_one_sat(context):
     """
     Define the structures and metadata to perform PIT load
@@ -1111,22 +1112,39 @@ def pit_one_sat(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
                          }
+        },
+        "STG_CUSTOMER_DETAILS_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
+                         }
         }
     }
 
     context.derived_columns = {
         "STG_CUSTOMER_DETAILS": {
             "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_DETAILS_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
         }
     }
 
     context.vault_structure_columns = {
         "HUB_CUSTOMER": {
             "source_model": ["STG_CUSTOMER_DETAILS",
-            ],
+                             ],
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_CUSTOMER_TS": {
+            "source_model": ["STG_CUSTOMER_DETAILS_TS",
+                             ],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "SAT_CUSTOMER_DETAILS": {
@@ -1136,6 +1154,15 @@ def pit_one_sat(context):
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "source_model": "STG_CUSTOMER_DETAILS_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "PIT_CUSTOMER": {
@@ -1156,6 +1183,25 @@ def pit_one_sat(context):
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                 },
             "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_TS": {
+            "source_model": "HUB_CUSTOMER_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE_TS",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+                },
+            "src_ldts": "LOAD_DATETIME"
         }
     }
 
@@ -1166,6 +1212,13 @@ def pit_one_sat(context):
              "CUSTOMER_ADDRESS",
              "CUSTOMER_DOB",
              "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_DETAILS_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATETIME",
              "SOURCE"]
     }
 
@@ -1176,7 +1229,17 @@ def pit_one_sat(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_DETAILS_TS": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1184,11 +1247,31 @@ def pit_one_sat(context):
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_CUSTOMER_TS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
         "SAT_CUSTOMER_DETAILS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
@@ -1202,15 +1285,375 @@ def pit_one_sat(context):
         },
         "AS_OF_DATE": {
             "+column_types": {
+                "AS_OF_DATE": "DATE"
+            }
+        },
+        "AS_OF_DATE_TS": {
+            "+column_types": {
                 "AS_OF_DATE": "DATETIME"
             }
         },
         "PIT_CUSTOMER": {
             "+column_types": {
+                "AS_OF_DATE": "DATE",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+            }
+        },
+        "PIT_CUSTOMER_TS": {
+            "+column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_LG": {
+            "+column_types": {
+                "AS_OF_DATE": "DATE",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+            }
+        },
+        "PIT_CUSTOMER_HG": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+            }
+        }
+    }
+
+@fixture
+def pit_two_sats(context):
+    """
+    Define the structures and metadata to perform PIT load
+    """
+
+    context.vault_structure_type = "pit"
+
+    context.hashed_columns = {
+        "STG_CUSTOMER_DETAILS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
+                         }
+        },
+        "STG_CUSTOMER_DETAILS_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
+                         }
+        },
+        "STG_CUSTOMER_LOGIN": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["DEVICE_USED", "LAST_LOGIN_DATE"]
+                         }
+        },
+        "STG_CUSTOMER_LOGIN_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["DEVICE_USED", "LAST_LOGIN_DATE"]
+                         }
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER_DETAILS": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_DETAILS_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
+        },
+        "STG_CUSTOMER_LOGIN": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_LOGIN_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB_CUSTOMER": {
+            "source_model": ["STG_CUSTOMER_DETAILS",
+            ],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_CUSTOMER_TS": {
+            "source_model": ["STG_CUSTOMER_DETAILS_TS",
+            ],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_DETAILS": {
+            "source_model": "STG_CUSTOMER_DETAILS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "source_model": "STG_CUSTOMER_DETAILS_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_LOGIN": {
+            "source_model": "STG_CUSTOMER_LOGIN",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["LAST_LOGIN_DATE", "DEVICE_USED"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_LOGIN_TS": {
+            "source_model": "STG_CUSTOMER_LOGIN_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["LAST_LOGIN_DATE", "DEVICE_USED"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "PIT_CUSTOMER": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_LOGIN": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                    "STG_CUSTOMER_LOGIN": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_TS": {
+            "source_model": "HUB_CUSTOMER_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE_TS",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    },
+                    "SAT_CUSTOMER_LOGIN_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+                    "STG_CUSTOMER_LOGIN_TS": "LOAD_DATETIME",
+                },
+            "src_ldts": "LOAD_DATETIME"
+        }
+    }
+
+    context.stage_columns = {
+        "RAW_STAGE_DETAILS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_DETAILS_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATETIME",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN_TS":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATETIME",
+             "SOURCE"]
+    }
+
+    context.seed_config = {
+        "RAW_STAGE_DETAILS": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_DETAILS_TS": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_LOGIN": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "DEVICE_USED": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_LOGIN_TS": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "DEVICE_USED": "VARCHAR",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_CUSTOMER_TS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "DEVICE_USED": "VARCHAR",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN_TS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "DEVICE_USED": "VARCHAR",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "AS_OF_DATE": {
+            "+column_types": {
+                "AS_OF_DATE": "DATE"
+            }
+        },
+        "AS_OF_DATE_TS": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER": {
+            "+column_types": {
+                "AS_OF_DATE": "DATE",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+            }
+        },
+        "PIT_CUSTOMER_TS": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_LG": {
+            "+column_types": {
+                "AS_OF_DATE": "DATE",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+            }
+        },
+        "PIT_CUSTOMER_HG": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
             }
         }
     }

@@ -18,6 +18,7 @@ fixture_registry = {
     "fixture.t_link": t_link,
     "fixture.pit": pit,
     "fixture.pit_one_sat": pit_one_sat,
+    "fixture.pit_two_sats": pit_two_sats,
     "fixture.cycle": cycle,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
