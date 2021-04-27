@@ -726,7 +726,6 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
             :param config: Optional model config
         """
-
         template = f"""
         {{{{ config({config}) }}}}
         {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {links_and_eff_sats}, {source_model}) }}}}
@@ -775,8 +774,8 @@ class DBTVAULTGenerator:
 
                 elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
 
-                    link_columns_hk = [item[col]['pk']['PK'] for col in item.keys()]
-                    eff_satellite_columns_end_date = [item[col]['end_date']['ENDDATE'] for col in item.keys()]
+                    link_columns_hk = [item[col]['link_pk'] for col in item.keys()]
+                    eff_satellite_columns_end_date = [item[col]['eff_sat_end_date'] for col in item.keys()]
 
                     processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
 

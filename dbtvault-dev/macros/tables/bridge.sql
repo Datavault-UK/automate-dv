@@ -16,91 +16,87 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
-{#- Aquiring the source relation for the AS_OF table -#}
+{#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
     {%- set source_name = as_of_dates_table | first -%}
     {%- set source_table_name = as_of_dates_table[source_name] -%}
     {%- set source_relation = source(source_name, source_table_name) -%}
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
-    {%- set source_relation_AS_OF = ref(as_of_dates_table) -%}
+    {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
-{%- set ghost_pk = ('0000000000000000') -%}
+{%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1990-01-01 00:00:00.000000' %}
 
 WITH
     AS_OF_DATES_FOR_BRIDGE AS(
          SELECT
                a.AS_OF_DATE
-         FROM {{ source_relation_AS_OF }} AS a
+         FROM {{ source_relation }} AS a
          WHERE
                a.AS_OF_DATE <= CURRENT_DATE()
-          {#      AND #}
-          {#      a.AS_OF_DATE > #}
-          {#      (#}
-          {#      CASE#}
-          {#             WHEN (SELECT MAX(b.AS_OF_DATE) FROM "SANDBOX"."NORBERT_ACATRINEI"."BRIDGE" AS b) IS NULL#}
-          {#                    THEN TO_TIMESTAMP( '"'"~ghost_date~"'"')#}
-          {#             ELSE#}
-          {#                    (SELECT MAX(b."AS_OF_DATE") FROM "SANDBOX"."NORBERT_ACATRINEI"."BRIDGE" AS b)#}
-          {#      END#}
-          {#  )#}
     ),
 
 BRIDGE_WALK AS (
     SELECT
-        a.{{ src_pk }},
-        ,b."AS_OF_DATE"
-        {%- for index in range(len(links.keys())) -%}
+        a.{{ src_pk }}
+        ,b.AS_OF_DATE
+        {%- for index in links_and_eff_sats.keys() -%}
             {%- filter indent(width=8) -%}
-            {% set link_key = links[list(links.keys())[index]]['pk']['PK'] -%}
-            {% set eff_sat_end_date = eff_sats[list(eff_sats.keys())[index]]['end_date']['ENDDATE'] -%}
+            {% set link_table = links_and_eff_sats[index]['link_table'] -%}
+            {% set link_pk = links_and_eff_sats[index]['link_pk'] -%}
+            {% set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
+            {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
             {{- "\n" -}}
-            {{ ',COALESCE(MAX('~ list(links.keys())[index] ~'_SRC.'~ link_key~'), CAST( '"'"~ ghost_pk ~"'"' AS BINARY)) AS LINK_' ~ link_key  }}
-            {{ ',COALESCE(MAX('~ list(eff_sats.keys())[index] ~'_SRC.'~ eff_sat_end_date ~'), CAST( '"'"~ ghost_date ~"'"' AS BINARY)) AS '~ list(eff_sats.keys())[index] ~'_'~ eff_sat_end_date }}
-            {{- ',' if not loop.last -}}
+            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST( '"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ link_pk  }}
+            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST( '"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ eff_sat_end_date }}
             {% endfilter %}
         {%- endfor %}
 
     FROM {{ ref(source_model) }} AS a
     INNER JOIN AS_OF_DATES_FOR_BRIDGE AS b
         ON (1=1)
-
-    {% for index in range(len(links.keys())) -%}
+    {%  set ns = namespace(lastlink = '', last_link_fk = '') %}
+    {%- for index in links_and_eff_sats.keys() -%}
         {%- filter indent(width=8) -%}
-        {%- set current_link = list(links.keys())[index] -%}
-        {%- set current_eff_sat = list(eff_sats.keys())[index] -%}
-        {%- set link_key = links[list(links.keys())[index]]['pk']['PK'] -%}
-        {%- set eff_sat_end_date = eff_sats[list(eff_sats.keys())[index]]['end_date']['ENDDATE'] -%}
+        {%- set current_link = links_and_eff_sats[index]['link_table'] -%}
+        {%- set current_eff_sat = links_and_eff_sats[index]['eff_sat_table'] -%}
+        {%- set link_pk = links_and_eff_sats[index]['link_pk'] -%}
+        {%- set link_fk = links_and_eff_sats[index]['link_fk'] -%}
+        {%- set eff_sat_pk = links_and_eff_sats[index]['eff_sat_pk'] -%}
+        {%- set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
+        {%- set eff_sat_ldts = links_and_eff_sats[index]['eff_sat_ldts'] -%}
         {%- if loop.first  -%}
-        LEFT JOIN {{  ref(current_link) }} AS {{- current_link -}}_SRC
-            ON a.{{- src_pk }} = {{-  current_link -}}_SRC.{{ link_key }}
+        {{- "\n" -}}
+        LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
+            ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk }}
         {% else %}
-        LEFT JOIN {{  ref(current_link) }} AS {{- current_link -}}_SRC
--- {#                {% if previous_link_eff_sat.split('_')[-1] == link_and_eff_sat.split('_')[0]  %}#}
-            {% set common_hub = list(links.keys())[index-1].split('_')[-1] %}
-            ON {{- list(links.keys())[index-1] -}}_SRC.{{- common_hub -}}_FK = {{- current_link -}}_SRC.{{- common_hub -}}_FK
-        {%- endif -%}
-        INNER JOIN {{ ref(current_eff_sat) }} AS {{- current_eff_sat -}}_SRC
-            ON {{- current_eff_sat -}}_SRC.{{ link_key }} = {{-  current_link -}}_SRC.{{ link_key }}
-            AND {{- current_eff_sat -}}_SRC.LOAD_DATE <= b.AS_OF_DATE
-            {% endfilter %}
-
+        LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
+            ON {{ ns.last_link }}.{{ ns.last_link_fk }} = {{ current_link }}.{{ link_fk }}
+        {% endif %}
+        INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
+            ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
+            AND {{ current_eff_sat }}.{{ eff_sat_ldts }} <= b.AS_OF_DATE
+        {% set ns.last_link = current_link %}
+        {% set ns.last_link_fk = link_fk %}
+        {% endfilter %}
     {%- endfor %}
 
     GROUP BY
-        b."AS_OF_DATE", a."CUSTOMER_PK"
+        b.AS_OF_DATE, a.{{ src_pk }}
 
     ORDER BY 1,2)
 
 
-SELECT * FROM BRIDGE_WALK WHERE
-    {% for index in range(len(links.keys())) -%}
+SELECT * FROM BRIDGE_WALK
+    {% for index in links_and_eff_sats.keys() -%}
+        {{ 'WHERE' if loop.first }}
         {%- filter indent(width=8) -%}
-        {% set eff_sat_end_date = eff_sats[list(eff_sats.keys())[index]]['end_date']['ENDDATE'] -%}
-        {{ list(eff_sats.keys())[index] ~'_'~ eff_sat_end_date ~"='"~ maxdate ~"'" }}
-        {{- 'AND' if not loop.last -}}
+        {% set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
+        {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] %}
+        {{ eff_sat_table ~'.'~ eff_sat_end_date ~"='"~ maxdate ~"'" }}
+        {{ 'AND' if not loop.last }}
         {% endfilter %}
     {%- endfor %}
 
