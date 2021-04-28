@@ -50,7 +50,7 @@ BRIDGE_WALK AS (
             {% set bridge_end_date_col = links_and_eff_sats[index]['bridge_end_date_col'] -%}
             {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
             {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
-            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ bridge_end_date_col }}
+            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
         {% endfor -%}
 
     FROM {{ ref(source_model) }} AS a
@@ -88,9 +88,8 @@ BRIDGE_WALK AS (
 SELECT * FROM BRIDGE_WALK
     {% for index in links_and_eff_sats.keys() -%}
         {{ 'WHERE' ~ '\n' if loop.first }}
-        {%- set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
-        {%- set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
-        {{ eff_sat_table ~'.'~ eff_sat_end_date ~"='"~ maxdate ~"'" }}
+        {%- set bridge_end_date_col = links_and_eff_sats[index]['bridge_end_date_col'] -%}
+        {{ bridge_end_date_col ~"='"~ maxdate ~"'" }}
         {{ 'AND' if not loop.last }}
     {% endfor -%}
 

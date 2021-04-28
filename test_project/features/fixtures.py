@@ -754,8 +754,8 @@ def bridge(context):
                     "link_fk2": "ORDER_FK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
-                    "eff_sat_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
-                    "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_ldts": "LOAD_DATE"
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk_col": "LINK_ORDER_PRODUCT_PK",
@@ -766,8 +766,8 @@ def bridge(context):
                     "link_fk2": "PRODUCT_FK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
-                    "eff_sat_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
-                    "eff_sat_ldts": "EFF_SAT_ORDER_PRODUCT_LDTS"
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_ldts": "LOAD_DATE"
                 }
             }
         }
