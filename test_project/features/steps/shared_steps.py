@@ -216,18 +216,20 @@ def load_table(context, model_name, vault_structure):
 @step("I load the vault")
 def load_vault(context):
     models = {k: list(filter(None, DBTVAULTGenerator.flatten(v))) for k, v in context.vault_model_names.items()}
+    model_names = []
 
-    for vault_structure, models in models.items():
-        for model_name in models:
+    for vault_structure, model_list in models.items():
+        for model_name in model_list:
             metadata = {**context.vault_structure_columns[model_name]}
 
             context.vault_structure_metadata = metadata
 
             dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+            model_names.append(model_name)
 
     is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
 
-    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=models,
+    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=model_names,
                                                  full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs

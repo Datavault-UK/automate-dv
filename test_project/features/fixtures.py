@@ -673,8 +673,11 @@ def bridge(context):
 
     context.hashed_columns = {
         "STG_CUSTOMER_ORDER_PRODUCT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
             "CUSTOMER_FK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
             "ORDER_FK": "ORDER_ID",
+            "PRODUCT_PK": "PRODUCT_ID",
             "PRODUCT_FK": "PRODUCT_ID",
             "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
                                   "columns": ["CUSTOMER_ID", "ORDER_ID"]
