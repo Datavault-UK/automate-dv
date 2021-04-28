@@ -740,27 +740,26 @@ def bridge(context):
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
-            "links_and_eff_sats":
-                {
-                    "CUSTOMER_ORDER": {
-                        "link_table": "LINK_CUSTOMER_ORDER",
-                        "link_pk": "LINK_CUSTOMER_ORDER_PK",
-                        "link_fk": "LINK_CUSTOMER_ORDER_FK",
-                        "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
-                        "eff_sat_pk": "LINK_CUSTOMER_ORDER_PK",
-                        "eff_sat_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
-                        "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
-                    },
-                    "ORDER_PRODUCT": {
-                        "link_table": "LINK_ORDER_PRODUCT",
-                        "link_pk": "LINK_ORDER_PRODUCT_PK",
-                        "link_fk": "LINK_ORDER_PRODUCT_FK",
-                        "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
-                        "eff_sat_pk": "LINK_ORDER_PRODUCT_PK",
-                        "eff_sat_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
-                        "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
-                    }
+            "links_and_eff_sats": {
+                "CUSTOMER_ORDER": {
+                    "link_table": "LINK_CUSTOMER_ORDER",
+                    "link_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "link_fk": "LINK_CUSTOMER_ORDER_FK",
+                    "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
+                    "eff_sat_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "eff_sat_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
+                },
+                "ORDER_PRODUCT": {
+                    "link_table": "LINK_ORDER_PRODUCT",
+                    "link_pk": "LINK_ORDER_PRODUCT_PK",
+                    "link_fk": "LINK_ORDER_PRODUCT_FK",
+                    "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
+                    "eff_sat_pk": "LINK_ORDER_PRODUCT_PK",
+                    "eff_sat_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
+                    "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
                 }
+            }
         }
    }
 

@@ -32,7 +32,7 @@
 WITH
     AS_OF_DATES_FOR_BRIDGE AS (
          SELECT
-               a.AS_OF_DATE
+             a.AS_OF_DATE
          FROM {{ source_relation }} AS a
          WHERE
                a.AS_OF_DATE <= CURRENT_DATE()
@@ -47,8 +47,8 @@ BRIDGE_WALK AS (
             {% set link_pk = links_and_eff_sats[index]['link_pk'] -%}
             {% set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
             {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
-            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST( '"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ link_pk  }}
-            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST( '"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ eff_sat_end_date }}
+            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ link_pk }}
+            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ eff_sat_end_date }}
         {% endfor -%}
 
     FROM {{ ref(source_model) }} AS a
