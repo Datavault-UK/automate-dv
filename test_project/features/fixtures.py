@@ -691,7 +691,6 @@ def bridge(context):
     context.derived_columns = {
         "STG_CUSTOMER_ORDER_PRODUCT": {
             "EFFECTIVE_FROM": "LOAD_DATE",
-            "END_DATE": "LOAD_DATE",
             "START_DATE": "LOAD_DATE"
         }
     }
@@ -779,6 +778,7 @@ def bridge(context):
              "ORDER_ID",
              "PRODUCT_ID",
              "LOAD_DATE",
+             "END_DATE"
              "SOURCE"]
     }
 
@@ -789,6 +789,7 @@ def bridge(context):
                 "ORDER_ID": "VARCHAR",
                 "PRODUCT_ID": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },

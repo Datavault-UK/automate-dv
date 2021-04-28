@@ -9,11 +9,11 @@ Feature: Bridge
       | HUB_CUSTOMER | LINK_ORDER_PRODUCT  | EFF_SAT_ORDER_PRODUCT  | BRIDGE_CUSTOMER |
       |              | LINK_CUSTOMER_ORDER | EFF_SAT_CUSTOMER_ORDER |                 |
     And the RAW_CUSTOMER_ORDER_PRODUCT table contains data
-      | CUSTOMER_ID | ORDER_ID | PRODUCT_ID | LOAD_DATE                  | SOURCE |
-      | 1001        | 100      | AAA        | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | 200      | BBB        | 2018-06-01 00:00:00.000000 | *      |
-      | 1003        | 300      | CCC        | 2018-06-01 00:00:00.000000 | *      |
-      | 1004        | 400      | DDD        | 2018-06-01 00:00:00.000000 | *      |
+      | CUSTOMER_ID | ORDER_ID | PRODUCT_ID | LOAD_DATE                  | END_DATE                   | SOURCE |
+      | 1001        | 100      | AAA        | 2018-06-01 00:00:00.000000 | 9999-12-31 00:00:00.000000 | *      |
+      | 1002        | 200      | BBB        | 2018-06-01 00:00:00.000000 | 9999-12-31 00:00:00.000000 | *      |
+      | 1003        | 300      | CCC        | 2018-06-01 00:00:00.000000 | 9999-12-31 00:00:00.000000 | *      |
+      | 1004        | 400      | DDD        | 2018-06-01 00:00:00.000000 | 9999-12-31 00:00:00.000000 | *      |
     And I create the STG_CUSTOMER_ORDER_PRODUCT stage
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |

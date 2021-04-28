@@ -50,14 +50,13 @@ BRIDGE_WALK AS (
             {% set bridge_end_date_col = links_and_eff_sats[index]['bridge_end_date_col'] -%}
             {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
             {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
-            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
+            {{- ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
         {% endfor -%}
-
     FROM {{ ref(source_model) }} AS a
     INNER JOIN AS_OF_DATES_FOR_BRIDGE AS b
         ON (1=1)
-    {%  set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
-    {% for index in links_and_eff_sats.keys() -%}
+    {% set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
+    {%- for index in links_and_eff_sats.keys() -%}
         {%- set current_link = links_and_eff_sats[index]['link_table'] -%}
         {%- set current_eff_sat = links_and_eff_sats[index]['eff_sat_table'] -%}
         {%- set link_pk = links_and_eff_sats[index]['link_pk'] -%}
@@ -66,13 +65,13 @@ BRIDGE_WALK AS (
         {%- set eff_sat_pk = links_and_eff_sats[index]['eff_sat_pk'] -%}
         {%- set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
         {%- set eff_sat_ldts = links_and_eff_sats[index]['eff_sat_ldts'] -%}
-        {%- if loop.first  -%}
+        {%- if loop.first  %}
         LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
             ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk1 }}
-        {% else %}
+        {%- else %}
         LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
             ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link }}.{{ link_fk1 }}
-        {% endif %}
+        {%- endif %}
         INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
             ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
             AND {{ current_eff_sat }}.{{ eff_sat_ldts }} <= b.AS_OF_DATE
