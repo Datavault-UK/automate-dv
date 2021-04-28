@@ -691,6 +691,7 @@ def bridge(context):
     context.derived_columns = {
         "STG_CUSTOMER_ORDER_PRODUCT": {
             "EFFECTIVE_FROM": "LOAD_DATE",
+            "END_DATE": "LOAD_DATE",
             "START_DATE": "LOAD_DATE"
         }
     }
@@ -746,19 +747,19 @@ def bridge(context):
             "links_and_eff_sats": {
                 "CUSTOMER_ORDER": {
                     "link_table": "LINK_CUSTOMER_ORDER",
-                    "link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "link_fk": "LINK_CUSTOMER_ORDER_FK",
+                    "link_pk": "CUSTOMER_ORDER_PK",
+                    "link_fk": "CUSTOMER_FK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
-                    "eff_sat_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
                 },
                 "ORDER_PRODUCT": {
                     "link_table": "LINK_ORDER_PRODUCT",
-                    "link_pk": "LINK_ORDER_PRODUCT_PK",
-                    "link_fk": "LINK_ORDER_PRODUCT_FK",
+                    "link_pk": "ORDER_PRODUCT_PK",
+                    "link_fk": "ORDER_FK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
-                    "eff_sat_pk": "LINK_ORDER_PRODUCT_PK",
+                    "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
                 }

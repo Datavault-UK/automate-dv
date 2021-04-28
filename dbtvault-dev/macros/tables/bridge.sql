@@ -47,7 +47,7 @@ BRIDGE_WALK AS (
             {% set link_pk = links_and_eff_sats[index]['link_pk'] -%}
             {% set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
             {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
-            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ link_pk }}
+            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ 'LINK_' ~ link_pk }}
             {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ eff_sat_end_date }}
         {% endfor -%}
 
