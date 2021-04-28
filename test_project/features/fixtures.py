@@ -746,22 +746,28 @@ def bridge(context):
             "as_of_dates_table": "AS_OF_DATE",
             "links_and_eff_sats": {
                 "CUSTOMER_ORDER": {
+                    "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk": "CUSTOMER_FK",
+                    "link_fk1": "CUSTOMER_FK",
+                    "link_fk2": "ORDER_FK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
                 },
                 "ORDER_PRODUCT": {
+                    "bridge_link_pk_col": "LINK_ORDER_PRODUCT_PK",
+                    "bridge_end_date_col": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
-                    "link_fk": "ORDER_FK",
+                    "link_fk1": "ORDER_FK",
+                    "link_fk2": "PRODUCT_FK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
-                    "eff_sat_ldts": "EFF_SAT_CUSTOMER_ORDER_LDTS"
+                    "eff_sat_ldts": "EFF_SAT_ORDER_PRODUCT_LDTS"
                 }
             }
         }

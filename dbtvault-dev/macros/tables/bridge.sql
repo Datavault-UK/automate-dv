@@ -44,11 +44,13 @@ BRIDGE_WALK AS (
         ,b.AS_OF_DATE
         {% for index in links_and_eff_sats.keys() -%}
             {% set link_table = links_and_eff_sats[index]['link_table'] -%}
+            {% set bridge_link_pk_col = links_and_eff_sats[index]['bridge_link_pk_col'] -%}
             {% set link_pk = links_and_eff_sats[index]['link_pk'] -%}
             {% set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
+            {% set bridge_end_date_col = links_and_eff_sats[index]['bridge_end_date_col'] -%}
             {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
-            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ 'LINK_' ~ link_pk }}
-            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ eff_sat_end_date }}
+            {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
+            {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ ghost_date ~"'"' AS BINARY(16))) AS '~ bridge_end_date_col }}
         {% endfor -%}
 
     FROM {{ ref(source_model) }} AS a
@@ -59,22 +61,23 @@ BRIDGE_WALK AS (
         {%- set current_link = links_and_eff_sats[index]['link_table'] -%}
         {%- set current_eff_sat = links_and_eff_sats[index]['eff_sat_table'] -%}
         {%- set link_pk = links_and_eff_sats[index]['link_pk'] -%}
-        {%- set link_fk = links_and_eff_sats[index]['link_fk'] -%}
+        {%- set link_fk1 = links_and_eff_sats[index]['link_fk1'] -%}
+        {%- set link_fk2 = links_and_eff_sats[index]['link_fk2'] -%}
         {%- set eff_sat_pk = links_and_eff_sats[index]['eff_sat_pk'] -%}
         {%- set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
         {%- set eff_sat_ldts = links_and_eff_sats[index]['eff_sat_ldts'] -%}
         {%- if loop.first  -%}
         LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
-            ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk }}
+            ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk1 }}
         {% else %}
         LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
-            ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk }} = {{ current_link }}.{{ link_fk }}
+            ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link }}.{{ link_fk1 }}
         {% endif %}
         INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
             ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
             AND {{ current_eff_sat }}.{{ eff_sat_ldts }} <= b.AS_OF_DATE
         {%- set loop_vars.last_link = current_link -%}
-        {%- set loop_vars.last_link_fk = link_fk -%}
+        {%- set loop_vars.last_link_fk2 = link_fk2 -%}
     {% endfor %}
 
     GROUP BY
