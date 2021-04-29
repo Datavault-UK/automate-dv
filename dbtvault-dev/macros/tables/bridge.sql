@@ -1,11 +1,11 @@
-{%- macro bridge(src_pk, as_of_dates_table, links_and_eff_sats, source_model) -%}
+{%- macro bridge(src_pk, as_of_dates_table, bridge_walk, source_model) -%}
 
     {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
-                                                                                  links_and_eff_sats=links_and_eff_sats,
+                                                                                  bridge_walk=bridge_walk,
                                                                                   as_of_dates_table=as_of_dates_table) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(src_pk, as_of_dates_table, links_and_eff_sats, source_model) -%}
+{%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, source_model) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -42,13 +42,13 @@ BRIDGE_WALK AS (
     SELECT
         a.{{ src_pk }}
         ,b.AS_OF_DATE
-        {% for index in links_and_eff_sats.keys() -%}
-            {% set link_table = links_and_eff_sats[index]['link_table'] -%}
-            {% set bridge_link_pk_col = links_and_eff_sats[index]['bridge_link_pk_col'] -%}
-            {% set link_pk = links_and_eff_sats[index]['link_pk'] -%}
-            {% set eff_sat_table = links_and_eff_sats[index]['eff_sat_table'] -%}
-            {% set bridge_end_date_col = links_and_eff_sats[index]['bridge_end_date_col'] -%}
-            {% set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
+        {% for bridge_step in bridge_walk.keys() -%}
+            {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
+            {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
+            {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
+            {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
+            {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
+            {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
             {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
             {{- ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ maxdate ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
         {% endfor -%}
@@ -56,15 +56,15 @@ BRIDGE_WALK AS (
     INNER JOIN AS_OF_DATES_FOR_BRIDGE AS b
         ON (1=1)
     {% set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
-    {%- for index in links_and_eff_sats.keys() -%}
-        {%- set current_link = links_and_eff_sats[index]['link_table'] -%}
-        {%- set current_eff_sat = links_and_eff_sats[index]['eff_sat_table'] -%}
-        {%- set link_pk = links_and_eff_sats[index]['link_pk'] -%}
-        {%- set link_fk1 = links_and_eff_sats[index]['link_fk1'] -%}
-        {%- set link_fk2 = links_and_eff_sats[index]['link_fk2'] -%}
-        {%- set eff_sat_pk = links_and_eff_sats[index]['eff_sat_pk'] -%}
-        {%- set eff_sat_end_date = links_and_eff_sats[index]['eff_sat_end_date'] -%}
-        {%- set eff_sat_ldts = links_and_eff_sats[index]['eff_sat_ldts'] -%}
+    {%- for bridge_step in bridge_walk.keys() -%}
+        {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
+        {%- set current_eff_sat = bridge_walk[bridge_step]['eff_sat_table'] -%}
+        {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
+        {%- set link_fk1 = bridge_walk[bridge_step]['link_fk1'] -%}
+        {%- set link_fk2 = bridge_walk[bridge_step]['link_fk2'] -%}
+        {%- set eff_sat_pk = bridge_walk[bridge_step]['eff_sat_pk'] -%}
+        {%- set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
+        {%- set eff_sat_ldts = bridge_walk[bridge_step]['eff_sat_ldts'] -%}
         {%- if loop.first  %}
         LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
             ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk1 }}
@@ -85,9 +85,9 @@ BRIDGE_WALK AS (
     ORDER BY 1,2)
 
 SELECT * FROM BRIDGE_WALK
-    {% for index in links_and_eff_sats.keys() -%}
+    {% for bridge_step in bridge_walk.keys() -%}
         {{ 'WHERE' ~ '\n' if loop.first }}
-        {%- set bridge_end_date_col = links_and_eff_sats[index]['bridge_end_date_col'] -%}
+        {%- set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
         {{ bridge_end_date_col ~"='"~ maxdate ~"'" }}
         {{ 'AND' if not loop.last }}
     {% endfor -%}

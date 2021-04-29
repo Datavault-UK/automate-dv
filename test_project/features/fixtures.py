@@ -743,7 +743,7 @@ def bridge(context):
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
-            "links_and_eff_sats": {
+            "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
                     "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
