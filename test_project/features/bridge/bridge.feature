@@ -18,8 +18,6 @@ Feature: Bridge
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2018-06-01 00:00:00.000000 |
-    And the BRIDGE_CUSTOMER table is created and populated with data
-      | CUSTOMER_PK | AS_OF_DATE | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE | LINK_ORDER_PRODUCT_PK | EFF_SAT_ORDER_PRODUCT_ENDDATE |
     When I load the vault
     Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
@@ -76,8 +74,6 @@ Feature: Bridge
       | AS_OF_DATE                 |
       | 2018-05-30 00:00:00.000000 |
       | 2018-05-31 00:00:00.000000 |
-    And the BRIDGE_CUSTOMER table is created and populated with data
-      | CUSTOMER_PK | AS_OF_DATE | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE | LINK_ORDER_PRODUCT_PK | EFF_SAT_ORDER_PRODUCT_ENDDATE |
     When I load the vault
     Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
@@ -131,8 +127,6 @@ Feature: Bridge
       | AS_OF_DATE                 |
       | 2018-06-01 00:00:00.000000 |
       | 2018-06-02 00:00:00.000000 |
-    And the BRIDGE_CUSTOMER table is created and populated with data
-      | CUSTOMER_PK | AS_OF_DATE | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE | LINK_ORDER_PRODUCT_PK | EFF_SAT_ORDER_PRODUCT_ENDDATE |
     When I load the vault
     Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |

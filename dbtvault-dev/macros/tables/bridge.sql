@@ -34,6 +34,7 @@ WITH AS_OF_DATES_FOR_BRIDGE AS (
          a.AS_OF_DATE
      FROM {{ source_relation }} AS a
      WHERE a.AS_OF_DATE <= CURRENT_DATE()
+     {% if not load_relation(this) is none %}
      AND
          a.AS_OF_DATE >
          (
@@ -43,7 +44,8 @@ WITH AS_OF_DATES_FOR_BRIDGE AS (
              ELSE
                  (SELECT MAX(AS_OF_DATE) FROM {{ this }})
          END
-    )
+         )
+     {% endif %}
 ),
 
 BRIDGE_WALK AS (
