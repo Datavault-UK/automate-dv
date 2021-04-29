@@ -30,11 +30,10 @@
 {%- set ghost_date = '1990-01-01 00:00:00.000000' %}
 
 WITH AS_OF_DATES_FOR_BRIDGE AS (
-     SELECT
-         a.AS_OF_DATE
+     SELECT a.AS_OF_DATE
      FROM {{ source_relation }} AS a
      WHERE a.AS_OF_DATE <= CURRENT_DATE()
-     {% if load_relation(this) %}
+     {%- if load_relation(this) -%}
      AND
          a.AS_OF_DATE >
          (
@@ -45,23 +44,27 @@ WITH AS_OF_DATES_FOR_BRIDGE AS (
                  (SELECT MAX(AS_OF_DATE) FROM {{ this }})
          END
          )
-     {% endif %}
+     {%- endif %}
 ),
 
 BRIDGE_WALK AS (
     SELECT
         a.{{ src_pk }}
         ,b.AS_OF_DATE
-        {% for bridge_step in bridge_walk.keys() -%}
+        {%- for bridge_step in bridge_walk.keys() -%}
             {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
             {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
             {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
             {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
             {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
             {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
+            {%- filter indent(width=8) -%}
+            {{- "\n" -}}
             {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
+            {{- "\n" -}}
             {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ maxdate ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
-        {% endfor -%}
+            {%- endfilter -%}
+        {% endfor %}
     FROM {{ ref(source_model) }} AS a
     INNER JOIN AS_OF_DATES_FOR_BRIDGE AS b
         ON (1=1)
