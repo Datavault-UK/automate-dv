@@ -892,10 +892,8 @@ class DBTVAULTGenerator:
         if ignore_columns is None:
             ignore_columns = []
 
-        extracted_compare_columns = [k for k, v in columns_to_compare.items()]
-
         columns_to_compare = list(
-            [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
+            [c for c in columns_to_compare if c not in ignore_columns])
 
         test_yaml = {
             "models": [{

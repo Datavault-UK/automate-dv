@@ -110,7 +110,7 @@ Feature: Bridge
       | md5('300\|\|CCC') | md5('300') | md5('CCC') | 2018-06-01 00:00:00.000000 | 9999-12-31 23:59:59.999999 | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('400\|\|DDD') | md5('400') | md5('DDD') | 2018-06-01 00:00:00.000000 | 9999-12-31 23:59:59.999999 | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
     Then the BRIDGE_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE                 | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE | LINK_ORDER_PRODUCT_PK | EFF_SAT_ORDER_PRODUCT_ENDDATE |
+      | CUSTOMER_PK | AS_OF_DATE | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE | LINK_ORDER_PRODUCT_PK | EFF_SAT_ORDER_PRODUCT_ENDDATE |
 
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table with AS_OF dates in the future and multiple loads in the stage

@@ -329,9 +329,8 @@ def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                            model_name=f"{model_name}_expected")
 
-    columns_to_compare = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="records")[0]
-    compare_column_list = [k for k, v in columns_to_compare.items()]
-    unique_id = compare_column_list[0]
+    columns_to_compare = context.table.headings
+    unique_id = columns_to_compare[0]
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv_name,
@@ -341,7 +340,7 @@ def expect_data(context, model_name):
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
     dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
-                                       include_columns=compare_column_list,
+                                       include_columns=columns_to_compare,
                                        seed_config=context.seed_config[model_name])
 
     context.dbt_test_utils.run_dbt_seed(expected_output_csv_name)
