@@ -34,6 +34,16 @@ WITH AS_OF_DATES_FOR_BRIDGE AS (
          a.AS_OF_DATE
      FROM {{ source_relation }} AS a
      WHERE a.AS_OF_DATE <= CURRENT_DATE()
+     AND
+         a.AS_OF_DATE >
+         (
+         CASE
+             WHEN (SELECT MAX(AS_OF_DATE) FROM {{ this }}) IS NULL
+                 THEN {{ 'CAST('"'"~ ghost_date ~"'"' AS TIMESTAMP_NTZ)' }}
+             ELSE
+                 (SELECT MAX(AS_OF_DATE) FROM {{ this }})
+         END
+    )
 ),
 
 BRIDGE_WALK AS (
