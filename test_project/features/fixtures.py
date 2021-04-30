@@ -1098,7 +1098,6 @@ def pit(context):
 
 
 @fixture
-@fixture
 def pit_one_sat(context):
     """
     Define the structures and metadata to perform PIT load
