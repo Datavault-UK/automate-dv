@@ -769,6 +769,25 @@ def bridge(context):
                     "eff_sat_ldts": "LOAD_DATE"
                 }
             }
+        },
+        "BRIDGE_CUSTOMER_ORDER": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "bridge_walk": {
+                "CUSTOMER_ORDER": {
+                    "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "link_table": "LINK_CUSTOMER_ORDER",
+                    "link_pk": "CUSTOMER_ORDER_PK",
+                    "link_fk1": "CUSTOMER_FK",
+                    "link_fk2": "ORDER_FK",
+                    "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
+                    "eff_sat_pk": "CUSTOMER_ORDER_PK",
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_ldts": "LOAD_DATE"
+                }
+            }
         }
    }
 
@@ -856,6 +875,14 @@ def bridge(context):
                 "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
                 "EFF_SAT_ORDER_PRODUCT_ENDDATE": "DATETIME"
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME"
             }
         }
     }
