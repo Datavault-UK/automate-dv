@@ -24,7 +24,7 @@
     {%- set source_table_name = as_of_dates_table[source_name] -%}
     {%- set source_relation = source(source_name, source_table_name) -%}
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
-    {%- set source_relation_AS_OF = ref(as_of_dates_table) -%}
+    {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
 {# Setting Ghost values to replace NULLS #}
@@ -40,7 +40,7 @@
 
 
 WITH as_of AS (
-    SELECT * FROM {{ source_relation_AS_OF}}
+    SELECT * FROM {{ source_relation}}
 ),
 
 {% if dbtvault.is_any_incremental() -%}
