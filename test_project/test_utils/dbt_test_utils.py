@@ -724,9 +724,11 @@ class DBTVAULTGenerator:
             :param satellites: Dictionary of satellite reference mappings
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: depends on string if provided
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites},{stage_tables},{src_ldts}, {source_model}) }}}}
         """

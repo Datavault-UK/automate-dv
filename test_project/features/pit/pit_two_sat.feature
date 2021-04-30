@@ -6,13 +6,13 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
 # todo: Add cycles tests
 # todo: Discuss with Neil the situation of the date/time format (of AS OF) or LDTSs;
   # Are we using only timestamps? do we allow for a difference in granularity?
-  # If we allow for different gramnularities, do we define the lower granularity date as CONVERT_TO_TIME or do we keep at as it is?
+  # If we allow for different granularity, do we define the lower granularity date as CONVERT_TO_TIME or do we keep at as it is?
   # (e.g. the AS OF are dates and LDTS are timestamps with nano seconds. Do we define AS OF as date + 00:00:00.000000 or we leave them as dates?)
 
 ######################### BASE LOAD #########################
 
   # DATES
-  @fixture.pit_one_sat
+  @fixture.pit_two_sats
   Scenario: [BASE-LOAD] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -99,7 +99,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | md5('1003') | 2018-06-06 | md5('1003')             | 2018-06-05                | md5('1003')           | 2018-06-01              |
 
   # TIMESTAMPS
-  @fixture.pit_one_sat
+  @fixture.pit_two_sats
   Scenario: [BASE-LOAD-TS] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -186,7 +186,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | md5('1003') | 2018-06-02 00:00:00.000001 | md5('1003')                | 2018-06-01 23:59:59.999999   | md5('1003')              | 2018-06-01 23:59:59.999999 |
 
   # AS OF - LOWER GRANULARITY
-  @fixture.pit_one_sat
+  @fixture.pit_two_sats
   Scenario: [BASE-LOAD-LG] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -257,7 +257,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | md5('1003') | 2018-06-02 00:00:00.000000 | md5('1003')                | 2018-06-01 23:59:59.999999    | md5('1003')              | 2018-06-01 23:59:59.999999 |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_one_sat
+  @fixture.pit_two_sats
   Scenario: [BASE-LOAD-HG] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -338,7 +338,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
 ######################### INCREMENTAL LOAD #########################
 
   # DATES
-  @fixture.pit_one_sat
+  @fixture.pit_two_sats
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
     Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE   | SOURCE |
@@ -443,7 +443,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | md5('1004') | 2018-06-05 | md5('1004')             | 2018-06-05                | md5('1004')           | 2018-06-04              |
 
   # TIMESTAMPS
-  @fixture.pit_one_sat
+  @fixture.pit_two_sats
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with timestamps
     Given the HUB_CUSTOMER_TS hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
@@ -554,9 +554,9 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | md5('1004') | 2018-06-03 00:00:00.000000 | md5('1004')                | 2018-06-02 23:59:59.999999   | md5('1004')              | 2018-06-02 23:59:59.999999 |
 
   # AS OF - HIGHER GRANULARITY
-#  @fixture.pit_one_sat
+#  @fixture.pit_two_sats
 #  Scenario: [INCR-LOAD-HG] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates
 
   # AS OF - LOWER GRANULARITY
-#  @fixture.pit_one_sat
+#  @fixture.pit_two_sats
 #  Scenario: [INCR-LOAD-LG] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with timestamps
