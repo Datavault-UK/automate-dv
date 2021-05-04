@@ -576,7 +576,7 @@ class DBTVAULTGenerator:
         generator_functions[vault_structure](**processed_metadata)
 
     def stage(self, model_name, source_model: dict, derived_columns=None, hashed_columns=None,
-              ranked_columns=None, include_source_columns=True, config=None):
+              ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
         """
         Generate a stage model template
             :param model_name: Name of the model file
@@ -587,9 +587,11 @@ class DBTVAULTGenerator:
             :param ranked_columns: Dictionary of ranked columns, can be None
             :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
                             source_model={source_model},
@@ -600,7 +602,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config):
+    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, depends_on=""):
         """
         Generate a hub model template
             :param model_name: Name of the model file
@@ -610,9 +612,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config string
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}    
         {{{{ config({config}) }}}}
         {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
                           {src_source}, {source_model})   }}}}
@@ -620,7 +624,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config):
+    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config, depends_on=""):
         """
         Generate a link model template
             :param model_name: Name of the model file
@@ -630,9 +634,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.link({src_pk}, {src_fk}, {src_ldts},
                            {src_source}, {source_model})   }}}}
@@ -642,7 +648,7 @@ class DBTVAULTGenerator:
 
     def sat(self, model_name, src_pk, src_hashdiff, src_payload,
             src_eff, src_ldts, src_source, source_model,
-            config):
+            config, depends_on=""):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -654,9 +660,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.sat({src_pk}, {src_hashdiff}, {src_payload},
                           {src_eff}, {src_ldts}, {src_source}, 
@@ -667,7 +675,7 @@ class DBTVAULTGenerator:
 
     def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
                 src_start_date, src_end_date, src_eff, src_ldts, src_source,
-                source_model, config):
+                source_model, config, depends_on=""):
         """
         Generate an effectivity satellite model template
             :param model_name: Name of the model file
@@ -681,9 +689,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.eff_sat({src_pk}, {src_dfk}, {src_sfk},
                               {src_start_date}, {src_end_date},
@@ -693,7 +703,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config, src_payload=None):
+    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
+               src_payload=None, depends_on=""):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -705,9 +716,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload if src_payload else 'none'}, 
                              {src_eff}, {src_ldts}, {src_source}, {source_model}) }}}}
@@ -715,13 +728,16 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites,
+            stage_tables, src_ldts, depends_on="", config=None):
         """
         Generate a PIT template
             :param model_name: Name of the model file
             :param src_pk: Source pk
             :param as_of_dates_table: Name for the AS_OF table
             :param satellites: Dictionary of satellite reference mappings
+            :param src_ldts: Source Load Date timestamp
+            :param stage_tables: List of stage tables
             :param source_model: Model name to select from
             :param config: Optional model config
             :param depends_on: depends on string if provided
