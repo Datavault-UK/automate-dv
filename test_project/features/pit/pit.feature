@@ -367,7 +367,7 @@ Feature: pit
       | md5('1003') | 2019-01-06 00:00:00.000000 | md5('1003')             | 2019-01-06 00:00:00.000000 | md5('1003')           | 2019-01-06 00:00:00.000000 | md5('1003')             | 2019-01-06 00:00:00.000000 |
 
 
-     @fixture.pit
+  @fixture.pit
   Scenario: Load into a pit table where the as_of_dates table changes
     Given the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PIT          |
