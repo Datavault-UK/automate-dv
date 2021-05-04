@@ -1186,7 +1186,7 @@ def pit_one_sat(context):
         "PIT_CUSTOMER_TS": {
             "source_model": "HUB_CUSTOMER_TS",
             "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATE_TS",
+            "as_of_dates_table": "AS_OF_DATE",
             "satellites":
                 {
                     "SAT_CUSTOMER_DETAILS_TS": {
@@ -1201,6 +1201,44 @@ def pit_one_sat(context):
                     "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
                 },
             "src_ldts": "LOAD_DATETIME"
+        },
+        "PIT_CUSTOMER_LG": {
+            "source_model": "HUB_CUSTOMER_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+                },
+            "src_ldts": "LOAD_DATETIME"
+        },
+        "PIT_CUSTOMER_HG": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                },
+            "src_ldts": "LOAD_DATE"
         }
     }
 
@@ -1278,42 +1316,42 @@ def pit_one_sat(context):
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
         "AS_OF_DATE": {
             "+column_types": {
-                "AS_OF_DATE": "DATE"
-            }
-        },
-        "AS_OF_DATE_TS": {
-            "+column_types": {
                 "AS_OF_DATE": "DATETIME"
             }
         },
+        # "AS_OF_DATE_TS": {
+        #     "+column_types": {
+        #         "AS_OF_DATE": "DATETIME"
+        #     }
+        # },
         "PIT_CUSTOMER": {
             "+column_types": {
-                "AS_OF_DATE": "DATE",
+                "AS_OF_DATE": "TIMESTAMP_NTZ(9)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP_NTZ(9)"
             }
         },
         "PIT_CUSTOMER_TS": {
             "+column_types": {
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "TIMESTAMP_NTZ(9)",
                 "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP_NTZ(9)"
             }
         },
         "PIT_CUSTOMER_LG": {
             "+column_types": {
                 "AS_OF_DATE": "DATE",
                 "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATE"
             }
         },
         "PIT_CUSTOMER_HG": {
