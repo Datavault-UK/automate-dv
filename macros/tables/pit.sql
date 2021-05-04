@@ -18,7 +18,7 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
-{#- Aquiring the source reltion for the AS_OF table -#}
+{#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
     {%- set source_name = as_of_dates_table | first -%}
     {%- set source_table_name = as_of_dates_table[source_name] -%}
@@ -27,14 +27,14 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{# Setting Ghost values to replace NULLS #}
+{# Setting ghost values to replace NULLS #}
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
-{%- set ghost_pk = ('0000000000000000') -%}
+{%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
-{# Stating the dependancys on the stage tables outside of the If STATEMENT #}
+{# Stating the dependancies on the stage tables outside of the If STATEMENT #}
 {%- for stg in stage_tables -%}
-    -- depends_on: {{ ref(stg) }}
+    -- depends_on: {{ ref(stg) }} {{- "\n" -}}
 {%- endfor %}
 
 
