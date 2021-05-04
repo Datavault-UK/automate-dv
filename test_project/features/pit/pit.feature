@@ -75,7 +75,7 @@ Feature: pit
 
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table is already established but the final pit table will deal with NULL Values as ghosts
+  Scenario: Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PITS         |
@@ -121,7 +121,7 @@ Feature: pit
 
 
   @fixture.pit
-  Scenario: Load into a pit table where the AS IS table is already established and the AS IS table has increments of 30 mins
+  Scenario: Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PITS         |
