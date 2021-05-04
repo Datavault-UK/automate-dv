@@ -7,61 +7,60 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
 # todo: Add cycles tests
 # todo: Discuss with Neil the situation of the date/time format (of AS OF) or LDTSs;
   # Are we using only timestamps? do we allow for a difference in granularity?
-  # If we allow for different gramnularities, do we define the lower granularity date as CONVERT_TO_TIME or do we keep at as it is?
+  # If we allow for different granularities, do we define the lower granularity date as CONVERT_TO_TIME or do we keep at as it is?
   # (e.g. the AS OF are dates and LDTS are timestamps with nano seconds. Do we define AS OF as date + 00:00:00.000000 or we leave them as dates?)
 
 ######################### BASE LOAD #########################
 
   # DATES
   @fixture.pit_one_sat
-#  Scenario: [BASE-LOAD] Base load into a pit table from two satellites with dates with AS OF dates all in the past
-#    Given the PIT_CUSTOMER table does not exist
-#    And the raw vault contains empty tables
-#      | HUBS         | LINKS | SATS                 | PIT          |
-#      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-#    And the RAW_STAGE_DETAILS table contains data
-#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-#      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
-#      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 | *      |
-#      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-05 | *      |
-#      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
-#      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
-#      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-#    And I create the STG_CUSTOMER_DETAILS stage
-#    # TODO: This is failing because 2018-06-31 isn't a valid date. There are only 30 days in June    .
-#    And the AS_OF_DATE table is created and populated with data
-#      | AS_OF_DATE |
-#      | 2018-05-29 |
-#      | 2018-06-30 |
-#      | 2018-06-31 |
-#    When I load the vault
-#    Then the HUB_CUSTOMER table should contain expected data
-#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE   | SOURCE |
-#      | md5('1001') | 1001        | 2018-06-01  | *      |
-#      | md5('1002') | 1002        | 2018-06-01  | *      |
-#      | md5('1003') | 1003        | 2018-06-01  | *      |
-#    Then the SAT_CUSTOMER_DETAILS table should contain expected data
-#      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-#      | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01 | *      |
-#      | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01 | *      |
-#      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05 | *      |
-#      | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01     | 2018-06-01 | *      |
-#      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *      |
-#      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
-#    Then the PIT_CUSTOMER table should contain expected data
-#      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-#      | md5('1001') | 2018-05-29 | 0000000000000000        | 1900-01-01                |
-#      | md5('1001') | 2018-05-30 | 0000000000000000        | 1900-01-01                |
-#      | md5('1001') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-#      | md5('1002') | 2018-05-29 | 0000000000000000        | 1900-01-01                |
-#      | md5('1002') | 2018-05-30 | 0000000000000000        | 1900-01-01                |
-#      | md5('1002') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-#      | md5('1003') | 2018-05-29 | 0000000000000000        | 1900-01-01                |
-#      | md5('1003') | 2018-05-30 | 0000000000000000        | 1900-01-01                |
-#      | md5('1003') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
+  Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with AS OF dates all in the past
+    Given the PIT_CUSTOMER table does not exist
+    And the raw vault contains empty tables
+      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+    And the RAW_STAGE_DETAILS table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
+      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 | *      |
+      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-05 | *      |
+      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
+    And I create the STG_CUSTOMER_DETAILS stage
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE |
+      | 2018-05-29 |
+      | 2018-05-30 |
+      | 2018-05-31 |
+    When I load the vault
+    Then the HUB_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE   | SOURCE |
+      | md5('1001') | 1001        | 2018-06-01  | *      |
+      | md5('1002') | 1002        | 2018-06-01  | *      |
+      | md5('1003') | 1003        | 2018-06-01  | *      |
+    Then the SAT_CUSTOMER_DETAILS table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01 | *      |
+      | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01 | *      |
+      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05 | *      |
+      | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01     | 2018-06-01 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
+    Then the PIT_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2018-05-29 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1001') | 2018-05-30 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1002') | 2018-05-29 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1002') | 2018-05-30 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1002') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1003') | 2018-05-29 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1003') | 2018-05-30 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [BASE-LOAD] Base load into a pit table from two satellites with dates with AS OF dates in the past and in between LDTS
+  Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with AS OF dates in the past and in between LDTS
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PIT          |
@@ -96,22 +95,23 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *      |
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-      | md5('1001') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-      | md5('1001') | 2018-06-01 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-02 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-04 | md5('1001')             | 2018-06-01                |
-      | md5('1002') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-      | md5('1002') | 2018-06-01 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2018-06-02 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2018-06-04 | md5('1002')             | 2018-06-01                |
-      | md5('1003') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-      | md5('1003') | 2018-06-01 | md5('1003')             | 2018-06-01                |
-      | md5('1003') | 2018-06-02 | md5('1003')             | 2018-06-01                |
-      | md5('1003') | 2018-06-04 | md5('1003')             | 2018-06-03                |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-04 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
 
+  # todo: still failing despite actual being identical to expected (including data types)
   @fixture.pit_one_sat
-  Scenario: [BASE-LOAD] Base load into a pit table from two satellites with dates with AS OF dates in between LDTS and some in the future
+  Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with AS OF dates in between LDTS and some in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PIT          |
@@ -145,19 +145,20 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *      |
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-      | md5('1001') | 2016-06-02 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2016-06-04 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2016-06-06 | md5('1001')             | 2018-06-01                |
-      | md5('1002') | 2016-06-02 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2016-06-04 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2016-06-06 | md5('1002')             | 2018-06-05                |
-      | md5('1003') | 2016-06-02 | md5('1003')             | 2018-06-01                |
-      | md5('1003') | 2016-06-04 | md5('1003')             | 2018-06-03                |
-      | md5('1003') | 2016-06-06 | md5('1003')             | 2018-06-05                |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2016-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2016-06-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2016-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2016-06-02 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2016-06-04 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2016-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2016-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2016-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
+      | md5('1003') | 2016-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
+  # todo: still failing despite actual being identical to expected (including data types)
   @fixture.pit_one_sat
-  Scenario: [BASE-LOAD] Base load into a pit table from two satellites with dates with all AS OF dates in the future
+  Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with all AS OF dates in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUBS         | LINKS | SATS                 | PIT          |
@@ -191,16 +192,16 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *      |
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-      | md5('1001') | 2016-06-06 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2016-06-07 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2016-06-08 | md5('1001')             | 2018-06-01                |
-      | md5('1002') | 2016-06-06 | md5('1002')             | 2018-06-05                |
-      | md5('1002') | 2016-06-07 | md5('1002')             | 2018-06-05                |
-      | md5('1002') | 2016-06-08 | md5('1002')             | 2018-06-05                |
-      | md5('1003') | 2016-06-06 | md5('1003')             | 2018-06-05                |
-      | md5('1003') | 2016-06-07 | md5('1003')             | 2018-06-05                |
-      | md5('1003') | 2016-06-08 | md5('1003')             | 2018-06-05                |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2016-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2016-06-07 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2016-06-08 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2016-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1002') | 2016-06-07 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1002') | 2016-06-08 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2016-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2016-06-07 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2016-06-08 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
@@ -241,31 +242,30 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *      |
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-      | md5('1001') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-      | md5('1001') | 2018-06-01 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-02 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-03 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-04 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-05 | md5('1001')             | 2018-06-01                |
-      | md5('1001') | 2018-06-06 | md5('1001')             | 2018-06-01                |
-      | md5('1002') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-      | md5('1002') | 2018-06-01 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2018-06-02 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2018-06-03 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2018-06-04 | md5('1002')             | 2018-06-01                |
-      | md5('1002') | 2018-06-05 | md5('1002')             | 2018-06-05                |
-      | md5('1002') | 2018-06-06 | md5('1002')             | 2018-06-05                |
-      | md5('1003') | 2018-05-31 | 0000000000000000        | 1900-01-01                |
-      | md5('1003') | 2018-06-01 | md5('1003')             | 2018-06-01                |
-      | md5('1003') | 2018-06-02 | md5('1003')             | 2018-06-01                |
-      | md5('1003') | 2018-06-03 | md5('1003')             | 2018-06-03                |
-      | md5('1003') | 2018-06-04 | md5('1003')             | 2018-06-03                |
-      | md5('1003') | 2018-06-05 | md5('1003')             | 2018-06-05                |
-      | md5('1003') | 2018-06-06 | md5('1003')             | 2018-06-05                |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-03 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-05 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-03 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-04 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-05 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1002') | 2018-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2018-06-03 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
+      | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
+      | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
   # TIMESTAMPS
-  # todo: the satellite sourced column names in the PIT might need to 
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-TS] Base load into a pit table from one satellite with timestamps with al AS OF timestamps in the past
     Given the PIT_CUSTOMER_TS table does not exist
@@ -273,45 +273,46 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999999 | *      |
-      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000000 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.000001 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME              | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
+      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
+      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999 | *      |
+      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999 | *      |
     And I create the STG_CUSTOMER_DETAILS_TS stage
-    And the AS_OF_DATE_TS table is created and populated with data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
-      | 2018-05-31 12:00:00.000001 |
-      | 2018-05-31 23:59:59.999998 |
-      | 2018-05-31 23:59:59.999999 |
+      | 2018-05-31 12:00:00.001 |
+      | 2018-05-31 23:59:59.998 |
+      | 2018-05-31 23:59:59.999 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
-      | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | 1002        | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1003') | 1003        | 2018-06-01 00:00:00.000000 | *      |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME              | SOURCE |
+      | md5('1001') | 1001        | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | 1002        | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003') | 1003        | 2018-06-01 00:00:00.000 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
-      | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
-      | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-01 12:00:00.000001 | 2018-06-01 12:00:00.000001 | *      |
-      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+      | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999 | 2018-06-01 23:59:59.999 | *      |
+      | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-01 12:00:00.001 | 2018-06-01 12:00:00.001 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-01 23:59:59.999 | 2018-06-01 23:59:59.999 | *      |
     Then the PIT_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS  |
-      | md5('1001') | 2018-05-31 12:00:00.000001 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1001') | 2018-05-31 23:59:59.999998 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1001') | 2018-05-31 23:59:59.999999 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1002') | 2018-05-31 12:00:00.000001 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1002') | 2018-05-31 23:59:59.999998 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1002') | 2018-05-31 23:59:59.999999 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1003') | 2018-05-31 12:00:00.000001 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1003') | 2018-05-31 23:59:59.999998 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
-      | md5('1003') | 2018-05-31 23:59:59.999999 | 0000000000000000           | 1900-01-01 00:00:00.000000    |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
+      | md5('1001') | 2018-05-31 12:00:00.001 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1001') | 2018-05-31 23:59:59.998 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1001') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1002') | 2018-05-31 12:00:00.001 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1002') | 2018-05-31 23:59:59.998 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1002') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1003') | 2018-05-31 12:00:00.001 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1003') | 2018-05-31 23:59:59.998 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1003') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
 
+  # todo: check results - think SQL is not working correctly
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-TS] Base load into a pit table from one satellite with timestamps with some AS OF timestamps in the past and sone in between LDTS
     Given the PIT_CUSTOMER_TS table does not exist
@@ -319,79 +320,80 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999999 | *      |
-      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000000 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.000001 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
+      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
+      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999 | *      |
+      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999 | *      |
     And I create the STG_CUSTOMER_DETAILS_TS stage
-    And the AS_OF_DATE_TS table is created and populated with data
-      | AS_OF_DATE                 |
-      | 2018-05-31 23:59:59.999999 |
-      | 2019-06-01 00:00:00.000000 |
-      | 2019-06-01 12:00:00.000000 |
-      | 2019-06-01 23:59:59.999998 |
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE              |
+      | 2018-05-31 23:59:59.999 |
+      | 2019-06-01 00:00:00.000 |
+      | 2019-06-01 12:00:00.000 |
+      | 2019-06-01 23:59:59.998 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
-      | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | 1002        | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1003') | 1003        | 2018-06-01 00:00:00.000000 | *      |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME           | SOURCE |
+      | md5('1001') | 1001        | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | 1002        | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003') | 1003        | 2018-06-01 00:00:00.000 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
-      | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
-      | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-01 12:00:00.000001 | 2018-06-01 12:00:00.000001 | *      |
-      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+      | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999 | 2018-06-01 23:59:59.999 | *      |
+      | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-01 12:00:00.001 | 2018-06-01 12:00:00.001 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-01 23:59:59.999 | 2018-06-01 23:59:59.999 | *      |
     Then the PIT_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE                 | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
-      | md5('1001') | 2018-05-31 23:59:59.999999 | 0000000000000000           | 1900-01-01 00:00:00.000000   |
-      | md5('1001') | 2018-06-01 00:00:00.000000 | md5('1001')                | 2018-06-01 00:00:00.000000   |
-      | md5('1001') | 2018-06-01 12:00:00.000000 | md5('1001')                | 2018-06-01 00:00:00.000000   |
-      | md5('1001') | 2018-06-01 23:59:59.999998 | md5('1001')                | 2018-06-01 00:00:00.000000   |
-      | md5('1002') | 2018-05-31 23:59:59.999999 | 0000000000000000           | 1900-01-01 00:00:00.000000   |
-      | md5('1002') | 2018-06-01 00:00:00.000000 | md5('1002')                | 2018-06-01 00:00:00.000000   |
-      | md5('1002') | 2018-06-01 12:00:00.000000 | md5('1002')                | 2018-06-01 00:00:00.000000   |
-      | md5('1002') | 2018-06-01 23:59:59.999998 | md5('1002')                | 2018-06-01 00:00:00.000000   |
-      | md5('1003') | 2018-05-31 23:59:59.999999 | 0000000000000000           | 1900-01-01 00:00:00.000000   |
-      | md5('1003') | 2018-06-01 00:00:00.000000 | md5('1003')                | 2018-06-01 00:00:00.000000   |
-      | md5('1003') | 2018-06-01 12:00:00.000000 | md5('1003')                | 2018-06-01 00:00:00.000000   |
-      | md5('1003') | 2018-06-01 23:59:59.999998 | md5('1003')                | 2018-06-01 12:00:00.000001   |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
+      | md5('1001') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
+      | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
+      | md5('1001') | 2018-06-01 23:59:59.998 | md5('1001')                | 2018-06-01 00:00:00.000      |
+      | md5('1002') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002')                | 2018-06-01 00:00:00.000      |
+      | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002')                | 2018-06-01 00:00:00.000      |
+      | md5('1002') | 2018-06-01 23:59:59.998 | md5('1002')                | 2018-06-01 00:00:00.000      |
+      | md5('1003') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
+      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
+      | md5('1003') | 2018-06-01 12:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
+      | md5('1003') | 2018-06-01 23:59:59.998 | md5('1003')                | 2018-06-01 12:00:00.001      |
 
+  # todo: check results
   @fixture.pit_one_sat
-  Scenario: [BASE-LOAD-TS] Base load into a pit table from two satellites with timestamps with AS OF timestamps in between LDTS and some in the future
+  Scenario: [BASE-LOAD-TS] Base load into a pit table from one satellite with timestamps with AS OF timestamps in between LDTS and some in the future
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000000 | *      |
-      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999999 | *      |
-      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000000 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.000001 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
+      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
+      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999 | *      |
+      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999 | *      |
     And I create the STG_CUSTOMER_DETAILS_TS stage
-    And the AS_OF_DATE_TS table is created and populated with data
-      | AS_OF_DATE                 |
-      | 2019-06-01 00:00:00.000001 |
-      | 2019-06-01 12:00:00.000000 |
-      | 2019-06-01 12:00:00.000001 |
-      | 2019-06-01 23:59:59.999999 |
-      | 2019-06-02 00:00:00.000000 |
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE              |
+      | 2019-06-01 00:00:00.001 |
+      | 2019-06-01 12:00:00.000 |
+      | 2019-06-01 12:00:00.001 |
+      | 2019-06-01 23:59:59.999 |
+      | 2019-06-02 00:00:00.000 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
-      | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1002') | 1002        | 2018-06-01 00:00:00.000000 | *      |
-      | md5('1003') | 1003        | 2018-06-01 00:00:00.000000 | *      |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME           | SOURCE |
+      | md5('1001') | 1001        | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002') | 1002        | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003') | 1003        | 2018-06-01 00:00:00.000 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
@@ -416,14 +418,15 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2019-06-01 23:59:59.999999 | md5('1003')                | 2018-06-01 23:59:59.999999   |
       | md5('1003') | 2019-06-02 00:00:00.000000 | md5('1003')                | 2018-06-01 23:59:59.999999   |
 
+  # todo: check results
   @fixture.pit_one_sat
-  Scenario: [BASE-LOAD-TS] Base load into a pit table from two satellites with timestamps with all AS OF timestamps in the future
+  Scenario: [BASE-LOAD-TS] Base load into a pit table from one satellite with timestamps with all AS OF timestamps in the future
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999999 | *      |
@@ -431,17 +434,17 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.000001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999999 | *      |
     And I create the STG_CUSTOMER_DETAILS_TS stage
-    And the AS_OF_DATE_TS table is created and populated with data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2019-06-02 00:00:00.000000 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME              | SOURCE |
       | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | 1002        | 2018-06-01 00:00:00.000000 | *      |
       | md5('1003') | 1003        | 2018-06-01 00:00:00.000000 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
@@ -473,7 +476,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999999 | *      |
@@ -481,7 +484,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.000001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999999 | *      |
     And I create the STG_CUSTOMER_DETAILS_TS stage
-    And the AS_OF_DATE_TS table is created and populated with data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2018-05-31 23:59:59.999999 |
       | 2018-06-01 00:00:00.000000 |
@@ -492,12 +495,12 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 2018-06-02 00:00:00.000000 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME              | SOURCE |
       | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | 1002        | 2018-06-01 00:00:00.000000 | *      |
       | md5('1003') | 1003        | 2018-06-01 00:00:00.000000 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999999 | 2018-06-01 23:59:59.999999 | *      |
@@ -529,6 +532,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-06-02 00:00:00.000000 | md5('1003')                | 2018-06-01 23:59:59.999999   |
 
   # AS OF - LOWER GRANULARITY
+  # todo: check results
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-LG] Base load into a pit table from one satellite with timestamps where AS OF dates are in the future
     Given the PIT_CUSTOMER_LG table does not exist
@@ -536,7 +540,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000001 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 00:00:00.000002 | *      |
@@ -548,12 +552,12 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 2018-06-04 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME              | SOURCE |
       | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | 1002        | 2018-06-01 00:00:00.000001 | *      |
       | md5('1003') | 1003        | 2018-06-01 00:00:00.000002 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | Alice         | 1 Forrest road Hampshire | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 2 Forrest road Hampshire | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000001 | 2018-06-01 00:00:00.000001 | *      |
       | md5('1003') | Chad          | 3 Forrest road Hampshire | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000002 | 2018-06-01 00:00:00.000002 | *      |
@@ -569,6 +573,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-06-03 | md5('1003')                | 2018-06-01 00:00:00.000002   |
       | md5('1003') | 2018-06-04 | md5('1003')                | 2018-06-01 00:00:00.000002   |
 
+  # todo: check results
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-LG] Base load into a pit table from one satellite with timestamps where AS OF dates are in the past
     Given the PIT_CUSTOMER_LG table does not exist
@@ -576,7 +581,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000001 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 00:00:00.000002 | *      |
@@ -588,12 +593,12 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 2018-05-31 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME              | SOURCE |
       | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | 1002        | 2018-06-01 00:00:00.000001 | *      |
       | md5('1003') | 1003        | 2018-06-01 00:00:00.000002 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | Alice         | 1 Forrest road Hampshire | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
       | md5('1002') | Bob           | 2 Forrest road Hampshire | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000001 | 2018-06-01 00:00:00.000001 | *      |
       | md5('1003') | Chad          | 3 Forrest road Hampshire | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000002 | 2018-06-01 00:00:00.000002 | *      |
@@ -609,6 +614,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-05-30 | 0000000000000000           | 1900-01-01 00:00:00.000000   |
       | md5('1003') | 2018-05-31 | 0000000000000000           | 1900-01-01 00:00:00.000000   |
 
+  # todo: check results
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-LG] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_LG table does not exist
@@ -616,7 +622,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | HUBS            | LINKS | SATS                    | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
     And the RAW_STAGE_DETAILS_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000001 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 00:00:00.000002 | *      |
@@ -628,15 +634,15 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 2018-06-02 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE   | SOURCE |
-      | md5('1001') | 1001        | 2018-06-01  | *      |
-      | md5('1002') | 1002        | 2018-06-01  | *      |
-      | md5('1003') | 1003        | 2018-06-01  | *      |
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME              | SOURCE |
+      | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
+      | md5('1002') | 1002        | 2018-06-01 00:00:00.000001 | *      |
+      | md5('1003') | 1003        | 2018-06-01 00:00:00.000002 | *      |
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | Alice         | 1 Forrest road Hampshire | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01 | *      |
-      | md5('1002') | Bob           | 2 Forrest road Hampshire | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01 | *      |
-      | md5('1003') | Chad          | 3 Forrest road Hampshire | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01     | 2018-06-01 | *      |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
+      | md5('1001') | Alice         | 1 Forrest road Hampshire | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000000 | 2018-06-01 00:00:00.000000 | *      |
+      | md5('1002') | Bob           | 2 Forrest road Hampshire | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000001 | 2018-06-01 00:00:00.000001 | *      |
+      | md5('1003') | Chad          | 3 Forrest road Hampshire | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000002 | 2018-06-01 00:00:00.000002 | *      |
     Then the PIT_CUSTOMER_LG table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 | 0000000000000000           | 1900-01-01 00:00:00.000000   |
@@ -650,6 +656,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-06-02 | md5('1003')                | 2018-06-01 00:00:00.000002   |
 
   # AS OF - HIGHER GRANULARITY
+  # todo: check results
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-HG] Base load into a pit table from one satellite with dates where AS OF timestamps are in the future
     Given the PIT_CUSTOMER_HG table does not exist
@@ -662,7 +669,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 | *      |
     And I create the STG_CUSTOMER_DETAILS stage
-    And the AS_OF_DATE_TS table is created and populated with data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2018-06-01 00:00:00.000001 |
       | 2018-06-01 12:00:00.000001 |
@@ -690,6 +697,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-06-01 12:00:00.000001 | md5('1003')             | 2018-06-01                |
       | md5('1003') | 2018-06-02 00:00:00.000001 | md5('1003')             | 2018-06-01                |
 
+  # todo: check results
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-HG] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
     Given the PIT_CUSTOMER_HG table does not exist
@@ -702,7 +710,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 | *      |
     And I create the STG_CUSTOMER_DETAILS stage
-    And the AS_OF_DATE_TS table is created and populated with data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2018-05-31 00:00:00.000000 |
       | 2018-05-31 12:30:00.000001 |
@@ -730,6 +738,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-05-31 12:30:00.000001 | 0000000000000000        | 1900-01-01                |
       | md5('1003') | 2018-05-31 23:59:59.999999 | 0000000000000000        | 1900-01-01                |
 
+  # todo: check results
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD-HG] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
@@ -742,7 +751,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 | *      |
     And I create the STG_CUSTOMER_DETAILS stage
-    And the AS_OF_DATE_TS table is created and populated with data
+    And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2018-05-31 23:59:59.999999 |
       | 2018-06-01 00:00:00.000000 |
