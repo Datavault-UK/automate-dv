@@ -40,7 +40,7 @@
 
 
 WITH as_of AS (
-    SELECT * FROM {{ source_relation}}
+    SELECT * FROM {{ source_relation }}
 ),
 
 {% if dbtvault.is_any_incremental() -%}
@@ -155,7 +155,7 @@ WITH as_of AS (
     ),
 
 {% else %}
-    new_row_as_of AS(
+    new_row_as_of AS (
     SELECT * FROM as_of
     ),
 {% endif %}
