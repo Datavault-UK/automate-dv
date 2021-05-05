@@ -11,7 +11,7 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-    {%- if (as_of_dates_table is none) and execute -%}
+{%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
     "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
     {%- endset -%}
@@ -37,7 +37,12 @@
     -- depends_on: {{ ref(stg) }} {{- "\n" -}}
 {%- endfor %}
 
-
+{# Setting the new AS_OF dates CTE name #}
+{% if dbtvault.is_any_incremental() -%}
+{% set new_as_of_dates_cte = 'NEW_ROW_AS_OF'  %}
+{% else %}
+{% set new_as_of_dates_cte = 'AS_OF' %}
+{% endif %}
 
 WITH as_of AS (
     SELECT * FROM {{ source_relation }}
@@ -111,6 +116,7 @@ WITH as_of AS (
         AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
         AND p.AS_OF_DATE NOT IN (SELECT * FROM as_of_grain_lost_entries)
     ),
+
     -- backfill any newly arrived hubs, set all historical pit dates to ghost records
 
     bf_hub AS (
@@ -138,26 +144,22 @@ WITH as_of AS (
                 {% endfilter %}
             {%- endfor %}S
 
-          FROM bf_hub AS bf
+        FROM bf_hub AS bf
 
-         {% for sat in satellites -%}
+        {% for sat in satellites -%}
                 {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
                 {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0] -%}
                 LEFT JOIN {{ ref(sat) }} AS {{  sat -}}_SRC
                     ON  bf.{{- src_pk }} = {{ sat -}}_SRC.{{ satellites[sat]['pk'][sat_key] }}
                 AND {{ sat -}}_SRC.{{ satellites[sat]['ldts'][sat_ldts] }} <= bf.AS_OF_DATE
 
-             {% endfor %}
+        {% endfor %}
 
-            GROUP BY
-                bf.{{- src_pk }}, bf.AS_OF_DATE
-            ORDER BY (1, 2)
+        GROUP BY
+            bf.{{- src_pk }}, bf.AS_OF_DATE
+        ORDER BY (1, 2)
     ),
 
-{% else %}
-    new_row_as_of AS (
-    SELECT * FROM as_of
-    ),
 {% endif %}
 
 new_as_of_dates_PK_join AS (
@@ -165,7 +167,7 @@ new_as_of_dates_PK_join AS (
         hub.{{ src_pk }},
         x.AS_OF_DATE
     FROM {{ ref(source_model) }} hub
-    INNER JOIN new_row_as_of AS x
+    INNER JOIN {{ new_as_of_dates_cte }} AS x
     ON (1=1)
 ),
 
