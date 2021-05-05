@@ -323,17 +323,17 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
-      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999 | *      |
+      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.991 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
-      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.999 | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.993 | *      |
     And I create the STG_CUSTOMER_DETAILS_TS stage
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.999 |
       | 2019-06-01 00:00:00.000 |
       | 2019-06-01 12:00:00.000 |
-      | 2019-06-01 23:59:59.998 |
+      | 2019-06-01 23:59:59.990 |
     When I load the vault
     Then the HUB_CUSTOMER_TS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME           | SOURCE |
@@ -344,24 +344,24 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001') | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1002') | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.999 | 2018-06-01 23:59:59.999 | *      |
+      | md5('1002') | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-01 23:59:59.991 | 2018-06-01 23:59:59.991 | *      |
       | md5('1003') | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-01 12:00:00.001 | 2018-06-01 12:00:00.001 | *      |
-      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-01 23:59:59.999 | 2018-06-01 23:59:59.999 | *      |
+      | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-01 23:59:59.993 | 2018-06-01 23:59:59.993 | *      |
     Then the PIT_CUSTOMER_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
-      | md5('1001') | 2018-06-01 23:59:59.998 | md5('1001')                | 2018-06-01 00:00:00.000      |
+      | md5('1001') | 2018-06-01 23:59:59.990 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1002') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002')                | 2018-06-01 00:00:00.000      |
       | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002')                | 2018-06-01 00:00:00.000      |
-      | md5('1002') | 2018-06-01 23:59:59.998 | md5('1002')                | 2018-06-01 00:00:00.000      |
+      | md5('1002') | 2018-06-01 23:59:59.990 | md5('1002')                | 2018-06-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
       | md5('1003') | 2018-06-01 12:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
-      | md5('1003') | 2018-06-01 23:59:59.998 | md5('1003')                | 2018-06-01 12:00:00.001      |
+      | md5('1003') | 2018-06-01 23:59:59.990 | md5('1003')                | 2018-06-01 12:00:00.001      |
 
   # todo: failing - SAT_LDTS in the actual is set to max LDTS or end-of-day timestamp
   @fixture.pit_one_sat
