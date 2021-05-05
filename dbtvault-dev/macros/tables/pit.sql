@@ -213,6 +213,7 @@ SELECT * FROM new_rows
 {%- endif -%}
 )
 
-SELECT * FROM PIT
+-- There are situations where overlap and backfill CTEs can themselves overlap!
+SELECT DISTINCT * FROM PIT
 
 {%- endmacro -%}
