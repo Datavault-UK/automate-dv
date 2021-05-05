@@ -1,14 +1,7 @@
 @fixture.set_workdir
 Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one satellite
 
-############### READ BEFORE RUNNING THE TESTS ###############
-
-# todo (or rather toanswer): will we allow the AS OF dates to be DATE in the PIT table or are we always going to convert them into DATETIME? What about LDTSs in the PIT?
 # todo: Add cycles tests
-# todo: Discuss with Neil the situation of the date/time format (of AS OF) or LDTSs;
-  # Are we using only timestamps? do we allow for a difference in granularity?
-  # If we allow for different granularities, do we define the lower granularity date as CONVERT_TO_TIME or do we keep at as it is?
-  # (e.g. the AS OF are dates and LDTS are timestamps with nano seconds. Do we define AS OF as date + 00:00:00.000000 or we leave them as dates?)
 
 ######################### BASE LOAD #########################
 
@@ -109,8 +102,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
 
-  # todo: still failing despite actual being identical to expected (including data types)
-  @fixture.pit_one_sat
+    @fixture.pit_one_sat
   Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with AS OF dates in between LDTS and some in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -146,17 +138,16 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-      | md5('1001') | 2016-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1001') | 2016-06-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1001') | 2016-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1002') | 2016-06-02 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
-      | md5('1002') | 2016-06-04 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
-      | md5('1002') | 2016-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
-      | md5('1003') | 2016-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
-      | md5('1003') | 2016-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
-      | md5('1003') | 2016-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-04 00:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
+      | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
+      | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
-  # todo: still failing despite actual being identical to expected (including data types)
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with all AS OF dates in the future
     Given the PIT_CUSTOMER table does not exist
@@ -193,15 +184,15 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *      |
     Then the PIT_CUSTOMER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
-      | md5('1001') | 2016-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1001') | 2016-06-07 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1001') | 2016-06-08 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1002') | 2016-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
-      | md5('1002') | 2016-06-07 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
-      | md5('1002') | 2016-06-08 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
-      | md5('1003') | 2016-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
-      | md5('1003') | 2016-06-07 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
-      | md5('1003') | 2016-06-08 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1001') | 2018-06-06 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-07 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-08 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1002') | 2018-06-06 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1002') | 2018-06-07 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1002') | 2018-06-08 00:00:00.000 | md5('1002')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2018-06-07 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
+      | md5('1003') | 2018-06-08 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
   @fixture.pit_one_sat
   Scenario: [BASE-LOAD] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
