@@ -2480,7 +2480,7 @@ def cycle(context):
             "src_payload": ["PRICE", "BOOKING_DATE",
                             "DEPARTURE_DATE", "DESTINATION"],
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
     }
