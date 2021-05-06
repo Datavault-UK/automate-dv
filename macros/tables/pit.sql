@@ -120,7 +120,7 @@ WITH as_of AS (
     -- backfill any newly arrived hubs, set all historical pit dates to ghost records
 
     backfill_rows_as_of_dates AS (
-        SELECTe
+        SELECT
             nh.{{ src_pk }},
             bfa.AS_OF_DATE
         FROM new_rows_pks AS nh
