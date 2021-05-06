@@ -870,7 +870,6 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
 ######################### INCREMENTAL LOAD #########################
 
   # DATES
-  # todo: ghost records are being input twice
   @fixture.pit_one_sat
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER table does not exist
@@ -1069,7 +1068,6 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.999      |
 
   # AS OF - HIGHER GRANULARITY
-  # todo: duplicated ghost record
   @fixture.pit_one_sat
   Scenario: [INCR-LOAD-HG] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
@@ -1127,3 +1125,41 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1004') | 2018-06-02 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1004') | 2018-06-04 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1004') | 2018-06-06 00:00:00.000 | md5('1004')             | 2018-06-05 00:00:00.000   |
+
+  # AS OF - HIGHER GRANULARITY
+  @fixture.pit_one_sat
+  Scenario: [INCR-LOAD-HG-ONEPK] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
+    Given the PIT_CUSTOMER_HG table does not exist
+    And the raw vault contains empty tables
+      | HUBS         | LINKS | SATS                 | PIT             |
+      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+    And the RAW_STAGE_DETAILS table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
+    And I create the STG_CUSTOMER_DETAILS stage
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE              |
+      | 2018-05-31 12:00:00.000 |
+      | 2018-06-02 12:00:00.000 |
+      | 2018-06-04 12:00:00.000 |
+    When I load the vault
+    Then the PIT_CUSTOMER_HG table should contain expected data
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2018-05-31 12:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
+      | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-04 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+    When the RAW_STAGE_DETAILS is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alicia        | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-03 | *      |
+    And I create the STG_CUSTOMER_DETAILS stage
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE              |
+      | 2018-06-02 00:00:00.000 |
+      | 2018-06-04 00:00:00.000 |
+      | 2018-06-06 00:00:00.000 |
+    When I load the vault
+    Then the PIT_CUSTOMER_HG table should contain expected data
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
+      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
+      | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-03 00:00:00.000   |
+      | md5('1001') | 2018-06-06 00:00:00.000 | md5('1001')             | 2018-06-03 00:00:00.000   |

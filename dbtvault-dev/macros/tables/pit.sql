@@ -39,7 +39,7 @@
 
 {# Setting the new AS_OF dates CTE name #}
 {% if dbtvault.is_any_incremental() -%}
-{% set new_as_of_dates_cte = 'NEW_ROW_AS_OF'  %}
+{% set new_as_of_dates_cte = 'NEW_ROWS_AS_OF'  %}
 {% else %}
 {% set new_as_of_dates_cte = 'AS_OF' %}
 {% endif %}
@@ -62,13 +62,13 @@ WITH as_of AS (
         )
     ),
 
-    old_as_of_grain AS (
+    as_of_grain_old_entries AS (
         SELECT DISTINCT AS_OF_DATE FROM {{ this }}
     ),
 
     as_of_grain_lost_entries AS (
         SELECT a.AS_OF_DATE
-        FROM old_as_of_grain AS a
+        FROM as_of_grain_old_entries AS a
         LEFT OUTER JOIN as_of AS b
         ON a.AS_OF_DATE = b.AS_OF_DATE
         WHERE b.AS_OF_DATE IS NULL
@@ -77,12 +77,12 @@ WITH as_of AS (
     as_of_grain_new_entries AS (
         SELECT a.AS_OF_DATE
         FROM as_of AS a
-        LEFT OUTER JOIN old_as_of_grain AS b
+        LEFT OUTER JOIN as_of_grain_old_entries AS b
         ON a.AS_OF_DATE = b.AS_OF_DATE
         WHERE b.AS_OF_DATE IS NULL
     ),
 
-    min_date AS(
+    min_date AS (
         SELECT min(AS_OF_DATE) AS MIN_DATE
         FROM as_of
     ),
@@ -93,13 +93,13 @@ WITH as_of AS (
         WHERE as_of.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     ),
 
-    new_hubs AS (
-        SELECT {{ src_pk }}
+    new_rows_pks AS (
+        SELECT h.{{ src_pk }}
         FROM {{ ref(source_model) }} AS h
         WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
         ),
 
-    new_row_as_of AS (
+    new_rows_as_of AS (
         SELECT AS_OF_DATE
         FROM as_of
         WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
@@ -114,16 +114,16 @@ WITH as_of AS (
         ON p.{{ src_pk }} = h.{{ src_pk }}
         WHERE  P.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
         AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT * FROM as_of_grain_lost_entries)
+        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
     ),
 
     -- backfill any newly arrived hubs, set all historical pit dates to ghost records
 
-    bf_hub AS (
-        SELECT
+    backfill_rows_as_of_dates AS (
+        SELECTe
             nh.{{ src_pk }},
             bfa.AS_OF_DATE
-        FROM new_hubs AS nh
+        FROM new_rows_pks AS nh
         INNER JOIN backfill_as_of AS bfa
           ON (1=1)
     ),
@@ -142,9 +142,8 @@ WITH as_of AS (
                 {{ "'"~ghost_date~"'"'::TIMESTAMP_NTZ AS '~ sat ~'_'~ sat_ldts  }}
                 {{- ',' if not loop.last -}}
                 {% endfilter %}
-            {%- endfor %}S
-
-        FROM bf_hub AS bf
+            {%- endfor %}
+        FROM backfill_rows_as_of_dates AS bf
 
         {% for sat in satellites -%}
                 {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
@@ -162,7 +161,7 @@ WITH as_of AS (
 
 {% endif %}
 
-new_as_of_dates_PK_join AS (
+new_rows_as_of_dates AS (
     SELECT
         hub.{{ src_pk }},
         x.AS_OF_DATE
@@ -172,7 +171,6 @@ new_as_of_dates_PK_join AS (
 ),
 
 new_rows AS (
-
     SELECT
         a.{{ src_pk }},
         a.AS_OF_DATE,
@@ -187,7 +185,7 @@ new_rows AS (
             {{- ',' if not loop.last -}}
             {% endfilter %}
         {%- endfor %}
-    FROM new_as_of_dates_PK_join AS a
+    FROM new_rows_as_of_dates AS a
 
     {% for sat in satellites -%}
         {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
