@@ -34,8 +34,8 @@
 
 {# Stating the dependancies on the stage tables outside of the If STATEMENT #}
 {%- for stg in stage_tables -%}
-    -- depends_on: {{ ref(stg) }} {{- "\n" -}}
-{%- endfor %}
+    -- depends_on: {{ ref(stg) }}
+{% endfor %}
 
 {# Setting the new AS_OF dates CTE name #}
 {% if dbtvault.is_any_incremental() -%}
