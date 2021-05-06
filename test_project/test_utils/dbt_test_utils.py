@@ -567,7 +567,8 @@ class DBTVAULTGenerator:
             "sat": self.sat,
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
-            "ma_sat": self.ma_sat
+            "ma_sat": self.ma_sat,
+            "pit": self.pit
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -576,7 +577,7 @@ class DBTVAULTGenerator:
         generator_functions[vault_structure](**processed_metadata)
 
     def stage(self, model_name, source_model: dict, derived_columns=None, hashed_columns=None,
-              ranked_columns=None, include_source_columns=True, depends_on="", config=None):
+              ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
         """
         Generate a stage model template
             :param model_name: Name of the model file
@@ -588,6 +589,7 @@ class DBTVAULTGenerator:
             :param include_source_columns: Boolean: Whether to extract source columns from source table
             :param depends_on: depends on string if provided
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -612,11 +614,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config string
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
-        {depends_on}
+        {depends_on}    
         {{{{ config({config}) }}}}
         {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
                           {src_source}, {source_model})   }}}}
@@ -634,7 +636,7 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -660,7 +662,7 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -689,7 +691,7 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -716,7 +718,7 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -753,6 +755,29 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites,
+            stage_tables, src_ldts, depends_on="", config=None):
+        """
+        Generate a PIT template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param satellites: Dictionary of satellite reference mappings
+            :param src_ldts: Source Load Date timestamp
+            :param stage_tables: List of stage tables
+            :param source_model: Model name to select from
+            :param config: Optional model config
+            :param depends_on: depends on string if provided
+        """
+
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites},{stage_tables},{src_ldts}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
@@ -768,11 +793,11 @@ class DBTVAULTGenerator:
             if isinstance(item, dict):
 
                 if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
-
-                    satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
-                    satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-
-                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+                    dict_check = [next(iter(item))][0]
+                    if isinstance(item[dict_check], dict):
+                        satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
+                        satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
+                        processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
 
                 elif item.get("source_column", None) and item.get("alias", None):
@@ -801,7 +826,8 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
-            "ma_sat": "incremental"
+            "ma_sat": "incremental",
+            "pit": "pit_incremental"
         }
 
         depends_on = kwargs.get("depends_on", "")

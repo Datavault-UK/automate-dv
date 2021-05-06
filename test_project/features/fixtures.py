@@ -792,13 +792,16 @@ def eff_satellite_multipart(context):
 
 @fixture
 def multi_active_satellite(context):
+def multi_active_satellite(context):
     """
     Define the structures and metadata to load multi active satellites
     """
     context.vault_structure_type = "ma_sat"
 
+    context.vault_structure_type = "pit"
+
     context.hashed_columns = {
-        "STG_CUSTOMER": {
+        "STG_CUSTOMER_DETAILS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
@@ -841,7 +844,7 @@ def multi_active_satellite(context):
     }
 
     context.derived_columns = {
-        "STG_CUSTOMER": {
+        "STG_CUSTOMER_DETAILS": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TS": {
@@ -939,6 +942,91 @@ def multi_active_satellite(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "source_model": "STG_CUSTOMER_DETAILS_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "PIT_CUSTOMER": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_TS": {
+            "source_model": "HUB_CUSTOMER_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+                },
+            "src_ldts": "LOAD_DATETIME"
+        },
+        "PIT_CUSTOMER_LG": {
+            "source_model": "HUB_CUSTOMER_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+                },
+            "src_ldts": "LOAD_DATETIME"
+        },
+        "PIT_CUSTOMER_HG": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                },
+            "src_ldts": "LOAD_DATE"
         }
     }
 
@@ -1365,6 +1453,12 @@ def multi_active_satellite_cycle(context):
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
             "+column_types": {
+                "AS_OF_DATE": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -1394,6 +1488,228 @@ def multi_active_satellite_cycle(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMBER(38, 0)",
                 "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "PIT_CUSTOMER_LG": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_HG": {
+            "+column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        }
+    }
+
+
+@fixture
+def cycle(context):
+    """
+    Define the structures and metadata to perform vault load cycles
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
+                         }
+        },
+        "STG_BOOKING": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "BOOKING_PK": "BOOKING_ID",
+            "CUSTOMER_BOOKING_PK": ["CUSTOMER_ID", "BOOKING_ID"],
+            "HASHDIFF_BOOK_CUSTOMER_DETAILS": {"is_hashdiff": True,
+                                               "columns": ["CUSTOMER_ID",
+                                                           "NATIONALITY",
+                                                           "PHONE"]
+                                               },
+            "HASHDIFF_BOOK_BOOKING_DETAILS": {"is_hashdiff": True,
+                                              "columns": ["BOOKING_ID",
+                                                          "BOOKING_DATE",
+                                                          "PRICE",
+                                                          "DEPARTURE_DATE",
+                                                          "DESTINATION"]
+                                              }
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_BOOKING": {
+            "EFFECTIVE_FROM": "BOOKING_DATE"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB_CUSTOMER": {
+            "source_model": ["STG_CUSTOMER",
+                             "STG_BOOKING"],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_BOOKING": {
+            "source_model": "STG_BOOKING",
+            "src_pk": "BOOKING_PK",
+            "src_nk": "BOOKING_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "LINK_CUSTOMER_BOOKING": {
+            "source_model": "STG_BOOKING",
+            "src_pk": "CUSTOMER_BOOKING_PK",
+            "src_fk": ["CUSTOMER_PK", "BOOKING_PK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUST_CUSTOMER_DETAILS": {
+            "source_model": "STG_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_BOOK_CUSTOMER_DETAILS": {
+            "source_model": "STG_BOOKING",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": {"source_column": "HASHDIFF_BOOK_CUSTOMER_DETAILS",
+                             "alias": "HASHDIFF"},
+            "src_payload": ["PHONE", "NATIONALITY"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_BOOK_BOOKING_DETAILS": {
+            "source_model": "STG_BOOKING",
+            "src_pk": "BOOKING_PK",
+            "src_hashdiff": {"source_column": "HASHDIFF_BOOK_BOOKING_DETAILS",
+                             "alias": "HASHDIFF"},
+            "src_payload": ["PRICE", "BOOKING_DATE",
+                            "DEPARTURE_DATE", "DESTINATION"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.stage_columns = {
+        "RAW_STAGE_CUSTOMER":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_DOB",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_BOOKING":
+            ["BOOKING_ID",
+             "CUSTOMER_ID",
+             "BOOKING_DATE",
+             "PRICE",
+             "DEPARTURE_DATE",
+             "DESTINATION",
+             "PHONE",
+             "NATIONALITY",
+             "LOAD_DATE",
+             "SOURCE"]
+    }
+
+    context.seed_config = {
+        "RAW_STAGE_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_BOOKING": {
+            "+column_types": {
+                "BOOKING_ID": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
+                "PRICE": "NUMBER(38,2)",
+                "DEPARTURE_DATE": "DATE",
+                "BOOKING_DATE": "DATE",
+                "PHONE": "VARCHAR",
+                "DESTINATION": "VARCHAR",
+                "NATIONALITY": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_BOOKING": {
+            "+column_types": {
+                "BOOKING_PK": "BINARY(16)",
+                "BOOKING_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "LINK_CUSTOMER_BOOKING": {
+            "+column_types": {
+                "CUSTOMER_BOOKING_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "BOOKING_PK": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_CUST_CUSTOMER_DETAILS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_BOOK_CUSTOMER_DETAILS": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "PHONE": "VARCHAR",
+                "NATIONALITY": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SAT_BOOK_BOOKING_DETAILS": {
+            "+column_types": {
+                "BOOKING_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "PRICE": "NUMBER(38,2)",
+                "BOOKING_DATE": "DATE",
+                "DEPARTURE_DATE": "DATE",
+                "DESTINATION": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -1495,6 +1811,32 @@ def cycle(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "PIT_CUSTOMER": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_LOGIN": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_PROFILE": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                }
         }
     }
 
