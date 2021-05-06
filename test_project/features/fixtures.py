@@ -792,7 +792,6 @@ def eff_satellite_multipart(context):
 
 @fixture
 def multi_active_satellite(context):
-def multi_active_satellite(context):
     """
     Define the structures and metadata to load multi active satellites
     """
