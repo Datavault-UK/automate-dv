@@ -27,28 +27,28 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{# Setting ghost values to replace NULLS #}
+{#- Setting ghost values to replace NULLS -#}
 {%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
 {# Stating the dependancies on the stage tables outside of the If STATEMENT #}
-{%- for stg in stage_tables -%}
-    -- depends_on: {{ ref(stg) }}
+{% for stg in stage_tables -%}
+    {{ "-- depends_on: " ~ ref(stg) }}
 {% endfor %}
 
-{# Setting the new AS_OF dates CTE name #}
-{% if dbtvault.is_any_incremental() -%}
-{% set new_as_of_dates_cte = 'NEW_ROWS_AS_OF'  %}
-{% else %}
-{% set new_as_of_dates_cte = 'AS_OF' %}
-{% endif %}
+{#- Setting the new AS_OF dates CTE name -#}
+{%- if dbtvault.is_any_incremental() -%}
+{%- set new_as_of_dates_cte = 'NEW_ROWS_AS_OF'  -%}
+{%- else -%}
+{%- set new_as_of_dates_cte = 'AS_OF' -%}
+{%- endif %}
 
 WITH as_of AS (
     SELECT * FROM {{ source_relation }}
 ),
 
-{% if dbtvault.is_any_incremental() -%}
+{%- if dbtvault.is_any_incremental() %}
 
     last_safe_load_datetime AS (
         SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
@@ -117,7 +117,7 @@ WITH as_of AS (
         AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
     ),
 
-    -- backfill any newly arrived hubs, set all historical pit dates to ghost records
+    -- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
 
     backfill_rows_as_of_dates AS (
         SELECT
@@ -158,7 +158,6 @@ WITH as_of AS (
             bf.{{- src_pk }}, bf.AS_OF_DATE
         ORDER BY (1, 2)
     ),
-
 {% endif %}
 
 new_rows_as_of_dates AS (
