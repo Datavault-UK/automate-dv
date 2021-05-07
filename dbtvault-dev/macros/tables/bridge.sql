@@ -25,9 +25,9 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set maxdate = '9999-12-31 23:59:59.999999' -%}
+{%- set maxdate = '9999-12-31 23:59:59.999' -%}
 {%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1990-01-01 00:00:00.000000' %}
+{%- set ghost_date = '1990-01-01 00:00:00.000' %}
 
 WITH AS_OF_DATES_FOR_BRIDGE AS (
      SELECT a.AS_OF_DATE
@@ -59,9 +59,9 @@ BRIDGE_WALK AS (
             {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
             {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
             {%- filter indent(width=8) -%}
---             {{- "\n" -}}
+            {{- "\n" -}}
             {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
---             {{- "\n" -}}
+            {{- "\n" -}}
             {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ maxdate ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
             {%- endfilter -%}
         {% endfor %}
