@@ -1,5 +1,5 @@
 name: 'dbtvault'
-version: '0.8.3'
+version: '0.8.4'
 require-dbt-version: [">=0.18.0", "<0.20.0"]
 config-version: 2
 
