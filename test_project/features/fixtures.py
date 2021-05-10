@@ -703,6 +703,15 @@ def bridge(context):
             "ORDER_PRODUCT_PK": {"is_hashdiff": True,
                                  "columns": ["ORDER_ID", "PRODUCT_ID"]
                                  }
+        },
+        "STG_PRODUCT_COMPONENT": {
+            "PRODUCT_PK": "PRODUCT_ID",
+            "PRODUCT_FK": "PRODUCT_ID",
+            "COMPONENT_PK": "COMPONENT_ID",
+            "COMPONENT_FK": "COMPONENT_ID",
+            "PRODUCT_COMPONENT_PK": {"is_hashdiff": True,
+                                    "columns": ["PRODUCT_ID", "COMPONENT_ID"]
+                                     }
         }
     }
 
@@ -716,6 +725,10 @@ def bridge(context):
             "START_DATE": "LOAD_DATE"
         },
         "STG_ORDER_PRODUCT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "START_DATE": "LOAD_DATE"
+        },
+        "STG_PRODUCT_COMPONENT": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "START_DATE": "LOAD_DATE"
         }
@@ -746,6 +759,14 @@ def bridge(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "LINK_PRODUCT_COMPONENT": {
+            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
+            "source_model": "STG_PRODUCT_COMPONENT",
+            "src_pk": "PRODUCT_COMPONENT_PK",
+            "src_fk": ["PRODUCT_FK", "COMPONENT_FK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "EFF_SAT_CUSTOMER_ORDER": {
             # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_CUSTOMER_ORDER",
@@ -764,6 +785,18 @@ def bridge(context):
             "src_pk": "ORDER_PRODUCT_PK",
             "src_dfk": ["PRODUCT_FK"],
             "src_sfk": ["ORDER_FK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_PRODUCT_COMPONENT": {
+            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
+            "source_model": "STG_PRODUCT_COMPONENT",
+            "src_pk": "PRODUCT_COMPONENT_PK",
+            "src_dfk": ["COMPONENT_FK"],
+            "src_sfk": ["PRODUCT_FK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -819,6 +852,49 @@ def bridge(context):
                     "eff_sat_ldts": "LOAD_DATE"
                 }
             }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "bridge_walk": {
+                "CUSTOMER_ORDER": {
+                    "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "link_table": "LINK_CUSTOMER_ORDER",
+                    "link_pk": "CUSTOMER_ORDER_PK",
+                    "link_fk1": "CUSTOMER_FK",
+                    "link_fk2": "ORDER_FK",
+                    "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
+                    "eff_sat_pk": "CUSTOMER_ORDER_PK",
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_ldts": "LOAD_DATE"
+                },
+                "ORDER_PRODUCT": {
+                    "bridge_link_pk_col": "LINK_ORDER_PRODUCT_PK",
+                    "bridge_end_date_col": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
+                    "link_table": "LINK_ORDER_PRODUCT",
+                    "link_pk": "ORDER_PRODUCT_PK",
+                    "link_fk1": "ORDER_FK",
+                    "link_fk2": "PRODUCT_FK",
+                    "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
+                    "eff_sat_pk": "ORDER_PRODUCT_PK",
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_ldts": "LOAD_DATE"
+                },
+                "PRODUCT_COMPONENT": {
+                    "bridge_link_pk_col": "LINK_PRODUCT_COMPONENT_PK",
+                    "bridge_end_date_col": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
+                    "link_table": "LINK_PRODUCT_COMPONENT",
+                    "link_pk": "PRODUCT_COMPONENT_PK",
+                    "link_fk1": "PRODUCT_FK",
+                    "link_fk2": "COMPONENT_FK",
+                    "eff_sat_table": "EFF_SAT_PRODUCT_COMPONENT",
+                    "eff_sat_pk": "PRODUCT_COMPONENT_PK",
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_ldts": "LOAD_DATE"
+                }
+            }
         }
 
    }
@@ -840,6 +916,12 @@ def bridge(context):
         "RAW_ORDER_PRODUCT":
             ["ORDER_ID",
              "PRODUCT_ID",
+             "LOAD_DATE",
+             "END_DATE"
+             "SOURCE"],
+        "RAW_PRODUCT_COMPONENT":
+            ["PRODUCT_ID",
+             "COMPONENT_ID",
              "LOAD_DATE",
              "END_DATE"
              "SOURCE"]
@@ -874,6 +956,15 @@ def bridge(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_PRODUCT_COMPONENT": {
+            "+column_types": {
+                "PRODUCT_ID": "VARCHAR",
+                "COMPONENT_ID": "VARCHAR",
+                "LOAD_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "HUB_CUSTOMER": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -896,6 +987,15 @@ def bridge(context):
                 "ORDER_PRODUCT_PK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "LINK_PRODUCT_COMPONENT": {
+            "+column_types": {
+                "PRODUCT_COMPONENT_PK": "BINARY(16)",
+                "PRODUCT_FK": "BINARY(16)",
+                "COMPONENT_FK": "BINARY(16)",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -924,6 +1024,18 @@ def bridge(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "EFF_SAT_PRODUCT_COMPONENT": {
+            "+column_types": {
+                "PRODUCT_COMPONENT_PK": "BINARY(16)",
+                "PRODUCT_FK": "BINARY(16)",
+                "COMPONENT_FK": "BINARY(16)",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "AS_OF_DATE": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME"
@@ -945,6 +1057,18 @@ def bridge(context):
                 "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
                 "EFF_SAT_ORDER_PRODUCT_ENDDATE": "DATETIME"
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME",
+                "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
+                "EFF_SAT_ORDER_PRODUCT_ENDDATE": "DATETIME",
+                "LINK_PRODUCT_COMPONENT_PK": "BINARY(16)",
+                "EFF_SAT_PRODUCT_COMPONENT_ENDDATE": "DATETIME"
             }
         }
     }
