@@ -93,13 +93,13 @@ BRIDGE_WALK AS (
     {% endfor %}
     GROUP BY b.AS_OF_DATE
             ,a.{{ src_pk }}
-            {% for bridge_step in bridge_walk.keys() -%}
+            {% for bridge_step in bridge_walk.keys() %}
                 {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
                 {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
                 {%- filter indent(width=12) -%}
-                {{ ','~ current_link ~'.'~ link_pk }}
-                {%- endfilter -%}
-            {%- endfor %}
+                {{ ','~ current_link ~'.'~ link_pk -}}
+                {%- endfilter %}
+            {% endfor %}
     ORDER BY 1,2
 )
 
