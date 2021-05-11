@@ -672,20 +672,6 @@ def bridge(context):
     context.vault_structure_type = "bridge"
 
     context.hashed_columns = {
-        "STG_CUSTOMER_ORDER_PRODUCT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID",
-            "ORDER_FK": "ORDER_ID",
-            "PRODUCT_PK": "PRODUCT_ID",
-            "PRODUCT_FK": "PRODUCT_ID",
-            "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
-                                  "columns": ["CUSTOMER_ID", "ORDER_ID"]
-                                  },
-            "ORDER_PRODUCT_PK": {"is_hashdiff": True,
-                                 "columns": ["ORDER_ID", "PRODUCT_ID"]
-                                 }
-        },
         "STG_CUSTOMER_ORDER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "CUSTOMER_FK": "CUSTOMER_ID",
@@ -710,16 +696,12 @@ def bridge(context):
             "COMPONENT_PK": "COMPONENT_ID",
             "COMPONENT_FK": "COMPONENT_ID",
             "PRODUCT_COMPONENT_PK": {"is_hashdiff": True,
-                                    "columns": ["PRODUCT_ID", "COMPONENT_ID"]
+                                     "columns": ["COMPONENT_ID", "PRODUCT_ID"]
                                      }
         }
     }
 
     context.derived_columns = {
-        "STG_CUSTOMER_ORDER_PRODUCT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "START_DATE": "LOAD_DATE"
-        },
         "STG_CUSTOMER_ORDER": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "START_DATE": "LOAD_DATE"
@@ -736,7 +718,6 @@ def bridge(context):
 
     context.vault_structure_columns = {
         "HUB_CUSTOMER": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
@@ -744,7 +725,6 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "LINK_CUSTOMER_ORDER": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
@@ -752,7 +732,6 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "LINK_ORDER_PRODUCT": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
             "src_fk": ["ORDER_FK", "PRODUCT_FK"],
@@ -760,7 +739,6 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "LINK_PRODUCT_COMPONENT": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_PRODUCT_COMPONENT",
             "src_pk": "PRODUCT_COMPONENT_PK",
             "src_fk": ["PRODUCT_FK", "COMPONENT_FK"],
@@ -768,7 +746,6 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_CUSTOMER_ORDER": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_FK"],
@@ -780,7 +757,6 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_PRODUCT": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
             "src_dfk": ["PRODUCT_FK"],
@@ -792,7 +768,6 @@ def bridge(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_PRODUCT_COMPONENT": {
-            # "source_model": "STG_CUSTOMER_ORDER_PRODUCT",
             "source_model": "STG_PRODUCT_COMPONENT",
             "src_pk": "PRODUCT_COMPONENT_PK",
             "src_dfk": ["COMPONENT_FK"],
@@ -900,13 +875,6 @@ def bridge(context):
    }
 
     context.stage_columns = {
-        "RAW_CUSTOMER_ORDER_PRODUCT":
-            ["CUSTOMER_ID",
-             "ORDER_ID",
-             "PRODUCT_ID",
-             "LOAD_DATE",
-             "END_DATE"
-             "SOURCE"],
         "RAW_CUSTOMER_ORDER":
             ["CUSTOMER_ID",
              "ORDER_ID",
@@ -928,16 +896,6 @@ def bridge(context):
     }
 
     context.seed_config = {
-        "RAW_CUSTOMER_ORDER_PRODUCT": {
-            "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
-                "PRODUCT_ID": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
-            }
-        },
         "RAW_CUSTOMER_ORDER": {
             "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
