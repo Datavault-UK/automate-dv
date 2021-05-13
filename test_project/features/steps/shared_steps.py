@@ -254,7 +254,7 @@ def create_csv(context, raw_stage_model_name):
     assert "Completed successfully" in logs
 
 
-@given("the {table_name} table is created and populated with data")
+@step("the {table_name} table is created and populated with data")
 def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
