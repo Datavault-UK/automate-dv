@@ -11,7 +11,7 @@
 
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
-    "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
+    "bridge error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
     {%- endset -%}
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
