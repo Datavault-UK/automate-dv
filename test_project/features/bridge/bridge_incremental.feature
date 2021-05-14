@@ -5,8 +5,7 @@ Feature: Bridge
 
 # ------------------------ ONE LINK ------------------------
 
-# TODO: second load is ONLY returning new rows for the new AS_OF date, is this really what we want? (this is not what the PIT table macro does)
-
+# TODO: bridge macro requires further investigation particularly around backfill and overlap CTEs
   @fixture.bridge
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates and an updated order into an already populated bridge table from one hub and one link
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
