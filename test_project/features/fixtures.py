@@ -799,7 +799,8 @@ def bridge(context):
             "stage_tables":
                 {
                     "STG_CUSTOMER_ORDER": "LOAD_DATE"
-                }
+                },
+            "src_ldts": "LOAD_DATE"
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "source_model": "HUB_CUSTOMER",
@@ -835,7 +836,8 @@ def bridge(context):
                 {
                     "STG_CUSTOMER_ORDER": "LOAD_DATE",
                     "STG_ORDER_PRODUCT": "LOAD_DATE"
-                }
+                },
+            "src_ldts": "LOAD_DATE"
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "source_model": "HUB_CUSTOMER",
@@ -884,7 +886,8 @@ def bridge(context):
                     "STG_CUSTOMER_ORDER": "LOAD_DATE",
                     "STG_ORDER_PRODUCT": "LOAD_DATE",
                     "STG_PRODUCT_COMPONENT": "LOAD_DATE"
-                }
+                },
+            "src_ldts": "LOAD_DATE"
         }
    }
 
