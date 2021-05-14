@@ -795,7 +795,11 @@ def bridge(context):
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_ldts": "LOAD_DATE"
                 }
-            }
+            },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_ORDER": "LOAD_DATE"
+                }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "source_model": "HUB_CUSTOMER",
@@ -826,7 +830,12 @@ def bridge(context):
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_ldts": "LOAD_DATE"
                 }
-            }
+            },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_ORDER": "LOAD_DATE",
+                    "STG_ORDER_PRODUCT": "LOAD_DATE"
+                }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "source_model": "HUB_CUSTOMER",
@@ -869,9 +878,14 @@ def bridge(context):
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_ldts": "LOAD_DATE"
                 }
-            }
+            },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_ORDER": "LOAD_DATE",
+                    "STG_ORDER_PRODUCT": "LOAD_DATE",
+                    "STG_PRODUCT_COMPONENT": "LOAD_DATE"
+                }
         }
-
    }
 
     context.stage_columns = {

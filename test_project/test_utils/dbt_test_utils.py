@@ -716,19 +716,20 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def bridge(self, model_name, src_pk, bridge_walk, as_of_dates_table, source_model, config):
+    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables, source_model, config):
         """
         Generate a bridge model template
             :param model_name: Name of the model file
             :param src_pk: Source pk
             :param as_of_dates_table: Name for the AS_OF table
             :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
+            :param stage_tables: List of stage table load date(time) stamps
             :param source_model: Model name to select from
             :param config: Optional model config
         """
         template = f"""
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {source_model}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -774,10 +775,12 @@ class DBTVAULTGenerator:
 
                 elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
 
-                    link_columns_hk = [item[col]['bridge_link_pk_col'] for col in item.keys()]
-                    eff_satellite_columns_end_date = [item[col]['bridge_end_date_col'] for col in item.keys()]
+                    dict_check = [next(iter(item))][0]
+                    if isinstance(item[dict_check], dict):
+                        link_columns_hk = [item[col]['bridge_link_pk_col'] for col in item.keys()]
+                        eff_satellite_columns_end_date = [item[col]['bridge_end_date_col'] for col in item.keys()]
 
-                    processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
+                        processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
 
                 elif item.get("source_column", None) and item.get("alias", None):
 
