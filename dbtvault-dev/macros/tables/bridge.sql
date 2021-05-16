@@ -87,12 +87,6 @@ WITH as_of AS (
         FROM as_of
     ),
 
-    backfill_as_of AS (
-        SELECT AS_OF_DATE
-        from as_of
-        WHERE as_of.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    ),
-
     new_rows_pks AS (
         SELECT h.{{ src_pk }}
         FROM {{ ref(source_model) }} AS h
@@ -155,64 +149,6 @@ WITH as_of AS (
             {% endfor %}
         FROM overlap_pks AS a
         INNER JOIN overlap_as_of AS b
-            ON (1=1)
-        {%- set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
-        {%- for bridge_step in bridge_walk.keys() -%}
-            {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
-            {%- set current_eff_sat = bridge_walk[bridge_step]['eff_sat_table'] -%}
-            {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-            {%- set link_fk1 = bridge_walk[bridge_step]['link_fk1'] -%}
-            {%- set link_fk2 = bridge_walk[bridge_step]['link_fk2'] -%}
-            {%- set eff_sat_pk = bridge_walk[bridge_step]['eff_sat_pk'] -%}
-            {%- set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
-            {%- set eff_sat_ldts = bridge_walk[bridge_step]['eff_sat_ldts'] -%}
-            {%- if loop.first  %}
-        LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
-            ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk1 }}
-            {%- else %}
-        LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
-            ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link }}.{{ link_fk1 }}
-            {%- endif %}
-        INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
-            ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
-            AND {{ current_eff_sat }}.{{ eff_sat_ldts }} <= b.AS_OF_DATE
-            {%- set loop_vars.last_link = current_link -%}
-            {%- set loop_vars.last_link_fk2 = link_fk2 -%}
-        {% endfor %}
-        GROUP BY b.AS_OF_DATE
-                ,a.{{ src_pk }}
-                {% for bridge_step in bridge_walk.keys() %}
-                    {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
-                    {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-                    {%- filter indent(width=12) -%}
-                    {{ ','~ current_link ~'.'~ link_pk -}}
-                    {%- endfilter %}
-                {% endfor %}
-        ORDER BY 1,2
-    ),
-
-    -- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
-
-    backfill AS (
-        SELECT
-            a.{{ src_pk }}
-            ,b.AS_OF_DATE
-            {%- for bridge_step in bridge_walk.keys() -%}
-                {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
-                {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
-                {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-                {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
-                {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
-                {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
-                {%- filter indent(width=8) -%}
-                {{- "\n" -}}
-                {{ ',COALESCE(MAX('~ link_table ~'.'~ link_pk ~'), CAST('"'"~ ghost_pk ~"'"' AS BINARY(16))) AS '~ bridge_link_pk_col }}
-                {{- "\n" -}}
-                {{ ',COALESCE(MAX('~ eff_sat_table ~'.'~ eff_sat_end_date ~'), CAST('"'"~ maxdate ~"'"' AS TIMESTAMP_NTZ)) AS '~ bridge_end_date_col }}
-                {%- endfilter -%}
-            {% endfor %}
-        FROM new_rows_pks AS a
-        INNER JOIN backfill_as_of AS b
             ON (1=1)
         {%- set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
         {%- for bridge_step in bridge_walk.keys() -%}
@@ -311,10 +247,7 @@ SELECT * FROM new_rows
 {% if dbtvault.is_any_incremental() -%}
     UNION ALL
     SELECT * FROM overlap
-    UNION ALL
-    SELECT * FROM backfill
-
-{%- endif -%}
+{% endif -%}
 )
 
 SELECT DISTINCT * FROM BRIDGE
@@ -328,4 +261,3 @@ WHERE {{ bridge_end_date_col ~" = '"~ maxdate ~"'" }}
     {% endfor -%}
 
 {%- endmacro -%}
-
