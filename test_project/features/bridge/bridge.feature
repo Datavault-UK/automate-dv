@@ -1,6 +1,8 @@
 @fixture.set_workdir
 Feature: Bridge
 
+# TODO: eliminate duplicate-like changes in upper level links/eff_sats
+
 ####################### BASE LOAD #######################
 
 # ------------------------ ONE LINK ------------------------
@@ -445,6 +447,7 @@ Feature: Bridge
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        | md5('300\|\|CCC')     | 9999-12-31 23:59:59.999       |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        | md5('400\|\|DDD')     | 9999-12-31 23:59:59.999       |
 
+  # TODO: How did we this test pass without auto_end_dating fixture?
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and two links with history and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist
@@ -785,6 +788,7 @@ Feature: Bridge
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        | md5('300\|\|CCC')     | 9999-12-31 23:59:59.999       | md5('CCC-0\|\|CCC')       | 9999-12-31 23:59:59.999           |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        | md5('400\|\|DDD')     | 9999-12-31 23:59:59.999       | md5('DDD-0\|\|DDD')       | 9999-12-31 23:59:59.999           |
 
+  # TODO: How did we this test pass without auto_end_dating fixture?
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with history only in EFF_SAT_ORDER_PRODUCT and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -946,6 +950,7 @@ Feature: Bridge
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        | md5('300\|\|CCB')     | 9999-12-31 23:59:59.999       | md5('CCB-2\|\|CCB')       | 9999-12-31 23:59:59.999           |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        | md5('400\|\|DDD')     | 9999-12-31 23:59:59.999       | md5('DDD-0\|\|DDD')       | 9999-12-31 23:59:59.999           |
 
+  # TODO: How did we this test pass without auto_end_dating fixture?
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with history only in EFF_SAT_PRODUCT_COMPONENT and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -1149,6 +1154,7 @@ Feature: Bridge
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        | md5('300\|\|CCC')     | 9999-12-31 23:59:59.999       | md5('CCC-2\|\|CCC')       | 9999-12-31 23:59:59.999           |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        | md5('400\|\|DDD')     | 9999-12-31 23:59:59.999       | md5('DDD-0\|\|DDD')       | 9999-12-31 23:59:59.999           |
 
+  # TODO: How did we this test pass without auto_end_dating fixture?
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
