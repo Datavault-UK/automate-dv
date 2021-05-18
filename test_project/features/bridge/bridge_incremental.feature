@@ -96,7 +96,8 @@ Feature: Bridge
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        |
 
-  # TODO: possibly needs to be deleted (because at the moment, without auto_end_date fixture, the eff_sat does not work)
+  # TODO: auto end dating is NOT triggered by "When I load the vault", only by "When I load EFF_SAT_CUSTOMER_ORDER eff_sat"
+  @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates and a new order into an already populated bridge table from one hub and one link
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
@@ -168,25 +169,29 @@ Feature: Bridge
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATE               | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
       | md5('1002\|\|100') | md5('1002') | md5('100') | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
       | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
     Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE |
-      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     | 9999-12-31 23:59:59.999        |
+#      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     | 9999-12-31 23:59:59.999        |
       | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     | 9999-12-31 23:59:59.999        |
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        |
-      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | 9999-12-31 23:59:59.999        |
+#      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | 9999-12-31 23:59:59.999        |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     | 9999-12-31 23:59:59.999        |
       | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|100')     | 9999-12-31 23:59:59.999        |
       | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|200')     | 9999-12-31 23:59:59.999        |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | 9999-12-31 23:59:59.999        |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | 9999-12-31 23:59:59.999        |
 
-  # TODO: investigate why there are duplicates in the bridge and why the old records with MAX_DATEs are being pulled in
-  # hint: check grouping is right
+  # TODO: investigate why there are duplicates in the bridge and why the old records with MAX_DATEs are being pulled in - it is as if the bridge_incremental materialisation is not being triggered
+  # TODO: is the bridge_incremental materialisation actually working but there is something we are doing that is causing it not to be triggered? or is it being triggered but then not working?
+  # TODO: the bridge selection needs end dating to be working.....
+  # TODO: why is auto end dating not enabled for "When I load the vault"?
+  # TODO: is eff sat without auto end dating working correctly? it appears in that case to have no end dating functionality at all!
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [INCR-LOAD] Incremental load with auto end-dating the more recent AS OF dates and a new order into an already populated bridge table from one hub and one link
