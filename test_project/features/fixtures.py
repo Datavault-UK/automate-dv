@@ -703,16 +703,16 @@ def bridge(context):
 
     context.derived_columns = {
         "STG_CUSTOMER_ORDER": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "START_DATE": "LOAD_DATE"
+            "EFFECTIVE_FROM": "LOAD_DATETIME",
+            "START_DATE": "LOAD_DATETIME"
         },
         "STG_ORDER_PRODUCT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "START_DATE": "LOAD_DATE"
+            "EFFECTIVE_FROM": "LOAD_DATETIME",
+            "START_DATE": "LOAD_DATETIME"
         },
         "STG_PRODUCT_COMPONENT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "START_DATE": "LOAD_DATE"
+            "EFFECTIVE_FROM": "LOAD_DATETIME",
+            "START_DATE": "LOAD_DATETIME"
         }
     }
 
@@ -721,28 +721,28 @@ def bridge(context):
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "LINK_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "LINK_ORDER_PRODUCT": {
             "source_model": "STG_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
             "src_fk": ["ORDER_FK", "PRODUCT_FK"],
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "LINK_PRODUCT_COMPONENT": {
             "source_model": "STG_PRODUCT_COMPONENT",
             "src_pk": "PRODUCT_COMPONENT_PK",
             "src_fk": ["PRODUCT_FK", "COMPONENT_FK"],
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "EFF_SAT_CUSTOMER_ORDER": {
@@ -753,18 +753,18 @@ def bridge(context):
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_PRODUCT": {
             "source_model": "STG_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
-            "src_dfk": ["PRODUCT_FK"],
-            "src_sfk": ["ORDER_FK"],
+            "src_dfk": ["ORDER_FK"],
+            "src_sfk": ["PRODUCT_FK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "EFF_SAT_PRODUCT_COMPONENT": {
@@ -775,7 +775,7 @@ def bridge(context):
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "BRIDGE_CUSTOMER_ORDER": {
@@ -785,7 +785,7 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATETIME",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
@@ -794,14 +794,14 @@ def bridge(context):
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
-                    "eff_sat_ldts": "LOAD_DATE"
+                    "eff_sat_ldts": "LOAD_DATETIME"
                 }
             },
             "stage_tables":
                 {
-                    "STG_CUSTOMER_ORDER": "LOAD_DATE"
+                    "STG_CUSTOMER_ORDER": "LOAD_DATETIME"
                 },
-            "src_ldts": "LOAD_DATE"
+            "src_ldts": "LOAD_DATETIME"
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "source_model": "HUB_CUSTOMER",
@@ -810,7 +810,7 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATETIME",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
@@ -819,11 +819,11 @@ def bridge(context):
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
-                    "eff_sat_ldts": "LOAD_DATE"
+                    "eff_sat_ldts": "LOAD_DATETIME"
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
-                    "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
+                    "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATETIME",
                     "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
@@ -832,15 +832,15 @@ def bridge(context):
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "END_DATE",
-                    "eff_sat_ldts": "LOAD_DATE"
+                    "eff_sat_ldts": "LOAD_DATETIME"
                 }
             },
             "stage_tables":
                 {
-                    "STG_CUSTOMER_ORDER": "LOAD_DATE",
-                    "STG_ORDER_PRODUCT": "LOAD_DATE"
+                    "STG_CUSTOMER_ORDER": "LOAD_DATETIME",
+                    "STG_ORDER_PRODUCT": "LOAD_DATETIME"
                 },
-            "src_ldts": "LOAD_DATE"
+            "src_ldts": "LOAD_DATETIME"
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "source_model": "HUB_CUSTOMER",
@@ -849,7 +849,7 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATETIME",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
@@ -858,11 +858,11 @@ def bridge(context):
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
-                    "eff_sat_ldts": "LOAD_DATE"
+                    "eff_sat_ldts": "LOAD_DATETIME"
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
-                    "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
+                    "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATETIME",
                     "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
@@ -871,11 +871,11 @@ def bridge(context):
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "END_DATE",
-                    "eff_sat_ldts": "LOAD_DATE"
+                    "eff_sat_ldts": "LOAD_DATETIME"
                 },
                 "PRODUCT_COMPONENT": {
                     "bridge_link_pk": "LINK_PRODUCT_COMPONENT_PK",
-                    "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
+                    "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATETIME",
                     "bridge_end_date": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
                     "link_table": "LINK_PRODUCT_COMPONENT",
                     "link_pk": "PRODUCT_COMPONENT_PK",
@@ -884,16 +884,16 @@ def bridge(context):
                     "eff_sat_table": "EFF_SAT_PRODUCT_COMPONENT",
                     "eff_sat_pk": "PRODUCT_COMPONENT_PK",
                     "eff_sat_end_date": "END_DATE",
-                    "eff_sat_ldts": "LOAD_DATE"
+                    "eff_sat_ldts": "LOAD_DATETIME"
                 }
             },
             "stage_tables":
                 {
-                    "STG_CUSTOMER_ORDER": "LOAD_DATE",
-                    "STG_ORDER_PRODUCT": "LOAD_DATE",
-                    "STG_PRODUCT_COMPONENT": "LOAD_DATE"
+                    "STG_CUSTOMER_ORDER": "LOAD_DATETIME",
+                    "STG_ORDER_PRODUCT": "LOAD_DATETIME",
+                    "STG_PRODUCT_COMPONENT": "LOAD_DATETIME"
                 },
-            "src_ldts": "LOAD_DATE"
+            "src_ldts": "LOAD_DATETIME"
         }
    }
 
@@ -901,19 +901,19 @@ def bridge(context):
         "RAW_CUSTOMER_ORDER":
             ["CUSTOMER_ID",
              "ORDER_ID",
-             "LOAD_DATE",
+             "LOAD_DATETIME",
              "END_DATE"
              "SOURCE"],
         "RAW_ORDER_PRODUCT":
             ["ORDER_ID",
              "PRODUCT_ID",
-             "LOAD_DATE",
+             "LOAD_DATETIME",
              "END_DATE"
              "SOURCE"],
         "RAW_PRODUCT_COMPONENT":
             ["PRODUCT_ID",
              "COMPONENT_ID",
-             "LOAD_DATE",
+             "LOAD_DATETIME",
              "END_DATE"
              "SOURCE"]
     }
@@ -923,7 +923,7 @@ def bridge(context):
             "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -932,7 +932,7 @@ def bridge(context):
             "+column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PRODUCT_ID": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -941,7 +941,7 @@ def bridge(context):
             "+column_types": {
                 "PRODUCT_ID": "VARCHAR",
                 "COMPONENT_ID": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -950,7 +950,7 @@ def bridge(context):
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -959,7 +959,7 @@ def bridge(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -968,7 +968,7 @@ def bridge(context):
                 "ORDER_PRODUCT_PK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -977,7 +977,7 @@ def bridge(context):
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
                 "COMPONENT_FK": "BINARY(16)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -989,7 +989,7 @@ def bridge(context):
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1001,7 +1001,7 @@ def bridge(context):
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1013,7 +1013,7 @@ def bridge(context):
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
