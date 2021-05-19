@@ -127,19 +127,19 @@ WITH as_of AS (
             {%- for bridge_step in bridge_walk.keys() -%}
                 {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
                 {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-                {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
+                {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
                 {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
-                {% set bridge_load_date_col = bridge_walk[bridge_step]['bridge_load_date_col'] -%}
-                {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
+                {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
+                {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
                 {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_ldts'] -%}
                 {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
                 {%- filter indent(width=8) -%}
                 {{- "\n" -}}
-                {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk_col }}
+                {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
                 {{- "\n" -}}
-                {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date_col }}
+                {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date }}
                 {{- "\n" -}}
-                {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date_col }}
+                {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date }}
                 {%- endfilter -%}
             {% endfor %}
         FROM overlap_pks AS a
@@ -178,19 +178,19 @@ new_rows AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
             {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-            {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
+            {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
             {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
-            {% set bridge_load_date_col = bridge_walk[bridge_step]['bridge_load_date_col'] -%}
-            {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
+            {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
+            {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_ldts'] -%}
             {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
             {%- filter indent(width=8) -%}
             {{- "\n" -}}
-            {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk_col }}
+            {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
             {{- "\n" -}}
-            {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date_col }}
+            {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date }}
             {{- "\n" -}}
-            {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date_col }}
+            {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date}}
             {%- endfilter -%}
         {% endfor %}
     FROM {{ ref(source_model) }} AS a
@@ -221,46 +221,49 @@ new_rows AS (
     {% endfor %}
 ),
 
-BRIDGE AS (
-SELECT * FROM new_rows
-{% if dbtvault.is_any_incremental() -%}
-UNION ALL
-SELECT * FROM overlap
-{% endif -%}
-)
-
+bridge AS (
 SELECT
     {{ src_pk }}
     ,AS_OF_DATE
     {%- for bridge_step in bridge_walk.keys() -%}
-    {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
-    {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] %}
-    {{ ','~ bridge_link_pk_col }}
-    {{ ','~ bridge_end_date_col }}
+    {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+    {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
+    {{ ','~ bridge_link_pk }}
+    {{ ','~ bridge_end_date }}
     {%- endfor %}
 FROM
 (
+{#  Select candidate records that are within a current group, i.e. in the most recent record of the group all relationships have end date as max date, #}
+{#  and that are entirely current, i.e. in the record all relationships have end date as max date #}
     SELECT *
         {%- for bridge_step in bridge_walk.keys() -%}
-        {% set bridge_link_pk_col = bridge_walk[bridge_step]['bridge_link_pk_col'] -%}
-        {% set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
-        {% set bridge_load_date_col = bridge_walk[bridge_step]['bridge_load_date_col'] %}
-        {{ ',FIRST_VALUE('~ bridge_end_date_col ~') OVER (PARTITION BY '~ bridge_link_pk_col ~' ORDER BY '~ bridge_load_date_col ~' DESC) AS firstvalueofgroup'~ loop.index }}
+        {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+        {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+        {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
+        {{ ',FIRST_VALUE('~ bridge_end_date ~') OVER (PARTITION BY '~ bridge_link_pk ~' ORDER BY '~ bridge_load_date ~' DESC) AS firstvalueofgroup'~ loop.index }}
         {%- endfor %}
     FROM
     (
-        SELECT DISTINCT * FROM BRIDGE
+{#  Select candidate records #}
+        SELECT * FROM new_rows
+        {% if dbtvault.is_any_incremental() -%}
+        UNION ALL
+        SELECT * FROM overlap
+        {% endif -%}
     ) AS x
     {%- for bridge_step in bridge_walk.keys() -%}
-    {%- set bridge_end_date_col = bridge_walk[bridge_step]['bridge_end_date_col'] -%}
+    {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
     {%- if loop.first %}
     {{ "QUALIFY firstvalueofgroup"~ loop.index ~" = '"~ maxdate ~"'" }}
-    {{ "AND "~ bridge_end_date_col ~" = '"~ maxdate ~"'" }}
+    {{ "AND "~ bridge_end_date ~" = '"~ maxdate ~"'" }}
     {%- else %}
     {{ "AND firstvalueofgroup"~ loop.index ~" = '"~ maxdate ~"'" }}
-    {{ "AND "~ bridge_end_date_col ~" = '"~ maxdate ~"'" }}
+    {{ "AND "~ bridge_end_date ~" = '"~ maxdate ~"'" }}
     {%- endif -%}
     {% endfor %}
 ) AS y
+)
+
+SELECT * FROM bridge
 
 {%- endmacro -%}

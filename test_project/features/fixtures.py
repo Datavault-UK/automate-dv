@@ -784,9 +784,9 @@ def bridge(context):
             "as_of_dates_table": "AS_OF_DATE",
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
-                    "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_load_date_col": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
-                    "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
                     "link_fk1": "CUSTOMER_FK",
@@ -809,9 +809,9 @@ def bridge(context):
             "as_of_dates_table": "AS_OF_DATE",
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
-                    "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_load_date_col": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
-                    "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
                     "link_fk1": "CUSTOMER_FK",
@@ -822,9 +822,9 @@ def bridge(context):
                     "eff_sat_ldts": "LOAD_DATE"
                 },
                 "ORDER_PRODUCT": {
-                    "bridge_link_pk_col": "LINK_ORDER_PRODUCT_PK",
-                    "bridge_load_date_col": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
-                    "bridge_end_date_col": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
+                    "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
+                    "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
+                    "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
                     "link_fk1": "ORDER_FK",
@@ -848,9 +848,9 @@ def bridge(context):
             "as_of_dates_table": "AS_OF_DATE",
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
-                    "bridge_link_pk_col": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_load_date_col": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
-                    "bridge_end_date_col": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
                     "link_fk1": "CUSTOMER_FK",
@@ -861,9 +861,9 @@ def bridge(context):
                     "eff_sat_ldts": "LOAD_DATE"
                 },
                 "ORDER_PRODUCT": {
-                    "bridge_link_pk_col": "LINK_ORDER_PRODUCT_PK",
-                    "bridge_load_date_col": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
-                    "bridge_end_date_col": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
+                    "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
+                    "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
+                    "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
                     "link_fk1": "ORDER_FK",
@@ -874,9 +874,9 @@ def bridge(context):
                     "eff_sat_ldts": "LOAD_DATE"
                 },
                 "PRODUCT_COMPONENT": {
-                    "bridge_link_pk_col": "LINK_PRODUCT_COMPONENT_PK",
-                    "bridge_load_date_col": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
-                    "bridge_end_date_col": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
+                    "bridge_link_pk": "LINK_PRODUCT_COMPONENT_PK",
+                    "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
+                    "bridge_end_date": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
                     "link_table": "LINK_PRODUCT_COMPONENT",
                     "link_pk": "PRODUCT_COMPONENT_PK",
                     "link_fk1": "PRODUCT_FK",

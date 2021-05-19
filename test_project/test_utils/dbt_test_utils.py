@@ -794,8 +794,8 @@ class DBTVAULTGenerator:
 
                     dict_check = [next(iter(item))][0]
                     if isinstance(item[dict_check], dict):
-                        link_columns_hk = [item[col]['bridge_link_pk_col'] for col in item.keys()]
-                        eff_satellite_columns_end_date = [item[col]['bridge_end_date_col'] for col in item.keys()]
+                        link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
+                        eff_satellite_columns_end_date = [item[col]['bridge_end_date'] for col in item.keys()]
 
                         processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
 
