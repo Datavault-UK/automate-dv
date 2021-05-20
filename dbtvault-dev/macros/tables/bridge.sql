@@ -221,6 +221,43 @@ new_rows AS (
     {% endfor %}
 ),
 
+{# Full data from bridge walk(s) #}
+all_rows AS (
+    SELECT * FROM new_rows
+    {% if dbtvault.is_any_incremental() -%}
+    UNION ALL
+    SELECT * FROM overlap
+    {% endif -%}
+),
+
+{# Select most recent set of relationship key(s) for each as of date #}
+candidate_rows AS (
+  SELECT *
+    ,ROW_NUMBER() OVER (PARTITION BY AS_OF_DATE,
+    {%- for bridge_step in bridge_walk.keys() -%}
+    {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+    {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
+        {%- if loop.first %}
+    {{ bridge_link_pk }}
+        {%- else %}
+    {{ ','~ bridge_link_pk }}
+        {%- endif -%}
+    {%- endfor %}
+ORDER BY
+    {%- for bridge_step in bridge_walk.keys() -%}
+    {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+    {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
+        {%- if loop.first %}
+    {{ bridge_load_date ~' DESC' }}
+        {%- else %}
+    {{ ','~ bridge_load_date ~' DESC' }}
+        {%- endif -%}
+    {%- endfor %}
+) AS rownum
+  FROM all_rows
+  QUALIFY rownum = 1
+),
+
 bridge AS (
 SELECT
     {{ src_pk }}
@@ -231,37 +268,16 @@ SELECT
     {{ ','~ bridge_link_pk }}
     {{ ','~ bridge_end_date }}
     {%- endfor %}
-FROM
-(
-{#  Select candidate records that are within a current group, i.e. in the most recent record of the group all relationships have end date as max date, #}
-{#  and that are entirely current, i.e. in the record all relationships have end date as max date #}
-    SELECT *
-        {%- for bridge_step in bridge_walk.keys() -%}
-        {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-        {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
-        {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
-        {{ ',FIRST_VALUE('~ bridge_end_date ~') OVER (PARTITION BY '~ bridge_link_pk ~' ORDER BY '~ bridge_load_date ~' DESC) AS firstvalueofgroup'~ loop.index }}
-        {%- endfor %}
-    FROM
-    (
-{#  Select candidate records #}
-        SELECT * FROM new_rows
-        {% if dbtvault.is_any_incremental() -%}
-        UNION ALL
-        SELECT * FROM overlap
-        {% endif -%}
-    ) AS x
+FROM candidate_rows
     {%- for bridge_step in bridge_walk.keys() -%}
-    {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
-    {%- if loop.first %}
-    {{ "QUALIFY firstvalueofgroup"~ loop.index ~" = '"~ maxdate ~"'" }}
-    {{ "AND "~ bridge_end_date ~" = '"~ maxdate ~"'" }}
-    {%- else %}
-    {{ "AND firstvalueofgroup"~ loop.index ~" = '"~ maxdate ~"'" }}
-    {{ "AND "~ bridge_end_date ~" = '"~ maxdate ~"'" }}
-    {%- endif -%}
-    {% endfor %}
-) AS y
+        {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+        {%- if loop.first %}
+WHERE {{ bridge_end_date ~" = '"~ maxdate ~"'" }}
+        {%- else %}
+    AND {{ bridge_end_date ~" = '"~ maxdate ~"'" }}
+        {%- endif -%}
+    {%- endfor %}
+ORDER BY 2,3,4 DESC
 )
 
 SELECT * FROM bridge
