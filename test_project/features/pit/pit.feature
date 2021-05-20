@@ -5,10 +5,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table is already established with increments of a day
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | LINK | SAT                  | PIT          |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              |      | SAT_CUSTOMER_LOGIN   |              |
+      |              |      | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |

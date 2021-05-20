@@ -567,6 +567,7 @@ class DBTVAULTGenerator:
             "sat": self.sat,
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
+            "bridge": self.bridge,
             "pit": self.pit
         }
 
@@ -616,7 +617,7 @@ class DBTVAULTGenerator:
         """
 
         template = f"""
-        {depends_on}    
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
                           {src_source}, {source_model})   }}}}
@@ -703,8 +704,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-               src_payload=None, depends_on=""):
+    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config, src_payload=None, depends_on=""):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -728,8 +728,28 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites,
-            stage_tables, src_ldts, depends_on="", config=None):
+    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables, source_model, src_ldts, config, depends_on=""):
+        """
+        Generate a bridge model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
+            :param stage_tables: List of stage table load date(time) stamps
+            :param source_model: Model name to select from
+            :param src_ldts: Source load date timestamp
+            :param config: Optional model config
+            :param depends_on: Optional forced dependency
+        """
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables}, {src_ldts}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts,, depends_on="" config=None):
         """
         Generate a PIT template
             :param model_name: Name of the model file
@@ -740,7 +760,7 @@ class DBTVAULTGenerator:
             :param stage_tables: List of stage tables
             :param source_model: Model name to select from
             :param config: Optional model config
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -773,6 +793,17 @@ class DBTVAULTGenerator:
                         processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
 
+                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+
+                elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
+
+                    dict_check = [next(iter(item))][0]
+                    if isinstance(item[dict_check], dict):
+                        link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
+                        eff_satellite_columns_end_date = [item[col]['bridge_end_date'] for col in item.keys()]
+
+                        processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
+
                 elif item.get("source_column", None) and item.get("alias", None):
 
                     processed_headings.append(item['source_column'])
@@ -799,13 +830,17 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
-            "pit": "pit_incremental",
+            "pit": "table",
+            "bridge": "bridge_incremental"
         }
 
-        if not config:
+        if config:
+            config["materialized"] = default_materialisations[vault_structure]
+        else:
             config = {"materialized": default_materialisations[vault_structure]}
 
         if vault_structure == "stage":
+
             if not kwargs.get("hashed_columns", None):
                 kwargs["hashed_columns"] = "none"
 
@@ -885,10 +920,8 @@ class DBTVAULTGenerator:
         if ignore_columns is None:
             ignore_columns = []
 
-        extracted_compare_columns = [k for k, v in columns_to_compare.items()]
-
         columns_to_compare = list(
-            [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
+            [c for c in columns_to_compare if c not in ignore_columns])
 
         test_yaml = {
             "models": [{

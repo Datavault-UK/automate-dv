@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Features (CircleCI)" type="PyBehaveRunConfigurationType" factoryName="Behave">
+  <configuration default="false" name="Bridges" type="PyBehaveRunConfigurationType" factoryName="Behave">
     <module name="dbtvault" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -23,7 +23,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/tests/features" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/bridges" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
