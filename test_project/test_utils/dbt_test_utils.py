@@ -749,7 +749,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts,, depends_on="" config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, depends_on="", config=None):
         """
         Generate a PIT template
             :param model_name: Name of the model file

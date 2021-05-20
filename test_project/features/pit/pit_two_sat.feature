@@ -10,7 +10,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [BASE-LOAD] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
     And the RAW_STAGE_DETAILS table contains data
@@ -97,7 +97,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [BASE-LOAD-TS] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
-      | HUBS            | LINKS | SATS                    | PIT             |
+      | HUB             | LINK  | SAT                     | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
       |                 |       | SAT_CUSTOMER_LOGIN_TS   |                 |
     And the RAW_STAGE_DETAILS_TS table contains data
@@ -184,7 +184,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [BASE-LOAD-LG] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
-      | HUBS            | LINKS | SATS                    | PIT             |
+      | HUB             | LINK  | SAT                     | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
       |                 |       | SAT_CUSTOMER_LOGIN_TS   |                 |
     And the RAW_STAGE_DETAILS_TS table contains data
@@ -255,7 +255,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [BASE-LOAD-HG] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT             |
+      | HUB          | LINK  | SAT                  | PIT             |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
       |              |       | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
@@ -337,7 +337,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
     And the RAW_STAGE_DETAILS table contains data
@@ -473,7 +473,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
-      | HUBS            | LINKS | SATS                    | PIT             |
+      | HUB             | LINK  | SAT                     | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
       |                 |       | SAT_CUSTOMER_LOGIN_TS   |                 |
     And the RAW_STAGE_DETAILS_TS table contains data
@@ -616,7 +616,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [INCR-LOAD-LG] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
-      | HUBS            | LINKS | SATS                    | PIT             |
+      | HUB             | LINK  | SAT                     | PIT             |
       | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
       |                 |       | SAT_CUSTOMER_LOGIN_TS   |                 |
     And the RAW_STAGE_DETAILS_TS table contains data
@@ -721,7 +721,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
   Scenario: [INCR-LOAD-HG] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT             |
+      | HUB          | LINK  | SAT                  | PIT             |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
       |              |       | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data

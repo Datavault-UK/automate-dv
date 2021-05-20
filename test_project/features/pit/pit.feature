@@ -78,7 +78,7 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
       |              |       | SAT_CUSTOMER_PROFILE |              |
@@ -124,7 +124,7 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
       |              |       | SAT_CUSTOMER_PROFILE |              |
@@ -171,7 +171,7 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     Given the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
       |              |       | SAT_CUSTOMER_PROFILE |              |
@@ -219,7 +219,7 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table dates are after the most recent satellite entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PITS         |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
       |              |       | SAT_CUSTOMER_PROFILE |              |
@@ -266,7 +266,7 @@ Feature: pit
   @fixture.pit
   Scenario: Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
       |              |       | SAT_CUSTOMER_PROFILE |              |
@@ -370,7 +370,7 @@ Feature: pit
   @fixture.pit
   Scenario: Load into a pit table where the as_of_dates table changes
     Given the raw vault contains empty tables
-      | HUBS         | LINKS | SATS                 | PIT          |
+      | HUB          | LINK  | SAT                  | PIT          |
       | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
       |              |       | SAT_CUSTOMER_LOGIN   |              |
       |              |       | SAT_CUSTOMER_PROFILE |              |
