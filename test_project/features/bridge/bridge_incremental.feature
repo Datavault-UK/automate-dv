@@ -199,13 +199,15 @@ Feature: Bridge
       | 2018-06-01 09:00:00.000 |
       | 2018-06-01 18:00:00.000 |
       | 2018-06-02 00:00:00.000 |
-    When I load the vault
+#    When I load the vault
+    When I load the HUB_CUSTOMER hub
     Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATETIME           | SOURCE |
       | md5('1001') | 1001        | 2018-06-01 00:00:00.000 | *      |
       | md5('1002') | 1002        | 2018-06-01 00:00:00.000 | *      |
       | md5('1003') | 1003        | 2018-06-01 00:00:00.000 | *      |
       | md5('1004') | 1004        | 2018-06-01 00:00:00.000 | *      |
+    When I load the LINK_CUSTOMER_ORDER link
     Then the LINK_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
@@ -214,6 +216,7 @@ Feature: Bridge
       | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | *      |
       | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | *      |
       | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | *      |
+    When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_FK | ORDER_FK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
@@ -223,6 +226,7 @@ Feature: Bridge
       | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+    When I load the BRIDGE_CUSTOMER_ORDER bridge
     Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | EFF_SAT_CUSTOMER_ORDER_ENDDATE |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     | 9999-12-31 23:59:59.999        |
