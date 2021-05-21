@@ -1,8 +1,6 @@
 @fixture.set_workdir
 Feature: Bridge
 
-# TODO: eliminate duplicate-like changes in upper level links/eff_sats
-
 ####################### BASE LOAD #######################
 
 # ------------------------ ONE LINK ------------------------
