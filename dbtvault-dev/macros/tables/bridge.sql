@@ -51,7 +51,8 @@ WITH as_of AS (
 {%- if dbtvault.is_any_incremental() %}
 
 last_safe_load_datetime AS (
-    SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
+    SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
+    FROM (
     {%- filter indent(width=8) -%}
     {%- for stg in stage_tables -%}
         {%- set stage_ldts =(stage_tables[stg])  -%}
@@ -63,14 +64,15 @@ last_safe_load_datetime AS (
 ),
 
 as_of_grain_old_entries AS (
-    SELECT DISTINCT AS_OF_DATE FROM {{ this }}
+    SELECT DISTINCT AS_OF_DATE
+    FROM {{ this }}
 ),
 
 as_of_grain_lost_entries AS (
     SELECT a.AS_OF_DATE
     FROM as_of_grain_old_entries AS a
     LEFT OUTER JOIN as_of AS b
-    ON a.AS_OF_DATE = b.AS_OF_DATE
+        ON a.AS_OF_DATE = b.AS_OF_DATE
     WHERE b.AS_OF_DATE IS NULL
 ),
 
@@ -78,7 +80,7 @@ as_of_grain_new_entries AS (
     SELECT a.AS_OF_DATE
     FROM as_of AS a
     LEFT OUTER JOIN as_of_grain_old_entries AS b
-    ON a.AS_OF_DATE = b.AS_OF_DATE
+        ON a.AS_OF_DATE = b.AS_OF_DATE
     WHERE b.AS_OF_DATE IS NULL
 ),
 
@@ -219,61 +221,61 @@ new_rows AS (
     {% endfor %}
 ),
 
-{#- Full data from bridge walk(s) #}
+{# Full data from bridge walk(s) -#}
 all_rows AS (
     SELECT * FROM new_rows
-    {% if dbtvault.is_any_incremental() -%}
+    {%- if dbtvault.is_any_incremental() %}
     UNION ALL
     SELECT * FROM overlap
-    {% endif -%}
+    {%- endif %}
 ),
 
-{#- Select most recent set of relationship key(s) for each as of date #}
+{# Select most recent set of relationship key(s) for each as of date -#}
 candidate_rows AS (
-  SELECT *
-    ,ROW_NUMBER() OVER (
-        PARTITION BY AS_OF_DATE,
-            {%- for bridge_step in bridge_walk.keys() -%}
-            {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-                {%- if loop.first %}
-            {{ bridge_link_pk }}
-                {%- else %}
-            {{ ','~ bridge_link_pk }}
-                {%- endif -%}
-            {%- endfor %}
-        ORDER BY
-            {%- for bridge_step in bridge_walk.keys() -%}
-            {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
-                {%- if loop.first %}
-            {{ bridge_load_date ~' DESC' }}
-                {%- else %}
-            {{ ','~ bridge_load_date ~' DESC' }}
-                {%- endif -%}
-            {%- endfor %}
-        ) AS rownum
-  FROM all_rows
-  QUALIFY rownum = 1
+    SELECT *
+        ,ROW_NUMBER() OVER (
+            PARTITION BY AS_OF_DATE,
+                {%- for bridge_step in bridge_walk.keys() -%}
+                {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+                    {%- if loop.first %}
+                {{ bridge_link_pk }}
+                    {%- else %}
+                {{ ','~ bridge_link_pk }}
+                    {%- endif -%}
+                {%- endfor %}
+            ORDER BY
+                {%- for bridge_step in bridge_walk.keys() -%}
+                {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
+                    {%- if loop.first %}
+                {{ bridge_load_date ~' DESC' }}
+                    {%- else %}
+                {{ ','~ bridge_load_date ~' DESC' }}
+                    {%- endif -%}
+                {%- endfor %}
+            ) AS rownum
+    FROM all_rows
+    QUALIFY rownum = 1
 ),
 
 bridge AS (
-SELECT
-    {{ src_pk }}
-    ,AS_OF_DATE
-    {%- for bridge_step in bridge_walk.keys() -%}
-    {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-    {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
-    {{ ','~ bridge_link_pk }}
-    {{ ','~ bridge_end_date }}
-    {%- endfor %}
-FROM candidate_rows
-    {%- for bridge_step in bridge_walk.keys() -%}
-        {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
-        {%- if loop.first %}
-WHERE {{ bridge_end_date ~" = '"~ maxdate ~"'" }}
-        {%- else %}
-    AND {{ bridge_end_date ~" = '"~ maxdate ~"'" }}
-        {%- endif -%}
-    {%- endfor %}
+    SELECT
+        {{ src_pk }}
+        ,AS_OF_DATE
+        {%- for bridge_step in bridge_walk.keys() -%}
+        {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+        {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
+        {{ ','~ bridge_link_pk }}
+        {{ ','~ bridge_end_date }}
+        {%- endfor %}
+    FROM candidate_rows
+        {%- for bridge_step in bridge_walk.keys() -%}
+            {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+            {%- if loop.first %}
+    WHERE {{ bridge_end_date ~" = '"~ maxdate ~"'" }}
+            {%- else %}
+        AND {{ bridge_end_date ~" = '"~ maxdate ~"'" }}
+            {%- endif -%}
+        {%- endfor %}
 )
 
 SELECT * FROM bridge
