@@ -131,8 +131,10 @@ WITH as_of AS (
                 {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
                 {% set bridge_start_date = bridge_walk[bridge_step]['bridge_start_date'] -%}
                 {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+                {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
                 {% set eff_sat_start_date = bridge_walk[bridge_step]['eff_sat_start_date'] -%}
                 {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
+                {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
                 {%- filter indent(width=8) -%}
                 {{- "\n" -}}
                 {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
@@ -140,6 +142,8 @@ WITH as_of AS (
                 {{ ','~ eff_sat_table ~'.'~ eff_sat_start_date ~' AS '~ bridge_start_date }}
                 {{- "\n" -}}
                 {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date }}
+                {{- "\n" -}}
+                {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date}}
                 {%- endfilter -%}
             {% endfor %}
         FROM overlap_pks AS a
@@ -165,7 +169,7 @@ WITH as_of AS (
         INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
             ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
             AND {{ current_eff_sat }}.{{ eff_sat_start_date }} <= b.AS_OF_DATE
-            AND {{ current_eff_sat }}.{{ eff_sat_end_date }} > b.AS_OF_DATE
+            AND {{ current_eff_sat }}.{{ eff_sat_end_date }} >= b.AS_OF_DATE
             {%- set loop_vars.last_link = current_link -%}
             {%- set loop_vars.last_link_fk2 = link_fk2 -%}
         {% endfor %}
@@ -183,8 +187,10 @@ new_rows AS (
             {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
             {% set bridge_start_date = bridge_walk[bridge_step]['bridge_start_date'] -%}
             {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+            {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
             {% set eff_sat_start_date = bridge_walk[bridge_step]['eff_sat_start_date'] -%}
             {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
+            {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
             {%- filter indent(width=8) -%}
             {{- "\n" -}}
             {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
@@ -192,6 +198,8 @@ new_rows AS (
             {{ ','~ eff_sat_table ~'.'~ eff_sat_start_date ~' AS '~ bridge_start_date }}
             {{- "\n" -}}
             {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date}}
+            {{- "\n" -}}
+            {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date}}
             {%- endfilter -%}
         {% endfor %}
     FROM {{ ref(source_model) }} AS a
@@ -217,7 +225,7 @@ new_rows AS (
     INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
         ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
         AND {{ current_eff_sat }}.{{ eff_sat_start_date }} <= b.AS_OF_DATE
-        AND {{ current_eff_sat }}.{{ eff_sat_end_date }} > b.AS_OF_DATE
+        AND {{ current_eff_sat }}.{{ eff_sat_end_date }} >= b.AS_OF_DATE
         {%- set loop_vars.last_link = current_link -%}
         {%- set loop_vars.last_link_fk2 = link_fk2 -%}
     {% endfor %}
@@ -247,11 +255,11 @@ candidate_rows AS (
             {%- endfor %}
         ORDER BY
             {%- for bridge_step in bridge_walk.keys() -%}
-            {% set bridge_start_date = bridge_walk[bridge_step]['bridge_start_date'] %}
+            {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
                 {%- if loop.first %}
-            {{ bridge_start_date ~' DESC' }}
+            {{ bridge_load_date ~' DESC' }}
                 {%- else %}
-            {{ ','~ bridge_start_date ~' DESC' }}
+            {{ ','~ bridge_load_date ~' DESC' }}
                 {%- endif -%}
             {%- endfor %}
         ) AS rownum
