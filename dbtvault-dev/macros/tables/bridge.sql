@@ -50,133 +50,125 @@ WITH as_of AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-    last_safe_load_datetime AS (
-        SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
-        {%- filter indent(width=8) -%}
-        {%- for stg in stage_tables -%}
-            {%- set stage_ldts =(stage_tables[stg])  -%}
-            {{ "SELECT MIN("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
-            {{ 'UNION ALL' if not loop.last }}
-        {% endfor -%}
-        {%- endfilter -%}
-        )
-    ),
+last_safe_load_datetime AS (
+    SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
+    {%- filter indent(width=8) -%}
+    {%- for stg in stage_tables -%}
+        {%- set stage_ldts =(stage_tables[stg])  -%}
+        {{ "SELECT MIN("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
+        {{ 'UNION ALL' if not loop.last }}
+    {% endfor -%}
+    {%- endfilter -%}
+    )
+),
 
-    as_of_grain_old_entries AS (
-        SELECT DISTINCT AS_OF_DATE FROM {{ this }}
-    ),
+as_of_grain_old_entries AS (
+    SELECT DISTINCT AS_OF_DATE FROM {{ this }}
+),
 
-    as_of_grain_lost_entries AS (
-        SELECT a.AS_OF_DATE
-        FROM as_of_grain_old_entries AS a
-        LEFT OUTER JOIN as_of AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-        WHERE b.AS_OF_DATE IS NULL
-    ),
+as_of_grain_lost_entries AS (
+    SELECT a.AS_OF_DATE
+    FROM as_of_grain_old_entries AS a
+    LEFT OUTER JOIN as_of AS b
+    ON a.AS_OF_DATE = b.AS_OF_DATE
+    WHERE b.AS_OF_DATE IS NULL
+),
 
-    as_of_grain_new_entries AS (
-        SELECT a.AS_OF_DATE
-        FROM as_of AS a
-        LEFT OUTER JOIN as_of_grain_old_entries AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-        WHERE b.AS_OF_DATE IS NULL
-    ),
+as_of_grain_new_entries AS (
+    SELECT a.AS_OF_DATE
+    FROM as_of AS a
+    LEFT OUTER JOIN as_of_grain_old_entries AS b
+    ON a.AS_OF_DATE = b.AS_OF_DATE
+    WHERE b.AS_OF_DATE IS NULL
+),
 
-    min_date AS (
-        SELECT min(AS_OF_DATE) AS MIN_DATE
-        FROM as_of
-    ),
+min_date AS (
+    SELECT min(AS_OF_DATE) AS MIN_DATE
+    FROM as_of
+),
 
-    new_rows_pks AS (
-        SELECT h.{{ src_pk }}
-        FROM {{ ref(source_model) }} AS h
-        WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    ),
+new_rows_pks AS (
+    SELECT h.{{ src_pk }}
+    FROM {{ ref(source_model) }} AS h
+    WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+),
 
-    new_rows_as_of AS (
-        SELECT AS_OF_DATE
-        FROM as_of
-        WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        UNION
-        SELECT as_of_date
-        FROM as_of_grain_new_entries
-    ),
+new_rows_as_of AS (
+    SELECT AS_OF_DATE
+    FROM as_of
+    WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    UNION
+    SELECT as_of_date
+    FROM as_of_grain_new_entries
+),
 
-    overlap_pks AS (
-        SELECT p.{{ src_pk }}
-        FROM {{ this }} AS p
-        INNER JOIN {{ ref(source_model) }} as h
-            ON p.{{ src_pk }} = h.{{ src_pk }}
-        WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-            AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-            AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
-    ),
+overlap_pks AS (
+    SELECT p.{{ src_pk }}
+    FROM {{ this }} AS p
+    INNER JOIN {{ ref(source_model) }} as h
+        ON p.{{ src_pk }} = h.{{ src_pk }}
+    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
+        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+),
 
-    overlap_as_of AS (
-        SELECT AS_OF_DATE
-        FROM as_of AS p
-        WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-            AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-            AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
-    ),
+overlap_as_of AS (
+    SELECT AS_OF_DATE
+    FROM as_of AS p
+    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
+        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+),
 
-    overlap AS (
-        SELECT
-            a.{{ src_pk }}
-            ,b.AS_OF_DATE
-            {%- for bridge_step in bridge_walk.keys() -%}
-                {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
-                {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-                {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-                {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
---                 {% set bridge_start_date = bridge_walk[bridge_step]['bridge_start_date'] -%}
-                {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
-                {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
---                 {% set eff_sat_start_date = bridge_walk[bridge_step]['eff_sat_start_date'] -%}
-                {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
-                {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
-                {%- filter indent(width=8) -%}
-                {{- "\n" -}}
-                {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
---                 {{- "\n" -}}
---                 {{ ','~ eff_sat_table ~'.'~ eff_sat_start_date ~' AS '~ bridge_start_date }}
-                {{- "\n" -}}
-                {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date }}
-                {{- "\n" -}}
-                {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date}}
-                {%- endfilter -%}
-            {% endfor %}
-        FROM overlap_pks AS a
-        INNER JOIN overlap_as_of AS b
-            ON (1=1)
-        {%- set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
+overlap AS (
+    SELECT
+        a.{{ src_pk }}
+        ,b.AS_OF_DATE
         {%- for bridge_step in bridge_walk.keys() -%}
-            {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
-            {%- set current_eff_sat = bridge_walk[bridge_step]['eff_sat_table'] -%}
-            {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
-            {%- set link_fk1 = bridge_walk[bridge_step]['link_fk1'] -%}
-            {%- set link_fk2 = bridge_walk[bridge_step]['link_fk2'] -%}
-            {%- set eff_sat_pk = bridge_walk[bridge_step]['eff_sat_pk'] -%}
---             {%- set eff_sat_start_date = bridge_walk[bridge_step]['eff_sat_start_date'] -%}
---             {%- set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
-            {%- set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
-            {%- if loop.first  %}
-        LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
-            ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk1 }}
-            {%- else %}
-        LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
-            ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link }}.{{ link_fk1 }}
-            {%- endif %}
-        INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
-            ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
-            AND {{ current_eff_sat }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
---             AND {{ current_eff_sat }}.{{ eff_sat_start_date }} <= b.AS_OF_DATE
---             AND {{ current_eff_sat }}.{{ eff_sat_end_date }} >= b.AS_OF_DATE
-            {%- set loop_vars.last_link = current_link -%}
-            {%- set loop_vars.last_link_fk2 = link_fk2 -%}
+            {% set link_table = bridge_walk[bridge_step]['link_table'] -%}
+            {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
+            {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+            {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
+            {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+            {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
+            {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
+            {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
+            {%- filter indent(width=8) -%}
+            {{- "\n" -}}
+            {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
+            {{- "\n" -}}
+            {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date }}
+            {{- "\n" -}}
+            {{ ','~ eff_sat_table ~'.'~ eff_sat_load_date ~' AS '~ bridge_load_date}}
+            {%- endfilter -%}
         {% endfor %}
-    ),
-{% endif %}
+    FROM overlap_pks AS a
+    INNER JOIN overlap_as_of AS b
+        ON (1=1)
+    {%- set loop_vars = namespace(lastlink = '', last_link_fk = '') %}
+    {%- for bridge_step in bridge_walk.keys() -%}
+        {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
+        {%- set current_eff_sat = bridge_walk[bridge_step]['eff_sat_table'] -%}
+        {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
+        {%- set link_fk1 = bridge_walk[bridge_step]['link_fk1'] -%}
+        {%- set link_fk2 = bridge_walk[bridge_step]['link_fk2'] -%}
+        {%- set eff_sat_pk = bridge_walk[bridge_step]['eff_sat_pk'] -%}
+        {%- set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
+        {%- if loop.first  %}
+    LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
+        ON a.{{ src_pk }} = {{ current_link }}.{{ link_fk1 }}
+        {%- else %}
+    LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
+        ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link }}.{{ link_fk1 }}
+        {%- endif %}
+    INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
+        ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
+        AND {{ current_eff_sat }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
+        {%- set loop_vars.last_link = current_link -%}
+        {%- set loop_vars.last_link_fk2 = link_fk2 -%}
+    {% endfor %}
+),
+{%- endif %}
 
 new_rows AS (
     SELECT
@@ -187,17 +179,13 @@ new_rows AS (
             {% set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
             {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
             {% set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
---             {% set bridge_start_date = bridge_walk[bridge_step]['bridge_start_date'] -%}
             {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
---             {% set eff_sat_start_date = bridge_walk[bridge_step]['eff_sat_start_date'] -%}
             {% set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
             {% set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
             {%- filter indent(width=8) -%}
             {{- "\n" -}}
             {{ ','~ link_table ~'.'~ link_pk ~' AS '~ bridge_link_pk }}
---             {{- "\n" -}}
---             {{ ','~ eff_sat_table ~'.'~ eff_sat_start_date ~' AS '~ bridge_start_date }}
             {{- "\n" -}}
             {{ ','~ eff_sat_table ~'.'~ eff_sat_end_date ~' AS '~ bridge_end_date}}
             {{- "\n" -}}
@@ -215,8 +203,6 @@ new_rows AS (
         {%- set link_fk1 = bridge_walk[bridge_step]['link_fk1'] -%}
         {%- set link_fk2 = bridge_walk[bridge_step]['link_fk2'] -%}
         {%- set eff_sat_pk = bridge_walk[bridge_step]['eff_sat_pk'] -%}
---         {%- set eff_sat_start_date = bridge_walk[bridge_step]['eff_sat_start_date'] -%}
---         {%- set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
         {%- set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
         {%- if loop.first  %}
     LEFT JOIN {{ ref(current_link) }} AS {{ current_link }}
@@ -228,14 +214,12 @@ new_rows AS (
     INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat }}
         ON {{ current_eff_sat }}.{{ eff_sat_pk }} = {{ current_link }}.{{ link_pk }}
         AND {{ current_eff_sat }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
---         AND {{ current_eff_sat }}.{{ eff_sat_start_date }} <= b.AS_OF_DATE
---         AND {{ current_eff_sat }}.{{ eff_sat_end_date }} >= b.AS_OF_DATE
         {%- set loop_vars.last_link = current_link -%}
         {%- set loop_vars.last_link_fk2 = link_fk2 -%}
     {% endfor %}
 ),
 
-{# Full data from bridge walk(s) #}
+{#- Full data from bridge walk(s) #}
 all_rows AS (
     SELECT * FROM new_rows
     {% if dbtvault.is_any_incremental() -%}
@@ -244,7 +228,7 @@ all_rows AS (
     {% endif -%}
 ),
 
-{# Select most recent set of relationship key(s) for each as of date #}
+{#- Select most recent set of relationship key(s) for each as of date #}
 candidate_rows AS (
   SELECT *
     ,ROW_NUMBER() OVER (
