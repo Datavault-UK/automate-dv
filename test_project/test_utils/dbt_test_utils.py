@@ -790,19 +790,17 @@ class DBTVAULTGenerator:
                     if isinstance(item[dict_check], dict):
                         satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                         satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
+
                         processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
-
-
-                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
                 elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
 
                     dict_check = [next(iter(item))][0]
                     if isinstance(item[dict_check], dict):
                         link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
-                        eff_satellite_columns_end_date = [item[col]['bridge_end_date'] for col in item.keys()]
+                        # eff_satellite_columns_end_date = [item[col]['bridge_end_date'] for col in item.keys()]
 
-                        processed_headings.extend(link_columns_hk + eff_satellite_columns_end_date)
+                        processed_headings.extend(link_columns_hk) #+ eff_satellite_columns_end_date)
 
                 elif item.get("source_column", None) and item.get("alias", None):
 

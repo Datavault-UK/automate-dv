@@ -264,9 +264,9 @@ bridge AS (
         ,AS_OF_DATE
         {%- for bridge_step in bridge_walk.keys() -%}
         {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-        {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
+--         {% set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
         {{ ','~ bridge_link_pk }}
-        {{ ','~ bridge_end_date }}
+--         {{ ','~ bridge_end_date }}
         {%- endfor %}
     FROM candidate_rows
         {%- for bridge_step in bridge_walk.keys() -%}
