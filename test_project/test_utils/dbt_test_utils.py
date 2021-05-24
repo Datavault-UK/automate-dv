@@ -728,14 +728,14 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables, source_model, src_ldts, config, depends_on=""):
+    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts, config, depends_on=""):
         """
         Generate a bridge model template
             :param model_name: Name of the model file
             :param src_pk: Source pk
             :param as_of_dates_table: Name for the AS_OF table
             :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
-            :param stage_tables: List of stage table load date(time) stamps
+            :param stage_tables_ldts: List of stage table load date(time) stamps
             :param source_model: Model name to select from
             :param src_ldts: Source load date timestamp
             :param config: Optional model config
@@ -744,7 +744,7 @@ class DBTVAULTGenerator:
         template = f"""
         {depends_on}
         {{{{ config({config}) }}}}
-        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables}, {src_ldts}, {source_model}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables_ldts}, {src_ldts}, {source_model}) }}}}
         """
 
         self.template_to_file(template, model_name)

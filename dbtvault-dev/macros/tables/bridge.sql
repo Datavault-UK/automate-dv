@@ -1,12 +1,13 @@
-{%- macro bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables, src_ldts, source_model) -%}
+{%- macro bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
     {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
                                                                                   bridge_walk=bridge_walk,
                                                                                   as_of_dates_table=as_of_dates_table,
-                                                                                  stage_tables=stage_tables,src_ldts=src_ldts) -}}
+                                                                                  stage_tables_ldts=stage_tables_ldts,
+                                                                                  src_ldts=src_ldts) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables, src_ldts, source_model) -%}
+{%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -31,7 +32,7 @@
 {%- set ghost_date = '1990-01-01 00:00:00.000' %}
 
 {# Stating the dependencies on the stage tables outside of the If STATEMENT #}
-{% for stg in stage_tables -%}
+{% for stg in stage_tables_ldts -%}
     {{ "-- depends_on: " ~ ref(stg) }}
 {% endfor %}
 
@@ -54,8 +55,8 @@ last_safe_load_datetime AS (
     SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
     FROM (
     {%- filter indent(width=8) -%}
-    {%- for stg in stage_tables -%}
-        {%- set stage_ldts =(stage_tables[stg])  -%}
+    {%- for stg in stage_tables_ldts -%}
+        {%- set stage_ldts =(stage_tables_ldts[stg])  -%}
         {{ "SELECT MIN("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
         {{ 'UNION ALL' if not loop.last }}
     {% endfor -%}

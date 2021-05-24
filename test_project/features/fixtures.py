@@ -780,6 +780,7 @@ def bridge(context):
         "BRIDGE_CUSTOMER_ORDER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATETIME",
             "as_of_dates_table": "AS_OF_DATE",
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
@@ -796,17 +797,17 @@ def bridge(context):
                     "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
-    }
+                }
             },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_ORDER": "LOAD_DATETIME"
-                },
-            "src_ldts": "LOAD_DATETIME"
+                }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATETIME",
             "as_of_dates_table": "AS_OF_DATE",
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
@@ -840,16 +841,16 @@ def bridge(context):
                     "eff_sat_load_date": "LOAD_DATETIME"
                 }
             },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_ORDER": "LOAD_DATETIME",
                     "STG_ORDER_PRODUCT": "LOAD_DATETIME"
-                },
-            "src_ldts": "LOAD_DATETIME"
+                }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATETIME",
             "as_of_dates_table": "AS_OF_DATE",
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
@@ -898,13 +899,12 @@ def bridge(context):
                     "eff_sat_load_date": "LOAD_DATETIME"
                 }
             },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_ORDER": "LOAD_DATETIME",
                     "STG_ORDER_PRODUCT": "LOAD_DATETIME",
                     "STG_PRODUCT_COMPONENT": "LOAD_DATETIME"
-                },
-            "src_ldts": "LOAD_DATETIME"
+                }
         }
    }
 
