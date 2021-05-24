@@ -785,7 +785,7 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
+                    # "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
@@ -812,7 +812,7 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
+                    # "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
@@ -827,7 +827,7 @@ def bridge(context):
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
-                    "bridge_start_date": "EFF_SAT_ORDER_PRODUCT_STARTDATE",
+                    # "bridge_start_date": "EFF_SAT_ORDER_PRODUCT_STARTDATE",
                     "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
@@ -855,7 +855,7 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
+                    # "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
@@ -870,7 +870,7 @@ def bridge(context):
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
-                    "bridge_start_date": "EFF_SAT_ORDER_PRODUCT_STARTDATE",
+                    # "bridge_start_date": "EFF_SAT_ORDER_PRODUCT_STARTDATE",
                     "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
@@ -885,7 +885,7 @@ def bridge(context):
                 },
                 "PRODUCT_COMPONENT": {
                     "bridge_link_pk": "LINK_PRODUCT_COMPONENT_PK",
-                    "bridge_start_date": "EFF_SAT_PRODUCT_COMPONENT_STARTDATE",
+                    # "bridge_start_date": "EFF_SAT_PRODUCT_COMPONENT_STARTDATE",
                     "bridge_end_date": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
                     "link_table": "LINK_PRODUCT_COMPONENT",
