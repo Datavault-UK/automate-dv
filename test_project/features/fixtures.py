@@ -617,7 +617,7 @@ def eff_satellite_testing_auto_end_dating(context):
             "ORDER_PK": "ORDER_ID"
         },
         "STG_ORDER_CUSTOMER": {
-            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID"
         }
@@ -644,7 +644,7 @@ def eff_satellite_testing_auto_end_dating(context):
         },
         "LINK_ORDER_CUSTOMER": {
             "source_model": "STG_ORDER_CUSTOMER",
-            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_pk": "ORDER_CUSTOMER_PK",
             "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
@@ -662,7 +662,7 @@ def eff_satellite_testing_auto_end_dating(context):
         },
         "EFF_SAT_ORDER_CUSTOMER": {
             "source_model": "STG_ORDER_CUSTOMER",
-            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
             "src_start_date": "START_DATE",
@@ -703,7 +703,7 @@ def eff_satellite_testing_auto_end_dating(context):
         },
         "LINK_ORDER_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "ORDER_CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME",
@@ -724,7 +724,7 @@ def eff_satellite_testing_auto_end_dating(context):
         },
         "EFF_SAT_ORDER_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "ORDER_CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
                 "START_DATE": "DATETIME",
