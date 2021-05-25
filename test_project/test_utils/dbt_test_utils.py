@@ -828,7 +828,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
-            "pit": "table",
+            "pit": "pit_incremental",
             "bridge": "bridge_incremental"
         }
 
