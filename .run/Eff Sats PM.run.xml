@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Eff Sats PM" type="PyBehaveRunConfigurationType" factoryName="Behave">
-    <module name="dbtvault-dev" />
+    <module name="dbtvault" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>

@@ -215,20 +215,23 @@ def load_table(context, model_name, vault_structure):
 
 @step("I load the vault")
 def load_vault(context):
-    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in context.vault_model_names.items()]) if name]
+    models = {k: list(filter(None, DBTVAULTGenerator.flatten(v))) for k, v in context.vault_model_names.items()}
+    model_names = []
 
-    for model_name in models:
-        metadata = {**context.vault_structure_columns[model_name]}
+    config = dbtvault_generator.append_end_date_config(context, dict())
 
-        context.vault_structure_metadata = metadata
+    for vault_structure, model_list in models.items():
+        for model_name in model_list:
+            metadata = {**context.vault_structure_columns[model_name]}
 
-        vault_structure = model_name.split("_")[0]
+            context.vault_structure_metadata = metadata
 
-        dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+            dbtvault_generator.raw_vault_structure(model_name, vault_structure, config=config, **metadata)
+            model_names.append(model_name)
 
     is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
 
-    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=models,
+    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=model_names,
                                                  full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
@@ -251,6 +254,36 @@ def create_csv(context, raw_stage_model_name):
     context.raw_stage_model_name = raw_stage_model_name
 
     assert "Completed successfully" in logs
+
+
+@step("the {table_name} table is created and populated with data")
+def create_csv(context, table_name):
+    """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
+
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+                                                                 model_name=table_name)
+
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                       seed_config=context.seed_config[table_name])
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
+
+    args = {k: v for k, v in stage_metadata.items() if k == "hash"}
+
+    dbtvault_generator.raw_vault_structure(model_name=table_name,
+                                           vault_structure='stage',
+                                           source_model=seed_file_name,
+                                           config={'materialized': 'table'})
+
+    run_logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=table_name,
+                                                    args=args, full_refresh=True)
+
+    context.raw_stage_models = seed_file_name
+
+    assert "Completed successfully" in seed_logs
+    assert "Completed successfully" in run_logs
 
 
 @step("the {raw_stage_model_name} is loaded")
@@ -298,9 +331,8 @@ def expect_data(context, model_name):
     expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
                                                                            model_name=f"{model_name}_expected")
 
-    columns_to_compare = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="records")[0]
-    compare_column_list = [k for k, v in columns_to_compare.items()]
-    unique_id = compare_column_list[0]
+    columns_to_compare = context.table.headings
+    unique_id = columns_to_compare[0]
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=expected_output_csv_name,
@@ -310,7 +342,7 @@ def expect_data(context, model_name):
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
     dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
-                                       include_columns=compare_column_list,
+                                       include_columns=columns_to_compare,
                                        seed_config=context.seed_config[model_name])
 
     context.dbt_test_utils.run_dbt_seed(expected_output_csv_name)
