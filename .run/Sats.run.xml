@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Sats" type="PyBehaveRunConfigurationType" factoryName="Behave">
-    <module name="dbtvault" />
+    <module name="dbtvault-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
@@ -23,8 +23,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/sats/sats.feature" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/sats/sats_cycles.feature" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/sats" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
