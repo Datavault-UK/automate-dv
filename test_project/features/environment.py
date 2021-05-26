@@ -16,6 +16,8 @@ fixture_registry = {
     "fixture.eff_satellite": eff_satellite,
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.t_link": t_link,
+    "fixture.multi_active_satellite": multi_active_satellite,
+    "fixture.multi_active_satellite_cycle": multi_active_satellite_cycle,
     "fixture.cycle": cycle,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
