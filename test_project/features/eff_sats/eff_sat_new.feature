@@ -391,6 +391,74 @@ Feature: Effectivity Satellites
       | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
       | md5('1002\|\|100') | md5('1002') | md5('100') | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
 
+  # TODO: test fails
+  # CUSTOMER 1002 gets ORDERS 201 and 202 in place of ORDER 200 at different ldts but in the same load
+  #   The eff_sat macro should either insert a single closing record for ORDER 200 with the END_DATE equalling the START_DATE of ORDER 201
+  # Now, in case we want to interpret ORDER 201 as a replacement to ORDER 200  and ORDER 202 as a replacement to ORDER 201,
+  #   then we would need a closing record for ORDER 200 and a closing record for ORDER 201
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite_testing_auto_end_dating
+  Scenario: [INCR-LOAD] Incremental load with auto end-dating and new orders to existing customers; CUSTOMER_PK is DFK & ORDER_PK is SFK; 2 loads; going from one SFK per DFK to two (new) SFKs per DFK
+    Given the EFF_SAT_CUSTOMER_ORDER table does not exist
+# First load...
+    And the RAW_STAGE_CUSTOMER_ORDER table contains data
+      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+      | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+    And I create the STG_CUSTOMER_ORDER stage
+    When I load the LINK_CUSTOMER_ORDER link
+    Then the LINK_CUSTOMER_ORDER table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATETIME           | SOURCE |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | *      |
+    When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
+    Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+# Second load...
+    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+      | 1001        | 101      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1001        | 102      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 201      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 202      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+    And I create the STG_CUSTOMER_ORDER stage
+    When I load the LINK_CUSTOMER_ORDER link
+    Then the LINK_CUSTOMER_ORDER table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | LOAD_DATETIME           | SOURCE |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | *      |
+      | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 09:00:00.000 | *      |
+      | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 09:00:00.000 | *      |
+      | md5('1002\|\|201') | md5('1002') | md5('201') | 2018-06-01 09:00:00.000 | *      |
+      | md5('1002\|\|202') | md5('1002') | md5('202') | 2018-06-01 12:00:00.000 | *      |
+    When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
+    Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1004\|\|400') | md5('1004') | md5('400') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+      | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+      | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+      | md5('1002\|\|201') | md5('1002') | md5('201') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+      | md5('1002\|\|202') | md5('1002') | md5('202') | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
+#      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+#      | md5('1002\|\|201') | md5('1002') | md5('201') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
+#      | md5('1002\|\|201') | md5('1002') | md5('201') | 2018-06-01 09:00:00.000 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
+#      | md5('1002\|\|202') | md5('1002') | md5('202') | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 12:00:00.000 | 2018-06-01 12:00:00.000 | *      |
+
   # TODO: The test fails
   # We think CUSTOMER 1001 and 1002 should each be able to add a new relationship to the existing ones,
   #   but the macro doesn't seem to allow for multiple SFKs for the same DFK
