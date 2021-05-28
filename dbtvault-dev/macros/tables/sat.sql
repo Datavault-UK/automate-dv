@@ -58,12 +58,12 @@ update_records AS (
 
 latest_records AS (
     SELECT {{ dbtvault.prefix(rank_cols, 'c', alias_target='target') }},
-           CASE WHEN RANK()
-           OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
-           ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC) = 1
-    THEN 'Y' ELSE 'N' END AS latest
+        RANK() OVER (
+           PARTITION BY {{ dbtvault.prefix([src_pk], 'c') }}
+           ORDER BY {{ dbtvault.prefix([src_ldts], 'c') }} DESC
+           ) AS rank
     FROM update_records as c
-    QUALIFY latest = 'Y'
+    QUALIFY rank = 1
 ),
 {%- endif %}
 
@@ -74,7 +74,7 @@ records_to_insert AS (
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'e') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'e') }}
-        OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
     {%- endif %}
 )
 
