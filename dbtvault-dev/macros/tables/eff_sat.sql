@@ -17,32 +17,35 @@
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+{%- endif -%}
 
 {{- dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT *
-    FROM {{ ref(source_model) }}
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+    {%- else %}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    {%- endif %}
+    FROM {{ ref(source_model) }} AS a
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     WHERE __PERIOD_FILTER__
-    {% endif %}
-    {%- set source_cte = "source_data" %}
-),
-
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-rank_col AS (
-    SELECT * FROM source_data
+    {%- elif model.config.materialized == 'vault_insert_by_rank' %}
     WHERE __RANK_FILTER__
-    {%- set source_cte = "rank_col" %}
+    {%- endif %}
 ),
-{% endif -%}
 
 {%- if load_relation(this) is none %}
 
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM {{ source_cte }} AS e
+    FROM source_data AS e
 )
+
 {%- else %}
 
 latest_open_eff AS
@@ -63,7 +66,7 @@ latest_open_eff AS
 stage_slice AS
 (
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM {{ "rank_col" if model.config.materialized == 'vault_insert_by_rank' else "source_data" }} AS stage
+    FROM source_data AS stage
 ),
 
 new_open_records AS (
@@ -76,6 +79,7 @@ new_open_records AS (
     AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
 ),
+
 {%- if is_auto_end_dating %}
 
 links_to_end_date AS (
@@ -111,6 +115,8 @@ amended_end_dated_records AS (
     WHERE {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
 ),
+
+{# if is_auto_end_dating #}
 {%- endif %}
 
 records_to_insert AS (
@@ -120,6 +126,8 @@ records_to_insert AS (
     SELECT * FROM amended_end_dated_records
     {%- endif %}
 )
+
+{# if load_relation(this) is none #}
 {%- endif %}
 
 SELECT * FROM records_to_insert
