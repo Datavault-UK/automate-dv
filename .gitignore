@@ -22,5 +22,3 @@ secrethub/secrethub_dev.env
 
 
 .run/OOS Sats.run.xml
-
-test_project/backup_files/dbt_project.bak.yml
