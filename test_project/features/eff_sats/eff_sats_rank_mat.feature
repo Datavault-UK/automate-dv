@@ -35,6 +35,7 @@ Feature: Effectivity Satellites Loaded using Rank Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  # TODO: failing
   @fixture.eff_satellite
   Scenario: [EFF-SAT-RANK-MAT-INC] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the RAW_STAGE table contains data

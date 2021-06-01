@@ -33,6 +33,7 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
+  # TODO: failing
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD-PM] 2 loads, Link is Changed Back Again, driving key is ORDER_PK
@@ -57,6 +58,7 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
       | md5('5000\|\|CCC') | md5('5000') | md5('CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
 
+  # TODO: failing
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [NULL-DFK-PM] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
