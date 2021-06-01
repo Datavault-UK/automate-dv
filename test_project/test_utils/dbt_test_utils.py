@@ -567,6 +567,7 @@ class DBTVAULTGenerator:
             "sat": self.sat,
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
+            "ma_sat": self.ma_sat,
             "bridge": self.bridge,
             "pit": self.pit
         }
@@ -728,6 +729,31 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def ma_sat(self, model_name, src_pk, src_cdk, src_hashdiff, src_payload,
+               src_eff, src_ldts, src_source, source_model, config):
+        """
+        Generate a multi active satellite model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_cdk: Source cdk
+            :param src_hashdiff: Source hashdiff
+            :param src_payload: Source payload
+            :param src_eff: Source effective from
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param config: Optional model config
+        """
+
+        template = f"""
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.ma_sat({src_pk}, {src_cdk}, {src_hashdiff}, {src_payload},
+                          {src_eff}, {src_ldts}, {src_source}, 
+                          {source_model})   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts, config, depends_on=""):
         """
         Generate a bridge model template
@@ -828,6 +854,7 @@ class DBTVAULTGenerator:
             "sat": "incremental",
             "eff_sat": "incremental",
             "t_link": "incremental",
+            "ma_sat": "incremental",
             "pit": "pit_incremental",
             "bridge": "bridge_incremental"
         }
