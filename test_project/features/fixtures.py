@@ -623,17 +623,6 @@ def eff_satellite_testing_auto_end_dating(context):
         }
     }
 
-    context.derived_columns = {
-        "STG_CUSTOMER_ORDER": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME",
-            "START_DATE": "LOAD_DATETIME"
-        },
-        "STG_ORDER_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME",
-            "START_DATE": "LOAD_DATETIME"
-        }
-    }
-
     context.vault_structure_columns = {
         "LINK_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER",
@@ -678,8 +667,10 @@ def eff_satellite_testing_auto_end_dating(context):
             "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -687,8 +678,10 @@ def eff_satellite_testing_auto_end_dating(context):
             "+column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         },

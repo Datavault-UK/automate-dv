@@ -1,9 +1,6 @@
 @fixture.set_workdir
 Feature: Effectivity Satellites
 
-  # TODO: all tests have EFFECTIVE_FROM dates in the stage + they are < LOAD_DATE;
-  #  Should we then leave the date model to the stage and not do any derivation/processing in the eff_sat macro?
-
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [BASE-LOAD] Load data into a non-existent effectivity satellite
@@ -84,7 +81,6 @@ Feature: Effectivity Satellites
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
 
-  # TODO: not passing (closed record EFFECTIVE_FROM < LOAD_DATE)
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD] Link is Changed
@@ -106,7 +102,6 @@ Feature: Effectivity Satellites
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
-  # TODO: not passing (EFFECTIVE_FROM < LOAD_DATE)
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
   Scenario: [INCREMENTAL-LOAD] 2 loads, Link is Changed Back Again, driving key is ORDER_PK

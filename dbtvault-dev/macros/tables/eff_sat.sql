@@ -52,7 +52,7 @@ records_to_insert AS (
 latest_records AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            RANK() OVER (
-                PARTITION BY {{ src_pk }}
+                PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS rank_num
     FROM {{ this }} AS b
@@ -95,9 +95,9 @@ new_reopened_records AS (
     SELECT DISTINCT
         lc.{{ src_pk }}
         ,{{ dbtvault.alias_all(fk_cols, 'lc') }}
-        ,lc.{{ src_start_date }}
-        ,stage.{{ src_end_date }} AS END_DATE
-        ,stage.{{ src_ldts }} AS EFFECTIVE_FROM
+        ,lc.{{ src_start_date }} AS {{ src_start_date }}
+        ,stage.{{ src_end_date }} AS {{ src_end_date }}
+        ,stage.{{ src_eff }} AS {{ src_eff }}
         ,stage.{{ src_ldts }}
         ,stage.{{ src_source }}
     FROM stage_slice AS stage
@@ -124,9 +124,9 @@ new_closed_records AS (
     SELECT DISTINCT
         a.{{ src_pk }}
         ,{{ dbtvault.alias_all(fk_cols, 'a') }}
-        ,a.{{ src_start_date }}
-        ,stage.{{ src_ldts }} AS END_DATE
-        ,stage.{{ src_ldts }} AS EFFECTIVE_FROM
+        ,b.{{ src_start_date }} AS {{ src_start_date }}
+        ,stage.{{ src_eff }} AS {{ src_end_date }}
+        ,stage.{{ src_eff }} AS {{ src_eff }}
         ,stage.{{ src_ldts }}
         ,a.{{ src_source }}
     FROM latest_open AS a
