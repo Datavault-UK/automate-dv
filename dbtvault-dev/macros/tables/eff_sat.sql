@@ -44,11 +44,13 @@ WITH source_data AS (
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
     FROM source_data AS e
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='e', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_sfk, prefix='e', condition='IS NOT NULL') }}
 )
 
 {%- else %}
 
-{#- Selecting the most recent records for each link hashkey -#}
+{# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            RANK() OVER (
@@ -59,14 +61,14 @@ latest_records AS (
     QUALIFY rank_num = 1
 ),
 
-{#- Selecting the open records of the most recent records for each link hashkey -#}
+{# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
     SELECT *
     FROM latest_records AS b
     WHERE TO_DATE(b.{{ src_end_date }}) = TO_DATE('9999-12-31')
 ),
 
-{#- Selecting the closed records of the most recent records for each link hashkey -#}
+{# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT *
     FROM latest_records AS b
@@ -78,7 +80,7 @@ stage_slice AS (
     FROM source_data AS stage
 ),
 
-{#- Identifying the completely new link relationships to be opened in eff sat -#}
+{# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'stage') }}
@@ -90,7 +92,7 @@ new_open_records AS (
         AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 
-{#- Identifying the existing closed link relationships to be reopened in eff sat -#}
+{# Identifying the existing closed link relationships to be reopened in eff sat -#}
 new_reopened_records AS (
     SELECT DISTINCT
         lc.{{ src_pk }}
@@ -109,7 +111,7 @@ new_reopened_records AS (
 
 {%- if is_auto_end_dating %}
 
-{#- Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
+{# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
 links_to_close AS (
     SELECT DISTINCT a.*
     FROM latest_open AS a
@@ -119,12 +121,12 @@ links_to_close AS (
     OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
 ),
 
-{#- Creating the closing records -#}
+{# Creating the closing records -#}
 new_closed_records AS (
     SELECT DISTINCT
         a.{{ src_pk }}
         ,{{ dbtvault.alias_all(fk_cols, 'a') }}
-        ,b.{{ src_start_date }} AS {{ src_start_date }}
+        ,a.{{ src_start_date }} AS {{ src_start_date }}
         ,stage.{{ src_eff }} AS {{ src_end_date }}
         ,stage.{{ src_eff }} AS {{ src_eff }}
         ,stage.{{ src_ldts }}
