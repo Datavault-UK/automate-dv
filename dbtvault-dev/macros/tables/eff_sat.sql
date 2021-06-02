@@ -39,16 +39,7 @@ WITH source_data AS (
     {%- endif %}
 ),
 
-{%- if load_relation(this) is none %}
-
-records_to_insert AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM source_data AS e
-    WHERE {{ dbtvault.multikey(src_dfk, prefix='e', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_sfk, prefix='e', condition='IS NOT NULL') }}
-)
-
-{%- else %}
+{%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
@@ -140,7 +131,7 @@ new_closed_records AS (
     AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
 ),
 
-{# if is_auto_end_dating #}
+{#- if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
@@ -153,7 +144,16 @@ records_to_insert AS (
     {%- endif %}
 )
 
-{# if load_relation(this) is none #}
+{%- else %}
+
+records_to_insert AS (
+    SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
+    FROM source_data AS e
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='e', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_sfk, prefix='e', condition='IS NOT NULL') }}
+)
+
+{#- if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
 SELECT * FROM records_to_insert
