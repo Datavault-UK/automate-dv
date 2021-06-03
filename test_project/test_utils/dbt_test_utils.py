@@ -1008,7 +1008,7 @@ class DBTVAULTGenerator:
                     config["is_auto_end_dating"] = True
                 else:
                     config = {**config,
-                              "auto_end_dating": True}
+                              "is_auto_end_dating": True}
 
         return config
 
