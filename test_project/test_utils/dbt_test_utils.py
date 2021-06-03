@@ -863,7 +863,8 @@ class DBTVAULTGenerator:
         }
 
         if config:
-            config["materialized"] = default_materialisations[vault_structure]
+            if "materialized" not in config:
+                config["materialized"] = default_materialisations[vault_structure]
         else:
             config = {"materialized": default_materialisations[vault_structure]}
 
