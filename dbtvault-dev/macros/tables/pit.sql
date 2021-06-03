@@ -173,16 +173,16 @@ new_rows AS (
     SELECT
         a.{{ src_pk }},
         a.AS_OF_DATE,
-        {% for sat_name in satellites -%}
-            {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
-            {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-            {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
-            {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-            {%- set sat_name = sat_name | lower -%}
-            {{ "COALESCE(MAX({}_src.{}), '{}'::BINARY(16)) AS {}_{}".format(sat_name, sat_pk, ghost_pk, sat_name, sat_pk_name) }},
-            {{ "COALESCE(MAX({}_src.{}), '{}'::TIMESTAMP_NTZ) AS {}_{}".format(sat_name, sat_ldts, ghost_date, sat_name, sat_ldts_name) }}
-            {{- ",\n" if not loop.last }}
-        {%- endfor %}
+    {%- for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set sat_name = sat_name | lower %}
+        {{ ("COALESCE(MAX({}_src.{}), '{}'::BINARY(16)) AS {}_{}".format(sat_name, sat_pk, ghost_pk, sat_name, sat_pk_name)) }},
+        {{ ("COALESCE(MAX({}_src.{}), '{}'::TIMESTAMP_NTZ) AS {}_{}".format(sat_name, sat_ldts, ghost_date, sat_name, sat_ldts_name)) }}
+        {{- "," if not loop.last }}
+    {%- endfor %}
     FROM new_rows_as_of_dates AS a
 
     {% for sat_name in satellites -%}
