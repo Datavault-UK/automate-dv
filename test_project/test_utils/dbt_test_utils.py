@@ -705,7 +705,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config, src_payload=None, depends_on=""):
+    def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
+               src_payload=None, depends_on=""):
         """
         Generate a t-link model template
             :param model_name: Name of the model file
@@ -754,7 +755,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts, config, depends_on=""):
+    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
+               config, depends_on=""):
         """
         Generate a bridge model template
             :param model_name: Name of the model file
@@ -775,7 +777,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, depends_on="", config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts,
+            depends_on="", config=None):
         """
         Generate a PIT template
             :param model_name: Name of the model file
@@ -824,9 +827,7 @@ class DBTVAULTGenerator:
                     dict_check = [next(iter(item))][0]
                     if isinstance(item[dict_check], dict):
                         link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
-                        # eff_satellite_columns_end_date = [item[col]['bridge_end_date'] for col in item.keys()]
-
-                        processed_headings.extend(link_columns_hk) #+ eff_satellite_columns_end_date)
+                        processed_headings.extend(link_columns_hk)
 
                 elif item.get("source_column", None) and item.get("alias", None):
 
@@ -1003,8 +1004,8 @@ class DBTVAULTGenerator:
                 if config:
                     config["is_auto_end_dating"] = True
                 else:
-                    config = {"materialized": "incremental",
-                              "is_auto_end_dating": True}
+                    config = {**config,
+                              "auto_end_dating": True}
 
         return config
 
