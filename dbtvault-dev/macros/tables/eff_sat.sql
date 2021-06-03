@@ -54,81 +54,70 @@ latest_records AS (
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
-    SELECT *
-    FROM latest_records AS b
-    WHERE TO_DATE(b.{{ src_end_date }}) = TO_DATE('9999-12-31')
+    SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
+    FROM latest_records AS c
+    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('9999-12-31')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
-    SELECT *
-    FROM latest_records AS b
-    WHERE TO_DATE(b.{{ src_end_date }}) != TO_DATE('9999-12-31')
+    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
+    FROM latest_records AS d
+    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('9999-12-31')
 ),
 
 stage_slice AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM source_data AS stage
+    SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
+    FROM source_data AS e
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM stage_slice AS stage
+        {{ dbtvault.alias_all(source_cols, 'f') }}
+    FROM stage_slice AS f
     LEFT JOIN latest_records AS lr
-        ON stage.{{ src_pk }} = lr.{{ src_pk }}
+        ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
-        AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
-        AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
+        AND {{ dbtvault.multikey(src_dfk, prefix='f', condition='IS NOT NULL') }}
+        AND {{ dbtvault.multikey(src_sfk, prefix='f', condition='IS NOT NULL') }}
 ),
 
-{# Identifying the existing closed link relationships to be reopened in eff sat -#}
+{# Identifying the currently closed link relationships to be reopened in eff sat -#}
 new_reopened_records AS (
     SELECT DISTINCT
         lc.{{ src_pk }}
         ,{{ dbtvault.alias_all(fk_cols, 'lc') }}
         ,lc.{{ src_start_date }} AS {{ src_start_date }}
-        ,stage.{{ src_end_date }} AS {{ src_end_date }}
-        ,stage.{{ src_eff }} AS {{ src_eff }}
-        ,stage.{{ src_ldts }}
-        ,stage.{{ src_source }}
-    FROM stage_slice AS stage
+        ,g.{{ src_end_date }} AS {{ src_end_date }}
+        ,g.{{ src_eff }} AS {{ src_eff }}
+        ,g.{{ src_ldts }}
+        ,g.{{ src_source }}
+    FROM stage_slice AS g
     INNER JOIN latest_closed lc
-    ON stage.{{ src_pk }} = lc.{{ src_pk }}
-    WHERE {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
+    ON g.{{ src_pk }} = lc.{{ src_pk }}
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='g', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_sfk, prefix='g', condition='IS NOT NULL') }}
 ),
 
 {%- if is_auto_end_dating %}
 
-{# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
-links_to_close AS (
-    SELECT DISTINCT a.*
-    FROM latest_open AS a
-    LEFT JOIN stage_slice AS b
-    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
-    OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
-),
-
 {# Creating the closing records -#}
+{# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
 new_closed_records AS (
     SELECT DISTINCT
-        a.{{ src_pk }}
-        ,{{ dbtvault.alias_all(fk_cols, 'a') }}
-        ,a.{{ src_start_date }} AS {{ src_start_date }}
-        ,stage.{{ src_eff }} AS {{ src_end_date }}
-        ,stage.{{ src_eff }} AS {{ src_eff }}
-        ,stage.{{ src_ldts }}
-        ,a.{{ src_source }}
-    FROM latest_open AS a
-    INNER JOIN links_to_close AS b
-    ON a.{{ src_pk }} = b.{{ src_pk }}
-    INNER JOIN stage_slice AS stage
-    ON {{ dbtvault.multikey(src_dfk, prefix=['stage', 'a'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
+        lo.{{ src_pk }}
+        ,{{ dbtvault.alias_all(fk_cols, 'lo') }}
+        ,lo.{{ src_start_date }} AS {{ src_start_date }}
+        ,h.{{ src_eff }} AS {{ src_end_date }}
+        ,h.{{ src_eff }} AS {{ src_eff }}
+        ,h.{{ src_ldts }}
+        ,lo.{{ src_source }}
+    FROM latest_open AS lo
+    LEFT JOIN stage_slice AS h
+    ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
+    WHERE ({{ dbtvault.multikey(src_sfk, prefix='h', condition='IS NOT NULL') }})
+    AND ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
 {#- if is_auto_end_dating -#}
@@ -147,10 +136,10 @@ records_to_insert AS (
 {%- else %}
 
 records_to_insert AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM source_data AS e
-    WHERE {{ dbtvault.multikey(src_dfk, prefix='e', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_sfk, prefix='e', condition='IS NOT NULL') }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
+    FROM source_data AS i
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='i', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_sfk, prefix='i', condition='IS NOT NULL') }}
 )
 
 {#- if not dbtvault.is_any_incremental() -#}
