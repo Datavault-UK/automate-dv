@@ -54,7 +54,7 @@ WITH as_of_dates AS (
         {%- filter indent(width=8) -%}
         {%- for stg in stage_tables -%}
             {%- set stage_ldts =(stage_tables[stg])  -%}
-            {{ "SELECT MIN(" ~ stage_ldts ~ ") AS LOAD_DATETIME FROM " ~ ref(stg) }}
+            {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
             {{ "UNION ALL" if not loop.last }}
         {% endfor -%}
         {%- endfilter -%}
@@ -132,23 +132,26 @@ WITH as_of_dates AS (
         SELECT
             a.{{ src_pk }},
             a.AS_OF_DATE,
-            {%- for sat in satellites -%}
+            {%- for sat_name in satellites -%}
                 {%- filter indent(width=8) -%}
-                {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-                {%- set sat_ldts = (satellites[sat]['ldts'].keys() | list )[0]  -%}
-                '{{ ghost_pk }}' {{- "::BINARY(16) AS '" -}} {{- sat ~ '_' ~ sat_key ~ ',' }}
-                '{{ ghost_date}}' {{- "::TIMESTAMP_NTZ AS '" -}} {{- sat ~'_'~ sat_ldts }}
+                {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+                {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0]  -%}
+                {{ "'{}'::BINARY(16) AS {}".format(ghost_pk, sat_name, sat_key_name) }}
+                {{ "'{}'::TIMESTAMP_NTZ AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
                 {{- ',' if not loop.last -}}
                 {% endfilter %}
             {%- endfor %}
         FROM backfill_rows_as_of_dates AS a
 
-        {% for sat in satellites -%}
-                {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-                {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0] -%}
-                LEFT JOIN {{ ref(sat) }} AS {{  sat -}}_SRC
-                    ON  a.{{- src_pk }} = {{ sat -}}_SRC.{{ satellites[sat]['pk'][sat_key] }}
-                AND {{ sat -}}_SRC.{{ satellites[sat]['ldts'][sat_ldts] }} <= a.AS_OF_DATE
+        {% for sat_name in satellites -%}
+                {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+                {%- set sat_ldts_name =(satellites[sat_name]['ldts'].keys() | list )[0] -%}
+                {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+                {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+                {%- set sat_name = sat_name | lower -%}
+                LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name) }}
+                    ON a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name, sat_pk) }}
+                AND {{ "{}_src.{}".format(sat_name, sat_ldts) }} <= a.AS_OF_DATE
         {% endfor %}
 
         GROUP BY
@@ -170,24 +173,26 @@ new_rows AS (
     SELECT
         a.{{ src_pk }},
         a.AS_OF_DATE,
-        {% for sat in satellites -%}
-            {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-            {%- set sat_ldts = (satellites[sat]['ldts'].keys() | list )[0] -%}
-            {%- do log("sat_key: " ~ sat_key, true) -%}
-            {%- do log("sat_ldts: " ~ sat_ldts, true) -%}
-            {%- do log("satellites[sat]['pk']: " ~ satellites[sat]['pk'], true) -%}
-            {{ "COALESCE(MAX(" }} {{- (sat ~ "_SRC.") | lower }} {{- satellites[sat]['pk'][sat_key] ~ ")," }} '{{ ghost_pk }}' {{- "::BINARY(16)) AS " ~ sat ~ "_" ~ sat_key }},
-            {{ "\n" ~ "COALESCE(MAX(" | indent(8) }} {{- (sat ~ '_SRC.') | lower }} {{- satellites[sat]['ldts'][sat_ldts] ~ ")," }} '{{ ghost_date }}' {{- "::TIMESTAMP_NTZ) AS " ~ sat ~ '_' ~ sat_ldts }}
-            {{- "," if not loop.last }}
+        {% for sat_name in satellites -%}
+            {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+            {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+            {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+            {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+            {%- set sat_name = sat_name | lower -%}
+            {{ "COALESCE(MAX({}_src.{}), '{}'::BINARY(16)) AS {}_{}".format(sat_name, sat_pk, ghost_pk, sat_name, sat_pk_name) }},
+            {{ "COALESCE(MAX({}_src.{}), '{}'::TIMESTAMP_NTZ) AS {}_{}".format(sat_name, sat_ldts, ghost_date, sat_name, sat_ldts_name) }}
+            {{- ",\n" if not loop.last }}
         {%- endfor %}
     FROM new_rows_as_of_dates AS a
 
-    {% for sat in satellites -%}
-        {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-        {%- set sat_ldts = (satellites[sat]['ldts'].keys() | list )[0] -%}
-        LEFT JOIN {{ ref(sat) }} AS {{ (sat ~ "_SRC") | lower }}
-        {{ "ON" | indent(4) }} a.{{- src_pk }} = {{ (sat ~ "_SRC.") | lower }} {{- satellites[sat]['pk'][sat_key] }}
-        {{ "AND" | indent(4) }} {{ (sat ~ "_SRC.") | lower }} {{- satellites[sat]['ldts'][sat_ldts] }} <= a.AS_OF_DATE
+    {% for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
+        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
