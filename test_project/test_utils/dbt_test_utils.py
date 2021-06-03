@@ -796,7 +796,10 @@ class DBTVAULTGenerator:
             "ma_sat": "incremental"
         }
 
-        if not config:
+        if config:
+            if "materialized" not in config:
+                config["materialized"] = default_materialisations[vault_structure]
+        else:
             config = {"materialized": default_materialisations[vault_structure]}
 
         if vault_structure == "stage":
