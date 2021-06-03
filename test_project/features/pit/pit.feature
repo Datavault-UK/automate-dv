@@ -5,10 +5,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table is already established with increments of a day
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK | SAT                  | PIT          |
-      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |      | SAT_CUSTOMER_LOGIN   |              |
-      |              |      | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -78,10 +78,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -124,10 +124,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -171,10 +171,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     Given the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -219,10 +219,10 @@ Feature: pit
   Scenario: Load into a pit table where the AS OF table dates are after the most recent satellite entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *      |
@@ -266,10 +266,10 @@ Feature: pit
   @fixture.pit
   Scenario: Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2019-01-03 00:00:00.000000 | *      |
@@ -370,10 +370,10 @@ Feature: pit
   @fixture.pit
   Scenario: Load into a pit table where the as_of_dates table changes
     Given the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |       | SAT_CUSTOMER_LOGIN   |              |
-      |              |       | SAT_CUSTOMER_PROFILE |              |
+      | HUB          | SAT                  | PIT          |
+      | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      |              | SAT_CUSTOMER_LOGIN   |              |
+      |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2019-01-03 00:00:00.000000 | *      |
