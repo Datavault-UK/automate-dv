@@ -13,10 +13,19 @@
                                        src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
-{%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
-{%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
+{%- set source_cols = dbtvault.escape_column_name(dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source])) -%}
+{%- set fk_cols = dbtvault.escape_column_name(dbtvault.expand_column_list(columns=[src_dfk, src_sfk])) -%}
+{%- set dfk_cols = dbtvault.escape_column_name(dbtvault.expand_column_list(columns=[src_dfk])) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+
+{%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
+{%- set src_dfk = dbtvault.escape_column_name(src_dfk) -%}
+{%- set src_sfk = dbtvault.escape_column_name(src_sfk) -%}
+{%- set src_start_date = dbtvault.escape_column_name(src_start_date) -%}
+{%- set src_end_date = dbtvault.escape_column_name(src_end_date) -%}
+{%- set src_eff = dbtvault.escape_column_name(src_eff) -%}
+{%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_name(src_source) -%}
 
 {{- dbtvault.prepend_generated_by() }}
 
