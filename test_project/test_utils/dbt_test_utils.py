@@ -953,10 +953,7 @@ class DBTVAULTGenerator:
 
         if hasattr(context, "auto_end_date"):
             if context.auto_end_date:
-                if config:
-                    config["is_auto_end_dating"] = True
-                else:
-                    config = {**config,
+                config = {**config,
                           "is_auto_end_dating": True}
 
         return config
