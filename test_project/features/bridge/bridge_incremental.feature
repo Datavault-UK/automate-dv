@@ -1,4 +1,3 @@
-# TODO: Scenario names are too long
 @fixture.set_workdir
 Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two links
 
