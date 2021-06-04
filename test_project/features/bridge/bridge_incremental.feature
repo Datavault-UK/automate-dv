@@ -1,3 +1,4 @@
+# TODO: Scenario names are too long
 @fixture.set_workdir
 Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two links
 
@@ -699,7 +700,6 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  # TODO: Scenario name is much too long
   Scenario: [INCR-LOAD] Incremental load with auto end-dating and more recent AS OF dates into an already populated bridge table from one hub and two links
   An existing order gets assigned either to another existing customer or to a new customer, then it gets reassigned to the initial customer
     Given the BRIDGE_CUSTOMER_ORDER table does not exist

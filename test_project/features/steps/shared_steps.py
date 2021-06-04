@@ -218,13 +218,13 @@ def load_vault(context):
     models = {k: list(filter(None, DBTVAULTGenerator.flatten(v))) for k, v in context.vault_model_names.items()}
     model_names = []
 
-    config = dbtvault_generator.append_end_date_config(context, dict())
-
     for vault_structure, model_list in models.items():
         for model_name in model_list:
             metadata = {**context.vault_structure_columns[model_name]}
 
             context.vault_structure_metadata = metadata
+
+            config = dbtvault_generator.append_end_date_config(context, dict())
 
             dbtvault_generator.raw_vault_structure(model_name, vault_structure, config=config, **metadata)
             model_names.append(model_name)
