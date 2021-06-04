@@ -1,9 +1,6 @@
 @fixture.set_workdir
-Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three links
+Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three links
 
-####################### BASE LOAD #######################
-
-# ------------------------ ONE LINK ------------------------
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and one link with the AS_OF date and LDTS equal
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
@@ -127,7 +124,6 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | md5('1002') | 2018-06-03 00:00:00.000 | md5('1002\|\|200')     |
       | md5('1003') | 2018-06-03 00:00:00.000 | md5('1003\|\|300')     |
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004\|\|400')     |
-
       | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001\|\|100')     |
       | md5('1002') | 2018-06-04 00:00:00.000 | md5('1002\|\|200')     |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003\|\|300')     |
@@ -177,14 +173,12 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     |
       | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     |
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     |
-
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     |
       | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|200')     |
       | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|201')     |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|301')     |
 
-# ------------------------ TWO LINKS ------------------------
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and two links with the AS_OF date and LDTS equal
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist
@@ -440,7 +434,6 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     |
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
-
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAB')    |
@@ -538,7 +531,6 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | LINK_ORDER_PRODUCT_PK |
       | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
-
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    |
@@ -546,7 +538,6 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
 
-# ------------------------ THREE LINKS ------------------------
   @fixture.bridge
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with the AS_OF date and LDTS equal
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -934,14 +925,12 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | LINK_ORDER_PRODUCT_PK | LINK_PRODUCT_COMPONENT_PK |
       | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-0\|\|BBB')       |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     | md5('AAA-0\|\|AAA')       |
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     | md5('AAB-0\|\|AAB')       |
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    | md5('AAA-0\|\|AAAA')      |
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    | md5('AAA-1\|\|AAAA')      |
       | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-0\|\|BBB')       |
       | md5('1004') | 2018-06-01 12:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     | md5('AAA-0\|\|AAA')       |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     | md5('AAB-0\|\|AAB')       |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    | md5('AAA-0\|\|AAAA')      |
@@ -1134,7 +1123,6 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
     Then the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | LINK_ORDER_PRODUCT_PK | LINK_PRODUCT_COMPONENT_PK |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    | md5('AAA-1\|\|AAAA')      |
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAB')    | md5('AAA-0\|\|AAAB')      |
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAB')    | md5('AAA-1\|\|AAAB')      |
@@ -1142,7 +1130,6 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-2\|\|BBB')       |
       | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-3\|\|BBB')       |
       | md5('1004') | 2018-06-01 12:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     | md5('AAA-1\|\|AAA')       |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     | md5('AAB-1\|\|AAB')       |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     | md5('AAB-2\|\|AAB')       |
@@ -1366,12 +1353,10 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
     Then the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | LINK_ORDER_PRODUCT_PK | LINK_PRODUCT_COMPONENT_PK |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
       | md5('1001') | 2018-06-01 12:00:00.000 | md5('1001\|\|101')     | md5('101\|\|AAAA')    | md5('AAA-1\|\|AAAA')      |
       | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-2\|\|BBB')       |
       | md5('1002') | 2018-06-01 12:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-3\|\|BBB')       |
       | md5('1004') | 2018-06-01 12:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     | md5('AAA-1\|\|AAA')       |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     | md5('AAB-1\|\|AAB')       |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAB')     | md5('AAB-2\|\|AAB')       |
@@ -1380,4 +1365,3 @@ Feature: Bridge table -  Base Bridge behaviour with one hub and one/two/three li
       | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     | md5('BBB-3\|\|BBB')       |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCB')     | md5('CCC-0\|\|CCB')       |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
-
