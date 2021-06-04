@@ -92,12 +92,10 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-#      | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
       | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
     And I create the STG_CUSTOMER stage
     And I insert by period into the EFF_SAT eff_sat by day
-#    And I insert by period into the EFF_SAT eff_sat by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -107,3 +105,70 @@ Feature: Effectivity Satellites Loaded using Period Materialization
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-13 | orders |
       | md5('5000\|\|CCC') | md5('5000') | md5('CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [INCREMENTAL-LOAD-PM] One load with different ldts; going from an empty table to the same CUSTOMER for 3 different ORDERS
+    Given the EFF_SAT table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-01 | 9999-12-31 | 2020-01-01     | 2020-01-01 | *      |
+      | 1000        | BBB      | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | 1000        | CCC      | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+    And I create the STG_CUSTOMER stage
+    And I insert by period into the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01 | 9999-12-31 | 2020-01-01     | 2020-01-01 | *      |
+      | md5('1000\|\|BBB') | md5('1000') | md5('BBB') | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | md5('1000\|\|CCC') | md5('1000') | md5('CCC') | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [INCREMENTAL-LOAD-PM] One load with different ldts and different number of CUSTOMERS per ldts; going from an empty table to 3 CUSTOMERS per ORDER
+    Given the EFF_SAT table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-01 | 9999-12-31 | 2020-01-01     | 2020-01-01 | *      |
+      | 2000        | AAA      | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | 3000        | AAA      | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | 4000        | AAA      | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+      | 5000        | AAA      | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+      | 6000        | AAA      | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+    And I create the STG_CUSTOMER stage
+    And I insert by period into the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01 | 9999-12-31 | 2020-01-01     | 2020-01-01 | *      |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01 | 2020-01-02 | 2020-01-02     | 2020-01-02 | *      |
+      | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | md5('3000\|\|AAA') | md5('3000') | md5('AAA') | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | 2020-01-02 | 2020-01-03 | 2020-01-03     | 2020-01-03 | *      |
+      | md5('3000\|\|AAA') | md5('3000') | md5('AAA') | 2020-01-02 | 2020-01-03 | 2020-01-03     | 2020-01-03 | *      |
+      | md5('4000\|\|AAA') | md5('4000') | md5('AAA') | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+      | md5('5000\|\|AAA') | md5('5000') | md5('AAA') | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+      | md5('6000\|\|AAA') | md5('6000') | md5('AAA') | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [INCREMENTAL-LOAD-PM] One load with different ldts; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
+    Given the EFF_SAT table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | 2020-01-01 | 9999-12-31 | 2020-01-01     | 2020-01-01 | *      |
+      | 2000        | AAA      | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | 1000        | AAA      | 2020-01-01 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+    And I create the STG_CUSTOMER stage
+    And I insert by period into the EFF_SAT eff_sat by day
+    And I insert by period into the EFF_SAT eff_sat by day
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01 | 9999-12-31 | 2020-01-01     | 2020-01-01 | *      |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01 | 2020-01-02 | 2020-01-02     | 2020-01-02 | *      |
+      | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | 2020-01-02 | 9999-12-31 | 2020-01-02     | 2020-01-02 | *      |
+      | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | 2020-01-02 | 2020-01-03 | 2020-01-03     | 2020-01-03 | *      |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
+
+
