@@ -785,7 +785,6 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    # "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
@@ -794,7 +793,6 @@ def bridge(context):
                     "link_fk2": "ORDER_FK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
-                    # "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
                 }
@@ -812,7 +810,6 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    # "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
@@ -821,13 +818,11 @@ def bridge(context):
                     "link_fk2": "ORDER_FK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
-                    # "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
-                    # "bridge_start_date": "EFF_SAT_ORDER_PRODUCT_STARTDATE",
                     "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
@@ -836,7 +831,6 @@ def bridge(context):
                     "link_fk2": "PRODUCT_FK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
-                    # "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
                 }
@@ -855,7 +849,6 @@ def bridge(context):
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
-                    # "bridge_start_date": "EFF_SAT_CUSTOMER_ORDER_STARTDATE",
                     "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
@@ -864,13 +857,11 @@ def bridge(context):
                     "link_fk2": "ORDER_FK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
-                    # "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
                 },
                 "ORDER_PRODUCT": {
                     "bridge_link_pk": "LINK_ORDER_PRODUCT_PK",
-                    # "bridge_start_date": "EFF_SAT_ORDER_PRODUCT_STARTDATE",
                     "bridge_end_date": "EFF_SAT_ORDER_PRODUCT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
@@ -879,13 +870,11 @@ def bridge(context):
                     "link_fk2": "PRODUCT_FK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
-                    # "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
                 },
                 "PRODUCT_COMPONENT": {
                     "bridge_link_pk": "LINK_PRODUCT_COMPONENT_PK",
-                    # "bridge_start_date": "EFF_SAT_PRODUCT_COMPONENT_STARTDATE",
                     "bridge_end_date": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
                     "link_table": "LINK_PRODUCT_COMPONENT",
@@ -894,7 +883,6 @@ def bridge(context):
                     "link_fk2": "COMPONENT_FK",
                     "eff_sat_table": "EFF_SAT_PRODUCT_COMPONENT",
                     "eff_sat_pk": "PRODUCT_COMPONENT_PK",
-                    # "eff_sat_start_date": "START_DATE",
                     "eff_sat_end_date": "END_DATE",
                     "eff_sat_load_date": "LOAD_DATETIME"
                 }
@@ -1038,7 +1026,6 @@ def bridge(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
-                # "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME"
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
@@ -1046,9 +1033,7 @@ def bridge(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
-                # "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
-                # "EFF_SAT_ORDER_PRODUCT_ENDDATE": "DATETIME"
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
@@ -1056,11 +1041,8 @@ def bridge(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
-                # "EFF_SAT_CUSTOMER_ORDER_ENDDATE": "DATETIME",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
-                # "EFF_SAT_ORDER_PRODUCT_ENDDATE": "DATETIME",
                 "LINK_PRODUCT_COMPONENT_PK": "BINARY(16)",
-                # "EFF_SAT_PRODUCT_COMPONENT_ENDDATE": "DATETIME"
             }
         }
     }

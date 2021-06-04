@@ -41,7 +41,7 @@
 {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
 {%- else -%}
 {%- set new_as_of_dates_cte = 'as_of_dates' -%}
-{%- endif -%}
+{%- endif %}
 
 WITH as_of_dates AS (
     SELECT * FROM {{ as_of_table_relation }}
@@ -51,13 +51,11 @@ WITH as_of_dates AS (
 
 last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
-    {%- filter indent(width=8) -%}
     {%- for stg in stage_tables -%}
-        {%- set stage_ldts =(stage_tables[stg])  -%}
+        {%- set stage_ldts = stage_tables[stg] %}
         {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
         {{ "UNION ALL" if not loop.last }}
-    {% endfor -%}
-    {%- endfilter -%}
+    {%- endfor %}
     )
 ),
 
