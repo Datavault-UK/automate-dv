@@ -44,12 +44,12 @@ WITH source_data AS (
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
-           RANK() OVER (
+           ROW_NUMBER() OVER (
                 PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
-           ) AS rank_num
+           ) AS row_num
     FROM {{ this }} AS b
-    QUALIFY rank_num = 1
+    QUALIFY row_num = 1
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
