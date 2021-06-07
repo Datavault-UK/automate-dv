@@ -399,6 +399,11 @@ def satellite(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
+        "STG_ESCAPED": {
+            "TABLE_PK": "PK",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["'COLUMN'", "'COLUMN 2'", "COLUMN_3", "_COLUMN4", "COLUMN5_", "'COL6'", "'COLUMN 7'"]}
         }
     }
 
@@ -411,6 +416,9 @@ def satellite(context):
         },
         "STG_CUSTOMER_G": {
             "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_ESCAPED": {
+            "EFFECTIVE_FROM": "DATE"
         }
     }
 
@@ -429,6 +437,14 @@ def satellite(context):
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "SATELLITE_ESCAPED": {
+            "src_pk": "TABLE_PK",
+            "src_payload": ["'COLUMN'", "'COLUMN 2'", "COLUMN_3", "_COLUMN4", "COLUMN5_", '"COL6"', "'COLUMN 7'"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "DATE",
             "src_source": "SOURCE"
         }
     }
@@ -454,6 +470,20 @@ def satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_ESCAPED": {
+            "+column_types": {
+                "PK": "VARCHAR",
+                "'COLUMN'": "VARCHAR",
+                "'COLUMN 2'": "VARCHAR",
+                "COLUMN_3": "VARCHAR",
+                "_COLUMN4": "VARCHAR",
+                "COLUMN5_": "VARCHAR",
+                "'COL6'": "VARCHAR",
+                "'COLUMN 7'": "VARCHAR",
+                "DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "SATELLITE": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -475,6 +505,22 @@ def satellite(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_ESCAPED": {
+            "+column_types": {
+                "TABLE_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "'COLUMN'": "VARCHAR",
+                "'COLUMN 2'": "VARCHAR",
+                "COLUMN_3": "VARCHAR",
+                "_COLUMN4": "VARCHAR",
+                "COLUMN5_": "VARCHAR",
+                '"COL6"': "VARCHAR",
+                "'COLUMN 7'": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         }
