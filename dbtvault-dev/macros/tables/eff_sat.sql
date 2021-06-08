@@ -32,10 +32,12 @@ WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
     FROM {{ ref(source_model) }} AS a
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
-    WHERE __PERIOD_FILTER__
+    AND __PERIOD_FILTER__
     {%- elif model.config.materialized == 'vault_insert_by_rank' %}
-    WHERE __RANK_FILTER__
+    AND __RANK_FILTER__
     {%- endif %}
 ),
 
@@ -77,10 +79,8 @@ new_open_records AS (
         {{ dbtvault.alias_all(source_cols, 'f') }}
     FROM stage_slice AS f
     LEFT JOIN latest_records AS lr
-        ON f.{{ src_pk }} = lr.{{ src_pk }}
+    ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
-        AND {{ dbtvault.multikey(src_dfk, prefix='f', condition='IS NOT NULL') }}
-        AND {{ dbtvault.multikey(src_sfk, prefix='f', condition='IS NOT NULL') }}
 ),
 
 {# Identifying the currently closed link relationships to be reopened in eff sat -#}
@@ -96,8 +96,6 @@ new_reopened_records AS (
     FROM stage_slice AS g
     INNER JOIN latest_closed lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
-    WHERE {{ dbtvault.multikey(src_dfk, prefix='g', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_sfk, prefix='g', condition='IS NOT NULL') }}
 ),
 
 {%- if is_auto_end_dating %}
@@ -113,11 +111,10 @@ new_closed_records AS (
         ,h.{{ src_eff }} AS {{ src_eff }}
         ,h.{{ src_ldts }}
         ,lo.{{ src_source }}
-    FROM latest_open AS lo
-    LEFT JOIN stage_slice AS h
+    FROM stage_slice AS h
+    INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
-    WHERE ({{ dbtvault.multikey(src_sfk, prefix='h', condition='IS NOT NULL') }})
-    AND ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
+    WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
 {#- if is_auto_end_dating -#}
@@ -138,8 +135,6 @@ records_to_insert AS (
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
     FROM source_data AS i
-    WHERE {{ dbtvault.multikey(src_dfk, prefix='i', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_sfk, prefix='i', condition='IS NOT NULL') }}
 )
 
 {#- if not dbtvault.is_any_incremental() -#}
