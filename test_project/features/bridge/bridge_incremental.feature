@@ -3,8 +3,9 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Incremental load with auto end-dating with more recent AS OF dates and a new order & a change of customer into an already populated bridge table from one hub and one link
-  New order or changed order are assigned only to existing customers
+  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 1
+    Incremental load with auto end-dating with more recent AS OF dates and new orders
+    New order or changed order are assigned only to existing customers
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -97,8 +98,9 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Incremental load with auto end-dating with new AS OF dates in the past; bridge table is already populated with data from one hub and one link
-  Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
+  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 2
+    Incremental load with auto end-dating with new AS OF dates in the past
+    Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -230,8 +232,9 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Incremental load with auto end-dating with more recent AS OF dates and two new orders + two changed orders into an already populated bridge table from one hub and one link
-  New orders or changed orders are assigned to existing customers, as well as to new ones
+  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 3
+    Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
+    New orders or changed orders are assigned to existing customers, as well as to new ones
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -351,8 +354,9 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Incremental load with auto end-dating with more recent AS OF dates and two changed orders into an already populated bridge table from one hub and one link
-  The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
+  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 4
+    Incremental load with auto end-dating with more recent AS OF dates and changed orders
+    The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -517,9 +521,10 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Incremental load with auto end-dating with more recent AS OF dates and two new orders + two changed orders into an already populated bridge table from one hub and two links
-  New orders or changed orders are assigned to existing customers, as well as to new ones
-  New orders or changed orders get assigned existing or new products
+  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 1
+    Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
+    New orders or changed orders are assigned to existing customers, as well as to new ones
+    New orders or changed orders get assigned existing or new products
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                        |
@@ -699,8 +704,10 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Incremental load with auto end-dating and more recent AS OF dates into an already populated bridge table from one hub and two links
-  An existing order gets assigned either to another existing customer or to a new customer, then it gets reassigned to the initial customer
+  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 2
+    Incremental load with auto end-dating and more recent AS OF dates.
+    An existing order gets assigned either to another existing customer or to a new customer,
+    then it gets reassigned to the initial customer
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                        |
