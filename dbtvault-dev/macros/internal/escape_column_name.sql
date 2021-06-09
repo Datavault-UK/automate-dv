@@ -2,46 +2,61 @@
 
 {# TODO: different platforms use different escape characters, the coding below is for Snowflake which uses double quotes #}
 
-{%- if not columns -%}
-    {%- if execute -%}
-         {{- exceptions.raise_compiler_error("Expected a column name or a list of column names, got: " ~ columns) -}}
-    {%- endif -%}
-{%- endif -%}
+    {%- if columns -%}
 
-{%- set col_list = [] -%}
-{%- set col_string = '' -%}
+        {%- set col_list = [] -%}
+        {%- set col_string = '' -%}
 
-{%- if columns is string -%}
+        {%- if columns is string -%}
 
-    {%- set col_string = '"'~ columns | replace('"', '') | trim ~'"' -%}
+            {%- set col_string = '"'~ columns | replace('"', '') | trim ~'"' -%}
 
-{%- elif dbtvault.is_list(columns) -%}
+        {%- elif dbtvault.is_list(columns) -%}
 
-    {%- for col in columns -%}
+--          {%- if columns is defined and columns|length -%}
 
-        {%- if col is string -%}
+            {%- for col in columns -%}
 
-            {%- set escaped_col = '"'~ col | replace('"', '') | trim ~'"' -%}
+                {%- if col is string -%}
 
-            {%- do col_list.append(escaped_col) -%}
+                    {%- set escaped_col = '"'~ col | replace('"', '') | trim ~'"' -%}
+
+                    {%- do col_list.append(escaped_col) -%}
+
+                {%- else -%}
+
+                    {%- if execute -%}
+                        {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string.") -}}
+                    {%- endif -%}
+
+                {%- endif -%}
+
+            {%- endfor -%}
+
+--          {%- else -%}
+--
+--             {%- if execute -%}
+--                 {{- exceptions.raise_compiler_error("The list of column names provided was empty") -}}
+--             {%- endif -%}
+--
+--           {%- endif -%}
+
 
         {%- else -%}
 
             {%- if execute -%}
-                {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string.") -}}
-            {%- endif -%}
+                {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string or a list of strings.") -}}
+            {%- endif %}
 
         {%- endif -%}
 
-    {%- endfor -%}
+    {%- else -%}
 
-{%- else -%}
+        {%- if execute -%}
+             {{- exceptions.raise_compiler_error("Expected a column name or a list of column names, got: None") -}}
+        {%- endif -%}
 
-    {%- if execute -%}
-        {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string or a list of strings.") -}}
-    {%- endif %}
-
-{%- endif -%}
+    {%- endif -%}
 
 {%- if columns is string -%}
 
