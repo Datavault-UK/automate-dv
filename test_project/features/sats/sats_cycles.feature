@@ -321,6 +321,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1004') | md5('1990-02-14\|\|1004\|\|DOM')     | Dom           | 1990-02-14   | 2019-01-03     | 2019-01-03 | *      |
       | md5('1005') | md5('1990-02-15\|\|1005\|\|FREYA')   | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-CYCLE-DUPLICATES] SATELLITE load over several cycles with no PK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
