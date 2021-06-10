@@ -21,104 +21,109 @@
 {{- dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT *
-    FROM {{ ref(source_model) }}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    FROM {{ ref(source_model) }} AS a
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
-    WHERE __PERIOD_FILTER__
-    {% endif %}
-    {%- set source_cte = "source_data" %}
+    AND __PERIOD_FILTER__
+    {%- elif model.config.materialized == 'vault_insert_by_rank' %}
+    AND __RANK_FILTER__
+    {%- endif %}
 ),
 
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-rank_col AS (
-    SELECT * FROM source_data
-    WHERE __RANK_FILTER__
-    {%- set source_cte = "rank_col" %}
-),
-{% endif -%}
+{%- if dbtvault.is_any_incremental() %}
 
-{%- if load_relation(this) is none %}
-
-records_to_insert AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM {{ source_cte }} AS e
-)
-{%- else %}
-
-latest_open_eff AS
-(
+{# Selecting the most recent records for each link hashkey -#}
+latest_records AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
-                PARTITION BY
-                {%- for driving_key in dfk_cols %}
-                    {{ driving_key }}{{ ", " if not loop.last }}
-                {%- endfor %}
+                PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
-           ) AS row_number
+           ) AS row_num
     FROM {{ this }} AS b
-    WHERE TO_DATE(b.{{ src_end_date }}) = TO_DATE('9999-12-31')
-    QUALIFY row_number = 1
+    QUALIFY row_num = 1
 ),
 
-stage_slice AS
-(
-    SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM {{ "rank_col" if model.config.materialized == 'vault_insert_by_rank' else "source_data" }} AS stage
+{# Selecting the open records of the most recent records for each link hashkey -#}
+latest_open AS (
+    SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
+    FROM latest_records AS c
+    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('9999-12-31')
 ),
 
+{# Selecting the closed records of the most recent records for each link hashkey -#}
+latest_closed AS (
+    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
+    FROM latest_records AS d
+    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('9999-12-31')
+),
+
+{# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM stage_slice AS stage
-    LEFT JOIN latest_open_eff AS e
-    ON stage.{{ src_pk }} = e.{{ src_pk }}
-    WHERE e.{{ src_pk }} IS NULL
-    AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
+        {{ dbtvault.alias_all(source_cols, 'f') }}
+    FROM source_data AS f
+    LEFT JOIN latest_records AS lr
+    ON f.{{ src_pk }} = lr.{{ src_pk }}
+    WHERE lr.{{ src_pk }} IS NULL
 ),
+
+{# Identifying the currently closed link relationships to be reopened in eff sat -#}
+new_reopened_records AS (
+    SELECT DISTINCT
+        lc.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lc') }},
+        lc.{{ src_start_date }} AS {{ src_start_date }},
+        g.{{ src_end_date }} AS {{ src_end_date }},
+        g.{{ src_eff }} AS {{ src_eff }},
+        g.{{ src_ldts }},
+        g.{{ src_source }}
+    FROM source_data AS g
+    INNER JOIN latest_closed lc
+    ON g.{{ src_pk }} = lc.{{ src_pk }}
+),
+
 {%- if is_auto_end_dating %}
 
-links_to_end_date AS (
-    SELECT a.*
-    FROM latest_open_eff AS a
-    LEFT JOIN stage_slice AS b
-    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_sfk, prefix='b', condition='IS NULL', operator='OR') }}
-    OR {{ dbtvault.multikey(src_sfk, prefix=['a', 'b'], condition='<>', operator='OR') }}
+{# Creating the closing records -#}
+{# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
+new_closed_records AS (
+    SELECT DISTINCT
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        lo.{{ src_start_date }} AS {{ src_start_date }},
+        h.{{ src_eff }} AS {{ src_end_date }},
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
+    FROM source_data AS h
+    INNER JOIN latest_open AS lo
+    ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
+    WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-new_end_dated_records AS (
-    SELECT DISTINCT
-        h.{{ src_pk }},
-        {{ dbtvault.alias_all(fk_cols, 'g') }},
-        h.EFFECTIVE_FROM AS {{ src_start_date }}, h.{{ src_source }}
-    FROM latest_open_eff AS h
-    INNER JOIN links_to_end_date AS g
-    ON g.{{ src_pk }} = h.{{ src_pk }}
-),
-
-amended_end_dated_records AS (
-    SELECT DISTINCT
-        a.{{ src_pk }},
-        {{ dbtvault.alias_all(fk_cols, 'a') }},
-        a.{{ src_start_date }},
-        stage.{{ src_eff }} AS END_DATE, stage.{{ src_eff }}, stage.{{ src_ldts }},
-        a.{{ src_source }}
-    FROM new_end_dated_records AS a
-    INNER JOIN stage_slice AS stage
-    ON {{ dbtvault.multikey(src_dfk, prefix=['stage', 'a'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_sfk, prefix='stage', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(src_dfk, prefix='stage', condition='IS NOT NULL') }}
-),
+{#- if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
     SELECT * FROM new_open_records
+    UNION
+    SELECT * FROM new_reopened_records
     {%- if is_auto_end_dating %}
     UNION
-    SELECT * FROM amended_end_dated_records
+    SELECT * FROM new_closed_records
     {%- endif %}
 )
+
+{%- else %}
+
+records_to_insert AS (
+    SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
+    FROM source_data AS i
+)
+
+{#- if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
 SELECT * FROM records_to_insert
