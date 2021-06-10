@@ -568,6 +568,7 @@ class DBTVAULTGenerator:
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
             "ma_sat": self.ma_sat,
+            "bridge": self.bridge,
             "pit": self.pit
         }
 
@@ -618,7 +619,6 @@ class DBTVAULTGenerator:
         """
 
         template = f"""
-        {depends_on}
         {depends_on}    
         {{{{ config({config}) }}}}
         {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
@@ -756,6 +756,28 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
+               config, depends_on=""):
+        """
+        Generate a bridge model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
+            :param stage_tables_ldts: List of stage table load date(time) stamps
+            :param source_model: Model name to select from
+            :param src_ldts: Source load date timestamp
+            :param config: Optional model config
+            :param depends_on: Optional forced dependency
+        """
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables_ldts}, {src_ldts}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites,
             stage_tables, src_ldts, depends_on="", config=None):
         """
@@ -768,7 +790,7 @@ class DBTVAULTGenerator:
             :param stage_tables: List of stage tables
             :param source_model: Model name to select from
             :param config: Optional model config
-            :param depends_on: depends on string if provided
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
@@ -798,12 +820,6 @@ class DBTVAULTGenerator:
                     if isinstance(item[dict_check], dict):
                         satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                         satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-                    dict_check = [next(iter(item))][0]
-                    if isinstance(item[dict_check], dict):
-                        satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
-                        satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-                        processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
-
                         processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
                 elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
@@ -840,7 +856,8 @@ class DBTVAULTGenerator:
             "eff_sat": "incremental",
             "t_link": "incremental",
             "ma_sat": "incremental",
-            "pit": "pit_incremental"
+            "pit": "pit_incremental",
+            "bridge": "bridge_incremental"
         }
 
         if config:
