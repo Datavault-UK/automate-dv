@@ -601,9 +601,6 @@ def eff_satellite(context):
     }
 
 
-# TODO: Inconsistent (Link and) effectivity satellite naming of the Foreign Keys;
-#  In eff_satellite fixture below, they are named using the _PK suffix
-#  whereas in the link fixture they are named using the _FK suffix
 @fixture
 def eff_satellite_testing_auto_end_dating(context):
     """
