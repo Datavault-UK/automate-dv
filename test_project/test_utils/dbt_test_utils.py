@@ -754,8 +754,8 @@ class DBTVAULTGenerator:
                           {source_model})   }}}}
         """
 
-        self.template_to_file(template, model_name
-                              
+        self.template_to_file(template, model_name)
+
     def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
                config, depends_on=""):
         """
