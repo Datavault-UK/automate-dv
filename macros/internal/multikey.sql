@@ -16,7 +16,9 @@
 
     {%- if condition in ['<>', '!=', '='] -%}
         {%- for col in columns -%}
-            {{ (prefix[0] ~ '.') if prefix }}{{ col }} {{ condition }} {{ (prefix[1] ~ '.') if prefix }}{{ col }}
+            {%- if prefix -%}
+                {{- dbtvault.prefix([col], prefix[0], alias_target='target') }} {{ condition }} {{ dbtvault.prefix([col], prefix[1]) -}}
+            {%- endif %}
             {%- if not loop.last %} {{ operator }} {% endif %}
         {% endfor -%}
     {%- else -%}
