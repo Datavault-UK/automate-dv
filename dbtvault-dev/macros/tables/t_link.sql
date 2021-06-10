@@ -36,7 +36,7 @@ WITH stage AS (
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.prefix(source_cols, 'stg') }}
     FROM stage AS stg
-    {% if is_incremental() -%}
+    {% if dbtvault.is_any_incremental() -%}
     LEFT JOIN {{ this }} AS tgt
     ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'tgt') }}
     WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
