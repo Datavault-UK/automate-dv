@@ -732,6 +732,28 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def xts(self, model_name, src_pk, src_satellite, src_ldts, src_source, source_model, config=None, depends_on=""):
+        """
+        Generate a XTS template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_satellite: Satellite to track
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param config: Optional model config
+            :param depends_on: Optional forced dependency
+        """
+
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
+                          {source_model})   }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def ma_sat(self, model_name, src_pk, src_cdk, src_hashdiff, src_payload,
                src_eff, src_ldts, src_source, source_model, config):
         """
