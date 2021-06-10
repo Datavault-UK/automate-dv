@@ -2,7 +2,7 @@
 
 {# TODO: different platforms use different escape characters, the coding below is for Snowflake which uses double quotes #}
 
-    {%- if columns -%}
+    {%- if dbtvault.is_something(columns) -%}
 
         {%- set col_list = [] -%}
         {%- set col_string = '' -%}
@@ -12,8 +12,6 @@
             {%- set col_string = '"'~ columns | replace('"', '') | trim ~'"' -%}
 
         {%- elif dbtvault.is_list(columns) -%}
-
---          {%- if columns is defined and columns|length -%}
 
             {%- for col in columns -%}
 
@@ -32,15 +30,6 @@
                 {%- endif -%}
 
             {%- endfor -%}
-
---          {%- else -%}
---
---             {%- if execute -%}
---                 {{- exceptions.raise_compiler_error("The list of column names provided was empty") -}}
---             {%- endif -%}
---
---           {%- endif -%}
-
 
         {%- else -%}
 

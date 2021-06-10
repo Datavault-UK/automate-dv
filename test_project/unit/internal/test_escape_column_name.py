@@ -83,12 +83,12 @@ class TestEscapeMacro(TestCase):
 
         assert "Expected a column name or a list of column names, got: None" in process_logs
 
-    def test_escape_string_not_a_string_raises_error(self):
-        var_dict = {'columns': 123}
+    def test_escape_empty_column_string_raises_error(self):
+        var_dict = {'columns': ''}
 
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
 
-        assert "Invalid column name(s) provided. Must be a string or a list of strings." in process_logs
+        assert "Expected a column name or a list of column names, got: None" in process_logs
 
     def test_escape_empty_column_list_raises_error(self):
         var_dict = {'columns': []}
@@ -96,6 +96,13 @@ class TestEscapeMacro(TestCase):
         process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
 
         assert "Expected a column name or a list of column names, got: None" in process_logs
+
+    def test_escape_string_not_a_string_raises_error(self):
+        var_dict = {'columns': 123}
+
+        process_logs = self.dbt_test_utils.run_dbt_model(model_name=self.current_test_name, args=var_dict)
+
+        assert "Invalid column name(s) provided. Must be a string or a list of strings." in process_logs
 
     def test_escape_column_list_not_strings_raises_error(self):
         var_dict = {'columns': [123, {'a': 'b'}]}
