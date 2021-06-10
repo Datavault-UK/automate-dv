@@ -12,7 +12,7 @@
 
 {%- macro is_any_incremental() -%}
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() -%}
-        {{- return(true) -}}
+        {%- do return(true) -%}
     {%- else -%}
         {%- do return(false) -%}
     {%- endif -%}
