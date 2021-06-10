@@ -154,7 +154,6 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1006') | George        | 1990-02-06   | md5('1990-02-06\|\|1006\|\|GEORGE') | 2019-01-04     | 2019-01-04 | *      |
       | md5('1007') | Harry         | 1990-02-07   | md5('1990-02-07\|\|1007\|\|HARRY')  | 2019-01-04     | 2019-01-04 | *      |
 
-  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-CYCLE-NULLS] SATELLITE load over several cycles no PK in HASHDIFF and NULL records
     Given the RAW_STAGE stage is empty
