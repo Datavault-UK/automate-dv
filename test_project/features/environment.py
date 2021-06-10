@@ -25,7 +25,6 @@ fixture_registry = {
     "fixture.pit_two_sats": pit_two_sats,
     "fixture.bridge": bridge,
     "fixture.cycle": cycle,
-    "fixture.disable_payload": disable_payload,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
