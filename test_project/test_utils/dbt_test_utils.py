@@ -847,15 +847,6 @@ class DBTVAULTGenerator:
             if "materialized" not in config:
                 config["materialized"] = default_materialisations[vault_structure]
         else:
-        depends_on = kwargs.get("depends_on", "")
-
-        if depends_on:
-
-            depends_on = ', '.join([f"'{model}'" for model in kwargs["depends_on"]])
-
-            depends_on = f"-- depends on: {{{{ ref({depends_on}) }}}}"
-
-        if not config:
             config = {"materialized": default_materialisations[vault_structure]}
 
         if vault_structure == "stage":
@@ -875,7 +866,6 @@ class DBTVAULTGenerator:
 
         return {**kwargs, **processed_string_values,
                 **processed_list_dict_values, "config": config,
-                "depends_on": depends_on,
                 "model_name": model_name}
 
     @staticmethod
