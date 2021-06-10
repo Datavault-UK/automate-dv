@@ -72,13 +72,13 @@ new_open_records AS (
 {# Identifying the currently closed link relationships to be reopened in eff sat -#}
 new_reopened_records AS (
     SELECT DISTINCT
-        lc.{{ src_pk }}
-        ,{{ dbtvault.alias_all(fk_cols, 'lc') }}
-        ,lc.{{ src_start_date }} AS {{ src_start_date }}
-        ,g.{{ src_end_date }} AS {{ src_end_date }}
-        ,g.{{ src_eff }} AS {{ src_eff }}
-        ,g.{{ src_ldts }}
-        ,g.{{ src_source }}
+        lc.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lc') }},
+        lc.{{ src_start_date }} AS {{ src_start_date }},
+        g.{{ src_end_date }} AS {{ src_end_date }},
+        g.{{ src_eff }} AS {{ src_eff }},
+        g.{{ src_ldts }},
+        g.{{ src_source }}
     FROM source_data AS g
     INNER JOIN latest_closed lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
@@ -90,13 +90,13 @@ new_reopened_records AS (
 {# Identifying the currently open relationships that need to be closed due to change in SFK(s) -#}
 new_closed_records AS (
     SELECT DISTINCT
-        lo.{{ src_pk }}
-        ,{{ dbtvault.alias_all(fk_cols, 'lo') }}
-        ,lo.{{ src_start_date }} AS {{ src_start_date }}
-        ,h.{{ src_eff }} AS {{ src_end_date }}
-        ,h.{{ src_eff }} AS {{ src_eff }}
-        ,h.{{ src_ldts }}
-        ,lo.{{ src_source }}
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        lo.{{ src_start_date }} AS {{ src_start_date }},
+        h.{{ src_eff }} AS {{ src_end_date }},
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
     FROM source_data AS h
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
