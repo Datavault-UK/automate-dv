@@ -2,7 +2,7 @@ WITH row_rank_1 AS (
     SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE ASC
+               ORDER BY LOADDATE
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
     WHERE CUSTOMER_PK IS NOT NULL
