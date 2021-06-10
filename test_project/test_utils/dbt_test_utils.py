@@ -588,6 +588,7 @@ class DBTVAULTGenerator:
             :param hashed_columns: Dictionary of hashed columns, can be None
             :param ranked_columns: Dictionary of ranked columns, can be None
             :param include_source_columns: Boolean: Whether to extract source columns from source table
+            :param depends_on: depends on string if provided
             :param config: Optional model config
             :param depends_on: Optional forced dependency
         """
@@ -618,7 +619,7 @@ class DBTVAULTGenerator:
         """
 
         template = f"""
-        {depends_on}
+        {depends_on}    
         {{{{ config({config}) }}}}
         {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
                           {src_source}, {source_model})   }}}}
@@ -753,8 +754,8 @@ class DBTVAULTGenerator:
                           {source_model})   }}}}
         """
 
-        self.template_to_file(template, model_name)
-
+        self.template_to_file(template, model_name
+                              
     def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
                config, depends_on=""):
         """
@@ -777,8 +778,8 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites, stage_tables, src_ldts,
-            depends_on="", config=None):
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites,
+            stage_tables, src_ldts, depends_on="", config=None):
         """
         Generate a PIT template
             :param model_name: Name of the model file
@@ -819,7 +820,6 @@ class DBTVAULTGenerator:
                     if isinstance(item[dict_check], dict):
                         satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
                         satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-
                         processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
                 elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
@@ -828,8 +828,6 @@ class DBTVAULTGenerator:
                     if isinstance(item[dict_check], dict):
                         link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
                         processed_headings.extend(link_columns_hk)
-
-                        processed_headings.extend(link_columns_hk) #+ eff_satellite_columns_end_date)
 
                 elif item.get("source_column", None) and item.get("alias", None):
 
