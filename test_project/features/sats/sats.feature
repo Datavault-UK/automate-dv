@@ -345,6 +345,7 @@ Feature: Satellites
       | md5('1016') | George        | 17-214-233-1219 | <null>       | md5('^^\|\|1016\|\|GEORGE\|\|17-214-233-1219')         | 1993-01-02     | 1993-01-02 | *      |
       | md5('1017') | <null>        | 17-214-233-1220 | 1988-04-13   | md5('1988-04-13\|\|1017\|\|^^\|\|17-214-233-1220')     | 1993-01-02     | 1993-01-02 | *      |
 
+  # TODO: Failing
   @fixture.satellite
   Scenario: [INCREMENTAL-LOAD] Load data into a populated satellite where some records overlap, hashdiff DOES NOT include PK (for G)
     Given the SATELLITE sat is already populated with data
