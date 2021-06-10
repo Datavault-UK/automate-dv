@@ -86,6 +86,7 @@ workflows:
               only:
                 - develop
                 - /^int.*/
+                - /^fix.*/
   test-integration:
     jobs:
       - integration:
@@ -94,3 +95,4 @@ workflows:
               only:
                 - develop
                 - /^int.*/
+                - /^fix.*/
