@@ -567,6 +567,7 @@ class DBTVAULTGenerator:
             "sat": self.sat,
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
+            "xts": self.xts
             "ma_sat": self.ma_sat,
             "bridge": self.bridge,
             "pit": self.pit
@@ -854,6 +855,8 @@ class DBTVAULTGenerator:
             "link": "incremental",
             "sat": "incremental",
             "eff_sat": "incremental",
+            "xts": "incremental",
+            "t_link": "incremental"
             "t_link": "incremental",
             "ma_sat": "incremental",
             "pit": "pit_incremental",
