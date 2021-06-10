@@ -154,6 +154,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1006') | George        | 1990-02-06   | md5('1990-02-06\|\|1006\|\|GEORGE') | 2019-01-04     | 2019-01-04 | *      |
       | md5('1007') | Harry         | 1990-02-07   | md5('1990-02-07\|\|1007\|\|HARRY')  | 2019-01-04     | 2019-01-04 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-CYCLE-NULLS] SATELLITE load over several cycles no PK in HASHDIFF and NULL records
     Given the RAW_STAGE stage is empty
@@ -321,6 +322,7 @@ Feature: Satellites Loaded in cycles using separate manual loads
       | md5('1004') | md5('1990-02-14\|\|1004\|\|DOM')     | Dom           | 1990-02-14   | 2019-01-03     | 2019-01-03 | *      |
       | md5('1005') | md5('1990-02-15\|\|1005\|\|FREYA')   | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
+  # TODO: Failing
   @fixture.satellite_cycle
   Scenario: [SAT-CYCLE-DUPLICATES] SATELLITE load over several cycles with no PK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
