@@ -58,7 +58,7 @@ jobs:
   integration:
     docker:
       - image: cimg/python:3.8.5
-    parallelism: 15
+    parallelism: 20
     steps:
       - build_test_env
       - run:
