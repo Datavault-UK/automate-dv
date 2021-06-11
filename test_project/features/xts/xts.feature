@@ -1,7 +1,6 @@
 @fixture.set_workdir
 Feature: XTS
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [BASE-LOAD] Load one stage of records into an empty single satellite XTS
     Given the XTS xts is empty
@@ -70,7 +69,6 @@ Feature: XTS
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Load multiple subsequent stages into a single stage XTS with no timeline change
     Given the XTS xts is empty
@@ -213,7 +211,6 @@ Feature: XTS
       | md5('1003') | md5('LINCOLN\|\|LINCOLNSHIRE\|\|1003')       | SAT_CUSTOMER_LOCATION | 1993-01-01 | *      |
       | md5('1004') | md5('BRIGHTON\|\|EAST SUSSEX\|\|1004')       | SAT_CUSTOMER_LOCATION | 1993-01-01 | *      |
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [BASE-LOAD] Loads data from two simultaneous stages in an XTS accepting feeds to a single satellite
     Given the XTS xts is empty
@@ -243,7 +240,6 @@ Feature: XTS
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from two stages each containing feeds to one satellite with repeats between stages
     Given the XTS xts is empty
@@ -271,7 +267,6 @@ Feature: XTS
       | md5('1006') | md5('FRED\|\|1006\|\|FIELD')     | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from two stages each containing feeds to one satellite with repeated records in the first stage
     Given the XTS xts is empty
@@ -300,7 +295,6 @@ Feature: XTS
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [BASE-LOAD] Loads from numerous stages each containing feeds to one satellite with repeated records in both stages
     Given the XTS xts is empty
@@ -366,7 +360,6 @@ Feature: XTS
       | md5('1007') | md5('2013-02-04\|\|1007\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1008') | md5('2018-04-13\|\|1008\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  # TODO: Failing
   @fixture.xts
   Scenario: [BASE-LOAD] Null unique identifier values are not loaded into an empty existing XTS
     Given the XTS xts is empty
