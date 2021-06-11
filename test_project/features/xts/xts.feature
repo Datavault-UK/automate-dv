@@ -70,32 +70,6 @@ Feature: XTS
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [INCREMENTAL-LOAD] Load multiple subsequent stages into a single stage XTS with no timeline change
-    Given the XTS xts is empty
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
-      | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
-    And I load the XTS xts
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
-      | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-02 | *      |
-      | 1002        | Bob                | Barns             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
-    And I load the XTS xts
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
-      | 1003        | Chad               | Clarke            | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | 1993-01-03 | *      |
-    And I create the STG_CUSTOMER stage
-    When I load the XTS xts
-    Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-02 | *      |
-      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-02 | *      |
-      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-03 | *      |
-
-  @fixture.xts
   Scenario: [BASE-LOAD] Loads records from a single stage to an XTS linked to two satellites.
     Given I will have a RAW_STAGE_2SAT raw stage and I have a STG_CUSTOMER_2SAT processed stage
     And the XTS_2SAT xts is empty
@@ -211,7 +185,6 @@ Feature: XTS
       | md5('1003') | md5('LINCOLN\|\|LINCOLNSHIRE\|\|1003')       | SAT_CUSTOMER_LOCATION | 1993-01-01 | *      |
       | md5('1004') | md5('BRIGHTON\|\|EAST SUSSEX\|\|1004')       | SAT_CUSTOMER_LOCATION | 1993-01-01 | *      |
 
-
   @fixture.xts
   Scenario: [BASE-LOAD] Loads data from two simultaneous stages in an XTS accepting feeds to a single satellite
     Given the XTS xts is empty
@@ -290,7 +263,7 @@ Feature: XTS
       | CUSTOMER_PK | HASHDIFF                          | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')     | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')       | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')      | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1005') | md5('EDWARD\|\|1005\|\|EDEN')     | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1006') | md5('FRED\|\|1006\|\|FIELD')      | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
@@ -390,8 +363,8 @@ Feature: XTS
     And I create the STG_CUSTOMER stage
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                         | SATELLITE_NAME | LOAD_DATE  | SOURCE |
-      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')  | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                      | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
@@ -417,6 +390,32 @@ Feature: XTS
       | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
+
+  @fixture.xts
+  Scenario: [INCREMENTAL-LOAD] Load multiple subsequent stages into a single stage XTS with no timeline change
+    Given the XTS xts is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-01 | *      |
+    And I create the STG_CUSTOMER stage
+    And I load the XTS xts
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-02 | *      |
+      | 1002        | Bob                | Barns             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | 1993-01-02 | *      |
+    And I create the STG_CUSTOMER stage
+    And I load the XTS xts
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | 1003        | Chad               | Clarke            | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | 1993-01-03 | *      |
+    And I create the STG_CUSTOMER stage
+    When I load the XTS xts
+    Then the XTS table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-02 | *      |
+      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-02 | *      |
+      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-03 | *      |
 
   @fixture.xts
   Scenario: [INCREMENTAL-LOAD] Load duplicated data into a pre-populated XTS
