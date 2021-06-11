@@ -1,8 +1,6 @@
 @fixture.set_workdir
 Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two satellites
 
-# todo: Add cycles tests
-
 ######################### BASE LOAD #########################
 
   # DATES
@@ -332,7 +330,6 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
 ######################### INCREMENTAL LOAD #########################
 
   # DATES
-  # todo: check results
   @fixture.pit_two_sats
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER table does not exist
@@ -468,7 +465,6 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | md5('1004') | 2018-06-05 | md5('1004')             | 2018-06-05                | md5('1004')           | 2018-06-04              |
 
   # TIMESTAMPS
-  # todo: check results
   @fixture.pit_two_sats
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
