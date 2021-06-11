@@ -525,7 +525,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 1
+  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 5
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
     New orders or changed orders get assigned existing or new products
@@ -709,7 +709,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 2
+  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 6
     Incremental load with auto end-dating and more recent AS OF dates.
     An existing order gets assigned either to another existing customer or to a new customer,
     it gets reassigned to the initial customer
