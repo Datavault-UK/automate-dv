@@ -6,6 +6,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 1
     Incremental load with auto end-dating with more recent AS OF dates and new orders
     New order or changed order are assigned only to existing customers
+
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -101,6 +102,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 2
     Incremental load with auto end-dating with new AS OF dates in the past
     Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
+
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -235,6 +237,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 3
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
+
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -357,6 +360,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 4
     Incremental load with auto end-dating with more recent AS OF dates and changed orders
     The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
+
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -488,9 +492,9 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | md5('1012\|\|200') | md5('1012') | md5('200') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | md5('1002\|\|100') | md5('1002') | md5('100') | 2018-06-01 09:00:00.000 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
-      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
+      | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
       | md5('1012\|\|200') | md5('1012') | md5('200') | 2018-06-01 09:00:00.000 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
-      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
+      | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
     When I load the BRIDGE_CUSTOMER_ORDER bridge
     Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK |
@@ -525,6 +529,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
     New orders or changed orders get assigned existing or new products
+
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                        |
@@ -707,7 +712,8 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
   Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 2
     Incremental load with auto end-dating and more recent AS OF dates.
     An existing order gets assigned either to another existing customer or to a new customer,
-    then it gets reassigned to the initial customer
+    it gets reassigned to the initial customer
+
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                        |
