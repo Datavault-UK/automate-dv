@@ -355,7 +355,6 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
-  # TODO: Failing
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 4
