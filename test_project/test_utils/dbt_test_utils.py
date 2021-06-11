@@ -852,6 +852,11 @@ class DBTVAULTGenerator:
                         link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
                         processed_headings.extend(link_columns_hk)
 
+                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
+
+                    processed_headings.extend(satellite_columns)
+
                 elif item.get("source_column", None) and item.get("alias", None):
 
                     processed_headings.append(item['source_column'])
