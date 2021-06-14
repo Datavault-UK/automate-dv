@@ -255,7 +255,7 @@ def check_target(target: str):
         :return: bool
     """
 
-    available_targets = ['snowflake', 'bigquery']
+    available_targets = ['snowflake', 'bigquery', 'sqlserver']
 
     if target in available_targets:
         return True
