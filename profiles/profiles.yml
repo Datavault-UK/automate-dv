@@ -28,6 +28,16 @@ dbtvault:
       priority: interactive
       retries: 1
 
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: "{{ env_var('SQLSERVER_DB_SERVER') }}"
+      port: "{{ env_var('SQLSERVER_DB_PORT') }}"
+      database: "{{ env_var('SQLSERVER_DB_DATABASE') }}"
+      schema: "{{ env_var('SQLSERVER_DB_SCHEMA') }}"
+      user: "{{ env_var('SQLSERVER_DB_USER') }}"
+      password: "{{ env_var('SQLSERVER_DB_PW') }}"
+
   target: "{{ env_var('TARGET') }}"
 
 snowflake-demo:
