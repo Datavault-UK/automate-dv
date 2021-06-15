@@ -63,8 +63,10 @@ class DBTTestUtils:
         else:
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET', '').lower() == 'snowflake' or not os.getenv('TARGET', None):
+        if os.getenv('TARGET', '').lower() == 'snowflake':
             target = 'snowflake'
+        elif os.getenv('TARGET', '').lower() == 'sqlserver':
+            target = 'sqlserver'
         else:
             target = None
 
@@ -89,6 +91,19 @@ class DBTTestUtils:
             return {
                 'SCHEMA_NAME': schema_name,
                 'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
+            }
+        elif target == 'sqlserver':
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
+                schema_name = f"{os.getenv('SQLSERVER_DB_SCHEMA')}_{os.getenv('SQLSERVER_DB_USER')}" \
+                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+            else:
+                schema_name = f"{os.getenv('SQLSERVER_DB_SCHEMA')}_{os.getenv('SQLSERVER_DB_USER')}"
+
+            schema_name = schema_name.replace("-", "_").replace(".", "_").replace("/", "_")
+
+            return {
+                'SCHEMA_NAME': schema_name,
+                'DATABASE_NAME': os.getenv('SQLSERVER_DB_DATABASE'),
             }
         else:
             raise ValueError('TARGET not set')
