@@ -16,11 +16,11 @@
     {%- set dest_columns = adapter.get_columns_in_relation(target_relation) -%}
     {%- set dest_cols_csv = dest_columns | map(attribute='quoted') | join(', ') -%}
 
-    Truncate table {{ target_relation }};
+    TRUNCATE TABLE {{ target_relation }};
 
-    insert into {{ target_relation }} ({{ dest_cols_csv }})
+    INSERT INTO {{ target_relation }} ({{ dest_cols_csv }})
     (
-       select {{ dest_cols_csv }}
-       from {{ tmp_relation }}
+       SELECT {{ dest_cols_csv }}
+       FROM {{ tmp_relation }}
     );
 {%- endmacro %}

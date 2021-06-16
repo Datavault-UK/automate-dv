@@ -22,13 +22,12 @@
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
     {%- set source_name = as_of_dates_table | first -%}
     {%- set source_table_name = as_of_dates_table[source_name] -%}
-    {%- set source_relation = source(source_name, source_table_name) -%}
+    {%- set as_of_table_relation = source(source_name, source_table_name) -%}
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
-    {%- set source_relation = ref(as_of_dates_table) -%}
+    {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
 {#- Setting ghost values to replace NULLS -#}
-{%- set maxdate = '9999-12-31 23:59:59.999999' -%}
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
@@ -39,133 +38,130 @@
 
 {#- Setting the new AS_OF dates CTE name -#}
 {%- if dbtvault.is_any_incremental() -%}
-{%- set new_as_of_dates_cte = 'NEW_ROWS_AS_OF'  -%}
+{%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
 {%- else -%}
-{%- set new_as_of_dates_cte = 'AS_OF' -%}
+{%- set new_as_of_dates_cte = 'as_of_dates' -%}
 {%- endif %}
 
-WITH as_of AS (
-    SELECT * FROM {{ source_relation }}
+WITH as_of_dates AS (
+    SELECT * FROM {{ as_of_table_relation }}
 ),
 
 {%- if dbtvault.is_any_incremental() %}
 
-    last_safe_load_datetime AS (
-        SELECT min(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
-        {%- filter indent(width=8) -%}
-        {%- for stg in stage_tables -%}
-            {%- set stage_ldts =(stage_tables[stg])  -%}
-            {{ "SELECT MIN("~stage_ldts~") AS LOAD_DATETIME FROM "~ ref(stg) }}
-            {{ 'UNION ALL' if not loop.last }}
-        {% endfor -%}
-        {%- endfilter -%}
-        )
-    ),
+last_safe_load_datetime AS (
+    SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
+    {%- for stg in stage_tables -%}
+        {%- set stage_ldts = stage_tables[stg] %}
+        {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
+        {{ "UNION ALL" if not loop.last }}
+    {%- endfor %}
+    )
+),
 
-    as_of_grain_old_entries AS (
-        SELECT DISTINCT AS_OF_DATE FROM {{ this }}
-    ),
+as_of_grain_old_entries AS (
+    SELECT DISTINCT AS_OF_DATE FROM {{ this }}
+),
 
-    as_of_grain_lost_entries AS (
-        SELECT a.AS_OF_DATE
-        FROM as_of_grain_old_entries AS a
-        LEFT OUTER JOIN as_of AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-        WHERE b.AS_OF_DATE IS NULL
-    ),
+as_of_grain_lost_entries AS (
+    SELECT a.AS_OF_DATE
+    FROM as_of_grain_old_entries AS a
+    LEFT OUTER JOIN as_of_dates AS b
+    ON a.AS_OF_DATE = b.AS_OF_DATE
+    WHERE b.AS_OF_DATE IS NULL
+),
 
-    as_of_grain_new_entries AS (
-        SELECT a.AS_OF_DATE
-        FROM as_of AS a
-        LEFT OUTER JOIN as_of_grain_old_entries AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-        WHERE b.AS_OF_DATE IS NULL
-    ),
+as_of_grain_new_entries AS (
+    SELECT a.AS_OF_DATE
+    FROM as_of_dates AS a
+    LEFT OUTER JOIN as_of_grain_old_entries AS b
+    ON a.AS_OF_DATE = b.AS_OF_DATE
+    WHERE b.AS_OF_DATE IS NULL
+),
 
-    min_date AS (
-        SELECT min(AS_OF_DATE) AS MIN_DATE
-        FROM as_of
-    ),
+min_date AS (
+    SELECT min(AS_OF_DATE) AS MIN_DATE
+    FROM as_of_dates
+),
 
-    backfill_as_of AS (
-        SELECT AS_OF_DATE
-        from as_of
-        WHERE as_of.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    ),
+backfill_as_of AS (
+    SELECT AS_OF_DATE
+    FROM as_of_dates AS a
+    WHERE a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+),
 
-    new_rows_pks AS (
-        SELECT h.{{ src_pk }}
-        FROM {{ ref(source_model) }} AS h
-        WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        ),
+new_rows_pks AS (
+    SELECT a.{{ src_pk }}
+    FROM {{ ref(source_model) }} AS a
+    WHERE a.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+),
 
-    new_rows_as_of AS (
-        SELECT AS_OF_DATE
-        FROM as_of
-        WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        UNION
-        SELECT as_of_date
-        FROM as_of_grain_new_entries
-    ),
+new_rows_as_of AS (
+    SELECT AS_OF_DATE
+    FROM as_of_dates AS a
+    WHERE a.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    UNION
+    SELECT AS_OF_DATE
+    FROM as_of_grain_new_entries
+),
 
-    overlap AS (
-        SELECT p.* FROM {{ this }} AS p
-        INNER JOIN {{ ref(source_model) }} as h
-        ON p.{{ src_pk }} = h.{{ src_pk }}
-        WHERE  P.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
-    ),
+overlap AS (
+    SELECT a.*
+    FROM {{ this }} AS a
+    INNER JOIN {{ ref(source_model) }} as b
+    ON a.{{ src_pk }} = b.{{ src_pk }}
+    WHERE a.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
+    AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    AND a.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+),
 
-    -- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
+-- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
 
-    backfill_rows_as_of_dates AS (
-        SELECT
-            nh.{{ src_pk }},
-            bfa.AS_OF_DATE
-        FROM new_rows_pks AS nh
-        INNER JOIN backfill_as_of AS bfa
-          ON (1=1)
-    ),
+backfill_rows_as_of_dates AS (
+    SELECT
+        a.{{ src_pk }},
+        b.AS_OF_DATE
+    FROM new_rows_pks AS a
+    INNER JOIN backfill_as_of AS b
+        ON (1=1 )
+),
 
-    backfill AS (
-        SELECT
-            bf.{{ src_pk }},
-            bf.AS_OF_DATE,
-            {%- for sat in satellites -%}
-                {%- filter indent(width=8) -%}
-                {% set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-                {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0]  -%}
-                {{- "\n" -}}
-                {{ "'"~ghost_pk~"'"'::BINARY(16) AS '~ sat ~'_'~ sat_key ~','  }}
-                {{- "\n" -}}
-                {{ "'"~ghost_date~"'"'::TIMESTAMP_NTZ AS '~ sat ~'_'~ sat_ldts  }}
-                {{- ',' if not loop.last -}}
-                {% endfilter %}
-            {%- endfor %}
-        FROM backfill_rows_as_of_dates AS bf
+backfill AS (
+    SELECT
+        a.{{ src_pk }},
+        a.AS_OF_DATE,
+    {%- for sat_name in satellites -%}
+        {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
+        {%- set sat_name = sat_name | upper %}
+        {{ "'{}'::BINARY(16) AS {}".format(ghost_pk, sat_name, sat_key_name) }},
+        {{ "'{}'::TIMESTAMP_NTZ AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
+        {{- ',' if not loop.last -}}
+    {%- endfor %}
+    FROM backfill_rows_as_of_dates AS a
 
-        {% for sat in satellites -%}
-                {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-                {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0] -%}
-                LEFT JOIN {{ ref(sat) }} AS {{  sat -}}_SRC
-                    ON  bf.{{- src_pk }} = {{ sat -}}_SRC.{{ satellites[sat]['pk'][sat_key] }}
-                AND {{ sat -}}_SRC.{{ satellites[sat]['ldts'][sat_ldts] }} <= bf.AS_OF_DATE
+    {% for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
+        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+    {% endfor -%}
 
-        {% endfor %}
-
-        GROUP BY
-            bf.{{- src_pk }}, bf.AS_OF_DATE
-        ORDER BY (1, 2)
-    ),
-{% endif %}
+    GROUP BY
+        a.{{- src_pk }}, a.AS_OF_DATE
+    ORDER BY (1, 2)
+),
+{%- endif %}
 
 new_rows_as_of_dates AS (
     SELECT
-        hub.{{ src_pk }},
-        x.AS_OF_DATE
-    FROM {{ ref(source_model) }} hub
-    INNER JOIN {{ new_as_of_dates_cte }} AS x
+        a.{{ src_pk }},
+        b.AS_OF_DATE
+    FROM {{ ref(source_model) }} AS a
+    INNER JOIN {{ new_as_of_dates_cte }} AS b
     ON (1=1)
 ),
 
@@ -173,43 +169,43 @@ new_rows AS (
     SELECT
         a.{{ src_pk }},
         a.AS_OF_DATE,
-        {%- for sat in satellites -%}
-            {%- filter indent(width=8) -%}
-            {% set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-            {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0]  -%}
-            {{- "\n" -}}
-            {{ 'COALESCE(MAX('~ sat ~'_SRC.'~ satellites[sat]['pk'][sat_key]~'), '"'"~ghost_pk~"'"'::BINARY(16)) AS '~ sat ~'_'~ sat_key ~','  }}
-            {{- "\n" -}}
-            {{ 'COALESCE(MAX('~ sat ~'_SRC.'~ satellites[sat]['ldts'][sat_ldts]~'), '"'"~ghost_date~"'"'::TIMESTAMP_NTZ) AS '~ sat ~'_'~ sat_ldts  }}
-            {{- ',' if not loop.last -}}
-            {% endfilter %}
-        {%- endfor %}
+    {%- for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
+        {{ ("COALESCE(MAX({}_src.{}), '{}'::BINARY(16)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        {{ ("COALESCE(MAX({}_src.{}), '{}'::TIMESTAMP_NTZ) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        {{- "," if not loop.last }}
+    {%- endfor %}
     FROM new_rows_as_of_dates AS a
 
-    {% for sat in satellites -%}
-        {%- set sat_key = (satellites[sat]['pk'].keys() | list )[0] -%}
-        {%- set sat_ldts =(satellites[sat]['ldts'].keys() | list )[0] -%}
-        LEFT JOIN {{ ref(sat) }} AS {{  sat -}}_SRC
-            ON  a.{{- src_pk }} = {{ sat -}}_SRC.{{ satellites[sat]['pk'][sat_key] }}
-        AND {{ sat -}}_SRC.{{ satellites[sat]['ldts'][sat_ldts] }} <= a.AS_OF_DATE
-     {% endfor %}
+    {% for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
+        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+    {% endfor -%}
 
     GROUP BY
         a.{{- src_pk }}, a.AS_OF_DATE
     ORDER BY (1, 2)
 ),
 
-PIT AS (
-SELECT * FROM new_rows
-{% if dbtvault.is_any_incremental() -%}
+pit AS (
+    SELECT * FROM new_rows
+{%- if dbtvault.is_any_incremental() %}
     UNION ALL
     SELECT * FROM overlap
     UNION ALL
     SELECT * FROM backfill
 
-{%- endif -%}
+{%- endif %}
 )
 
-SELECT DISTINCT * FROM PIT
+SELECT DISTINCT * FROM pit
 
 {%- endmacro -%}

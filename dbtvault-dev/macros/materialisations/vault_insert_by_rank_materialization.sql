@@ -28,29 +28,6 @@
 
         {% do to_drop.append(tmp_relation) %}
 
-        {% call statement("main", fetch_result=True) %}
-            {{ build_sql }}
-        {% endcall %}
-
-        {% set result = load_result('main') %}
-
-        {% if 'response' in result.keys() %} {# added in v0.19.0 #}
-            {% set rows_inserted = result['response']['rows_affected'] %}
-        {% else %} {# older versions #}
-            {% set rows_inserted = result['status'].split(" ")[2] | int %}
-        {% endif %}
-
-        {% call noop_statement('main', "BASE LOAD {}".format(rows_inserted)) -%}
-            {{ build_sql }}
-        {%- endcall %}
-
-        {{ run_hooks(post_hooks, inside_transaction=True) }}
-
-        -- `COMMIT` happens here
-        {% do adapter.commit() %}
-
-        {{ run_hooks(post_hooks, inside_transaction=False) }}
-
     {% elif existing_relation.is_view or full_refresh_mode %}
         {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
         {% set backup_identifier = existing_relation.identifier ~ "__dbt_backup" %}
@@ -114,12 +91,7 @@
 
 
             {% do to_drop.append(tmp_relation) %}
-
-            {{ run_hooks(post_hooks, inside_transaction=True) }}
-
             {% do adapter.commit() %}
-
-            {{ run_hooks(post_hooks, inside_transaction=False) }}
 
         {% endfor %}
 
@@ -128,6 +100,29 @@
         {%- endcall %}
 
     {% endif %}
+
+    {% if build_sql is defined %}
+        {% call statement("main", fetch_result=True) %}
+            {{ build_sql }}
+        {% endcall %}
+
+        {% set result = load_result('main') %}
+
+        {% if 'response' in result.keys() %} {# added in v0.19.0 #}
+            {% set rows_inserted = result['response']['rows_affected'] %}
+        {% else %} {# older versions #}
+            {% set rows_inserted = result['status'].split(" ")[2] | int %}
+        {% endif %}
+
+        {% call noop_statement('main', "BASE LOAD {}".format(rows_inserted)) -%}
+            {{ build_sql }}
+        {%- endcall %}
+
+        -- `COMMIT` happens here
+        {% do adapter.commit() %}
+    {% endif %}
+
+    {{ run_hooks(post_hooks, inside_transaction=True) }}
 
     {% for rel in to_drop %}
         {% if rel.type is not none %}
