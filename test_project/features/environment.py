@@ -7,6 +7,7 @@ fixture_registry = {
     "fixture.set_workdir": set_workdir,
     "fixture.staging": staging,
     "fixture.single_source_hub": single_source_hub,
+    "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
     "fixture.sha": sha,
     "fixture.multi_source_hub": multi_source_hub,
     "fixture.single_source_link": single_source_link,

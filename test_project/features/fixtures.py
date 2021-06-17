@@ -115,6 +115,50 @@ def single_source_hub(context):
 
 
 @fixture
+def single_source_hub_sqlserver(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID"
+        },
+        "STG_CUSTOMER_HASHLIST": {
+            "CUSTOMER_PK": ["CUSTOMER_ID", "CUSTOMER_NAME"]
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB_CUSTOMER": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_PK": "VARCHAR(50)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_NAME": "VARCHAR(5)",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR(4)"
+            }
+        }
+    }
+
+
+@fixture
 def multi_source_hub(context):
     """
     Define the structures and metadata to load multi-source hubs
