@@ -177,6 +177,9 @@ stage_mat_filter AS (
 {%- if source_model | length > 1 %}
 
 row_rank_union AS (
+    SELECT *
+    FROM
+    (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
@@ -184,7 +187,8 @@ row_rank_union AS (
            ) AS row_rank_number
     FROM {{ ns.last_cte }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    QUALIFY row_rank_number = 1
+    ) innerselect
+    WHERE row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}

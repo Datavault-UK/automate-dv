@@ -10,6 +10,7 @@ fixture_registry = {
     "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
     "fixture.sha": sha,
     "fixture.multi_source_hub": multi_source_hub,
+    "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver,
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
     "fixture.satellite": satellite,

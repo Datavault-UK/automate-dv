@@ -189,15 +189,15 @@ compare AS (
 )
 
 -- For manual debugging
--- SELECT * FROM order_actual_data
--- SELECT * FROM order_expected_data
--- SELECT * FROM compare_e_to_a
--- SELECT * FROM compare_a_to_e
--- SELECT * FROM duplicates_actual
--- SELECT * FROM duplicates_expected
--- SELECT * FROM duplicates_not_in_actual
--- SELECT * FROM duplicates_not_in_expected
--- SELECT * FROM compare
+-- SELECT * FROM order_actual_data ORDER BY {{ source_columns_list | sort | join(", ") }}
+-- SELECT * FROM order_expected_data ORDER BY {{ compare_columns | sort | join(", ") }}
+-- SELECT * FROM compare_e_to_a ORDER BY {{ columns_string }}
+-- SELECT * FROM compare_a_to_e ORDER BY {{ columns_string }}
+-- SELECT * FROM duplicates_actual ORDER BY {{ columns_string }}
+-- SELECT * FROM duplicates_expected ORDER BY {{ columns_string }}
+-- SELECT * FROM duplicates_not_in_actual ORDER BY {{ columns_string }}
+-- SELECT * FROM duplicates_not_in_expected ORDER BY {{ columns_string }}
+-- SELECT * FROM compare ORDER BY {{ columns_string }}
 
 SELECT COUNT(*) AS differences FROM compare
 {%- endmacro -%}
