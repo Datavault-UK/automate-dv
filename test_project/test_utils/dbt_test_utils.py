@@ -394,6 +394,63 @@ class DBTTestUtils:
 
         return table_dict
 
+    def context_table_to_model(self, context, model_name: str):
+        """
+        Creates a model from a feature file data table
+            :param context: Behave context
+            :param model_name: Name of the model to create
+            :return: SELECT statement to form model
+        """
+
+        if os.getenv('TARGET', '').lower() == 'snowflake':
+            target = 'snowflake'
+        elif os.getenv('TARGET', '').lower() == 'sqlserver':
+            target = 'sqlserver'
+        else:
+            target = None
+
+        feature_data = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="index")
+        column_types = context.seed_config[model_name]["+column_types"]
+
+        sql_command = ""
+        first_row = True
+        first_column = True
+
+        for row_number in feature_data.keys():
+            if first_row:
+                first_row = False
+            else:
+                sql_command = sql_command + "\nUNION ALL \n"
+            first_column = True
+
+            sql_command = sql_command + "SELECT "
+
+            for column_name in feature_data[row_number].keys():
+                if first_column:
+                    first_column = False
+                else:
+                    sql_command = sql_command + ", "
+                column_data = feature_data[row_number][column_name]
+                column_type = column_types[column_name]
+                if target == "snowflake":
+                    sql_command = sql_command + "CAST('" + column_data + "' AS " + column_type + ") AS " + column_name + " "
+                elif target == "sqlserver":
+                    if column_type[0:6].upper() == "BINARY":
+                        expression = "CONVERT(" + column_type + ", '" + column_data + "', 2)"
+                    else:
+                        expression = "CAST('" + column_data + "' AS " + column_type + ")"
+                    sql_command = sql_command + expression + " AS " + column_name + " "
+
+        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
+            f.write(sql_command)
+
+    # TODO
+    # Variable sql_command now contains the SELECT query for the model
+    # I don't know whether this needs to be saved as a file somewhere temporarily, nor how to actually run the model, (run_dbt_model() ?)
+    # Also, I don't know what the return value should be
+
+        return model_name
+
     def columns_from_context_table(self, table: Table) -> list:
         """
             Get a List of columns (headers) from a context table

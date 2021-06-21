@@ -172,6 +172,9 @@ def load_populated_table(context, model_name, vault_structure):
     Create a table with data pre-populated from the context table.
     """
 
+    sql_model = context.dbt_test_utils.context_table_to_model(context, model_name=model_name)
+    result = context.dbt_test_utils.run_dbt_model(mode="run", model_name=sql_model)
+
     context.target_model_name = model_name
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
