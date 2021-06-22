@@ -149,6 +149,19 @@ class DBTTestUtils:
 
         return self.run_dbt_command(command)
 
+    def run_dbt_seed_model(self, seed_model_name=None) -> str:
+        """
+        Run seed model files in dbt
+            :return: dbt logs
+        """
+
+        command = ['dbt', 'run']
+
+        if seed_model_name:
+            command.extend(['-m', seed_model_name, '--full-refresh'])
+
+        return self.run_dbt_command(command)
+
     def run_dbt_model(self, *, mode='compile', model_name: str, args=None, full_refresh=False,
                       include_model_deps=False, include_tag=False) -> str:
         """
@@ -394,11 +407,13 @@ class DBTTestUtils:
 
         return table_dict
 
-    def context_table_to_model(self, context, model_name: str):
+    def context_table_to_model(self, context, table: Table, model_name: str, target_model_name: str):
         """
         Creates a model from a feature file data table
             :param context: Behave context
-            :param model_name: Name of the model to create
+            :param table: The context.table from a scenario or a manually defined table
+            :param model_name: Name of the model to base the feature data table on
+            :param target_name: Name of the model to create
             :return: SELECT statement to form model
         """
 
@@ -409,7 +424,7 @@ class DBTTestUtils:
         else:
             target = None
 
-        feature_data = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="index")
+        feature_data = context.dbt_test_utils.context_table_to_dict(table=table, orient="index")
         column_types = context.seed_config[model_name]["+column_types"]
 
         sql_command = ""
@@ -441,15 +456,10 @@ class DBTTestUtils:
                         expression = "CAST('" + column_data + "' AS " + column_type + ")"
                     sql_command = sql_command + expression + " AS " + column_name + " "
 
-        with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
+        with open(FEATURE_MODELS_ROOT / f"{target_model_name}_SEED.sql", "w") as f:
             f.write(sql_command)
 
-    # TODO
-    # Variable sql_command now contains the SELECT query for the model
-    # I don't know whether this needs to be saved as a file somewhere temporarily, nor how to actually run the model, (run_dbt_model() ?)
-    # Also, I don't know what the return value should be
-
-        return model_name
+        return f"{target_model_name}_SEED"
 
     def columns_from_context_table(self, table: Table) -> list:
         """

@@ -114,18 +114,32 @@ def load_empty_table(context, model_name, vault_structure):
 
     empty_table = Table(headings=headings, rows=row)
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
-                                                                 model_name=model_name)
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+    #                                                              model_name=model_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[model_name])
+    #
+    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[model_name])
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context, empty_table, model_name=model_name, target_model_name=model_name)
 
-    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    context.target_model_name = model_name
+
+    metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
     if getattr(context, "create_empty_stage", False) and getattr(context, "empty_stage_name", False):
         source_model_name = context.empty_stage_name
     else:
-        source_model_name = seed_file_name
+        source_model_name = seed_model_name
+
+    logs = ""
 
     if not vault_structure == "stage":
         metadata = {"source_model": source_model_name, **context.vault_structure_columns[model_name]}
@@ -136,6 +150,7 @@ def load_empty_table(context, model_name, vault_structure):
 
         logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name)
 
+    assert "Completed successfully" or "WARNING: Nothing to do" in seed_logs
     assert "Completed successfully" in logs
 
 
@@ -172,20 +187,22 @@ def load_populated_table(context, model_name, vault_structure):
     Create a table with data pre-populated from the context table.
     """
 
-    sql_model = context.dbt_test_utils.context_table_to_model(context, model_name=model_name)
-    result = context.dbt_test_utils.run_dbt_model(mode="run", model_name=sql_model)
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context, context.table, model_name=model_name, target_model_name=model_name)
 
     context.target_model_name = model_name
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=model_name)
+    metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[model_name])
+    context.vault_structure_metadata = metadata
 
-    context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-    metadata = {"source_model": seed_file_name, **context.vault_structure_columns[model_name]}
+    # dbtvault_generator.add_seed_config(seed_name=seed_model_name,
+    #                                    seed_config=context.seed_config[model_name])
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
+    metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
 
     context.vault_structure_metadata = metadata
 
@@ -193,6 +210,7 @@ def load_populated_table(context, model_name, vault_structure):
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name)
 
+    assert "Completed successfully" in seed_logs
     assert "Completed successfully" in logs
 
 
@@ -331,25 +349,30 @@ def stage_processing(context, processed_stage_name):
 
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
-    expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                           model_name=f"{model_name}_expected")
+    expected_model_name = f"{model_name}_EXPECTED"
+
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context, context.table, model_name=model_name, target_model_name=expected_model_name)
+
+    context.target_model_name = seed_model_name
 
     columns_to_compare = context.table.headings
+
+    # dbtvault_generator.add_seed_config(seed_name=seed_model_name,
+    #                                    include_columns=columns_to_compare,
+    #                                    seed_config=context.seed_config[model_name])
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
     unique_id = columns_to_compare[0]
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
-                                                                 expected_output_csv=expected_output_csv_name,
+                                                                 expected_output_csv=seed_model_name,
                                                                  unique_id=unique_id,
                                                                  columns_to_compare=columns_to_compare)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-    dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
-                                       include_columns=columns_to_compare,
-                                       seed_config=context.seed_config[model_name])
-
-    context.dbt_test_utils.run_dbt_seed(expected_output_csv_name)
-
     logs = context.dbt_test_utils.run_dbt_command(["dbt", "test"])
 
+    assert "Completed successfully" in seed_logs
     assert "1 of 1 PASS" in logs

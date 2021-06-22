@@ -147,7 +147,7 @@ def single_source_hub_sqlserver(context):
     context.seed_config = {
         "HUB_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "VARCHAR(50)",
+                "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(4)"
@@ -155,7 +155,7 @@ def single_source_hub_sqlserver(context):
         },
         "HUB_CUSTOMER_SHA": {
             "+column_types": {
-                "CUSTOMER_PK": "VARCHAR(100)",
+                "CUSTOMER_PK": "BINARY(32)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(4)"
@@ -281,7 +281,7 @@ def multi_source_hub_sqlserver(context):
     context.seed_config = {
         "HUB": {
             "+column_types": {
-                "PART_PK": "VARCHAR(50)",
+                "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(4)"

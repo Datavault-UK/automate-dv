@@ -173,23 +173,23 @@ Feature: sqlserver
 
   @fixture.single_source_hub_sqlserver
   Scenario: [POPULATED-LOAD-1] Load of stage data into a hub
-#    Given the HUB_CUSTOMER hub is already populated with data
-#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
-#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
-#      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-#    And the RAW_STAGE table contains data
-    Given the HUB_CUSTOMER hub is empty
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
-    When I load the HUB_CUSTOMER hub
-    Then the HUB_CUSTOMER table should contain expected data
+    Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-    Given the RAW_STAGE table contains data
+    And the RAW_STAGE table contains data
+#    Given the HUB_CUSTOMER hub is empty
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+#      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+#    And I create the STG_CUSTOMER stage
+#    When I load the HUB_CUSTOMER hub
+#    Then the HUB_CUSTOMER table should contain expected data
+#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+#      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+#    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
       | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
@@ -206,23 +206,23 @@ Feature: sqlserver
 
   @fixture.single_source_hub_sqlserver
   Scenario: [POPULATED-LOAD-2] Load of distinct stage data into a hub
-#    Given the HUB_CUSTOMER hub is already populated with data
-#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
-#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
-#      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-#    And the RAW_STAGE table contains data
-    Given the HUB_CUSTOMER hub is empty
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
-    When I load the HUB_CUSTOMER hub
-    Then the HUB_CUSTOMER table should contain expected data
+    Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-    Given the RAW_STAGE table contains data
+    And the RAW_STAGE table contains data
+#    Given the HUB_CUSTOMER hub is empty
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+#      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+#    And I create the STG_CUSTOMER stage
+#    When I load the HUB_CUSTOMER hub
+#    Then the HUB_CUSTOMER table should contain expected data
+#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+#      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+#    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
@@ -244,23 +244,23 @@ Feature: sqlserver
 
   @fixture.single_source_hub_sqlserver
   Scenario: [POPULATED-LOAD-3] Keys with NULL or empty values are not loaded into a hub
-#    Given the HUB_CUSTOMER hub is already populated with data
-#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
-#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
-#      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-#    And the RAW_STAGE table contains data
-    Given the HUB_CUSTOMER hub is empty
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
-    And I create the STG_CUSTOMER stage
-    When I load the HUB_CUSTOMER hub
-    Then the HUB_CUSTOMER table should contain expected data
+    Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
-    Given the RAW_STAGE table contains data
+    And the RAW_STAGE table contains data
+#    Given the HUB_CUSTOMER hub is empty
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+#      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+#    And I create the STG_CUSTOMER stage
+#    When I load the HUB_CUSTOMER hub
+#    Then the HUB_CUSTOMER table should contain expected data
+#      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+#      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+#    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
       | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
@@ -411,34 +411,34 @@ Feature: sqlserver
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
   @fixture.multi_source_hub_sqlserver
-  Scenario: [POPULATED-LOAD-UNION-1] Union three staging tables to feed an empty hub over two cycles
-#    Given the HUB hub is already populated with data
-#      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
-#      | md5('1001') | 1001    | 1993-01-01 | *      |
-#      | md5('1002') | 1002    | 1993-01-01 | *      |
-#    And the RAW_STAGE_PARTS table contains data
-    Given the HUB hub is empty
-    And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
-      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | *      |
-      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | *      |
-    And I create the STG_PARTS stage
-    And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
-      | 1001    | 9           | 6        | 68.00      | 1993-01-01 | *      |
-      | 1002    | 1           | 2        | 120.00     | 1993-01-01 | *      |
-    And I create the STG_SUPPLIER stage
-    And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
-      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | *      |
-      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | *      |
-    And I create the STG_LINEITEM stage
-    And I load the HUB hub
-    Then the HUB table should contain expected data
+  Scenario: [POPULATED-LOAD-UNION-1] Union three staging tables to feed a populated hub over two cycles
+    Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | *      |
       | md5('1002') | 1002    | 1993-01-01 | *      |
-    Given the RAW_STAGE_PARTS table contains data
+    And the RAW_STAGE_PARTS table contains data
+#    Given the HUB hub is empty
+#    And the RAW_STAGE_PARTS table contains data
+#      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
+#      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | *      |
+#      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | *      |
+#    And I create the STG_PARTS stage
+#    And the RAW_STAGE_SUPPLIER table contains data
+#      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
+#      | 1001    | 9           | 6        | 68.00      | 1993-01-01 | *      |
+#      | 1002    | 1           | 2        | 120.00     | 1993-01-01 | *      |
+#    And I create the STG_SUPPLIER stage
+#    And the RAW_STAGE_LINEITEM table contains data
+#      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
+#      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | *      |
+#      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | *      |
+#    And I create the STG_LINEITEM stage
+#    And I load the HUB hub
+#    Then the HUB table should contain expected data
+#      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001    | 1993-01-01 | *      |
+#      | md5('1002') | 1002    | 1993-01-01 | *      |
+#    Given the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | *      |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | *      |
@@ -507,33 +507,33 @@ Feature: sqlserver
 
   @fixture.multi_source_hub_sqlserver
   Scenario: [POPULATED-LOAD-UNION-2] Union three staging tables to feed a populated hub
-#    Given the HUB hub is already populated with data
-#      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
-#      | md5('1001') | 1001    | 1993-01-01 | LINE   |
-#      | md5('1002') | 1002    | 1993-01-01 | LINE   |
-#    And the RAW_STAGE_PARTS table contains data
-    Given the HUB hub is empty
-    And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
-      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
-      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
-    And I create the STG_PARTS stage
-    And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
-      | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
-      | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
-    And I create the STG_SUPPLIER stage
-    And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
-      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
-      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
-    And I create the STG_LINEITEM stage
-    And I load the HUB hub
-    Then the HUB table should contain expected data
+    Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
-    Given the RAW_STAGE_PARTS table contains data
+    And the RAW_STAGE_PARTS table contains data
+#    Given the HUB hub is empty
+#    And the RAW_STAGE_PARTS table contains data
+#      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
+#      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
+#      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
+#    And I create the STG_PARTS stage
+#    And the RAW_STAGE_SUPPLIER table contains data
+#      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
+#      | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
+#      | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
+#    And I create the STG_SUPPLIER stage
+#    And the RAW_STAGE_LINEITEM table contains data
+#      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
+#      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
+#      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
+#    And I create the STG_LINEITEM stage
+#    And I load the HUB hub
+#    Then the HUB table should contain expected data
+#      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001    | 1993-01-01 | LINE   |
+#      | md5('1002') | 1002    | 1993-01-01 | LINE   |
+#    Given the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | PART   |
@@ -574,33 +574,33 @@ Feature: sqlserver
 
   @fixture.multi_source_hub_sqlserver
   Scenario: [POPULATED-LOAD-UNION-3] Keys with a NULL or empty value in a union of three staging tables are not fed into a populated hub
-#    Given the HUB hub is already populated with data
-#      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
-#      | md5('1001') | 1001    | 1993-01-01 | LINE   |
-#      | md5('1002') | 1002    | 1993-01-01 | LINE   |
-#    And the RAW_STAGE_PARTS table contains data
-    Given the HUB hub is empty
-    And the RAW_STAGE_PARTS table contains data
-      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
-      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
-      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
-    And I create the STG_PARTS stage
-    And the RAW_STAGE_SUPPLIER table contains data
-      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
-      | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
-      | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
-    And I create the STG_SUPPLIER stage
-    And the RAW_STAGE_LINEITEM table contains data
-      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
-      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
-      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
-    And I create the STG_LINEITEM stage
-    And I load the HUB hub
-    Then the HUB table should contain expected data
+    Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001    | 1993-01-01 | LINE   |
       | md5('1002') | 1002    | 1993-01-01 | LINE   |
-    Given the RAW_STAGE_PARTS table contains data
+    And the RAW_STAGE_PARTS table contains data
+#    Given the HUB hub is empty
+#    And the RAW_STAGE_PARTS table contains data
+#      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
+#      | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-01 | PART   |
+#      | 1002    | Door      | external  | XL        | 150.00           | 1993-01-01 | PART   |
+#    And I create the STG_PARTS stage
+#    And the RAW_STAGE_SUPPLIER table contains data
+#      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | LOAD_DATE  | SOURCE |
+#      | 1001    | 9           | 6        | 68.00      | 1993-01-01 | SUPP   |
+#      | 1002    | 1           | 2        | 120.00     | 1993-01-01 | SUPP   |
+#    And I create the STG_SUPPLIER stage
+#    And the RAW_STAGE_LINEITEM table contains data
+#      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | LOAD_DATE  | SOURCE |
+#      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | 1993-01-01 | LINE   |
+#      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | 1993-01-01 | LINE   |
+#    And I create the STG_LINEITEM stage
+#    And I load the HUB hub
+#    Then the HUB table should contain expected data
+#      | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
+#      | md5('1001') | 1001    | 1993-01-01 | LINE   |
+#      | md5('1002') | 1002    | 1993-01-01 | LINE   |
+#    Given the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
       | 1001    | Pedal     | internal  | M         | 60.00            | 1993-01-02 | PART   |
       | 1002    | Door      | external  | XL        | 150.00           | 1993-01-02 | PART   |
@@ -642,3 +642,46 @@ Feature: sqlserver
       | md5('1004') | 1004    | 1993-01-02 | LINE   |
       | md5('1005') | 1005    | 1993-01-02 | LINE   |
       | md5('1006') | 1006    | 1993-01-02 | SUPP   |
+
+  @fixture.single_source_hub_sqlserver
+  Scenario: [POPULATED-LOAD] Load of stage data into a hub, test of dbt_test_utils.py revision
+    Given the HUB_CUSTOMER hub is already populated with data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-02 | TPCH   |
+      | 1003        | Chad          | 2013-02-04   | 1993-01-02 | TPCH   |
+      | 1004        | Dom           | 2018-04-13   | 1993-01-02 | TPCH   |
+    And I create the STG_CUSTOMER stage
+    When I load the HUB_CUSTOMER hub
+    Then the HUB_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-02 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-02 | TPCH   |
+
+  @fixture.single_source_hub_sqlserver
+  Scenario: [HUB-BASE-LOAD] Simple load of stage data into an empty hub, PK is a hash of a single column, test of dbt_test_utils.py revision
+    Given the HUB_CUSTOMER hub is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 | TPCH   |
+      | 1003        | Chad          | 1993-01-01 | TPCH   |
+      | 1004        | Dom           | 1993-01-01 | TPCH   |
+    And I create the STG_CUSTOMER stage
+    When I load the HUB_CUSTOMER hub
+    Then the HUB_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-01 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-01 | TPCH   |
+
