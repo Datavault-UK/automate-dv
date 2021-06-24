@@ -7,10 +7,8 @@ fixture_registry = {
     "fixture.set_workdir": set_workdir,
     "fixture.staging": staging,
     "fixture.single_source_hub": single_source_hub,
-    "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
     "fixture.sha": sha,
     "fixture.multi_source_hub": multi_source_hub,
-    "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver,
     "fixture.single_source_link": single_source_link,
     "fixture.multi_source_link": multi_source_link,
     "fixture.satellite": satellite,
@@ -30,7 +28,10 @@ fixture_registry = {
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
-    "fixture.disable_payload": disable_payload
+    "fixture.disable_payload": disable_payload,
+    "fixture.staging_sqlserver": staging_sqlserver,
+    "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
+    "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver
 }
 
 

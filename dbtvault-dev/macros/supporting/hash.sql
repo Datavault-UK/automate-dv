@@ -128,7 +128,7 @@
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n)) AS BINARY({})) AS {}".format(hash_size, alias) -}}
+                {{- "\n))) AS BINARY({})) AS {}".format(hash_size, alias) -}}
             {%- else -%}
                 {{- "\n), '{}'))) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, alias) -}}
             {%- endif -%}

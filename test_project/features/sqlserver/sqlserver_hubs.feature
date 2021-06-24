@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: sqlserver
+Feature: sqlserver_hubs
 
   @fixture.single_source_hub_sqlserver
   Scenario: [HUB-BASE-LOAD-1] Simple load of stage data into an empty hub, PK is a hash of a single column
@@ -685,3 +685,21 @@ Feature: sqlserver
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
+  @fixture.single_source_hub_sqlserver
+  Scenario: [POPULATED-LOAD] Load of stage data into a hub, test of dbt_test_utils.py revision "table is created and populated with data" (MSSQL)
+    Given the HUB_CUSTOMER table is created and populated with data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | <null>      | 1003        | 1993-01-01 | TPCH   |
+      |             | 1004        | 1993-01-01 | TPCH   |
+      | md5('1005') | 1005        | <null>     | TPCH   |
+      | md5('1006') | 1006        | 1993-01-01 |        |
+    Then the HUB_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | <null>      | 1003        | 1993-01-01 | TPCH   |
+      |             | 1004        | 1993-01-01 | TPCH   |
+      | md5('1005') | 1005        | <null>     | TPCH   |
+      | md5('1006') | 1006        | 1993-01-01 |        |

@@ -70,6 +70,8 @@ class DBTTestUtils:
         else:
             target = None
 
+        self.target = target
+
         self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
 
     @staticmethod
@@ -357,10 +359,11 @@ class DBTTestUtils:
 
         self.run_dbt_operation(macro_name='drop_test_schemas')
 
-    def context_table_to_df(self, table: Table) -> pd.DataFrame:
+    def context_table_to_df(self, table: Table, use_nan=True) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
             :param table: The context.table from a scenario
+            :param use_nan: Replace <null> placeholder with NaN
             :return: DataFrame representation of the provide context table
         """
 
@@ -369,7 +372,8 @@ class DBTTestUtils:
         table_df = table_df.apply(self.calc_hash)
         table_df = table_df.apply(self.parse_hashdiffs)
 
-        table_df = table_df.replace("<null>", NaN)
+        if use_nan:
+            table_df = table_df.replace("<null>", NaN)
 
         return table_df
 
@@ -383,6 +387,8 @@ class DBTTestUtils:
 
         table_df = self.context_table_to_df(table)
 
+        table_df.dropna(how="all", inplace=True)
+
         csv_fqn = CSV_DIR / f'{model_name.lower()}_seed.csv'
 
         table_df.to_csv(csv_fqn, index=False)
@@ -391,15 +397,16 @@ class DBTTestUtils:
 
         return csv_fqn.stem
 
-    def context_table_to_dict(self, table: Table, orient='index'):
+    def context_table_to_dict(self, table: Table, orient='index', use_nan=True):
         """
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
+            :param use_nan: Replace <null> placeholder with NaN
             :return: A dictionary modelled from a context table
         """
 
-        table_df = self.context_table_to_df(table)
+        table_df = self.context_table_to_df(table, use_nan=use_nan)
 
         table_dict = table_df.to_dict(orient=orient)
 
@@ -407,25 +414,18 @@ class DBTTestUtils:
 
         return table_dict
 
-    def context_table_to_model(self, context, table: Table, model_name: str, target_model_name: str):
+    def context_table_to_model(self, seed_config : dict, table: Table, model_name: str, target_model_name: str):
         """
         Creates a model from a feature file data table
-            :param context: Behave context
-            :param table: The context.table from a scenario or a manually defined table
+            :param seed_config: Configuration dict for seed file
+            :param table: The context.table from a scenario or a programmatically defined table
             :param model_name: Name of the model to base the feature data table on
-            :param target_name: Name of the model to create
-            :return: SELECT statement to form model
+            :param target_model_name: Name of the model to create
+            :return: Seed file name
         """
 
-        if os.getenv('TARGET', '').lower() == 'snowflake':
-            target = 'snowflake'
-        elif os.getenv('TARGET', '').lower() == 'sqlserver':
-            target = 'sqlserver'
-        else:
-            target = None
-
-        feature_data = context.dbt_test_utils.context_table_to_dict(table=table, orient="index")
-        column_types = context.seed_config[model_name]["+column_types"]
+        feature_data = self.context_table_to_dict(table=table, orient="index", use_nan=False)
+        column_types = seed_config[model_name]["+column_types"]
 
         sql_command = ""
         first_row = True
@@ -447,14 +447,17 @@ class DBTTestUtils:
                     sql_command = sql_command + ", "
                 column_data = feature_data[row_number][column_name]
                 column_type = column_types[column_name]
-                if target == "snowflake":
-                    sql_command = sql_command + "CAST('" + column_data + "' AS " + column_type + ") AS " + column_name + " "
-                elif target == "sqlserver":
-                    if column_type[0:6].upper() == "BINARY":
-                        expression = "CONVERT(" + column_type + ", '" + column_data + "', 2)"
-                    else:
-                        expression = "CAST('" + column_data + "' AS " + column_type + ")"
-                    sql_command = sql_command + expression + " AS " + column_name + " "
+                if column_data.lower() == "<null>" or column_data == "":
+                    sql_command = sql_command + "NULL AS " + column_name + " "
+                else:
+                    if self.target == "snowflake":
+                        sql_command = sql_command + "CAST('" + column_data + "' AS " + column_type + ") AS " + column_name + " "
+                    elif self.target == "sqlserver":
+                        if column_type[0:6].upper() == "BINARY":
+                            expression = "CONVERT(" + column_type + ", '" + column_data + "', 2)"
+                        else:
+                            expression = "CAST('" + column_data + "' AS " + column_type + ")"
+                        sql_command = sql_command + expression + " AS " + column_name + " "
 
         with open(FEATURE_MODELS_ROOT / f"{target_model_name}_SEED.sql", "w") as f:
             f.write(sql_command)

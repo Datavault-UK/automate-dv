@@ -114,32 +114,18 @@ def load_empty_table(context, model_name, vault_structure):
 
     empty_table = Table(headings=headings, rows=row)
 
-    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
-    #                                                              model_name=model_name)
-    #
-    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-    #                                    seed_config=context.seed_config[model_name])
-    #
-    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+                                                                 model_name=model_name)
 
-    seed_model_name = context.dbt_test_utils.context_table_to_model(context, empty_table, model_name=model_name, target_model_name=model_name)
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                       seed_config=context.seed_config[model_name])
 
-    context.target_model_name = model_name
-
-    metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
-
-    context.vault_structure_metadata = metadata
-
-    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
-
-    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
     if getattr(context, "create_empty_stage", False) and getattr(context, "empty_stage_name", False):
         source_model_name = context.empty_stage_name
     else:
-        source_model_name = seed_model_name
-
-    logs = ""
+        source_model_name = seed_file_name
 
     if not vault_structure == "stage":
         metadata = {"source_model": source_model_name, **context.vault_structure_columns[model_name]}
@@ -150,7 +136,6 @@ def load_empty_table(context, model_name, vault_structure):
 
         logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name)
 
-    assert "Completed successfully" or "WARNING: Nothing to do" in seed_logs
     assert "Completed successfully" in logs
 
 
@@ -187,7 +172,7 @@ def load_populated_table(context, model_name, vault_structure):
     Create a table with data pre-populated from the context table.
     """
 
-    seed_model_name = context.dbt_test_utils.context_table_to_model(context, context.table, model_name=model_name, target_model_name=model_name)
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=model_name, target_model_name=model_name)
 
     context.target_model_name = model_name
 
@@ -262,15 +247,21 @@ def load_vault(context):
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=raw_stage_model_name)
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=raw_stage_model_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[raw_stage_model_name])
+    #
+    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[raw_stage_model_name])
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=raw_stage_model_name, target_model_name=raw_stage_model_name)
 
-    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    context.target_model_name = raw_stage_model_name
 
-    context.raw_stage_models = seed_file_name
+    logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
+    context.raw_stage_models = seed_model_name
 
     context.raw_stage_model_name = raw_stage_model_name
 
@@ -281,13 +272,19 @@ def create_csv(context, raw_stage_model_name):
 def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=table_name)
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=table_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[table_name])
+    #
+    # seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[table_name])
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=table_name, target_model_name=table_name)
 
-    seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    context.target_model_name = table_name
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
     stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
@@ -295,13 +292,13 @@ def create_csv(context, table_name):
 
     dbtvault_generator.raw_vault_structure(model_name=table_name,
                                            vault_structure='stage',
-                                           source_model=seed_file_name,
+                                           source_model=seed_model_name,
                                            config={'materialized': 'table'})
 
     run_logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=table_name,
                                                     args=args, full_refresh=True)
 
-    context.raw_stage_models = seed_file_name
+    context.raw_stage_models = seed_model_name
 
     assert "Completed successfully" in seed_logs
     assert "Completed successfully" in run_logs
@@ -314,15 +311,22 @@ def create_csv(context, raw_stage_model_name):
 
     context.raw_stage_model_name = raw_stage_model_name
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=raw_stage_model_name)
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=raw_stage_model_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[raw_stage_model_name])
+    #
+    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=raw_stage_model_name, target_model_name=raw_stage_model_name)
+
+    dbtvault_generator.add_seed_config(seed_name=seed_model_name,
                                        seed_config=context.seed_config[raw_stage_model_name])
 
-    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
-    context.raw_stage_models = seed_file_name
+    context.raw_stage_models = seed_model_name
 
     assert "Completed successfully" in logs
 
@@ -351,7 +355,7 @@ def stage_processing(context, processed_stage_name):
 def expect_data(context, model_name):
     expected_model_name = f"{model_name}_EXPECTED"
 
-    seed_model_name = context.dbt_test_utils.context_table_to_model(context, context.table, model_name=model_name, target_model_name=expected_model_name)
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=model_name, target_model_name=expected_model_name)
 
     context.target_model_name = seed_model_name
 
