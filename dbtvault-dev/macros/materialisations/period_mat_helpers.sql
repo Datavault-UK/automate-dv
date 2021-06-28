@@ -29,6 +29,19 @@
     {% do return(filtered_sql) %}
 {% endmacro %}
 
+{% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+
+    {%- set period_filter -%}
+            (CAST({{ timestamp_field }} AS DATE) >= DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{start_timestamp}}' AS DATE))), 0) AND
+             CAST({{ timestamp_field }} AS DATE) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{start_timestamp}}' AS DATE)))
+      AND (CAST({{ timestamp_field }} AS DATE) >= CAST('{{ start_timestamp }}' AS DATE)))
+    {%- endset -%}
+
+    {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
+
+    {% do return(filtered_sql) %}
+{% endmacro %}
+
 
 {#-- GET_PERIOD_FILTER_SQL #}
 
@@ -101,6 +114,34 @@
     {% do return(period_boundaries) %}
 {%- endmacro %}
 
+{% macro sqlserver__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+
+    {% set period_boundary_sql -%}
+        with data as (
+            select
+                CAST(coalesce(max({{ timestamp_field }}), '{{ start_date }}') AS DATETIME) as start_timestamp,
+                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "CAST(nullif('" ~ stop_date | lower ~ "','none') AS DATETIME)") }},
+                         {{ dbt_utils.current_timestamp() }} ) as stop_timestamp
+            from {{ target_schema }}.{{ target_table }}
+        )
+        select
+            start_timestamp,
+            stop_timestamp,
+            {{ dbt_utils.datediff('start_timestamp',
+                                  'stop_timestamp',
+                                  period) }} + 1 as num_periods
+        from data
+    {%- endset %}
+
+    {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
+
+    {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
+                                'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
+                                'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
+
+    {% do return(period_boundaries) %}
+{%- endmacro %}
+
 
 {#-- GET_PERIOD_OF_LOAD #}
 
@@ -118,6 +159,19 @@
 
     {% set period_of_load_sql -%}
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{start_timestamp}}'))) AS period_of_load
+    {%- endset %}
+
+    {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}
+
+    {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
+
+    {% do return(period_of_load) %}
+{%- endmacro -%}
+
+{%- macro sqlserver__get_period_of_load(period, offset, start_timestamp) -%}
+
+    {% set period_of_load_sql -%}
+        SELECT DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{start_timestamp}}' AS DATE)), 0) AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}

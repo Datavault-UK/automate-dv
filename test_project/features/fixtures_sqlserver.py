@@ -86,6 +86,12 @@ def single_source_hub_sqlserver(context):
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -103,6 +109,14 @@ def single_source_hub_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(32)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
