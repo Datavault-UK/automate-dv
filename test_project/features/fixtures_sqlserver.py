@@ -25,7 +25,25 @@ def staging_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT"
+                "DBTVAULT_RANK": "INT",
+                "CUSTOMER_NK": "VARCHAR(30)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)"
+            }
+        },
+        "STG_CUSTOMER_HASH": {
+            "+column_types": {
+                "CUSTOMER_ID": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "INT",
+                "CUSTOMER_NK": "VARCHAR(30)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)"
             }
         },
         "RAW_STAGE": {
