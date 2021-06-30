@@ -11,8 +11,11 @@ Feature: Hubs Loaded using Rank Materialization (sqlserver)
       | 1002        | Bob           | 1993-01-02 | TPCH   |
       | 1002        | Bob           | 1993-01-02 | TPCH   |
       | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-03 | TPCH   |
       | 1003        | Chad          | 1993-01-03 | TPCH   |
       | 1004        | Dom           | 1993-01-04 | TPCH   |
+      | 1001        | Alice         | 1993-01-04 | TPCH   |
+      | 1001        | Alice         | 1993-01-05 | TPCH   |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I create the STG_CUSTOMER stage
     And I insert by rank into the HUB hub

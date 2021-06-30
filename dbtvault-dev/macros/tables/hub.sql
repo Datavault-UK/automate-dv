@@ -129,22 +129,26 @@ SELECT * FROM records_to_insert
 {%- set source_number = loop.index | string -%}
 
 row_rank_{{ source_number }} AS (
-    SELECT *
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ source_cols_with_rank | join(', ') }}
+    {%- else %}
+    SELECT {{ source_cols | join(', ') }}
+    {%- endif %}
     FROM
     (
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ source_cols_with_rank | join(', ') }},
-    {%- else %}
-    SELECT {{ source_cols | join(', ') }},
-    {%- endif %}
+        {%- if model.config.materialized == 'vault_insert_by_rank' %}
+        SELECT {{ source_cols_with_rank | join(', ') }},
+        {%- else %}
+        SELECT {{ source_cols | join(', ') }},
+        {%- endif %}
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }}
            ) AS row_number
-    FROM {{ ref(src) }}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    ) innerselect
-    WHERE row_number = 1
+        FROM {{ ref(src) }}
+        WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    ) h
+    WHERE h.row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
@@ -180,15 +184,15 @@ row_rank_union AS (
     SELECT *
     FROM
     (
-    SELECT *,
+        SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
                ORDER BY {{ src_ldts }}, {{ src_source }} ASC
            ) AS row_rank_number
-    FROM {{ ns.last_cte }}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    ) innerselect
-    WHERE row_rank_number = 1
+        FROM {{ ns.last_cte }}
+        WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    ) h
+    WHERE h.row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}

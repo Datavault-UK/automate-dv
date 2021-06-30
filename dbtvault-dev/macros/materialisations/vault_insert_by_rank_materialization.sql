@@ -25,9 +25,7 @@
     {% if existing_relation is none %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-        {% do log("filtered_sql: " ~ filtered_sql, true) %}
         {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
-        {% do log("build_sql: " ~ build_sql, true) %}
 
         {% do to_drop.append(tmp_relation) %}
 
