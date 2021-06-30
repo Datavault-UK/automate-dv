@@ -13,6 +13,8 @@
 
     {%- set to_drop = [] -%}
 
+    {% set adapter_type = dbtvault.get_adapter_type() %}
+
     {%- do dbtvault.check_placeholder(sql, "__RANK_FILTER__") -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
@@ -23,8 +25,9 @@
     {% if existing_relation is none %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-
-        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+        {% do log("filtered_sql: " ~ filtered_sql, true) %}
+        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
+        {% do log("build_sql: " ~ build_sql, true) %}
 
         {% do to_drop.append(tmp_relation) %}
 
@@ -37,7 +40,7 @@
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
@@ -58,7 +61,7 @@
             {% set tmp_relation = make_temp_relation(this) %}
 
             {% call statement() -%}
-                {{ dbt.create_table_as(True, tmp_relation, filtered_sql) }}
+                {{ dbtvault.create_table_as(True, tmp_relation, filtered_sql) }}
             {%- endcall %}
 
             {{ adapter.expand_target_column_types(from_relation=tmp_relation,
@@ -66,10 +69,14 @@
 
             {%- set insert_query_name = 'main-' ~ i -%}
             {% call statement(insert_query_name, fetch_result=True) -%}
-                insert into {{ target_relation }} ({{ target_cols_csv }})
+                INSERT INTO {{ target_relation }} ({{ target_cols_csv }})
                 (
-                    select {{ target_cols_csv }}
-                    from {{ tmp_relation.include(schema=True) }}
+                    SELECT {{ target_cols_csv }}
+                    {% if adapter_type == "sqlserver" %}
+                    FROM   {{ tmp_relation.include(database=False, schema=False) }}
+                    {%  else  %}
+                    FROM {{ tmp_relation.include(schema=True) }}
+                    {%  endif %}
                 );
             {%- endcall %}
 

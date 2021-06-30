@@ -129,7 +129,7 @@ SELECT * FROM records_to_insert
 {%- set source_number = loop.index | string -%}
 
 row_rank_{{ source_number }} AS (
-    SELECT {{ source_cols | join(', ') }}
+    SELECT *
     FROM
     (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
