@@ -14,6 +14,8 @@
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
 
+    {% set adapter_type = dbtvault.get_adapter_type() %}
+
     {%- do dbtvault.check_placeholder(sql) -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
@@ -27,7 +29,7 @@
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
-        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
 
@@ -43,7 +45,7 @@
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
-        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
@@ -73,7 +75,7 @@
                                                                   period_boundaries.stop_timestamp, i) %}
 
             {% call statement() -%}
-                {{ dbt.create_table_as(True, tmp_relation, tmp_table_sql) }}
+                {{ dbtvault.create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}
 
             {{ adapter.expand_target_column_types(from_relation=tmp_relation,
@@ -81,10 +83,14 @@
 
             {%- set insert_query_name = 'main-' ~ i -%}
             {% call statement(insert_query_name, fetch_result=True) -%}
-                insert into {{ target_relation }} ({{ target_cols_csv }})
+                INSERT INTO {{ target_relation }} ({{ target_cols_csv }})
                 (
-                    select {{ target_cols_csv }}
-                    from {{ tmp_relation.include(schema=True) }}
+                    SELECT {{ target_cols_csv }}
+                    {% if adapter_type == "sqlserver" %}
+                    FROM   {{ tmp_relation.include(database=False, schema=False) }}
+                    {%  else  %}
+                    FROM {{ tmp_relation.include(schema=True) }}
+                    {%  endif %}
                 );
             {%- endcall %}
 
