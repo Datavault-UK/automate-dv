@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: sqlserver_hubs
+Feature: hubs (sqlserver)
 
   @fixture.single_source_hub_sqlserver
   Scenario: [HUB-BASE-LOAD-1] Simple load of stage data into an empty hub, PK is a hash of a single column

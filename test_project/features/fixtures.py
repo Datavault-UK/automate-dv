@@ -109,7 +109,8 @@ def single_source_hub(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
+                "CUSTOMER_DOB": "VARCHAR"
             }
         }
     }

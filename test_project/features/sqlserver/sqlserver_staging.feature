@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: sqlserver_staging
+Feature: staging (sqlserver)
 
 @fixture.staging_sqlserver
   Scenario: Staging with derived, hashed, ranked and source columns.

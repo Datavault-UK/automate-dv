@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Hubs Loaded using Period Materialization
+Feature: Hubs Loaded using Period Materialization (sqlserver)
 
   @fixture.single_source_hub_sqlserver
   Scenario: [BASE-PERIOD-MAT] Simple load of stage data into an empty hub
