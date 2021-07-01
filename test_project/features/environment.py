@@ -31,7 +31,8 @@ fixture_registry = {
     "fixture.disable_payload": disable_payload,
     "fixture.staging_sqlserver": staging_sqlserver,
     "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
-    "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver
+    "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver,
+    "fixture.pit_sqlserver": pit_sqlserver
 }
 
 
