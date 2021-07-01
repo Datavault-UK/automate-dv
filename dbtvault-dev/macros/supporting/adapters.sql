@@ -17,14 +17,14 @@
     {%- set as_columnstore = config.get('as_columnstore', default=true) -%}
     {% set tmp_relation = relation.incorporate(
         path={"identifier": relation.identifier.replace("#", "") ~ '_temp_view'},
-        type='view')-%}
+        type='view') -%}
     {%- set temp_view_sql = sql.replace("'", "''") -%}
 
     {% if relation.identifier.startswith('#') -%}
         {# Temporary tables are a special case in MSSQL: they are always in database 'tempdb' and technically schemaless #}
-        {# However dbt seems to require a schema and in this case using 'dbo' will work #}
+        {# However dbt seems to require a schema and in this case using either 'dbo' or the current schema will work #}
        {% set relation = relation.create(
-            database='tempdb', schema='dbo', identifier=relation.identifier, type='table')-%}
+            database='tempdb', schema=relation.schema, identifier=relation.identifier, type='table')-%}
     {% endif -%}
 
     {% if relation.type == None -%}
@@ -36,7 +36,7 @@
     {{ sqlserver__drop_relation_script(relation) }}
 
     USE [{{ tmp_relation.database }}];
-    EXEC('create view {{ tmp_relation.include(database=False) }} as
+    EXEC('CREATE VIEW {{ tmp_relation.include(database=False) }} AS
     {{ temp_view_sql }}
     ');
 

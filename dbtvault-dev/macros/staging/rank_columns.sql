@@ -23,7 +23,7 @@
             {%- else -%}
                 {%- set partition_by_str = columns[col].partition_by -%}
             {%- endif -%}
-
+{# TODO Configurable ranking function defaulting to DENSE_RANK() to eliminate unnecessary incremental processing cycles? #}
             {{- "RANK() OVER (PARTITION BY {} ORDER BY {}) AS {}".format(partition_by_str, order_by_str, col) | indent(4) -}}
 
         {%- endif -%}
