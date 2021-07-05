@@ -58,7 +58,7 @@ last_safe_load_datetime AS (
         {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
-    )
+    ) a
 ),
 
 as_of_grain_old_entries AS (
@@ -158,7 +158,6 @@ backfill AS (
 
     GROUP BY
         a.{{- src_pk }}, a.AS_OF_DATE
-    ORDER BY (1, 2)
 ),
 {%- endif %}
 
