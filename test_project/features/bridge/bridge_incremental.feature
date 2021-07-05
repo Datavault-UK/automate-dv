@@ -768,11 +768,11 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('300\|\|CCC') | md5('300') | md5('CCC') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('400\|\|DDD') | md5('400') | md5('DDD') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
     Then the BRIDGE_CUSTOMER_ORDER_PRODUCT table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK |
-      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     |
-      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     |
-      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     |
-      | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
+      | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK | LINK_ORDER_PRODUCT_PK |
+      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     | md5('100\|\|AAA')     |
+      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     |
+      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     |
+      | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
     Given the RAW_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1002        | 100      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
