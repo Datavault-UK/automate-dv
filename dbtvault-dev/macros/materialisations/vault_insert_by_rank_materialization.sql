@@ -25,7 +25,7 @@
     {% if existing_relation is none %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
 
@@ -38,7 +38,7 @@
         {% do adapter.rename_relation(target_relation, backup_relation) %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
@@ -59,7 +59,7 @@
             {% set tmp_relation = make_temp_relation(this) %}
 
             {% call statement() -%}
-                {{ dbtvault.create_table_as(True, tmp_relation, filtered_sql) }}
+                {{ create_table_as(True, tmp_relation, filtered_sql) }}
             {%- endcall %}
 
             {{ adapter.expand_target_column_types(from_relation=tmp_relation,

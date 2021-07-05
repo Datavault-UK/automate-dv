@@ -29,7 +29,7 @@
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
-        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
 
@@ -45,7 +45,7 @@
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
-        {% set build_sql = dbtvault.create_table_as(False, target_relation, filtered_sql) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
         {% do to_drop.append(backup_relation) %}
@@ -75,7 +75,7 @@
                                                                   period_boundaries.stop_timestamp, i) %}
 
             {% call statement() -%}
-                {{ dbtvault.create_table_as(True, tmp_relation, tmp_table_sql) }}
+                {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}
 
             {{ adapter.expand_target_column_types(from_relation=tmp_relation,
