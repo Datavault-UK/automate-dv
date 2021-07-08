@@ -58,6 +58,9 @@
 
             {% set tmp_relation = make_temp_relation(this) %}
 
+            {# This call statement drops and then creates a temporary table #}
+            {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
+            {# See MSSQL note and drop code below #}
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, filtered_sql) }}
             {%- endcall %}
@@ -70,11 +73,7 @@
                 INSERT INTO {{ target_relation }} ({{ target_cols_csv }})
                 (
                     SELECT {{ target_cols_csv }}
-                    {% if adapter_type == "sqlserver" %}
-                    FROM   {{ tmp_relation.include(database=False, schema=False) }}
-                    {%  else  %}
                     FROM {{ tmp_relation.include(schema=True) }}
-                    {%  endif %}
                 );
             {%- endcall %}
 
@@ -94,6 +93,13 @@
                                                                                           rows_inserted,
                                                                                           model.unique_id)) }}
 
+            {% if adapter_type == "sqlserver" %}
+                {# In MSSQL a temporary table can only be dropped by the connection or session that created it #}
+                {# so drop it now before the commit below closes this session #}
+                {% call statement() -%}
+                    IF OBJECT_ID('{{ tmp_relation.include(schema=True) }}', 'U') IS NULL DROP TABLE {{ tmp_relation }};
+                {%- endcall %}
+            {%  endif %}
 
             {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
