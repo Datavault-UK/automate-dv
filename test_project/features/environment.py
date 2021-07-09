@@ -32,7 +32,9 @@ fixture_registry = {
     "fixture.staging_sqlserver": staging_sqlserver,
     "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
     "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver,
-    "fixture.pit_sqlserver": pit_sqlserver
+    "fixture.pit_sqlserver": pit_sqlserver,
+    "fixture.pit_one_sat_sqlserver": pit_one_sat_sqlserver,
+    "fixture.pit_two_sats_sqlserver": pit_two_sats_sqlserver
 }
 
 
