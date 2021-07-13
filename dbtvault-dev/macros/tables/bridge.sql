@@ -1,10 +1,10 @@
 {%- macro bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
-    {{- adapter.dispatch('bridge', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
-                                                                                  bridge_walk=bridge_walk,
-                                                                                  as_of_dates_table=as_of_dates_table,
-                                                                                  stage_tables_ldts=stage_tables_ldts,
-                                                                                  src_ldts=src_ldts) -}}
+    {{- adapter.dispatch('bridge', 'dbtvault')(source_model=source_model, src_pk=src_pk,
+                                               bridge_walk=bridge_walk,
+                                               as_of_dates_table=as_of_dates_table,
+                                               stage_tables_ldts=stage_tables_ldts,
+                                               src_ldts=src_ldts) -}}
 {%- endmacro -%}
 
 {%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}

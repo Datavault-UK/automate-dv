@@ -1,6 +1,6 @@
 {%- macro derive_columns(source_relation=none, columns=none) -%}
 
-    {{- adapter.dispatch('derive_columns', packages = dbtvault.get_dbtvault_namespaces())(source_relation=source_relation, columns=columns) -}}
+    {{- adapter.dispatch('derive_columns', 'dbtvault')(source_relation=source_relation, columns=columns) -}}
 
 {%- endmacro %}
 

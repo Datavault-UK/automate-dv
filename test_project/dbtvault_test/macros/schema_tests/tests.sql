@@ -1,4 +1,4 @@
-{%- macro test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -92,5 +92,5 @@ compare AS (
 // SELECT * FROM duplicates_not_in_expected
 // SELECT * FROM compare
 
-SELECT COUNT(*) AS differences FROM compare
-{%- endmacro -%}
+SELECT * FROM compare
+{%- endtest -%}
