@@ -1,6 +1,6 @@
 {%- macro alias_all(columns=none, prefix=none) -%}
 
-    {{- adapter.dispatch('alias_all', packages = dbtvault.get_dbtvault_namespaces())(columns=columns, prefix=prefix) -}}
+    {{- adapter.dispatch('alias_all', 'dbtvault')(columns=columns, prefix=prefix) -}}
 
 {%- endmacro %}
 
