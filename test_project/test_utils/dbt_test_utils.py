@@ -523,6 +523,7 @@ class DBTTestUtils:
 
         if getattr(context, 'disable_payload', False):
             metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
+            metadata.update({"src_payload": []})
 
         return metadata
 
