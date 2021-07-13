@@ -384,9 +384,7 @@ def expect_data(context, model_name):
 
 @then("the {model_name} table should contain no data")
 def expect_no_data(context, model_name):
-    # Create empty seed file and table
-    context.target_model_name = model_name
-
+    # Create seed file with no data rows
     expected_model_name = f"{model_name}_EXPECTED"
 
     headings = [k for k, v in context.seed_config[model_name]['+column_types'].items()]
@@ -397,20 +395,20 @@ def expect_no_data(context, model_name):
 
     seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
                                                                  model_name=expected_model_name)
+
+    # Create empty expected data table using empty seed file
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[model_name])
 
     seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    # Run comparison test between target table and seed table
+    # Run comparison test between target table and expected data table
     unique_id = context.vault_structure_columns[model_name]['src_pk']
-
-    columns_to_compare = headings
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                  expected_output_csv=seed_file_name,
                                                                  unique_id=unique_id,
-                                                                 columns_to_compare=columns_to_compare)
+                                                                 columns_to_compare=headings)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
