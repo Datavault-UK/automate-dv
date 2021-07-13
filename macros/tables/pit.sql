@@ -1,10 +1,10 @@
 {%- macro pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model ) -%}
 
-    {{- adapter.dispatch('pit', packages = dbtvault.get_dbtvault_namespaces())(source_model=source_model, src_pk=src_pk,
-                                                                               as_of_dates_table=as_of_dates_table,
-                                                                               satellites=satellites,
-                                                                               stage_tables=stage_tables,
-                                                                               src_ldts=src_ldts) -}}
+    {{- adapter.dispatch('pit', 'dbtvault')(source_model=source_model, src_pk=src_pk,
+                                            as_of_dates_table=as_of_dates_table,
+                                            satellites=satellites,
+                                            stage_tables=stage_tables,
+                                            src_ldts=src_ldts) -}}
 {%- endmacro -%}
 
 {%- macro default__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}

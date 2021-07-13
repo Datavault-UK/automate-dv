@@ -1,6 +1,6 @@
 {%- macro as_constant(column_str=none) -%}
 
-    {{- adapter.dispatch('as_constant', packages = dbtvault.get_dbtvault_namespaces())(column_str=column_str) -}}
+    {{- adapter.dispatch('as_constant', 'dbtvault')(column_str=column_str) -}}
 
 {%- endmacro %}
 

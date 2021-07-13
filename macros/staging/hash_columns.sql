@@ -1,6 +1,6 @@
 {%- macro hash_columns(columns=none) -%}
 
-    {{- adapter.dispatch('hash_columns', packages = dbtvault.get_dbtvault_namespaces())(columns=columns) -}}
+    {{- adapter.dispatch('hash_columns', 'dbtvault')(columns=columns) -}}
 
 {%- endmacro %}
 
