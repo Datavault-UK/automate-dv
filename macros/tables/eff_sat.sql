@@ -1,9 +1,9 @@
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('eff_sat', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                                                   src_start_date=src_start_date, src_end_date=src_end_date,
-                                                                                   src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                                                                   source_model=source_model) -}}
+    {{- adapter.dispatch('eff_sat', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+                                                src_start_date=src_start_date, src_end_date=src_end_date,
+                                                src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
@@ -80,7 +80,7 @@ new_reopened_records AS (
         g.{{ src_ldts }},
         g.{{ src_source }}
     FROM source_data AS g
-    INNER JOIN latest_closed lc
+    INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
 ),
 
@@ -103,7 +103,7 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-{#- if is_auto_end_dating -#}
+{#- end if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
@@ -123,7 +123,7 @@ records_to_insert AS (
     FROM source_data AS i
 )
 
-{#- if not dbtvault.is_any_incremental() -#}
+{#- end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
 SELECT * FROM records_to_insert

@@ -3,8 +3,8 @@
 </p>
 
 <p align="center">
-  <a href="https://dbtvault.readthedocs.io/en/stable/?badge=v0.7.5"><img
-    src="https://readthedocs.org/projects/dbtvault/badge/?version=v0.7.5" 
+  <a href="https://dbtvault.readthedocs.io/en/stable/?badge=v0.7.6"><img
+    src="https://readthedocs.org/projects/dbtvault/badge/?version=v0.7.6" 
     alt="Documentation Status"
   /></a>
   <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img

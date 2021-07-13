@@ -1,6 +1,6 @@
 {%- macro rank_columns(columns=none) -%}
 
-    {{- adapter.dispatch('rank_columns', packages = dbtvault.get_dbtvault_namespaces())(columns=columns) -}}
+    {{- adapter.dispatch('rank_columns', 'dbtvault')(columns=columns) -}}
 
 {%- endmacro %}
 
