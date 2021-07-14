@@ -131,7 +131,7 @@ def setup(c, target=None, user=None, project=None, secrethub_template='secrethub
     logger.info(f'Checking project directory...')
     check_project(c)
     logger.info(f'Installing dbtvault-dev in test project...')
-    run_dbt(c, 'deps', project='test')
+    run_dbt(c, 'deps', target=target, user=user, project='test')
 
 
 @task
@@ -255,7 +255,7 @@ def check_target(target: str):
         :return: bool
     """
 
-    available_targets = ['snowflake', 'bigquery']
+    available_targets = ['snowflake', 'bigquery', 'sqlserver']
 
     if target in available_targets:
         return True
