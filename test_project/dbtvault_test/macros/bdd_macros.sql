@@ -16,7 +16,7 @@
 
 {% macro check_model_exists(model_name) %}
 
-    {% set schema_name = get_schema_name() %}
+    {% set schema_name = dbtvault_test.get_schema_name() %}
 
     {%- set source_relation = adapter.get_relation(
           database=target.database,
@@ -33,7 +33,7 @@
 
 {%- macro drop_test_schemas() -%}
 
-    {% set schema_name = get_schema_name() %}
+    {% set schema_name = dbtvault_test.get_schema_name() %}
 
     {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
     {% do log("Schema '{}' dropped.".format(schema_name), true) %}
@@ -42,7 +42,7 @@
 
 {%- macro create_test_schemas() -%}
 
-    {% set schema_name = get_schema_name() %}
+    {% set schema_name = dbtvault_test.get_schema_name() %}
 
     {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
     {% do log("Schema '{}' created.".format(schema_name), true) %}

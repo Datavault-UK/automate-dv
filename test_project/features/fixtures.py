@@ -97,18 +97,18 @@ def single_source_hub(context):
     context.seed_config = {
         "HUB": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
