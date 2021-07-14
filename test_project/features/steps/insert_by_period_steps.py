@@ -8,13 +8,13 @@ dbtvault_generator = DBTVAULTGenerator()
 
 
 @step("I insert by period into the {model_name} {vault_structure} "
-      "by {period} with date range: {start_date} to {stop_date}")
-def load_table(context, model_name, vault_structure, period, start_date=None, stop_date=None):
+      "by {period} with date range: {start_date} to {stop_date} and LDTS {timestamp_field}")
+def load_table(context, model_name, vault_structure, period, start_date, stop_date, timestamp_field):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": "LOAD_DATE",
+              "timestamp_field": timestamp_field,
               "start_date": start_date,
               "stop_date": stop_date,
               "period": period}
