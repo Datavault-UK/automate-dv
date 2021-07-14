@@ -120,6 +120,8 @@ def setup(c, target=None, user=None, project=None, secrethub_template='secrethub
         Secrethub Datavault org.
     """
 
+    os.environ['TARGET'] = target
+
     target, user, project = params(c, target=target, project=project, user=user)
 
     logger.info(f'Setting defaults...')
