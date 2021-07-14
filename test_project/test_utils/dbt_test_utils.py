@@ -63,12 +63,13 @@ class DBTTestUtils:
         else:
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET', '').lower() == 'snowflake' or not os.getenv('TARGET', None):
-            target = 'snowflake'
+        available_targets = ['snowflake', 'bigquery', 'sqlserver']
+
+        if os.getenv('TARGET', '').lower() in available_targets:
+            target = os.getenv('TARGET', '').lower()
+            self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
         else:
             target = None
-
-        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
 
     @staticmethod
     def set_dynamic_properties_for_comparison(target):
@@ -89,6 +90,12 @@ class DBTTestUtils:
             return {
                 'SCHEMA_NAME': schema_name,
                 'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
+            }
+        elif target == 'bigquery':
+            schema_name = f"{os.getenv('GCP_DATASET').upper()}_{os.getenv('GCP_USER').upper()}"
+
+            return {
+                "DATASET_NAME": schema_name
             }
         else:
             raise ValueError('TARGET not set')
