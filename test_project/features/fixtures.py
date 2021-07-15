@@ -98,7 +98,7 @@ def single_source_hub(context):
         "HUB": {
             "+column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }

@@ -91,7 +91,7 @@ class DBTTestUtils:
                 'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
             }
         elif target == 'bigquery':
-            schema_name = f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
+            schema_name = f"{os.getenv('GCP_DATASET')}-{os.getenv('GCP_USER')}".upper()
 
             return {
                 "DATASET_NAME": schema_name
