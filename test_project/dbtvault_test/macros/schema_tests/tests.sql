@@ -40,47 +40,47 @@ order_expected_data AS (
     ORDER BY {{ compare_columns | sort | join(", ") }}
 ),
 compare_e_to_a AS (
-    SELECT * FROM atomic-marking-318313.DBT_JS_JOSSY.order_expected_data.e
-    LEFT OUTER JOIN atomic-marking-318313.DBT_JS_JOSSY.order_actual_data.a
+    SELECT * FROM order_expected_data AS e
+    LEFT OUTER JOIN order_actual_data AS a
     ON a.CUSTOMER_PK = e.CUSTOMER_PK
     WHERE a.CUSTOMER_PK IS NULL
 ),
 compare_a_to_e AS (
-    SELECT * FROM atomic-marking-318313.DBT_JS_JOSSY.order_actual_data.a
-    LEFT OUTER JOIN atomic-marking-318313.DBT_JS_JOSSY.order_expected_data.e
+    SELECT * FROM order_actual_data AS a
+    LEFT OUTER JOIN order_expected_data AS e
     ON e.CUSTOMER_PK = a.CUSTOMER_PK
     WHERE e.CUSTOMER_PK IS NULL
 ),
 duplicates_actual AS (
     SELECT {{ columns_string }}, COUNT(*) AS COUNT
-    FROM atomic-marking-318313.DBT_JS_JOSSY.order_actual_data
+    FROM order_actual_data
     GROUP BY {{ columns_string }}
     HAVING COUNT(*) > 1
 ),
 duplicates_expected AS (
     SELECT {{ columns_string }}, COUNT(*) AS COUNT
-    FROM atomic-marking-318313.DBT_JS_JOSSY.order_expected_data
+    FROM order_expected_data
     GROUP BY {{ columns_string }}
     HAVING COUNT(*) > 1
 ),
 duplicates_not_in_actual AS (
     SELECT {{ columns_string }}
-    FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_expected
-    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_actual)
+    FROM duplicates_expected
+    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_actual)
 ),
 duplicates_not_in_expected AS (
     SELECT {{ columns_string }}
-    FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_actual
-    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_expected)
+    FROM duplicates_actual
+    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 ),
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.compare_e_to_a
+    SELECT {{ dbtvault.prefix(columns_processed , 'a') }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.compare_a_to_e
+    SELECT {{ dbtvault.prefix(columns_processed , 'b') }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_not_in_actual
+    SELECT {{ dbtvault.prefix(columns_processed , 'c') }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_not_in_expected
+    SELECT {{ dbtvault.prefix(columns_processed , 'd') }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
 )
 
 -- For manual debugging
@@ -94,5 +94,5 @@ compare AS (
 // SELECT * FROM duplicates_not_in_expected
 // SELECT * FROM compare */
 
-SELECT * FROM atomic-marking-318313.DBT_JS_JOSSY.compare
+SELECT * FROM compare
 {%- endtest -%}
