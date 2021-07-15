@@ -21,7 +21,7 @@
 {%- macro bigquery__get_schema_name() -%}
 
     {%- set schema_name -%}
-        {{ env_var('GCP_DATASET') | upper }}_{{ env_var('GCP_USER') | upper }}
+        {{ env_var('GCP_DATASET') | upper }}-{{ env_var('GCP_USER') | upper }}
     {%- endset -%}
 
     {% do return(schema_name) %}
