@@ -24,20 +24,20 @@
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
 WITH actual_data AS (
-    SELECT * FROM {{ model }}
+    SELECT * FROM `atomic-marking-318313`.`DBT_JS_JOSSY`.`HUB`
 ),
 expected_data AS (
-    SELECT * FROM {{ ref(expected_seed) }}
+    SELECT * FROM `atomic-marking-318313`.`DBT_JS_JOSSY`.`hub_expected_seed`
 ),
 order_actual_data AS (
-    SELECT {{ source_columns_string }}
+    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, SAFE_CONVERT_BYTES_TO_STRING(CUSTOMER_PK) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
     FROM actual_data
-    ORDER BY {{ source_columns_list | sort | join(", ") }}
+    ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
 order_expected_data AS (
-    SELECT {{ compare_columns_string }}
+    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, CAST(CUSTOMER_PK AS STRING) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
     FROM expected_data
-    ORDER BY {{ compare_columns | sort | join(", ") }}
+    ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
 compare_e_to_a AS (
     SELECT * FROM order_expected_data AS e
@@ -52,42 +52,42 @@ compare_a_to_e AS (
     WHERE e.CUSTOMER_PK IS NULL
 ),
 duplicates_actual AS (
-    SELECT {{ columns_string }}, COUNT(*) AS COUNT
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE, COUNT(*) AS COUNT
     FROM order_actual_data
-    GROUP BY {{ columns_string }}
+    GROUP BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     HAVING COUNT(*) > 1
 ),
 duplicates_expected AS (
-    SELECT {{ columns_string }}, COUNT(*) AS COUNT
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE, COUNT(*) AS COUNT
     FROM order_expected_data
-    GROUP BY {{ columns_string }}
+    GROUP BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     HAVING COUNT(*) > 1
 ),
 duplicates_not_in_actual AS (
-    SELECT {{ columns_string }}
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     FROM duplicates_expected
-    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_actual)
+    WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_actual)
 ),
 duplicates_not_in_expected AS (
-    SELECT {{ columns_string }}
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     FROM duplicates_actual
-    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
+    WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_expected)
 ),
 compare AS (
-    SELECT {{ dbtvault.prefix(columns_processed , 'a') }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
+    SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.LOAD_DATE, a.SOURCE, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
     UNION ALL
-    SELECT {{ dbtvault.prefix(columns_processed , 'b') }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
+    SELECT b.CUSTOMER_PK, b.CUSTOMER_ID, b.LOAD_DATE, b.SOURCE, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
     UNION ALL
-    SELECT {{ dbtvault.prefix(columns_processed , 'c') }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
+    SELECT c.CUSTOMER_PK, c.CUSTOMER_ID, c.LOAD_DATE, c.SOURCE, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
     UNION ALL
-    SELECT {{ dbtvault.prefix(columns_processed , 'd') }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
+    SELECT d.CUSTOMER_PK, d.CUSTOMER_ID, d.LOAD_DATE, d.SOURCE, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
 )
 
 -- For manual debugging
 /*SELECT * FROM order_actual_data
-// SELECT * FROM order_expected_data
-// SELECT * FROM compare_e_to_a
-// SELECT * FROM compare_a_to_e
+// SELECT * FROM order_expected_data */
+-- SELECT * FROM compare_e_to_a
+/* SELECT * FROM compare_a_to_e
 // SELECT * FROM duplicates_actual
 // SELECT * FROM duplicates_expected
 // SELECT * FROM duplicates_not_in_actual
