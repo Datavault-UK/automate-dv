@@ -30,7 +30,7 @@ expected_data AS (
     SELECT * FROM `atomic-marking-318313`.`DBT_JS_JOSSY`.`hub_expected_seed`
 ),
 order_actual_data AS (
-    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, SAFE_CONVERT_BYTES_TO_STRING(CUSTOMER_PK) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
+    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, (UPPER(TO_HEX(CUSTOMER_PK))) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
     FROM actual_data
     ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
@@ -40,13 +40,13 @@ order_expected_data AS (
     ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
 compare_e_to_a AS (
-    SELECT * FROM order_expected_data AS e
+    SELECT e.* FROM order_expected_data AS e
     LEFT OUTER JOIN order_actual_data AS a
     ON a.CUSTOMER_PK = e.CUSTOMER_PK
     WHERE a.CUSTOMER_PK IS NULL
 ),
 compare_a_to_e AS (
-    SELECT * FROM order_actual_data AS a
+    SELECT a.* FROM order_actual_data AS a
     LEFT OUTER JOIN order_expected_data AS e
     ON e.CUSTOMER_PK = a.CUSTOMER_PK
     WHERE e.CUSTOMER_PK IS NULL
@@ -72,7 +72,8 @@ duplicates_not_in_expected AS (
     SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     FROM duplicates_actual
     WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_expected)
-),
+)
+,
 compare AS (
     SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.LOAD_DATE, a.SOURCE, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
     UNION ALL
