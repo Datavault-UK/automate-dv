@@ -68,10 +68,7 @@ class DBTTestUtils:
         target = os.getenv('TARGET', '').lower()
 
         if target in available_targets:
-
             self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
-        else:
-            self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison('')
 
     @staticmethod
     def set_dynamic_properties_for_comparison(target):
