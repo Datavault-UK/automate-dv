@@ -65,11 +65,10 @@ class DBTTestUtils:
 
         available_targets = ['snowflake', 'bigquery', 'sqlserver']
 
-        if os.getenv('TARGET', '').lower() in available_targets:
-            target = os.getenv('TARGET', '').lower()
+        target = os.getenv('TARGET', '').lower()
+
+        if target in available_targets:
             self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
-        else:
-            target = None
 
     @staticmethod
     def set_dynamic_properties_for_comparison(target):
