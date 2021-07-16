@@ -7,8 +7,11 @@
 {%- set source_columns_processed = [] -%}
 
 {%- for compare_col in compare_columns -%}
-
-    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+    {%- endif -%}
     {%- do columns_processed.append(compare_col) -%}
 
 {%- endfor %}
@@ -16,7 +19,11 @@
 {%- for source_col in source_columns -%}
 
     {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
@@ -30,69 +37,70 @@ expected_data AS (
     SELECT * FROM {{ ref(expected_seed) }}
 ),
 order_actual_data AS (
-    SELECT {{ source_columns_string }}
+    SELECT CAST(CUSTOMER_ID AS target.type__type_string()) AS CUSTOMER_ID, (UPPER(TO_HEX(CUSTOMER_PK))) AS CUSTOMER_PK, CAST(LOAD_DATE AS target.type__type_string()) AS LOAD_DATE, CAST(SOURCE AS target.type__type_string()) AS SOURCE
     FROM actual_data
-    ORDER BY {{ source_columns_list | sort | join(", ") }}
+    ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
 order_expected_data AS (
-    SELECT {{ compare_columns_string }}
+    SELECT CAST(CUSTOMER_ID AS target.type__type_string()) AS CUSTOMER_ID, CAST(CUSTOMER_PK AS target.type__type_string()) AS CUSTOMER_PK, CAST(LOAD_DATE AS target.type__type_string()) AS LOAD_DATE, CAST(SOURCE AS target.type__type_string()) AS SOURCE
     FROM expected_data
-    ORDER BY {{ compare_columns | sort | join(", ") }}
+    ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
 compare_e_to_a AS (
-    SELECT * FROM atomic-marking-318313.DBT_JS_JOSSY.order_expected_data.e
-    LEFT OUTER JOIN atomic-marking-318313.DBT_JS_JOSSY.order_actual_data.a
+    SELECT e.* FROM order_expected_data AS e
+    LEFT OUTER JOIN order_actual_data AS a
     ON a.CUSTOMER_PK = e.CUSTOMER_PK
     WHERE a.CUSTOMER_PK IS NULL
 ),
 compare_a_to_e AS (
-    SELECT * FROM atomic-marking-318313.DBT_JS_JOSSY.order_actual_data.a
-    LEFT OUTER JOIN atomic-marking-318313.DBT_JS_JOSSY.order_expected_data.e
+    SELECT a.* FROM order_actual_data AS a
+    LEFT OUTER JOIN order_expected_data AS e
     ON e.CUSTOMER_PK = a.CUSTOMER_PK
     WHERE e.CUSTOMER_PK IS NULL
 ),
 duplicates_actual AS (
-    SELECT {{ columns_string }}, COUNT(*) AS COUNT
-    FROM atomic-marking-318313.DBT_JS_JOSSY.order_actual_data
-    GROUP BY {{ columns_string }}
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE, COUNT(*) AS COUNT
+    FROM order_actual_data
+    GROUP BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     HAVING COUNT(*) > 1
 ),
 duplicates_expected AS (
-    SELECT {{ columns_string }}, COUNT(*) AS COUNT
-    FROM atomic-marking-318313.DBT_JS_JOSSY.order_expected_data
-    GROUP BY {{ columns_string }}
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE, COUNT(*) AS COUNT
+    FROM order_expected_data
+    GROUP BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
     HAVING COUNT(*) > 1
 ),
 duplicates_not_in_actual AS (
-    SELECT {{ columns_string }}
-    FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_expected
-    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_actual)
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    FROM duplicates_expected
+    WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_actual)
 ),
 duplicates_not_in_expected AS (
-    SELECT {{ columns_string }}
-    FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_actual
-    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_expected)
-),
+    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    FROM duplicates_actual
+    WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_expected)
+)
+,
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.compare_e_to_a
+    SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.LOAD_DATE, a.SOURCE, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.compare_a_to_e
+    SELECT b.CUSTOMER_PK, b.CUSTOMER_ID, b.LOAD_DATE, b.SOURCE, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_not_in_actual
+    SELECT c.CUSTOMER_PK, c.CUSTOMER_ID, c.LOAD_DATE, c.SOURCE, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM atomic-marking-318313.DBT_JS_JOSSY.duplicates_not_in_expected
+    SELECT d.CUSTOMER_PK, d.CUSTOMER_ID, d.LOAD_DATE, d.SOURCE, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
 )
 
 -- For manual debugging
 /*SELECT * FROM order_actual_data
-// SELECT * FROM order_expected_data
-// SELECT * FROM compare_e_to_a
-// SELECT * FROM compare_a_to_e
+// SELECT * FROM order_expected_data */
+-- SELECT * FROM compare_e_to_a
+/* SELECT * FROM compare_a_to_e
 // SELECT * FROM duplicates_actual
 // SELECT * FROM duplicates_expected
 // SELECT * FROM duplicates_not_in_actual
 // SELECT * FROM duplicates_not_in_expected
 // SELECT * FROM compare */
 
-SELECT * FROM atomic-marking-318313.DBT_JS_JOSSY.compare
+SELECT * FROM compare
 {%- endtest -%}
