@@ -100,7 +100,7 @@ compare AS (
 -- SELECT * FROM duplicates_expected
 -- SELECT * FROM duplicates_not_in_actual
 -- SELECT * FROM duplicates_not_in_expected
--- SELECT * FROM compare 
+-- SELECT * FROM compare
 
 SELECT * FROM compare
 {%- endtest -%}
