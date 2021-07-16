@@ -24,10 +24,10 @@
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
 WITH actual_data AS (
-    SELECT * FROM `atomic-marking-318313`.`DBT_JS_JOSSY`.`HUB`
+    SELECT * FROM {{ model }}
 ),
 expected_data AS (
-    SELECT * FROM `atomic-marking-318313`.`DBT_JS_JOSSY`.`hub_expected_seed`
+    SELECT * FROM {{ ref(expected_seed) }}
 ),
 order_actual_data AS (
     SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, (UPPER(TO_HEX(CUSTOMER_PK))) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
