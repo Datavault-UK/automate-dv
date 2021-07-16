@@ -63,12 +63,12 @@ class DBTTestUtils:
         else:
             self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET', '').lower() == 'snowflake' or not os.getenv('TARGET', None):
-            target = 'snowflake'
-        else:
-            target = None
+        available_targets = ['snowflake', 'bigquery', 'sqlserver']
 
-        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+        target = os.getenv('TARGET', '').lower()
+
+        if target in available_targets:
+            self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
 
     @staticmethod
     def set_dynamic_properties_for_comparison(target):
@@ -76,7 +76,7 @@ class DBTTestUtils:
         Database and schema for generated SQL during macro tests changes based on user.
         This function works out what those names need to be for downstream comparisons to use instead.
         """
-
+        # TODO: Re-factor this. Work out patterns, move to separate functions etc.
         if target == 'snowflake':
             if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
                 schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
@@ -832,6 +832,7 @@ class DBTVAULTGenerator:
             :param headings: Headings to process
         """
 
+        # TODO: Re-factor this. Work out patterns, move to separate functions etc.
         processed_headings = []
 
         for item in headings:

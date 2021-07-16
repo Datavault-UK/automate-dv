@@ -7,6 +7,8 @@ The fixtures here are used to supply runtime metadata to tests, which are provid
 """
 
 
+# TODO: Split these fixtures up in to separate files by platform and table type
+
 @fixture
 def set_workdir(_):
     """
