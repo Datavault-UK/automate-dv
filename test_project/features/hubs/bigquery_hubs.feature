@@ -65,7 +65,7 @@ Feature: Hubs
       | sha('1003') | 1003        | 1993-01-01 | TPCH   |
       | sha('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub
+  @fixture.single_source_hub_bigquery
   Scenario: [BASE-LOAD] Keys with NULL or empty values are not loaded into empty hub that does not exist
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
@@ -88,7 +88,7 @@ Feature: Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub
+  @fixture.single_source_hub_bigquery
   Scenario: [BASE-LOAD-EMPTY] Simple load of stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
