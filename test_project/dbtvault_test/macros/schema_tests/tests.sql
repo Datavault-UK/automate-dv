@@ -7,8 +7,11 @@
 {%- set source_columns_processed = [] -%}
 
 {%- for compare_col in compare_columns -%}
-
-    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+    {%- endif -%}
     {%- do columns_processed.append(compare_col) -%}
 
 {%- endfor %}
@@ -16,7 +19,11 @@
 {%- for source_col in source_columns -%}
 
     {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
@@ -30,12 +37,12 @@ expected_data AS (
     SELECT * FROM {{ ref(expected_seed) }}
 ),
 order_actual_data AS (
-    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, (UPPER(TO_HEX(CUSTOMER_PK))) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
+    SELECT CAST(CUSTOMER_ID AS target.type__type_string()) AS CUSTOMER_ID, (UPPER(TO_HEX(CUSTOMER_PK))) AS CUSTOMER_PK, CAST(LOAD_DATE AS target.type__type_string()) AS LOAD_DATE, CAST(SOURCE AS target.type__type_string()) AS SOURCE
     FROM actual_data
     ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
 order_expected_data AS (
-    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, CAST(CUSTOMER_PK AS STRING) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
+    SELECT CAST(CUSTOMER_ID AS target.type__type_string()) AS CUSTOMER_ID, CAST(CUSTOMER_PK AS target.type__type_string()) AS CUSTOMER_PK, CAST(LOAD_DATE AS target.type__type_string()) AS LOAD_DATE, CAST(SOURCE AS target.type__type_string()) AS SOURCE
     FROM expected_data
     ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
 ),
