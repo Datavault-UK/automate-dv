@@ -53,13 +53,10 @@
     {#- Else a list of columns to hash -#}
     {%- else -%}
      {%- set all_null = [] -%}
-
         {%- if is_hashdiff -%}
-          {{- "CAST({}(string_agg(, '{}'".format(hash_alg, concat_string) | indent(4)  -}}
-           {# "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) #}
+            {{- "CAST({}(CONCAT(".format(hash_alg) | indent(4) -}}
         {%- else -%}
-            {{- "CAST({}(NULLIF(string_agg(', {}',".format(hash_alg, concat_string) | indent(4) -}}
-            {# "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) #}
+            {{- "CAST({}(NULLIF(CONCAT(".format(hash_alg) | indent(4) -}}
         {%- endif -%}
 
         {%- for column in columns -%}
@@ -68,7 +65,7 @@
 
             {%- set column_str = dbtvault.as_constant(column) -%}
             {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
-            {{- "," if not loop.last -}}
+            {{- concat_string if not loop.last -}}
 
             {%- if loop.last -%}
 
