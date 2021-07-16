@@ -55,9 +55,11 @@
      {%- set all_null = [] -%}
 
         {%- if is_hashdiff -%}
-           {{- "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+          {{- "CAST({}(string_agg(, '{}'".format(hash_alg, concat_string) | indent(4)  -}}
+           {# "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) #}
         {%- else -%}
-            {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+            {{- "CAST({}(NULLIF(string_agg(', {}',".format(hash_alg, concat_string) | indent(4) -}}
+            {# "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) #}
         {%- endif -%}
 
         {%- for column in columns -%}
