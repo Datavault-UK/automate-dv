@@ -1,6 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
-from test_project.features.bigquery_fixtures import single_source_hub_bigquery, multi_source_hub_bigquery
+from test_project.features.bigquery_fixtures import single_source_hub_bigquery, multi_source_hub_bigquery, \
+    single_source_link_bigquery
 from test_project.features.fixtures import *
 from test_project.test_utils.dbt_test_utils import *
 
@@ -13,6 +14,7 @@ fixture_registry = {
     "fixture.multi_source_hub": multi_source_hub,
     "fixture.multi_source_hub_bigquery": multi_source_hub_bigquery,
     "fixture.single_source_link": single_source_link,
+    "fixture.single_source_link_bigquery": single_source_link_bigquery,
     "fixture.multi_source_link": multi_source_link,
     "fixture.satellite": satellite,
     "fixture.satellite_cycle": satellite_cycle,
