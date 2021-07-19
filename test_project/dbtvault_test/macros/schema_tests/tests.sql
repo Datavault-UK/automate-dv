@@ -10,11 +10,7 @@
 {%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
     {%- if target.type == 'bigquery' -%}
-        {%- if compare_col.date_type == 'BYTES' -%}
-            {%- do compare_columns_processed.append("UPPER(TO_HEX({}))".format(compare_col)) -%}
-        {%- else -%}
-            {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
-        {%- endif -%}
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
     {%- elif target.type == 'snowflake' -%}
         {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
@@ -26,8 +22,9 @@
 
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
-        {%- if source_col.date_type == 'BYTES' -%}
-            {%- do source_columns_processed.append("UPPER(TO_HEX({}))".format(source_col)) -%}
+        {%- if source_col.data_type == 'BYTES' -%}
+            {%- do log("this is bytes" ~source_col, true) -%}
+            {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
         {%- else -%}
             {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
         {%- endif -%}
@@ -37,7 +34,6 @@
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
-{%- do log("CCS" ~ compare_columns_string, true) -%}
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
