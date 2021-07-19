@@ -72,7 +72,7 @@
                 {% if is_hashdiff %}
                     {{- "\n)) AS BYTES) AS {}".format(alias) -}}
                 {%- else -%}
-                    {{- "\n), '{}')) AS BYTES) AS {}".format(all_null | join(""), alias) -}}
+                    {{- "\n), '{}')) AS STRING) AS {}".format(all_null | join(""), alias) -}}
                 {%- endif -%}
             {%- else -%}
 
