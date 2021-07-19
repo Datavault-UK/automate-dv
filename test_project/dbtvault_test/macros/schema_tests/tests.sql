@@ -37,58 +37,58 @@ expected_data AS (
     SELECT * FROM {{ ref(expected_seed) }}
 ),
 order_actual_data AS (
-    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, CAST(CUSTOMER_PK AS STRING) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
+    SELECT {{ source_columns_string }}
     FROM actual_data
-    ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    ORDER BY {{ source_columns_list | sort | join(", ") }}
 ),
 order_expected_data AS (
-    SELECT CAST(CUSTOMER_ID AS STRING) AS CUSTOMER_ID, CAST(CUSTOMER_PK AS STRING) AS CUSTOMER_PK, CAST(LOAD_DATE AS STRING) AS LOAD_DATE, CAST(SOURCE AS STRING) AS SOURCE
+    SELECT {{ compare_columns_string }}
     FROM expected_data
-    ORDER BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    ORDER BY {{ compare_columns | sort | join(", ") }}
 ),
 compare_e_to_a AS (
-    SELECT e.* FROM order_expected_data AS e
-    LEFT OUTER JOIN order_actual_data AS a
-    ON a.CUSTOMER_PK = e.CUSTOMER_PK
-    WHERE a.CUSTOMER_PK IS NULL
+    SELECT * FROM order_expected_data
+    EXCEPT DISTINCT
+    SELECT * FROM order_actual_data
 ),
+
 compare_a_to_e AS (
-    SELECT a.* FROM order_actual_data AS a
-    LEFT OUTER JOIN order_expected_data AS e
-    ON e.CUSTOMER_PK = a.CUSTOMER_PK
-    WHERE e.CUSTOMER_PK IS NULL
+    SELECT * FROM order_actual_data
+    EXCEPT DISTINCT
+    SELECT * FROM order_expected_data
 ),
+
 duplicates_actual AS (
-    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE, COUNT(*) AS COUNT
+    SELECT {{ columns_string }}, COUNT(*) AS COUNT
     FROM order_actual_data
-    GROUP BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    GROUP BY {{ columns_string }}
     HAVING COUNT(*) > 1
 ),
 duplicates_expected AS (
-    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE, COUNT(*) AS COUNT
+    SELECT {{ columns_string }}, COUNT(*) AS COUNT
     FROM order_expected_data
-    GROUP BY CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    GROUP BY {{ columns_string }}
     HAVING COUNT(*) > 1
 ),
 duplicates_not_in_actual AS (
-    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    SELECT {{ columns_string }}
     FROM duplicates_expected
-    WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_actual)
+    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_actual)
 ),
 duplicates_not_in_expected AS (
-    SELECT CUSTOMER_ID, CUSTOMER_PK, LOAD_DATE, SOURCE
+    SELECT {{ columns_string }}
     FROM duplicates_actual
-    WHERE CUSTOMER_PK NOT IN (SELECT CUSTOMER_PK FROM duplicates_expected)
+    WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 )
 ,
 compare AS (
-    SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.LOAD_DATE, a.SOURCE, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
+    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
     UNION ALL
-    SELECT b.CUSTOMER_PK, b.CUSTOMER_ID, b.LOAD_DATE, b.SOURCE, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
+    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
     UNION ALL
-    SELECT c.CUSTOMER_PK, c.CUSTOMER_ID, c.LOAD_DATE, c.SOURCE, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
     UNION ALL
-    SELECT d.CUSTOMER_PK, d.CUSTOMER_ID, d.LOAD_DATE, d.SOURCE, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
 )
 
 -- For manual debugging
