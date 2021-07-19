@@ -20,7 +20,7 @@
     {%- if hash == 'MD5' -%}
         {%- set hash_alg = 'MD5' -%}
     {%- elif hash == 'SHA' -%}
-        {%- set hash_alg = 'SHA512' -%}
+        {%- set hash_alg = 'SHA256' -%}
     {%- endif -%}
     {%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
 {%- elif target.type == 'snowflake' -%}
@@ -48,7 +48,7 @@
 {%- if target.type == 'bigquery' -%}
     {%- if columns is string -%}
         {%- set column_str = dbtvault.as_constant(columns) -%}
-        {{- "CAST(({}({})) AS BYTES) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
+        {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
 
     {#- Else a list of columns to hash -#}
     {%- else -%}
