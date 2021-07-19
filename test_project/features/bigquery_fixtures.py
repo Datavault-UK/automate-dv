@@ -49,12 +49,12 @@ def staging(context):
 
         "STG_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE"
@@ -62,12 +62,12 @@ def staging(context):
         },
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -147,44 +147,44 @@ def multi_source_hub_bigquery(context):
     context.seed_config = {
         "HUB": {
             "+column_types": {
-                "PART_PK": "BINARY(16)",
-                "PART_ID": "VARCHAR",
+                "PART_PK": "BYTES",
+                "PART_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_PARTS": {
             "+column_types": {
-                "PART_ID": "VARCHAR",
-                "PART_NAME": "VARCHAR",
-                "PART_TYPE": "VARCHAR",
-                "PART_SIZE": "VARCHAR",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "PART_ID": "STRING",
+                "PART_NAME": "STRING",
+                "PART_TYPE": "STRING",
+                "PART_SIZE": "STRING",
+                "PART_RETAILPRICE": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_SUPPLIER": {
             "+column_types": {
-                "PART_ID": "VARCHAR",
-                "SUPPLIER_ID": "VARCHAR",
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_LINEITEM": {
             "+column_types": {
-                "ORDER_ID": "VARCHAR",
-                "PART_ID": "VARCHAR",
-                "SUPPLIER_ID": "VARCHAR",
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "NUMERIC",
+                "DISCOUNT": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
