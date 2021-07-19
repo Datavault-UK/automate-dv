@@ -147,7 +147,7 @@ def multi_source_hub_bigquery(context):
     context.seed_config = {
         "HUB": {
             "+column_types": {
-                "PART_PK": "BYTES",
+                "PART_PK": "STRING",
                 "PART_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"

@@ -20,7 +20,7 @@
 
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
-        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
     {%- elif target.type == 'snowflake' -%}
         {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
     {%- endif -%}
