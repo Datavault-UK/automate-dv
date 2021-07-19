@@ -1,14 +1,24 @@
 {%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
+
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
-
+{%- set columns = adapter.get_columns_in_relation(this) -%}
+{%- do log(("columns " ~ columns), True) -%}
 {%- for compare_col in compare_columns -%}
     {%- if target.type == 'bigquery' -%}
-        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+        [%- for src_col in source_columns -%]
+            {%- if src_col.name == compare_col -%}
+                {%- if src_col.date_type == 'BYTES' -%}
+                    {%- do compare_columns_processed.append("UPPER(TO_HEX({}))".format(src_col)) -%}
+                {%- else -%}
+                    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+                {%- endif -%}
+            {%- endif -%}
+        {# endfor #}
     {%- elif target.type == 'snowflake' -%}
         {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
