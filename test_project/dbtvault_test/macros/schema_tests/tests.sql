@@ -22,15 +22,14 @@
 
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
-            {%- do source_columns_processed.append("UPPER(TO_HEX({}))".format(source_col)) -%}
         {%- if source_col.data_type == 'BYTES' -%}
             {%- do log("this is bytes" ~source_col, true) -%}
-            {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
+            {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
         {%- else -%}
-            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
         {%- endif -%}
     {%- elif target.type == 'snowflake' -%}
-        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.name, source_col.name)) -%}
     {%- endif -%}
 {%- endfor %}
 
