@@ -29,7 +29,7 @@
             {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
         {%- endif -%}
     {%- elif target.type == 'snowflake' -%}
-        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.name, source_col.name)) -%}
     {%- endif -%}
 {%- endfor %}
 
