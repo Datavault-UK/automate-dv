@@ -41,7 +41,9 @@ fixture_registry = {
     "fixture.pit_sqlserver": pit_sqlserver,
     "fixture.pit_one_sat_sqlserver": pit_one_sat_sqlserver,
     "fixture.pit_two_sats_sqlserver": pit_two_sats_sqlserver,
-    "fixture.bridge_sqlserver": bridge_sqlserver
+    "fixture.bridge_sqlserver": bridge_sqlserver,
+    "fixture.multi_active_satellite_sqlserver": multi_active_satellite_sqlserver,
+    "fixture.multi_active_satellite_cycle_sqlserver": multi_active_satellite_cycle_sqlserver
 }
 
 

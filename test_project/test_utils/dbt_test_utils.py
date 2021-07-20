@@ -301,15 +301,21 @@ class DBTTestUtils:
         shutil.rmtree(target, ignore_errors=True)
 
     @staticmethod
-    def clean_csv():
+    def clean_csv(model_name=None):
         """
         Deletes csv files in csv folder.
         """
 
-        delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
+        if not model_name:
+            delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
+        else:
+            delete_files = [Path(f"{CSV_DIR}/{model_name.lower()}.csv")]
 
         for file in delete_files:
-            os.remove(file)
+            try:
+                os.remove(file)
+            except OSError:
+                pass
 
     @staticmethod
     def clean_models():
@@ -459,10 +465,10 @@ class DBTTestUtils:
                             expression = "CAST('" + column_data + "' AS " + column_type + ")"
                         sql_command = sql_command + expression + " AS " + column_name + " "
 
-        with open(FEATURE_MODELS_ROOT / f"{target_model_name}_SEED.sql", "w") as f:
+        with open(FEATURE_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
             f.write(sql_command)
 
-        return f"{target_model_name}_SEED"
+        return f"{target_model_name.lower()}_seed"
 
     def columns_from_context_table(self, table: Table) -> list:
         """

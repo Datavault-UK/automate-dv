@@ -29,7 +29,7 @@
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
-{%- set source_columns_string = compare_columns_processed | sort | join(", ") -%}
+{%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
 WITH actual_data AS (

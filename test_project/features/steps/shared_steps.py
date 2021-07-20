@@ -3,6 +3,7 @@ from behave.model import Table, Row
 import copy
 
 from test_project.test_utils.dbt_test_utils import DBTVAULTGenerator
+from test_project.test_utils.dbt_test_utils import DBTTestUtils
 
 use_step_matcher("parse")
 
@@ -308,6 +309,10 @@ def create_csv(context, table_name):
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
     """
+
+    # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
+    # For Snowflake deletion of seed file is not required but does not cause a problem if performed
+    DBTTestUtils.clean_csv(raw_stage_model_name.lower() + "_seed")
 
     context.raw_stage_model_name = raw_stage_model_name
 
