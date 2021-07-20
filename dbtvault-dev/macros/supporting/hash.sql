@@ -10,7 +10,7 @@
 
 {%- macro default__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = "||" -%}
+{%- set concat_string = '||' -%}
 {%- set null_placeholder_string = "^^" -%}
 
 {%- set hash = var('hash', 'MD5') -%}
@@ -65,8 +65,7 @@
 
             {%- set column_str = dbtvault.as_constant(column) -%}
             {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
-            {{- concat_string if not loop.last -}}
-
+            {{- ",'{}',".format(concat_string) if not loop.last -}}
             {%- if loop.last -%}
 
                 {% if is_hashdiff %}
