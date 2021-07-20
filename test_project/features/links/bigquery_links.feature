@@ -21,7 +21,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD] Load a stage table with duplicates into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
@@ -46,7 +46,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD] Load a simple stage table into a non-existent link and exclude records with NULL foreign keys
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
@@ -65,7 +65,7 @@ Feature: Links
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD-EMPTY] Load a simple stage table into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
@@ -85,7 +85,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD-EMPTY] Load a stage table with duplicates into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
