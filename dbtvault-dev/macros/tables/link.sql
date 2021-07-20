@@ -103,7 +103,7 @@ records_to_insert AS (
     FROM {{ ns.last_cte }} AS a
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON a.UPPER(TO_HEX({{ src_pk }})) = d.{{ src_pk }}
+    ON a.{{ src_pk }} = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
     {%- endif %}
 )
