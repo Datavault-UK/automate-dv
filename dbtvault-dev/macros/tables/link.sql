@@ -48,7 +48,9 @@ row_rank_{{ source_number }} AS (
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
     {%- endif %}
+    {%- if target.type == 'snowflake' -%}
     QUALIFY row_number = 1
+    {%- endif -%}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
@@ -56,6 +58,9 @@ row_rank_{{ source_number }} AS (
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
+    {% if target.type == 'bigquery' %}
+    WHERE row_number = 1
+    {% endif %}
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
@@ -98,7 +103,7 @@ records_to_insert AS (
     FROM {{ ns.last_cte }} AS a
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON a.{{ src_pk }} = d.{{ src_pk }}
+    ON a.UPPER(TO_HEX({{ src_pk }})) = d.{{ src_pk }}
     WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
     {%- endif %}
 )
