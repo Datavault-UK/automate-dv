@@ -19,7 +19,6 @@
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
         {%- if source_col.data_type == 'BYTES' -%}
