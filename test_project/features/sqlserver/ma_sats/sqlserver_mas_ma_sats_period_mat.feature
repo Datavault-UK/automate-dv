@@ -170,13 +170,6 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
     And I create the STG_CUSTOMER stage
     And I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
     # ================ LOAD 2 ===================
     When the RAW_STAGE is loaded
