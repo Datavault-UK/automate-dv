@@ -54,7 +54,7 @@
     {%- else -%}
      {%- set all_null = [] -%}
         {%- if is_hashdiff -%}
-            {{- "CAST({}(CONCAT(".format(hash_alg) | indent(4) -}}
+            {{- "UPPER(TO_HEX({}(CONCAT(".format(hash_alg) | indent(4) -}}
         {%- else -%}
             {{- "UPPER(TO_HEX({}(NULLIF(CONCAT(".format(hash_alg) | indent(4) -}}
         {%- endif -%}
@@ -69,7 +69,7 @@
             {%- if loop.last -%}
 
                 {% if is_hashdiff %}
-                    {{- "\n)) AS BYTES) AS {}".format(alias) -}}
+                    {{- "\n)))) AS {}".format(alias) -}}
                 {%- else -%}
                     {{- "\n), '{}')))) AS {}".format(all_null | join(""), alias) -}}
                 {%- endif -%}
