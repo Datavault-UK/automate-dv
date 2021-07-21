@@ -7,18 +7,25 @@
 {%- set source_columns_processed = [] -%}
 
 {%- for compare_col in compare_columns -%}
+    {%- do log(("Column type: {}, {} ".format~((compare_col, compare_col.name).data_type)), True) -%}
     {%- if compare_col.data_type == 'BYTES' -%}
-        {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS STRING".format(compare_col)) -%}
+        {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(compare_col, compare_col)) -%}
+    {%- else -%}
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
-    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
     {%- do columns_processed.append(compare_col) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-
+    {%- do log(("Column type: {}, {} ".format~((source_col, source_col.name).data_type)), True) -%}
+    {%- if source_col.data_type == 'BYTES' -%}
+        {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- else -%}
+        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
     {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}

@@ -273,9 +273,9 @@ def multi_source_link(context):
     context.seed_config = {
         "LINK": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BYTES",
-                "CUSTOMER_FK": "BYTES",
-                "NATION_FK": "BYTES",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -363,10 +363,10 @@ def t_link(context):
         },
         "T_LINK": {
             "+column_types": {
-                "TRANSACTION_PK": "BYTES",
-                "CUSTOMER_FK": "BYTES",
-                "ORDER_FK": "BYTES",
-                "TRANSACTION_NUMBER": "NUMERIC",
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
                 "AMOUNT": "NUMERIC",
