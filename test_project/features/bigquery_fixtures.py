@@ -48,9 +48,9 @@ def t_link_bigquery(context):
         },
         "T_LINK": {
             "+column_types": {
-                "TRANSACTION_PK": "BYTES",
-                "CUSTOMER_FK": "BYTES",
-                "ORDER_FK": "BYTES",
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
                 "TRANSACTION_NUMBER": "NUMERIC",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
