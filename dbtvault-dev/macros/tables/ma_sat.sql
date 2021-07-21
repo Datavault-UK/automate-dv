@@ -23,12 +23,14 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-WITH source_data_filtered AS (
+WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
     {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
+    ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} )
+        OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
     {%- for child_key in src_cdk %}
@@ -41,23 +43,7 @@ WITH source_data_filtered AS (
     {%- endif %}
 ),
 
-source_data AS (
-
-    SELECT s.*
-        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} ORDER BY {{ dbtvault.prefix([src_ldts], 's') }} ASC) AS source_rank
-    FROM source_data_filtered s
-    QUALIFY source_rank = 1
-),
-
 {% if dbtvault.is_any_incremental() %}
-
-source_data_with_counts AS (
-
-    SELECT b.*
-        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'b') }}, {{ dbtvault.prefix(cdk_cols, 'b') }} )
-            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}) AS source_count
-    FROM source_data b
-),
 
 {# Select latest records from satellite together with count of distinct hashdiffs for each hashkey #}
 latest_records AS (
@@ -95,7 +81,7 @@ matching_records AS (
 {# either where total counts differ or where match counts differ  #}
 satellite_update AS (
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
-    FROM source_data_with_counts AS stage
+    FROM source_data AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
     LEFT OUTER JOIN matching_records
@@ -103,7 +89,7 @@ satellite_update AS (
     WHERE (stage.source_count != latest_records.target_count
         OR COALESCE(matching_records.match_count, 0) != latest_records.target_count)
     {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
-        AND {{ dbtvault.prefix([src_ldts], 'stage') }} > {{ dbtvault.prefix([src_ldts], 'latest_records') }}
+        AND {{ dbtvault.prefix([src_ldts], 'stage') }} >= {{ dbtvault.prefix([src_ldts], 'latest_records') }}
     {%- endif %}
 ),
 
@@ -139,7 +125,6 @@ records_to_insert AS (
 SELECT * FROM records_to_insert
 
 {%- endmacro -%}
-
 {%- macro sqlserver__ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 
