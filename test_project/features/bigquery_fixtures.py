@@ -456,7 +456,7 @@ def satellite_bigquery(context):
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -468,7 +468,7 @@ def satellite_bigquery(context):
         },
         "SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
