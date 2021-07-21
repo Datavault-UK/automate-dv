@@ -52,7 +52,9 @@ latest_records AS (
         FROM source_data
     ) AS source_records
     ON {{ dbtvault.prefix([src_pk], 'current_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-    QUALIFY rank = 1
+    {%- if target.type == 'snowflake' -%}
+        QUALIFY rank = 1
+    {%- endif -%}
 ),
 {%- endif %}
 
@@ -62,8 +64,13 @@ records_to_insert AS (
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_pk], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
+    {% if target.type == 'snowflake' %}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
         OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {% elif target.type == 'bigquery' %}
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
+        OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {% endif %}
     {%- endif %}
 )
 
