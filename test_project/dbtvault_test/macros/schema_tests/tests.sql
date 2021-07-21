@@ -8,15 +8,22 @@
 
 {%- for compare_col in compare_columns -%}
 
-    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+    {%- endif -%}
     {%- do columns_processed.append(compare_col) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-
+    {%- if target.type == 'bigquery' -%}
+        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
     {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
@@ -30,12 +37,12 @@ expected_data AS (
     SELECT * FROM {{ ref(expected_seed) }}
 ),
 order_actual_data AS (
-    SELECT {{ source_columns_string }}
+    SELECT DISTINCT {{ source_columns_string }}
     FROM actual_data
     ORDER BY {{ source_columns_list | sort | join(", ") }}
 ),
 order_expected_data AS (
-    SELECT {{ compare_columns_string }}
+    SELECT DISTINCT {{ compare_columns_string }}
     FROM expected_data
     ORDER BY {{ compare_columns | sort | join(", ") }}
 ),
