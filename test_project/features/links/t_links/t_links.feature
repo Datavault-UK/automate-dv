@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Transactional Links
 
-  @fixture.t_link
+        @fixture.t_link_bigquery
   Scenario: [BASE-LOAD] Load a non-existent Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
