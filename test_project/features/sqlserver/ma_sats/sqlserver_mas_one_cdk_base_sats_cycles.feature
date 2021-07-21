@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites - Loading in cycles using separate manual loads of base satellites behaviour with one CDK
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -70,7 +70,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218')   | Jenny         | 17-214-233-1218   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_sqlserver
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
