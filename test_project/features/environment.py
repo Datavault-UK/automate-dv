@@ -1,5 +1,6 @@
 from behave.fixture import use_fixture_by_tag
 
+from test_project.features.bigquery_fixtures import eff_satellite_bigquery
 from test_project.features.fixtures import *
 from test_project.test_utils.dbt_test_utils import *
 
@@ -14,6 +15,7 @@ fixture_registry = {
     "fixture.satellite": satellite,
     "fixture.satellite_cycle": satellite_cycle,
     "fixture.eff_satellite": eff_satellite,
+    "fixture.eff_satellite_bigquery": eff_satellite_bigquery,
     "fixture.eff_satellite_testing_auto_end_dating": eff_satellite_testing_auto_end_dating,
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.t_link": t_link,
