@@ -50,7 +50,7 @@ Feature: Transactional Links
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 2019-09-19     | 2019-09-21 | SAP    |
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 2019-09-19     | 2019-09-21 | SAP    |
 
-  @fixture.t_link
+  @fixture.t_link_bigquery
   Scenario: [BASE-LOAD] Load an empty Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
