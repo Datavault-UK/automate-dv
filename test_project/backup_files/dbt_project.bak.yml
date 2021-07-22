@@ -42,11 +42,3 @@ seeds:
         BOOKING_FK: BYTES
         ORDER_FK: BYTES
         LOADDATE: DATE
-    temp:
-      link_expected_seed:
-        +column_types:
-          CUSTOMER_NATION_PK: STRING
-          CUSTOMER_FK: STRING
-          NATION_FK: STRING
-          LOAD_DATE: DATE
-          SOURCE: STRING

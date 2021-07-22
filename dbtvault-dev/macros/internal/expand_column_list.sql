@@ -7,7 +7,7 @@
 {%- endif -%}
 
 {%- set col_list = [] -%}
-
+{%- do log(columns, True) -%}
 {%- if dbtvault.is_list(columns) -%}
 
     {%- set columns = columns | reject("none") %}
