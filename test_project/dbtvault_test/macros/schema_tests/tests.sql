@@ -7,7 +7,6 @@
 {%- set source_columns_processed = [] -%}
 
 {%- for compare_col in compare_columns -%}
-    {%- do log(("Column type: {}, {} ".format~((compare_col, compare_col.name).data_type)), True) -%}
     {%- if compare_col.data_type == 'BYTES' -%}
         {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(compare_col, compare_col)) -%}
     {%- else -%}
@@ -18,7 +17,6 @@
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-    {%- do log(("Column type: {}, {} ".format~((source_col, source_col.name).data_type)), True) -%}
     {%- if source_col.data_type == 'BYTES' -%}
         {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
     {%- else -%}

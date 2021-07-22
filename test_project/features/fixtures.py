@@ -216,9 +216,9 @@ def single_source_link(context):
     context.seed_config = {
         "LINK": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BYTES",
-                "CUSTOMER_FK": "BYTES",
-                "NATION_FK": "BYTES",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }

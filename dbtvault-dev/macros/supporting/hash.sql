@@ -44,7 +44,7 @@
 {%- if target.type == 'bigquery' -%}
     {%- if columns is string -%}
         {%- set column_str = dbtvault.as_constant(columns) -%}
-        {{- "CAST(({}({})) AS BYTES) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
+        {{- "UPPER(TO_HEX(({}({})))) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
 
     {#- Else a list of columns to hash -#}
     {%- else -%}
