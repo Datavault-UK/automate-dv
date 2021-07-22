@@ -23,7 +23,7 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-WITH source_data AS (
+WITH source_data_filtered AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
     {%- else %}
@@ -43,6 +43,16 @@ WITH source_data AS (
     {%- endif %}
 ),
 
+source_data AS (
+    SELECT x.*
+    FROM (
+        SELECT s.*
+            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} ORDER BY {{ dbtvault.prefix([src_ldts], 's') }} ASC) AS source_rank
+        FROM source_data_filtered s
+    ) x
+    WHERE x.source_rank = 1
+),
+
 {% if dbtvault.is_any_incremental() %}
 
 {# Select latest records from satellite together with count of distinct hashdiffs for each hashkey #}
@@ -51,14 +61,14 @@ latest_records AS (
             OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'latest_selection') }}) AS target_count
     FROM (
         SELECT {{ dbtvault.prefix(cdk_cols, 'target_records', alias_target='target') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
-                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS rank_value
+            ,ROW_NUMBER() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}, {{ dbtvault.prefix(cdk_cols, 'target_records', alias_target='target') }}
+                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS rownum_value
         FROM {{ this }} AS target_records
         INNER JOIN
             (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
             FROM source_data AS source_pks) AS source_records
                 ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-        QUALIFY rank_value = 1
+        QUALIFY rownum_value = 1
         ) AS latest_selection
 ),
 
@@ -78,7 +88,7 @@ matching_records AS (
 ),
 
 {# Select stage records with PKs that exist in sat where hashdiffs differ #}
-{# either where total counts differ or where match counts differ  #}
+{# either where source / target counts differ or where match counts differ  #}
 satellite_update AS (
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage', alias_target='target') }}
     FROM source_data AS stage
@@ -87,7 +97,8 @@ satellite_update AS (
     LEFT OUTER JOIN matching_records
         ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
     WHERE (stage.source_count != latest_records.target_count
-        OR COALESCE(matching_records.match_count, 0) != latest_records.target_count)
+        OR COALESCE(matching_records.match_count, 0) != latest_records.target_count
+        OR stage.source_count != COALESCE(matching_records.match_count, 0))
     {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
         AND {{ dbtvault.prefix([src_ldts], 'stage') }} >= {{ dbtvault.prefix([src_ldts], 'latest_records') }}
     {%- endif %}
@@ -105,9 +116,9 @@ satellite_insert AS (
 {%- endif %}
 
 records_to_insert AS (
+    {#- Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
     SELECT {% if not dbtvault.is_any_incremental() %} DISTINCT {% endif %} {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
-    {#- Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     INNER JOIN satellite_update
         ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
