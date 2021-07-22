@@ -1,4 +1,4 @@
-@fixture.set_workdir
+ @fixture.set_workdir
 Feature: Satellites
 
   @fixture.satellite_bigquery

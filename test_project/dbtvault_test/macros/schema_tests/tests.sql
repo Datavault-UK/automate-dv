@@ -49,12 +49,12 @@ expected_data AS (
     SELECT * FROM {{ ref(expected_seed) }}
 ),
 order_actual_data AS (
-    SELECT DISTINCT {{ source_columns_string }}
+    SELECT {{ source_columns_string }}
     FROM actual_data
     ORDER BY {{ source_columns_list | sort | join(", ") }}
 ),
 order_expected_data AS (
-    SELECT DISTINCT {{ compare_columns_string }}
+    SELECT {{ compare_columns_string }}
     FROM expected_data
     ORDER BY {{ compare_columns | sort | join(", ") }}
 ),

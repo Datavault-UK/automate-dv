@@ -482,7 +482,7 @@ def satellite_bigquery(context):
 
 
 @fixture
-def satellite_cycle(context):
+def satellite_cycle_bigquery(context):
     """
     Define the structures and metadata to perform load cycles for satellites
     """
@@ -534,10 +534,10 @@ def satellite_cycle(context):
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BYTES",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
