@@ -1,6 +1,6 @@
 {%- macro get_adapter_type() -%}
 
-    {%- set macro = adapter.dispatch('get_adapter_type', packages = dbtvault.get_dbtvault_namespaces())() -%}
+    {%- set macro = adapter.dispatch('get_adapter_type', 'dbtvault')() -%}
 
     {%- do return(macro) -%}
 

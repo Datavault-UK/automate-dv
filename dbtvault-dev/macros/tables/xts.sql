@@ -1,5 +1,5 @@
 {%- macro xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
-    {{- adapter.dispatch('xts', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk,
+    {{- adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
                                                                                src_satellite=src_satellite,
                                                                                src_ldts=src_ldts,
                                                                                src_source=src_source,

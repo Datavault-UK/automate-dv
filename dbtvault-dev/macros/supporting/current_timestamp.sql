@@ -1,5 +1,5 @@
 {% macro current_timestamp() -%}
-  {{ return(adapter.dispatch('current_timestamp', packages = dbtvault.get_dbtvault_namespaces())()) }}
+  {{ return(adapter.dispatch('current_timestamp', 'dbtvault')()) }}
 {%- endmacro %}
 
 {% macro default__current_timestamp() %}
@@ -12,7 +12,7 @@
 
 
 {% macro current_timestamp_in_utc() -%}
-  {{ return(adapter.dispatch('current_timestamp_in_utc', packages = dbtvault.get_dbtvault_namespaces())()) }}
+  {{ return(adapter.dispatch('current_timestamp_in_utc', 'dbtvault')()) }}
 {%- endmacro %}
 
 {% macro default__current_timestamp_in_utc() %}

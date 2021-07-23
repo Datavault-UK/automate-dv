@@ -1,6 +1,6 @@
 {%- macro prefix(columns, prefix_str, alias_target) -%}
 
-    {{- adapter.dispatch('prefix', packages = dbtvault.get_dbtvault_namespaces())(columns=columns,
+    {{- adapter.dispatch('prefix', 'dbtvault')(columns=columns,
                                                                          prefix_str=prefix_str,
                                                                          alias_target=alias_target) -}}
 

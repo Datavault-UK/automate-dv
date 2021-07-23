@@ -1,11 +1,19 @@
-{%- macro test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{% test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
-    {{- adapter.dispatch('test_assert_data_equal_to_expected', packages = ['dbtvault_test'])(model=model,
-                                                                               unique_id=unique_id,
-                                                                               compare_columns=compare_columns,
-                                                                               expected_seed=expected_seed) -}}
+    {% set macro = adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test') %}
 
-{%- endmacro -%}
+    {{ macro(model, unique_id, compare_columns, expected_seed) }}
+
+{% endtest %}
+
+{#{%- macro test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}#}
+{##}
+{#    {{- adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test')(model=model,#}
+{#                                                                               unique_id=unique_id,#}
+{#                                                                               compare_columns=compare_columns,#}
+{#                                                                               expected_seed=expected_seed) -}}#}
+{##}
+{#{%- endmacro -%}#}
 
 {%- macro default__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
@@ -101,7 +109,7 @@ compare AS (
 // SELECT * FROM duplicates_not_in_expected
 // SELECT * FROM compare
 
-SELECT COUNT(*) AS differences FROM compare
+SELECT * FROM compare
 {%- endmacro -%}
 
 {%- macro sqlserver__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
@@ -199,5 +207,5 @@ compare AS (
 -- SELECT * FROM duplicates_not_in_expected ORDER BY {{ columns_string }}
 -- SELECT * FROM compare ORDER BY {{ columns_string }}
 
-SELECT COUNT(*) AS differences FROM compare
+SELECT * FROM compare
 {%- endmacro -%}

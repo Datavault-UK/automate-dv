@@ -472,9 +472,9 @@ class DBTTestUtils:
                 if column_data.lower() == "<null>" or column_data == "":
                     sql_command = sql_command + "NULL AS " + column_name + " "
                 else:
-                    if self.target == "snowflake":
+                    if self.get_target() == "snowflake":
                         sql_command = sql_command + "CAST('" + column_data + "' AS " + column_type + ") AS " + column_name + " "
-                    elif self.target == "sqlserver":
+                    elif self.get_target() == "sqlserver":
                         if column_type[0:6].upper() == "BINARY":
                             expression = "CONVERT(" + column_type + ", '" + column_data + "', 2)"
                         else:

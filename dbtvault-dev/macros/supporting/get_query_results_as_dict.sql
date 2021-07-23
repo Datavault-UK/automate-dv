@@ -1,5 +1,5 @@
 {% macro get_query_results_as_dict(query) %}
-    {{ return(adapter.dispatch('get_query_results_as_dict', packages = dbtvault.get_dbtvault_namespaces())(query)) }}
+    {{ return(adapter.dispatch('get_query_results_as_dict', 'dbtvault')(query)) }}
 {% endmacro %}
 
 {% macro default__get_query_results_as_dict(query) %}

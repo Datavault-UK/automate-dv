@@ -4,7 +4,7 @@
 
 
 {% macro get_schema_name() -%}
-    {{- adapter.dispatch('get_schema_name', packages = ['dbtvault_test'])() -}}
+    {{- adapter.dispatch('get_schema_name', 'dbtvault_test')() -}}
 {%- endmacro -%}
 
 {%- macro default__get_schema_name() -%}

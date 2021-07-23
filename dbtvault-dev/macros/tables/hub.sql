@@ -1,6 +1,6 @@
 {%- macro hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('hub', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_nk=src_nk,
+    {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk,
                                                                                src_ldts=src_ldts, src_source=src_source,
                                                                                source_model=source_model) -}}
 
