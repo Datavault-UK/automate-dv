@@ -660,73 +660,73 @@ def eff_satellite_testing_auto_end_dating_bigquery(context):
     context.seed_config = {
         "RAW_STAGE_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_ORDER_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_ORDER_CUSTOMER": {
             "+column_types": {
-                "ORDER_CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_ORDER_CUSTOMER": {
             "+column_types": {
-                "ORDER_CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
 
 
 @fixture
-def eff_satellite_multipart(context):
+def eff_satellite_multipart_bigquery(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
@@ -758,30 +758,30 @@ def eff_satellite_multipart(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "NATION_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
-                "PLATFORM_ID": "VARCHAR",
-                "ORGANISATION_ID": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "NATION_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "PLATFORM_ID": "STRING",
+                "ORGANISATION_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
-                "PLATFORM_PK": "BINARY(16)",
-                "ORGANISATION_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "NATION_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PLATFORM_PK": "STRING",
+                "ORGANISATION_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "NATION_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
