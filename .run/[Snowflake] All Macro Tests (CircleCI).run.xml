@@ -410,11 +410,10 @@
     </method>
   </configuration>
   <configuration default="false" name="[Snowflake] All Macro Tests (CircleCI)" type="tests" factoryName="py.test">
-    <module name="dbtvault-dev" />
+    <module name="dbtvault" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="false" />
     <envs>
-      <env name="TARGET" value="snowflake" />
       <env name="CIRCLE_JOB" value="MACRO" />
       <env name="CIRCLE_NODE_INDEX" value="0" />
     </envs>
