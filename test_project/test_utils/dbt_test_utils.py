@@ -4,12 +4,14 @@ import logging
 import os
 import re
 import shutil
+import sys
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
+import yaml
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
@@ -23,6 +25,7 @@ MODELS_ROOT = TESTS_DBT_ROOT / 'models'
 SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
 DBT_PROJECT_YML_FILE = TESTS_DBT_ROOT / 'dbt_project.yml'
+INVOKE_YML_FILE = PROJECT_ROOT / 'invoke.yml'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
 BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
@@ -43,7 +46,7 @@ class DBTTestUtils:
     def __init__(self, model_directory=None):
 
         # Setup logging
-        self.logger = logging.getLogger('dbt')
+        self.logger = logging.getLogger('dbtvault')
 
         logging.basicConfig(level=logging.INFO)
 
@@ -60,19 +63,26 @@ class DBTTestUtils:
         if model_directory:
             self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
+
+        available_targets = ['snowflake', 'bigquery', 'sqlserver']
+
+        target = self.get_target()
+
+        os.environ['TARGET'] = target
+
+        if target in available_targets:
+            self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+
+    def get_target(self):
+
+        if os.path.isfile(INVOKE_YML_FILE):
+
+            with open(INVOKE_YML_FILE) as config:
+                config_dict = yaml.safe_load(config)
+                return config_dict['target']
         else:
-            self.logger.warning('Model directory not set.')
-
-        if os.getenv('TARGET', '').lower() == 'snowflake':
-            target = 'snowflake'
-        elif os.getenv('TARGET', '').lower() == 'sqlserver':
-            target = 'sqlserver'
-        else:
-            target = None
-
-        self.target = target
-
-        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+            self.logger.error(f"'{INVOKE_YML_FILE}' not found. Please run 'inv setup'")
+            sys.exit(0)
 
     @staticmethod
     def set_dynamic_properties_for_comparison(target):
@@ -93,6 +103,12 @@ class DBTTestUtils:
             return {
                 'SCHEMA_NAME': schema_name,
                 'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
+            }
+        elif target == 'bigquery':
+            schema_name = f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
+
+            return {
+                "DATASET_NAME": schema_name
             }
         elif target == 'sqlserver':
             if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
