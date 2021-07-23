@@ -144,6 +144,7 @@ records_to_insert AS (
 SELECT * FROM records_to_insert
 
 {%- endmacro -%}
+
 {%- macro sqlserver__ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
 
@@ -273,9 +274,9 @@ satellite_insert AS (
 {%- endif %}
 
 records_to_insert AS (
+    {#- Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
     SELECT {% if not dbtvault.is_any_incremental() %} DISTINCT {% endif %} {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
-    {#- Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     INNER JOIN satellite_update
         ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}

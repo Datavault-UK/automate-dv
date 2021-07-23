@@ -1,10 +1,10 @@
-{% test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
-    {% set macro = adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test') %}
+    {%- set macro = adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test') -%}
 
     {{ macro(model, unique_id, compare_columns, expected_seed) }}
 
-{% endtest %}
+{%- endtest -%}
 
 {#{%- macro test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}#}
 {##}
