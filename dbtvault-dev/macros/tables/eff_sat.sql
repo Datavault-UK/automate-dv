@@ -82,7 +82,7 @@ latest_closed AS (
     WHERE {% if target.type == 'snowflake' %}
         TO_DATE(d.{{ src_end_date }}) = TO_DATE('9999-12-31')
         {% elif target.type == 'bigquery' %}
-        CAST(d.{{ src_end_date }} AS DATE) = CAST('9999-12-31' AS DATE)
+        CAST(d.{{ src_end_date }} AS DATE) != CAST('9999-12-31' AS DATE)
         {% endif %}
 ),
 
@@ -140,10 +140,10 @@ new_closed_records AS (
 
 records_to_insert AS (
     SELECT * FROM new_open_records
-    UNION ALL
+    UNION DISTINCT
     SELECT * FROM new_reopened_records
     {%- if is_auto_end_dating %}
-    UNION ALL
+    UNION DISTINCT
     SELECT * FROM new_closed_records
     {%- endif %}
 )
