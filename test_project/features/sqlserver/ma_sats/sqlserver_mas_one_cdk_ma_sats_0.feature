@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one CDK
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -35,7 +35,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -78,7 +78,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD-EMPTY] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
@@ -112,7 +112,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | Dom           | 17-214-233-1227 | md5('1004\|\|DOM\|\|17-214-233-1227')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
@@ -155,7 +155,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | Dom           | 17-214-233-1227 | md5('1004\|\|DOM\|\|17-214-233-1227')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
@@ -191,7 +191,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1005') | <null>        | 17-214-233-1218 | md5('1005\|\|^^\|\|17-214-233-1218')    | 1993-01-01     | 1993-01-01 | *      |
       | md5('1005') | Frida         | 17-214-233-1228 | md5('1005\|\|FRIDA\|\|17-214-233-1228') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load data with timestamps into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data

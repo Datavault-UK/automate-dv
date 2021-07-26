@@ -7,7 +7,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE   | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211  | 123       | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 17-214-233-1212  | 123       | 2019-05-04     | 2019-05-04 | *      |
@@ -145,7 +145,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE is loaded
+    When the RAW_STAGE_TWO_CDK is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE    | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211   | 123       | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 17-214-233-1212   | 123       | 2019-05-04     | 2019-05-04 | *      |

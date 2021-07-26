@@ -3,7 +3,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
   This file includes tests for debugging purposes
   It tests a series of loading cycles over an increasing number of days, i.e. one to four days
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] 1-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -49,7 +49,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1012') | md5('1012\|\|ALBERT\|\|17-214-233-1235')  | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
 
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] 2-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -126,7 +126,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1242')   | Jenny         | 17-214-233-1242 | 2019-01-02     | 2019-01-02 | *      |
 
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] 3-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -224,7 +224,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1006') | md5('1006\|\|FREIA\|\|17-214-233-1212')   | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] 4-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty

@@ -1927,7 +1927,7 @@ def multi_active_satellite_sqlserver(context):
         "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         },
         "STG_CUSTOMER_TWO_CDK": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -1947,7 +1947,7 @@ def multi_active_satellite_sqlserver(context):
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         }
     }
 
@@ -2213,7 +2213,7 @@ def multi_active_satellite_cycle_sqlserver(context):
         "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         },
         "STG_CUSTOMER_TWO_CDK": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -2233,7 +2233,7 @@ def multi_active_satellite_cycle_sqlserver(context):
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         }
     }
 

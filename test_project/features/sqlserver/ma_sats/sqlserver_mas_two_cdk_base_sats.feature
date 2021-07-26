@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
@@ -20,7 +20,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | Dom           | 17-214-233-1217 | 123       | 1993-01-01     | 1993-01-01 | *      |
 
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
@@ -43,7 +43,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|123')  | Chad          | 17-214-233-1216 | 123       | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | Dom           | 17-214-233-1217 | 123       | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD-EMPTY] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
@@ -61,7 +61,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1003') | Chad          | 17-214-233-1216 | 123       | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|123')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | 123       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
@@ -84,7 +84,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1003') | Chad          | 17-214-233-1216 | 123       | md5('1003\|\|CHAD\|\|17-214-233-1216\|\|123')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | 123       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some records have NULL PK(s), CDK(s) and Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
@@ -114,7 +114,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1004') | Dom           | 17-214-233-1216 | 125       | md5('1004\|\|DOM\|\|17-214-233-1216\|\|125')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1005') | <null>        | 17-214-233-1218 | 123       | md5('1005\|\|^^\|\|17-214-233-1218\|\|123')    | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where all records load
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -137,7 +137,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1005') | Eric          | 17-214-233-1217 | 123       | md5('1005\|\|ERIC\|\|17-214-233-1217\|\|123')  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1214 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some records overlap
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -162,7 +162,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1005') | Eric          | 17-214-233-1217 | 123       | md5('1005\|\|ERIC\|\|17-214-233-1217\|\|123')  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1217 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1217\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -191,7 +191,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1006') | Frida         | 17-214-233-1216 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|123') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1008') | Jenny         | 17-214-233-1218 | 123       | md5('1008\|\|JENNY\|\|17-214-233-1218\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -216,7 +216,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with two CDKs
       | md5('1004') | Dom           | 17-214-233-1214 | 123       | md5('1004\|\|DOM\|\|17-214-233-1214\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1216 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_sqlserver
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
