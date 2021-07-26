@@ -8,8 +8,8 @@
 
     {% set macro = adapter.dispatch('replace_placeholder_with_rank_filter',
                                     'dbtvault')(core_sql=core_sql,
-                                                                                   rank_column=rank_column,
-                                                                                   rank_iteration=rank_iteration) %}
+                                                rank_column=rank_column,
+                                                rank_iteration=rank_iteration) %}
     {% do return(macro) %}
 {%- endmacro %}
 

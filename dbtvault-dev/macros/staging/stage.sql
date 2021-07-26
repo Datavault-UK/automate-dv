@@ -5,10 +5,10 @@
     {%- endif -%}
 
     {{- adapter.dispatch('stage', 'dbtvault')(include_source_columns=include_source_columns,
-                                                                                 source_model=source_model,
-                                                                                 hashed_columns=hashed_columns,
-                                                                                 derived_columns=derived_columns,
-                                                                                 ranked_columns=ranked_columns) -}}
+                                              source_model=source_model,
+                                              hashed_columns=hashed_columns,
+                                              derived_columns=derived_columns,
+                                              ranked_columns=ranked_columns) -}}
 {%- endmacro -%}
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, ranked_columns) -%}

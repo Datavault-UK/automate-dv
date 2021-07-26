@@ -8,11 +8,11 @@
 
     {% set macro = adapter.dispatch('replace_placeholder_with_period_filter',
                                     'dbtvault')(core_sql=core_sql,
-                                                                                   timestamp_field=timestamp_field,
-                                                                                   start_timestamp=start_timestamp,
-                                                                                   stop_timestamp=stop_timestamp,
-                                                                                   offset=offset,
-                                                                                   period=period) %}
+                                                timestamp_field=timestamp_field,
+                                                start_timestamp=start_timestamp,
+                                                stop_timestamp=stop_timestamp,
+                                                offset=offset,
+                                                period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
@@ -52,12 +52,12 @@
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
                                     'dbtvault')(target_cols_csv=target_cols_csv,
-                                                                                   base_sql=base_sql,
-                                                                                   timestamp_field=timestamp_field,
-                                                                                   period=period,
-                                                                                   start_timestamp=start_timestamp,
-                                                                                   stop_timestamp=stop_timestamp,
-                                                                                   offset=offset) %}
+                                                base_sql=base_sql,
+                                                timestamp_field=timestamp_field,
+                                                period=period,
+                                                start_timestamp=start_timestamp,
+                                                stop_timestamp=stop_timestamp,
+                                                offset=offset) %}
     {% do return(macro) %}
 {%- endmacro %}
 
@@ -93,11 +93,11 @@
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     'dbtvault')(target_schema=target_schema,
-                                                                                   target_table=target_table,
-                                                                                   timestamp_field=timestamp_field,
-                                                                                   start_date=start_date,
-                                                                                   stop_date=stop_date,
-                                                                                   period=period) %}
+                                                target_table=target_table,
+                                                timestamp_field=timestamp_field,
+                                                start_date=start_date,
+                                                stop_date=stop_date,
+                                                period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -169,8 +169,8 @@
 
     {% set macro = adapter.dispatch('get_period_of_load',
                                     'dbtvault')(period=period,
-                                                                                   offset=offset,
-                                                                                   start_timestamp=start_timestamp) %}
+                                                offset=offset,
+                                                start_timestamp=start_timestamp) %}
 
     {% do return(macro) %}
 {%- endmacro %}
