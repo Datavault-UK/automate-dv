@@ -35,14 +35,19 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
-latest_records AS (
+latest_records_unranked AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_num
     FROM {{ this }} AS b
-    QUALIFY row_num = 1
+),
+
+latest_records AS (
+    SELECT *
+    FROM latest_records_unranked
+    WHERE row_num = 1
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
@@ -103,7 +108,8 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-{#- end if is_auto_end_dating -#}
+{#-
+end if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
@@ -123,8 +129,9 @@ records_to_insert AS (
     FROM source_data AS i
 )
 
-{#- end if not dbtvault.is_any_incremental() -#}
+{#-
+end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
-SELECT * FROM records_to_insert
-{%- endmacro -%}
+SELECT *
+FROM records_to_insert {%- endmacro -%}

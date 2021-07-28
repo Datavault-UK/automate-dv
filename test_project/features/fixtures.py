@@ -786,7 +786,7 @@ def eff_satellite_multipart(context):
         }
     }
 
-
+@fixture
 def bridge(context):
     """
     Define the structures and metadata to perform bridge load

@@ -1,7 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from test_project.features.bigquery_fixtures import single_source_hub_bigquery, multi_source_hub_bigquery, \
-    single_source_link_bigquery, multi_source_link_bigquery
+    single_source_link_bigquery, multi_source_link_bigquery, bridge_bigquery
 from test_project.features.fixtures import *
 from test_project.test_utils.dbt_test_utils import *
 
@@ -30,6 +30,7 @@ fixture_registry = {
     "fixture.pit_one_sat": pit_one_sat,
     "fixture.pit_two_sats": pit_two_sats,
     "fixture.bridge": bridge,
+    "fixture.bridge_bigquery": bridge_bigquery,
     "fixture.cycle": cycle,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
