@@ -226,7 +226,8 @@ all_rows AS (
 ),
 
 {# Select most recent set of relationship key(s) for each as of date -#}
-candidate_rows AS (
+
+candidate_rows_unranked AS (
     SELECT *,
         ROW_NUMBER() OVER (
             PARTITION BY AS_OF_DATE,
@@ -249,7 +250,17 @@ candidate_rows AS (
                 {%- endfor %}
             ) AS row_num
     FROM all_rows
-    QUALIFY row_num = 1
+
+
+),
+
+
+candidate_rows AS (
+    SELECT *
+    FROM candidate_rows_unranked
+    WHERE row_num = 1
+
+
 ),
 
 bridge AS (
@@ -264,9 +275,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE TO_DATE({{ bridge_end_date }}) = TO_DATE('{{ max_date }}')
+    WHERE CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
             {%- else %}
-        AND TO_DATE({{ bridge_end_date }}) = TO_DATE('{{ max_date }}')
+        AND CAST{{ bridge_end_date }} AS DATETIME) = CAST(('{{ max_date }}' AS DATETIME)
             {%- endif -%}
         {%- endfor %}
 )
