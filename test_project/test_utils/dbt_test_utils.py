@@ -467,19 +467,20 @@ class DBTTestUtils:
                     first_column = False
                 else:
                     sql_command = sql_command + ", "
+
                 column_data = feature_data[row_number][column_name]
                 column_type = column_types[column_name]
+
                 if column_data.lower() == "<null>" or column_data == "":
-                    sql_command = sql_command + "NULL AS " + column_name + " "
+                    column_data_for_sql = "NULL"
                 else:
-                    if self.get_target() == "snowflake":
-                        sql_command = sql_command + "CAST('" + column_data + "' AS " + column_type + ") AS " + column_name + " "
-                    elif self.get_target() == "sqlserver":
-                        if column_type[0:6].upper() == "BINARY":
-                            expression = "CONVERT(" + column_type + ", '" + column_data + "', 2)"
-                        else:
-                            expression = "CAST('" + column_data + "' AS " + column_type + ")"
-                        sql_command = sql_command + expression + " AS " + column_name + " "
+                    column_data_for_sql = f"'{column_data}'"
+
+                expression = "CAST(" + column_data_for_sql + " AS " + column_type + ")"
+                if  self.get_target() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                        expression = "CONVERT(" + column_type + ", " + column_data_for_sql + ", 2)"
+
+                sql_command = sql_command + expression + " AS " + column_name + " "
 
         with open(FEATURE_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
             f.write(sql_command)
