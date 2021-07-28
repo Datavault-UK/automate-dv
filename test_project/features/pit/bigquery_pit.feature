@@ -74,7 +74,7 @@ Feature: pit
       | md5('1001') | 2019-01-04 00:00:00.000000 | md5('1001')             | 2018-06-01 00:00:00.000000 | md5('1001')           | 2019-01-04 00:00:00.000000 | md5('1001')             | 2019-01-04 00:00:00.000000 |
 
 
-  @fixture.pit
+  @fixture.pit_bigquery
   Scenario: Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
