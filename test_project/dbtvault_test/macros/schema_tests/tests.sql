@@ -7,8 +7,11 @@
 {%- set source_columns_processed = [] -%}
 
 {%- for compare_col in compare_columns -%}
-
-    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+    {%- endif -%}
     {%- do columns_processed.append(compare_col) -%}
 
 {%- endfor %}
@@ -16,7 +19,11 @@
 {%- for source_col in source_columns -%}
 
     {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- if target.type == 'bigquery' -%}
+            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
@@ -41,14 +48,16 @@ order_expected_data AS (
 ),
 compare_e_to_a AS (
     SELECT * FROM order_expected_data
-    EXCEPT
+    EXCEPT DISTINCT
     SELECT * FROM order_actual_data
 ),
+
 compare_a_to_e AS (
     SELECT * FROM order_actual_data
-    EXCEPT
+    EXCEPT DISTINCT
     SELECT * FROM order_expected_data
 ),
+
 duplicates_actual AS (
     SELECT {{ columns_string }}, COUNT(*) AS COUNT
     FROM order_actual_data
@@ -70,27 +79,28 @@ duplicates_not_in_expected AS (
     SELECT {{ columns_string }}
     FROM duplicates_actual
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
-),
+)
+,
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM compare_e_to_a
+    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
+    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM duplicates_not_in_expected
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
 )
 
 -- For manual debugging
-// SELECT * FROM order_actual_data
-// SELECT * FROM order_expected_data
-// SELECT * FROM compare_e_to_a
-// SELECT * FROM compare_a_to_e
-// SELECT * FROM duplicates_actual
-// SELECT * FROM duplicates_expected
-// SELECT * FROM duplicates_not_in_actual
-// SELECT * FROM duplicates_not_in_expected
-// SELECT * FROM compare
+-- SELECT * FROM order_actual_data
+-- SELECT * FROM order_expected_data
+-- SELECT * FROM compare_e_to_a
+-- SELECT * FROM compare_a_to_e
+-- SELECT * FROM duplicates_actual
+-- SELECT * FROM duplicates_expected
+-- SELECT * FROM duplicates_not_in_actual
+-- SELECT * FROM duplicates_not_in_expected
+-- SELECT * FROM compare
 
 SELECT * FROM compare
 {%- endtest -%}
