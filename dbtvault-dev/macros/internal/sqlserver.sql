@@ -1,3 +1,5 @@
+# Overrides for dbt-sqlserver adapter functionality
+
 {% macro sqlserver__create_table_as(temporary, relation, sql) -%}
    {%- set as_columnstore = config.get('as_columnstore', default=true) -%}
    {% set tmp_relation = relation.incorporate(
@@ -29,3 +31,74 @@
    {% endif %}
 
 {% endmacro %}
+
+# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0
+{#{% macro sqlserver__get_test_sql(main_sql, fail_calc, warn_if, error_if, limit) -%}#}
+{##}
+{#    SELECT {{ "TOP (" ~ limit ~ ")" if limit != none }}#}
+{#      {{ fail_calc }} AS failures,#}
+{#      CAST(CASE WHEN {{ fail_calc}} {{ warn_if}} THEN 1 ELSE 0 END AS bit) AS should_warn,#}
+{#      CAST(CASE WHEN {{ fail_calc}} {{ warn_if}} THEN 1 ELSE 0 END AS bit) AS should_error#}
+{#    FROM (#}
+{#      {{ main_sql }}#}
+{#    ) AS dbt_internal_test#}
+{##}
+{#{%- endmacro %}#}
+
+{%- materialization test, adapter='sqlserver' -%}
+
+  {% set relations = [] %}
+
+  {% if should_store_failures() %}
+
+    {% set identifier = model['alias'] %}
+    {% set old_relation = adapter.get_relation(database=database, schema=schema, identifier=identifier) %}
+    {% set target_relation = api.Relation.create(
+        identifier=identifier, schema=schema, database=database, type='table') -%} %}
+
+    {% if old_relation %}
+        {% do adapter.drop_relation(old_relation) %}
+    {% endif %}
+
+    {% call statement(auto_begin=True) %}
+        {{ create_table_as(False, target_relation, sql) }}
+    {% endcall %}
+
+    {% do relations.append(target_relation) %}
+
+    {% set main_sql %}
+        SELECT *
+        FROM {{ target_relation }}
+    {% endset %}
+
+    {{ adapter.commit() }}
+
+  {% else %}
+
+      {% set main_sql = sql %}
+
+  {% endif %}
+
+  {% set limit = config.get('limit') %}
+  {% set fail_calc = config.get('fail_calc') %}
+  {% set warn_if = config.get('warn_if') %}
+  {% set error_if = config.get('error_if') %}
+
+  {% call statement('main', fetch_result=True) -%}
+
+# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0
+{#    {{ get_test_sql(main_sql, fail_calc, warn_if, error_if, limit) }}#}
+
+    SELECT {{ "TOP (" ~ limit ~ ")" if limit != none }}
+      {{ fail_calc }} AS failures,
+      CAST(CASE WHEN {{ fail_calc}} {{ warn_if}} THEN 1 ELSE 0 END AS bit) AS should_warn,
+      CAST(CASE WHEN {{ fail_calc}} {{ warn_if}} THEN 1 ELSE 0 END AS bit) AS should_error
+    FROM (
+      {{ main_sql }}
+    ) AS dbt_internal_test
+
+  {%- endcall %}
+
+  {{ return({'relations': relations}) }}
+
+{%- endmaterialization -%}
