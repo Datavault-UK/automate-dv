@@ -476,9 +476,10 @@ class DBTTestUtils:
                 else:
                     column_data_for_sql = f"'{column_data}'"
 
-                expression = "CAST(" + column_data_for_sql + " AS " + column_type + ")"
                 if  self.get_target() == "sqlserver" and column_type[0:6].upper() == "BINARY":
-                        expression = "CONVERT(" + column_type + ", " + column_data_for_sql + ", 2)"
+                    expression = "CONVERT(" + column_type + ", " + column_data_for_sql + ", 2)"
+                else:
+                    expression = "CAST(" + column_data_for_sql + " AS " + column_type + ")"
 
                 sql_command = sql_command + expression + " AS " + column_name + " "
 
