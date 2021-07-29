@@ -7,8 +7,18 @@
 {%- set source_columns_processed = [] -%}
 
 {%- for compare_col in compare_columns -%}
+
     {%- if target.type == 'bigquery' -%}
-        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+        {%- for src in source_columns -%}
+            {%- if src.name == compare_col -%}
+                {%- if src.data_type == 'BYTES' -%}
+                    {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(compare_col, compare_col)) -%}
+                {%- else -%}
+                    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+                {%- endif -%}
+            {%- endif -%}
+        {%- endfor -%}
+
     {%- elif target.type == 'snowflake' -%}
         {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
@@ -17,8 +27,17 @@
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-
+    {%- if target.type == 'bigquery' -%}
+        {%- if source_col.data_type == 'BYTES' -%}
+            {% do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
+        {%- else -%}
+            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+        {%- endif -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
     {%- do source_columns_list.append(source_col.column) -%}
+
     {%- if target.type == 'bigquery' -%}
             {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
     {%- elif target.type == 'snowflake' -%}
