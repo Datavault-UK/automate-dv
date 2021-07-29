@@ -1,24 +1,16 @@
 {%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
+
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
 
+{%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
-
     {%- if target.type == 'bigquery' -%}
-        {%- for src in source_columns -%}
-            {%- if src.name == compare_col -%}
-                {%- if src.data_type == 'BYTES' -%}
-                    {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(compare_col, compare_col)) -%}
-                {%- else -%}
-                    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
-                {%- endif -%}
-            {%- endif -%}
-        {%- endfor -%}
-
+        {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
     {%- elif target.type == 'snowflake' -%}
         {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
@@ -27,21 +19,16 @@
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
+    {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
         {%- if source_col.data_type == 'BYTES' -%}
-            {% do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
+            {%- do log("this is bytes" ~ source_col, true) -%}
+            {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
         {%- else -%}
-            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
+            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
         {%- endif -%}
     {%- elif target.type == 'snowflake' -%}
-        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
-    {%- endif -%}
-    {%- do source_columns_list.append(source_col.column) -%}
-
-    {%- if target.type == 'bigquery' -%}
-            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
-    {%- elif target.type == 'snowflake' -%}
-        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.name, source_col.name)) -%}
     {%- endif -%}
 {%- endfor %}
 
