@@ -22,7 +22,7 @@
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
         {%- if source_col.data_type == 'BYTES' -%}
-            {%- do log("this is bytes" ~source_col, true) -%}
+            {%- do log("this is bytes" ~ source_col, true) -%}
             {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
         {%- else -%}
             {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
