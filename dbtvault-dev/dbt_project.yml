@@ -17,3 +17,7 @@ clean-targets:
 
 vars:
   hash: MD5
+
+dispatch:
+  - macro_namespace: dbt_sqlserver
+    search_order: ['dbtvault', 'dbt_sqlserver']
