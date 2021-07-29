@@ -32,8 +32,8 @@ def sha(context):
 
             for c, t in config[k]["+column_types"].items():
 
-                if t == "BINARY(16)":
-                    config[k]["+column_types"][c] = "BINARY(32)"
+                if t == "BYTES":
+                    config[k]["+column_types"][c] = "BYTES"
 
     else:
         raise ValueError("sha fixture used before vault structure fixture.")
@@ -49,25 +49,25 @@ def staging(context):
 
         "STG_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
+                "SOURCE": "STRING",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE"
             }
         },
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -147,44 +147,44 @@ def multi_source_hub(context):
     context.seed_config = {
         "HUB": {
             "+column_types": {
-                "PART_PK": "BINARY(16)",
-                "PART_ID": "VARCHAR",
+                "PART_PK": "BYTES",
+                "PART_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_PARTS": {
             "+column_types": {
-                "PART_ID": "VARCHAR",
-                "PART_NAME": "VARCHAR",
-                "PART_TYPE": "VARCHAR",
-                "PART_SIZE": "VARCHAR",
+                "PART_ID": "STRING",
+                "PART_NAME": "STRING",
+                "PART_TYPE": "STRING",
+                "PART_SIZE": "STRING",
                 "PART_RETAILPRICE": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_SUPPLIER": {
             "+column_types": {
-                "PART_ID": "VARCHAR",
-                "SUPPLIER_ID": "VARCHAR",
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
                 "AVAILQTY": "FLOAT",
                 "SUPPLYCOST": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_LINEITEM": {
             "+column_types": {
-                "ORDER_ID": "VARCHAR",
-                "PART_ID": "VARCHAR",
-                "SUPPLIER_ID": "VARCHAR",
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
                 "EXTENDED_PRICE": "NUMBER(38,2)",
                 "DISCOUNT": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -216,22 +216,22 @@ def single_source_link(context):
     context.seed_config = {
         "LINK": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -273,44 +273,44 @@ def multi_source_link(context):
     context.seed_config = {
         "LINK": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_SAP": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_CRM": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_WEB": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -351,14 +351,14 @@ def t_link(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
                 "TRANSACTION_DATE": "DATE",
-                "TYPE": "VARCHAR",
+                "TYPE": "STRING",
                 "AMOUNT": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "T_LINK": {
@@ -368,11 +368,11 @@ def t_link(context):
                 "ORDER_FK": "BINARY(16)",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
                 "TRANSACTION_DATE": "DATE",
-                "TYPE": "VARCHAR",
+                "TYPE": "STRING",
                 "AMOUNT": "NUMBER(38,2)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
