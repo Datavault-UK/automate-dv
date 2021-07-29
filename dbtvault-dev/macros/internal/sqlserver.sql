@@ -32,7 +32,7 @@
 
 {% endmacro %}
 
-# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0
+{# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0 #}
 {#{% macro sqlserver__get_test_sql(main_sql, fail_calc, warn_if, error_if, limit) -%}#}
 {##}
 {#    SELECT {{ "TOP (" ~ limit ~ ")" if limit != none }}#}
@@ -86,7 +86,7 @@
 
   {% call statement('main', fetch_result=True) -%}
 
-# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0
+{# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0 #}
 {#    {{ get_test_sql(main_sql, fail_calc, warn_if, error_if, limit) }}#}
 
     SELECT {{ "TOP (" ~ limit ~ ")" if limit != none }}
