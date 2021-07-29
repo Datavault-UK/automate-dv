@@ -100,7 +100,7 @@ new_rows_as_of AS (
     SELECT AS_OF_DATE
     FROM as_of
     WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    UNION DISINCT
+    UNION DISTINCT
     SELECT as_of_date
     FROM as_of_grain_new_entries
 ),
