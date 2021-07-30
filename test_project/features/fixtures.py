@@ -159,7 +159,7 @@ def multi_source_hub(context):
                 "PART_NAME": "STRING",
                 "PART_TYPE": "STRING",
                 "PART_SIZE": "STRING",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "PART_RETAILPRICE": "NUMERIC",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -169,7 +169,7 @@ def multi_source_hub(context):
                 "PART_ID": "STRING",
                 "SUPPLIER_ID": "STRING",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "NUMERIC",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -181,8 +181,8 @@ def multi_source_hub(context):
                 "SUPPLIER_ID": "STRING",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "NUMERIC",
+                "DISCOUNT": "NUMERIC",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -353,23 +353,23 @@ def t_link(context):
             "+column_types": {
                 "CUSTOMER_ID": "STRING",
                 "ORDER_ID": "STRING",
-                "TRANSACTION_NUMBER": "NUMBER(38,0)",
+                "TRANSACTION_NUMBER": "NUMERIC",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
-                "AMOUNT": "NUMBER(38,2)",
+                "AMOUNT": "NUMERIC",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         },
         "T_LINK": {
             "+column_types": {
-                "TRANSACTION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "TRANSACTION_NUMBER": "NUMBER(38,0)",
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
-                "AMOUNT": "NUMBER(38,2)",
+                "AMOUNT": "NUMERIC",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -436,46 +436,46 @@ def satellite(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -524,23 +524,23 @@ def satellite_cycle(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -576,24 +576,24 @@ def eff_satellite(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "ORDER_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "ORDER_PK": "BYTES",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -660,66 +660,66 @@ def eff_satellite_testing_auto_end_dating(context):
     context.seed_config = {
         "RAW_STAGE_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_ORDER_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "ORDER_PK": "BYTES",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_ORDER_CUSTOMER": {
             "+column_types": {
-                "ORDER_CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "ORDER_CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "ORDER_PK": "BYTES",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "ORDER_PK": "BYTES",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_ORDER_CUSTOMER": {
             "+column_types": {
-                "ORDER_CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
+                "ORDER_CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "ORDER_PK": "BYTES",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -758,30 +758,30 @@ def eff_satellite_multipart(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "NATION_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
-                "PLATFORM_ID": "VARCHAR",
-                "ORGANISATION_ID": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "NATION_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "PLATFORM_ID": "STRING",
+                "ORGANISATION_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "ORDER_PK": "BINARY(16)",
-                "PLATFORM_PK": "BINARY(16)",
-                "ORGANISATION_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "NATION_PK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "BYTES",
+                "ORDER_PK": "BYTES",
+                "PLATFORM_PK": "BYTES",
+                "ORGANISATION_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "NATION_PK": "BYTES",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -1044,100 +1044,100 @@ def bridge(context):
     context.seed_config = {
         "RAW_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_ORDER_PRODUCT": {
             "+column_types": {
-                "ORDER_ID": "VARCHAR",
-                "PRODUCT_ID": "VARCHAR",
+                "ORDER_ID": "STRING",
+                "PRODUCT_ID": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_PRODUCT_COMPONENT": {
             "+column_types": {
-                "PRODUCT_ID": "VARCHAR",
-                "COMPONENT_ID": "VARCHAR",
+                "PRODUCT_ID": "STRING",
+                "COMPONENT_ID": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "BYTES",
+                "CUSTOMER_FK": "BYTES",
+                "ORDER_FK": "BYTES",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_ORDER_PRODUCT": {
             "+column_types": {
-                "ORDER_PRODUCT_PK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
+                "ORDER_PRODUCT_PK": "BYTES",
+                "ORDER_FK": "BYTES",
+                "PRODUCT_FK": "BYTES",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_PRODUCT_COMPONENT": {
             "+column_types": {
-                "PRODUCT_COMPONENT_PK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
-                "COMPONENT_FK": "BINARY(16)",
+                "PRODUCT_COMPONENT_PK": "BYTES",
+                "PRODUCT_FK": "BYTES",
+                "COMPONENT_FK": "BYTES",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_ORDER_PK": "BYTES",
+                "CUSTOMER_FK": "BYTES",
+                "ORDER_FK": "BYTES",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_ORDER_PRODUCT": {
             "+column_types": {
-                "ORDER_PRODUCT_PK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
+                "ORDER_PRODUCT_PK": "BYTES",
+                "ORDER_FK": "BYTES",
+                "PRODUCT_FK": "BYTES",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_PRODUCT_COMPONENT": {
             "+column_types": {
-                "PRODUCT_COMPONENT_PK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
-                "COMPONENT_FK": "BINARY(16)",
+                "PRODUCT_COMPONENT_PK": "BYTES",
+                "PRODUCT_FK": "BYTES",
+                "COMPONENT_FK": "BYTES",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "AS_OF_DATE": {
@@ -1147,26 +1147,26 @@ def bridge(context):
         },
         "BRIDGE_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
                 "AS_OF_DATE": "DATETIME",
-                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "LINK_CUSTOMER_ORDER_PK": "BYTES",
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
                 "AS_OF_DATE": "DATETIME",
-                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
-                "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
+                "LINK_CUSTOMER_ORDER_PK": "BYTES",
+                "LINK_ORDER_PRODUCT_PK": "BYTES",
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
                 "AS_OF_DATE": "DATETIME",
-                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
-                "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
-                "LINK_PRODUCT_COMPONENT_PK": "BINARY(16)",
+                "LINK_CUSTOMER_ORDER_PK": "BYTES",
+                "LINK_ORDER_PRODUCT_PK": "BYTES",
+                "LINK_PRODUCT_COMPONENT_PK": "BYTES",
             }
         }
     }
@@ -1312,72 +1312,72 @@ def pit(context):
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_LOGIN": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
-                "DEVICE_USED": "VARCHAR",
+                "DEVICE_USED": "STRING",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_PROFILE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "DASHBOARD_COLOUR": "VARCHAR",
-                "DISPLAY_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "DASHBOARD_COLOUR": "STRING",
+                "DISPLAY_NAME": "STRING",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_DETAILS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_LOGIN": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "DEVICE_USED": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "DEVICE_USED": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_PROFILE": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "DASHBOARD_COLOUR": "VARCHAR",
-                "DISPLAY_NAME": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "DASHBOARD_COLOUR": "STRING",
+                "DISPLAY_NAME": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "AS_OF_DATE": {
@@ -1388,12 +1388,12 @@ def pit(context):
         "PIT_CUSTOMER": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
-                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_PK": "BYTES",
                 "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME",
-                "SAT_CUSTOMER_PROFILE_PK": "BINARY(16)",
+                "SAT_CUSTOMER_PROFILE_PK": "BYTES",
                 "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME"
             }
         }
@@ -1565,62 +1565,62 @@ def pit_one_sat(context):
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_DETAILS_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_DETAILS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_DETAILS_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "AS_OF_DATE": {
@@ -1631,32 +1631,32 @@ def pit_one_sat(context):
         "PIT_CUSTOMER": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_TS": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_LG": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_HG": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         }
@@ -1904,102 +1904,102 @@ def pit_two_sats(context):
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_DETAILS_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_LOGIN": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
-                "DEVICE_USED": "VARCHAR",
+                "DEVICE_USED": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_LOGIN_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
-                "DEVICE_USED": "VARCHAR",
+                "DEVICE_USED": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_DETAILS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_DETAILS_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_ADDRESS": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_LOGIN": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "DEVICE_USED": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "DEVICE_USED": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_LOGIN_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "DEVICE_USED": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "DEVICE_USED": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "AS_OF_DATE": {
@@ -2010,40 +2010,40 @@ def pit_two_sats(context):
         "PIT_CUSTOMER": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
-                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_PK": "BYTES",
                 "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_TS": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME",
-                "SAT_CUSTOMER_LOGIN_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_TS_PK": "BYTES",
                 "SAT_CUSTOMER_LOGIN_TS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_LG": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME",
-                "SAT_CUSTOMER_LOGIN_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_TS_PK": "BYTES",
                 "SAT_CUSTOMER_LOGIN_TS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_HG": {
             "+column_types": {
                 "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SAT_CUSTOMER_DETAILS_PK": "BYTES",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
-                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_PK": "BYTES",
                 "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME"
             }
         }
@@ -2205,132 +2205,132 @@ def multi_active_satellite(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TWO_CDK": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -2527,136 +2527,136 @@ def multi_active_satellite_cycle(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TWO_CDK": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMBER(38, 0)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "NUMERIC",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -2829,177 +2829,177 @@ def xts(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "RAW_STAGE_1": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "RAW_STAGE_2": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "RAW_STAGE_2SAT": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "RAW_STAGE_2SAT_1": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "RAW_STAGE_2SAT_2": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "RAW_STAGE_3SAT": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
+                "SOURCE": "STRING",
             }
         },
         "STG_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
-                "SATELLITE_NAME": "VARCHAR",
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "SATELLITE_NAME": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "STG_CUSTOMER_2SAT": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF_1": "BINARY(16)",
-                "HASHDIFF_2": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF_1": "BYTES",
+                "HASHDIFF_2": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
-                "SATELLITE_1": "VARCHAR",
-                "SATELLITE_2": "VARCHAR",
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "SATELLITE_1": "STRING",
+                "SATELLITE_2": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "STG_CUSTOMER_3SAT": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF_1": "BINARY(16)",
-                "HASHDIFF_2": "BINARY(16)",
-                "HASHDIFF_3": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF_1": "BYTES",
+                "HASHDIFF_2": "BYTES",
+                "HASHDIFF_3": "BYTES",
                 "EFFECTIVE_FROM": "DATE",
-                "SATELLITE_1": "VARCHAR",
-                "SATELLITE_2": "VARCHAR",
-                "SATELLITE_3": "VARCHAR",
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
+                "SATELLITE_1": "STRING",
+                "SATELLITE_2": "STRING",
+                "SATELLITE_3": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_FIRSTNAME": "STRING",
+                "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_COUNTY": "STRING",
+                "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "XTS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
                 "LOAD_DATE": "DATE",
-                "SATELLITE_NAME": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
-                "SOURCE": "VARCHAR"
+                "SATELLITE_NAME": "STRING",
+                "HASHDIFF": "BYTES",
+                "SOURCE": "STRING"
             }
         },
         "XTS_2SAT": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SATELLITE_NAME": "STRING",
+                "HASHDIFF": "BYTES",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "XTS_3SAT": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_PK": "BYTES",
+                "SATELLITE_NAME": "STRING",
+                "HASHDIFF": "BYTES",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -3152,86 +3152,86 @@ def cycle(context):
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_BOOKING": {
             "+column_types": {
-                "BOOKING_ID": "VARCHAR",
-                "CUSTOMER_ID": "VARCHAR",
-                "PRICE": "NUMBER(38,2)",
+                "BOOKING_ID": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "PRICE": "NUMERIC",
                 "DEPARTURE_DATE": "DATE",
                 "BOOKING_DATE": "DATE",
-                "PHONE": "VARCHAR",
-                "DESTINATION": "VARCHAR",
-                "NATIONALITY": "VARCHAR",
+                "PHONE": "STRING",
+                "DESTINATION": "STRING",
+                "NATIONALITY": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_CUSTOMER": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "HUB_BOOKING": {
             "+column_types": {
-                "BOOKING_PK": "BINARY(16)",
-                "BOOKING_ID": "VARCHAR",
+                "BOOKING_PK": "BYTES",
+                "BOOKING_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "LINK_CUSTOMER_BOOKING": {
             "+column_types": {
-                "CUSTOMER_BOOKING_PK": "BINARY(16)",
-                "CUSTOMER_PK": "BINARY(16)",
-                "BOOKING_PK": "BINARY(16)",
+                "CUSTOMER_BOOKING_PK": "BYTES",
+                "CUSTOMER_PK": "BYTES",
+                "BOOKING_PK": "BYTES",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "PHONE": "VARCHAR",
-                "NATIONALITY": "VARCHAR",
+                "CUSTOMER_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "PHONE": "STRING",
+                "NATIONALITY": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "SAT_BOOK_BOOKING_DETAILS": {
             "+column_types": {
-                "BOOKING_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "PRICE": "NUMBER(38,2)",
+                "BOOKING_PK": "BYTES",
+                "HASHDIFF": "BYTES",
+                "PRICE": "NUMERIC",
                 "BOOKING_DATE": "DATE",
                 "DEPARTURE_DATE": "DATE",
-                "DESTINATION": "VARCHAR",
+                "DESTINATION": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }

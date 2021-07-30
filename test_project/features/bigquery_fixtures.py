@@ -478,8 +478,7 @@ def satellite_cycle_bigquery(context):
                 "SOURCE": "STRING"
             }
         }
-    }
-    
+
 @fixture
 def t_link_bigquery(context):
     """

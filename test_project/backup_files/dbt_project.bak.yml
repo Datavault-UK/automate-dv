@@ -32,22 +32,13 @@ seeds:
   dbtvault_test:
     raw_source:
       +column_types:
-        CUSTOMER_PK: BINARY(16)
-        BOOKING_FK: BINARY(16)
-        ORDER_FK: BINARY(16)
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
         LOADDATE: DATE
     raw_source_2:
       +column_types:
-        CUSTOMER_PK: BINARY(16)
-        BOOKING_FK: BINARY(16)
-        ORDER_FK: BINARY(16)
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
         LOADDATE: DATE
-    temp:
-      raw_stage_seed:
-        +column_types:
-          CUSTOMER_ID: STRING
-          CUSTOMER_NAME: STRING
-          CUSTOMER_DOB: DATE
-          EFFECTIVE_FROM: DATE
-          LOAD_DATE: DATE
-          SOURCE: STRING
