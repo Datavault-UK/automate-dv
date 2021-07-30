@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Satellites Loaded using Period Materialization for base loads
+Feature: Satellites Loaded using Period Materialization for base loads (sqlserver)
 
   @fixture.satellite_sqlserver
   Scenario: [SAT-PERIOD-MAT-BASE] Base load of a satellite with one value in rank column loads first rank

@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Satellites
+Feature: Satellites (sqlserver)
 
   @fixture.satellite_sqlserver
   Scenario: [BASE-LOAD] Load data into a non-existent satellite

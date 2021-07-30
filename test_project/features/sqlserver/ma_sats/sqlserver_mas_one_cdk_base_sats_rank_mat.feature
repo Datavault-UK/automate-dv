@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites - Loading using Rank Materialization
+Feature: Multi Active Satellites - Loading using Rank Materialization (sqlserver)
 
   @fixture.multi_active_satellite_sqlserver
   Scenario: [SAT-RANK-MAT-BASE] Base load of a multi-active satellite with one value in rank column loads first rank

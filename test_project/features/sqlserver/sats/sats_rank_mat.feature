@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Satellites Loaded using Rank Materialization
+Feature: Satellites Loaded using Rank Materialization (sqlserver)
 
   @fixture.satellite_sqlserver
   Scenario: [SAT-RANK-MAT-BASE] Base load of a satellite with one value in rank column loads first rank

@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour with two CDKs
+Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour with two CDKs (sqlserver)
 
   @fixture.multi_active_satellite_sqlserver
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where all records load

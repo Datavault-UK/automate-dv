@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two CDKs
+Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two CDKs (sqlserver)
 
   @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite, where some customers have the same phone number but different extensions and others have different phone numbers but the same extensions

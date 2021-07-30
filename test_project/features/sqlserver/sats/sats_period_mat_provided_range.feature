@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Satellites Loaded using Period Materialization for provided date ranges
+Feature: Satellites Loaded using Period Materialization for provided date ranges (sqlserver)
 
 # TODO: Work out a way to stop this becoming a larger test as time goes on (will always do until current date)
 #  # PROVIDED DATE RANGE [START-ONLY] (DAILY)

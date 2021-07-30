@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Satellites Loaded in cycles using separate manual loads
+Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
 
   @fixture.satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] SATELLITE load over several cycles

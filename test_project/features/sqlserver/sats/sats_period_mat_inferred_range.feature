@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Satellites Loaded using Period Materialization and inferred date ranges
+Feature: Satellites Loaded using Period Materialization and inferred date ranges (sqlserver)
 
   @fixture.satellite_cycle_sqlserver
   Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite

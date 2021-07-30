@@ -1,5 +1,5 @@
 @fixture.set_workdir
-Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with one CDK
+Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with one CDK (sqlserver)
 
   @fixture.multi_active_satellite_cycle_sqlserver
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with sets of records keeping the group size the same while having one or more records changed
