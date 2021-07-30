@@ -1,28 +1,41 @@
 {%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
+
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
 
+{%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
-    {%- if compare_col.data_type == 'BYTES' -%}
+
+    {%- if target.type == 'bigquery' -%}
+      {%- if compare_col.data_type == 'BYTES' -%}
         {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(compare_col, compare_col)) -%}
-    {%- else -%}
+      {%- else -%}
         {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+      {%- endif -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
     {%- do columns_processed.append(compare_col) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-    {%- if source_col.data_type == 'BYTES' -%}
-        {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.column, source_col.column)) -%}
-    {%- else -%}
-        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.column, source_col.column)) -%}
-    {%- endif -%}
+
     {%- do source_columns_list.append(source_col.column) -%}
+    {%- if target.type == 'bigquery' -%}
+        {%- if source_col.data_type == 'BYTES' -%}
+            {%- do log("this is bytes" ~ source_col, true) -%}
+            {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
+        {%- else -%}
+            {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
+        {%- endif -%}
+    {%- elif target.type == 'snowflake' -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.name, source_col.name)) -%}
+    {%- endif -%}
 
 {%- endfor %}
 
@@ -51,11 +64,13 @@ compare_e_to_a AS (
     EXCEPT DISTINCT
     SELECT * FROM order_actual_data
 ),
+
 compare_a_to_e AS (
     SELECT * FROM order_actual_data
     EXCEPT DISTINCT
     SELECT * FROM order_expected_data
 ),
+
 duplicates_actual AS (
     SELECT {{ columns_string }}, COUNT(*) AS COUNT
     FROM order_actual_data
