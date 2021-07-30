@@ -93,13 +93,17 @@ min_date AS (
 new_rows_pks AS (
     SELECT h.{{ src_pk }}
     FROM {{ ref(source_model) }} AS h
-    WHERE h.{{ src_ldts }} >= (SELECT CAST(LAST_SAFE_LOAD_DATETIME AS DATETIME) FROM last_safe_load_datetime)
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+    WHERE h.{{ src_ldts }} >= last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
 ),
 
 new_rows_as_of AS (
     SELECT AS_OF_DATE
     FROM as_of
-    WHERE as_of.AS_OF_DATE >= (SELECT CAST(LAST_SAFE_LOAD_DATETIME AS DATETIME) FROM last_safe_load_datetime)
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+    WHERE as_of.AS_OF_DATE >= last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
     UNION DISTINCT
     SELECT as_of_date
     FROM as_of_grain_new_entries
@@ -110,17 +114,21 @@ overlap_pks AS (
     FROM {{ this }} AS p
     INNER JOIN {{ ref(source_model) }} as h
         ON p.{{ src_pk }} = h.{{ src_pk }}
-    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+    INNER JOIN min_date, last_safe_load_datetime, as_of_grain_lost_entries
+    ON 1 = 1
+    WHERE p.AS_OF_DATE >= min_date.MIN_DATE
+        AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+        AND p.AS_OF_DATE NOT IN as_of_grain_lost_entries.AS_OF_DATE
 ),
 
 overlap_as_of AS (
     SELECT AS_OF_DATE
     FROM as_of AS p
-    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+    INNER JOIN min_date, last_safe_load_datetime, as_of_grain_lost_entries
+        ON 1 = 1
+    WHERE p.AS_OF_DATE >= min_date.MIN_DATE
+        AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+        AND p.AS_OF_DATE NOT IN as_of_grain_lost_entries.AS_OF_DATE
 ),
 
 overlap AS (
@@ -275,9 +283,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE CAST({{ bridge_end_date }} AS DATE) = CAST('{{ max_date }}' AS DATE)
+    WHERE CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
             {%- else %}
-        AND CAST({{ bridge_end_date }} AS DATE) = CAST('{{ max_date }}' AS DATE)
+        AND CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
             {%- endif -%}
         {%- endfor %}
 )
