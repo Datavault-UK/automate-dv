@@ -135,7 +135,7 @@ backfill AS (
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {{ "CAST('{}' AS BYTES) AS {}".format(ghost_pk, sat_name, sat_key_name) }},
+        {{ "CAST({} AS STRING) AS {}".format(ghost_pk, sat_name, sat_key_name) }},
         {{ "CAST('{}' AS DATETIME) AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
