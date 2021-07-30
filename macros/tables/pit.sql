@@ -176,7 +176,7 @@ new_rows AS (
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
         {{ ("COALESCE(MAX({}_src.{}), CAST({} AS STRING)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
-        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS DATETIME)) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        {{ ("COALESCE(MAX({}_src.{}), CAST(FORMAT_DATETIME('%F, %X, %E3S', '{}') AS DATETIME)) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
