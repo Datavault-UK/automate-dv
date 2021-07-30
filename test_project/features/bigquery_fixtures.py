@@ -180,8 +180,8 @@ def multi_source_hub_bigquery(context):
                 "SUPPLIER_ID": "STRING",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "NUMERIC",
+                "DISCOUNT": "NUMERIC",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
