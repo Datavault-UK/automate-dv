@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three links
 
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with the AS_OF date and LDTS equal
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -83,7 +83,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     | md5('CCC-0\|\|CCC')       |
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with the AS_OF dates in the past
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -161,7 +161,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
     Then the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE | LINK_CUSTOMER_ORDER_PK | LINK_ORDER_PRODUCT_PK | LINK_PRODUCT_COMPONENT_PK |
 
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with the AS_OF dates in the future
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -243,7 +243,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     | md5('CCC-0\|\|CCC')       |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with history only in EFF_SAT_ORDER_PRODUCT and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -404,7 +404,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCB')     | md5('CCB-2\|\|CCB')       |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with history only in EFF_SAT_PRODUCT_COMPONENT and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -607,7 +607,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     | md5('CCC-2\|\|CCC')       |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [BASE-LOAD] Base load into a bridge table from one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, and encompassing range of AS_OF dates
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables

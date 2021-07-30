@@ -277,7 +277,7 @@ bridge AS (
             {%- if loop.first %}
     WHERE CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
             {%- else %}
-        AND CAST{{ bridge_end_date }} AS DATETIME) = CAST(('{{ max_date }}' AS DATETIME)
+        AND CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
             {%- endif -%}
         {%- endfor %}
 )
