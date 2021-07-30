@@ -93,13 +93,13 @@ min_date AS (
 new_rows_pks AS (
     SELECT h.{{ src_pk }}
     FROM {{ ref(source_model) }} AS h
-    WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    WHERE h.{{ src_ldts }} >= (SELECT CAST(LAST_SAFE_LOAD_DATETIME AS DATETIME) FROM last_safe_load_datetime)
 ),
 
 new_rows_as_of AS (
     SELECT AS_OF_DATE
     FROM as_of
-    WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    WHERE as_of.AS_OF_DATE >= (SELECT CAST(LAST_SAFE_LOAD_DATETIME AS DATETIME) FROM last_safe_load_datetime)
     UNION DISTINCT
     SELECT as_of_date
     FROM as_of_grain_new_entries
@@ -275,9 +275,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
+    WHERE CAST({{ bridge_end_date }} AS DATE) = CAST('{{ max_date }}' AS DATE)
             {%- else %}
-        AND CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
+        AND CAST({{ bridge_end_date }} AS DATE) = CAST('{{ max_date }}' AS DATE)
             {%- endif -%}
         {%- endfor %}
 )
