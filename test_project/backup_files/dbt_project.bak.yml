@@ -43,12 +43,10 @@ seeds:
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
     temp:
-      sat_customer_login_seed:
+      raw_stage_login_seed:
         +column_types:
-          CUSTOMER_PK: STRING
-          HASHDIFF: STRING
-          DEVICE_USED: STRING
+          CUSTOMER_ID: STRING
           LAST_LOGIN_DATE: DATETIME
-          EFFECTIVE_FROM: DATETIME
+          DEVICE_USED: STRING
           LOAD_DATE: DATETIME
           SOURCE: STRING
