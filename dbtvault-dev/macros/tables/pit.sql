@@ -27,6 +27,8 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
+{# TODO ghost_pk should be at least a 16byte 0 hash i.e 0x00000000000000000000000000000000 #}
+
 {#- Setting ghost values to replace NULLS -#}
 {%- set ghost_pk = '0000000000000000' -%}
 
@@ -136,7 +138,7 @@ backfill AS (
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {{ "FROM_HEX({}) AS {}_{}".format(ghost_pk, sat_name, sat_key_name) }},
+        {{ "'{}' AS {}_{}".format(ghost_pk, sat_name, sat_key_name) }},
         {{ "CAST('{}' AS DATETIME) AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
@@ -176,7 +178,7 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
-        {{ ("COALESCE(MAX({}_src.{}), FROM_HEX({}) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        {{ ("COALESCE(MAX({}_src.{}), '{}') AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
         {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS DATETIME)) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
         {{- "," if not loop.last }}
     {%- endfor %}
