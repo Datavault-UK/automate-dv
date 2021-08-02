@@ -291,9 +291,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE CAST(DATE({{ bridge_end_date }}) AS DATE) = CAST(DATE('{{ max_date }}') AS DATE)
+    WHERE DATE({{ bridge_end_date }}) = DATE('{{ max_date }}')
             {%- else %}
-        AND CAST(DATE({{ bridge_end_date }}) AS DATE) = CAST(DATE('{{ max_date }}') AS DATE)
+        AND DATE({{ bridge_end_date }}) = DATE('{{ max_date }}')
             {%- endif -%}
         {%- endfor %}
 )
