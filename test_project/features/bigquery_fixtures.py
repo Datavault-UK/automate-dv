@@ -1360,7 +1360,7 @@ def pit_bigquery(context):
         },
         "SAT_CUSTOMER_LOGIN": {
             "+column_types": {
-                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "BYTES",
                 "HASHDIFF": "STRING",
                 "DEVICE_USED": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
