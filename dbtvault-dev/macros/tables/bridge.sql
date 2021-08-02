@@ -114,21 +114,29 @@ overlap_pks AS (
     FROM {{ this }} AS p
     INNER JOIN {{ ref(source_model) }} as h
         ON p.{{ src_pk }} = h.{{ src_pk }}
-    INNER JOIN min_date, last_safe_load_datetime, as_of_grain_lost_entries
+    INNER JOIN min_date
+    ON 1 = 1
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+    INNER JOIN as_of_grain_lost_entries
     ON 1 = 1
     WHERE p.AS_OF_DATE >= min_date.MIN_DATE
         AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
-        AND p.AS_OF_DATE NOT IN as_of_grain_lost_entries.AS_OF_DATE
+        AND p.AS_OF_DATE NOT IN (as_of_grain_lost_entries.AS_OF_DATE)
 ),
 
 overlap_as_of AS (
-    SELECT AS_OF_DATE
+    SELECT p.AS_OF_DATE
     FROM as_of AS p
-    INNER JOIN min_date, last_safe_load_datetime, as_of_grain_lost_entries
-        ON 1 = 1
+    INNER JOIN min_date
+    ON 1 = 1
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+    INNER JOIN as_of_grain_lost_entries
+    ON 1 = 1
     WHERE p.AS_OF_DATE >= min_date.MIN_DATE
         AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
-        AND p.AS_OF_DATE NOT IN as_of_grain_lost_entries.AS_OF_DATE
+        AND p.AS_OF_DATE NOT IN (as_of_grain_lost_entries.AS_OF_DATE)
 ),
 
 overlap AS (
@@ -283,9 +291,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
+    WHERE CAST(DATE({{ bridge_end_date }}) AS DATE) = CAST(DATE('{{ max_date }}') AS DATE)
             {%- else %}
-        AND CAST({{ bridge_end_date }} AS DATETIME) = CAST('{{ max_date }}' AS DATETIME)
+        AND CAST(DATE({{ bridge_end_date }}) AS DATE) = CAST(DATE('{{ max_date }}') AS DATE)
             {%- endif -%}
         {%- endfor %}
 )
