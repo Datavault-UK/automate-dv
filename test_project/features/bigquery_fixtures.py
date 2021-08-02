@@ -756,7 +756,7 @@ def satellite_bigquery(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -766,7 +766,7 @@ def satellite_bigquery(context):
         },
         "RAW_STAGE_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -776,7 +776,7 @@ def satellite_bigquery(context):
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -788,7 +788,7 @@ def satellite_bigquery(context):
         },
         "SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -854,7 +854,7 @@ def satellite_cycle_bigquery(context):
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
+                "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "HASHDIFF": "BYTES",
@@ -896,7 +896,7 @@ def eff_satellite_bigquery(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "NUMERIC",
                 "ORDER_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
@@ -906,9 +906,9 @@ def eff_satellite_bigquery(context):
         },
         "EFF_SAT": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BYTES",
-                "CUSTOMER_PK": "BYTES",
-                "ORDER_PK": "BYTES",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -1002,27 +1002,27 @@ def eff_satellite_testing_auto_end_dating_bigquery(context):
         },
         "LINK_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BYTES",
-                "CUSTOMER_PK": "BYTES",
-                "ORDER_PK": "BYTES",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
         },
         "LINK_ORDER_CUSTOMER": {
             "+column_types": {
-                "ORDER_CUSTOMER_PK": "BYTES",
-                "CUSTOMER_PK": "BYTES",
-                "ORDER_PK": "BYTES",
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
         },
         "EFF_SAT_CUSTOMER_ORDER": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BYTES",
-                "CUSTOMER_PK": "BYTES",
-                "ORDER_PK": "BYTES",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -1032,9 +1032,9 @@ def eff_satellite_testing_auto_end_dating_bigquery(context):
         },
         "EFF_SAT_ORDER_CUSTOMER": {
             "+column_types": {
-                "ORDER_CUSTOMER_PK": "BYTES",
-                "CUSTOMER_PK": "BYTES",
-                "ORDER_PK": "BYTES",
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -1078,7 +1078,7 @@ def eff_satellite_multipart_bigquery(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "STRING",
                 "NATION_ID": "STRING",
                 "ORDER_ID": "STRING",
                 "PLATFORM_ID": "STRING",
@@ -1091,12 +1091,12 @@ def eff_satellite_multipart_bigquery(context):
         },
         "EFF_SAT": {
             "+column_types": {
-                "CUSTOMER_ORDER_PK": "BYTES",
-                "ORDER_PK": "BYTES",
-                "PLATFORM_PK": "BYTES",
-                "ORGANISATION_PK": "BYTES",
-                "CUSTOMER_PK": "BYTES",
-                "NATION_PK": "BYTES",
+                "CUSTOMER_ORDER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PLATFORM_PK": "STRING",
+                "ORGANISATION_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "NATION_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",

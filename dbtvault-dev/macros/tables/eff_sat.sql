@@ -103,6 +103,7 @@ new_closed_records AS (
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
+    {# Logic is wrong #}
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
