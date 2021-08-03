@@ -17,6 +17,7 @@
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+{%- set max_date = '9999-12-31 23:59:59.999' -%}
 
 {{- dbtvault.prepend_generated_by() }}
 
@@ -54,14 +55,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE CAST(c.{{ src_end_date }} AS DATETIME) = CAST('9999-12-31' AS DATETIME)
+    WHERE DATE(c.{{ src_end_date }}) = DATE('{{max_date}}')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE CAST(d.{{ src_end_date }} AS DATETIME) != CAST('9999-12-31' AS DATETIME)
+    WHERE DATE(d.{{ src_end_date }}) = DATE('{{max_date}}')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -103,7 +104,6 @@ new_closed_records AS (
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
-    {# Logic is wrong #}
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
