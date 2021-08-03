@@ -103,7 +103,7 @@ new_rows_as_of AS (
     FROM as_of
     INNER JOIN last_safe_load_datetime
     ON 1 = 1
-    WHERE as_of.AS_OF_DATE >= last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+--     WHERE as_of.AS_OF_DATE >= last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
     UNION DISTINCT
     SELECT as_of_date
     FROM as_of_grain_new_entries
