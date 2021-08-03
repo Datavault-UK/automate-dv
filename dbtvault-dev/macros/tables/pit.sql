@@ -139,7 +139,7 @@ backfill AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
         {{ "'{}' AS {}_{}".format(ghost_pk, sat_name, sat_key_name) }},
-        {{ "CAST('{}' AS DATETIME) AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
+        {{ "PARSE_DATETIME('%F %H:%M:%E3S', '{}') AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -179,7 +179,7 @@ new_rows AS (
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
         {{ ("COALESCE(MAX({}_src.{}), '{}') AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
-        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS DATETIME)) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        {{ ("COALESCE(MAX({}_src.{}), PARSE_DATETIME('%F %H:%M:%E3S',  '{}')) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
