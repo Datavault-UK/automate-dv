@@ -46,7 +46,7 @@
 WITH as_of AS (
      SELECT a.AS_OF_DATE
      FROM {{ source_relation }} AS a
-     WHERE DATE(a.AS_OF_DATE) <= CURRENT_DATE()
+     WHERE a.AS_OF_DATE <= CURRENT_DATE()
 ),
 
 {%- if dbtvault.is_any_incremental() %}
