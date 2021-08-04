@@ -2,7 +2,7 @@
 Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two links
 
   @fixture.enable_auto_end_date
-  @fixture.bridge_bigquery
+  @fixture.bridge
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 1
     Incremental load with auto end-dating with more recent AS OF dates and new orders
     New order or changed order are assigned only to existing customers
@@ -98,7 +98,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.enable_auto_end_date
-  @fixture.bridge_bigquery
+  @fixture.bridge
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 2
     Incremental load with auto end-dating with new AS OF dates in the past
     Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
