@@ -1,5 +1,8 @@
 # Overrides for dbt-sqlserver adapter functionality
 
+{# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0 #}
+{# TODO dbt-sqlserver adapters.sql revised with the macro code below #}
+{# TODO leaving the macro code below not commented out for the time being #}
 {% macro sqlserver__create_table_as(temporary, relation, sql) -%}
    {%- set as_columnstore = config.get('as_columnstore', default=true) -%}
    {% set tmp_relation = relation.incorporate(
@@ -33,6 +36,7 @@
 {% endmacro %}
 
 {# TODO multi dispatch not working for the following macro using the new method in dbt v0.20.0 #}
+{# TODO the full materialization code with sqlserver customisation below is working OK #}
 {#{% macro sqlserver__get_test_sql(main_sql, fail_calc, warn_if, error_if, limit) -%}#}
 {##}
 {#    SELECT {{ "TOP (" ~ limit ~ ")" if limit != none }}#}
