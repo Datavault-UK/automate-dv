@@ -39,7 +39,7 @@ WITH source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-latest_records AS (
+latest_records_non_ranked AS (
 
     SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
            RANK() OVER (
@@ -52,8 +52,14 @@ latest_records AS (
         FROM source_data
     ) AS source_records
     ON {{ dbtvault.prefix([src_pk], 'current_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-    QUALIFY rank = 1
+
 ),
+
+latest_records AS (
+    SELECT * FROM latest_records_non_ranked
+    WHERE rank = 1
+),
+
 {%- endif %}
 
 records_to_insert AS (
