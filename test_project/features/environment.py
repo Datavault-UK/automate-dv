@@ -1,6 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
-from test_project.features.bigquery_fixtures import pit_bigquery, satellite_bigquery, pit_one_sat_bigquery
+from test_project.features.bigquery_fixtures import pit_bigquery, satellite_bigquery, pit_one_sat_bigquery, \
+    pit_two_sats_bigquery
 from test_project.features.fixtures import *
 from test_project.test_utils.dbt_test_utils import *
 
@@ -27,6 +28,7 @@ fixture_registry = {
     "fixture.pit_one_sat": pit_one_sat,
     "fixture.pit_one_sat_bigquery": pit_one_sat_bigquery,
     "fixture.pit_two_sats": pit_two_sats,
+    "fixture.pit_two_sats_bigquery": pit_two_sats_bigquery,
     "fixture.bridge": bridge,
     "fixture.cycle": cycle,
     "fixture.enable_auto_end_date": enable_auto_end_date,
