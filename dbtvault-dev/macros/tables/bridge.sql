@@ -27,7 +27,7 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set max_date = '9999-12-31 23:59:59.999' -%}
+{%- set max_date = '9999-12-31 23:59:59.996' -%}
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
@@ -61,7 +61,7 @@ last_safe_load_datetime AS (
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
     {%- endfilter -%}
-    )
+    ) AS l
 ),
 
 as_of_grain_old_entries AS (
@@ -99,14 +99,14 @@ new_rows_pks AS (
 ),
 
 new_rows_as_of AS (
-    SELECT AS_OF_DATE
+    (SELECT AS_OF_DATE
     FROM as_of
     INNER JOIN last_safe_load_datetime
     ON 1 = 1
-    WHERE as_of.AS_OF_DATE >= last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+    WHERE as_of.AS_OF_DATE >= last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME)
     UNION DISTINCT
-    SELECT as_of_date
-    FROM as_of_grain_new_entries
+    (SELECT as_of_date
+    FROM as_of_grain_new_entries)
 ),
 
 overlap_pks AS (
@@ -243,41 +243,35 @@ all_rows AS (
 
 {# Select most recent set of relationship key(s) for each as of date -#}
 
-candidate_rows_unranked AS (
-    SELECT *,
-        ROW_NUMBER() OVER (
-            PARTITION BY AS_OF_DATE,
-                {%- for bridge_step in bridge_walk.keys() -%}
-                {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
-                    {%- if loop.first %}
-                {{ bridge_link_pk }}
-                    {%- else %}
-                {{ ','~ bridge_link_pk }}
-                    {%- endif -%}
-                {%- endfor %}
-            ORDER BY
-                {%- for bridge_step in bridge_walk.keys() -%}
-                {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
-                    {%- if loop.first %}
-                {{ bridge_load_date ~' DESC' }}
-                    {%- else %}
-                {{ ','~ bridge_load_date ~' DESC' }}
-                    {%- endif -%}
-                {%- endfor %}
-            ) AS row_num
-    FROM all_rows
-
-
-),
-
-
 candidate_rows AS (
     SELECT *
-    FROM candidate_rows_unranked
-    WHERE row_num = 1
-
-
+    FROM (
+        SELECT *,
+            ROW_NUMBER() OVER (
+                PARTITION BY AS_OF_DATE,
+                    {%- for bridge_step in bridge_walk.keys() -%}
+                    {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+                        {%- if loop.first %}
+                    {{ bridge_link_pk }}
+                        {%- else %}
+                    {{ ','~ bridge_link_pk }}
+                        {%- endif -%}
+                    {%- endfor %}
+                ORDER BY
+                    {%- for bridge_step in bridge_walk.keys() -%}
+                    {% set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] %}
+                        {%- if loop.first %}
+                    {{ bridge_load_date ~' DESC' }}
+                        {%- else %}
+                    {{ ','~ bridge_load_date ~' DESC' }}
+                        {%- endif -%}
+                    {%- endfor %}
+                ) AS row_num
+        FROM all_rows
+    ) AS a
+    WHERE a.row_num = 1
 ),
+
 
 bridge AS (
     SELECT
