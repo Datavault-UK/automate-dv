@@ -233,7 +233,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.enable_auto_end_date
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 3
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
@@ -356,7 +356,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.enable_auto_end_date
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 4
     Incremental load with auto end-dating with more recent AS OF dates and changed orders
     The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
@@ -524,7 +524,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.enable_auto_end_date
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 5
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
@@ -708,7 +708,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDDB')    |
 
   @fixture.enable_auto_end_date
-  @fixture.bridge
+  @fixture.bridge_bigquery
   Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 6
     Incremental load with auto end-dating and more recent AS OF dates.
     An existing order gets assigned either to another existing customer or to a new customer,
