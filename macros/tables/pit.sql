@@ -117,12 +117,15 @@ overlap AS (
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
     ON a.{{ src_pk }} = b.{{ src_pk }}
-    INNER JOIN min_date as m
-    ON a.AS_OF_DATE >= m.MIN_DATE
-    INNER JOIN last_safe_load_datetime as l
-    ON a.AS_OF_DATE < l.LAST_SAFE_LOAD_DATETIME
-    INNER JOIN as_of_grain_lost_entries as g
-    ON a.AS_OF_DATE != g.AS_OF_DATE
+    INNER JOIN min_date
+    ON 1 = 1
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+	LEFT OUTER JOIN as_of_grain_lost_entries
+	ON a.AS_OF_DATE = as_of_grain_lost_entries.AS_OF_DATE
+    WHERE a.AS_OF_DATE >= min_date.MIN_DATE
+        AND a.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
 
 -- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
