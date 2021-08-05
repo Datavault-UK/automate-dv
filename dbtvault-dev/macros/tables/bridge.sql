@@ -118,11 +118,11 @@ overlap_pks AS (
     ON 1 = 1
     INNER JOIN last_safe_load_datetime
     ON 1 = 1
-    INNER JOIN as_of_grain_lost_entries
-    ON 1 = 1
+	LEFT OUTER JOIN as_of_grain_lost_entries
+	ON p.AS_OF_DATE = as_of_grain_lost_entries.AS_OF_DATE
     WHERE p.AS_OF_DATE >= min_date.MIN_DATE
         AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
-        AND p.AS_OF_DATE NOT IN (as_of_grain_lost_entries.AS_OF_DATE)
+		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
 
 overlap_as_of AS (
@@ -132,13 +132,12 @@ overlap_as_of AS (
     ON 1 = 1
     INNER JOIN last_safe_load_datetime
     ON 1 = 1
-    INNER JOIN as_of_grain_lost_entries
-    ON 1 = 1
+	LEFT OUTER JOIN as_of_grain_lost_entries
+	ON p.AS_OF_DATE = as_of_grain_lost_entries.AS_OF_DATE
     WHERE p.AS_OF_DATE >= min_date.MIN_DATE
         AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
-        AND p.AS_OF_DATE NOT IN (as_of_grain_lost_entries.AS_OF_DATE)
+		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
-
 overlap AS (
     SELECT
         a.{{ src_pk }},
