@@ -707,7 +707,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1003') | 2018-05-31 12:30:00.001 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 23:59:59.999 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
-  @fixture.pit_one_sat
+  @fixture.pit_one_sat_bigquery
   Scenario: [BASE-LOAD-HG] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -868,7 +868,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
 ######################### INCREMENTAL LOAD #########################
 
   # DATES
-  @fixture.pit_one_sat
+  @fixture.pit_one_sat_bigquery
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -927,7 +927,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1004') | 2018-06-05 00:00:00.000 | md5('1004')             | 2018-06-05 00:00:00.000   |
 
   # TIMESTAMPS
-  @fixture.pit_one_sat
+  @fixture.pit_one_sat_bigquery
   Scenario: [INCR-LOAD] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -994,7 +994,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.999      |
 
   # AS OF - LOWER GRANULARITY
-  @fixture.pit_one_sat
+  @fixture.pit_one_sat_bigquery
   Scenario: [INCR-LOAD-LG] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -1066,7 +1066,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.999      |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_one_sat
+  @fixture.pit_one_sat_bigquery
   Scenario: [INCR-LOAD-HG] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -1125,7 +1125,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | md5('1004') | 2018-06-06 00:00:00.000 | md5('1004')             | 2018-06-05 00:00:00.000   |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_one_sat
+  @fixture.pit_one_sat_bigquery
   Scenario: [INCR-LOAD-HG-ONEPK] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
