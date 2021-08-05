@@ -62,7 +62,7 @@ latest_open AS (
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE DATE(d.{{ src_end_date }}) = DATE('{{max_date}}')
+    WHERE DATE(d.{{ src_end_date }}) != DATE('{{max_date}}')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
