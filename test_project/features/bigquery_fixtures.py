@@ -74,6 +74,7 @@ def staging(context):
         }
     }
 
+
 @fixture
 def single_source_hub_bigquery(context):
     """
@@ -113,6 +114,7 @@ def single_source_hub_bigquery(context):
             }
         }
     }
+
 
 def multi_source_hub_bigquery(context):
     """
@@ -188,7 +190,7 @@ def multi_source_hub_bigquery(context):
         }
     }
 
-    
+
 @fixture
 def single_source_link_bigquery(context):
     """
@@ -234,6 +236,7 @@ def single_source_link_bigquery(context):
             }
         }
     }
+
 
 @fixture
 def multi_source_link_bigquery(context):
@@ -312,7 +315,8 @@ def multi_source_link_bigquery(context):
             }
         }
     }
-   
+
+
 @fixture
 def satellite_bigquery(context):
     """
@@ -478,6 +482,8 @@ def satellite_cycle_bigquery(context):
                 "SOURCE": "STRING"
             }
         }
+    }
+
 
 @fixture
 def t_link_bigquery(context):
@@ -539,6 +545,7 @@ def t_link_bigquery(context):
             }
         }
     }
+
 
 @fixture
 def multi_active_satellite_bigquery(context):
