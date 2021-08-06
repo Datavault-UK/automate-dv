@@ -57,8 +57,8 @@ def staging(context):
                 "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING",
-                "CUSTOMER_PK": "BYTES",
-                "HASHDIFF": "BYTES",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE"
             }
         },
@@ -479,7 +479,8 @@ def satellite_cycle_bigquery(context):
             }
         }
     }
-    
+
+
 @fixture
 def t_link_bigquery(context):
     """
@@ -527,9 +528,9 @@ def t_link_bigquery(context):
         },
         "T_LINK": {
             "+column_types": {
-                "TRANSACTION_PK": "BYTES",
-                "CUSTOMER_FK": "BYTES",
-                "ORDER_FK": "BYTES",
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
                 "TRANSACTION_NUMBER": "NUMERIC",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
