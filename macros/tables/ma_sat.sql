@@ -134,7 +134,7 @@ records_to_insert AS (
     INNER JOIN satellite_update
         ON {{ dbtvault.prefix([src_pk], 'satellite_update') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
 
-    UNION
+    UNION DISTINCT
 
     SELECT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
