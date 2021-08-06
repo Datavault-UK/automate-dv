@@ -529,7 +529,7 @@ def bridge_bigquery(context):
                     "bridge_link_pk": "LINK_PRODUCT_COMPONENT_PK",
                     "bridge_end_date": "EFF_SAT_PRODUCT_COMPONENT_ENDDATE",
                     "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
-                    "link_table": "LINK_LINKPRODUCT_COMPONENT",
+                    "link_table": "LINK_PRODUCT_COMPONENT",
                     "link_pk": "PRODUCT_COMPONENT_PK",
                     "link_fk1": "PRODUCT_FK",
                     "link_fk2": "COMPONENT_FK",
