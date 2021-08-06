@@ -63,7 +63,7 @@
             {%- endif -%}
         {%- endfor -%}
         {%- if is_hashdiff -%}
-            {{- "UPPER(TO_HEX({}({}".format(hash_alg, dbtvault.concat_ws(list_to_concat, concat_string)) | indent(4) -}}
+            {{- "UPPER(TO_HEX({}(UPPER({})".format(hash_alg, dbtvault.concat_ws(list_to_concat, concat_string)) | indent(4) -}}
         {%- else -%}
             {{- "UPPER(TO_HEX({}(NULLIF({}".format(hash_alg, dbtvault.concat_ws(list_to_concat, concat_string)) | indent(4) -}}
         {%- endif -%}

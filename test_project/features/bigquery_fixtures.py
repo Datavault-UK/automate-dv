@@ -57,8 +57,8 @@ def staging(context):
                 "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING",
-                "CUSTOMER_PK": "BYTES",
-                "HASHDIFF": "BYTES",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE"
             }
         },
@@ -1077,8 +1077,8 @@ def multi_active_satellite_cycle_bigquery(context):
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BYTES",
-                "HASHDIFF": "BYTES",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",

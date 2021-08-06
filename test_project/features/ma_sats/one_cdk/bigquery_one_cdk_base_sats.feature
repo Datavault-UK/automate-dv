@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites - Base satellite behaviour with one CDK
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -19,7 +19,7 @@ Feature: Multi Active Satellites - Base satellite behaviour with one CDK
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
