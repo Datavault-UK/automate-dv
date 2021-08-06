@@ -73,8 +73,8 @@ latest_records AS (
             (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
             FROM source_data AS source_pks) AS source_records
                 ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-        QUALIFY latest_rank = 1
         ) AS latest_selection
+        WHERE latest_selection.latest_rank = 1
 ),
 
 {# Select PKs and hashdiff counts for matching stage and satellite records #}
