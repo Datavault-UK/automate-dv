@@ -47,6 +47,7 @@ fixture_registry = {
     "fixture.satellite_sqlserver": satellite_sqlserver,
     "fixture.satellite_cycle_sqlserver": satellite_cycle_sqlserver,
     "fixture.xts_sqlserver": xts_sqlserver,
+    "fixture.out_of_sequence_satellite_sqlserver": out_of_sequence_satellite_sqlserver,
     "fixture.cycle_sqlserver": cycle_sqlserver
 }
 
