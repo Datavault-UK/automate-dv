@@ -18,6 +18,7 @@ fixture_registry = {
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.t_link": t_link,
     "fixture.xts": xts,
+    "fixture.out_of_sequence_satellite": out_of_sequence_satellite,
     "fixture.multi_active_satellite": multi_active_satellite,
     "fixture.multi_active_satellite_cycle": multi_active_satellite_cycle,
     "fixture.pit": pit,
