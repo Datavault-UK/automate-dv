@@ -9,8 +9,13 @@
 
 {%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
+
     {%- if target.type == 'bigquery' -%}
+      {%- if compare_col.data_type == 'BYTES' -%}
+        {%- do compare_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(compare_col, compare_col)) -%}
+      {%- else -%}
         {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
+      {%- endif -%}
     {%- elif target.type == 'snowflake' -%}
         {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- endif -%}
@@ -19,6 +24,7 @@
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
+
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
         {%- if source_col.data_type == 'BYTES' -%}
@@ -30,6 +36,7 @@
     {%- elif target.type == 'snowflake' -%}
         {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.name, source_col.name)) -%}
     {%- endif -%}
+
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
@@ -85,28 +92,28 @@ duplicates_not_in_expected AS (
     SELECT {{ columns_string }}
     FROM duplicates_actual
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
-)
-,
+),
+
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
+    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
+    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
+    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
--- SELECT * FROM order_actual_data
--- SELECT * FROM order_expected_data
--- SELECT * FROM compare_e_to_a
--- SELECT * FROM compare_a_to_e
--- SELECT * FROM duplicates_actual
--- SELECT * FROM duplicates_expected
--- SELECT * FROM duplicates_not_in_actual
--- SELECT * FROM duplicates_not_in_expected
--- SELECT * FROM compare
+-- // SELECT * FROM order_actual_data
+-- // SELECT * FROM order_expected_data
+-- // SELECT * FROM compare_e_to_a
+-- // SELECT * FROM compare_a_to_e
+-- // SELECT * FROM duplicates_actual
+-- // SELECT * FROM duplicates_expected
+-- // SELECT * FROM duplicates_not_in_actual
+-- // SELECT * FROM duplicates_not_in_expected
+-- // SELECT * FROM compare
 
 SELECT * FROM compare
 {%- endtest -%}
