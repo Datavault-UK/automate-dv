@@ -22,7 +22,7 @@
     {%- elif hash == 'SHA' -%}
         {%- set hash_alg = 'SHA256' -%}
     {%- endif -%}
-    {%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
+    {%- set standardise = "IFNULL(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
 {%- elif target.type == 'snowflake' -%}
     {%- if hash == 'MD5' -%}
         {%- set hash_alg = 'MD5_BINARY' -%}
@@ -56,10 +56,11 @@
         {%- set list_to_concat = [] -%}
         {%- for column in columns -%}
             {%- set column_str = dbtvault.as_constant(column) -%}
+
             {%- if (standardise | replace('[EXPRESSION]', column_str))  == NULL -%}
                 {%- do list_to_concat.append("\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4)) -%}
             {%- else -%}
-                {%- do list_to_concat.append("{}".format(column)) -%}
+                {%- do list_to_concat.append("IFNULL(CAST({} AS STRING), '^^')".format(column)) -%}
             {%- endif -%}
         {%- endfor -%}
         {%- if is_hashdiff -%}
