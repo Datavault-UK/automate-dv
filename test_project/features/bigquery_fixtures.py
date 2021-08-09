@@ -74,7 +74,7 @@ def staging(context):
 
 
 @fixture
-def single_source_hub(context):
+def single_source_hub_bigquery(context):
     """
     Define the structures and metadata to load single-source hubs
     """
@@ -115,7 +115,7 @@ def single_source_hub(context):
 
 
 @fixture
-def multi_source_hub(context):
+def multi_source_hub_bigquery(context):
     """
     Define the structures and metadata to load multi-source hubs
     """
@@ -191,7 +191,7 @@ def multi_source_hub(context):
 
 
 @fixture
-def single_source_link(context):
+def single_source_link_bigquery(context):
     """
     Define the structures and metadata to load single-source links
     """
@@ -238,7 +238,7 @@ def single_source_link(context):
 
 
 @fixture
-def multi_source_link(context):
+def multi_source_link_bigquery(context):
     """
     Define the structures and metadata to load single-source links
     """
@@ -317,7 +317,7 @@ def multi_source_link(context):
 
 
 @fixture
-def t_link(context):
+def t_link_bigquery(context):
     """
     Define the structures and metadata to load transactional links
     """
@@ -379,7 +379,7 @@ def t_link(context):
 
 
 @fixture
-def satellite(context):
+def satellite_bigquery(context):
     """
     Define the structures and metadata to load satellites
     """
@@ -584,7 +584,7 @@ def satellite_bigquery(context):
 
 
 @fixture
-def satellite_cycle(context):
+def satellite_cycle_bigquery(context):
     """
     Define the structures and metadata to perform load cycles for satellites
     """
@@ -649,7 +649,7 @@ def satellite_cycle(context):
 
 
 @fixture
-def eff_satellite(context):
+def eff_satellite_bigquery(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -702,7 +702,7 @@ def eff_satellite(context):
 
 
 @fixture
-def eff_satellite_testing_auto_end_dating(context):
+def eff_satellite_testing_auto_end_dating_bigquery(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -828,7 +828,7 @@ def eff_satellite_testing_auto_end_dating(context):
 
 
 @fixture
-def eff_satellite_multipart(context):
+def eff_satellite_multipart_bigquery(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
@@ -889,7 +889,7 @@ def eff_satellite_multipart(context):
     }
 
 
-def bridge(context):
+def bridge_bigquery(context):
     """
     Define the structures and metadata to perform bridge load
     """
@@ -2153,7 +2153,7 @@ def pit_two_sats_bigquery(context):
 
 
 @fixture
-def multi_active_satellite(context):
+def multi_active_satellite_bigquery(context):
     """
     Define the structures and metadata to load multi active satellites
     """
@@ -2439,7 +2439,7 @@ def multi_active_satellite(context):
 
 
 @fixture
-def multi_active_satellite_cycle(context):
+def multi_active_satellite_cycle_bigquery(context):
     """
     Define the structures and metadata to perform load cycles for multi active satellites
     """
@@ -2765,7 +2765,7 @@ def multi_active_satellite_cycle(context):
 
 
 @fixture
-def xts(context):
+def xts_bigquery(context):
     """
     Define the structures and metadata to load xts
     """
@@ -3108,7 +3108,7 @@ def xts(context):
 
 
 @fixture
-def cycle(context):
+def cycle_bigquery(context):
     """
     Define the structures and metadata to perform vault load cycles
     """
