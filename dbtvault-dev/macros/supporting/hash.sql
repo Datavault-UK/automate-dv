@@ -48,24 +48,15 @@
 {%- if target.type == 'bigquery' -%}
     {%- if columns is string -%}
         {%- set column_str = dbtvault.as_constant(columns) -%}
-        {{- "UPPER(TO_HEX({}({})))  AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
+        {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
 
     {#- Else a list of columns to hash -#}
     {%- else -%}
-        {%- set all_null = [] -%}
-        {%- set list_to_concat = [] -%}
-        {%- for column in columns -%}
-            {%- set column_str = dbtvault.as_constant(column) -%}
-            {%- if (standardise | replace('[EXPRESSION]', column_str))  == NULL -%}
-                {%- do list_to_concat.append("\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4)) -%}
-            {%- else -%}
-                {%- do list_to_concat.append("{}".format(column)) -%}
-            {%- endif -%}
-        {%- endfor -%}
+     {%- set all_null = [] -%}
         {%- if is_hashdiff -%}
-            {{- "UPPER(TO_HEX({}({}".format(hash_alg, dbtvault.concat_ws(list_to_concat, concat_string)) | indent(4) -}}
+            {{- "UPPER(TO_HEX({}(CONCAT(".format(hash_alg) | indent(4) -}}
         {%- else -%}
-            {{- "UPPER(TO_HEX({}(NULLIF({}".format(hash_alg, dbtvault.concat_ws(list_to_concat, concat_string)) | indent(4) -}}
+            {{- "UPPER(TO_HEX({}(NULLIF(CONCAT(".format(hash_alg) | indent(4) -}}
         {%- endif -%}
 
         {%- for column in columns -%}
@@ -73,12 +64,14 @@
             {%- do all_null.append(null_placeholder_string) -%}
 
             {%- set column_str = dbtvault.as_constant(column) -%}
+            {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+            {{- ",'{}',".format(concat_string) if not loop.last -}}
             {%- if loop.last -%}
 
                 {% if is_hashdiff %}
-                    {{- "))) AS {}".format(alias) -}}
+                    {{- "\n)))) AS {}".format(alias) -}}
                 {%- else -%}
-                    {{- ", '{}')))) AS {}".format(all_null | join(""), alias) -}}
+                    {{- "\n), '{}')))) AS {}".format(all_null | join(""), alias) -}}
                 {%- endif -%}
             {%- else -%}
 
