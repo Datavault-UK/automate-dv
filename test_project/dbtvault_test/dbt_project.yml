@@ -33,7 +33,7 @@ seeds:
     raw_source:
       +column_types:
         CUSTOMER_PK: BYTES
-        BOOKING_FK: BYTES
+        BOOKING_FK: BYES
         ORDER_FK: BYTES
         LOADDATE: DATE
     raw_source_2:
@@ -42,3 +42,14 @@ seeds:
         BOOKING_FK: BYTES
         ORDER_FK: BYTES
         LOADDATE: DATE
+    temp:
+      raw_stage_seed:
+        +column_types:
+          CUSTOMER_ID: STRING
+          ORDER_ID: STRING
+          TRANSACTION_NUMBER: NUMBER(38,0)
+          TRANSACTION_DATE: DATE
+          TYPE: STRING
+          AMOUNT: NUMBER(38,2)
+          LOAD_DATE: DATE
+          SOURCE: STRING

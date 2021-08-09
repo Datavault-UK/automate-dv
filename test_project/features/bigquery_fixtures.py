@@ -33,12 +33,9 @@ def sha(context):
             for c, t in config[k]["+column_types"].items():
 
 
-                if target.type == 'bigquery':
-                    if t == "BYTES":
+                if t == "BYTES":
                     config[k]["+column_types"][c] = "BYTES"
-
-                else:
-                    t == "BINARY(16)":
+                if t == "BINARY(16)":
                     config[k]["+column_types"][c] = "BINARY(32)"
 
     else:
@@ -61,10 +58,9 @@ def staging(context):
                 "CUSTOMER_DOB": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-                "CUSTOMER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-
+                "SOURCE": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE"
             }
         },
@@ -573,6 +569,8 @@ def eff_satellite_bigquery(context):
                 "SOURCE": "STRING"
             }
         }
+    }
+
 
     }
 
@@ -788,7 +786,6 @@ def t_link_bigquery(context):
                 "NATION_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
-
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"

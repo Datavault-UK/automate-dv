@@ -5,9 +5,7 @@ from test_project.features.bigquery_fixtures import single_source_hub_bigquery, 
                                                     single_source_link_bigquery, multi_source_link_bigquery, \
                                                     satellite_bigquery, satellite_cycle_bigquery,
                                                     t_link_bigquery, eff_satellite_bigquery, \
-    eff_satellite_testing_auto_end_dating_bigquery, eff_satellite_multipart_bigquery
-
-
+                                                    eff_satellite_testing_auto_end_dating_bigquery, eff_satellite_multipart_bigquery
 from test_project.features.fixtures import *
 from test_project.test_utils.dbt_test_utils import *
 
