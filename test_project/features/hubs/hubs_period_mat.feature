@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Hubs Loaded using Period Materialization
 
   @fixture.single_source_hub

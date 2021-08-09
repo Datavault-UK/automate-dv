@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Hubs
 
   @fixture.single_source_hub
@@ -44,7 +43,7 @@ Feature: Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  @fixture.sha
+  @fixture.enable_sha
   Scenario: [BASE-LOAD-SHA] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data

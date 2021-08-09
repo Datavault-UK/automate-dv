@@ -27,4 +27,4 @@ pymdown-extensions = "==7.1"
 dbt = "==0.20.0"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9.0"

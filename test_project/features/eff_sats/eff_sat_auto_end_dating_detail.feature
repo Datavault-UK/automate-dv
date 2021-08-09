@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Effectivity Satellites
   Further depth of testing for the auto-end-dating of effectivity satellite
 

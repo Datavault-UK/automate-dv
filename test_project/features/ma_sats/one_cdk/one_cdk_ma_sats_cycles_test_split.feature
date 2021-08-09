@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with one CDK
   This file includes tests for debugging purposes
   It tests a series of loading cycles over an increasing number of days, i.e. one to four days

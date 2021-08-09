@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one CDK
 
   @fixture.multi_active_satellite

@@ -15,7 +15,7 @@ import yaml
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
-from ruamel.yaml import YAML
+import ruamel.yaml
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -33,6 +33,8 @@ COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_DBT_ROOT}/target/compiled/dbtvault_test/
 EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/unit/expected_model_output")
 FEATURES_ROOT = TESTS_ROOT / 'features'
 CSV_DIR = TESTS_DBT_ROOT / 'data/temp'
+
+AVAILABLE_TARGETS = ['snowflake', 'bigquery', 'sqlserver']
 
 if not os.getenv('DBT_PROFILES_DIR'):
     os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
@@ -64,16 +66,15 @@ class DBTTestUtils:
             self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
 
-        available_targets = ['snowflake', 'bigquery', 'sqlserver']
-
         target = self.get_target()
 
         os.environ['TARGET'] = target
 
-        if target in available_targets:
+        if target in AVAILABLE_TARGETS:
             self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
 
     def get_target(self):
+        """ Gets tha target as set by the user via the invoke CLI, stored in invoke.yml"""
 
         if os.path.isfile(INVOKE_YML_FILE):
 
@@ -956,10 +957,10 @@ class DBTVAULTGenerator:
         with open(TEST_SCHEMA_YML_FILE, 'a+') as f:
             f.write('\n\n')
 
-            yaml = YAML()
-            yaml.indent(sequence=4, offset=2)
+            yml = ruamel.yaml.YAML()
+            yml.indent(sequence=4, offset=2)
 
-            yaml.dump(yaml_dict, f)
+            yml.dump(yaml_dict, f)
 
     @staticmethod
     def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
@@ -970,25 +971,25 @@ class DBTVAULTGenerator:
             :param include_columns: A list of columns to add to the seed config, All if not provided
         """
 
-        yaml = YAML()
+        yml = ruamel.yaml.YAML()
 
         if include_columns:
             seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if
                                             k in include_columns}
 
         with open(DBT_PROJECT_YML_FILE, 'r+') as f:
-            project_file = yaml.load(f)
+            project_file = yml.load(f)
 
             project_file["seeds"]["dbtvault_test"]["temp"] = {seed_name: seed_config}
 
             f.seek(0)
             f.truncate()
 
-            yaml.width = 150
+            yml.width = 150
 
-            yaml.indent(sequence=4, offset=2)
+            yml.indent(sequence=4, offset=2)
 
-            yaml.dump(project_file, f)
+            yml.dump(project_file, f)
 
     @staticmethod
     def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
@@ -1088,10 +1089,10 @@ class DBTVAULTGenerator:
         Convert a dictionary to YAML and return a string with the YAML
         """
 
-        yaml = YAML()
-        yaml.indent(sequence=4, offset=2)
+        yml = ruamel.yaml.YAML()
+        yml.indent(sequence=4, offset=2)
         buf = io.BytesIO()
-        yaml.dump(yaml_dict, buf)
+        yml.dump(yaml_dict, buf)
         yaml_str = buf.getvalue().decode('utf-8')
 
         return yaml_str

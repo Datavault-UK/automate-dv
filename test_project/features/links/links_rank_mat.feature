@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Links Loaded using Rank Materialization
 
   @fixture.single_source_link

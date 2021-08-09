@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Multi Active Satellites - Base satellite behaviour with one CDK
 
   @fixture.multi_active_satellite

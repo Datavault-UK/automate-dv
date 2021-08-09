@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Multi Active Satellites - Loading using Period Materialization
 
   @fixture.multi_active_satellite

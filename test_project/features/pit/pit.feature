@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: pit
 
   @fixture.pit
