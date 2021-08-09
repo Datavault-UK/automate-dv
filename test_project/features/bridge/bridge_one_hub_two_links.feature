@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three links
 
   @fixture.bridge

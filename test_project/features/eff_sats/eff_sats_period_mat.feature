@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Effectivity Satellites Loaded using Period Materialization
 
   @fixture.eff_satellite

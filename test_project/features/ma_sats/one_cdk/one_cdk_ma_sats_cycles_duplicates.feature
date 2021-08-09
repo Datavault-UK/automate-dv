@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with duplicates and one CDK
   This is a series of 4 day loading cycles testing different duplicate record loads
   and different hashdiff configurations, i.e. incl. PK and CDK, excl. CDK, excl. PK and CDK

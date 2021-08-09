@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two links
 
   @fixture.enable_auto_end_date

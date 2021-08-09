@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two satellites
 
 ######################### BASE LOAD #########################

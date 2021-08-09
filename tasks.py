@@ -5,7 +5,7 @@ from pathlib import PurePath, Path
 import yaml
 from invoke import task
 
-from test_project.test_utils.dbt_test_utils import DBTTestUtils
+from test_project.test_utils.dbt_test_utils import DBTTestUtils, AVAILABLE_TARGETS
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -96,6 +96,10 @@ def set_defaults(c, target=None, user=None, project=None):
 
     dict_file = {
         'secrets_user': user, 'project': project, 'target': target}
+
+    if target not in AVAILABLE_TARGETS:
+        logger.error(f"Target must be set to one of: {', '.join(AVAILABLE_TARGETS)}")
+        exit(0)
 
     dict_file = {k: v for k, v in dict_file.items() if v}
 

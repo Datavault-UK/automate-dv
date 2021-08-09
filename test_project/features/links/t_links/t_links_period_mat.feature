@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Transactional Links using Period Materialization
 
   @fixture.t_link

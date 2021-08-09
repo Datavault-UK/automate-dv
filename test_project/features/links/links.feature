@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Links
 
   @fixture.single_source_link

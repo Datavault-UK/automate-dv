@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Effectivity Satellites without automatic end-dating
 
   @fixture.eff_satellite
