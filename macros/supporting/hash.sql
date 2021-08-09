@@ -11,7 +11,7 @@
 {%- macro default__hash(columns, alias, is_hashdiff) -%}
 
 {%- set concat_string = '||' -%}
-{%- set null_placeholder_string = "^^" -%}
+{%- set null_placeholder_string = '^^' -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
@@ -56,13 +56,9 @@
         {%- set list_to_concat = [] -%}
         {%- for column in columns -%}
             {%- set column_str = dbtvault.as_constant(column) -%}
-
-            {%- if (standardise | replace('[EXPRESSION]', column_str))  == NULL -%}
-                {%- do list_to_concat.append("\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4)) -%}
-            {%- else -%}
-                {%- do list_to_concat.append("IFNULL(CAST({} AS STRING), '^^')".format(column)) -%}
-            {%- endif -%}
+            {%- do list_to_concat.append("\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4)) -%}
         {%- endfor -%}
+        {%- do log(("list_to_concat: ", list_to_concat), True) -%}
         {%- if is_hashdiff -%}
             {{- "UPPER(TO_HEX({}(UPPER({})".format(hash_alg, dbtvault.concat_ws(list_to_concat, concat_string)) | indent(4) -}}
         {%- else -%}
@@ -87,7 +83,7 @@
             {%- endif -%}
 
         {%- endfor -%}
-
+    {%- do log(("Column String: " ~  column_str), True) -%}
     {%- endif -%}
 
 {%- elif target.type == 'snowflake' -%}
