@@ -1,8 +1,9 @@
 from behave.fixture import use_fixture_by_tag
 
+
 from test_project.features.bigquery_fixtures import single_source_hub_bigquery, multi_source_hub_bigquery, \
                                                     single_source_link_bigquery, multi_source_link_bigquery, \
-                                                    satellite_bigquery, satellite_cycle_bigquery,
+                                                    satellite_bigquery, satellite_cycle_bigquery, \
                                                     t_link_bigquery
 
 from test_project.features.fixtures import *
