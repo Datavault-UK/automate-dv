@@ -1,11 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Eff Sats PM" type="PyBehaveRunConfigurationType" factoryName="Behave">
-    <module name="dbtvault-dev" />
+    <module name="dbtvault" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <envs>
-      <env name="TARGET" value="snowflake" />
-    </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="" />
     <option name="IS_MODULE_SDK" value="true" />
