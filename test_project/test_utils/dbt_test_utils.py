@@ -4,12 +4,14 @@ import logging
 import os
 import re
 import shutil
+import sys
 from hashlib import md5, sha256
 from pathlib import PurePath, Path
 from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
+import yaml
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
@@ -23,6 +25,7 @@ MODELS_ROOT = TESTS_DBT_ROOT / 'models'
 SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = MODELS_ROOT / 'schema_test.yml'
 DBT_PROJECT_YML_FILE = TESTS_DBT_ROOT / 'dbt_project.yml'
+INVOKE_YML_FILE = PROJECT_ROOT / 'invoke.yml'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
 BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 FEATURE_MODELS_ROOT = MODELS_ROOT / 'feature'
@@ -43,7 +46,7 @@ class DBTTestUtils:
     def __init__(self, model_directory=None):
 
         # Setup logging
-        self.logger = logging.getLogger('dbt')
+        self.logger = logging.getLogger('dbtvault')
 
         logging.basicConfig(level=logging.INFO)
 
@@ -60,15 +63,26 @@ class DBTTestUtils:
         if model_directory:
             self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
-        else:
-            self.logger.warning('Model directory not set.')
 
-        if os.getenv('TARGET', '').lower() == 'snowflake' or not os.getenv('TARGET', None):
-            target = 'snowflake'
-        else:
-            target = None
+        available_targets = ['snowflake', 'bigquery', 'sqlserver']
 
-        self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+        target = self.get_target()
+
+        os.environ['TARGET'] = target
+
+        if target in available_targets:
+            self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
+
+    def get_target(self):
+
+        if os.path.isfile(INVOKE_YML_FILE):
+
+            with open(INVOKE_YML_FILE) as config:
+                config_dict = yaml.safe_load(config)
+                return config_dict['target']
+        else:
+            self.logger.error(f"'{INVOKE_YML_FILE}' not found. Please run 'inv setup'")
+            sys.exit(0)
 
     @staticmethod
     def set_dynamic_properties_for_comparison(target):
@@ -89,6 +103,12 @@ class DBTTestUtils:
             return {
                 'SCHEMA_NAME': schema_name,
                 'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
+            }
+        elif target == 'bigquery':
+            schema_name = f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
+
+            return {
+                "DATASET_NAME": schema_name
             }
         else:
             raise ValueError('TARGET not set')
@@ -567,7 +587,10 @@ class DBTVAULTGenerator:
             "sat": self.sat,
             "eff_sat": self.eff_sat,
             "t_link": self.t_link,
-            "ma_sat": self.ma_sat
+            "xts": self.xts,
+            "ma_sat": self.ma_sat,
+            "bridge": self.bridge,
+            "pit": self.pit
         }
 
         processed_metadata = self.process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -576,7 +599,7 @@ class DBTVAULTGenerator:
         generator_functions[vault_structure](**processed_metadata)
 
     def stage(self, model_name, source_model: dict, derived_columns=None, hashed_columns=None,
-              ranked_columns=None, include_source_columns=True, config=None):
+              ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
         """
         Generate a stage model template
             :param model_name: Name of the model file
@@ -586,10 +609,13 @@ class DBTVAULTGenerator:
             :param hashed_columns: Dictionary of hashed columns, can be None
             :param ranked_columns: Dictionary of ranked columns, can be None
             :param include_source_columns: Boolean: Whether to extract source columns from source table
+            :param depends_on: depends on string if provided
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
                             source_model={source_model},
@@ -600,7 +626,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config):
+    def hub(self, model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, depends_on=""):
         """
         Generate a hub model template
             :param model_name: Name of the model file
@@ -610,9 +636,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config string
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}    
         {{{{ config({config}) }}}}
         {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
                           {src_source}, {source_model})   }}}}
@@ -620,7 +648,7 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config):
+    def link(self, model_name, src_pk, src_fk, src_ldts, src_source, source_model, config, depends_on=""):
         """
         Generate a link model template
             :param model_name: Name of the model file
@@ -630,9 +658,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.link({src_pk}, {src_fk}, {src_ldts},
                            {src_source}, {source_model})   }}}}
@@ -642,7 +672,7 @@ class DBTVAULTGenerator:
 
     def sat(self, model_name, src_pk, src_hashdiff, src_payload,
             src_eff, src_ldts, src_source, source_model,
-            config):
+            config, depends_on=""):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -654,9 +684,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.sat({src_pk}, {src_hashdiff}, {src_payload},
                           {src_eff}, {src_ldts}, {src_source}, 
@@ -667,7 +699,7 @@ class DBTVAULTGenerator:
 
     def eff_sat(self, model_name, src_pk, src_dfk, src_sfk,
                 src_start_date, src_end_date, src_eff, src_ldts, src_source,
-                source_model, config):
+                source_model, config, depends_on=""):
         """
         Generate an effectivity satellite model template
             :param model_name: Name of the model file
@@ -681,9 +713,11 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.eff_sat({src_pk}, {src_dfk}, {src_sfk},
                               {src_start_date}, {src_end_date},
@@ -706,12 +740,36 @@ class DBTVAULTGenerator:
             :param src_source: Source record source column
             :param source_model: Model name to select from
             :param config: Optional model config
+            :param depends_on: Optional forced dependency
         """
 
         template = f"""
+        {depends_on}
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload if src_payload else 'none'}, 
                              {src_eff}, {src_ldts}, {src_source}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def xts(self, model_name, src_pk, src_satellite, src_ldts, src_source, source_model, config=None, depends_on=""):
+        """
+        Generate a XTS template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param src_satellite: Satellite to track
+            :param src_ldts: Source load date timestamp
+            :param src_source: Source record source column
+            :param source_model: Model name to select from
+            :param config: Optional model config
+            :param depends_on: Optional forced dependency
+        """
+
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
+                          {source_model})   }}}}
         """
 
         self.template_to_file(template, model_name)
@@ -741,6 +799,51 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
+    def bridge(self, model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
+               config, depends_on=""):
+        """
+        Generate a bridge model template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
+            :param stage_tables_ldts: List of stage table load date(time) stamps
+            :param source_model: Model name to select from
+            :param src_ldts: Source load date timestamp
+            :param config: Optional model config
+            :param depends_on: Optional forced dependency
+        """
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables_ldts}, {src_ldts}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
+    def pit(self, model_name, source_model, src_pk, as_of_dates_table, satellites,
+            stage_tables, src_ldts, depends_on="", config=None):
+        """
+        Generate a PIT template
+            :param model_name: Name of the model file
+            :param src_pk: Source pk
+            :param as_of_dates_table: Name for the AS_OF table
+            :param satellites: Dictionary of satellite reference mappings
+            :param src_ldts: Source Load Date timestamp
+            :param stage_tables: List of stage tables
+            :param source_model: Model name to select from
+            :param config: Optional model config
+            :param depends_on: Optional forced dependency
+        """
+
+        template = f"""
+        {depends_on}
+        {{{{ config({config}) }}}}
+        {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites},{stage_tables},{src_ldts}, {source_model}) }}}}
+        """
+
+        self.template_to_file(template, model_name)
+
     def process_structure_headings(self, context, model_name: str, headings: list):
         """
         Extract keys from headings if they are dictionaries
@@ -756,16 +859,23 @@ class DBTVAULTGenerator:
             if isinstance(item, dict):
 
                 if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
+                    dict_check = [next(iter(item))][0]
+                    if isinstance(item[dict_check], dict):
+                        satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
+                        satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
+                        processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
 
-                    satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
-                    satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-
-                    processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
+                elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
 
                     dict_check = [next(iter(item))][0]
                     if isinstance(item[dict_check], dict):
                         link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
                         processed_headings.extend(link_columns_hk)
+
+                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
+                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
+
+                    processed_headings.extend(satellite_columns)
 
                 elif item.get("source_column", None) and item.get("alias", None):
 
@@ -792,8 +902,11 @@ class DBTVAULTGenerator:
             "link": "incremental",
             "sat": "incremental",
             "eff_sat": "incremental",
+            "xts": "incremental",
             "t_link": "incremental",
-            "ma_sat": "incremental"
+            "ma_sat": "incremental",
+            "pit": "pit_incremental",
+            "bridge": "bridge_incremental"
         }
 
         if config:
@@ -803,6 +916,7 @@ class DBTVAULTGenerator:
             config = {"materialized": default_materialisations[vault_structure]}
 
         if vault_structure == "stage":
+
             if not kwargs.get("hashed_columns", None):
                 kwargs["hashed_columns"] = "none"
 
@@ -882,10 +996,8 @@ class DBTVAULTGenerator:
         if ignore_columns is None:
             ignore_columns = []
 
-        extracted_compare_columns = [k for k, v in columns_to_compare.items()]
-
         columns_to_compare = list(
-            [c for c in DBTVAULTGenerator.flatten(extracted_compare_columns) if c not in ignore_columns])
+            [c for c in columns_to_compare if c not in ignore_columns])
 
         test_yaml = {
             "models": [{

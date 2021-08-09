@@ -10,7 +10,7 @@ from test_project.test_utils.dbt_test_utils import DBTTestUtils
 PROJECT_ROOT = PurePath(__file__).parents[0]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 
-logger = logging.getLogger('dbt')
+logger = logging.getLogger('dbtvault')
 
 dbt_utils = DBTTestUtils()
 
@@ -99,7 +99,7 @@ def set_defaults(c, target=None, user=None, project=None):
 
     dict_file = {k: v for k, v in dict_file.items() if v}
 
-    with open('./invoke.yml', 'w') as file:
+    with open('invoke.yml', 'w') as file:
         yaml.dump(dict_file, file)
         logger.info(f'Defaults set.')
         logger.info(f'secrets_users: {user}')
@@ -132,6 +132,7 @@ def setup(c, target=None, user=None, project=None, secrethub_template='secrethub
     check_project(c)
     logger.info(f'Installing dbtvault-dev in test project...')
     run_dbt(c, 'deps', target=target, user=user, project='test')
+    logger.info(f'Setup complete!')
 
 
 @task
@@ -149,7 +150,7 @@ def change_target(c, target):
         'project': c.config.get('project', None),
         'target': target}
 
-    with open('./invoke.yml', 'w') as file:
+    with open('invoke.yml', 'w') as file:
         yaml.dump(dict_file, file)
         logger.info(f"Target set to '{target}'")
 
@@ -255,7 +256,7 @@ def check_target(target: str):
         :return: bool
     """
 
-    available_targets = ['snowflake', 'bigquery']
+    available_targets = ['snowflake', 'bigquery', 'sqlserver']
 
     if target in available_targets:
         return True

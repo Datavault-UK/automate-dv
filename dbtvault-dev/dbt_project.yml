@@ -1,6 +1,6 @@
-name: 'dbtvault'
-version: '0.7.4'
-require-dbt-version: [">=0.18.0", "<0.20.0"]
+name: dbtvault
+version: 0.7.5
+require-dbt-version: [">=0.18.0", "<0.21.0"]
 config-version: 2
 
 source-paths: ["models"]
