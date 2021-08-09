@@ -1,13 +1,11 @@
 {%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
-
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
 
-{%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
     {%- if target.type == 'bigquery' -%}
         {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
@@ -52,13 +50,11 @@ compare_e_to_a AS (
     EXCEPT DISTINCT
     SELECT * FROM order_actual_data
 ),
-
 compare_a_to_e AS (
     SELECT * FROM order_actual_data
     EXCEPT DISTINCT
     SELECT * FROM order_expected_data
 ),
-
 duplicates_actual AS (
     SELECT {{ columns_string }}, COUNT(*) AS COUNT
     FROM order_actual_data
@@ -81,7 +77,6 @@ duplicates_not_in_expected AS (
     FROM duplicates_actual
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 ),
-
 compare AS (
     SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a
     UNION ALL
