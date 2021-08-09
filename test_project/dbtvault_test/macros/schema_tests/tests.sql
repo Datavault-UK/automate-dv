@@ -110,12 +110,24 @@ SELECT * FROM compare
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
+{%- set expected_columns = adapter.get_columns_in_relation(ref(expected_seed)) -%}
 
-{%- for compare_col in compare_columns -%}
+{%- for expected_col in expected_columns -%}
 
-    {%- do columns_processed.append(compare_col) -%}
+    {%- set compare_col = expected_col.column -%}
+    {%- set compare_col_data_type = expected_col.data_type -%}
 
-    {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(compare_col, compare_col)) -%}
+    {%  if compare_col in compare_columns %}
+        {%- do columns_processed.append(compare_col) -%}
+
+        {% if compare_col_data_type == 'binary' %}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(compare_col, compare_col)) -%}
+        {% elif compare_col_data_type == 'datetime' %}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 121) AS {}".format(compare_col, compare_col)) -%}
+        {% else %}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(compare_col, compare_col)) -%}
+        {% endif %}
+    {% endif %}
 
 {%- endfor %}
 
@@ -123,7 +135,13 @@ SELECT * FROM compare
 
     {%- do source_columns_list.append(source_col.column) -%}
 
-    {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(source_col.column, source_col.column)) -%}
+    {% if source_col.data_type == 'binary' %}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(source_col.column, source_col.column)) -%}
+    {% elif source_col.data_type == 'datetime' %}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 121) AS {}".format(source_col.column, source_col.column)) -%}
+    {% else %}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(source_col.column, source_col.column)) -%}
+    {% endif %}
 
 {%- endfor %}
 
