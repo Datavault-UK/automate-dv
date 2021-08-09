@@ -1,7 +1,13 @@
 from behave.fixture import use_fixture_by_tag
 
-from test_project.features.bigquery_fixtures import eff_satellite_bigquery, \
+
+from test_project.features.bigquery_fixtures import single_source_hub_bigquery, multi_source_hub_bigquery, \
+                                                    single_source_link_bigquery, multi_source_link_bigquery, \
+                                                    satellite_bigquery, satellite_cycle_bigquery,
+                                                    t_link_bigquery, eff_satellite_bigquery, \
     eff_satellite_testing_auto_end_dating_bigquery, eff_satellite_multipart_bigquery
+
+
 from test_project.features.fixtures import *
 from test_project.test_utils.dbt_test_utils import *
 
@@ -9,12 +15,18 @@ fixture_registry = {
     "fixture.set_workdir": set_workdir,
     "fixture.staging": staging,
     "fixture.single_source_hub": single_source_hub,
+    "fixture.single_source_hub_bigquery": single_source_hub_bigquery,
     "fixture.sha": sha,
     "fixture.multi_source_hub": multi_source_hub,
+    "fixture.multi_source_hub_bigquery": multi_source_hub_bigquery,
     "fixture.single_source_link": single_source_link,
+    "fixture.single_source_link_bigquery": single_source_link_bigquery,
     "fixture.multi_source_link": multi_source_link,
+    "fixture.multi_source_link_bigquery": multi_source_link_bigquery,
     "fixture.satellite": satellite,
+    "fixture.satellite_bigquery": satellite_bigquery,
     "fixture.satellite_cycle": satellite_cycle,
+    "fixture.satellite_cycle_bigquery": satellite_cycle_bigquery,
     "fixture.eff_satellite": eff_satellite,
     "fixture.eff_satellite_bigquery": eff_satellite_bigquery,
     "fixture.eff_satellite_testing_auto_end_dating": eff_satellite_testing_auto_end_dating,
@@ -22,6 +34,7 @@ fixture_registry = {
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.eff_satellite_multipart_bigquery": eff_satellite_multipart_bigquery,
     "fixture.t_link": t_link,
+    "fixture.t_link_bigquery": t_link_bigquery,
     "fixture.xts": xts,
     "fixture.multi_active_satellite": multi_active_satellite,
     "fixture.multi_active_satellite_cycle": multi_active_satellite_cycle,

@@ -32,7 +32,13 @@ def sha(context):
 
             for c, t in config[k]["+column_types"].items():
 
-                if t == "BINARY(16)":
+
+                if target.type == 'bigquery':
+                    if t == "BYTES":
+                    config[k]["+column_types"][c] = "BYTES"
+
+                else:
+                    t == "BINARY(16)":
                     config[k]["+column_types"][c] = "BINARY(32)"
 
     else:
@@ -49,6 +55,7 @@ def staging(context):
 
         "STG_CUSTOMER": {
             "+column_types": {
+
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
@@ -57,24 +64,28 @@ def staging(context):
                 "SOURCE": "VARCHAR",
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
+
                 "EFFECTIVE_FROM": "DATE"
             }
         },
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         }
     }
 
 
 @fixture
-def single_source_hub(context):
+def single_source_hub_bigquery(context):
+
     """
     Define the structures and metadata to load single-source hubs
     """
@@ -113,9 +124,8 @@ def single_source_hub(context):
         }
     }
 
+def multi_source_hub_bigquery(context):
 
-@fixture
-def multi_source_hub(context):
     """
     Define the structures and metadata to load multi-source hubs
     """
@@ -147,51 +157,61 @@ def multi_source_hub(context):
     context.seed_config = {
         "HUB": {
             "+column_types": {
-                "PART_PK": "BINARY(16)",
-                "PART_ID": "VARCHAR",
+
+                "PART_PK": "STRING",
+                "PART_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_PARTS": {
             "+column_types": {
-                "PART_ID": "VARCHAR",
-                "PART_NAME": "VARCHAR",
-                "PART_TYPE": "VARCHAR",
-                "PART_SIZE": "VARCHAR",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+<
+                "PART_ID": "STRING",
+                "PART_NAME": "STRING",
+                "PART_TYPE": "STRING",
+                "PART_SIZE": "STRING",
+                "PART_RETAILPRICE": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_SUPPLIER": {
             "+column_types": {
-                "PART_ID": "VARCHAR",
-                "SUPPLIER_ID": "VARCHAR",
+
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_LINEITEM": {
             "+column_types": {
-                "ORDER_ID": "VARCHAR",
-                "PART_ID": "VARCHAR",
-                "SUPPLIER_ID": "VARCHAR",
+
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "NUMERIC",
+                "DISCOUNT": "NUMERIC",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         }
     }
 
 
+    
 @fixture
-def single_source_link(context):
+def single_source_link_bigquery(context):
+
     """
     Define the structures and metadata to load single-source links
     """
@@ -216,29 +236,34 @@ def single_source_link(context):
     context.seed_config = {
         "LINK": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         }
     }
 
 
 @fixture
-def multi_source_link(context):
+def multi_source_link_bigquery(context):
+
     """
     Define the structures and metadata to load single-source links
     """
@@ -273,113 +298,58 @@ def multi_source_link(context):
     context.seed_config = {
         "LINK": {
             "+column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_SAP": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_CRM": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_WEB": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
-
-
+   
 @fixture
-def t_link(context):
-    """
-    Define the structures and metadata to load transactional links
-    """
+def satellite_bigquery(context):
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
-
-    context.seed_config = {
-        "RAW_STAGE": {
-            "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "ORDER_ID": "VARCHAR",
-                "TRANSACTION_NUMBER": "NUMBER(38,0)",
-                "TRANSACTION_DATE": "DATE",
-                "TYPE": "VARCHAR",
-                "AMOUNT": "NUMBER(38,2)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "T_LINK": {
-            "+column_types": {
-                "TRANSACTION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "TRANSACTION_NUMBER": "NUMBER(38,0)",
-                "TRANSACTION_DATE": "DATE",
-                "TYPE": "VARCHAR",
-                "AMOUNT": "NUMBER(38,2)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        }
-    }
-
-
-@fixture
-def satellite(context):
     """
     Define the structures and metadata to load satellites
     """
@@ -436,53 +406,63 @@ def satellite(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "RAW_STAGE_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+
+                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "SATELLITE": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         },
         "SATELLITE_TS": {
             "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
+
             }
         }
     }
 
 
 @fixture
-def satellite_cycle(context):
+
+def satellite_cycle_bigquery(context):
+
     """
     Define the structures and metadata to perform load cycles for satellites
     """
@@ -524,25 +504,7 @@ def satellite_cycle(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "SATELLITE": {
-            "+column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        }
+
     }
 
 
@@ -591,11 +553,27 @@ def eff_satellite_bigquery(context):
                 "ORDER_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE": {
+            "+column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         }
+
     }
 
 
@@ -739,16 +717,44 @@ def eff_satellite_multipart_bigquery(context):
             "ORDER_PK": "ORDER_ID",
             "PLATFORM_PK": "PLATFORM_ID",
             "ORGANISATION_PK": "ORGANISATION_ID"
+
+
+@fixture
+def t_link_bigquery(context):
+    """
+    Define the structures and metadata to load transactional links
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "ORDER_FK": "ORDER_ID"
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "TRANSACTION_DATE"
+
         }
     }
 
     context.vault_structure_columns = {
+
         "EFF_SAT": {
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK", "PLATFORM_PK", "ORGANISATION_PK"],
             "src_sfk": ["CUSTOMER_PK", "NATION_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
+
+        "T_LINK": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -758,6 +764,7 @@ def eff_satellite_multipart_bigquery(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
+
                 "CUSTOMER_ID": "NUMERIC",
                 "NATION_ID": "STRING",
                 "ORDER_ID": "STRING",
@@ -765,10 +772,12 @@ def eff_satellite_multipart_bigquery(context):
                 "ORGANISATION_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         },
+
         "EFF_SAT": {
             "+column_types": {
                 "CUSTOMER_ORDER_PK": "STRING",
@@ -779,12 +788,14 @@ def eff_satellite_multipart_bigquery(context):
                 "NATION_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         }
     }
+
 
 
 def bridge(context):
@@ -3267,3 +3278,4 @@ def disable_payload(context):
     Indicate that a src_payload key should be removed from the provided metadata
     """
     context.disable_payload = True
+

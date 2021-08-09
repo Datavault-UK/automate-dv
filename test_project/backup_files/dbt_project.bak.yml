@@ -1,6 +1,6 @@
 name: dbtvault_test
 version: 0.7.6
-require-dbt-version: ['>=0.18.0', "<0.21.0"]
+require-dbt-version: ['>=0.18.0', <0.21.0]
 config-version: 2
 profile: dbtvault
 
@@ -32,13 +32,13 @@ seeds:
   dbtvault_test:
     raw_source:
       +column_types:
-        CUSTOMER_PK: BINARY(16)
-        BOOKING_FK: BINARY(16)
-        ORDER_FK: BINARY(16)
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
         LOADDATE: DATE
     raw_source_2:
       +column_types:
-        CUSTOMER_PK: BINARY(16)
-        BOOKING_FK: BINARY(16)
-        ORDER_FK: BINARY(16)
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
         LOADDATE: DATE
