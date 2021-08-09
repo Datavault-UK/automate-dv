@@ -42,11 +42,3 @@ seeds:
         BOOKING_FK: BYTES
         ORDER_FK: BYTES
         LOADDATE: DATE
-    temp:
-      raw_stage_seed:
-        +column_types:
-          CUSTOMER_ID: NUMERIC
-          CUSTOMER_NAME: STRING
-          CUSTOMER_PHONE: STRING
-          LOAD_DATE: DATE
-          SOURCE: STRING
