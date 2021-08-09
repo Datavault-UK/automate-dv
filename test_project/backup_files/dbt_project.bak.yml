@@ -42,3 +42,13 @@ seeds:
         BOOKING_FK: BYTES
         ORDER_FK: BYTES
         LOADDATE: DATE
+    temp:
+      multi_active_satellite_expected_seed:
+        +column_types:
+          CUSTOMER_PK: STRING
+          CUSTOMER_NAME: STRING
+          CUSTOMER_PHONE: STRING
+          HASHDIFF: STRING
+          EFFECTIVE_FROM: DATE
+          LOAD_DATE: DATE
+          SOURCE: STRING
