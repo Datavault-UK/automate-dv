@@ -90,11 +90,11 @@ latest_records AS (
 {# Matching by hashkey + hashdiff + cdk #}
 matching_records AS (
     SELECT {{ dbtvault.prefix([src_pk], 'stage') }}
-        {%- if target.type == 'bigquery' -%}
+        {% if target.type == 'bigquery' %}
             ,COUNT(DISTINCT CONCAT({{ dbtvault.prefix([src_hashdiff], 'stage') }}, {{ dbtvault.prefix(cdk_cols, 'stage') }}) ) AS match_count
-        {%- elif target.type == 'snowflake' -%}
+        {% elif target.type == 'snowflake' %}
             ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'stage') }}, {{ dbtvault.prefix(cdk_cols, 'stage') }}) AS match_count
-        {%- endif -%}
+        {% endif %}
     FROM source_data AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
