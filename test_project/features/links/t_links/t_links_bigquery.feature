@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Transactional Links
 
-        @fixture.t_link_bigquery
+  @fixture.t_link_bigquery
   Scenario: [BASE-LOAD] Load a non-existent Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -26,7 +26,7 @@ Feature: Transactional Links
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.disable_payload
-  @fixture.t_link
+  @fixture.t_link_bigquery
   Scenario: [BASE-LOAD] Load a non-existent Transactional Link without a payload
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
