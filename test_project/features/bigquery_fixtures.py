@@ -34,7 +34,7 @@ def sha(context):
 
                 if t == "BYTES":
                     config[k]["+column_types"][c] = "BYTES"
-                if t == "BINARY(16)":
+                if t == "BYTES":
                     config[k]["+column_types"][c] = "BINARY(32)"
 
     else:
@@ -535,7 +535,7 @@ def t_link_bigquery(context):
                 "TRANSACTION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
                 "ORDER_FK": "STRING",
-                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_NUMBER": "NUMERIC",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
                 "AMOUNT": "STRING",
