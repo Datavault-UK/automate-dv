@@ -35,28 +35,55 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
-latest_records AS (
+latest_records_snowflake AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_num
     FROM {{ this }} AS b
-    QUALIFY row_num = 1
+    {%- if target.type == 'snowflake' -%}
+        QUALIFY row_num = 1
+    {%- endif -%}
 ),
+{% if target.type == 'bigquery' %}
+latest_records_bigquery AS (
+    SELECT * FROM latest_records_snowflake
+    WHERE row_num = 1
+),
+{% endif %}
+
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
-    FROM latest_records AS c
-    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('9999-12-31')
+    FROM {% if target.type == 'snowflake' %}
+            latest_records_snowflake
+        {% elif target.type == 'bigquery' %}
+            latest_records_bigquery
+        {% endif %}
+        AS c
+    WHERE {% if target.type == 'snowflake' %}
+        TO_DATE(c.{{ src_end_date }}) = TO_DATE('9999-12-31')
+        {% elif target.type == 'bigquery' %}
+        CAST(c.{{ src_end_date }} AS DATE) = CAST('9999-12-31' AS DATE)
+        {% endif %}
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
-    FROM latest_records AS d
-    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('9999-12-31')
+    FROM {% if target.type == 'snowflake' %}
+            latest_records_snowflake
+        {% elif target.type == 'bigquery' %}
+            latest_records_bigquery
+        {% endif %}
+        AS d
+    WHERE {% if target.type == 'snowflake' %}
+        TO_DATE(d.{{ src_end_date }}) = TO_DATE('9999-12-31')
+        {% elif target.type == 'bigquery' %}
+        CAST(d.{{ src_end_date }} AS DATE) != CAST('9999-12-31' AS DATE)
+        {% endif %}
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -64,7 +91,12 @@ new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'f') }}
     FROM source_data AS f
-    LEFT JOIN latest_records AS lr
+    LEFT JOIN {% if target.type == 'snowflake' %}
+            latest_records_snowflake
+        {% elif target.type == 'bigquery' %}
+            latest_records_bigquery
+        {% endif %}
+        AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
 ),
@@ -108,10 +140,10 @@ new_closed_records AS (
 
 records_to_insert AS (
     SELECT * FROM new_open_records
-    UNION
+    UNION DISTINCT
     SELECT * FROM new_reopened_records
     {%- if is_auto_end_dating %}
-    UNION
+    UNION DISTINCT
     SELECT * FROM new_closed_records
     {%- endif %}
 )
