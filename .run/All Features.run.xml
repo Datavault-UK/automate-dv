@@ -1,11 +1,8 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All Features" type="PyBehaveRunConfigurationType" factoryName="Behave">
-    <module name="dbtvault-dev" />
+    <module name="dbtvault" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
-    <envs>
-      <env name="TARGET" value="snowflake" />
-    </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="" />
     <option name="IS_MODULE_SDK" value="true" />
@@ -14,7 +11,7 @@
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <EXTENSION ID="net.ashald.envfile">
       <option name="IS_ENABLED" value="true" />
-      <option name="IS_SUBST" value="false" />
+      <option name="IS_SUBST" value="true" />
       <option name="IS_PATH_MACRO_SUPPORTED" value="false" />
       <option name="IS_IGNORE_MISSING_FILES" value="false" />
       <option name="IS_ENABLE_EXPERIMENTAL_INTEGRATIONS" value="false" />
@@ -23,7 +20,16 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/staging" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/ma_sats" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/xts" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/pit" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/bridge" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/links" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/sats" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/other" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/eff_sats" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test_project/features/hubs" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
