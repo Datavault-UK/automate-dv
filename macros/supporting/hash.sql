@@ -94,7 +94,7 @@
         {%- if is_hashdiff -%}
             {{- "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
         {%- else -%}
-            {{- "UPPER(TO_HEX({}(NULLIF(CONCAT(".format(hash_alg) | indent(4) -}}
+            {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
         {%- endif -%}
 
         {%- for column in columns -%}
@@ -103,15 +103,13 @@
 
             {%- set column_str = dbtvault.as_constant(column) -%}
             {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
-            {{- ",'{}',
-            ".format(concat_string) if not loop.last -}}
+            {{- "," if not loop.last -}}
 
             {%- if loop.last -%}
 
                 {% if is_hashdiff %}
                     {{- "\n)) AS BINARY({})) AS {}".format(hash_size, alias) -}}
                 {%- else -%}
-
                     {{- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, alias) -}}
                 {%- endif -%}
             {%- else -%}
