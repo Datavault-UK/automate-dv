@@ -22,7 +22,7 @@
     {%- elif hash == 'SHA' -%}
         {%- set hash_alg = 'SHA256' -%}
     {%- endif -%}
-    {%- set standardise = "IFNULL(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
+    {%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
 {%- elif target.type == 'snowflake' -%}
     {%- if hash == 'MD5' -%}
         {%- set hash_alg = 'MD5_BINARY' -%}
