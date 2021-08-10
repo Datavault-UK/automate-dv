@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Links
 
-  @fixture.single_source_link_bigquery
+  @fixture.single_source_link
   Scenario: [BASE-LOAD] Load a simple stage table into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
