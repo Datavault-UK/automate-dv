@@ -1,6 +1,7 @@
 from behave import fixture
 
 from test_project.test_utils.dbt_test_utils import *
+from fixtures_sqlserver import *
 
 """
 The fixtures here are used to supply runtime metadata to tests, which are provided to the model generator.
@@ -108,7 +109,8 @@ def single_source_hub(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
+                "CUSTOMER_DOB": "VARCHAR"
             }
         }
     }
@@ -2076,7 +2078,7 @@ def multi_active_satellite(context):
         "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         },
         "STG_CUSTOMER_TWO_CDK": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -2096,7 +2098,7 @@ def multi_active_satellite(context):
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         }
     }
 
@@ -2362,7 +2364,7 @@ def multi_active_satellite_cycle(context):
         "STG_CUSTOMER_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         },
         "STG_CUSTOMER_TWO_CDK": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -2382,7 +2384,7 @@ def multi_active_satellite_cycle(context):
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_NAME"]}
+                         "columns": "CUSTOMER_NAME"}
         }
     }
 

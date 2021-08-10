@@ -1,6 +1,6 @@
 name: dbtvault
-version: 0.7.5
-require-dbt-version: [">=0.18.0", "<0.21.0"]
+version: 0.7.7
+require-dbt-version: ["0.20.0", "<0.21.0"]
 config-version: 2
 
 source-paths: ["models"]
@@ -17,3 +17,7 @@ clean-targets:
 
 vars:
   hash: MD5
+
+dispatch:
+  - macro_namespace: dbt_sqlserver
+    search_order: ['dbtvault', 'dbt_sqlserver']

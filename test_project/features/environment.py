@@ -28,7 +28,26 @@ fixture_registry = {
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,
-    "fixture.disable_payload": disable_payload
+    "fixture.disable_payload": disable_payload,
+    "fixture.staging_sqlserver": staging_sqlserver,
+    "fixture.single_source_hub_sqlserver": single_source_hub_sqlserver,
+    "fixture.multi_source_hub_sqlserver": multi_source_hub_sqlserver,
+    "fixture.single_source_link_sqlserver": single_source_link_sqlserver,
+    "fixture.multi_source_link_sqlserver": multi_source_link_sqlserver,
+    "fixture.t_link_sqlserver": t_link_sqlserver,
+    "fixture.eff_satellite_sqlserver": eff_satellite_sqlserver,
+    "fixture.eff_satellite_testing_auto_end_dating_sqlserver": eff_satellite_testing_auto_end_dating_sqlserver,
+    "fixture.eff_satellite_multipart_sqlserver": eff_satellite_multipart_sqlserver,
+    "fixture.pit_sqlserver": pit_sqlserver,
+    "fixture.pit_one_sat_sqlserver": pit_one_sat_sqlserver,
+    "fixture.pit_two_sats_sqlserver": pit_two_sats_sqlserver,
+    "fixture.bridge_sqlserver": bridge_sqlserver,
+    "fixture.multi_active_satellite_sqlserver": multi_active_satellite_sqlserver,
+    "fixture.multi_active_satellite_cycle_sqlserver": multi_active_satellite_cycle_sqlserver,
+    "fixture.satellite_sqlserver": satellite_sqlserver,
+    "fixture.satellite_cycle_sqlserver": satellite_cycle_sqlserver,
+    "fixture.xts_sqlserver": xts_sqlserver,
+    "fixture.cycle_sqlserver": cycle_sqlserver
 }
 
 
