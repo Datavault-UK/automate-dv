@@ -111,13 +111,21 @@
         {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
     {%- endif -%}
 
-    {%- for column in columns -%}
+        {%- if is_hashdiff -%}
+            {{- "CAST({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {%- else -%}
+            {{- "CAST({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {%- endif -%}
 
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
         {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
+
+            {%- set column_str = dbtvault.as_constant(column) -%}
+            {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+            {{- "," if not loop.last -}}
 
             {%- if loop.last -%}
 
