@@ -30,14 +30,19 @@ WITH source_data_filtered AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
     {% if dbtvault.is_any_incremental() %}
-        {%- if target.type == 'bigquery' -%}
-            ,COUNT(DISTINCT CONCAT({{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }}) )
-        {%- elif target.type == 'snowflake' -%}
-            ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} )
-        {%- endif -%}
-        OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
+        , cd.source_count
     {%- endif %}
     FROM {{ ref(source_model) }} AS a
+    {% if dbtvault.is_any_incremental() %}
+    INNER JOIN
+    (
+        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS source_count
+        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM {{ ref(source_model) }} AS s) AS t
+
+        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+    ) AS cd
+    ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'a') }}
+    {%- endif %}
     WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
     {%- for child_key in src_cdk %}
         AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
@@ -63,15 +68,26 @@ source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
+latest_selection AS (
+    SELECT ls.*
+    FROM (
+        SELECT {{ dbtvault.prefix(cdk_cols, 'target_records') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
+            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
+                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS latest_rank
+        FROM {{ this }} AS target_records
+        INNER JOIN
+            (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
+            FROM source_data AS source_pks) AS source_records
+                ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
+    ) AS ls
+    WHERE ls.latest_rank = 1
+),
+
+
+
 {# Select latest records from satellite together with count of distinct hashdiff + cdk combinations for each hashkey #}
 latest_records AS (
-    SELECT latest_selection.*,
-        {%- if target.type == 'bigquery' -%}
-            COUNT(DISTINCT CONCAT({{ dbtvault.prefix([src_hashdiff], 'latest_selection') }}, {{ dbtvault.prefix(cdk_cols, 'latest_selection') }}) )
-        {%- elif target.type == 'snowflake' -%}
-            COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'latest_selection') }}, {{ dbtvault.prefix(cdk_cols, 'latest_selection') }} )
-        {%- endif -%}
-            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'latest_selection') }}) AS target_count
+    SELECT latest_selection.*, cd.target_count
     FROM (
         {# Select the most recent group of records relating to each PK in the source data #}
         SELECT {{ dbtvault.prefix(cdk_cols, 'target_records') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
@@ -83,6 +99,14 @@ latest_records AS (
             FROM source_data AS source_pks) AS source_records
                 ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
         ) AS latest_selection
+        INNER JOIN
+        (
+            SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS target_count
+            FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_selection AS s) AS t
+
+            GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+        ) AS cd
+        ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'latest_selection') }}
         WHERE latest_selection.latest_rank = 1
 ),
 
@@ -90,11 +114,7 @@ latest_records AS (
 {# Matching by hashkey + hashdiff + cdk #}
 matching_records AS (
     SELECT {{ dbtvault.prefix([src_pk], 'stage') }}
-        {% if target.type == 'bigquery' %}
-            ,COUNT(DISTINCT CONCAT({{ dbtvault.prefix([src_hashdiff], 'stage') }}, {{ dbtvault.prefix(cdk_cols, 'stage') }}) ) AS match_count
-        {% elif target.type == 'snowflake' %}
-            ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'stage') }}, {{ dbtvault.prefix(cdk_cols, 'stage') }}) AS match_count
-        {% endif %}
+        , MAX(cd.match_count) AS match_count
     FROM source_data AS stage
     INNER JOIN latest_records
         ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
@@ -102,6 +122,14 @@ matching_records AS (
     {%- for child_key in src_cdk %}
         AND {{ dbtvault.prefix([child_key], 'stage') }} = {{ dbtvault.prefix([child_key], 'latest_records') }}
     {%- endfor %}
+    INNER JOIN
+    (
+        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS match_count
+        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_records AS s) AS t
+
+        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+    ) AS cd
+    ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
     GROUP BY {{ dbtvault.prefix([src_pk], 'stage') }}
 ),
 
