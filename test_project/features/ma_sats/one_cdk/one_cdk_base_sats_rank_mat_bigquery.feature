@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites - Loading using Rank Materialization
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-BASE] Base load of a multi-active satellite with one value in rank column loads first rank
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
