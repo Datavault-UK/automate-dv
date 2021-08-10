@@ -27,8 +27,11 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
+{# TODO ghost_pk should be at least a 16byte 0 hash i.e 0x00000000000000000000000000000000 #}
+
 {#- Setting ghost values to replace NULLS -#}
 {%- set ghost_pk = '0000000000000000' -%}
+
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
 {# Stating the dependancies on the stage tables outside of the If STATEMENT #}
@@ -42,6 +45,7 @@
 {%- else -%}
 {%- set new_as_of_dates_cte = 'as_of_dates' -%}
 {%- endif %}
+
 
 WITH as_of_dates AS (
     SELECT * FROM {{ as_of_table_relation }}
@@ -87,20 +91,23 @@ min_date AS (
 backfill_as_of AS (
     SELECT AS_OF_DATE
     FROM as_of_dates AS a
-    WHERE a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    INNER JOIN last_safe_load_datetime as l
+    ON a.AS_OF_DATE < l.LAST_SAFE_LOAD_DATETIME
 ),
 
 new_rows_pks AS (
     SELECT a.{{ src_pk }}
     FROM {{ ref(source_model) }} AS a
-    WHERE a.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    INNER JOIN last_safe_load_datetime as l
+    ON a.{{ src_ldts }} >= l.LAST_SAFE_LOAD_DATETIME
 ),
 
 new_rows_as_of AS (
     SELECT AS_OF_DATE
     FROM as_of_dates AS a
-    WHERE a.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    UNION
+    INNER JOIN last_safe_load_datetime as l
+    ON a.AS_OF_DATE >= l.LAST_SAFE_LOAD_DATETIME
+    UNION DISTINCT
     SELECT AS_OF_DATE
     FROM as_of_grain_new_entries
 ),
@@ -110,9 +117,15 @@ overlap AS (
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
     ON a.{{ src_pk }} = b.{{ src_pk }}
-    WHERE a.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-    AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    AND a.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+    INNER JOIN min_date
+    ON 1 = 1
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+	LEFT OUTER JOIN as_of_grain_lost_entries
+	ON a.AS_OF_DATE = as_of_grain_lost_entries.AS_OF_DATE
+    WHERE a.AS_OF_DATE >= min_date.MIN_DATE
+        AND a.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
 
 -- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
@@ -134,8 +147,8 @@ backfill AS (
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {{ "'{}'::BINARY(16) AS {}".format(ghost_pk, sat_name, sat_key_name) }},
-        {{ "'{}'::TIMESTAMP_NTZ AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
+        {{ "'{}' AS {}_{}".format(ghost_pk, sat_name, sat_key_name) }},
+        {{ "PARSE_DATETIME('%F %H:%M:%E6S', '{}') AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -152,7 +165,7 @@ backfill AS (
 
     GROUP BY
         a.{{- src_pk }}, a.AS_OF_DATE
-    ORDER BY (1, 2)
+    ORDER BY (1)
 ),
 {%- endif %}
 
@@ -174,11 +187,12 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
-        {{ ("COALESCE(MAX({}_src.{}), '{}'::BINARY(16)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
-        {{ ("COALESCE(MAX({}_src.{}), '{}'::TIMESTAMP_NTZ) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        {{ ("COALESCE(MAX({}_src.{}), '{}') AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        {{ ("COALESCE(MAX({}_src.{}), PARSE_DATETIME('%F %H:%M:%E6S',  '{}')) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
+
 
     {% for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
@@ -192,7 +206,7 @@ new_rows AS (
 
     GROUP BY
         a.{{- src_pk }}, a.AS_OF_DATE
-    ORDER BY (1, 2)
+    ORDER BY (1)
 ),
 
 pit AS (
@@ -207,5 +221,7 @@ pit AS (
 )
 
 SELECT DISTINCT * FROM pit
+
+
 
 {%- endmacro -%}
