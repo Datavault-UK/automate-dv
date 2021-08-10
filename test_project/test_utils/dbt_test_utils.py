@@ -66,14 +66,13 @@ class DBTTestUtils:
             self.compiled_model_path = COMPILED_TESTS_DBT_ROOT / model_directory
             self.expected_sql_file_path = EXPECTED_OUTPUT_FILE_ROOT / model_directory
 
-        target = self.get_target()
+        os.environ['TARGET'] = self.target
 
-        os.environ['TARGET'] = target
+        if self.target in AVAILABLE_TARGETS:
+            self.EXPECTED_PARAMETERS = self.set_custom_names()
 
-        if target in AVAILABLE_TARGETS:
-            self.EXPECTED_PARAMETERS = self.set_dynamic_properties_for_comparison(target)
-
-    def get_target(self):
+    @property
+    def target(self):
         """ Gets tha target as set by the user via the invoke CLI, stored in invoke.yml"""
 
         if os.path.isfile(INVOKE_YML_FILE):
@@ -86,33 +85,38 @@ class DBTTestUtils:
             sys.exit(0)
 
     @staticmethod
-    def set_dynamic_properties_for_comparison(target):
+    def is_pipeline():
+        return os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH')
+
+    def set_custom_names(self):
         """
-        Database and schema for generated SQL during macro tests changes based on user.
-        This function works out what those names need to be for downstream comparisons to use instead.
+        Database and schema names for generated SQL during macro tests changes based on user.
+        This function generates those names.
         """
-        # TODO: Re-factor this. Work out patterns, move to separate functions etc.
-        if target == 'snowflake':
-            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
-                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}" \
-                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
-            else:
-                schema_name = f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
 
-            schema_name = schema_name.replace("-", "_").replace(".", "_").replace("/", "_")
+        def sanitise_strings(unsanitised_str):
+            return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
 
-            return {
-                'SCHEMA_NAME': schema_name,
-                'DATABASE_NAME': os.getenv('SNOWFLAKE_DB_DATABASE'),
+        circleci_metadata = {
+            "snowflake": {
+                "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
+                               f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
             }
-        elif target == 'bigquery':
-            schema_name = f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
+        }
 
-            return {
-                "DATASET_NAME": schema_name
+        local_metadata = {
+            "snowflake": {
+                "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}".upper()
+            },
+            "bigquery": {
+                "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
             }
+        }
+
+        if self.is_pipeline():
+            return {k: sanitise_strings(v) for k, v in circleci_metadata[self.target].items()}
         else:
-            raise ValueError('TARGET not set')
+            return {k: sanitise_strings(v) for k, v in local_metadata[self.target].items()}
 
     def run_dbt_command(self, command) -> str:
         """
@@ -159,7 +163,6 @@ class DBTTestUtils:
                       include_model_deps=False, include_tag=False) -> str:
         """
         Run or Compile a specific dbt model, with optionally provided variables.
-
             :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
             :param model_name: Model name for dbt to run
             :param args: variable dictionary to provide to dbt
@@ -234,7 +237,6 @@ class DBTTestUtils:
     def retrieve_compiled_model(self, model: str, exclude_comments=True):
         """
         Retrieve the compiled SQL for a specific dbt model
-
             :param model: Model name to check
             :param exclude_comments: Exclude comments from output
             :return: Contents of compiled SQL file
@@ -251,7 +253,6 @@ class DBTTestUtils:
     def retrieve_expected_sql(self, file_name: str):
         """
         Retrieve the expected SQL for a specific dbt model
-
             :param file_name: File name to check
             :return: Contents of compiled SQL file
         """
@@ -498,7 +499,6 @@ class DBTTestUtils:
         """
         Evaluate strings surrounded with hashdiff() and exclude_hashdiff() to
         augment the YAML metadata and configure hashdiff columns for staging.
-
             :param columns_as_series: Columns from a context.table in Series form.
             :return: Modified series
         """
