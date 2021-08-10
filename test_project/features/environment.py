@@ -109,7 +109,7 @@ def before_scenario(context, scenario):
 
 
 def before_tag(context, tag):
-    target = context.dbt_test_utils.get_target()
+    target = context.dbt_test_utils.target
 
     if target in AVAILABLE_TARGETS:
         fixtures = fixture_lookup[target]
