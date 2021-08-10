@@ -353,10 +353,10 @@ def t_link_bigquery(context):
             "+column_types": {
                 "CUSTOMER_ID": "STRING",
                 "ORDER_ID": "STRING",
-                "TRANSACTION_NUMBER": "NUMERIC",
+                "TRANSACTION_NUMBER": "STRING",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
-                "AMOUNT": "NUMERIC",
+                "AMOUNT": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -369,7 +369,7 @@ def t_link_bigquery(context):
                 "TRANSACTION_NUMBER": "STRING",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
-                "AMOUNT": "NUMERIC",
+                "AMOUNT": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
