@@ -24,7 +24,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-02     | 1993-01-02 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-BASE] Base load of a multi-active satellite with one value in rank column excludes NULL PKs and loads first rank,
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -46,7 +46,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with one value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -66,7 +66,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with one value in rank column excluding NULL PKs, loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -87,7 +87,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-BASE] Base load of a multi-active satellite with multiple and duplicated values in rank column loads first rank
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -105,7 +105,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-03     | 1993-01-03 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04     | 1993-01-04 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with multiple and duplicated values in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -125,7 +125,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-03     | 1993-01-03 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04     | 1993-01-04 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-BASE] Base load of a multi-active satellite with one timestamp value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -144,7 +144,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with multiple timestamps over different days in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -164,7 +164,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-03 11:14:54.396 | 1993-01-03 11:14:54.396 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-BASE] Base load of a multi-active satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -190,7 +190,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -221,7 +221,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       #| md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.393 | 1993-01-04 11:14:54.393 | *      |
       | md5('1004') | md5('1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 1993-01-04 12:14:54.393 | 1993-01-04 12:14:54.393 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -241,7 +241,7 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with multiple sets of records per load, loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
