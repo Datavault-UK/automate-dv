@@ -375,7 +375,7 @@ def satellite_bigquery(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -385,7 +385,7 @@ def satellite_bigquery(context):
         },
         "RAW_STAGE_TS": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -702,7 +702,7 @@ def multi_active_satellite_bigquery(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMERIC",
+                "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
