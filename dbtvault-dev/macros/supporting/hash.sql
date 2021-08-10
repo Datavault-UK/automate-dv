@@ -132,7 +132,7 @@
 
     {%- endif -%}
 
-{%- elif target.type == 'snowflake' -%}
+
     {%- if columns is string -%}
         {%- set column_str = dbtvault.as_constant(columns) -%}
         {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), hash_size, alias) | indent(4) -}}
@@ -171,9 +171,9 @@
             {%- endif -%}
 
 
+    {%- endif -%}
 
-    {%- endfor -%}
-{%- endif -%}
+
 
 
 
