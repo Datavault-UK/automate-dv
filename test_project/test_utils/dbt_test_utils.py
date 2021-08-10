@@ -322,10 +322,10 @@ class DBTTestUtils:
         Deletes csv files in csv folder.
         """
 
-        if not model_name:
-            delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
+        if model_name:
+            delete_files = [CSV_DIR / f"{model_name.lower()}.csv"]
         else:
-            delete_files = [Path(f"{CSV_DIR}/{model_name.lower()}.csv")]
+            delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
 
         for file in delete_files:
             try:
@@ -451,7 +451,6 @@ class DBTTestUtils:
 
         sql_command = ""
         first_row = True
-        first_column = True
 
         for row_number in feature_data.keys():
             if first_row:
@@ -477,11 +476,11 @@ class DBTTestUtils:
                     column_data_for_sql = f"'{column_data}'"
 
                 if  self.get_target() == "sqlserver" and column_type[0:6].upper() == "BINARY":
-                    expression = "CONVERT(" + column_type + ", " + column_data_for_sql + ", 2)"
+                    expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
                 else:
-                    expression = "CAST(" + column_data_for_sql + " AS " + column_type + ")"
+                    expression = f"CAST({column_data_for_sql} AS {column_type})"
 
-                sql_command = sql_command + expression + " AS " + column_name + " "
+                sql_command = f"{sql_command}{expression} AS {column_name} "
 
         with open(FEATURE_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
             f.write(sql_command)
