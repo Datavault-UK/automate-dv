@@ -11,11 +11,11 @@ from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
+import ruamel.yaml
 import yaml
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
-import ruamel.yaml
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
@@ -845,48 +845,87 @@ class DBTVAULTGenerator:
 
         self.template_to_file(template, model_name)
 
-    def process_structure_headings(self, context, model_name: str, headings: list):
+    @staticmethod
+    def process_pit_columns(column_def: dict):
+
+        column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
+
+        if not column_def:
+            return dict()
+        else:
+            satellite_columns_hk = [f"{col}_{list(column_def[col]['pk'].keys())[0]}" for col in column_def.keys()]
+            satellite_columns_ldts = [f"{col}_{list(column_def[col]['ldts'].keys())[0]}" for col in column_def.keys()]
+            return [satellite_columns_hk + satellite_columns_ldts]
+
+    @staticmethod
+    def process_xts_columns(column_def: dict):
+        column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
+
+        if not column_def:
+            return dict()
+        else:
+            return [f"{list(col.keys())[0]}" for col in list(column_def.values())[0].values()]
+
+    @staticmethod
+    def process_bridge_columns(column_def: dict):
+
+        column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
+
+        if not column_def:
+            return dict()
+        else:
+            return [column_def[col]['bridge_link_pk'] for col in column_def.keys()]
+
+    @staticmethod
+    def process_other_columns(column_def: dict):
+
+        column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
+
+        if not column_def:
+            return dict()
+        else:
+            if column_def.get("source_column", None) and column_def.get("alias", None):
+                return column_def['source_column']
+            else:
+                return list(column_def.keys())
+
+    def extract_column_names(self, context, model_name: str, model_params: dict, ignored_params=None):
         """
         Extract keys from headings if they are dictionaries
             :param context: Fixture context
             :param model_name: Name of model which headers are being processed for
-            :param headings: Headings to process
+            :param model_params: Dictionary of parameters provided to the model (sc_pk, src_hashdiff, etc.)
+            :param ignored_params: A list of parameters to ignore in the dictionary
         """
 
-        # TODO: Re-factor this. Work out patterns, move to separate functions etc.
+        if not ignored_params:
+            ignored_params = ["source_model"]
+
+        column_metadata = [v for k, v in model_params.items() if k not in ignored_params]
+
+        processing_functions = {
+            "pit": self.process_pit_columns,
+            "bridge": self.process_bridge_columns,
+            "xts": self.process_xts_columns
+        }
+
         processed_headings = []
 
-        for item in headings:
+        column_strings = [column_name for column_name in column_metadata if not isinstance(column_name, dict)]
+        column_dicts = [column_def for column_def in column_metadata if isinstance(column_def, dict)]
 
-            if isinstance(item, dict):
+        vault_structure_type = getattr(context, "vault_structure_type", None)
 
-                if getattr(context, "vault_structure_type", None) == "pit" and "pit" in model_name.lower():
-                    dict_check = [next(iter(item))][0]
-                    if isinstance(item[dict_check], dict):
-                        satellite_columns_hk = [f"{col}_{list(item[col]['pk'].keys())[0]}" for col in item.keys()]
-                        satellite_columns_ldts = [f"{col}_{list(item[col]['ldts'].keys())[0]}" for col in item.keys()]
-                        processed_headings.extend(satellite_columns_hk + satellite_columns_ldts)
-
-                elif getattr(context, "vault_structure_type", None) == "bridge" and "bridge" in model_name.lower():
-
-                    dict_check = [next(iter(item))][0]
-                    if isinstance(item[dict_check], dict):
-                        link_columns_hk = [item[col]['bridge_link_pk'] for col in item.keys()]
-                        processed_headings.extend(link_columns_hk)
-
-                elif getattr(context, "vault_structure_type", None) == "xts" and "xts" in model_name.lower():
-                    satellite_columns = [f"{list(col.keys())[0]}" for col in list(item.values())[0].values()]
-
-                    processed_headings.extend(satellite_columns)
-
-                elif item.get("source_column", None) and item.get("alias", None):
-
-                    processed_headings.append(item['source_column'])
-
-                else:
-                    processed_headings.append(list(item.keys()))
+        if column_dicts:
+            if vault_structure_type in processing_functions.keys() and vault_structure_type in model_name.lower():
+                extracted_headings = list(filter(None, map(processing_functions[context.vault_structure_type],
+                                                           column_dicts)))
             else:
-                processed_headings.append(item)
+                extracted_headings = list(filter(None, map(self.process_other_columns,
+                                                           column_dicts)))
+
+            processed_headings.extend(extracted_headings)
+        processed_headings.extend(column_strings)
 
         return list(self.flatten(processed_headings))
 
