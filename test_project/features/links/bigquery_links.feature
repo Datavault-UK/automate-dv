@@ -21,7 +21,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD] Load a stage table with duplicates into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
@@ -46,7 +46,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD] Load a simple stage table into a non-existent link and exclude records with NULL foreign keys
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
@@ -65,7 +65,7 @@ Feature: Links
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD-EMPTY] Load a simple stage table into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
@@ -85,7 +85,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [BASE-LOAD-EMPTY] Load a stage table with duplicates into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
@@ -110,7 +110,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [POPULATED-LOAD] Load a simple stage table into a populated link.
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -137,7 +137,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [POPULATED-LOAD] Load a stage table with duplicates into a populated link
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -167,7 +167,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [POPULATED-LOAD] Load a stage table where a foreign key is NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -198,7 +198,7 @@ Feature: Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
-  @fixture.single_source_link
+  @fixture.single_source_link_bigquery
   Scenario: [POPULATED-LOAD] Load a stage table where a primary keys components are all NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -220,7 +220,7 @@ Feature: Links
       | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
 
-  @fixture.multi_source_link
+  @fixture.multi_source_link_bigquery
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed a link which does not exist
     Given the LINK table does not exist
     And the RAW_STAGE_SAP table contains data
@@ -260,7 +260,7 @@ Feature: Links
       | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
       | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
 
-  @fixture.multi_source_link
+  @fixture.multi_source_link_bigquery
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed empty link
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
@@ -300,7 +300,7 @@ Feature: Links
       | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
       | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
 
-  @fixture.multi_source_link
+  @fixture.multi_source_link_bigquery
   Scenario: [BASE-LOAD-UNION] Union three staging tables to feed empty link where NULL foreign keys are not added
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
@@ -338,7 +338,7 @@ Feature: Links
       | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-02 | WEB    |
       | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
 
-  @fixture.multi_source_link
+  @fixture.multi_source_link_bigquery
   Scenario: [POPULATED-LOAD-UNION] Union three staging tables with duplicates to feed populated link
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
@@ -396,7 +396,7 @@ Feature: Links
       | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
       | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
 
-  @fixture.multi_source_link
+  @fixture.multi_source_link_bigquery
   Scenario: [POPULATED-LOAD-UNION] Load a stage table where a foreign key is NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |

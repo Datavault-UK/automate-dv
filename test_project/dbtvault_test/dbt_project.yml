@@ -42,3 +42,7 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
+    temp:
+      as_of_date_seed:
+        +column_types:
+          AS_OF_DATE: DATETIME
