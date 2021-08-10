@@ -17,6 +17,7 @@
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+{%- set max_date = '9999-12-31 23:59:59.999' -%}
 
 {{- dbtvault.prepend_generated_by() }}
 
@@ -35,16 +36,13 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
-latest_records_snowflake AS (
+latest_records_unranked AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_num
     FROM {{ this }} AS b
-    {%- if target.type == 'snowflake' -%}
-        QUALIFY row_num = 1
-    {%- endif -%}
 ),
 {% if target.type == 'bigquery' %}
 latest_records_bigquery AS (
@@ -53,37 +51,24 @@ latest_records_bigquery AS (
 ),
 {% endif %}
 
+latest_records AS (
+    SELECT *
+    FROM latest_records_unranked
+    WHERE row_num = 1
+),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
-    FROM {% if target.type == 'snowflake' %}
-            latest_records_snowflake
-        {% elif target.type == 'bigquery' %}
-            latest_records_bigquery
-        {% endif %}
-        AS c
-    WHERE {% if target.type == 'snowflake' %}
-        TO_DATE(c.{{ src_end_date }}) = TO_DATE('9999-12-31')
-        {% elif target.type == 'bigquery' %}
-        CAST(c.{{ src_end_date }} AS DATE) = CAST('9999-12-31' AS DATE)
-        {% endif %}
+    FROM latest_records AS c
+    WHERE DATE(c.{{ src_end_date }}) = DATE('{{max_date}}')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
-    FROM {% if target.type == 'snowflake' %}
-            latest_records_snowflake
-        {% elif target.type == 'bigquery' %}
-            latest_records_bigquery
-        {% endif %}
-        AS d
-    WHERE {% if target.type == 'snowflake' %}
-        TO_DATE(d.{{ src_end_date }}) = TO_DATE('9999-12-31')
-        {% elif target.type == 'bigquery' %}
-        CAST(d.{{ src_end_date }} AS DATE) != CAST('9999-12-31' AS DATE)
-        {% endif %}
+    FROM latest_records AS d
+    WHERE DATE(d.{{ src_end_date }}) != DATE('{{max_date}}')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -135,7 +120,8 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-{#- end if is_auto_end_dating -#}
+{#-
+end if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
@@ -155,8 +141,9 @@ records_to_insert AS (
     FROM source_data AS i
 )
 
-{#- end if not dbtvault.is_any_incremental() -#}
+{#-
+end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
-SELECT * FROM records_to_insert
-{%- endmacro -%}
+SELECT *
+FROM records_to_insert {%- endmacro -%}
