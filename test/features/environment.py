@@ -1,17 +1,17 @@
 from behave.fixture import use_fixture_by_tag
 
-from test.features.fixtures import *
-from test.features.staging import fixtures_staging
-from test.features.hubs import fixtures_hub
-from test.features.links import fixtures_link
-from test.features.sats import fixtures_sat
-from test.features.eff_sats import fixtures_eff_sat
-from test.features.ma_sats import fixtures_ma_sat
-from test.features.xts import fixtures_xts
-from test.features.pit import fixtures_pit
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
-from test_utils import dbtvault_generator
+from test.features.eff_sats import fixtures_eff_sat
+from test.features.fixtures import *
+from test.features.hubs import fixtures_hub
+from test.features.links import fixtures_link
+from test.features.ma_sats import fixtures_ma_sat
+from test.features.pit import fixtures_pit
+from test.features.sats import fixtures_sat
+from test.features.staging import fixtures_staging
+from test.features.xts import fixtures_xts
+from test_utils import dbtvault_generator, dbtvault_harness_utils
 
 fixture_registry_utils = {
     "fixture.set_workdir": set_workdir,
@@ -64,16 +64,13 @@ def before_all(context):
     Set up the full test environment and add objects to the context for use in steps
     """
 
-    dbt_test_utils = DBTVAULTHarnessUtils()
-
     # Setup context
     context.config.setup_logging()
-    context.dbt_test_utils = dbt_test_utils
 
     # Clean dbt folders and generated files
-    DBTVAULTHarnessUtils.clean_csv()
-    DBTVAULTHarnessUtils.clean_models()
-    DBTVAULTHarnessUtils.clean_target()
+    dbtvault_harness_utils.clean_csv()
+    dbtvault_harness_utils.clean_models()
+    dbtvault_harness_utils.clean_target()
 
     # Restore modified YAML to starting state
     dbtvault_generator.clean_test_schema_file()
@@ -81,11 +78,13 @@ def before_all(context):
     # Backup YAML prior to run
     dbtvault_generator.backup_project_yml()
 
+    # Env setup
     os.chdir(test.TESTS_DBT_ROOT)
+    os.environ['TARGET'] = dbtvault_harness_utils.target()
 
-    context.dbt_test_utils.create_dummy_model()
+    dbtvault_harness_utils.create_dummy_model()
 
-    context.dbt_test_utils.replace_test_schema()
+    dbtvault_harness_utils.replace_test_schema()
 
 
 def after_all(context):
@@ -97,22 +96,22 @@ def after_all(context):
 
 
 def before_scenario(context, scenario):
-    context.dbt_test_utils.create_dummy_model()
-    context.dbt_test_utils.replace_test_schema()
+    dbtvault_harness_utils.create_dummy_model()
+    dbtvault_harness_utils.replace_test_schema()
 
-    DBTVAULTHarnessUtils.clean_csv()
-    DBTVAULTHarnessUtils.clean_models()
-    DBTVAULTHarnessUtils.clean_target()
+    dbtvault_harness_utils.clean_csv()
+    dbtvault_harness_utils.clean_models()
+    dbtvault_harness_utils.clean_target()
 
     dbtvault_generator.clean_test_schema_file()
     dbtvault_generator.restore_project_yml()
 
 
 def before_tag(context, tag):
-    target = context.dbt_test_utils.target
+    tgt = dbtvault_harness_utils.target()
 
-    if target in test.AVAILABLE_TARGETS:
-        fixtures = fixture_lookup[target]
+    if tgt in test.AVAILABLE_TARGETS:
+        fixtures = fixture_lookup[tgt]
         if tag.startswith("fixture."):
             return use_fixture_by_tag(tag, context, fixtures)
     else:
