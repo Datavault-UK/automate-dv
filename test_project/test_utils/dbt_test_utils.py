@@ -110,6 +110,19 @@ class DBTTestUtils:
             return {
                 "DATASET_NAME": schema_name
             }
+        elif target == 'sqlserver':
+            if os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH'):
+                schema_name = f"{os.getenv('SQLSERVER_DB_SCHEMA')}_{os.getenv('SQLSERVER_DB_USER')}" \
+                              f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+            else:
+                schema_name = f"{os.getenv('SQLSERVER_DB_SCHEMA')}_{os.getenv('SQLSERVER_DB_USER')}"
+
+            schema_name = schema_name.replace("-", "_").replace(".", "_").replace("/", "_")
+
+            return {
+                'SCHEMA_NAME': schema_name,
+                'DATABASE_NAME': os.getenv('SQLSERVER_DB_DATABASE'),
+            }
         else:
             raise ValueError('TARGET not set')
 
@@ -151,6 +164,19 @@ class DBTTestUtils:
 
         if seed_file_name:
             command.extend(['--select', seed_file_name, '--full-refresh'])
+
+        return self.run_dbt_command(command)
+
+    def run_dbt_seed_model(self, seed_model_name=None) -> str:
+        """
+        Run seed model files in dbt
+            :return: dbt logs
+        """
+
+        command = ['dbt', 'run']
+
+        if seed_model_name:
+            command.extend(['-m', seed_model_name, '--full-refresh'])
 
         return self.run_dbt_command(command)
 
@@ -291,15 +317,21 @@ class DBTTestUtils:
         shutil.rmtree(target, ignore_errors=True)
 
     @staticmethod
-    def clean_csv():
+    def clean_csv(model_name=None):
         """
         Deletes csv files in csv folder.
         """
 
-        delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
+        if model_name:
+            delete_files = [CSV_DIR / f"{model_name.lower()}.csv"]
+        else:
+            delete_files = [file for file in glob.glob(str(CSV_DIR / '*.csv'), recursive=True)]
 
         for file in delete_files:
-            os.remove(file)
+            try:
+                os.remove(file)
+            except OSError:
+                pass
 
     @staticmethod
     def clean_models():
@@ -349,10 +381,11 @@ class DBTTestUtils:
 
         self.run_dbt_operation(macro_name='drop_test_schemas')
 
-    def context_table_to_df(self, table: Table) -> pd.DataFrame:
+    def context_table_to_df(self, table: Table, use_nan=True) -> pd.DataFrame:
         """
         Converts a context table in a feature file into a pandas DataFrame
             :param table: The context.table from a scenario
+            :param use_nan: Replace <null> placeholder with NaN
             :return: DataFrame representation of the provide context table
         """
 
@@ -361,7 +394,8 @@ class DBTTestUtils:
         table_df = table_df.apply(self.calc_hash)
         table_df = table_df.apply(self.parse_hashdiffs)
 
-        table_df = table_df.replace("<null>", NaN)
+        if use_nan:
+            table_df = table_df.replace("<null>", NaN)
 
         return table_df
 
@@ -375,6 +409,8 @@ class DBTTestUtils:
 
         table_df = self.context_table_to_df(table)
 
+        table_df.dropna(how="all", inplace=True)
+
         csv_fqn = CSV_DIR / f'{model_name.lower()}_seed.csv'
 
         table_df.to_csv(csv_fqn, index=False)
@@ -383,21 +419,73 @@ class DBTTestUtils:
 
         return csv_fqn.stem
 
-    def context_table_to_dict(self, table: Table, orient='index'):
+    def context_table_to_dict(self, table: Table, orient='index', use_nan=True):
         """
         Converts a context table in a feature file into a dictionary
             :param table: The context.table from a scenario
             :param orient: orient for df to_dict
+            :param use_nan: Replace <null> placeholder with NaN
             :return: A dictionary modelled from a context table
         """
 
-        table_df = self.context_table_to_df(table)
+        table_df = self.context_table_to_df(table, use_nan=use_nan)
 
         table_dict = table_df.to_dict(orient=orient)
 
         table_dict = self.parse_lists_in_dicts(table_dict)
 
         return table_dict
+
+    def context_table_to_model(self, seed_config : dict, table: Table, model_name: str, target_model_name: str):
+        """
+        Creates a model from a feature file data table
+            :param seed_config: Configuration dict for seed file
+            :param table: The context.table from a scenario or a programmatically defined table
+            :param model_name: Name of the model to base the feature data table on
+            :param target_model_name: Name of the model to create
+            :return: Seed file name
+        """
+
+        feature_data = self.context_table_to_dict(table=table, orient="index", use_nan=False)
+        column_types = seed_config[model_name]["+column_types"]
+
+        sql_command = ""
+        first_row = True
+
+        for row_number in feature_data.keys():
+            if first_row:
+                first_row = False
+            else:
+                sql_command = sql_command + "\nUNION ALL \n"
+            first_column = True
+
+            sql_command = sql_command + "SELECT "
+
+            for column_name in feature_data[row_number].keys():
+                if first_column:
+                    first_column = False
+                else:
+                    sql_command = sql_command + ", "
+
+                column_data = feature_data[row_number][column_name]
+                column_type = column_types[column_name]
+
+                if column_data.lower() == "<null>" or column_data == "":
+                    column_data_for_sql = "NULL"
+                else:
+                    column_data_for_sql = f"'{column_data}'"
+
+                if  self.get_target() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                    expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+                else:
+                    expression = f"CAST({column_data_for_sql} AS {column_type})"
+
+                sql_command = f"{sql_command}{expression} AS {column_name} "
+
+        with open(FEATURE_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
+            f.write(sql_command)
+
+        return f"{target_model_name.lower()}_seed"
 
     def columns_from_context_table(self, table: Table) -> list:
         """
@@ -458,6 +546,7 @@ class DBTTestUtils:
 
         if getattr(context, 'disable_payload', False):
             metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
+            metadata.update({"src_payload": []})
 
         return metadata
 

@@ -11,6 +11,8 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
+{% set adapter_type = dbtvault.get_adapter_type() %}
+
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
     "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
@@ -29,7 +31,7 @@
 
 {#- Setting ghost values to replace NULLS -#}
 {%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1900-01-01 00:00:00.000000' %}
+{%- set ghost_date = '1900-01-01 00:00:00.000' %}
 
 {# Stating the dependancies on the stage tables outside of the If STATEMENT #}
 {% for stg in stage_tables -%}
@@ -56,7 +58,7 @@ last_safe_load_datetime AS (
         {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
-    )
+    ) a
 ),
 
 as_of_grain_old_entries AS (
@@ -131,11 +133,15 @@ backfill AS (
         a.{{ src_pk }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
-        {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {{ "'{}'::BINARY(16) AS {}".format(ghost_pk, sat_name, sat_key_name) }},
-        {{ "'{}'::TIMESTAMP_NTZ AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
+        {%- if adapter_type == "sqlserver" -%}
+        {{ "CONVERT(BINARY(16), '{}', 2) AS {}_{}".format(ghost_pk, sat_name, sat_pk_name) }},
+        {%  else  %}
+        {{ "CAST('{}' AS BINARY(16)) AS {}_{}".format(ghost_pk, sat_name, sat_pk_name) }},
+        {%  endif  %}
+        {{ "CAST('{}' AS {}) AS {}_{}".format(ghost_date, dbtvault.type_timestamp(), sat_name, sat_ldts_name) }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -152,7 +158,6 @@ backfill AS (
 
     GROUP BY
         a.{{- src_pk }}, a.AS_OF_DATE
-    ORDER BY (1, 2)
 ),
 {%- endif %}
 
@@ -174,8 +179,12 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
-        {{ ("COALESCE(MAX({}_src.{}), '{}'::BINARY(16)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
-        {{ ("COALESCE(MAX({}_src.{}), '{}'::TIMESTAMP_NTZ) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        {%- if adapter_type == "sqlserver" -%}
+        {{ ("COALESCE(MAX({}_src.{}), CONVERT(BINARY(16), '{}', 2)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        {%- else -%}
+        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS BINARY(16))) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        {%- endif -%}
+        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS {})) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, dbtvault.type_timestamp(), sat_name | upper, sat_ldts_name | upper)) }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
@@ -192,7 +201,6 @@ new_rows AS (
 
     GROUP BY
         a.{{- src_pk }}, a.AS_OF_DATE
-    ORDER BY (1, 2)
 ),
 
 pit AS (
