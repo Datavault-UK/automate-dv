@@ -7,7 +7,6 @@
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
 
-{%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
 
     {%- if target.type == 'bigquery' -%}
