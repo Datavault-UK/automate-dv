@@ -16,7 +16,7 @@
 {% macro bigquery__replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) %}
 
     {%- set rank_filter -%}
-        CAST({{ rank_column }} AS INTEGER) = CAST({{ rank_iteration }} AS INTEGER)
+        CAST({{ rank_column }} AS NUMERIC) = CAST({{ rank_iteration }} AS NUMERIC)
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__RANK_FILTER__", rank_filter) -%}
