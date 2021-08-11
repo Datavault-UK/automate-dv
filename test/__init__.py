@@ -33,4 +33,3 @@ if not logger.handlers:
 
     logger.addHandler(ch)
     logger.setLevel(logging.DEBUG)
-    logger.propagate = False

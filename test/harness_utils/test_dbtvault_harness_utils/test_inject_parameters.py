@@ -1,0 +1,68 @@
+import pytest
+
+from harness_utils import dbtvault_harness_utils
+
+
+def test_inject_parameters_success():
+    sample_file_contents = "SELECT * FROM [DATABASE].[SCHEMA].[TABLE]"
+
+    expected_file_contents = "SELECT * FROM test_db.test_schema.test_table"
+
+    params = {
+        "DATABASE": "test_db",
+        "SCHEMA": "test_schema",
+        "TABLE": "test_table"
+    }
+
+    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
+                                                                    params)
+
+    assert actual_file_contents == expected_file_contents
+
+
+def test_inject_parameters_case_insensitive_success():
+    sample_file_contents = "SELECT * FROM [DATABASE].[SCHEMA].[TABLE]"
+
+    expected_file_contents = "SELECT * FROM test_db.test_schema.test_table"
+
+    params = {
+        "database": "test_db",
+        "ScHEmA": "test_schema",
+        "TABLE": "test_table"
+    }
+
+    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
+                                                                    params)
+
+    assert actual_file_contents == expected_file_contents
+
+
+def test_inject_parameters_missing_placeholders_success():
+    sample_file_contents = "SELECT * FROM [DATABASE].[SCHEMA]"
+
+    expected_file_contents = "SELECT * FROM test_db.test_schema"
+
+    params = {
+        "DATABASE": "test_db",
+        "SCHEMA": "test_schema",
+        "TABLE": "test_table"
+    }
+
+    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
+                                                                    params)
+
+    assert actual_file_contents == expected_file_contents
+
+
+def test_inject_parameters_missing_params_failure():
+    sample_file_contents = "SELECT * FROM [DATABASE].[SCHEMA].[TABLE]"
+
+    params = {
+        "DATABASE": "test_db",
+        "SCHEMA": "test_schema"
+    }
+
+    with pytest.raises(ValueError) as e:
+        dbtvault_harness_utils.inject_parameters(sample_file_contents, params)
+
+    assert str(e.value) == "Unable to replace some placeholder values: [TABLE]"

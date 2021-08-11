@@ -11,7 +11,7 @@ from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.xts import fixtures_xts
-from test_utils import dbtvault_generator, dbtvault_harness_utils
+from harness_utils import dbtvault_generator, dbtvault_harness_utils
 
 fixture_registry_utils = {
     "fixture.set_workdir": set_workdir,

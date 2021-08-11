@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from test.test_utils.dbtvault_harness_utils import *
+from test.harness_utils.dbtvault_harness_utils import *
 
 
 def get_test_utils(request):

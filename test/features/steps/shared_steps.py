@@ -3,7 +3,7 @@ import copy
 from behave import *
 from behave.model import Table, Row
 
-from test.test_utils import dbtvault_generator, dbtvault_harness_utils
+from test.harness_utils import dbtvault_generator, dbtvault_harness_utils
 
 
 def set_stage_metadata(context, stage_model_name) -> dict:
