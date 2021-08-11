@@ -16,6 +16,19 @@
     {% do return(macro) %}
 {%- endmacro %}
 
+-- {% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+--
+--     {%- set period_filter -%}
+--             (DATE({{ timestamp_field }}) >= DATE_TRUNC('{{ period }}', DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
+--              DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
+--       AND (DATE({{ timestamp_field }}) >= DATE('{{ start_timestamp }}'))
+--     {%- endset -%}
+--
+--     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
+--
+--     {% do return(filtered_sql) %}
+-- {% endmacro %}
+
 {% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
@@ -23,7 +36,6 @@
              TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
       AND (TO_DATE({{ timestamp_field }}) >= TO_DATE('{{ start_timestamp }}'))
     {%- endset -%}
-
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
 
     {% do return(filtered_sql) %}
