@@ -10,12 +10,12 @@ logs/
 
 dbtvault_test/data/temp/
 
-test_project/dbtvault_test/dbt_modules/
-test_project/dbtvault_test/models/feature/dummy.sql
+test/dbtvault_test/dbt_modules/
+test/dbtvault_test/models/feature/dummy.sql
 test_project/features/csv_temp/*.csv
 test_project/dbtvault_test/data/temp/*.csv
 test_project/dbtvault_test/models/feature/*.sql
-test_project/dbtvault_test/models/schema_test.yml
+test/dbtvault_test/models/schema_test.yml
 
 secrethub/secrethub_dev.env
 

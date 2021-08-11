@@ -1,6 +1,8 @@
-import pytest
-from test_project.test_utils.dbt_test_utils import *
 from pathlib import Path
+
+import pytest
+
+from test.test_utils.dbt_test_utils import *
 
 
 def get_test_utils(request):

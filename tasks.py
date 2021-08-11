@@ -5,9 +5,10 @@ from pathlib import PurePath, Path
 import yaml
 from invoke import task
 
-from test_project.test_utils.dbt_test_utils import DBTTestUtils, AVAILABLE_TARGETS
+from test.test_utils.dbt_test_utils import DBTTestUtils, AVAILABLE_TARGETS
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
+TESTS_ROOT = Path(f"{PROJECT_ROOT}/test")
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 
 logger = logging.getLogger('dbtvault')
@@ -26,7 +27,7 @@ def check_project(c, project='test'):
 
     available_projects = {
         "dev": {"work_dir": str(PROJECT_ROOT / "dbtvault-dev")},
-        "test": {"work_dir": str(PROJECT_ROOT / "test_project/dbtvault_test")},
+        "test": {"work_dir": str(TESTS_ROOT / "dbtvault_test")},
     }
 
     if not project:

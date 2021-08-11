@@ -19,7 +19,7 @@ from pandas import Series
 
 PROJECT_ROOT = PurePath(__file__).parents[2]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
-TESTS_ROOT = Path(f"{PROJECT_ROOT}/test_project")
+TESTS_ROOT = Path(f"{PROJECT_ROOT}/test")
 TESTS_DBT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test")
 MODELS_ROOT = TESTS_DBT_ROOT / 'models'
 SCHEMA_YML_FILE = MODELS_ROOT / 'schema.yml'

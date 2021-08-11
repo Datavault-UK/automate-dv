@@ -1,6 +1,6 @@
 from behave import fixture
 
-from test_project.test_utils.dbt_test_utils import *
+from test.test_utils.dbt_test_utils import *
 
 
 @fixture
