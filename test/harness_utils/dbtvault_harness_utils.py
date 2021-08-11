@@ -21,13 +21,20 @@ if not os.getenv('DBT_PROFILES_DIR'):
 
 
 def target():
-    """ Gets tha target as set by the user via the invoke CLI, stored in invoke.yml"""
+    """Gets the target platform as set by the user via the invoke CLI, stored in invoke.yml"""
 
     if os.path.isfile(test.INVOKE_YML_FILE):
 
         with open(test.INVOKE_YML_FILE) as config:
             config_dict = yaml.safe_load(config)
-            return config_dict['target']
+            tgt = config_dict.get('target')
+
+            if tgt.lower() not in test.AVAILABLE_TARGETS:
+                test.logger.error(f"Target must be set to one of: {', '.join(test.AVAILABLE_TARGETS)} "
+                                  f"in '{test.INVOKE_YML_FILE}'")
+                sys.exit(0)
+            else:
+                return tgt
     else:
         test.logger.error(f"'{test.INVOKE_YML_FILE}' not found. Please run 'inv setup'")
         sys.exit(0)
@@ -37,21 +44,26 @@ def is_pipeline():
     return os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH')
 
 
-def inject_parameters(file: str, parameters: dict):
+def inject_parameters(file_contents: str, parameters: dict):
     """
     Replace placeholders in a file with the provided dictionary
-        :param file: String containing expected file contents
+        :param file_contents: String containing expected file contents
         :param parameters: Dictionary of parameters {placeholder: value}
         :return: Parsed/injected file
     """
 
     if not parameters:
-        return file
+        return file_contents
     else:
         for key, val in parameters.items():
-            file = file.replace(f'[{key}]', val)
+            file_contents = re.sub(rf'\[{key}]', val, file_contents, flags=re.IGNORECASE)
 
-        return file
+        remaining_placeholders = re.findall(r'\[.*]', file_contents, flags=re.IGNORECASE)
+
+        if remaining_placeholders:
+            raise ValueError(f"Unable to replace some placeholder values: {', '.join(remaining_placeholders)}")
+
+        return file_contents
 
 
 def clean_target():

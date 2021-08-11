@@ -1,6 +1,6 @@
 from behave import fixture
 
-from test.test_utils.dbtvault_harness_utils import *
+from test.harness_utils.dbtvault_harness_utils import *
 
 
 @fixture
