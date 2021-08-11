@@ -9,6 +9,10 @@
 
 {%- macro default__oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
+                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 
@@ -24,10 +28,6 @@
     -- depends_on: {{ this }}
 {% endif -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
-                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
-
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
@@ -39,19 +39,13 @@ WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
     FROM {{ ref(source_model) }} AS a
+    WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
     {%- if model.config.materialized == 'vault_insert_by_period' %}
-    WHERE __PERIOD_FILTER__
+    AND __PERIOD_FILTER__
+    {% elif model.config.materialized == 'vault_insert_by_rank' %}
+    AND __RANK_FILTER__
     {% endif %}
-    {%- set source_cte = "source_data" %}
 ),
-
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-rank_col AS (
-    SELECT * FROM source_data
-    WHERE __RANK_FILTER__
-    {%- set source_cte = "rank_col" %}
-),
-{% endif -%}
 
 {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
 
@@ -135,7 +129,7 @@ out_of_sequence_inserts AS (
 
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM {{ source_cte }} AS e
+    FROM source_data AS e
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
@@ -153,6 +147,10 @@ SELECT * FROM records_to_insert
 
 {%- macro sqlserver__oos_sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
+                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 
@@ -168,10 +166,6 @@ SELECT * FROM records_to_insert
     -- depends_on: {{ this }}
 {% endif -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
-                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
-
 {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
@@ -183,19 +177,13 @@ WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     {%- endif %}
     FROM {{ ref(source_model) }} AS a
+    WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
     {%- if model.config.materialized == 'vault_insert_by_period' %}
-    WHERE __PERIOD_FILTER__
+    AND __PERIOD_FILTER__
+    {% elif model.config.materialized == 'vault_insert_by_rank' %}
+    AND __RANK_FILTER__
     {% endif %}
-    {%- set source_cte = "source_data" %}
 ),
-
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-rank_col AS (
-    SELECT * FROM source_data
-    WHERE __RANK_FILTER__
-    {%- set source_cte = "rank_col" %}
-),
-{% endif -%}
 
 {% if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
 
@@ -284,7 +272,7 @@ out_of_sequence_inserts AS (
 
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'e') }}
-    FROM {{ source_cte }} AS e
+    FROM source_data AS e
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or is_incremental() %}
     LEFT JOIN latest_records
     ON {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'e') }}
