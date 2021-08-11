@@ -1,19 +1,13 @@
 import logging
 import os
-from pathlib import PurePath, Path
+from pathlib import Path
 
 import yaml
 from invoke import task
 
-from test import DBTVAULTHarnessUtils, AVAILABLE_TARGETS
-
-PROJECT_ROOT = PurePath(__file__).parents[0]
-TESTS_ROOT = Path(f"{PROJECT_ROOT}/test")
-PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
+import test
 
 logger = logging.getLogger('dbtvault')
-
-dbt_utils = DBTVAULTHarnessUtils()
 
 
 @task
@@ -26,8 +20,8 @@ def check_project(c, project='test'):
     """
 
     available_projects = {
-        "dev": {"work_dir": str(PROJECT_ROOT / "dbtvault-dev")},
-        "test": {"work_dir": str(TESTS_ROOT / "dbtvault_test")},
+        "dev": {"work_dir": str(test.PROJECT_ROOT / "dbtvault-dev")},
+        "test": {"work_dir": str(test.TESTS_ROOT / "dbtvault_test")},
     }
 
     if not project:
@@ -79,8 +73,8 @@ def create_secrethub_file(c, user=None,
     if not user:
         user = c.config.get('secrets_user', None)
 
-    with open(PROJECT_ROOT / from_file, 'rt') as f_in:
-        with open(PROJECT_ROOT / to_file, 'wt') as f_out:
+    with open(test.PROJECT_ROOT / from_file, 'rt') as f_in:
+        with open(test.PROJECT_ROOT / to_file, 'wt') as f_out:
             for line in f_in:
                 f_out.write(line.replace('<user>', str(user)))
 
@@ -98,8 +92,8 @@ def set_defaults(c, target=None, user=None, project=None):
     dict_file = {
         'secrets_user': user, 'project': project, 'target': target}
 
-    if target not in AVAILABLE_TARGETS:
-        logger.error(f"Target must be set to one of: {', '.join(AVAILABLE_TARGETS)}")
+    if target not in test.AVAILABLE_TARGETS:
+        logger.error(f"Target must be set to one of: {', '.join(test.AVAILABLE_TARGETS)}")
         exit(0)
 
     dict_file = {k: v for k, v in dict_file.items() if v}
@@ -181,7 +175,7 @@ def macro_tests(c, target=None, user=None, env_file='secrethub/secrethub_dev.env
 
         logger.info(f"Running on '{target}' with user '{user}' and environment file '{env_file}'")
 
-        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={test.PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- pytest {'$(cat /tmp/macro-tests-to-run)' if user == 'circleci' else ''} --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
                   f"--junitxml=test-results/macro_tests/junit.xml"
 
@@ -209,7 +203,7 @@ def integration_tests(c, target=None, user=None, env_file='secrethub/secrethub_d
 
         logger.info(f"Running on '{target}' with user '{user}'")
 
-        command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
+        command = f"secrethub run --no-masking --env-file={test.PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
                   f" -- behave {'$(cat /tmp/feature-tests-to-run)' if user == 'circleci' else ''} --junit --junit-directory ../../test-results/integration_tests/"
 
         c.run(command)
@@ -235,9 +229,9 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
         os.environ['TARGET'] = target
 
     # Set dbt profiles dir
-    os.environ['DBT_PROFILES_DIR'] = str(PROFILE_DIR)
+    os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
 
-    command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
+    command = f"secrethub run --no-masking --env-file={test.PROJECT_ROOT}/{env_file} -v user={user} -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
@@ -249,7 +243,7 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None, env_file='secreth
 
         logger.info(f'Project: {project}')
         logger.info(f'Target: {target}')
-        logger.info(f'Env file: {PROJECT_ROOT}/{env_file}\n')
+        logger.info(f'Env file: {test.PROJECT_ROOT}/{env_file}\n')
 
         c.run(command)
 
