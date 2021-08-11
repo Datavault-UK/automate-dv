@@ -1,10 +1,6 @@
 from behave import *
 
-from test.test_utils.dbtvault_generator import DBTVAULTGenerator
-
 use_step_matcher("parse")
-
-dbtvault_generator = DBTVAULTGenerator()
 
 
 @step("I have ranked columns in the {processed_stage_name} model")

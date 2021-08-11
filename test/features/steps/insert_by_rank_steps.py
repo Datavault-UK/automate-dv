@@ -1,10 +1,8 @@
 from behave import *
 
-from test.test_utils.dbtvault_generator import DBTVAULTGenerator
+from test.test_utils import dbtvault_generator
 
 use_step_matcher("parse")
-
-dbtvault_generator = DBTVAULTGenerator()
 
 
 @step("I insert by rank into the {model_name} {vault_structure} with a {rank_column} rank column")
@@ -60,23 +58,22 @@ def rank_insert(context, model_name, vault_structure):
 @step("I have a rank column {rank_column} in the {stage_name} stage partitioned by {"
       "partition_by_column} and ordered by {order_by_column}")
 def define_rank_column(context, rank_column, stage_name, partition_by_column, order_by_column):
-
     if hasattr(context, 'ranked_columns'):
 
         if not context.ranked_columns.get(stage_name, None):
             context.ranked_columns[stage_name] = dict()
 
         context.ranked_columns[stage_name] = ({**context.ranked_columns[stage_name],
-                                               rank_column: {
-                                                   "partition_by": partition_by_column,
-                                                   "order_by": order_by_column
-                                               }})
+            rank_column: {
+                "partition_by": partition_by_column,
+                "order_by": order_by_column
+            }})
 
     else:
 
         context.ranked_columns = {stage_name: {rank_column: {
-                                                   "partition_by": partition_by_column,
-                                                   "order_by": order_by_column
-                                               }}}
+            "partition_by": partition_by_column,
+            "order_by": order_by_column
+        }}}
 
     context.rank_column = rank_column

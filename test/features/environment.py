@@ -11,7 +11,7 @@ from test.features.xts import fixtures_xts
 from test.features.pit import fixtures_pit
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
-from test_utils.dbtvault_generator import DBTVAULTGenerator
+from test_utils import dbtvault_generator
 
 fixture_registry_utils = {
     "fixture.set_workdir": set_workdir,
@@ -76,10 +76,10 @@ def before_all(context):
     DBTVAULTHarnessUtils.clean_target()
 
     # Restore modified YAML to starting state
-    DBTVAULTGenerator.clean_test_schema_file()
+    dbtvault_generator.clean_test_schema_file()
 
     # Backup YAML prior to run
-    DBTVAULTGenerator.backup_project_yml()
+    dbtvault_generator.backup_project_yml()
 
     os.chdir(test.TESTS_DBT_ROOT)
 
@@ -93,7 +93,7 @@ def after_all(context):
     Force Restore of dbt_project.yml
     """
 
-    DBTVAULTGenerator.restore_project_yml()
+    dbtvault_generator.restore_project_yml()
 
 
 def before_scenario(context, scenario):
@@ -104,8 +104,8 @@ def before_scenario(context, scenario):
     DBTVAULTHarnessUtils.clean_models()
     DBTVAULTHarnessUtils.clean_target()
 
-    DBTVAULTGenerator.clean_test_schema_file()
-    DBTVAULTGenerator.restore_project_yml()
+    dbtvault_generator.clean_test_schema_file()
+    dbtvault_generator.restore_project_yml()
 
 
 def before_tag(context, tag):
