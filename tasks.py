@@ -5,7 +5,7 @@ from pathlib import PurePath, Path
 import yaml
 from invoke import task
 
-from test.test_utils.dbt_test_utils import DBTTestUtils, AVAILABLE_TARGETS
+from test import DBTVAULTHarnessUtils, AVAILABLE_TARGETS
 
 PROJECT_ROOT = PurePath(__file__).parents[0]
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/test")
@@ -13,7 +13,7 @@ PROFILE_DIR = Path(f"{PROJECT_ROOT}/profiles")
 
 logger = logging.getLogger('dbtvault')
 
-dbt_utils = DBTTestUtils()
+dbt_utils = DBTVAULTHarnessUtils()
 
 
 @task
