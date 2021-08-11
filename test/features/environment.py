@@ -1,16 +1,16 @@
 from behave.fixture import use_fixture_by_tag
 
-from test_project.features.fixtures import *
-from test_project.features.staging import fixtures_staging
-from test_project.features.hubs import fixtures_hub
-from test_project.features.links import fixtures_link
-from test_project.features.sats import fixtures_sat
-from test_project.features.eff_sats import fixtures_eff_sat
-from test_project.features.ma_sats import fixtures_ma_sat
-from test_project.features.xts import fixtures_xts
-from test_project.features.pit import fixtures_pit
-from test_project.features.bridge import fixtures_bridge
-from test_project.features.cycle import fixtures_cycle
+from test.features.fixtures import *
+from test.features.staging import fixtures_staging
+from test.features.hubs import fixtures_hub
+from test.features.links import fixtures_link
+from test.features.sats import fixtures_sat
+from test.features.eff_sats import fixtures_eff_sat
+from test.features.ma_sats import fixtures_ma_sat
+from test.features.xts import fixtures_xts
+from test.features.pit import fixtures_pit
+from test.features.bridge import fixtures_bridge
+from test.features.cycle import fixtures_cycle
 
 
 fixture_registry_utils = {

@@ -1,6 +1,6 @@
 from behave import *
 
-from test_project.test_utils.dbt_test_utils import DBTVAULTGenerator
+from test.test_utils.dbt_test_utils import DBTVAULTGenerator
 
 use_step_matcher("parse")
 

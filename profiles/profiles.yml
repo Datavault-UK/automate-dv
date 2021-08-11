@@ -29,22 +29,3 @@ dbtvault:
       retries: 1
 
   target: "{{ env_var('TARGET') }}"
-
-snowflake-demo:
-  outputs:
-    snowflake:
-      type: snowflake
-      account: "{{ env_var('SNOWFLAKE_DB_ACCOUNT') }}"
-
-      user: "{{ env_var('SNOWFLAKE_DB_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_DB_PW') }}"
-
-      role: "{{ env_var('SNOWFLAKE_DB_ROLE') }}"
-      database: "{{ env_var('SNOWFLAKE_DB_DATABASE') }}"
-      warehouse: "{{ env_var('SNOWFLAKE_DB_WH') }}"
-      schema: "{{ env_var('SNOWFLAKE_DB_SCHEMA') }}"
-
-      threads: 4
-      client_session_keep_alive: False
-
-  target: "{{ env_var('TARGET') }}"
