@@ -11,7 +11,7 @@ from test.features.xts import fixtures_xts
 from test.features.pit import fixtures_pit
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
-
+from test_utils.dbtvault_generator import DBTVAULTGenerator
 
 fixture_registry_utils = {
     "fixture.set_workdir": set_workdir,
@@ -64,16 +64,16 @@ def before_all(context):
     Set up the full test environment and add objects to the context for use in steps
     """
 
-    dbt_test_utils = DBTTestUtils()
+    dbt_test_utils = DBTVAULTHarnessUtils()
 
     # Setup context
     context.config.setup_logging()
     context.dbt_test_utils = dbt_test_utils
 
     # Clean dbt folders and generated files
-    DBTTestUtils.clean_csv()
-    DBTTestUtils.clean_models()
-    DBTTestUtils.clean_target()
+    DBTVAULTHarnessUtils.clean_csv()
+    DBTVAULTHarnessUtils.clean_models()
+    DBTVAULTHarnessUtils.clean_target()
 
     # Restore modified YAML to starting state
     DBTVAULTGenerator.clean_test_schema_file()
@@ -81,7 +81,7 @@ def before_all(context):
     # Backup YAML prior to run
     DBTVAULTGenerator.backup_project_yml()
 
-    os.chdir(TESTS_DBT_ROOT)
+    os.chdir(test.TESTS_DBT_ROOT)
 
     context.dbt_test_utils.create_dummy_model()
 
@@ -100,9 +100,9 @@ def before_scenario(context, scenario):
     context.dbt_test_utils.create_dummy_model()
     context.dbt_test_utils.replace_test_schema()
 
-    DBTTestUtils.clean_csv()
-    DBTTestUtils.clean_models()
-    DBTTestUtils.clean_target()
+    DBTVAULTHarnessUtils.clean_csv()
+    DBTVAULTHarnessUtils.clean_models()
+    DBTVAULTHarnessUtils.clean_target()
 
     DBTVAULTGenerator.clean_test_schema_file()
     DBTVAULTGenerator.restore_project_yml()
@@ -111,9 +111,9 @@ def before_scenario(context, scenario):
 def before_tag(context, tag):
     target = context.dbt_test_utils.target
 
-    if target in AVAILABLE_TARGETS:
+    if target in test.AVAILABLE_TARGETS:
         fixtures = fixture_lookup[target]
         if tag.startswith("fixture."):
             return use_fixture_by_tag(tag, context, fixtures)
     else:
-        raise ValueError(f"Target must be set to one of: {', '.join(AVAILABLE_TARGETS)}")
+        raise ValueError(f"Target must be set to one of: {', '.join(test.AVAILABLE_TARGETS)}")
