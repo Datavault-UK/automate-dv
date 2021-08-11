@@ -1,12 +1,11 @@
-from behave import *
-from behave.model import Table, Row
 import copy
 
-from test.test_utils.dbtvault_generator import DBTVAULTGenerator
+from behave import *
+from behave.model import Table, Row
+
+from test.test_utils import dbtvault_generator
 
 use_step_matcher("parse")
-
-dbtvault_generator = DBTVAULTGenerator()
 
 
 def set_stage_metadata(context, stage_model_name) -> dict:
@@ -72,7 +71,7 @@ def clear_schema(context):
 
     context.vault_model_names = model_names
 
-    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in model_names.items()]) if name]
+    models = [name for name in dbtvault_generator.flatten([v for k, v in model_names.items()]) if name]
 
     for model_name in models:
         headings_dict = dbtvault_generator.evaluate_hashdiff(copy.deepcopy(context.vault_structure_columns[model_name]))
@@ -105,8 +104,7 @@ def load_empty_table(context, model_name, vault_structure):
     if vault_structure == "stage":
         headings = context.stage_columns[model_name]
     else:
-        headings = [val for key, val in columns[model_name].items()]
-        headings = dbtvault_generator.extract_column_names(context, model_name, headings)
+        headings = dbtvault_generator.extract_column_names(context, model_name, columns[model_name])
 
     row = Row(cells=[], headings=headings)
 
@@ -213,7 +211,7 @@ def load_table(context, model_name, vault_structure):
 
 @step("I load the vault")
 def load_vault(context):
-    models = {k: list(filter(None, DBTVAULTGenerator.flatten(v))) for k, v in context.vault_model_names.items()}
+    models = {k: list(filter(None, dbtvault_generator.flatten(v))) for k, v in context.vault_model_names.items()}
     model_names = []
 
     for vault_structure, model_list in models.items():

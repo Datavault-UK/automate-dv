@@ -1,10 +1,8 @@
 from behave import *
 
-from test.test_utils.dbtvault_generator import DBTVAULTGenerator
+from test.test_utils import dbtvault_generator
 
 use_step_matcher("parse")
-
-dbtvault_generator = DBTVAULTGenerator()
 
 
 @step("I insert by period into the {model_name} {vault_structure} "
