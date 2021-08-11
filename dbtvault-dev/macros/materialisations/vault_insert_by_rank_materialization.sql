@@ -65,14 +65,6 @@
                 {{ create_table_as(True, tmp_relation, filtered_sql) }}
             {%- endcall %}
 
-{#            {%- set check_query_name = 'CHECK_QUERY-' ~ i -%}#}
-{#            {% call statement(check_query_name, fetch_result=True) -%}#}
-{#                SELECT COUNT(*)#}
-{#                FROM {{ tmp_relation.include(schema=True) }}#}
-{#            {%- endcall %}#}
-{#            {% set result = load_result(check_query_name) %}#}
-{#            {% do log("CHECK QUERY: " ~ result, true) %}#}
-
             {{ adapter.expand_target_column_types(from_relation=tmp_relation,
                                                   to_relation=target_relation) }}
 
@@ -108,8 +100,6 @@
                 {% call statement(drop_query_name, fetch_result=True) -%}
                     DROP TABLE {{ tmp_relation }};
                 {%- endcall %}
-{#                {% set result = load_result(drop_query_name) %}#}
-{#                {% do log("DROP QUERY: " ~ result, true) %}#}
             {%  endif %}
 
             {% do to_drop.append(tmp_relation) %}
