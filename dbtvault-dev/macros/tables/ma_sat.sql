@@ -23,37 +23,31 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-WITH source_data_filtered AS (
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
-    {%- else %}
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
-    {%- endif %}
-    {% if dbtvault.is_any_incremental() %}
-    ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} )
-        OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
-    {%- endif %}
-    FROM {{ ref(source_model) }} AS a
-    WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
-    {%- for child_key in src_cdk %}
-        AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
-    {%- endfor %}
+WITH source_data AS (
+    SELECT s.*
+    FROM (
+        {%- if model.config.materialized == 'vault_insert_by_rank' %}
+        SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+        {%- else %}
+        SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+        {%- endif %}
+        {% if dbtvault.is_any_incremental() %}
+        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} )
+            OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}) AS source_count
+        {%- endif %}
+        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}, {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }} ASC) AS source_rank
+        FROM {{ ref(source_model) }} AS a
+        WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
+        {%- for child_key in src_cdk %}
+            AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
+        {%- endfor %}
+    ) AS s
+    WHERE s.source_rank = 1
     {%- if model.config.materialized == 'vault_insert_by_period' %}
         AND __PERIOD_FILTER__
     {%- elif model.config.materialized == 'vault_insert_by_rank' %}
         AND __RANK_FILTER__
     {%- endif %}
-),
-
-{# Dedupe source data #}
-source_data AS (
-    SELECT x.*
-    FROM (
-        SELECT s.*
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} ORDER BY {{ dbtvault.prefix([src_ldts], 's') }} ASC) AS source_rank
-        FROM source_data_filtered s
-    ) AS x
-    WHERE x.source_rank = 1
 ),
 
 {% if dbtvault.is_any_incremental() %}
@@ -165,33 +159,27 @@ SELECT * FROM records_to_insert
 
 {{ dbtvault.prepend_generated_by() }}
 
-WITH source_data_filtered AS (
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
-    {%- else %}
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
-    {%- endif %}
-    FROM {{ ref(source_model) }} AS a
-    WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
-    {%- for child_key in src_cdk %}
-        AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
-    {%- endfor %}
+WITH source_data AS (
+    SELECT s.*
+    FROM (
+        {%- if model.config.materialized == 'vault_insert_by_rank' %}
+        SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+        {%- else %}
+        SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+        {%- endif %}
+        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}, {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }} ASC) AS source_rank
+        FROM {{ ref(source_model) }} AS a
+        WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
+        {%- for child_key in src_cdk %}
+            AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
+        {%- endfor %}
+        ) AS s
+    WHERE s.source_rank = 1
     {%- if model.config.materialized == 'vault_insert_by_period' %}
         AND __PERIOD_FILTER__
     {%- elif model.config.materialized == 'vault_insert_by_rank' %}
         AND __RANK_FILTER__
     {%- endif %}
-),
-
-{# Dedupe source data #}
-source_data AS (
-    SELECT x.*
-    FROM (
-        SELECT s.*
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} ORDER BY {{ dbtvault.prefix([src_ldts], 's') }} ASC) AS source_rank
-        FROM source_data_filtered s
-    ) AS x
-    WHERE x.source_rank = 1
 ),
 
 {% if dbtvault.is_any_incremental() %}
@@ -200,13 +188,13 @@ source_data_with_counts AS (
     SELECT a.*,
         ca.source_count
     FROM source_data a
-    CROSS APPLY
+    INNER JOIN
     (
         SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS source_count
         FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM source_data AS s) AS t
-        WHERE {{ dbtvault.prefix([src_pk], 't') }} = {{ dbtvault.prefix([src_pk], 'a') }}
         GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
     ) AS ca
+    ON {{ dbtvault.prefix([src_pk], 'ca') }} = {{ dbtvault.prefix([src_pk], 'a') }}
 ),
 
 {# Select the most recent group of satellite records relating to each PK in the source data #}
@@ -230,13 +218,13 @@ latest_records AS (
     SELECT latest_selection.*,
         ca.target_count
     FROM latest_selection
-    CROSS APPLY
+    INNER JOIN
     (
         SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS target_count
         FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_selection AS s) AS t
-        WHERE {{ dbtvault.prefix([src_pk], 't') }} = {{ dbtvault.prefix([src_pk], 'latest_selection') }}
         GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
     ) AS ca
+    ON {{ dbtvault.prefix([src_pk], 'ca') }} = {{ dbtvault.prefix([src_pk], 'latest_selection') }}
 ),
 
 {# Select the matching group of satellite records relating to each PK in the source data #}
@@ -257,13 +245,13 @@ matching_records AS (
 	SELECT {{ dbtvault.prefix([src_pk], 'matching_selection') }},
         MAX(ca.match_count) AS match_count
 	FROM matching_selection
-    CROSS APPLY
+    INNER JOIN
     (
         SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS match_count
         FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM matching_selection AS s) AS t
-        WHERE {{ dbtvault.prefix([src_pk], 't') }} = {{ dbtvault.prefix([src_pk], 'matching_selection') }}
         GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
     ) AS ca
+    ON {{ dbtvault.prefix([src_pk], 'ca') }} = {{ dbtvault.prefix([src_pk], 'matching_selection') }}
     GROUP BY {{ dbtvault.prefix([src_pk], 'matching_selection') }}
 ),
 
