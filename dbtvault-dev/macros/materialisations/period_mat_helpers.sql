@@ -135,7 +135,7 @@
                                   period) }} + 1 as NUM_PERIODS
         from data
     {%- endset %}
-    {%- do log(("period boundary sql: " ~ period_boundary_sql), True) -%}
+
     {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,

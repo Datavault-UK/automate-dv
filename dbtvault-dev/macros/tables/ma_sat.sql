@@ -23,47 +23,40 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-WITH source_data_filtered AS (
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
-    {%- else %}
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
-    {%- endif %}
-    {% if dbtvault.is_any_incremental() %}
-        , cd.source_count
-    {%- endif %}
-    FROM {{ ref(source_model) }} AS a
-    {% if dbtvault.is_any_incremental() %}
-    INNER JOIN
-    (
-        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS source_count
-        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM {{ ref(source_model) }} AS s) AS t
+WITH source_data AS (
+    SELECT s.*
+    FROM (
+        {%- if model.config.materialized == 'vault_insert_by_rank' %}
+        SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+        {%- else %}
+        SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+        {%- endif %}
+        {% if dbtvault.is_any_incremental() %}
+            , cd.source_count
+        {%- endif %}
+        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}, {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }} ASC) AS source_rank
+        FROM {{ ref(source_model) }} AS a
+        {% if dbtvault.is_any_incremental() %}
+        INNER JOIN
+        (
+            SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS source_count
+            FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM {{ ref(source_model) }} AS s) AS t
 
-        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
-    ) AS cd
-    ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'a') }}
-    {%- endif %}
-    WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
-    {%- for child_key in src_cdk %}
-        AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
-    {%- endfor %}
+            GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+        ) AS cd
+        ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'a') }}
+        {%- endif %}
+        WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
+        {%- for child_key in src_cdk %}
+            AND {{ dbtvault.multikey(child_key, 'a', condition='IS NOT NULL') }}
+        {%- endfor %}
+    ) AS s
+    WHERE s.source_rank = 1
     {%- if model.config.materialized == 'vault_insert_by_period' %}
         AND __PERIOD_FILTER__
     {%- elif model.config.materialized == 'vault_insert_by_rank' %}
         AND __RANK_FILTER__
     {%- endif %}
-),
-
-{# Dedupe source data #}
-source_data AS (
-    SELECT x.*
-    FROM (
-        SELECT s.*
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} ORDER BY {{ dbtvault.prefix([src_ldts], 's') }} ASC) AS source_rank
-        FROM source_data_filtered AS s
-    ) AS x
-
-    WHERE x.source_rank = 1
 ),
 
 {% if dbtvault.is_any_incremental() %}
