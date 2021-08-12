@@ -43,9 +43,14 @@ def sample_directory_tree(tmp_path):
 def setup():
     os.environ['TARGET'] = dbtvault_harness_utils.target()
     os.chdir(test.TESTS_DBT_ROOT)
+    dbtvault_harness_utils.clean_models()
+    dbtvault_harness_utils.clean_target()
+    yield
 
 
 @pytest.fixture(scope='session', autouse=True)
-def clean_database(request):
-    os.environ['TARGET'] = dbtvault_harness_utils.target()
+def teardown():
+    yield
     dbtvault_harness_utils.drop_test_schemas()
+    dbtvault_harness_utils.clean_models()
+    dbtvault_harness_utils.clean_target()

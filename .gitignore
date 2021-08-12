@@ -18,7 +18,4 @@ test/dbtvault_test/data/temp/*.csv
 test/dbtvault_test/models/schema_test.yml
 
 secrethub/secrethub_dev.env
-
-
-
-.run/OOS Sats.run.xml
+/test/test_dbtvault_harness_utils/.pytest_cache/
