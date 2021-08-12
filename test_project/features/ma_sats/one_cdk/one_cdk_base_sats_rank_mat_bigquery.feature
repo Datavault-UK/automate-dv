@@ -190,7 +190,6 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
 
-# TODO In this scenario the MAS sat macro is not deduping commented out "Dom" expected data.
   @fixture.multi_active_satellite_bigquery
   Scenario: [SAT-RANK-MAT-INC] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
