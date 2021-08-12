@@ -27,8 +27,9 @@
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
+        {%- do log(("filtered sql: " ~ filtered_sql), True) -%}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
-
+        {%- do log(("build sql: " ~ build_sql), True) -%}
         {% do to_drop.append(tmp_relation) %}
 
     {% elif existing_relation.is_view or full_refresh_mode %}
