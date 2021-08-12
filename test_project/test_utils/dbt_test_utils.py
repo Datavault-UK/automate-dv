@@ -761,7 +761,7 @@ class DBTVAULTGenerator:
 
     def sat(self, model_name, src_pk, src_hashdiff, src_payload,
             src_eff, src_ldts, src_source, source_model,
-            config, depends_on=""):
+            config, depends_on="", out_of_sequence=None):
         """
         Generate a satellite model template
             :param model_name: Name of the model file
@@ -774,6 +774,7 @@ class DBTVAULTGenerator:
             :param source_model: Model name to select from
             :param config: Optional model config
             :param depends_on: Optional forced dependency
+            :param out_of_sequence: Optional dictionary of metadata required for out of sequence sat
         """
 
         template = f"""
@@ -781,7 +782,7 @@ class DBTVAULTGenerator:
         {{{{ config({config}) }}}}
         {{{{ dbtvault.sat({src_pk}, {src_hashdiff}, {src_payload},
                           {src_eff}, {src_ldts}, {src_source}, 
-                          {source_model})   }}}}
+                          {source_model}, {out_of_sequence})   }}}}
         """
 
         self.template_to_file(template, model_name)
