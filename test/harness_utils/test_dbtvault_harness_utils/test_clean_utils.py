@@ -4,9 +4,26 @@ from unittest.mock import patch
 
 from harness_utils import dbtvault_harness_utils
 
+directory_dict = {
+    'csv': {
+        'my_file_1.csv': "my, csv, file, 2",
+        'my_file_2.csv': "my, csv, file, 3",
+    },
+    'models': {
+        'my_file_1.sql': "SELECT * FROM 1",
+        'my_file_2.sql': "SELECT * FROM 2",
+    },
+    'target': {
+        'my_file_1.sql': "SELECT * FROM 1",
+        'my_file_2.sql': "SELECT * FROM 2",
+        'my_file_1.csv': "my, csv, file, 2",
+        'my_file_2.csv': "my, csv, file, 3"
+    }
+}
+
 
 def test_clean_csv_success(sample_directory_tree):
-    paths, tmp_dir = sample_directory_tree
+    paths, tmp_dir = sample_directory_tree(directory_dict)
 
     tmp_csv_dir = Path(tmp_dir) / 'csv'
 
@@ -19,7 +36,7 @@ def test_clean_csv_success(sample_directory_tree):
 
 
 def test_clean_target_success(sample_directory_tree):
-    paths, tmp_dir = sample_directory_tree
+    paths, tmp_dir = sample_directory_tree(directory_dict)
 
     tmp_target_dir = Path(tmp_dir) / 'target'
 
@@ -32,7 +49,7 @@ def test_clean_target_success(sample_directory_tree):
 
 
 def test_clean_models_success(sample_directory_tree):
-    paths, tmp_dir = sample_directory_tree
+    paths, tmp_dir = sample_directory_tree(directory_dict)
 
     tmp_models_dir = Path(tmp_dir) / 'models'
 

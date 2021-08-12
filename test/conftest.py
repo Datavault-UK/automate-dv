@@ -1,7 +1,11 @@
+import os
 import tempfile
 from pathlib import Path
 
 import pytest
+
+import test
+from test.harness_utils import dbtvault_harness_utils
 
 
 def dict_to_directories(dir_dict: dict, root_path: Path):
@@ -27,23 +31,42 @@ def dict_to_directories(dir_dict: dict, root_path: Path):
 
 @pytest.fixture()
 def sample_directory_tree(tmp_path):
-    directory_dict = {
-        'csv': {
-            'my_file_1.csv': "my, csv, file, 2",
-            'my_file_2.csv': "my, csv, file, 3",
-        },
-        'models': {
-            'my_file_1.sql': "SELECT * FROM 1",
-            'my_file_2.sql': "SELECT * FROM 2",
-        },
-        'target': {
-            'my_file_1.sql': "SELECT * FROM 1",
-            'my_file_2.sql': "SELECT * FROM 2",
-            'my_file_1.csv': "my, csv, file, 2",
-            'my_file_2.csv': "my, csv, file, 3"
-        }
-    }
+    def _convert(directory_dict):
+        paths = dict_to_directories(directory_dict, tmp_path)
 
-    paths = dict_to_directories(directory_dict, tmp_path)
+        return paths, tmp_path
 
-    return paths, tmp_path
+    return _convert
+
+
+@pytest.fixture(scope='class')
+def run_seeds(request):
+    os.chdir(test.TESTS_DBT_ROOT)
+    request.cls.dbt_test_utils.run_dbt_seed()
+    yield
+
+
+@pytest.fixture(autouse=True, scope="function")
+def current_test_name(request):
+    """
+    Provide the current test name to every test, as the filename for the expected output file for that test
+    """
+
+    return request.node.name
+
+
+@pytest.fixture(scope='session', autouse=True)
+def clean_database(request):
+    # Set working directory to test project root
+    os.chdir(test.TESTS_DBT_ROOT)
+
+    os.environ['TARGET'] = dbtvault_harness_utils.target()
+
+    dbtvault_harness_utils.drop_test_schemas()
+
+
+@pytest.fixture(autouse=True, scope='session')
+def clean_target():
+    """ Clean the target folder for each session"""
+    dbtvault_harness_utils.clean_target()
+    yield
