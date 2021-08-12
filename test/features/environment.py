@@ -1,9 +1,13 @@
+import os
+
 from behave.fixture import use_fixture_by_tag
 
+import test
+from harness_utils import dbtvault_generator, dbtvault_harness_utils
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
-from test.features.fixtures import *
+from test.features.behave_fixtures import *
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
@@ -11,10 +15,8 @@ from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.xts import fixtures_xts
-from harness_utils import dbtvault_generator, dbtvault_harness_utils
 
 fixture_registry_utils = {
-    "fixture.set_workdir": set_workdir,
     "fixture.enable_sha": enable_sha,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
@@ -79,7 +81,6 @@ def before_all(context):
     dbtvault_generator.backup_project_yml()
 
     # Env setup
-    os.chdir(test.TESTS_DBT_ROOT)
     os.environ['TARGET'] = dbtvault_harness_utils.target()
 
     dbtvault_harness_utils.create_dummy_model()
@@ -104,6 +105,7 @@ def before_scenario(context, scenario):
     dbtvault_harness_utils.clean_target()
 
     dbtvault_generator.clean_test_schema_file()
+
     dbtvault_generator.restore_project_yml()
 
 

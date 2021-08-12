@@ -82,8 +82,8 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
     template = f"""
     {depends_on}    
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.hub({src_pk}, {src_nk}, {src_ldts},
-                      {src_source}, {source_model})   }}}}
+    {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, src_ldts={src_ldts},
+                      src_source={src_source}, source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
@@ -428,7 +428,7 @@ def template_to_file(template, model_name):
         :param template: Template string to write
         :param model_name: Name of file to write
     """
-    with open(FEATURE_MODELS_ROOT / f"{model_name}.sql", "w") as f:
+    with open(TEST_MODELS_ROOT / f"{model_name}.sql", "w") as f:
         f.write(template.strip())
 
 

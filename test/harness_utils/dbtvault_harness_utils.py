@@ -87,7 +87,7 @@ def clean_models():
     Deletes models in features folder.
     """
 
-    delete_files = [file for file in glob.glob(str(test.FEATURE_MODELS_ROOT / '*.sql'), recursive=True)]
+    delete_files = [file for file in glob.glob(str(test.TEST_MODELS_ROOT / '*.sql'), recursive=True)]
 
     for file in delete_files:
         os.remove(file)
@@ -98,12 +98,16 @@ def create_dummy_model():
     Create dummy model to avoid unused config warning
     """
 
-    with open(test.FEATURE_MODELS_ROOT / 'dummy.sql', 'w') as f:
+    with open(test.TEST_MODELS_ROOT / 'dummy.sql', 'w') as f:
         f.write('SELECT 1')
 
 
 def is_full_refresh(context):
     return getattr(context, 'full_refresh', False)
+
+
+def is_successful_run(dbt_logs: str):
+    return 'Done' in dbt_logs and 'SQL compilation error' not in dbt_logs
 
 
 def is_pipeline():
@@ -296,7 +300,7 @@ def run_dbt_command(command) -> str:
     elif 'dbt' not in command and isinstance(command, str):
         command = ['dbt', command]
 
-    p = Popen(command, stdout=PIPE, stderr=STDOUT)
+    p = Popen(command, stdout=PIPE, stderr=STDOUT, cwd=test.TESTS_DBT_ROOT)
 
     stdout, _ = p.communicate()
 
