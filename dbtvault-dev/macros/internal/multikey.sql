@@ -1,6 +1,6 @@
 {%- macro multikey(columns, prefix=none, condition=none, operator='AND') -%}
 
-    {{- adapter.dispatch('multikey', packages = dbtvault.get_dbtvault_namespaces())(columns=columns, prefix=prefix, condition=condition, operator=operator) -}}
+    {{- adapter.dispatch('multikey', 'dbtvault')(columns=columns, prefix=prefix, condition=condition, operator=operator) -}}
 
 {%- endmacro %}
 
@@ -16,7 +16,9 @@
 
     {%- if condition in ['<>', '!=', '='] -%}
         {%- for col in columns -%}
-            {{ (prefix[0] ~ '.') if prefix }}{{ col }} {{ condition }} {{ (prefix[1] ~ '.') if prefix }}{{ col }}
+            {%- if prefix -%}
+                {{- dbtvault.prefix([col], prefix[0], alias_target='target') }} {{ condition }} {{ dbtvault.prefix([col], prefix[1]) -}}
+            {%- endif %}
             {%- if not loop.last %} {{ operator }} {% endif %}
         {% endfor -%}
     {%- else -%}

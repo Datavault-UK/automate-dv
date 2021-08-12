@@ -3,6 +3,7 @@ from behave.model import Table, Row
 import copy
 
 from test_project.test_utils.dbt_test_utils import DBTVAULTGenerator
+from test_project.test_utils.dbt_test_utils import DBTTestUtils
 
 use_step_matcher("parse")
 
@@ -172,17 +173,22 @@ def load_populated_table(context, model_name, vault_structure):
     Create a table with data pre-populated from the context table.
     """
 
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=model_name, target_model_name=model_name)
+
     context.target_model_name = model_name
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=model_name)
+    metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[model_name])
+    context.vault_structure_metadata = metadata
 
-    context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-    metadata = {"source_model": seed_file_name, **context.vault_structure_columns[model_name]}
+    # dbtvault_generator.add_seed_config(seed_name=seed_model_name,
+    #                                    seed_config=context.seed_config[model_name])
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
+    metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
 
     context.vault_structure_metadata = metadata
 
@@ -190,6 +196,7 @@ def load_populated_table(context, model_name, vault_structure):
 
     logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=model_name)
 
+    assert "Completed successfully" in seed_logs
     assert "Completed successfully" in logs
 
 
@@ -215,20 +222,23 @@ def load_table(context, model_name, vault_structure):
 
 @step("I load the vault")
 def load_vault(context):
-    models = [name for name in DBTVAULTGenerator.flatten([v for k, v in context.vault_model_names.items()]) if name]
+    models = {k: list(filter(None, DBTVAULTGenerator.flatten(v))) for k, v in context.vault_model_names.items()}
+    model_names = []
 
-    for model_name in models:
-        metadata = {**context.vault_structure_columns[model_name]}
+    for vault_structure, model_list in models.items():
+        for model_name in model_list:
+            metadata = {**context.vault_structure_columns[model_name]}
 
-        context.vault_structure_metadata = metadata
+            context.vault_structure_metadata = metadata
 
-        vault_structure = model_name.split("_")[0]
+            config = dbtvault_generator.append_end_date_config(context, dict())
 
-        dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
+            dbtvault_generator.raw_vault_structure(model_name, vault_structure, config=config, **metadata)
+            model_names.append(model_name)
 
     is_full_refresh = context.dbt_test_utils.check_full_refresh(context)
 
-    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=models,
+    logs = context.dbt_test_utils.run_dbt_models(mode="run", model_names=model_names,
                                                  full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
@@ -238,19 +248,61 @@ def load_vault(context):
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=raw_stage_model_name)
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=raw_stage_model_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[raw_stage_model_name])
+    #
+    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[raw_stage_model_name])
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=raw_stage_model_name, target_model_name=raw_stage_model_name)
 
-    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    context.target_model_name = raw_stage_model_name
 
-    context.raw_stage_models = seed_file_name
+    logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
+    context.raw_stage_models = seed_model_name
 
     context.raw_stage_model_name = raw_stage_model_name
 
     assert "Completed successfully" in logs
+
+
+@step("the {table_name} table is created and populated with data")
+def create_csv(context, table_name):
+    """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
+
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=table_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[table_name])
+    #
+    # seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=table_name, target_model_name=table_name)
+
+    context.target_model_name = table_name
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
+    stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
+
+    args = {k: v for k, v in stage_metadata.items() if k == "hash"}
+
+    dbtvault_generator.raw_vault_structure(model_name=table_name,
+                                           vault_structure='stage',
+                                           source_model=seed_model_name,
+                                           config={'materialized': 'table'})
+
+    run_logs = context.dbt_test_utils.run_dbt_model(mode="run", model_name=table_name,
+                                                    args=args, full_refresh=True)
+
+    context.raw_stage_models = seed_model_name
+
+    assert "Completed successfully" in seed_logs
+    assert "Completed successfully" in run_logs
 
 
 @step("the {raw_stage_model_name} is loaded")
@@ -258,17 +310,28 @@ def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
     """
 
+    # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
+    # For Snowflake deletion of seed file is not required but does not cause a problem if performed
+    DBTTestUtils.clean_csv(raw_stage_model_name.lower() + "_seed")
+
     context.raw_stage_model_name = raw_stage_model_name
 
-    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                 model_name=raw_stage_model_name)
+    # seed_file_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
+    #                                                              model_name=raw_stage_model_name)
+    #
+    # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    #                                    seed_config=context.seed_config[raw_stage_model_name])
+    #
+    # logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
-    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=raw_stage_model_name, target_model_name=raw_stage_model_name)
+
+    dbtvault_generator.add_seed_config(seed_name=seed_model_name,
                                        seed_config=context.seed_config[raw_stage_model_name])
 
-    logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
-    context.raw_stage_models = seed_file_name
+    context.raw_stage_models = seed_model_name
 
     assert "Completed successfully" in logs
 
@@ -295,26 +358,67 @@ def stage_processing(context, processed_stage_name):
 
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
-    expected_output_csv_name = context.dbt_test_utils.context_table_to_csv(table=context.table,
-                                                                           model_name=f"{model_name}_expected")
+    expected_model_name = f"{model_name}_EXPECTED"
 
-    columns_to_compare = context.dbt_test_utils.context_table_to_dict(table=context.table, orient="records")[0]
-    compare_column_list = [k for k, v in columns_to_compare.items()]
-    unique_id = compare_column_list[0]
+    seed_model_name = context.dbt_test_utils.context_table_to_model(context.seed_config, context.table, model_name=model_name, target_model_name=expected_model_name)
+
+    context.target_model_name = seed_model_name
+
+    columns_to_compare = context.table.headings
+
+    # dbtvault_generator.add_seed_config(seed_name=seed_model_name,
+    #                                    include_columns=columns_to_compare,
+    #                                    seed_config=context.seed_config[model_name])
+
+    seed_logs = context.dbt_test_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
+
+    unique_id = columns_to_compare[0]
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
-                                                                 expected_output_csv=expected_output_csv_name,
+                                                                 expected_output_csv=seed_model_name,
                                                                  unique_id=unique_id,
                                                                  columns_to_compare=columns_to_compare)
 
     dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-    dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
-                                       include_columns=compare_column_list,
+    logs = context.dbt_test_utils.run_dbt_command(["dbt", "test"])
+
+    assert "Completed successfully" in seed_logs
+    assert "1 of 1 PASS" in logs
+
+
+@then("the {model_name} table should contain no data")
+def expect_no_data(context, model_name):
+    # Create seed file with no data rows
+    expected_model_name = f"{model_name}_EXPECTED"
+
+    headings = [k for k, v in context.seed_config[model_name]['+column_types'].items()]
+
+    row = Row(cells=[], headings=headings)
+
+    empty_table = Table(headings=headings, rows=row)
+
+    seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+                                                                 model_name=expected_model_name)
+
+    # Create empty expected data table using empty seed file
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[model_name])
 
-    context.dbt_test_utils.run_dbt_seed(expected_output_csv_name)
+    seed_logs = context.dbt_test_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    # Run comparison test between target table and expected data table
+    unique_id = context.vault_structure_columns[model_name]['src_pk']
+
+    test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
+                                                                 expected_output_csv=seed_file_name,
+                                                                 unique_id=unique_id,
+                                                                 columns_to_compare=headings)
+
+    dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
     logs = context.dbt_test_utils.run_dbt_command(["dbt", "test"])
 
+    assert "Completed successfully" in seed_logs
     assert "1 of 1 PASS" in logs
+
