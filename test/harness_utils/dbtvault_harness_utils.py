@@ -40,10 +40,6 @@ def target():
         sys.exit(0)
 
 
-def is_pipeline():
-    return os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH')
-
-
 def inject_parameters(file_contents: str, parameters: dict):
     """
     Replace placeholders in a file with the provided dictionary
@@ -106,80 +102,12 @@ def create_dummy_model():
         f.write('SELECT 1')
 
 
-def check_full_refresh(context):
-    """
-    Check context for full refresh
-    """
+def is_full_refresh(context):
     return getattr(context, 'full_refresh', False)
 
 
-def process_stage_names(context, processed_stage_name):
-    """
-    Output a list of stage names if multiple stages are being used, or a single stage name if only one.
-    """
-
-    if hasattr(context, "processed_stage_name") and not getattr(context, 'disable_union', False):
-
-        stage_names = context.processed_stage_name
-
-        if isinstance(stage_names, list):
-            stage_names.append(processed_stage_name)
-        else:
-            stage_names = [stage_names] + [processed_stage_name]
-
-        stage_names = list(set(stage_names))
-
-        if isinstance(stage_names, list) and len(stage_names) == 1:
-            stage_names = stage_names[0]
-
-        return stage_names
-
-    else:
-        return processed_stage_name
-
-
-def filter_metadata(context, metadata: dict) -> dict:
-    """
-    Remove metadata indicated by fixtures
-        :param context: Behave context
-        :param metadata: Metadata dictionary containing macro parameters
-    """
-
-    if getattr(context, 'disable_payload', False):
-        metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
-
-    return metadata
-
-
-def calc_hash(columns_as_series: Series) -> Series:
-    """
-    Calculates the MD5 hash for a given value
-        :param columns_as_series: A pandas Series of strings for the hash to be calculated on.
-        In the form of "md5('1000')" or "sha('1000')"
-        :return: Hash (MD5 or SHA) of values as Series (used as column)
-    """
-
-    patterns = {
-        'md5': {
-            'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
-        'sha': {
-            'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
-
-    hashed_list = []
-
-    for item in columns_as_series:
-
-        active_hash_func = [pattern for pattern in patterns if pattern in item]
-        if active_hash_func:
-            active_hash_func = active_hash_func[0]
-            raw_item = re.findall(patterns[active_hash_func]['pattern'], item)[0]
-            hash_func = patterns[active_hash_func]['function']
-            hashed_item = str(hash_func(raw_item.encode('utf-8')).hexdigest()).upper()
-            hashed_list.append(hashed_item)
-        else:
-            hashed_list.append(item)
-
-    return Series(hashed_list)
+def is_pipeline():
+    return os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH')
 
 
 def parse_hashdiffs(columns_as_series: Series) -> Series:
@@ -254,6 +182,75 @@ def parse_lists_in_dicts(dicts_with_lists: List[dict]):
         return dicts_with_lists
 
 
+def process_stage_names(context, processed_stage_name):
+    """
+    Output a list of stage names if multiple stages are being used, or a single stage name if only one.
+    """
+
+    if hasattr(context, "processed_stage_name") and not getattr(context, 'disable_union', False):
+
+        stage_names = context.processed_stage_name
+
+        if isinstance(stage_names, list):
+            stage_names.append(processed_stage_name)
+        else:
+            stage_names = [stage_names] + [processed_stage_name]
+
+        stage_names = list(set(stage_names))
+
+        if isinstance(stage_names, list) and len(stage_names) == 1:
+            stage_names = stage_names[0]
+
+        return stage_names
+
+    else:
+        return processed_stage_name
+
+
+def filter_metadata(context, metadata: dict) -> dict:
+    """
+    Remove metadata indicated by fixtures
+        :param context: Behave context
+        :param metadata: Metadata dictionary containing macro parameters
+    """
+
+    if getattr(context, 'disable_payload', False):
+        metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
+
+    return metadata
+
+
+def calc_hash(columns_as_series: Series) -> Series:
+    """
+    Calculates the MD5 hash for a given value
+        :param columns_as_series: A pandas Series of strings for the hash to be calculated on.
+        In the form of "md5('1000')" or "sha('1000')"
+        :return: Hash (MD5 or SHA) of values as Series (used as column)
+    """
+
+    patterns = {
+        'md5': {
+            'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
+        'sha': {
+            'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
+
+    hashed_list = []
+
+    for item in columns_as_series:
+
+        active_hash_func = [pattern for pattern in patterns if pattern in item]
+        if active_hash_func:
+            active_hash_func = active_hash_func[0]
+            raw_item = re.findall(patterns[active_hash_func]['pattern'], item)[0]
+            hash_func = patterns[active_hash_func]['function']
+            hashed_item = str(hash_func(raw_item.encode('utf-8')).hexdigest()).upper()
+            hashed_list.append(hashed_item)
+        else:
+            hashed_list.append(item)
+
+    return Series(hashed_list)
+
+
 def set_custom_names():
     """
     Database and schema names for generated SQL during macro tests changes based on user.
@@ -324,40 +321,6 @@ def run_dbt_seed(seed_file_name=None) -> str:
 
     if seed_file_name:
         command.extend(['--select', seed_file_name, '--full-refresh'])
-
-    return run_dbt_command(command)
-
-
-def run_dbt_model(*, mode='compile', model_name: str, args=None, full_refresh=False,
-                  include_model_deps=False, include_tag=False) -> str:
-    """
-    Run or Compile a specific dbt model, with optionally provided variables.
-        :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
-        :param model_name: Model name for dbt to run
-        :param args: variable dictionary to provide to dbt
-        :param full_refresh: Run a full refresh
-        :param include_model_deps: Include model dependencies (+)
-        :param include_tag: Include tag string (tag:)
-        :return Log output of dbt run operation
-    """
-
-    if include_tag:
-        model_name = f'tag:{model_name}'
-
-    if include_model_deps:
-        model_name = f'+{model_name}'
-
-    if full_refresh:
-        command = ['dbt', mode, '-m', model_name, '--full-refresh']
-    else:
-        command = ['dbt', mode, '-m', model_name]
-
-    if args:
-        if not any(x in str(args) for x in ['(', ')']):
-            yaml_str = str(args).replace('\'', '"')
-        else:
-            yaml_str = str(args)
-        command.extend(['--vars', yaml_str])
 
     return run_dbt_command(command)
 
@@ -507,3 +470,35 @@ def find_columns_to_ignore(table: Table):
     df = context_table_to_df(table)
 
     return list(df.columns[df.isin(['*']).all()])
+
+
+def retrieve_compiled_model(model: str, exclude_comments=True):
+    """
+    Retrieve the compiled SQL for a specific dbt model
+        :param model: Model name to check
+        :param exclude_comments: Exclude comments from output
+        :return: Contents of compiled SQL file
+    """
+
+    with open(test.COMPILED_TESTS_DBT_ROOT / f'{model}.sql') as f:
+        file = f.readlines()
+
+        if exclude_comments:
+            file = [line for line in file if '--' not in line]
+
+        return "".join(file).strip()
+
+
+def retrieve_expected_sql(file_name: str):
+    """
+    Retrieve the expected SQL for a specific dbt model
+        :param file_name: File name to check
+        :return: Contents of compiled SQL file
+    """
+
+    with open(test.COMPILED_TESTS_DBT_ROOT / f'{file_name}.sql') as f:
+        file = f.readlines()
+
+        processed_file = inject_parameters("".join(file), set_custom_names())
+
+        return processed_file

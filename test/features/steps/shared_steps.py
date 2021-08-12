@@ -128,7 +128,7 @@ def load_empty_table(context, model_name, vault_structure):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name)
+        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
 
@@ -182,7 +182,7 @@ def load_populated_table(context, model_name, vault_structure):
 
     dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-    logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name)
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
 
@@ -202,7 +202,7 @@ def load_table(context, model_name, vault_structure):
                                            config=config,
                                            **metadata)
 
-    logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name)
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
 
@@ -223,7 +223,7 @@ def load_vault(context):
             dbtvault_generator.raw_vault_structure(model_name, vault_structure, config=config, **metadata)
             model_names.append(model_name)
 
-    is_full_refresh = dbtvault_harness_utils.check_full_refresh(context)
+    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=model_names,
                                                  full_refresh=is_full_refresh)
@@ -271,8 +271,8 @@ def create_csv(context, table_name):
                                            source_model=seed_file_name,
                                            config={'materialized': 'table'})
 
-    run_logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=table_name,
-                                                    args=args, full_refresh=True)
+    run_logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[table_name],
+                                                     args=args, full_refresh=True)
 
     context.raw_stage_models = seed_file_name
 
@@ -314,8 +314,8 @@ def stage_processing(context, processed_stage_name):
                                            ranked_columns=context.ranked_columns[processed_stage_name],
                                            include_source_columns=context.include_source_columns)
 
-    logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=processed_stage_name,
-                                                args=args)
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[processed_stage_name],
+                                                 args=args)
 
     assert "Completed successfully" in logs
 

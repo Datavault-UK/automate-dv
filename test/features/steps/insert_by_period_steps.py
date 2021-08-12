@@ -24,10 +24,10 @@ def load_table(context, model_name, vault_structure, period, start_date, stop_da
                                            config=config,
                                            **metadata)
 
-    is_full_refresh = dbtvault_harness_utils.check_full_refresh(context)
+    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
-    logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name,
-                                                full_refresh=is_full_refresh)
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
+                                                 full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
@@ -52,10 +52,10 @@ def load_table(context, model_name, vault_structure, period, start_date=None):
                                            config=config,
                                            **metadata)
 
-    is_full_refresh = dbtvault_harness_utils.check_full_refresh(context)
+    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
-    logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name,
-                                                full_refresh=is_full_refresh)
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
+                                                 full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
@@ -79,9 +79,9 @@ def load_table(context, model_name, vault_structure, period):
                                            config=config,
                                            **metadata)
 
-    is_full_refresh = dbtvault_harness_utils.check_full_refresh(context)
+    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
-    logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name,
-                                                full_refresh=is_full_refresh)
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
+                                                 full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
