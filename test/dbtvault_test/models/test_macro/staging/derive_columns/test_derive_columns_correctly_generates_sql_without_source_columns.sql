@@ -1,1 +1,0 @@
-{{ dbtvault.derive_columns(columns=var('columns')) }}

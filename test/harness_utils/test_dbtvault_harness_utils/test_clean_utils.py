@@ -55,7 +55,7 @@ def test_clean_models_success(sample_directory_tree):
 
     assert set(os.listdir(tmp_models_dir)) == {path.name for path in paths['models']}
 
-    with patch('test.FEATURE_MODELS_ROOT', tmp_models_dir):
+    with patch('test.TEST_MODELS_ROOT', tmp_models_dir):
         dbtvault_harness_utils.clean_models()
 
     assert not os.listdir(tmp_models_dir)

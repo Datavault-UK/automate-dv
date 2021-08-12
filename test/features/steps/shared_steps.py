@@ -51,7 +51,6 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
 @given("the {model_name} table does not exist")
 def check_exists(context, model_name):
-    """Check the model exists"""
     logs = dbtvault_harness_utils.run_dbt_operation(macro_name="check_model_exists",
                                                     args={"model_name": model_name})
 

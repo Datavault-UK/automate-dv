@@ -1,18 +1,7 @@
-from behave import fixture
-
-from test.harness_utils.dbtvault_harness_utils import *
+import behave
 
 
-@fixture
-def set_workdir(_):
-    """
-    Set the working (run) dir for dbt
-    """
-
-    os.chdir(TESTS_DBT_ROOT)
-
-
-@fixture
+@behave.fixture
 def enable_sha(context):
     """
     Augment the metadata for a vault structure load to work with SHA hashing instead of MD5
@@ -32,10 +21,10 @@ def enable_sha(context):
                     config[k]["+column_types"][c] = "BINARY(32)"
 
     else:
-        raise ValueError("sha fixture used before vault structure fixture.")
+        raise ValueError("sha behave.fixture used before vault structure behave.fixture.")
 
 
-@fixture
+@behave.fixture
 def enable_auto_end_date(context):
     """
     Indicate that auto end-dating on effectivity satellites should be enabled
@@ -43,7 +32,7 @@ def enable_auto_end_date(context):
     context.auto_end_date = True
 
 
-@fixture
+@behave.fixture
 def enable_full_refresh(context):
     """
     Indicate that a full refresh for a dbt run should be executed
@@ -51,7 +40,7 @@ def enable_full_refresh(context):
     context.full_refresh = True
 
 
-@fixture
+@behave.fixture
 def disable_union(context):
     """
     Indicate that a list should not be created if multiple stages are specified in a scenario
@@ -59,7 +48,7 @@ def disable_union(context):
     context.disable_union = True
 
 
-@fixture
+@behave.fixture
 def disable_payload(context):
     """
     Indicate that a src_payload key should be removed from the provided metadata

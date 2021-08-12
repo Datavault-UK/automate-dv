@@ -39,34 +39,13 @@ def sample_directory_tree(tmp_path):
     return _convert
 
 
-@pytest.fixture(scope='class')
-def run_seeds(request):
+@pytest.fixture(scope='session', autouse=True)
+def setup():
+    os.environ['TARGET'] = dbtvault_harness_utils.target()
     os.chdir(test.TESTS_DBT_ROOT)
-    request.cls.dbt_test_utils.run_dbt_seed()
-    yield
-
-
-@pytest.fixture(autouse=True, scope="function")
-def current_test_name(request):
-    """
-    Provide the current test name to every test, as the filename for the expected output file for that test
-    """
-
-    return request.node.name
 
 
 @pytest.fixture(scope='session', autouse=True)
 def clean_database(request):
-    # Set working directory to test project root
-    os.chdir(test.TESTS_DBT_ROOT)
-
     os.environ['TARGET'] = dbtvault_harness_utils.target()
-
     dbtvault_harness_utils.drop_test_schemas()
-
-
-@pytest.fixture(autouse=True, scope='session')
-def clean_target():
-    """ Clean the target folder for each session"""
-    dbtvault_harness_utils.clean_target()
-    yield
