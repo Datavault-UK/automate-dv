@@ -123,7 +123,7 @@
         with data as (
             select
                 coalesce(CAST(max({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
-                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "CAST(nullif('" ~ stop_date | lower ~ "','none') AS DATETIME) ") }},
+                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')") }},
                          CAST(CURRENT_TIMESTAMP() AS DATETIME) ) as STOP_TIMESTAMP
             from {{ target_schema }}.{{ target_table }}
         )
