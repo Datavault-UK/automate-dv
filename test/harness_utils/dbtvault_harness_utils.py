@@ -5,11 +5,13 @@ import re
 import shutil
 import sys
 from hashlib import md5, sha256
+from pathlib import Path
 from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
 import yaml
+from _pytest.fixtures import FixtureRequest
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
@@ -273,7 +275,8 @@ def set_custom_names():
 
     local_metadata = {
         "snowflake": {
-            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}".upper()
+            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}".upper(),
+            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
         },
         "bigquery": {
             "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
@@ -476,15 +479,15 @@ def find_columns_to_ignore(table: Table):
     return list(df.columns[df.isin(['*']).all()])
 
 
-def retrieve_compiled_model(model: str, exclude_comments=True):
+def retrieve_compiled_model(model_name: str, exclude_comments=True):
     """
     Retrieve the compiled SQL for a specific dbt model
-        :param model: Model name to check
+        :param model_name: Model name to check
         :param exclude_comments: Exclude comments from output
         :return: Contents of compiled SQL file
     """
 
-    with open(test.COMPILED_TESTS_DBT_ROOT / f'{model}.sql') as f:
+    with open(test.COMPILED_TESTS_DBT_ROOT / f'{model_name}.sql') as f:
         file = f.readlines()
 
         if exclude_comments:
@@ -493,14 +496,19 @@ def retrieve_compiled_model(model: str, exclude_comments=True):
         return "".join(file).strip()
 
 
-def retrieve_expected_sql(file_name: str):
+def retrieve_expected_sql(request: FixtureRequest):
     """
     Retrieve the expected SQL for a specific dbt model
-        :param file_name: File name to check
+        :param request: pytest request for calling test
         :return: Contents of compiled SQL file
     """
 
-    with open(test.COMPILED_TESTS_DBT_ROOT / f'{file_name}.sql') as f:
+    test_path = Path(request.fspath.strpath)
+    macro_folder = test_path.parent.name
+    macro_under_test = test_path.stem.split('test_')[1]
+    model_name = request.node.name
+
+    with open(test.EXPECTED_OUTPUT_FILE_ROOT / macro_folder / macro_under_test / f'{model_name}.sql') as f:
         file = f.readlines()
 
         processed_file = inject_parameters("".join(file), set_custom_names())

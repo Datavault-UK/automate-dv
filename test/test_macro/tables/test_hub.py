@@ -7,12 +7,11 @@ vault_structure = "hub"
 
 @pytest.mark.single_source_hub
 def test_hub_macro_correctly_generates_sql_for_single_source(request):
-    current_test_name = request.node.name
 
-    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[current_test_name],
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      full_refresh=True)
-    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(current_test_name)
-    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(current_test_name)
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
     assert expected_sql == actual_sql
