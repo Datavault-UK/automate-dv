@@ -2,7 +2,7 @@ import pytest
 
 import dbtvault_harness_utils
 
-vault_structure = "hub"
+macro = "hub"
 
 
 @pytest.mark.single_source_hub
