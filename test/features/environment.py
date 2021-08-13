@@ -3,7 +3,8 @@ import os
 from behave.fixture import use_fixture_by_tag
 
 import test
-from harness_utils import dbtvault_generator, dbtvault_harness_utils
+import dbtvault_generator
+import dbtvault_harness_utils
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat

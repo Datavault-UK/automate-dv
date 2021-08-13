@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from harness_utils import dbtvault_harness_utils
+import dbtvault_harness_utils
 from test import AVAILABLE_TARGETS
 
 
