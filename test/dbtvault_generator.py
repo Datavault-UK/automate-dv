@@ -37,6 +37,30 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
     generator_functions[vault_structure](**processed_metadata)
 
 
+def macro_model(model_name, macro_name):
+    """
+    Generate a model containing a call to a macro
+        :param model_name: Name of model to generate
+        :param macro_name: Type of macro to generate a model for
+    """
+
+    macro_name = macro_name.lower()
+
+    generator_functions = {
+        "hash": hash_macro
+    }
+
+    generator_functions[macro_name](model_name)
+
+
+def hash_macro(model_name):
+    template = f"""
+    {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
 def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=None,
           ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
     """
@@ -332,6 +356,10 @@ def extract_column_names(context, model_name: str, model_params: dict, ignored_p
     processed_headings.extend(column_strings)
 
     return list(flatten(processed_headings))
+
+
+def process_macro_model_metadata(macro_name, model_name, config, **kwargs):
+    return dict()
 
 
 def process_structure_metadata(vault_structure, model_name, config, **kwargs):
