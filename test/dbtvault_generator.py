@@ -34,7 +34,10 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
     processed_metadata = process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
                                                     config=config, **kwargs)
 
-    generator_functions[vault_structure](**processed_metadata)
+    if generator_functions.get(vault_structure):
+        generator_functions[vault_structure](**processed_metadata)
+    else:
+        raise ValueError(f"Invalid vault structure name '{vault_structure}'")
 
 
 def macro_model(model_name, macro_name):
@@ -47,18 +50,14 @@ def macro_model(model_name, macro_name):
     macro_name = macro_name.lower()
 
     generator_functions = {
-        "hash": hash_macro
+        "hash": hash_macro,
+        "prefix": prefix_macro
     }
 
-    generator_functions[macro_name](model_name)
-
-
-def hash_macro(model_name):
-    template = f"""
-    {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
-    """
-
-    template_to_file(template, model_name)
+    if generator_functions.get(macro_name):
+        generator_functions[macro_name](model_name)
+    else:
+        raise ValueError(f"Invalid macro name '{macro_name}'")
 
 
 def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=None,
@@ -312,6 +311,27 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables_ldts}, {src_ldts}, {source_model}) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def hash_macro(model_name):
+    template = f"""
+    {{% if execute %}}
+    {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
+    {{% endif %}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def prefix_macro(model_name):
+    template = f"""
+    {{% if execute %}}
+    {{{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
+    alias_target=var('alias_target', none)) }}}}
+    {{% endif %}}
     """
 
     template_to_file(template, model_name)
