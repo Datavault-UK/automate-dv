@@ -72,7 +72,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1323') | Charley       | 17-214-233-1323 | 2019-01-04     | 2019-01-04 | *      |
       | md5('1003') | md5('1003\|\|CHARLIE\|\|17-214-233-1333') | Charlie       | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_bigquery
   Scenario: [SAT-CYCLE-NULLS] MULTI_ACTIVE_SATELLITE load over several cycles with NULL records
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty

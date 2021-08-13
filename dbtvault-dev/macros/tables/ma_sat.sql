@@ -31,9 +31,6 @@ WITH source_data AS (
         {%- else %}
         SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
         {%- endif %}
-        {% if dbtvault.is_any_incremental() %}
-            , cd.source_count
-        {%- endif %}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}, {{ dbtvault.prefix([src_hashdiff], 'a', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 'a') }} ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }} ASC) AS source_rank
         FROM {{ ref(source_model) }} AS a
         WHERE {{ dbtvault.prefix([src_pk], 'a') }} IS NOT NULL
@@ -140,7 +137,7 @@ satellite_update AS (
     WHERE (stage.source_count != latest_records.target_count
         OR COALESCE(matching_records.match_count, 0) != latest_records.target_count
         OR stage.source_count != COALESCE(matching_records.match_count, 0))
-    {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
+     {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
         AND {{ dbtvault.prefix([src_ldts], 'stage') }} > latest_records.max_load_datetime
     {%- endif %}
 ),
