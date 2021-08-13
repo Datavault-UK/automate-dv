@@ -2,7 +2,7 @@ import pytest
 
 import dbtvault_harness_utils
 
-macro = "link"
+macro_name = "link"
 
 
 @pytest.mark.single_source_link
