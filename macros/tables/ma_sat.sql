@@ -64,44 +64,34 @@ source_data_with_counts AS (
     ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'a') }}
 ),
 
+{# Select the most recent group of satellite records relating to each PK in the source data #}
 latest_selection AS (
     SELECT ls.*
     FROM (
         SELECT {{ dbtvault.prefix(cdk_cols, 'target_records') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
             ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
-                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS latest_rank
+                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS rank_value
         FROM {{ this }} AS target_records
         INNER JOIN
             (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
             FROM source_data AS source_pks) AS source_records
                 ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
     ) AS ls
-    WHERE ls.latest_rank = 1
+    WHERE ls.rank_value = 1
 ),
 
 {# Select latest records from satellite together with count of distinct hashdiff + cdk combinations for each hashkey #}
 latest_records AS (
-    SELECT latest_selection.*, cd.target_count
-    FROM (
-        {# Select the most recent group of records relating to each PK in the source data #}
-        SELECT {{ dbtvault.prefix(cdk_cols, 'target_records') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
-                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS latest_rank
-        FROM {{ this }} AS target_records
-        INNER JOIN
-            (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
-            FROM source_data AS source_pks) AS source_records
-                ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-        ) AS latest_selection
-        INNER JOIN
-        (
-            SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS target_count
-            FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_selection AS s) AS t
-
-            GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+    SELECT latest_selection.*,
+        cd.target_count
+    FROM latest_selection
+    INNER JOIN
+    (
+        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS target_count
+        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_selection AS s) AS t
+        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
     ) AS cd
     ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'latest_selection') }}
-    WHERE latest_selection.latest_rank = 1
 ),
 
 {# Select the matching group of satellite records relating to each PK in the source data #}
