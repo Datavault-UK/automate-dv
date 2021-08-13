@@ -40,26 +40,6 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         raise ValueError(f"Invalid vault structure name '{vault_structure}'")
 
 
-def macro_model(model_name, macro_name):
-    """
-    Generate a model containing a call to a macro
-        :param model_name: Name of model to generate
-        :param macro_name: Type of macro to generate a model for
-    """
-
-    macro_name = macro_name.lower()
-
-    generator_functions = {
-        "hash": hash_macro,
-        "prefix": prefix_macro
-    }
-
-    if generator_functions.get(macro_name):
-        generator_functions[macro_name](model_name)
-    else:
-        raise ValueError(f"Invalid macro name '{macro_name}'")
-
-
 def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=None,
           ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
     """
@@ -316,6 +296,28 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template_to_file(template, model_name)
 
 
+def macro_model(model_name, macro_name, **kwargs):
+    """
+    Generate a model containing a call to a macro
+        :param model_name: Name of model to generate
+        :param macro_name: Type of macro to generate a model for
+    """
+
+    macro_name = macro_name.lower()
+
+    generator_functions = {
+        "hash": hash_macro,
+        "prefix": prefix_macro,
+        "derive_columns": derive_columns_macro,
+        "hash_columns": hash_columns_macro
+    }
+
+    if generator_functions.get(macro_name):
+        generator_functions[macro_name](model_name, **kwargs)
+    else:
+        raise ValueError(f"Invalid macro name '{macro_name}'")
+
+
 def hash_macro(model_name):
     template = f"""
     {{% if execute %}}
@@ -332,6 +334,29 @@ def prefix_macro(model_name):
     {{{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
     alias_target=var('alias_target', none)) }}}}
     {{% endif %}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def derive_columns_macro(model_name):
+    template = f"""
+    -- depends_on: {{{{ ref('raw_source') }}}}
+    {{%- if execute -%}}
+        {{%- if var('source_model', '') != '' -%}}
+            {{%- set source_relation = ref(var('source_model')) -%}}
+        {{% endif %}}
+    {{% endif %}}
+    
+    {{{{ dbtvault.derive_columns(source_relation=source_relation, columns=var('columns', [])) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def hash_columns_macro(model_name):
+    template = f"""
+    {{{{ dbtvault.hash_columns(columns=var('columns', [])) }}}}
     """
 
     template_to_file(template, model_name)
@@ -376,10 +401,6 @@ def extract_column_names(context, model_name: str, model_params: dict, ignored_p
     processed_headings.extend(column_strings)
 
     return list(flatten(processed_headings))
-
-
-def process_macro_model_metadata(macro_name, model_name, config, **kwargs):
-    return dict()
 
 
 def process_structure_metadata(vault_structure, model_name, config, **kwargs):
@@ -616,13 +637,13 @@ def restore_project_yml():
     shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
 
 
-def dict_to_yaml_string(yaml_dict: dict):
+def dict_to_yaml_string(yaml_dict: dict, sequence=4, offset=2):
     """
     Convert a dictionary to YAML and return a string with the YAML
     """
 
     yml = ruamel.yaml.YAML()
-    yml.indent(sequence=4, offset=2)
+    yml.indent(sequence=sequence, offset=offset)
     buf = io.BytesIO()
     yml.dump(yaml_dict, buf)
     yaml_str = buf.getvalue().decode('utf-8')
