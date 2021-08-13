@@ -335,7 +335,6 @@ def run_dbt_seed(seed_file_name=None) -> str:
 def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
-
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
         :param model_names: List of model names to run
         :param args: variable dictionary to provide to dbt
@@ -345,10 +344,10 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
 
     model_name_string = " ".join(model_names)
 
+    command = ['dbt', mode, '-m', model_name_string]
+
     if full_refresh:
-        command = ['dbt', mode, '-m', model_name_string, '--full-refresh']
-    else:
-        command = ['dbt', mode, '-m', model_name_string]
+        command.append('--full-refresh')
 
     if args:
         if not any(x in str(args) for x in ['(', ')']):

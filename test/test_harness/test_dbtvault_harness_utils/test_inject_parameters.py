@@ -1,6 +1,6 @@
 import pytest
 
-from harness_utils import dbtvault_harness_utils
+import dbtvault_harness_utils
 
 
 def test_inject_parameters_success():

@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 import test
-from test.harness_utils import dbtvault_harness_utils
+import dbtvault_harness_utils
 
 
 def dict_to_directories(dir_dict: dict, root_path: Path):
@@ -43,14 +43,10 @@ def sample_directory_tree(tmp_path):
 def setup():
     os.environ['TARGET'] = dbtvault_harness_utils.target()
     os.chdir(test.TESTS_DBT_ROOT)
-    dbtvault_harness_utils.clean_models()
-    dbtvault_harness_utils.clean_target()
     yield
 
 
 @pytest.fixture(scope='session', autouse=True)
 def teardown():
     yield
-    dbtvault_harness_utils.drop_test_schemas()
-    dbtvault_harness_utils.clean_models()
-    dbtvault_harness_utils.clean_target()
+    # Teardown logic

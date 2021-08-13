@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
-from harness_utils import dbtvault_harness_utils
+import dbtvault_harness_utils
 
 directory_dict = {
     'csv': {

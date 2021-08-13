@@ -1,6 +1,7 @@
 from behave import *
 
-from test.harness_utils import dbtvault_generator, dbtvault_harness_utils
+import dbtvault_generator
+import dbtvault_harness_utils
 
 
 @step("I insert by period into the {model_name} {vault_structure} "

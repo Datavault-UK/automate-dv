@@ -1,6 +1,6 @@
 from pandas import Series
 
-from harness_utils import dbtvault_harness_utils
+import dbtvault_harness_utils
 
 
 def test_calc_hash_without_hashing_for_single_column():
