@@ -15,8 +15,9 @@ from _pytest.fixtures import FixtureRequest
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
-from dbtvault_generator import dict_to_yaml_string
+import json
 import test
+from dbtvault_generator import dict_to_yaml_string
 
 if not os.getenv('DBT_PROFILES_DIR'):
     os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
@@ -350,8 +351,7 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         command.append('--full-refresh')
 
     if args:
-        yaml_str = dict_to_yaml_string(args)
-        command.extend(['--vars', f"'{yaml_str}'"])
+        command.extend(['--vars', f"{json.dumps(args)}"])
 
     return run_dbt_command(command)
 
