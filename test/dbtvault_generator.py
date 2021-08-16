@@ -1,6 +1,7 @@
 import io
 import os
 import shutil
+import textwrap
 
 import ruamel.yaml
 
@@ -296,11 +297,12 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template_to_file(template, model_name)
 
 
-def macro_model(model_name, macro_name, **kwargs):
+def macro_model(model_name, macro_name, metadata=None):
     """
     Generate a model containing a call to a macro
         :param model_name: Name of model to generate
         :param macro_name: Type of macro to generate a model for
+        :param metadata: Optional metadata dictionary
     """
 
     macro_name = macro_name.lower()
@@ -313,12 +315,12 @@ def macro_model(model_name, macro_name, **kwargs):
     }
 
     if generator_functions.get(macro_name):
-        generator_functions[macro_name](model_name, **kwargs)
+        generator_functions[macro_name](model_name, metadata=metadata)
     else:
         raise ValueError(f"Invalid macro name '{macro_name}'")
 
 
-def hash_macro(model_name):
+def hash_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
     {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
@@ -328,7 +330,7 @@ def hash_macro(model_name):
     template_to_file(template, model_name)
 
 
-def prefix_macro(model_name):
+def prefix_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
     {{{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
@@ -339,7 +341,7 @@ def prefix_macro(model_name):
     template_to_file(template, model_name)
 
 
-def derive_columns_macro(model_name):
+def derive_columns_macro(model_name, **_):
     template = f"""
     -- depends_on: {{{{ ref('raw_source') }}}}
     {{%- if execute -%}}
@@ -354,12 +356,14 @@ def derive_columns_macro(model_name):
     template_to_file(template, model_name)
 
 
-def hash_columns_macro(model_name):
-    template = f"""
-    {{{{ dbtvault.hash_columns(columns=var('columns', [])) }}}}
-    """
+def hash_columns_macro(model_name, metadata):
+    template = f"{{%- set yaml_metadata -%}}\n" \
+               f"{dict_to_yaml_string(metadata)}" \
+               f"{{%- endset -%}}\n\n" \
+               f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
+               f"{{{{ dbtvault.hash_columns(columns=metadata_dict['columns']) }}}}"
 
-    template_to_file(template, model_name)
+    template_to_file(textwrap.dedent(template), model_name)
 
 
 def extract_column_names(context, model_name: str, model_params: dict, ignored_params=None):

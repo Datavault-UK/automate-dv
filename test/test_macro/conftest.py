@@ -28,23 +28,28 @@ def pytest_collection_modifyitems(items):
 
 @pytest.fixture(autouse=True)
 def generate_model(request):
-    macro_name = getattr(request.module, "macro_name")
-    applied_marks = set(marker.name for marker in request.node.own_markers)
-    available_marks = set(mark_metadata_mapping.keys())
-    selected_mark = list(applied_marks & available_marks)
+    def _generate_model(metadata=None):
 
-    if selected_mark:
-        if selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] is not "macro":
-            dbtvault_generator.raw_vault_structure(model_name=request.node.name,
-                                                   vault_structure=macro_name,
-                                                   **mark_metadata_mapping[selected_mark[0]]())
-    elif "macro" in applied_marks:
+        macro_name = getattr(request.module, "macro_name")
+        applied_marks = set(marker.name for marker in request.node.own_markers)
+        available_marks = set(mark_metadata_mapping.keys())
+        selected_mark = list(applied_marks & available_marks)
 
-        dbtvault_generator.macro_model(macro_name=macro_name,
-                                       model_name=request.node.name)
+        if selected_mark:
+            if selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] is not "macro":
+                dbtvault_generator.raw_vault_structure(model_name=request.node.name,
+                                                       vault_structure=macro_name,
+                                                       **mark_metadata_mapping[selected_mark[0]]())
+        elif "macro" in applied_marks:
 
-    else:
-        raise ValueError(f"Invalid mark(s): {', '.join(applied_marks)}")
+            dbtvault_generator.macro_model(macro_name=macro_name,
+                                           model_name=request.node.name,
+                                           metadata=metadata)
+
+        else:
+            raise ValueError(f"Invalid mark(s): {', '.join(applied_marks)}")
+
+    yield _generate_model
 
 
 @pytest.fixture(scope='session', autouse=True)
