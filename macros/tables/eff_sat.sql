@@ -44,12 +44,6 @@ latest_records_unranked AS (
            ) AS row_num
     FROM {{ this }} AS b
 ),
-{% if target.type == 'bigquery' %}
-latest_records_bigquery AS (
-    SELECT * FROM latest_records_snowflake
-    WHERE row_num = 1
-),
-{% endif %}
 
 latest_records AS (
     SELECT *
@@ -76,11 +70,9 @@ new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'f') }}
     FROM source_data AS f
-    LEFT JOIN {% if target.type == 'snowflake' %}
-            latest_records_snowflake
-        {% elif target.type == 'bigquery' %}
-            latest_records_bigquery
-        {% endif %}
+    LEFT JOIN
+            latest_records
+
         AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
