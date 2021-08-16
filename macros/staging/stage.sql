@@ -25,7 +25,7 @@
     OR
     [SOURCES STYLE]
     source_model:
-        source_name: source_table_name"
+        source_name: source_table_name
     {%- endset -%}
 
     {{- exceptions.raise_compiler_error(error_message) -}}
