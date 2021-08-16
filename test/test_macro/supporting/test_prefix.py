@@ -15,7 +15,7 @@ def test_prefix_column_in_single_item_list_is_successful(request):
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -28,7 +28,7 @@ def test_prefix_multiple_columns_is_successful(request):
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -42,7 +42,7 @@ def test_prefix_aliased_column_is_successful(request):
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -56,7 +56,7 @@ def test_prefix_aliased_column_with_alias_target_as_source_is_successful(request
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -70,7 +70,7 @@ def test_prefix_aliased_column_with_alias_target_as_target_is_successful(request
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro

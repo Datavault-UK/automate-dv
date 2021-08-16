@@ -22,7 +22,7 @@ def test_hash_columns_correctly_generates_hashed_columns_for_single_columns(requ
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -46,7 +46,7 @@ def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns_h
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -66,7 +66,7 @@ def test_hash_columns_correctly_generates_hashed_columns_for_composite_columns_n
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -99,7 +99,7 @@ def test_hash_columns_correctly_generates_hashed_columns_for_multiple_composite_
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -122,7 +122,7 @@ def test_hash_columns_correctly_generates_unsorted_hashed_columns_for_composite_
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -164,7 +164,7 @@ def test_hash_columns_correctly_generates_sql_from_yaml(request, generate_model)
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -206,7 +206,7 @@ def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(request, 
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
 
 
 @pytest.mark.macro
@@ -241,7 +241,7 @@ def test_hash_columns_raises_warning_if_mapping_without_hashdiff(request, genera
     expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
-    assert expected_sql == actual_sql
+    assert actual_sql == expected_sql
     warning_message = "You provided a list of columns under a 'columns' key, " \
                       "but did not provide the 'is_hashdiff' flag. Use list syntax for PKs."
 

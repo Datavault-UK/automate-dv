@@ -311,7 +311,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "hash": hash_macro,
         "prefix": prefix_macro,
         "derive_columns": derive_columns_macro,
-        "hash_columns": hash_columns_macro
+        "hash_columns": hash_columns_macro,
+        "stage": stage_macro
     }
 
     if generator_functions.get(macro_name):
@@ -364,6 +365,20 @@ def hash_columns_macro(model_name, metadata):
                f"{{{{ dbtvault.hash_columns(columns=metadata_dict['columns']) }}}}"
 
     template_to_file(textwrap.dedent(template), model_name)
+
+
+def stage_macro(model_name, metadata):
+    template = f"{{%- set yaml_metadata -%}}\n" \
+               f"{dict_to_yaml_string(metadata)}" \
+               f"{{%- endset -%}}\n\n" \
+               f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
+               f"{{{{ dbtvault.stage(include_source_columns=metadata_dict.get('include_source_columns', none),\n" \
+               f"                  source_model=metadata_dict.get('source_model', none),\n" \
+               f"                  derived_columns=metadata_dict.get('derived_columns', none),\n" \
+               f"                  hashed_columns=metadata_dict.get('hashed_columns', none),\n" \
+               f"                  ranked_columns=metadata_dict.get('ranked_columns', none)) }}}}"
+
+    template_to_file(template, model_name)
 
 
 def extract_column_names(context, model_name: str, model_params: dict, ignored_params=None):
