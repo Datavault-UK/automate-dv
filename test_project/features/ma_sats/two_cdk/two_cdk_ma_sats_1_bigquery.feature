@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour with two CDKs
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where all records load
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -53,7 +53,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1214 | 12342     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12342') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1214 | 12343     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12343') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some records overlap
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -108,7 +108,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1228 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1228\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1238 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1238\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have fewer records
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -153,7 +153,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1004') | Dom           | 17-214-233-1217 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1217\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
       | md5('1004') | Dom           | 17-214-233-1237 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some sets of records have extra records
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -208,7 +208,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1004') | Dom           | 17-214-233-1247 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1247\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
       | md5('1004') | Dom           | 17-214-233-1257 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1257\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets maintain group size after records have been added and removed in the stage
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -269,7 +269,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1244 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1244\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1254 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1254\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets maintain group size but some records have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -324,7 +324,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1234 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1234\|\|12341')  | 1993-01-02     | 1993-01-02 | *      |
 
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have varying group size and some have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -401,7 +401,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Fridax        | 17-214-233-1224 | 12341     | md5('1006\|\|FRIDAX\|\|17-214-233-1224\|\|12341')| 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1234 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1234\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -441,7 +441,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1008') | Jenny         | 17-214-233-1218 | 12311     | md5('1008\|\|JENNY\|\|17-214-233-1218\|\|12311') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | <null>        | 17-214-233-1212 | 12311     | md5('1002\|\|^^\|\|17-214-233-1212\|\|12311')    | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -477,7 +477,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1216 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | <null>        | 17-214-233-1212 | 12311     | md5('1002\|\|^^\|\|17-214-233-1212\|\|12311')    | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -501,7 +501,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1226 | 12322     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12322') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1006') | Frida         | 17-214-233-1236 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where hashdiff does not include CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF             | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -548,7 +548,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1007') | Frida         | 17-214-233-1228 | 12332     | md5('1007\|\|FRIDA') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1007') | Frida         | 17-214-233-1248 | 12334     | md5('1007\|\|FRIDA') | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF             | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -584,7 +584,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1005') | Dom           | 17-214-233-1217 | 12324     | md5('1005\|\|DOM')   | 1993-01-02     | 1993-01-02 | *      |
       | md5('1005') | Dom           | 17-214-233-1217 | 12325     | md5('1005\|\|DOM')   | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where hashdiff does not include PK nor CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -631,7 +631,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1007') | Frida         | 17-214-233-1228 | 12332     | md5('FRIDA') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1007') | Frida         | 17-214-233-1248 | 12334     | md5('FRIDA') | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PK nor CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
