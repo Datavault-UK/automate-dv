@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two CDKs
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite, where some customers have the same phone number but different extensions and others have different phone numbers but the same extensions
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
@@ -35,7 +35,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | Dom           | 17-214-233-1227 | 12331     | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
@@ -71,7 +71,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | Dom           | 17-214-233-1227 | 12331     | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD-EMPTY] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
@@ -105,7 +105,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | Dom           | 17-214-233-1227 | 12331     | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
@@ -141,7 +141,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227\|\|12331')   | Dom           | 17-214-233-1227 | 12331     | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite
+  @fixture.multi_active_satellite_bigquery
   Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data

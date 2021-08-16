@@ -1,4 +1,4 @@
-@fixture.set_workdir
+two_cdk_ma_sats_cycles.feature@fixture.set_workdir
 Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with two CDKs
 
   @fixture.multi_active_satellite_cycle
