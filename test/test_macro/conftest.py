@@ -17,16 +17,7 @@ mark_metadata_mapping = {
 }
 
 
-@pytest.hookimpl(trylast=True)
-def pytest_collection_modifyitems(items):
-    for item in items:
-        current_marks = [mark.name for mark in item.own_markers]
-
-        if any([mark in current_marks for mark in mark_metadata_mapping.keys()]):
-            item.fixturenames.append('generate_model')
-
-
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def generate_model(request):
     def _generate_model(metadata=None):
 
@@ -47,7 +38,10 @@ def generate_model(request):
                                            metadata=metadata)
 
         else:
-            raise ValueError(f"Invalid mark(s): {', '.join(applied_marks)}")
+            if applied_marks:
+                raise ValueError(f"Invalid mark(s): {', '.join(applied_marks)}")
+            else:
+                raise ValueError(f"Missing a mark (e.g. @pytest.mark.macro)")
 
     yield _generate_model
 
