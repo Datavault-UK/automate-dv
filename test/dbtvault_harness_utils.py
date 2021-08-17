@@ -504,7 +504,7 @@ def retrieve_expected_sql(request: FixtureRequest):
     macro_under_test = test_path.stem.split('test_')[1]
     model_name = request.node.name
 
-    with open(test.EXPECTED_OUTPUT_FILE_ROOT / macro_folder / macro_under_test / f'{model_name}.sql') as f:
+    with open(test.TEST_MACRO_ROOT / macro_folder / "expected" / macro_under_test / f'{model_name}.sql') as f:
         file = f.readlines()
 
         processed_file = inject_parameters("".join(file), set_custom_names())
