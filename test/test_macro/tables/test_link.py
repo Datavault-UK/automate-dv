@@ -1,6 +1,6 @@
 import pytest
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 macro_name = "link"
 

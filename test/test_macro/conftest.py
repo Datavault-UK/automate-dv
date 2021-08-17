@@ -2,10 +2,10 @@ import os
 
 import pytest
 
-import dbtvault_generator
-import dbtvault_harness_utils
 import test
-from test_macro import structure_metadata
+from test import dbtvault_generator
+from test import dbtvault_harness_utils
+from . import structure_metadata
 
 mark_metadata_mapping = {
     "single_source_hub": structure_metadata.single_source_hub,

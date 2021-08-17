@@ -27,10 +27,10 @@ seeds:
         CUSTOMER_PK: BINARY(16)
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
-        LOADDATE: DATE
+        LOAD_DATE: DATE
     raw_source_2:
       +column_types:
         CUSTOMER_PK: BINARY(16)
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
-        LOADDATE: DATE
+        LOAD_DATE: DATE

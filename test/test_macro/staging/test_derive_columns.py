@@ -1,13 +1,13 @@
 import pytest
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 macro_name = "derive_columns"
 
 
 @pytest.mark.macro
 def test_derive_columns_correctly_generates_sql_with_source_columns(request, generate_model):
-    var_dict = {'source_model': 'raw_source', 'columns': {'SOURCE': "!STG_BOOKING", 'EFFECTIVE_FROM': 'LOADDATE'}}
+    var_dict = {'source_model': 'raw_source', 'columns': {'SOURCE': "!STG_BOOKING", 'EFFECTIVE_FROM': 'LOAD_DATE'}}
 
     generate_model()
 
@@ -22,7 +22,7 @@ def test_derive_columns_correctly_generates_sql_with_source_columns(request, gen
 
 @pytest.mark.macro
 def test_derive_columns_correctly_generates_sql_without_source_columns(request, generate_model):
-    var_dict = {'columns': {'SOURCE': "!STG_BOOKING", 'LOADDATE': 'EFFECTIVE_FROM'}}
+    var_dict = {'columns': {'SOURCE': "!STG_BOOKING", 'LOAD_DATE': 'EFFECTIVE_FROM'}}
 
     generate_model()
 
