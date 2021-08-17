@@ -57,7 +57,7 @@ def inject_parameters(file_contents: str, parameters: dict):
         for key, val in parameters.items():
             file_contents = re.sub(rf'\[{key}]', val, file_contents, flags=re.IGNORECASE)
 
-        remaining_placeholders = re.findall(r'\[.*]', file_contents, flags=re.IGNORECASE)
+        remaining_placeholders = re.findall("|".join([rf'\[{key}]' for key in parameters.keys()]), file_contents)
 
         if remaining_placeholders:
             raise ValueError(f"Unable to replace some placeholder values: {', '.join(remaining_placeholders)}")
