@@ -1,4 +1,4 @@
-Feature: Hubs
+Feature: [H] Hubs
 
   @fixture.single_source_hub
   Scenario: [H-001] Simple load of stage data into an empty hub
