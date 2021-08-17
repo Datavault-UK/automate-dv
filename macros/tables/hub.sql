@@ -48,7 +48,7 @@ row_rank_{{ source_number }}_non_ranked AS (
 ),
 
 row_rank_{{ source_number }} AS (
-SELECT * FROM row_rank_1_non_ranked
+SELECT * FROM row_rank_{{ source_number }}_non_ranked
 WHERE row_number = 1
 ), {{ "\n" if not loop.last }}
 
