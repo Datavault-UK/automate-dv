@@ -450,7 +450,7 @@ def satellite_bigquery(context):
                 "CUSTOMER_ID": "NUMERIC",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_DOB": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }

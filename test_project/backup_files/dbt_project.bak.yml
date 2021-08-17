@@ -43,6 +43,11 @@ seeds:
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
     temp:
-      as_of_date_seed:
+      raw_stage_supplier_seed:
         +column_types:
-          AS_OF_DATE: DATETIME
+          PART_ID: STRING
+          SUPPLIER_ID: STRING
+          AVAILQTY: FLOAT
+          SUPPLYCOST: NUMERIC
+          LOAD_DATE: DATE
+          SOURCE: STRING
