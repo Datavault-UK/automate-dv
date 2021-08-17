@@ -13,7 +13,7 @@ INVOKE_YML_FILE = PROJECT_ROOT / 'invoke.yml'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
 BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_DBT_ROOT}/target/compiled/dbtvault_test/models/")
-EXPECTED_OUTPUT_FILE_ROOT = Path(f"{TESTS_ROOT}/test_macro/expected_compiled_sql")
+TEST_MACRO_ROOT = Path(f"{TESTS_ROOT}/test_macro/")
 FEATURES_ROOT = TESTS_ROOT / 'features'
 CSV_DIR = TESTS_DBT_ROOT / 'data/temp'
 
