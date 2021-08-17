@@ -11,6 +11,7 @@ from test.features.eff_sats import fixtures_eff_sat
 from test.features.behave_fixtures import *
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
+from test.features.t_links import fixtures_t_link
 from test.features.ma_sats import fixtures_ma_sat
 from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
@@ -31,7 +32,7 @@ fixture_registry_snowflake = {
     "fixture.multi_source_hub": fixtures_hub.multi_source_hub,
     "fixture.single_source_link": fixtures_link.single_source_link,
     "fixture.multi_source_link": fixtures_link.multi_source_link,
-    "fixture.t_link": fixtures_link.t_link,
+    "fixture.t_link": fixtures_t_link.t_link,
     "fixture.satellite": fixtures_sat.satellite,
     "fixture.satellite_cycle": fixtures_sat.satellite_cycle,
     "fixture.eff_satellite": fixtures_eff_sat.eff_satellite,
