@@ -37,46 +37,18 @@ def check_project(c, project='test'):
 
 
 @task
-def inject_to_file(c, target=None, user=None, from_file='secrethub/secrethub_dev.env', to_file='pycharm.env'):
+def inject_to_file(c, from_file='profiles/profiles.tpl.yml', to_file='profiles/profiles.yml'):
     """
     Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
-    pycharm.env, which is an ignored file in git.
+    profiles/profiles.yml, which is an ignored file in git.
         :param c: invoke context
-        :param target: dbt profile target
-        :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
-        :param from_file: File which includes secrethub paths to extract into plain text
+        :param from_file: File which includes 1Password paths to extract into plain text
         :param to_file: File to store plain text in
     """
 
-    if not user:
-        user = c.config.get('secrets_user', None)
-
-    if not target:
-        target = c.config.get('target', None)
-
-    command = f"secrethub inject  -f -v env={target} -v user={user} -i {from_file} -o {to_file}"
+    command = f"op inject -i {from_file} -o {to_file}"
 
     c.run(command)
-
-
-@task
-def create_secrethub_file(c, user=None,
-                          from_file='secrethub/secrethub_tmpl.env',
-                          to_file='secrethub/secrethub_dev.env'):
-    """
-    Create a secrethub file to configure environment variables with secrethub path reference
-        :param c: invoke context
-        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
-        :param from_file: File path (relative to project root) to use as a template for the secrethub configuration
-        :param to_file: Secrethub environment file path (relative to project root) to create
-    """
-    if not user:
-        user = c.config.get('secrets_user', None)
-
-    with open(test.PROJECT_ROOT / from_file, 'rt') as f_in:
-        with open(test.PROJECT_ROOT / to_file, 'wt') as f_out:
-            for line in f_in:
-                f_out.write(line.replace('<user>', str(user)))
 
 
 @task
@@ -123,9 +95,9 @@ def setup(c, target=None, user=None, project=None, secrethub_template='secrethub
 
     logger.info(f'Setting defaults...')
     set_defaults(c, target, user, project)
-    logger.info(f'Creating secrethub file...')
-    create_secrethub_file(c, user=user, from_file=secrethub_template)
-    logger.info(f'Injecting credentials to pycharm environment file...')
+    # logger.info(f'Creating secrethub file...')
+    # create_secrethub_file(c, user=user, from_file=secrethub_template)
+    logger.info(f'Injecting credentials to profiles.yml file...')
     inject_to_file(c)
     logger.info(f'Checking project directory...')
     check_project(c)
