@@ -1,4 +1,5 @@
 import glob
+import json
 import logging
 import os
 import re
@@ -15,9 +16,8 @@ from _pytest.fixtures import FixtureRequest
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
-import json
+
 import test
-from dbtvault_generator import dict_to_yaml_string
 
 if not os.getenv('DBT_PROFILES_DIR'):
     os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
