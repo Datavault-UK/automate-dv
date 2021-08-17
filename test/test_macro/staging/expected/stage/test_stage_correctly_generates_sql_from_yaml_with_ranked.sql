@@ -6,7 +6,7 @@ WITH source_data AS (
     ORDER_FK,
     CUSTOMER_PK,
     CUSTOMER_ID,
-    LOADDATE,
+    LOAD_DATE,
     RECORD_SOURCE,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -33,7 +33,7 @@ derived_columns AS (
     ORDER_FK,
     CUSTOMER_PK,
     CUSTOMER_ID,
-    LOADDATE,
+    LOAD_DATE,
     RECORD_SOURCE,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -61,7 +61,7 @@ hashed_columns AS (
     BOOKING_FK,
     ORDER_FK,
     CUSTOMER_ID,
-    LOADDATE,
+    LOAD_DATE,
     RECORD_SOURCE,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -98,7 +98,7 @@ ranked_columns AS (
 
     SELECT *,
 
-    RANK() OVER (PARTITION BY CUSTOMER_ID ORDER BY LOADDATE) AS DBTVAULT_RANK
+    RANK() OVER (PARTITION BY CUSTOMER_ID ORDER BY LOAD_DATE) AS DBTVAULT_RANK
 
     FROM hashed_columns
 ),
@@ -110,7 +110,7 @@ columns_to_select AS (
     BOOKING_FK,
     ORDER_FK,
     CUSTOMER_ID,
-    LOADDATE,
+    LOAD_DATE,
     RECORD_SOURCE,
     CUSTOMER_DOB,
     CUSTOMER_NAME,

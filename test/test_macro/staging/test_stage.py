@@ -1,6 +1,6 @@
 import pytest
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 macro_name = "stage"
 
@@ -56,7 +56,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_source_style(request, gene
         },
         "derived_columns": {
             "SOURCE": "!STG_BOOKING",
-            "EFFECTIVE_FROM": "LOADDATE"
+            "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
 
@@ -93,7 +93,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_ranked(request, generate_m
         "ranked_columns": {
             "DBTVAULT_RANK": {
                 "partition_by": "CUSTOMER_ID",
-                "order_by": "LOADDATE"
+                "order_by": "LOAD_DATE"
             }
         }
     }
@@ -213,7 +213,7 @@ def test_stage_correctly_generates_sql_for_only_derived_from_yaml(request, gener
         "source_model": "raw_source",
         "derived_columns": {
             "SOURCE": "!STG_BOOKING",
-            "EFFECTIVE_FROM": "LOADDATE"
+            "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
 
@@ -236,11 +236,11 @@ def test_stage_correctly_generates_sql_for_only_ranked_from_yaml(request, genera
         "ranked_columns": {
             "DBTVAULT_RANK": {
                 "partition_by": "CUSTOMER_ID",
-                "order_by": "LOADDATE"
+                "order_by": "LOAD_DATE"
             },
             "SAT_LOAD_RANK": {
                 "partition_by": "CUSTOMER_ID",
-                "order_by": "LOADDATE"}
+                "order_by": "LOAD_DATE"}
         }
     }
 
@@ -421,7 +421,7 @@ def test_stage_correctly_generates_sql_for_hashing_with_exclude_flag(request, ge
         "source_model": "raw_source",
         "derived_columns": {
             "SOURCE": "!STG_BOOKING",
-            "EFFECTIVE_FROM": "LOADDATE"
+            "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "hashed_columns": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -432,7 +432,7 @@ def test_stage_correctly_generates_sql_for_hashing_with_exclude_flag(request, ge
                     "BOOKING_FK",
                     "ORDER_FK",
                     "CUSTOMER_PK",
-                    "LOADDATE",
+                    "LOAD_DATE",
                     "RECORD_SOURCE"]
             }
         }
@@ -455,7 +455,7 @@ def test_stage_correctly_generates_sql_for_hashing_with_exclude_flag_no_columns(
         "source_model": "raw_source",
         "derived_columns": {
             "SOURCE": "!STG_BOOKING",
-            "EFFECTIVE_FROM": "LOADDATE"
+            "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "hashed_columns": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -491,7 +491,7 @@ def test_stage_correctly_generates_sql_for_only_hashing_with_exclude_flag(reques
                     "BOOKING_FK",
                     "ORDER_FK",
                     "CUSTOMER_PK",
-                    "LOADDATE",
+                    "LOAD_DATE",
                     "RECORD_SOURCE"]
             }
         }
@@ -521,7 +521,7 @@ def test_stage_correctly_generates_sql_for_only_source_and_hashing_with_exclude_
                     ["BOOKING_FK",
                      "ORDER_FK",
                      "CUSTOMER_PK",
-                     "LOADDATE",
+                     "LOAD_DATE",
                      "RECORD_SOURCE"]
             }
         }
@@ -555,7 +555,7 @@ def test_stage_raises_error_with_missing_source(request, generate_model):
         },
         "derived_columns": {
             "SOURCE": "!STG_BOOKING",
-            "EFFECTIVE_FROM": "LOADDATE"
+            "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
 

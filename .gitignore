@@ -15,3 +15,4 @@ test/dbtvault_test/models/schema_test.yml
 profiles/profiles.yml
 
 .pytest_cache/
+/dbtvault-dev/dbt_modules/

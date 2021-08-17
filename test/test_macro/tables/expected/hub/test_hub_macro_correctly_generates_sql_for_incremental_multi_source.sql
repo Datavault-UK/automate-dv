@@ -1,8 +1,8 @@
 WITH row_rank_1 AS (
-    SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
+    SELECT CUSTOMER_PK, CUSTOMER_ID, LOAD_DATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE
+               ORDER BY LOAD_DATE
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
     WHERE CUSTOMER_PK IS NOT NULL
@@ -10,10 +10,10 @@ WITH row_rank_1 AS (
 ),
 
 row_rank_2 AS (
-    SELECT CUSTOMER_PK, CUSTOMER_ID, LOADDATE, RECORD_SOURCE,
+    SELECT CUSTOMER_PK, CUSTOMER_ID, LOAD_DATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE
+               ORDER BY LOAD_DATE
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_2
     WHERE CUSTOMER_PK IS NOT NULL
@@ -30,7 +30,7 @@ row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE, RECORD_SOURCE ASC
+               ORDER BY LOAD_DATE, RECORD_SOURCE ASC
            ) AS row_rank_number
     FROM stage_union
     WHERE CUSTOMER_PK IS NOT NULL
@@ -38,7 +38,7 @@ row_rank_union AS (
 ),
 
 records_to_insert AS (
-    SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.LOADDATE, a.RECORD_SOURCE
+    SELECT a.CUSTOMER_PK, a.CUSTOMER_ID, a.LOAD_DATE, a.RECORD_SOURCE
     FROM row_rank_union AS a
     LEFT JOIN [DATABASE_NAME].[SCHEMA_NAME].test_hub_macro_correctly_generates_sql_for_incremental_multi_source AS d
     ON a.CUSTOMER_PK = d.CUSTOMER_PK

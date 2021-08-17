@@ -2,7 +2,7 @@ WITH source_data AS (
 
     SELECT
 
-    LOADDATE,
+    LOAD_DATE,
     CUSTOMER_ID,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -24,7 +24,7 @@ derived_columns AS (
 
     SELECT
 
-    LOADDATE,
+    LOAD_DATE,
     CUSTOMER_ID,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -39,7 +39,7 @@ derived_columns AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9,
     'STG_BOOKING' AS SOURCE,
-    LOADDATE AS EFFECTIVE_FROM
+    LOAD_DATE AS EFFECTIVE_FROM
 
     FROM source_data
 ),
@@ -48,7 +48,7 @@ hashed_columns AS (
 
     SELECT
 
-    LOADDATE,
+    LOAD_DATE,
     CUSTOMER_ID,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -84,7 +84,7 @@ columns_to_select AS (
 
     SELECT
 
-    LOADDATE,
+    LOAD_DATE,
     CUSTOMER_ID,
     CUSTOMER_DOB,
     CUSTOMER_NAME,

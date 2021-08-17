@@ -6,7 +6,7 @@ WITH source_data AS (
     ORDER_FK,
     CUSTOMER_PK,
     CUSTOMER_ID,
-    LOADDATE,
+    LOAD_DATE,
     RECORD_SOURCE,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -33,7 +33,7 @@ derived_columns AS (
     ORDER_FK,
     CUSTOMER_PK,
     CUSTOMER_ID,
-    LOADDATE,
+    LOAD_DATE,
     RECORD_SOURCE,
     CUSTOMER_DOB,
     CUSTOMER_NAME,
@@ -49,7 +49,7 @@ derived_columns AS (
     TEST_COLUMN_9,
     BOOKING_DATE,
     'STG_BOOKING' AS SOURCE,
-    LOADDATE AS EFFECTIVE_FROM
+    LOAD_DATE AS EFFECTIVE_FROM
 
     FROM source_data
 ),

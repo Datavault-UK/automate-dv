@@ -1,6 +1,6 @@
 import pytest
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 macro_name = "prefix"
 
@@ -22,7 +22,7 @@ def test_prefix_column_in_single_item_list_is_successful(request, generate_model
 
 @pytest.mark.macro
 def test_prefix_multiple_columns_is_successful(request, generate_model):
-    var_dict = {'columns': ["CUSTOMER_HASHDIFF", 'CUSTOMER_PK', 'LOADDATE', 'SOURCE'], 'prefix': 'c'}
+    var_dict = {'columns': ["CUSTOMER_HASHDIFF", 'CUSTOMER_PK', 'LOAD_DATE', 'SOURCE'], 'prefix': 'c'}
 
     generate_model()
 
@@ -37,7 +37,7 @@ def test_prefix_multiple_columns_is_successful(request, generate_model):
 
 @pytest.mark.macro
 def test_prefix_aliased_column_is_successful(request, generate_model):
-    var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOADDATE"],
+    var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOAD_DATE"],
                 'prefix': 'c'}
 
     generate_model()
@@ -53,7 +53,7 @@ def test_prefix_aliased_column_is_successful(request, generate_model):
 
 @pytest.mark.macro
 def test_prefix_aliased_column_with_alias_target_as_source_is_successful(request, generate_model):
-    var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOADDATE"],
+    var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOAD_DATE"],
                 'prefix': 'c', 'alias_target': 'source'}
 
     generate_model()
@@ -69,7 +69,7 @@ def test_prefix_aliased_column_with_alias_target_as_source_is_successful(request
 
 @pytest.mark.macro
 def test_prefix_aliased_column_with_alias_target_as_target_is_successful(request, generate_model):
-    var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOADDATE"],
+    var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, "CUSTOMER_PK", "LOAD_DATE"],
                 'prefix': 'c', 'alias_target': 'target'}
 
     generate_model()

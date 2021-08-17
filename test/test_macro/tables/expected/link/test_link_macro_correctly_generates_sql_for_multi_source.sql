@@ -1,18 +1,18 @@
 WITH row_rank_1 AS (
-    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE,
+    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOAD_DATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE
+               ORDER BY LOAD_DATE
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
     QUALIFY row_number = 1
 ),
 
 row_rank_2 AS (
-    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOADDATE, RECORD_SOURCE,
+    SELECT CUSTOMER_PK, ORDER_FK, BOOKING_FK, LOAD_DATE, RECORD_SOURCE,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE
+               ORDER BY LOAD_DATE
            ) AS row_number
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source_2
     QUALIFY row_number = 1
@@ -28,7 +28,7 @@ row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY CUSTOMER_PK
-               ORDER BY LOADDATE, RECORD_SOURCE ASC
+               ORDER BY LOAD_DATE, RECORD_SOURCE ASC
            ) AS row_rank_number
     FROM stage_union
     WHERE CUSTOMER_PK IS NOT NULL
@@ -38,7 +38,7 @@ row_rank_union AS (
 ),
 
 records_to_insert AS (
-    SELECT a.CUSTOMER_PK, a.ORDER_FK, a.BOOKING_FK, a.LOADDATE, a.RECORD_SOURCE
+    SELECT a.CUSTOMER_PK, a.ORDER_FK, a.BOOKING_FK, a.LOAD_DATE, a.RECORD_SOURCE
     FROM row_rank_union AS a
 )
 
