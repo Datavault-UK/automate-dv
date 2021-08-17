@@ -1,45 +1,62 @@
 import pytest
-from unittest import TestCase
+
+import dbtvault_harness_utils
+
+macro_name = "expand_column_list"
 
 
-# @pytest.mark.usefixtures('dbt_test_utils', 'clean_database')
-# class TestExpandColumnListMacro(TestCase):
-#     maxDiff = None
-#
-#     def test_expand_column_list_correctly_generates_list_with_nesting(self):
-#         var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', 'BOOKING_FK']]}
-#
-#         process_logs = self.dbt_test_utils.run_dbt_models(model_name=[self.current_test_name], args=var_dict)
-#         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
-#         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
-#
-#         assert 'Done' in process_logs
-#         assert 'SQL compilation error' not in process_logs
-#         self.assertEqual(expected_sql, actual_sql)
-#
-#     def test_expand_column_list_correctly_generates_list_with_extra_nesting(self):
-#         var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', ['BOOKING_FK', 'TEST_COLUMN']]]}
-#
-#         process_logs = self.dbt_test_utils.run_dbt_models(model_name=[self.current_test_name], args=var_dict)
-#         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
-#         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
-#
-#         assert 'Done' in process_logs
-#         assert 'SQL compilation error' not in process_logs
-#         self.assertEqual(expected_sql, actual_sql)
-#
-#     def test_expand_column_list_correctly_generates_list_with_no_nesting(self):
-#         var_dict = {'columns': ['CUSTOMER_PK', 'ORDER_FK', 'BOOKING_FK']}
-#
-#         process_logs = self.dbt_test_utils.run_dbt_models(model_name=[self.current_test_name], args=var_dict)
-#         actual_sql = self.dbt_test_utils.retrieve_compiled_model(self.current_test_name)
-#         expected_sql = self.dbt_test_utils.retrieve_expected_sql(self.current_test_name)
-#
-#         assert 'Done' in process_logs
-#         assert 'SQL compilation error' not in process_logs
-#         self.assertEqual(expected_sql, actual_sql)
-#
-#     def test_expand_column_list_raises_error_with_missing_columns(self):
-#         process_logs = self.dbt_test_utils.run_dbt_models(model_names=[self.current_test_name])
-#
-#         assert 'Expected a list of columns, got: None' in process_logs
+@pytest.mark.macro
+def test_expand_column_list_correctly_generates_list_with_nesting(request, generate_model):
+    var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', 'BOOKING_FK']]}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_expand_column_list_correctly_generates_list_with_extra_nesting(request, generate_model):
+    var_dict = {'columns': ['CUSTOMER_PK', ['ORDER_FK', ['BOOKING_FK', 'TEST_COLUMN']]]}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_expand_column_list_correctly_generates_list_with_no_nesting(request, generate_model):
+    var_dict = {'columns': ['CUSTOMER_PK', 'ORDER_FK', 'BOOKING_FK']}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_expand_column_list_raises_error_with_missing_columns(request, generate_model):
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    assert 'Expected a list of columns, got: None' in dbt_logs

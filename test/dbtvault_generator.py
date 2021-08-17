@@ -312,7 +312,11 @@ def macro_model(model_name, macro_name, metadata=None):
         "prefix": prefix_macro,
         "derive_columns": derive_columns_macro,
         "hash_columns": hash_columns_macro,
-        "stage": stage_macro
+        "stage": stage_macro,
+        "expand_column_list": expand_column_list_macro,
+        "as_constant": as_constant_macro,
+        "alias": alias_macro,
+        "alias_all": alias_all_macro
     }
 
     if generator_functions.get(macro_name):
@@ -325,17 +329,6 @@ def hash_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
     {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
-    {{% endif %}}
-    """
-
-    template_to_file(template, model_name)
-
-
-def prefix_macro(model_name, **_):
-    template = f"""
-    {{% if execute %}}
-    {{{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
-    alias_target=var('alias_target', none)) }}}}
     {{% endif %}}
     """
 
@@ -377,6 +370,41 @@ def stage_macro(model_name, metadata):
                f"                  derived_columns=metadata_dict.get('derived_columns', none),\n" \
                f"                  hashed_columns=metadata_dict.get('hashed_columns', none),\n" \
                f"                  ranked_columns=metadata_dict.get('ranked_columns', none)) }}}}"
+
+    template_to_file(template, model_name)
+
+
+def expand_column_list_macro(model_name, **_):
+    template = "{{- dbtvault.expand_column_list(columns=var('columns', none)) -}}"
+
+    template_to_file(template, model_name)
+
+
+def as_constant_macro(model_name, **_):
+    template = "{{- dbtvault.as_constant(column_str=var('column_str', none)) -}}"
+
+    template_to_file(template, model_name)
+
+
+def alias_macro(model_name, **_):
+    template = "{{ dbtvault.alias(alias_config=var('alias_config', none), prefix=var('prefix', none)) }}"
+
+    template_to_file(template, model_name)
+
+
+def alias_all_macro(model_name, **_):
+    template = "{{ dbtvault.alias_all(columns=var('columns', none), prefix=var('prefix', none)) }}"
+
+    template_to_file(template, model_name)
+
+
+def prefix_macro(model_name, **_):
+    template = f"""
+    {{% if execute %}}
+    {{{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
+    alias_target=var('alias_target', none)) }}}}
+    {{% endif %}}
+    """
 
     template_to_file(template, model_name)
 

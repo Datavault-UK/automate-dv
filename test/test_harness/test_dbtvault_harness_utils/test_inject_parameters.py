@@ -54,15 +54,17 @@ def test_inject_parameters_missing_placeholders_success():
     assert actual_file_contents == expected_file_contents
 
 
-def test_inject_parameters_missing_params_failure():
+def test_inject_parameters_missing_params_success():
     sample_file_contents = "SELECT * FROM [DATABASE].[SCHEMA].[TABLE]"
+
+    expected_file_contents = "SELECT * FROM test_db.test_schema.[TABLE]"
 
     params = {
         "DATABASE": "test_db",
         "SCHEMA": "test_schema"
     }
 
-    with pytest.raises(ValueError) as e:
-        dbtvault_harness_utils.inject_parameters(sample_file_contents, params)
+    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
+                                                                    params)
 
-    assert str(e.value) == "Unable to replace some placeholder values: [TABLE]"
+    assert actual_file_contents == expected_file_contents
