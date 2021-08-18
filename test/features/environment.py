@@ -71,6 +71,9 @@ def before_all(context):
     # Setup context
     context.config.setup_logging()
 
+    # Env setup
+    dbtvault_harness_utils.setup_environment()
+
     # Clean dbt folders and generated files
     dbtvault_harness_utils.clean_csv()
     dbtvault_harness_utils.clean_models()
@@ -81,9 +84,6 @@ def before_all(context):
 
     # Backup YAML prior to run
     dbtvault_generator.backup_project_yml()
-
-    # Env setup
-    os.environ['TARGET'] = dbtvault_harness_utils.target()
 
     dbtvault_harness_utils.create_dummy_model()
 
