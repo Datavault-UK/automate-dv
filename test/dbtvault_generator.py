@@ -548,22 +548,6 @@ def template_to_file(template, model_name):
         f.write(template.strip())
 
 
-def append_dict_to_schema_yml(yaml_dict):
-    """
-    Append a given dictionary to the end of the schema_test.yml file
-        :param yaml_dict: Dictionary to append to the schema_test.yml file
-    """
-    shutil.copyfile(BACKUP_TEST_SCHEMA_YML_FILE, TEST_SCHEMA_YML_FILE)
-
-    with open(TEST_SCHEMA_YML_FILE, 'a+') as f:
-        f.write('\n\n')
-
-        yml = ruamel.yaml.YAML()
-        yml.indent(sequence=4, offset=2)
-
-        yml.dump(yaml_dict, f)
-
-
 def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     """
     Append a given dictionary to the end of the dbt_project.yml file
@@ -659,6 +643,22 @@ def append_end_date_config(context, config: dict) -> dict:
     return config
 
 
+def append_dict_to_schema_yml(yaml_dict):
+    """
+    Append a given dictionary to the end of the schema_test.yml file
+        :param yaml_dict: Dictionary to append to the schema_test.yml file
+    """
+    shutil.copyfile(BACKUP_TEST_SCHEMA_YML_FILE, TEST_SCHEMA_YML_FILE)
+
+    with open(TEST_SCHEMA_YML_FILE, 'a+') as f:
+        f.write('\n\n')
+
+        yml = ruamel.yaml.YAML()
+        yml.indent(sequence=4, offset=2)
+
+        yml.dump(yaml_dict, f)
+
+
 def clean_test_schema_file():
     """
     Delete the schema_test.yml file if it exists
@@ -682,6 +682,9 @@ def restore_project_yml():
     """
 
     shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
+
+    if BACKUP_DBT_PROJECT_YML_FILE.exists():
+        os.remove(BACKUP_DBT_PROJECT_YML_FILE)
 
 
 def dict_to_yaml_string(yaml_dict: dict, sequence=4, offset=2):
