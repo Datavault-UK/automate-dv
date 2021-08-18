@@ -27,7 +27,7 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set max_date = '9999-12-31 23:59:59.999' -%}
+{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999') -%}
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
@@ -264,9 +264,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE TO_DATE({{ bridge_end_date }}) = TO_DATE('{{ max_date }}')
+    WHERE TO_DATE({{ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
             {%- else %}
-        AND TO_DATE({{ bridge_end_date }}) = TO_DATE('{{ max_date }}')
+        AND TO_DATE({{ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
             {%- endif -%}
         {%- endfor %}
 )
