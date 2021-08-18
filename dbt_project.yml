@@ -17,3 +17,4 @@ clean-targets:
 
 vars:
   hash: MD5
+  max_datetime: '9999-12-31 23:59:59.999'
