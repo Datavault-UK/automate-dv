@@ -1126,7 +1126,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_NAME": "STRING",
-                "EXTENSION": "NUMERIC",
+                "EXTENSION": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
