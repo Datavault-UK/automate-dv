@@ -124,8 +124,7 @@ Feature: [BRG-3L] Bridge table
 
   @fixture.bridge
   Scenario: [BRG-3L-004] Base load into a bridge table
-    From one hub and three links with history only in EFF_SAT_ORDER_PRODUCT 
-    and encompassing range of AS_OF dates
+    From one hub and three links with history only in EFF_SAT_ORDER_PRODUCT and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -206,8 +205,7 @@ Feature: [BRG-3L] Bridge table
 
   @fixture.bridge
   Scenario: [BRG-3L-005] Base load into a bridge table 
-    From one hub and three links with history only in EFF_SAT_PRODUCT_COMPONENT 
-    and encompassing range of AS_OF dates
+    From one hub and three links with history only in EFF_SAT_PRODUCT_COMPONENT and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables
@@ -310,8 +308,7 @@ Feature: [BRG-3L] Bridge table
 
   @fixture.bridge
   Scenario: [BRG-3L-006] Base load into a bridge table 
-    From one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, 
-    and encompassing range of AS_OF dates
+    From one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
     And the raw vault contains empty tables

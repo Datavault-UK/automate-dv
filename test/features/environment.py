@@ -45,7 +45,7 @@ fixture_registry_snowflake = {
     "fixture.pit_one_sat": fixtures_pit.pit_one_sat,
     "fixture.pit_two_sats": fixtures_pit.pit_two_sats,
     "fixture.bridge": fixtures_bridge.bridge,
-    "fixture.cycle": fixtures_cycle,
+    "fixture.cycle": fixtures_cycle.cycle
 }
 
 fixture_registry_bigquery = {
