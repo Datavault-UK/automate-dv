@@ -240,9 +240,9 @@ matching_selection AS (
 {# Select PKs and hashdiff counts for matching stage and satellite records #}
 {# Matching by hashkey + hashdiff + cdk #}
 matching_records AS (
-	SELECT {{ dbtvault.prefix([src_pk], 'matching_selection') }},
+    SELECT {{ dbtvault.prefix([src_pk], 'matching_selection') }},
         MAX(ca.match_count) AS match_count
-	FROM matching_selection
+    FROM matching_selection
     INNER JOIN
     (
         SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS match_count
