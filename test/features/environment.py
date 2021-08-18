@@ -108,8 +108,6 @@ def before_scenario(context, scenario):
 
     dbtvault_generator.clean_test_schema_file()
 
-    dbtvault_generator.restore_project_yml()
-
 
 def before_tag(context, tag):
     tgt = dbtvault_harness_utils.target()

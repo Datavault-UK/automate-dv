@@ -1,15 +1,15 @@
 name: dbtvault_test
 version: 0.7.5
-require-dbt-version: [ '>=0.18.0', "<0.21.0" ]
+require-dbt-version: ['>=0.18.0', <0.21.0]
 config-version: 2
 profile: dbtvault
 
-source-paths: [ models ]
-analysis-paths: [ analysis ]
-test-paths: [ tests ]
-data-paths: [ data ]
-macro-paths: [ macros ]
-docs-paths: [ docs ]
+source-paths: [models]
+analysis-paths: [analysis]
+test-paths: [tests]
+data-paths: [data]
+macro-paths: [macros]
+docs-paths: [docs]
 
 target-path: target
 clean-targets:
