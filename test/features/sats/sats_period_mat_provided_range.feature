@@ -1,10 +1,8 @@
-Feature: Satellites Loaded using Period Materialization for provided date ranges
+Feature: [SAT-PMP] Satellites Loaded using Period Materialization for provided date ranges
 
 # TODO: Work out a way to stop this becoming a larger test as time goes on (will always do until current date)
-#  # PROVIDED DATE RANGE [START-ONLY] (DAILY)
-#
 #  @fixture.satellite_cycle
-#  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with start date only.
+#  Scenario: [SAT-PMP-001] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with start date only.
 #    Given the SATELLITE table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -16,7 +14,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
 #      | 1003        | Chris         | 1990-02-03   | 2021-01-12     | 2021-01-12 | *      |
 #      | 1004        | David         | 1992-01-30   | 2021-01-12     | 2021-01-12 | *      |
 #      | 1010        | Jenny         | 1991-03-25   | 2021-01-12     | 2021-01-12 | *      |
-#    And I create the STG_CUSTOMER stage
+#    And I stage the STG_CUSTOMER data
 #    And I insert by period into the SATELLITE sat by day with start date: 2021-01-11
 #    And I insert by period into the SATELLITE sat by day with start date: 2021-01-11
 #    Then the SATELLITE table should contain expected data
@@ -30,10 +28,8 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
 #      | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID')   | David         | 1992-01-30   | 2021-01-12     | 2021-01-12 | *      |
 #      | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY')   | Jenny         | 1991-03-25   | 2021-01-12     | 2021-01-12 | *      |
 
-  # PROVIDED DATE RANGE [START-AND-STOP] (DAILY)
-
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
+  Scenario: [SAT-PMP-002] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -55,7 +51,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
@@ -70,7 +66,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')  | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
+  Scenario: [SAT-PMP-003] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
     When the RAW_STAGE is loaded
@@ -93,7 +89,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -112,7 +108,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')   | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
+  Scenario: [SAT-PMP-004] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -141,7 +137,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | 1013        | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
 
     # =============== CHECKS ===================
@@ -166,7 +162,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
+  Scenario: [SAT-PMP-005] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -199,7 +195,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-05 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

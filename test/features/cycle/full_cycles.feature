@@ -1,7 +1,7 @@
-Feature: Full Vault Cycles
+Feature: [CYC] Full Vault Cycles
 
   @fixture.cycle
-  Scenario: [VAULT-CYCLE] Test several load cycles of a raw vault
+  Scenario: [CYC-01] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
       | HUB          | LINK                  | SAT                       |
       | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |
@@ -17,13 +17,13 @@ Feature: Full Vault Cycles
       | 1002        | Beth          | 1995-08-07   | 2019-05-04     | 2019-05-04 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Ronna         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10034      | 1001        | 2019-05-03   | 100.00 | 2019-09-17     | GBR         | 17-214-233-1214 | BRITISH     | 2019-05-04 | *      |
       | 10035      | 1002        | 2019-05-03   | 80.00  | 2019-09-16     | NLD         | 17-214-200-1214 | DUTCH       | 2019-05-04 | *      |
       | 10070      | 1040        | 2019-05-03   | 90.00  | 2019-09-15     | ZIM         | 17-214-200-4040 | CHINESE     | 2019-05-04 | *      |
-    And I create the STG_BOOKING stage
+    And I stage the STG_BOOKING data
     And I load the vault
 
     # ================ DAY 2 ===================
@@ -32,12 +32,12 @@ Feature: Full Vault Cycles
       | 1002        | Jack          | 1995-08-07   | 2019-05-05     | 2019-05-05 | *      |
       | 1003        | Michael       | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10036      | 1003        | 2019-05-04   | 70.00  | 2019-09-13     | AUS         | 17-214-555-1214 | AUSTRALIAN  | 2019-05-05 | *      |
       | 10037      | 1004        | 2019-05-04   | 810.00 | 2019-09-18     | DEU         | 17-214-123-1214 | GERMAN      | 2019-05-05 | *      |
-    And I create the STG_BOOKING stage
+    And I stage the STG_BOOKING data
     And I load the vault
 
     # ================ DAY 3 ===================
@@ -47,12 +47,12 @@ Feature: Full Vault Cycles
       | 1003        | Harold        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Kevin         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Chris         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10038      | 1005        | 2019-05-05   | 216.50 | 2019-09-19     | ITA         | 17-214-456-1214 | BRITISH     | 2019-05-06 | *      |
       | 10039      | 1006        | 2019-05-05   | 111.10 | 2019-09-20     | NOR         | 17-214-789-1214 | RUSSIAN     | 2019-05-06 | *      |
-    And I create the STG_BOOKING stage
+    And I stage the STG_BOOKING data
     And I load the vault
 
     # ================ DAY 4 ===================
@@ -69,7 +69,7 @@ Feature: Full Vault Cycles
       | 1013        | Rochel        | 2003-02-27   | 2019-05-07     | 2019-05-07 | *      |
       | 1014        | Shayne        | 1999-01-31   | 2019-05-07     | 2019-05-07 | *      |
       | 1015        | Fabiola       | 1985-04-02   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And the RAW_STAGE_BOOKING is loaded
       | BOOKING_ID | CUSTOMER_ID | BOOKING_DATE | PRICE  | DEPARTURE_DATE | DESTINATION | PHONE           | NATIONALITY | LOAD_DATE  | SOURCE |
       | 10039      | 1006        | 2019-05-05   | 111.10 | 2019-09-20     | AUS         | 17-214-789-1214 | RUSSIAN     | 2019-05-07 | *      |
@@ -82,7 +82,7 @@ Feature: Full Vault Cycles
       | 10046      | 1013        | 2019-05-06   | 295.81 | 2019-11-14     | SEN         | 17-214-577-1221 | INDONESIAN  | 2019-05-07 | *      |
       | 10047      | 1014        | 2019-05-06   | 259.99 | 2019-12-22     | HMD         | 17-214-577-1222 | ANGOLAN     | 2019-05-07 | *      |
       | 10048      | 1015        | 2019-05-06   | 219.99 | 2019-10-16     | JAM         | 17-214-577-1223 | TAIWANESE   | 2019-05-07 | *      |
-    And I create the STG_BOOKING stage
+    And I stage the STG_BOOKING data
     And I load the vault
 
     # =============== CHECKS ===================

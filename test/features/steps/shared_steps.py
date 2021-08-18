@@ -133,9 +133,34 @@ def load_empty_table(context, model_name, vault_structure):
     assert "Completed successfully" in logs
 
 
-@given("I will have a {raw_stage_name} raw stage and I have a {processed_stage_name} processed stage")
-def create_empty_stage(context, raw_stage_name, processed_stage_name):
-    stage_source_column_headings = list(context.seed_config[raw_stage_name]["+column_types"].keys())
+@given("I have an empty {raw_stage_name} raw stage")
+def create_empty_stage(context, raw_stage_name):
+    stage_headings = list(context.seed_config[raw_stage_name]["+column_types"].keys())
+
+    row = Row(cells=[], headings=stage_headings)
+
+    empty_table = Table(headings=stage_headings, rows=row)
+
+    seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=empty_table,
+                                                                 model_name=raw_stage_name)
+
+    context.create_empty_stage = True
+
+    context.empty_stage_name = seed_file_name
+
+    dbtvault_generator.add_seed_config(seed_name=seed_file_name,
+                                       seed_config=context.seed_config[raw_stage_name])
+
+    logs = dbtvault_harness_utils.run_dbt_seed(seed_file_name=seed_file_name)
+
+    context.raw_stage_name = raw_stage_name
+
+    assert "Completed successfully" in logs
+
+
+@given("I have an empty {processed_stage_name} primed stage")
+def create_empty_stage(context, processed_stage_name):
+    stage_source_column_headings = list(context.seed_config[context.raw_stage_name]["+column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
     stage_headings = stage_source_column_headings + stage_hashed_column_headings + stage_derived_column_headings
@@ -300,7 +325,7 @@ def create_csv(context, raw_stage_model_name):
     assert "Completed successfully" in logs
 
 
-@step("I create the {processed_stage_name} stage")
+@step("I stage the {processed_stage_name} data")
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
@@ -326,6 +351,37 @@ def expect_data(context, model_name):
                                                                            model_name=f"{model_name}_expected")
 
     columns_to_compare = context.table.headings
+    unique_id = columns_to_compare[0]
+
+    test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
+                                                                 expected_output_csv=expected_output_csv_name,
+                                                                 unique_id=unique_id,
+                                                                 columns_to_compare=columns_to_compare)
+
+    dbtvault_generator.append_dict_to_schema_yml(test_yaml)
+
+    dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
+                                       include_columns=columns_to_compare,
+                                       seed_config=context.seed_config[model_name])
+
+    dbtvault_harness_utils.run_dbt_seed(expected_output_csv_name)
+
+    logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+
+    assert "1 of 1 PASS" in logs
+
+
+@then("the {model_name} table should be empty")
+def expect_data(context, model_name):
+    table_headings = list(context.seed_config[model_name]["+column_types"].keys())
+    row = Row(cells=[], headings=table_headings)
+
+    empty_table = Table(headings=table_headings, rows=row)
+
+    expected_output_csv_name = dbtvault_harness_utils.context_table_to_csv(table=empty_table,
+                                                                           model_name=f"{model_name}_expected")
+
+    columns_to_compare = table_headings
     unique_id = columns_to_compare[0]
 
     test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,

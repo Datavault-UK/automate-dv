@@ -1,9 +1,9 @@
-Feature: Satellites Loaded using Period Materialization for other scenarios
+Feature: [SAT-PMO] Satellites Loaded using Period Materialization for other scenarios
 
   # ABORTED LOADS
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Simulate a restart of an aborted load
+  Scenario: [SAT-PMO-001] Simulate a restart of an aborted load
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -30,7 +30,7 @@ Feature: Satellites Loaded using Period Materialization for other scenarios
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -55,7 +55,7 @@ Feature: Satellites Loaded using Period Materialization for other scenarios
   # INFERRED DATE RANGE (MONTHLY)
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PERIOD-MAT] Satellite load over several monthly cycles with insert_by_period into empty satellite.
+  Scenario: [SAT-PMO-002] Satellite load over several monthly cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
     When the RAW_STAGE is loaded
@@ -78,7 +78,7 @@ Feature: Satellites Loaded using Period Materialization for other scenarios
       | 1007        | Geoff         | 1990-02-03   | 2019-08-07     | 2019-08-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-08-07     | 2019-08-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-08-07     | 2019-08-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by month
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
