@@ -60,6 +60,7 @@ def check_exists(context, model_name):
     assert f"Model {model_name} does not exist." in logs
 
 
+# TODO: Re-factor this so it is only one dbt run instead of looping
 @given("the raw vault contains empty tables")
 def clear_schema(context):
     dbtvault_harness_utils.replace_test_schema()
