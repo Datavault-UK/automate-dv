@@ -1,10 +1,10 @@
 name: dbtvault
-version: 0.7.5
+version: 0.7.7
 require-dbt-version: [">=0.18.0", "<0.21.0"]
 config-version: 2
 
 source-paths: ["models"]
-analysis-paths: ["analysis"] 
+analysis-paths: ["analysis"]
 test-paths: ["tests"]
 data-paths: ["data"]
 macro-paths: ["macros"]
