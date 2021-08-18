@@ -71,7 +71,10 @@ def inject_to_file(c, from_file='profiles/profiles.tpl.yml', to_file='profiles/p
         :param to_file: File to store plain text in
     """
 
-    os.remove(Path(to_file).absolute())
+    to_file_path = Path(to_file).absolute()
+
+    if os.path.exists(to_file_path):
+        os.remove(to_file_path)
 
     command = f"op inject -i {from_file} -o {to_file}"
 
