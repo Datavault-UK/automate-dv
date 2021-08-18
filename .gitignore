@@ -2,10 +2,8 @@ logs/
 .idea/
 *__pycache__*
 *.pyc
-*.user.yml
-*invoke.yml
+
 *target/
-*pycharm.env
 
 test/dbtvault_test/dbt_modules/
 test/dbtvault_test/models/*.sql
@@ -13,8 +11,10 @@ test/dbtvault_test/data/temp/*
 test/dbtvault_test/models/schema_test.yml
 test/backup_files/dbt_project.bak.yml
 
-profiles/profiles.yml
-/op/db_details.env
+*.user.yml
+*profiles.yml
+*db.env
+*invoke.yml
 
 .pytest_cache/
 /dbtvault-dev/dbt_modules/
