@@ -43,6 +43,22 @@ def target():
         sys.exit(0)
 
 
+def database_details():
+    if os.path.isfile(test.OP_DB_FILE):
+
+        with open(test.OP_DB_FILE) as config:
+            config_dict = yaml.safe_load(config)
+
+            details = {"SNOWFLAKE_DB_USER": config_dict.get('SNOWFLAKE_DB_USER'),
+                       "SNOWFLAKE_DB_DATABASE": config_dict.get('SNOWFLAKE_DB_DATABASE'),
+                       "SNOWFLAKE_DB_SCHEMA": config_dict.get('SNOWFLAKE_DB_SCHEMA')}
+
+            return details
+    else:
+        test.logger.error(f"'{test.OP_DB_FILE}' not found. Please run 'inv setup'")
+        sys.exit(0)
+
+
 def inject_parameters(file_contents: str, parameters: dict):
     """
     Replace placeholders in a file with the provided dictionary
@@ -267,17 +283,23 @@ def set_custom_names():
     def sanitise_strings(unsanitised_str):
         return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
 
+    db_details = database_details()
+
+    snowflake_db_user = os.getenv('SNOWFLAKE_DB_USER', db_details["SNOWFLAKE_DB_USER"])
+    snowflake_db_database = os.getenv('SNOWFLAKE_DB_DATABASE', db_details["SNOWFLAKE_DB_DATABASE"])
+    snowflake_db_schema = os.getenv('SNOWFLAKE_DB_SCHEMA', db_details["SNOWFLAKE_DB_SCHEMA"])
+
     circleci_metadata = {
         "snowflake": {
-            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
+            "SCHEMA_NAME": f"{snowflake_db_schema}_{snowflake_db_user}"
                            f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
         }
     }
 
     local_metadata = {
         "snowflake": {
-            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}".upper(),
-            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
+            "SCHEMA_NAME": f"{snowflake_db_schema}_{snowflake_db_user}".upper(),
+            "DATABASE_NAME": snowflake_db_database
         },
         "bigquery": {
             "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()

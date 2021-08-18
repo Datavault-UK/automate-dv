@@ -10,6 +10,7 @@ SCHEMA_YML_FILE = TEST_MODELS_ROOT / 'schema.yml'
 TEST_SCHEMA_YML_FILE = TEST_MODELS_ROOT / 'schema_test.yml'
 DBT_PROJECT_YML_FILE = TESTS_DBT_ROOT / 'dbt_project.yml'
 INVOKE_YML_FILE = PROJECT_ROOT / 'invoke.yml'
+OP_DB_FILE = PROJECT_ROOT / 'op/db_details.env'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
 BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TESTS_DBT_ROOT}/target/compiled/dbtvault_test/models/")

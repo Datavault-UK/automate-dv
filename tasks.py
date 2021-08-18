@@ -25,8 +25,9 @@ def setup(c, target=None, user=None, project=None):
 
     logger.info(f'Setting defaults...')
     set_defaults(c, target, user, project)
-    logger.info(f'Injecting credentials to profiles.yml file...')
+    logger.info(f'Injecting credentials to files...')
     inject_to_file(c)
+    inject_to_file(c, from_file='op/db.env', to_file='op/db_details.env')
     logger.info(f'Checking project directory...')
     check_project(c)
     logger.info(f'Installing dbtvault-dev in test project...')
