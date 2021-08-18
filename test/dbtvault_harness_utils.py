@@ -43,20 +43,34 @@ def target():
         sys.exit(0)
 
 
-def database_details():
+def con_details():
     if os.path.isfile(test.OP_DB_FILE):
 
         with open(test.OP_DB_FILE) as config:
             config_dict = yaml.safe_load(config)
 
-            details = {"SNOWFLAKE_DB_USER": config_dict.get('SNOWFLAKE_DB_USER'),
-                       "SNOWFLAKE_DB_DATABASE": config_dict.get('SNOWFLAKE_DB_DATABASE'),
-                       "SNOWFLAKE_DB_SCHEMA": config_dict.get('SNOWFLAKE_DB_SCHEMA')}
+            details = {"SNOWFLAKE_DB_USER": os.getenv('SNOWFLAKE_DB_USER',
+                                                      config_dict.get('SNOWFLAKE_DB_USER', None)),
+                       "SNOWFLAKE_DB_DATABASE": os.getenv('SNOWFLAKE_DB_DATABASE',
+                                                          config_dict.get('SNOWFLAKE_DB_DATABASE', None)),
+                       "SNOWFLAKE_DB_SCHEMA": os.getenv('SNOWFLAKE_DB_SCHEMA',
+                                                        config_dict.get('SNOWFLAKE_DB_SCHEMA', None))}
+
+            if not all([v for v in details.values()]) and target() == 'snowflake':
+                raise ValueError("Snowflake connection details unavailable. Please run 'inv setup'")
 
             return details
     else:
         test.logger.error(f"'{test.OP_DB_FILE}' not found. Please run 'inv setup'")
         sys.exit(0)
+
+
+def setup_environment():
+    db_details = con_details()
+    os.environ['TARGET'] = target()
+    os.environ['SNOWFLAKE_DB_USER'] = db_details['SNOWFLAKE_DB_USER']
+    os.environ['SNOWFLAKE_DB_DATABASE'] = db_details['SNOWFLAKE_DB_DATABASE']
+    os.environ['SNOWFLAKE_DB_SCHEMA'] = db_details['SNOWFLAKE_DB_SCHEMA']
 
 
 def inject_parameters(file_contents: str, parameters: dict):
@@ -283,11 +297,11 @@ def set_custom_names():
     def sanitise_strings(unsanitised_str):
         return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
 
-    db_details = database_details()
+    db_details = con_details()
 
-    snowflake_db_user = os.getenv('SNOWFLAKE_DB_USER', db_details["SNOWFLAKE_DB_USER"])
-    snowflake_db_database = os.getenv('SNOWFLAKE_DB_DATABASE', db_details["SNOWFLAKE_DB_DATABASE"])
-    snowflake_db_schema = os.getenv('SNOWFLAKE_DB_SCHEMA', db_details["SNOWFLAKE_DB_SCHEMA"])
+    snowflake_db_user = db_details["SNOWFLAKE_DB_USER"]
+    snowflake_db_database = db_details["SNOWFLAKE_DB_DATABASE"]
+    snowflake_db_schema = db_details["SNOWFLAKE_DB_SCHEMA"]
 
     circleci_metadata = {
         "snowflake": {
@@ -309,6 +323,7 @@ def set_custom_names():
     if is_pipeline():
         return {k: sanitise_strings(v) for k, v in circleci_metadata[target()].items()}
     else:
+
         return {k: sanitise_strings(v) for k, v in local_metadata[target()].items()}
 
 

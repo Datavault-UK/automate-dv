@@ -41,7 +41,7 @@ def sample_directory_tree(tmp_path):
 
 @pytest.fixture(scope='session', autouse=True)
 def setup():
-    os.environ['TARGET'] = dbtvault_harness_utils.target()
+    dbtvault_harness_utils.setup_environment()
     os.chdir(test.TESTS_DBT_ROOT)
     yield
 

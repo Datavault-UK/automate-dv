@@ -48,7 +48,7 @@ def generate_model(request):
 
 @pytest.fixture(scope='session', autouse=True)
 def setup():
-    os.environ['TARGET'] = dbtvault_harness_utils.target()
+    dbtvault_harness_utils.setup_environment()
     os.chdir(test.TESTS_DBT_ROOT)
     dbtvault_harness_utils.clean_models()
     dbtvault_harness_utils.clean_target()
