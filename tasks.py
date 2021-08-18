@@ -27,7 +27,7 @@ def setup(c, target=None, user=None, project=None):
     set_defaults(c, target, user, project)
     logger.info(f'Injecting credentials to files...')
     inject_to_file(c)
-    inject_to_file(c, from_file='op/db.env', to_file='op/db_details.env')
+    inject_to_file(c, from_file='env/db.env', to_file='env/db.tpl.env')
     logger.info(f'Checking project directory...')
     check_project(c)
     logger.info(f'Installing dbtvault-dev in test project...')
@@ -54,7 +54,7 @@ def set_defaults(c, target=None, user=None, project='test'):
 
     dict_file = {k: v for k, v in dict_file.items() if v}
 
-    with open('invoke.yml', 'w') as file:
+    with open('env/invoke.yml', 'w') as file:
         yaml.dump(dict_file, file)
         logger.info(f'Defaults set.')
         logger.info(f'secrets_user: {user}')
@@ -63,7 +63,7 @@ def set_defaults(c, target=None, user=None, project='test'):
 
 
 @task
-def inject_to_file(c, from_file='profiles/profiles.tpl.yml', to_file='profiles/profiles.yml'):
+def inject_to_file(c, from_file='env/profiles.tpl.yml', to_file='env/profiles.yml'):
     """
     Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
     profiles/profiles.yml, which is an ignored file in git.
@@ -123,7 +123,7 @@ def change_target(c, target):
         'project': c.config.get('project', None),
         'target': target}
 
-    with open('invoke.yml', 'w') as file:
+    with open('env/invoke.yml', 'w') as file:
         yaml.dump(dict_file, file)
         logger.info(f"Target set to '{target}'")
 
