@@ -7,6 +7,7 @@ from test_project.test_utils.dbt_test_utils import *
 fixture_registry = {
     "fixture.set_workdir": set_workdir,
     "fixture.staging": staging,
+    "fixture.staging_bigquery": staging_bigquery,
     "fixture.single_source_hub": single_source_hub,
     "fixture.single_source_hub_bigquery": single_source_hub_bigquery,
     "fixture.sha": sha,
@@ -27,6 +28,7 @@ fixture_registry = {
     "fixture.eff_satellite_multipart": eff_satellite_multipart,
     "fixture.eff_satellite_multipart_bigquery": eff_satellite_multipart_bigquery,
     "fixture.t_link": t_link,
+    "fixture.t_link_bigquery": t_link_bigquery,
     "fixture.xts": xts,
     "fixture.xts_bigquery": xts_bigquery,
     "fixture.multi_active_satellite": multi_active_satellite,
@@ -40,6 +42,7 @@ fixture_registry = {
     "fixture.bridge": bridge,
     "fixture.bridge_bigquery": bridge_bigquery,
     "fixture.cycle": cycle,
+    "fixture.cycle_bigquery": cycle_bigquery,
     "fixture.enable_auto_end_date": enable_auto_end_date,
     "fixture.enable_full_refresh": enable_full_refresh,
     "fixture.disable_union": disable_union,

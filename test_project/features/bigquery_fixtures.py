@@ -41,7 +41,7 @@ def sha(context):
 
 
 @fixture
-def staging(context):
+def staging_bigquery(context):
     """
     Define the structures and metadata to load a hashed staging layer
     """
@@ -3165,7 +3165,7 @@ def cycle_bigquery(context):
             "+column_types": {
                 "BOOKING_ID": "STRING",
                 "CUSTOMER_ID": "STRING",
-                "PRICE": "NUMERIC",
+                "PRICE": "STRING",
                 "DEPARTURE_DATE": "DATE",
                 "BOOKING_DATE": "DATE",
                 "PHONE": "STRING",
@@ -3226,7 +3226,7 @@ def cycle_bigquery(context):
             "+column_types": {
                 "BOOKING_PK": "STRING",
                 "HASHDIFF": "STRING",
-                "PRICE": "NUMERIC",
+                "PRICE": "STRINGff",
                 "BOOKING_DATE": "DATE",
                 "DEPARTURE_DATE": "DATE",
                 "DESTINATION": "STRING",
