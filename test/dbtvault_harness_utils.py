@@ -43,13 +43,13 @@ def platform():
         sys.exit(0)
 
 
-def con_details():
+def con_details(plt):
     if os.path.isfile(test.OP_DB_FILE):
 
         with open(test.OP_DB_FILE) as config:
             config_dict = yaml.safe_load(config)
 
-            if platform() == "snowflake":
+            if plt == "snowflake":
 
                 details = {"SNOWFLAKE_DB_USER": os.getenv('SNOWFLAKE_DB_USER',
                                                           config_dict.get('SNOWFLAKE_DB_USER', None)),
@@ -58,21 +58,29 @@ def con_details():
                            "SNOWFLAKE_DB_SCHEMA": os.getenv('SNOWFLAKE_DB_SCHEMA',
                                                             config_dict.get('SNOWFLAKE_DB_SCHEMA', None))}
 
-                if not all([v for v in details.values()]):
-                    raise ValueError("Snowflake connection details unavailable. Please run 'inv setup'")
+            elif plt == "bigquery":
+                details = {
+                    "GCP_DATASET": os.getenv('GCP_DATASET',
+                                             config_dict.get('GCP_DATASET', None)),
+                    "GCP_USER": os.getenv('GCP_USER',
+                                          config_dict.get('GCP_USER', None))}
 
-            return details
+            if not all([v for v in details.values()]):
+                raise ValueError(f"{str(plt).title()} environment details unavailable. Please run 'inv setup'")
+            else:
+                return details
     else:
         test.logger.error(f"'{test.OP_DB_FILE}' not found. Please run 'inv setup'")
         sys.exit(0)
 
 
 def setup_environment():
-    db_details = con_details()
-    os.environ['PLATFORM'] = platform()
-    os.environ['SNOWFLAKE_DB_USER'] = db_details['SNOWFLAKE_DB_USER']
-    os.environ['SNOWFLAKE_DB_DATABASE'] = db_details['SNOWFLAKE_DB_DATABASE']
-    os.environ['SNOWFLAKE_DB_SCHEMA'] = db_details['SNOWFLAKE_DB_SCHEMA']
+    p = platform()
+    db_details = con_details(plt=p)
+    os.environ['PLATFORM'] = p
+
+    for key, val in db_details.items():
+        os.environ[key] = val
 
 
 def inject_parameters(file_contents: str, parameters: dict):
