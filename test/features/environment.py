@@ -10,6 +10,7 @@ from test.features.eff_sats import fixtures_eff_sat
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
+from test.features.sats_with_oos import fixtures_oos_sat
 from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
@@ -36,6 +37,7 @@ fixture_registry_snowflake = {
     "fixture.eff_satellite": fixtures_eff_sat.eff_satellite,
     "fixture.eff_satellite_testing_auto_end_dating": fixtures_eff_sat.eff_satellite_testing_auto_end_dating,
     "fixture.eff_satellite_multipart": fixtures_eff_sat.eff_satellite_multipart,
+    "fixture.out_of_sequence_satellite": fixtures_oos_sat.out_of_sequence_satellite,
     "fixture.multi_active_satellite": fixtures_ma_sat.multi_active_satellite,
     "fixture.multi_active_satellite_cycle": fixtures_ma_sat.multi_active_satellite_cycle,
     "fixture.xts": fixtures_xts.xts,
@@ -62,7 +64,7 @@ fixture_registry_sqlserver = {
     "fixture.eff_satellite": fixtures_eff_sat.eff_satellite_sqlserver,
     "fixture.eff_satellite_testing_auto_end_dating": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
     "fixture.eff_satellite_multipart": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
-    "fixture.out_of_sequence_satellite_sqlserver": fixtures_sat.out_of_sequence_satellite_sqlserver,
+    "fixture.out_of_sequence_satellite": fixtures_oos_sat.out_of_sequence_satellite_sqlserver,
     "fixture.multi_active_satellite": fixtures_ma_sat.multi_active_satellite_sqlserver,
     "fixture.multi_active_satellite_cycle": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
     "fixture.xts": fixtures_xts.xts_sqlserver,
