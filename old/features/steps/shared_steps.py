@@ -2,8 +2,8 @@ from behave import *
 from behave.model import Table, Row
 import copy
 
-from test_project.test_utils.dbt_test_utils import DBTVAULTGenerator
-from test_project.test_utils.dbt_test_utils import DBTTestUtils
+from old.test_utils.dbt_test_utils import DBTVAULTGenerator
+from old.test_utils.dbt_test_utils import DBTTestUtils
 
 use_step_matcher("parse")
 
