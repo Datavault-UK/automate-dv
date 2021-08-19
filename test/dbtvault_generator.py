@@ -681,9 +681,8 @@ def restore_project_yml():
     Restore dbt_project.yml from backup
     """
 
-    shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
-
     if BACKUP_DBT_PROJECT_YML_FILE.exists():
+        shutil.copyfile(BACKUP_DBT_PROJECT_YML_FILE, DBT_PROJECT_YML_FILE)
         os.remove(BACKUP_DBT_PROJECT_YML_FILE)
 
 

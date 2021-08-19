@@ -35,10 +35,9 @@ seeds:
         ORDER_FK: BINARY(16)
         LOAD_DATE: DATE
     temp:
-      link_order_product_seed:
+      raw_stage_seed:
         +column_types:
-          ORDER_PRODUCT_PK: BINARY(16)
-          ORDER_FK: BINARY(16)
-          PRODUCT_FK: BINARY(16)
-          LOAD_DATETIME: DATETIME
+          CUSTOMER_ID: VARCHAR
+          CUSTOMER_NAME: VARCHAR
+          LOAD_DATE: DATE
           SOURCE: VARCHAR
