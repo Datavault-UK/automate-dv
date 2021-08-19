@@ -1,9 +1,10 @@
 import logging
 import os
 from pathlib import Path
+from typing import Tuple
 
 import yaml
-from invoke import task
+from invoke import Collection, task
 
 import test
 
@@ -11,59 +12,59 @@ logger = logging.getLogger('dbtvault')
 
 
 @task()
-def setup(c, target=None, user=None, project=None):
+def setup(c, platform=None, project=None):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
-        :param target: dbt profile target (Optional if defaults already set)
-        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param platform: dbt profile platform (Optional if defaults already set)
         (Optional if defaults already set)
         :param project: dbt project to run with (Optional if defaults already set)
     """
 
-    target, user, project = params(c, target=target, project=project, user=user)
+    if platform:
+        c.platform = platform
+    if project:
+        c.project = project
 
-    logger.info(f'Setting defaults...')
-    set_defaults(c, target, user, project)
+    set_defaults(c, platform=c.platform, project=c.project)
+
+    logger.info(f"Platform set to '{c.platform}'")
+    logger.info(f"Project set to '{c.project}'")
     logger.info(f'Injecting credentials to files...')
-    inject_to_file(c)
-    inject_to_file(c, from_file='env/db.tpl.env', to_file='env/db.env')
-    logger.info(f'Checking project directory...')
-    check_project(c)
+    inject_for_platform(c, platform)
     logger.info(f'Installing dbtvault-dev in test project...')
-    run_dbt(c, 'deps', target=target, user=user, project='test')
+    run_dbt(c, 'deps', platform=platform, project='test')
     logger.info(f'Setup complete!')
 
 
 @task
-def set_defaults(c, target=None, user=None, project='test'):
+def set_defaults(c, platform=None, project='test'):
     """
-    Generate an 'invoke.yml' file
+    Update the invoke namespace with new values
         :param c: invoke context
-        :param target: dbt profile target
-        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param platform: dbt profile platform
         :param project: dbt project to run with
     """
 
-    dict_file = {
-        'secrets_user': user, 'project': project, 'target': target}
+    dict_file = {'project': project,
+                 'platform': platform}
 
-    if target not in test.AVAILABLE_TARGETS:
-        logger.error(f"Target must be set to one of: {', '.join(test.AVAILABLE_TARGETS)}")
+    c.project = dict_file['project']
+    c.platform = dict_file['platform']
+
+    if platform not in test.AVAILABLE_PLATFORMS:
+        logger.error(f"platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
         exit(0)
 
-    dict_file = {k: v for k, v in dict_file.items() if v}
-
-    with open('env/invoke.yml', 'w') as file:
+    with open(test.INVOKE_YML_FILE, 'w') as file:
         yaml.dump(dict_file, file)
         logger.info(f'Defaults set.')
-        logger.info(f'secrets_user: {user}')
-        logger.info(f'project: {project}')
-        logger.info(f'target: {target}')
+        logger.info(f'Project: {c.project}')
+        logger.info(f'Platform: {c.platform}')
 
 
 @task
-def inject_to_file(c, from_file='env/profiles.tpl.yml', to_file='env/profiles.yml'):
+def inject_to_file(c, from_file, to_file):
     """
     Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
     profiles/profiles.yml, which is an ignored file in git.
@@ -80,6 +81,23 @@ def inject_to_file(c, from_file='env/profiles.tpl.yml', to_file='env/profiles.ym
     command = f"op inject -i {from_file} -o {to_file}"
 
     c.run(command)
+
+
+@task
+def inject_for_platform(c, platform):
+    if platform == 'snowflake':
+        profiles_from_file = 'env/profiles_sf.tpl.yml'
+        db_from_file = 'env/db_sf.tpl.env'
+
+    elif platform == 'bigquery':
+        profiles_from_file = 'env/profiles_bq.tpl.yml'
+        db_from_file = 'env/db_bq.tpl.env'
+
+    else:
+        raise ValueError(f"platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+
+    inject_to_file(c, from_file=profiles_from_file, to_file='env/profiles.yml')
+    inject_to_file(c, from_file=db_from_file, to_file='env/db.env')
 
 
 @task
@@ -109,42 +127,57 @@ def check_project(c, project='test'):
 
 
 @task
-def change_target(c, target):
+def change_platform(c, platform):
     """
-    Change default target platform
+    Change default platform platform
         :param c: invoke context
-        :param target: dbt profile target (Optional if defaults already set)
+        :param platform: dbt profile platform (Optional if defaults already set)
     """
 
-    check_target(target)
+    check_platform(c, platform)
+
+    c.platform = platform
+
+    inject_for_platform(c, platform=platform)
 
     dict_file = {
-        'secrets_user': c.config.get('secrets_user', None),
-        'project': c.config.get('project', None),
-        'target': target}
+        'project': c.project,
+        'target': c.platform}
 
-    with open('env/invoke.yml', 'w') as file:
+    with open(test.INVOKE_YML_FILE, 'w') as file:
         yaml.dump(dict_file, file)
-        logger.info(f"Target set to '{target}'")
+        logger.info(f"Platform set to '{c.platform}'")
 
 
 @task
-def run_dbt(c, dbt_args, target=None, user=None, project=None):
+def check_platform(c, platform):
+    """
+    Check specified platform is available
+        :param platform: platform to check
+    """
+
+    if platform in test.AVAILABLE_PLATFORMS:
+        logger.info(f"Platform '{platform}' is available.")
+        return True
+    else:
+        logger.error(f"Unexpected platform: '{platform}', available platforms: {', '.join(test.AVAILABLE_PLATFORMS)}")
+        exit(0)
+
+
+@task
+def run_dbt(c, dbt_args, platform=None, project=None):
     """
     Run dbt in the context of the provided project with the provided dbt args.
         :param c: invoke context
         :param dbt_args: Arguments to run db with (proceeding dbt)
-        :param target: dbt profile target
-        :param user: Optional, the user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
+        :param platform: dbt profile platform
         :param project: dbt project to run with, either core (public dbtvault project),
         dev (dev project) or test (test project)
     """
 
-    target, user, project = params(c, target=target, user=user, project=project)
-
     # Select dbt profile
-    if check_target(c, target):
-        os.environ['TARGET'] = target
+    if check_platform(c, platform):
+        os.environ['PLATFORM'] = platform
 
     # Set dbt profiles dir
     os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
@@ -155,58 +188,13 @@ def run_dbt(c, dbt_args, target=None, user=None, project=None):
     project_dir = check_project(c, project)
 
     with c.cd(project_dir):
-
-        if user:
-            logger.info(f'User: {user}')
-
         logger.info(f'Project: {project}')
-        logger.info(f'Target: {target}')
+        logger.info(f'Platform: {platform}')
         logger.info(f"Profiles.yml: {test.PROFILE_DIR / 'profiles.yml'}")
 
         c.run(command)
 
 
-@task
-def check_target(c, target):
-    """
-    Check specified target is available
-        :param target: Target to check
-        :return: bool
-    """
-
-    available_targets = ['snowflake', 'bigquery', 'sqlserver']
-
-    if target in available_targets:
-        logger.info(f"Target '{target}' is available.")
-        return True
-    else:
-        logger.error(f"Unexpected target: '{target}', available targets: {', '.join(available_targets)}")
-        exit(0)
-
-
-def params(c, target, user, project):
-    """
-    Validate parameters
-        :param c: invoke context
-        :param target: dbt profile target
-        :param user: The user to fetch credentials for, assuming SecretsHub contains sub-dirs for users.
-        :param project: dbt project to run with, either core (public dbtvault project)
-        :return: tuple of values
-    """
-
-    # Get config
-    if not target:
-        target = c.config.get('target', None)
-
-    if not user:
-        user = c.config.get('secrets_user', None)
-
-    if not project:
-        project = c.config.get('project', 'test')
-
-    # Raise error if any are null
-    if all(v is None for v in [target, user, project]):
-        logger.error('Expected target, user and project configurations, at least one is missing.')
-        exit(0)
-
-    return target, user, project
+ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
+                check_platform, run_dbt)
+ns.configure({'project': 'test', 'platform': 'snowflake'})
