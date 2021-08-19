@@ -148,7 +148,7 @@ satellite_update AS (
         OR COALESCE(matching_records.match_count, 0) != latest_records.target_count
         OR stage.source_count != COALESCE(matching_records.match_count, 0))
      {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
-        AND ({{ dbtvault.prefix([src_ldts], 'stage') }} >= latest_records.max_load_datetime)
+        AND ({{ dbtvault.prefix([src_ldts], 'stage') }} > latest_records.max_load_datetime)
     {%- endif %}
 ),
 
