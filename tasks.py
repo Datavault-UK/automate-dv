@@ -142,7 +142,7 @@ def change_platform(c, platform):
 
     dict_file = {
         'project': c.project,
-        'target': c.platform}
+        'platform': c.platform}
 
     with open(test.INVOKE_YML_FILE, 'w') as file:
         yaml.dump(dict_file, file)
