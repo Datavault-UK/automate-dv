@@ -512,7 +512,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites  - Incremental loads with actual MA
       | md5('1007') | Frida         | 17-214-233-1218 | 12331     | md5('1007\|\|FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1228 | 12332     | md5('1007\|\|FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1238 | 12333     | md5('1007\|\|FRIDA') | 1993-01-01     | 1993-01-01 | *      |
-    And the RAW_STAGE table contains data
+    And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1216 | 12311     | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1226 | 12311     | 1993-01-02 | *      |
@@ -559,7 +559,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites  - Incremental loads with actual MA
       | md5('1007') | Frida         | 17-214-233-1218 | 12331     | md5('1007\|\|FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1228 | 12332     | md5('1007\|\|FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1238 | 12333     | md5('1007\|\|FRIDA') | 1993-01-01     | 1993-01-01 | *      |
-    And the RAW_STAGE table contains data
+    And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1246 | 12311     | 1993-01-02 | *      |
       | 1005        | Dom           | 17-214-233-1217 | 12324     | 1993-01-02 | *      |
@@ -595,7 +595,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites  - Incremental loads with actual MA
       | md5('1007') | Frida         | 17-214-233-1218 | 12331     | md5('FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1228 | 12332     | md5('FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1238 | 12333     | md5('FRIDA') | 1993-01-01     | 1993-01-01 | *      |
-    And the RAW_STAGE table contains data
+    And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1216 | 12311     | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1226 | 12311     | 1993-01-02 | *      |
@@ -642,7 +642,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites  - Incremental loads with actual MA
       | md5('1007') | Frida         | 17-214-233-1218 | 12331     | md5('FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1228 | 12332     | md5('FRIDA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1007') | Frida         | 17-214-233-1238 | 12333     | md5('FRIDA') | 1993-01-01     | 1993-01-01 | *      |
-    And the RAW_STAGE table contains data
+    And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1246 | 12311     | 1993-01-02 | *      |
       | 1005        | Dom           | 17-214-233-1217 | 12324     | 1993-01-02 | *      |
