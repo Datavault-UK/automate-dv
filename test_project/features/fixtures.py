@@ -1,7 +1,5 @@
-from behave import fixture
-
 from test_project.test_utils.dbt_test_utils import *
-from fixtures_sqlserver import *
+from features.fixtures_sqlserver import *
 
 """
 The fixtures here are used to supply runtime metadata to tests, which are provided to the model generator.

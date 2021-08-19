@@ -51,7 +51,11 @@ fixture_registry_bigquery = {
 }
 
 fixture_registry_sqlserver = {
-
+    "fixture.staging": fixtures_staging.staging_sqlserver,
+    "fixture.single_source_hub": fixtures_hub.single_source_hub_sqlserver,
+    "fixture.multi_source_hub": fixtures_hub.multi_source_hub_sqlserver,
+    "fixture.single_source_link": fixtures_link.single_source_link_sqlserver,
+    "fixture.multi_source_link": fixtures_link.multi_source_link_sqlserver,
 }
 
 fixture_lookup = {
