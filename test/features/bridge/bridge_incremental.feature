@@ -1,9 +1,9 @@
-Feature: [BRG] Bridge table
+Feature: [SF-BRG] Bridge table
   Incremental Bridge behaviour with one hub and one/two links
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [BRG-001] Bridge on one hub and one link
+  Scenario: [SF-BRG-001] Bridge on one hub and one link
     Incremental load with auto end-dating with more recent AS OF dates and new orders
     New order or changed order are assigned only to existing customers
 
@@ -58,7 +58,7 @@ Feature: [BRG] Bridge table
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [BRG-002] Bridge on one hub and one link
+  Scenario: [SF-BRG-002] Bridge on one hub and one link
     Incremental load with auto end-dating with new AS OF dates in the past
     Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
 
@@ -129,7 +129,7 @@ Feature: [BRG] Bridge table
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [BRG-003] Bridge on one hub and one link
+  Scenario: [SF-BRG-003] Bridge on one hub and one link
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
 
@@ -201,7 +201,7 @@ Feature: [BRG] Bridge table
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [BRG-004] Bridge on one hub and one link
+  Scenario: [SF-BRG-004] Bridge on one hub and one link
     Incremental load with auto end-dating with more recent AS OF dates and changed orders
     The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
 
@@ -294,7 +294,7 @@ Feature: [BRG] Bridge table
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [BRG-005] Bridge on one hub and two links
+  Scenario: [SF-BRG-005] Bridge on one hub and two links
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
     New orders or changed orders get assigned existing or new products
@@ -386,7 +386,7 @@ Feature: [BRG] Bridge table
 
   @fixture.enable_auto_end_date
   @fixture.bridge
-  Scenario: [BRG-006] Bridge on one hub and two links
+  Scenario: [SF-BRG-006] Bridge on one hub and two links
     Incremental load with auto end-dating and more recent AS OF dates.
     An existing order gets assigned either to another existing customer or to a new customer,
     it gets reassigned to the initial customer

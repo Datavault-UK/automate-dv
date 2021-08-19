@@ -1,7 +1,7 @@
-Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate manual loads with two CDKs
+Feature: [SF-MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate manual loads with two CDKs
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-2CD-C-001] Load over several cycles
+  Scenario: [SF-MAS-2CD-C-001] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -70,7 +70,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218\|\|123')   | 123       | Jenny         | 17-214-233-1218 | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-2CD-C-002] Load over several cycles with Timestamps
+  Scenario: [SF-MAS-2CD-C-002] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
 
@@ -138,7 +138,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
 
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha
-  Scenario: [MAS-2CD-C-003] Load over several cycles
+  Scenario: [SF-MAS-2CD-C-003] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -205,7 +205,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
       | sha('1011') | sha('1011\|\|KAREN\|\|17-214-233-1217\|\|123')   | 123       | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-2CD-C-004] Load over several cycles with sets of records keeping the count of records the same while having one or more records changed
+  Scenario: [SF-MAS-2CD-C-004] Load over several cycles with sets of records keeping the count of records the same while having one or more records changed
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -283,7 +283,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1254\|\|12331')   | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-2CD-C-005] Load over several cycles
+  Scenario: [SF-MAS-2CD-C-005] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -425,7 +425,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
       | md5('1003') | md5('1003\|\|CHRISS\|\|17-214-233-1223\|\|12321')  | Chriss        | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-2CD-C-006] Load over several cycles with Timestamps
+  Scenario: [SF-MAS-2CD-C-006] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
 
@@ -562,7 +562,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-2CD-C-007] Load over several cycles with NULL records
+  Scenario: [SF-MAS-2CD-C-007] Load over several cycles with NULL records
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -659,7 +659,7 @@ Feature: [MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate 
 
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha
-  Scenario: [MAS-2CD-C-008] Load over several cycles
+  Scenario: [SF-MAS-2CD-C-008] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 

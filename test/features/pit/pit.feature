@@ -1,7 +1,7 @@
-Feature: [PIT] Point in Time
+Feature: [SF-PIT] Point in Time
 
   @fixture.pit
-  Scenario: [PIT-001] Load into a pit table where the AS OF table is already established with increments of a day
+  Scenario: [SF-PIT-001] Load into a pit table where the AS OF table is already established with increments of a day
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -73,7 +73,7 @@ Feature: [PIT] Point in Time
       | md5('1001') | 2019-01-04 00:00:00.000000 | md5('1001')             | 2018-06-01 00:00:00.000000 | md5('1001')           | 2019-01-04 00:00:00.000000 | md5('1001')             | 2019-01-04 00:00:00.000000 |
 
   @fixture.pit
-  Scenario: [PIT-002] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
+  Scenario: [SF-PIT-002] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -118,7 +118,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-04 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
 
   @fixture.pit
-  Scenario: [PIT-003] Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
+  Scenario: [SF-PIT-003] Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -165,7 +165,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-01 11:15:00 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-01 11:15:00     | md5('1002')             | 2019-01-01 11:15:00       |
 
   @fixture.pit
-  Scenario: [PIT-004] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
+  Scenario: [SF-PIT-004] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -212,7 +212,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2017-01-04 00:00:00.000000 | 0000000000000000        | 1900-01-01 00:00:00.000000 | 0000000000000000      | 1900-01-01 00:00:00.000000 | 0000000000000000        | 1900-01-01 00:00:00.000000 |
 
   @fixture.pit
-  Scenario: [PIT-005] Load into a pit table where the AS OF table dates are after the most recent satellite entry's
+  Scenario: [SF-PIT-005] Load into a pit table where the AS OF table dates are after the most recent satellite entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -259,7 +259,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-07 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
 
   @fixture.pit
-  Scenario: [PIT-006] Load into a pit table over several cycles where new record is introduced on the 3rd day
+  Scenario: [SF-PIT-006] Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -362,7 +362,7 @@ Feature: [PIT] Point in Time
       | md5('1003') | 2019-01-06 00:00:00.000000 | md5('1003')             | 2019-01-06 00:00:00.000000 | md5('1003')           | 2019-01-06 00:00:00.000000 | md5('1003')             | 2019-01-06 00:00:00.000000 |
 
   @fixture.pit
-  Scenario: [PIT-007] Load into a pit table where the as_of_dates table changes
+  Scenario: [SF-PIT-007] Load into a pit table where the as_of_dates table changes
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |

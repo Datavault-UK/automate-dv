@@ -1,7 +1,7 @@
-Feature: [SAT-PMP] Satellites Loaded using Period Materialization for provided date ranges
+Feature: [SF-SAT-PMP] Satellites Loaded using Period Materialization for provided date ranges
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PMP-002] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
+  Scenario: [SF-SAT-PMP-002] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -38,7 +38,7 @@ Feature: [SAT-PMP] Satellites Loaded using Period Materialization for provided d
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')  | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PMP-003] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
+  Scenario: [SF-SAT-PMP-003] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
     When the RAW_STAGE is loaded
@@ -80,7 +80,7 @@ Feature: [SAT-PMP] Satellites Loaded using Period Materialization for provided d
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')   | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PMP-004] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
+  Scenario: [SF-SAT-PMP-004] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -134,7 +134,7 @@ Feature: [SAT-PMP] Satellites Loaded using Period Materialization for provided d
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PMP-005] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
+  Scenario: [SF-SAT-PMP-005] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
