@@ -23,7 +23,7 @@ if not os.getenv('DBT_PROFILES_DIR'):
     os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
 
 
-def target():
+def platform():
     """Gets the target platform as set by the user via the invoke CLI, stored in invoke.yml"""
 
     if os.path.isfile(test.INVOKE_YML_FILE):
@@ -32,8 +32,8 @@ def target():
             config_dict = yaml.safe_load(config)
             tgt = config_dict.get('target')
 
-            if tgt.lower() not in test.AVAILABLE_TARGETS:
-                test.logger.error(f"Target must be set to one of: {', '.join(test.AVAILABLE_TARGETS)} "
+            if tgt.lower() not in test.AVAILABLE_PLATFORMS:
+                test.logger.error(f"Target must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
                                   f"in '{test.INVOKE_YML_FILE}'")
                 sys.exit(0)
             else:
@@ -49,15 +49,17 @@ def con_details():
         with open(test.OP_DB_FILE) as config:
             config_dict = yaml.safe_load(config)
 
-            details = {"SNOWFLAKE_DB_USER": os.getenv('SNOWFLAKE_DB_USER',
-                                                      config_dict.get('SNOWFLAKE_DB_USER', None)),
-                       "SNOWFLAKE_DB_DATABASE": os.getenv('SNOWFLAKE_DB_DATABASE',
-                                                          config_dict.get('SNOWFLAKE_DB_DATABASE', None)),
-                       "SNOWFLAKE_DB_SCHEMA": os.getenv('SNOWFLAKE_DB_SCHEMA',
-                                                        config_dict.get('SNOWFLAKE_DB_SCHEMA', None))}
+            if platform() == "snowflake":
 
-            if not all([v for v in details.values()]) and target() == 'snowflake':
-                raise ValueError("Snowflake connection details unavailable. Please run 'inv setup'")
+                details = {"SNOWFLAKE_DB_USER": os.getenv('SNOWFLAKE_DB_USER',
+                                                          config_dict.get('SNOWFLAKE_DB_USER', None)),
+                           "SNOWFLAKE_DB_DATABASE": os.getenv('SNOWFLAKE_DB_DATABASE',
+                                                              config_dict.get('SNOWFLAKE_DB_DATABASE', None)),
+                           "SNOWFLAKE_DB_SCHEMA": os.getenv('SNOWFLAKE_DB_SCHEMA',
+                                                            config_dict.get('SNOWFLAKE_DB_SCHEMA', None))}
+
+                if not all([v for v in details.values()]):
+                    raise ValueError("Snowflake connection details unavailable. Please run 'inv setup'")
 
             return details
     else:
@@ -67,7 +69,7 @@ def con_details():
 
 def setup_environment():
     db_details = con_details()
-    os.environ['TARGET'] = target()
+    os.environ['PLATFORM'] = platform()
     os.environ['SNOWFLAKE_DB_USER'] = db_details['SNOWFLAKE_DB_USER']
     os.environ['SNOWFLAKE_DB_DATABASE'] = db_details['SNOWFLAKE_DB_DATABASE']
     os.environ['SNOWFLAKE_DB_SCHEMA'] = db_details['SNOWFLAKE_DB_SCHEMA']
@@ -321,10 +323,10 @@ def set_custom_names():
     }
 
     if is_pipeline():
-        return {k: sanitise_strings(v) for k, v in circleci_metadata[target()].items()}
+        return {k: sanitise_strings(v) for k, v in circleci_metadata[platform()].items()}
     else:
 
-        return {k: sanitise_strings(v) for k, v in local_metadata[target()].items()}
+        return {k: sanitise_strings(v) for k, v in local_metadata[platform()].items()}
 
 
 def run_dbt_command(command) -> str:

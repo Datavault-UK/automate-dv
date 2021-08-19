@@ -20,12 +20,12 @@ dbtvault:
 
       method: oauth
 
-      project: "{{ env_var('GCP_PROJECT_ID') }}"
-      dataset: "{{ env_var('GCP_DATASET') }}"
+      project: ""
+      dataset: ""
 
       threads: 4
       timeout_seconds: 300
       priority: interactive
       retries: 1
 
-  target: "{{ env_var('TARGET') }}"
+  target: "{{ env_var('PLATFORM') }}"
