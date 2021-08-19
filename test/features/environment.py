@@ -56,6 +56,21 @@ fixture_registry_sqlserver = {
     "fixture.multi_source_hub": fixtures_hub.multi_source_hub_sqlserver,
     "fixture.single_source_link": fixtures_link.single_source_link_sqlserver,
     "fixture.multi_source_link": fixtures_link.multi_source_link_sqlserver,
+    "fixture.t_link": fixtures_t_link.t_link_sqlserver,
+    "fixture.satellite": fixtures_sat.satellite_sqlserver,
+    "fixture.satellite_cycle": fixtures_sat.satellite_cycle_sqlserver,
+    "fixture.eff_satellite": fixtures_eff_sat.eff_satellite_sqlserver,
+    "fixture.eff_satellite_testing_auto_end_dating": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
+    "fixture.eff_satellite_multipart": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
+    "fixture.out_of_sequence_satellite_sqlserver": fixtures_sat.out_of_sequence_satellite_sqlserver,
+    "fixture.multi_active_satellite": fixtures_ma_sat.multi_active_satellite_sqlserver,
+    "fixture.multi_active_satellite_cycle": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
+    "fixture.xts": fixtures_xts.xts_sqlserver,
+    "fixture.pit": fixtures_pit.pit_sqlserver,
+    "fixture.pit_one_sat": fixtures_pit.pit_one_sat_sqlserver,
+    "fixture.pit_two_sats": fixtures_pit.pit_two_sats_sqlserver,
+    "fixture.bridge": fixtures_bridge.bridge_sqlserver,
+    "fixture.cycle": fixtures_cycle.cycle_sqlserver
 }
 
 fixture_lookup = {
