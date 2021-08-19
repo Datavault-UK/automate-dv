@@ -27,7 +27,7 @@ def setup(c, target=None, user=None, project=None):
     set_defaults(c, target, user, project)
     logger.info(f'Injecting credentials to files...')
     inject_to_file(c)
-    inject_to_file(c, from_file='env/db.env', to_file='env/db.tpl.env')
+    inject_to_file(c, from_file='env/db.tpl.env', to_file='env/db.env')
     logger.info(f'Checking project directory...')
     check_project(c)
     logger.info(f'Installing dbtvault-dev in test project...')
