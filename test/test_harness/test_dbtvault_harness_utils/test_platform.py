@@ -15,8 +15,7 @@ def test_platform_correctly_read(tmp_path):
 
     expected_dict = {
         'project': 'test',
-        'secrets_user': 'test',
-        'target': 'snowflake'
+        'platform': 'snowflake'
     }
 
     with open(Path(file.name), 'w') as f:
@@ -24,7 +23,7 @@ def test_platform_correctly_read(tmp_path):
 
     with patch('test.INVOKE_YML_FILE', Path(file.name)):
         actual_dict = dbtvault_harness_utils.platform()
-        assert actual_dict == expected_dict['target']
+        assert actual_dict == expected_dict['platform']
 
 
 @pytest.mark.skip(reason="Need to work around propagate=False")
@@ -33,8 +32,7 @@ def test_platform_invalid_target_error(tmp_path, caplog):
 
     expected_dict = {
         'project': 'test',
-        'secrets_user': 'test',
-        'target': 'java'
+        'platform': 'java'
     }
 
     with open(Path(file.name), 'w') as f:
