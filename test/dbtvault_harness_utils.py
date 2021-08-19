@@ -30,14 +30,14 @@ def platform():
 
         with open(test.INVOKE_YML_FILE) as config:
             config_dict = yaml.safe_load(config)
-            tgt = config_dict.get('target')
+            plt = config_dict.get('platform')
 
-            if tgt.lower() not in test.AVAILABLE_PLATFORMS:
-                test.logger.error(f"Target must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
+            if plt.lower() not in test.AVAILABLE_PLATFORMS:
+                test.logger.error(f"Platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
                                   f"in '{test.INVOKE_YML_FILE}'")
                 sys.exit(0)
             else:
-                return tgt
+                return plt
     else:
         test.logger.error(f"'{test.INVOKE_YML_FILE}' not found. Please run 'inv setup'")
         sys.exit(0)

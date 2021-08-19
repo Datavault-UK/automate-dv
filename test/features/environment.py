@@ -1,21 +1,19 @@
-import os
-
 from behave.fixture import use_fixture_by_tag
 
-import test
 import dbtvault_generator
 import dbtvault_harness_utils
+import test
+from test.features.behave_fixtures import *
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
-from test.features.behave_fixtures import *
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
-from test.features.t_links import fixtures_t_link
 from test.features.ma_sats import fixtures_ma_sat
 from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
+from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
 
 fixture_registry_utils = {
@@ -49,7 +47,7 @@ fixture_registry_snowflake = {
 }
 
 fixture_registry_bigquery = {
-
+    "fixture.single_source_hub": fixtures_hub.single_source_hub_bigquery,
 }
 
 fixture_registry_sqlserver = {
