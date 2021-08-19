@@ -116,3 +116,44 @@ def multi_source_hub(context):
             }
         }
     }
+
+
+@fixture
+def single_source_hub_bigquery(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "+column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
