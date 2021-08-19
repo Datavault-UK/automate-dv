@@ -17,11 +17,13 @@
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set cdk_cols = dbtvault.expand_column_list(columns=[src_cdk]) -%}
 
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
+{% if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{%- endif -%}
+{% endif %}
 
 {{ dbtvault.prepend_generated_by() }}
+
+
 
 
 WITH source_data_filtered AS (
@@ -58,110 +60,110 @@ source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-source_data_with_counts AS (
-    SELECT a.*,
-        cd.source_count
-    FROM source_data a
-    INNER JOIN
-    (
-        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS source_count
-        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM source_data AS s) AS t
-        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
-    ) AS cd
-    ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'a') }}
-),
-
-{# Select the most recent group of satellite records relating to each PK in the source data #}
-latest_selection AS (
-    SELECT ls.*
-    FROM (
-        SELECT {{ dbtvault.prefix(cdk_cols, 'target_records') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
-                    ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS rank_value
-        FROM {{ this }} AS target_records
+    source_data_with_counts AS (
+        SELECT a.*,
+            cd.source_count
+        FROM source_data a
         INNER JOIN
-            (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
-            FROM source_data AS source_pks) AS source_records
-                ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
-    ) AS ls
-    WHERE ls.rank_value = 1
-),
+        (
+            SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS source_count
+            FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM source_data AS s) AS t
+            GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+        ) AS cd
+        ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'a') }}
+    ),
 
-{# Select latest records from satellite together with count of distinct hashdiff + cdk combinations for each hashkey #}
-latest_records AS (
-    SELECT latest_selection.*,
-        cd.target_count
-    FROM latest_selection
-    INNER JOIN
-    (
-        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS target_count
-        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_selection AS s) AS t
-        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
-    ) AS cd
-    ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'latest_selection') }}
-),
+    {# Select the most recent group of satellite records relating to each PK in the source data #}
+    latest_selection AS (
+        SELECT ls.*
+        FROM (
+            SELECT {{ dbtvault.prefix(cdk_cols, 'target_records') }}, {{ dbtvault.prefix(rank_cols, 'target_records', alias_target='target') }}
+                ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'target_records') }}
+                        ORDER BY {{ dbtvault.prefix([src_ldts], 'target_records') }} DESC) AS rank_value
+            FROM {{ this }} AS target_records
+            INNER JOIN
+                (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_pks') }}
+                FROM source_data AS source_pks) AS source_records
+                    ON {{ dbtvault.prefix([src_pk], 'target_records') }} = {{ dbtvault.prefix([src_pk], 'source_records') }}
+        ) AS ls
+        WHERE ls.rank_value = 1
+    ),
 
-{# Select the matching group of satellite records relating to each PK in the source data #}
-matching_selection AS (
-    SELECT stage.*
-    FROM source_data AS stage
-    INNER JOIN latest_records
-        ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
-        AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
-    {%- for child_key in src_cdk %}
-        AND {{ dbtvault.prefix([child_key], 'stage') }} = {{ dbtvault.prefix([child_key], 'latest_records') }}
-    {%- endfor %}
-),
+    {# Select latest records from satellite together with count of distinct hashdiff + cdk combinations for each hashkey #}
+    latest_records AS (
+        SELECT latest_selection.*,
+            cd.target_count
+        FROM latest_selection
+        INNER JOIN
+        (
+            SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS target_count
+            FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM latest_selection AS s) AS t
+            GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+        ) AS cd
+        ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'latest_selection') }}
+    ),
 
-{# Select PKs and hashdiff counts for matching stage and satellite records #}
-{# Matching by hashkey + hashdiff + cdk #}
-matching_records AS (
-	SELECT {{ dbtvault.prefix([src_pk], 'matching_selection') }},
-        MAX(cd.match_count) AS match_count
-	FROM matching_selection
-    INNER JOIN
-    (
-        SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS match_count
-        FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM matching_selection AS s) AS t
-        GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
-    ) AS cd
-    ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'matching_selection') }}
-    GROUP BY {{ dbtvault.prefix([src_pk], 'matching_selection') }}
-),
+    {# Select the matching group of satellite records relating to each PK in the source data #}
+    matching_selection AS (
+        SELECT stage.*
+        FROM source_data AS stage
+        INNER JOIN latest_records
+            ON CAST({{ dbtvault.prefix([src_pk], 'stage') }} AS STRING) = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+            AND CAST({{ dbtvault.prefix([src_hashdiff], 'stage') }} AS STRING) = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
+        {%- for child_key in src_cdk %}
+            AND CAST({{ dbtvault.prefix([child_key], 'stage') }} AS STRING) = {{ dbtvault.prefix([child_key], 'latest_records') }}
+        {%- endfor %}
+    ),
 
-{# Select stage records with PKs that exist in satellite but where hashdiffs or group size differ #}
-{# i.e. either match counts differ or where source / target counts differ  #}
-satellite_update AS (
-    SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage') }}
-    FROM source_data_with_counts AS stage
-    INNER JOIN (
-        SELECT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-            MAX(latest_records.target_count) AS target_count,
-            MAX({{ dbtvault.prefix([src_ldts], 'latest_records') }}) AS max_load_datetime
-        FROM latest_records
-        GROUP BY {{ dbtvault.prefix([src_pk], 'latest_records') }}
-    ) AS latest_records
-        ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
-    LEFT OUTER JOIN matching_records
-        ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
-    WHERE (stage.source_count != latest_records.target_count
-        OR COALESCE(matching_records.match_count, 0) != latest_records.target_count
-        OR stage.source_count != COALESCE(matching_records.match_count, 0))
-     {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
-        AND ({{ dbtvault.prefix([src_ldts], 'stage') }} > latest_records.max_load_datetime)
-    {%- endif %}
-),
+    {# Select PKs and hashdiff counts for matching stage and satellite records #}
+    {# Matching by hashkey + hashdiff + cdk #}
+    matching_records AS (
+        SELECT {{ dbtvault.prefix([src_pk], 'matching_selection') }},
+            MAX(cd.match_count) AS match_count
+        FROM matching_selection
+        INNER JOIN
+        (
+            SELECT {{ dbtvault.prefix([src_pk], 't') }}, COUNT(*) AS match_count
+            FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM matching_selection AS s) AS t
+            GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
+        ) AS cd
+        ON {{ dbtvault.prefix([src_pk], 'cd') }} = {{ dbtvault.prefix([src_pk], 'matching_selection') }}
+        GROUP BY {{ dbtvault.prefix([src_pk], 'matching_selection') }}
+    ),
 
-{# Select stage records with PKs that do not exist in satellite #}
-satellite_insert AS (
-    SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage') }}
-    FROM source_data AS stage
-    LEFT OUTER JOIN latest_records
-        ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'latest_records') }} IS NULL
-),
+    {# Select stage records with PKs that exist in satellite but where hashdiffs or group size differ #}
+    {# i.e. either match counts differ or where source / target counts differ  #}
+    satellite_update AS (
+        SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage') }}
+        FROM source_data_with_counts AS stage
+        INNER JOIN (
+            SELECT {{ dbtvault.prefix([src_pk], 'latest_records') }},
+                MAX(latest_records.target_count) AS target_count,
+                MAX({{ dbtvault.prefix([src_ldts], 'latest_records') }}) AS max_load_datetime
+            FROM latest_records
+            GROUP BY {{ dbtvault.prefix([src_pk], 'latest_records') }}
+        ) AS latest_records
+            ON {{ dbtvault.prefix([src_pk], 'latest_records') }} = {{ dbtvault.prefix([src_pk], 'stage') }}
+        LEFT OUTER JOIN matching_records
+            ON {{ dbtvault.prefix([src_pk], 'matching_records') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+        WHERE (stage.source_count != latest_records.target_count
+            OR COALESCE(matching_records.match_count, 0) != latest_records.target_count
+            OR stage.source_count != COALESCE(matching_records.match_count, 0))
+        {%- if model.config.materialized == 'vault_insert_by_rank' or model.config.materialized == 'vault_insert_by_period' %}
+            AND ({{ dbtvault.prefix([src_ldts], 'stage') }} > latest_records.max_load_datetime)
+        {%- endif %}
+    ),
 
-{%- endif %}
+    {# Select stage records with PKs that do not exist in satellite #}
+    satellite_insert AS (
+        SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'stage') }}
+        FROM source_data AS stage
+        LEFT OUTER JOIN latest_records
+            ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+        WHERE {{ dbtvault.prefix([src_pk], 'latest_records') }} IS NULL
+    ),
+
+{% endif %}
 
 records_to_insert AS (
     {#- Restrict to "to-do lists" of keys selected by satellite_update and satellite_insert CTEs #}
