@@ -86,12 +86,16 @@ def inject_to_file(c, from_file, to_file):
 @task
 def inject_for_platform(c, platform):
     if platform == 'snowflake':
-        profiles_from_file = 'env/sf/profiles_sf.tpl.yml'
-        db_from_file = 'env/sf/db_sf.tpl.env'
+        profiles_from_file = 'env/snowflake/profiles_snowflake.tpl.yml'
+        db_from_file = 'env/snowflake/db_snowflake.tpl.env'
 
     elif platform == 'bigquery':
-        profiles_from_file = 'env/bq/profiles_bq.tpl.yml'
-        db_from_file = 'env/bq/db_bq.tpl.env'
+        profiles_from_file = 'env/bigquery/profiles_bigquery.tpl.yml'
+        db_from_file = 'env/bigquery/db_bigquery.tpl.env'
+
+    elif platform == 'sqlserver':
+        profiles_from_file = 'env/sqlserver/profiles_sqlserver.tpl.yml'
+        db_from_file = 'env/sqlserver/db_sqlserver.tpl.env'
 
     else:
         raise ValueError(f"platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
