@@ -1047,7 +1047,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -1058,7 +1058,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
@@ -1114,7 +1114,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_NAME": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -1126,7 +1126,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_NAME": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
@@ -1137,7 +1137,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -1149,7 +1149,7 @@ def multi_active_satellite_cycle_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
