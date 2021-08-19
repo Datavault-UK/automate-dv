@@ -1,7 +1,7 @@
-Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two CDKs
+Feature: [SF-MAS-2CD] Multi Active Satellites - Base satellite behaviour with two CDKs
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-001] Load data into a non-existent multi-active satellite
+  Scenario: [SF-MAS-2CD-001] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -19,7 +19,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | Dom           | 17-214-233-1217 | 123       | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-002] Load duplicated data into a non-existent multi-active satellite
+  Scenario: [SF-MAS-2CD-002] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -42,7 +42,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | Dom           | 17-214-233-1217 | 123       | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-003] Load data into an empty multi-active satellite
+  Scenario: [SF-MAS-2CD-003] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -60,7 +60,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1004') | Dom           | 17-214-233-1217 | 123       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-004] Load duplicated data into an empty multi-active satellite
+  Scenario: [SF-MAS-2CD-004] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -83,7 +83,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1004') | Dom           | 17-214-233-1217 | 123       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-005] Load data into an empty multi-active satellite where some records have NULL PK(s), CDK(s) and Attribute(s)
+  Scenario: [SF-MAS-2CD-005] Load data into an empty multi-active satellite where some records have NULL PK(s), CDK(s) and Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -113,7 +113,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1005') | <null>        | 17-214-233-1218 | 123       | md5('1005\|\|^^\|\|17-214-233-1218\|\|123')    | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-006] Load data into a populated multi-active satellite where all records load
+  Scenario: [SF-MAS-2CD-006] Load data into a populated multi-active satellite where all records load
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | 123       | md5('1004\|\|DOM\|\|17-214-233-1217\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
@@ -136,7 +136,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1006') | Frida         | 17-214-233-1214 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-007] Load data into a populated multi-active satellite where some records overlap
+  Scenario: [SF-MAS-2CD-007] Load data into a populated multi-active satellite where some records overlap
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 123       | md5('1002\|\|BOB\|\|17-214-233-1215\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
@@ -161,7 +161,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1006') | Frida         | 17-214-233-1217 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1217\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-008] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
+  Scenario: [SF-MAS-2CD-008] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1212 | 123       | md5('1002\|\|BOB\|\|17-214-233-1212\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
@@ -190,7 +190,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1008') | Jenny         | 17-214-233-1218 | 123       | md5('1008\|\|JENNY\|\|17-214-233-1218\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-009] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
+  Scenario: [SF-MAS-2CD-009] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | 123       | md5('1004\|\|DOM\|\|17-214-233-1214\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
@@ -215,7 +215,7 @@ Feature: [MAS-2CD] Multi Active Satellites - Base satellite behaviour with two C
       | md5('1006') | Frida         | 17-214-233-1216 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-010] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
+  Scenario: [SF-MAS-2CD-010] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | 123       | md5('1004\|\|DOM\|\|17-214-233-1214\|\|123')   | 1993-01-01     | 1993-01-01 | *      |
