@@ -307,7 +307,7 @@ def set_custom_names():
     def sanitise_strings(unsanitised_str):
         return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
 
-    db_details = con_details()
+    db_details = con_details(platform())
 
     snowflake_db_user = db_details["SNOWFLAKE_DB_USER"]
     snowflake_db_database = db_details["SNOWFLAKE_DB_DATABASE"]
@@ -380,6 +380,20 @@ def run_dbt_seed(seed_file_name=None) -> str:
     return run_dbt_command(command)
 
 
+def run_dbt_seed_model(seed_model_name=None) -> str:
+    """
+    Run seed model files in dbt
+        :return: dbt logs
+    """
+
+    command = ['dbt', 'run']
+
+    if seed_model_name:
+        command.extend(['-m', seed_model_name, '--full-refresh'])
+
+    return run_dbt_command(command)
+
+
 def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
@@ -443,10 +457,11 @@ def drop_test_schemas():
     run_dbt_operation(macro_name='drop_test_schemas')
 
 
-def context_table_to_df(table: Table) -> pd.DataFrame:
+def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
     """
     Converts a context table in a feature file into a pandas DataFrame
         :param table: The context.table from a scenario
+        :param use_nan: Replace <null> placeholder with NaN
         :return: DataFrame representation of the provide context table
     """
 
@@ -455,7 +470,8 @@ def context_table_to_df(table: Table) -> pd.DataFrame:
     table_df = table_df.apply(calc_hash)
     table_df = table_df.apply(parse_hashdiffs)
 
-    table_df = table_df.replace("<null>", NaN)
+    if use_nan:
+        table_df = table_df.replace("<null>", NaN)
 
     return table_df
 
@@ -479,21 +495,74 @@ def context_table_to_csv(table: Table, model_name: str) -> str:
     return csv_fqn.stem
 
 
-def context_table_to_dict(table: Table, orient='index'):
+def context_table_to_dict(table: Table, orient='index', use_nan=True):
     """
     Converts a context table in a feature file into a dictionary
+        :param use_nan:
         :param table: The context.table from a scenario
         :param orient: orient for df to_dict
         :return: A dictionary modelled from a context table
     """
 
-    table_df = context_table_to_df(table)
+    table_df = context_table_to_df(table, use_nan=use_nan)
 
     table_dict = table_df.to_dict(orient=orient)
 
     table_dict = parse_lists_in_dicts(table_dict)
 
     return table_dict
+
+
+def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
+    """
+    Creates a model from a feature file data table
+        :param seed_config: Configuration dict for seed file
+        :param table: The context.table from a scenario or a programmatically defined table
+        :param model_name: Name of the model to base the feature data table on
+        :param target_model_name: Name of the model to create
+        :return: Seed file name
+    """
+
+    feature_data = context_table_to_dict(table=table, orient="index", use_nan=False)
+    column_types = seed_config[model_name]["+column_types"]
+
+    sql_command = ""
+    first_row = True
+
+    for row_number in feature_data.keys():
+        if first_row:
+            first_row = False
+        else:
+            sql_command = sql_command + "\nUNION ALL \n"
+        first_column = True
+
+        sql_command = sql_command + "SELECT "
+
+        for column_name in feature_data[row_number].keys():
+            if first_column:
+                first_column = False
+            else:
+                sql_command = sql_command + ", "
+
+            column_data = feature_data[row_number][column_name]
+            column_type = column_types[column_name]
+
+            if column_data.lower() == "<null>" or column_data == "":
+                column_data_for_sql = "NULL"
+            else:
+                column_data_for_sql = f"'{column_data}'"
+
+            if platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+            else:
+                expression = f"CAST({column_data_for_sql} AS {column_type})"
+
+            sql_command = f"{sql_command}{expression} AS {column_name} "
+
+    with open(test.TEST_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
+        f.write(sql_command)
+
+    return f"{target_model_name.lower()}_seed"
 
 
 def columns_from_context_table(table: Table) -> list:
