@@ -28,4 +28,14 @@ dbtvault:
       priority: interactive
       retries: 1
 
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: ""
+      port: ""
+      database: ""
+      schema: ""
+      user: ""
+      password: ""
+
   target: "{{ env_var('PLATFORM') }}"
