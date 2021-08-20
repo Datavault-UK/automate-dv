@@ -43,14 +43,12 @@ seeds:
         ORDER_FK: BINARY(16)
         LOADDATE: DATE
     temp:
-      raw_stage_1_seed:
+      multi_active_satellite_expected_seed:
         +column_types:
-          CUSTOMER_ID: STRING
-          CUSTOMER_FIRSTNAME: STRING
-          CUSTOMER_LASTNAME: STRING
-          CUSTOMER_DOB: DATE
+          CUSTOMER_PK: STRING
+          CUSTOMER_NAME: STRING
           CUSTOMER_PHONE: STRING
-          CUSTOMER_COUNTY: STRING
-          CUSTOMER_CITY: STRING
+          HASHDIFF: STRING
+          EFFECTIVE_FROM: DATE
           LOAD_DATE: DATE
           SOURCE: STRING
