@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Out of Sequence Satellites retain base functionality
 
   @fixture.out_of_sequence_satellite

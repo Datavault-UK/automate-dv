@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Satellites (sqlserver)
 
   @fixture.satellite_sqlserver

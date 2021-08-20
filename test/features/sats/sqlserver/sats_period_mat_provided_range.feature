@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Satellites Loaded using Period Materialization for provided date ranges (sqlserver)
 
   # PROVIDED DATE RANGE [START-AND-STOP] (DAILY)

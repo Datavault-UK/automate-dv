@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Satellites Loaded using Period Materialization and inferred date ranges (sqlserver)
 
   @fixture.satellite_cycle_sqlserver
