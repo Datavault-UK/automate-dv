@@ -1,8 +1,7 @@
-@fixture.set_workdir
-Feature: pit (sqlserver)
+Feature: [SQLS-PIT] PIT
 
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table where the AS OF table is already established with increments of a day
+  Scenario: [SF-PIT-001] Load into a pit table where the AS OF table is already established with increments of a day
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -51,20 +50,14 @@ Feature: pit (sqlserver)
       | md5('1002') | Bob           | 2 Forrest road Hampshire | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
       | md5('1002') | Bob           | 3 Forrest road Hampshire | 2006-04-17   | md5('3 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-12-01 00:00:00.000 | 2018-12-01 00:00:00.000 | *      |
     Then the SAT_CUSTOMER_LOGIN table should contain expected data
-      | CUSTOMER_PK | LAST_LOGIN_DATE         | DEVICE_USED | HASHDIFF                                 | EFFECTIVE_FROM          | LOAD_DATE               | SOURCE |
-#      | md5('1001') | 2019-01-01 02:00:00.000 | Phone       | md5('PHONE\|\|2019-01-01 02:00:00.000')  | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
-#      | md5('1001') | 2019-01-02 03:00:00.000 | Phone       | md5('PHONE\|\|2019-01-02 03:00:00.000')  | 2019-01-03 00:00:00.000 | 2019-01-03 00:00:00.000 | *      |
-#      | md5('1001') | 2019-01-03 01:00:00.000 | Laptop      | md5('LAPTOP\|\|2019-01-03 01:00:00.000') | 2019-01-04 00:00:00.000 | 2019-01-04 00:00:00.000 | *      |
-#      | md5('1002') | 2019-01-01 05:00:00.000 | Tablet      | md5('TABLET\|\|2019-01-01 05:00:00.000') | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
-#      | md5('1002') | 2019-01-02 06:00:00.000 | Tablet      | md5('TABLET\|\|2019-01-02 06:00:00.000') | 2019-01-03 00:00:00.000 | 2019-01-03 00:00:00.000 | *      |
-#      | md5('1002') | 2019-01-03 08:00:00.000 | Tablet      | md5('TABLET\|\|2019-01-03 08:00:00.000') | 2019-01-04 00:00:00.000 | 2019-01-04 00:00:00.000 | *      |
-      | md5('1001') | 2019-01-01 02:00:00.000 | Phone       | md5('PHONE\|\|JAN  1 2019  2:00AM')      | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
-      | md5('1001') | 2019-01-02 03:00:00.000 | Phone       | md5('PHONE\|\|JAN  2 2019  3:00AM')      | 2019-01-03 00:00:00.000 | 2019-01-03 00:00:00.000 | *      |
-      | md5('1001') | 2019-01-03 01:00:00.000 | Laptop      | md5('LAPTOP\|\|JAN  3 2019  1:00AM')     | 2019-01-04 00:00:00.000 | 2019-01-04 00:00:00.000 | *      |
-      | md5('1002') | 2019-01-01 05:00:00.000 | Tablet      | md5('TABLET\|\|JAN  1 2019  5:00AM')     | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
-      | md5('1002') | 2019-01-02 06:00:00.000 | Tablet      | md5('TABLET\|\|JAN  2 2019  6:00AM')     | 2019-01-03 00:00:00.000 | 2019-01-03 00:00:00.000 | *      |
-      | md5('1002') | 2019-01-03 08:00:00.000 | Tablet      | md5('TABLET\|\|JAN  3 2019  8:00AM')     | 2019-01-04 00:00:00.000 | 2019-01-04 00:00:00.000 | *      |
-      | md5('1002') | <null>                  | Tablet      | md5('TABLET\|\|^^')                      | 2019-01-05 00:00:00.000 | 2019-01-05 00:00:00.000 | *      |
+      | CUSTOMER_PK | LAST_LOGIN_DATE         | DEVICE_USED | HASHDIFF                             | EFFECTIVE_FROM          | LOAD_DATE               | SOURCE |
+      | md5('1001') | 2019-01-01 02:00:00.000 | Phone       | md5('PHONE\|\|JAN  1 2019  2:00AM')  | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
+      | md5('1001') | 2019-01-02 03:00:00.000 | Phone       | md5('PHONE\|\|JAN  2 2019  3:00AM')  | 2019-01-03 00:00:00.000 | 2019-01-03 00:00:00.000 | *      |
+      | md5('1001') | 2019-01-03 01:00:00.000 | Laptop      | md5('LAPTOP\|\|JAN  3 2019  1:00AM') | 2019-01-04 00:00:00.000 | 2019-01-04 00:00:00.000 | *      |
+      | md5('1002') | 2019-01-01 05:00:00.000 | Tablet      | md5('TABLET\|\|JAN  1 2019  5:00AM') | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
+      | md5('1002') | 2019-01-02 06:00:00.000 | Tablet      | md5('TABLET\|\|JAN  2 2019  6:00AM') | 2019-01-03 00:00:00.000 | 2019-01-03 00:00:00.000 | *      |
+      | md5('1002') | 2019-01-03 08:00:00.000 | Tablet      | md5('TABLET\|\|JAN  3 2019  8:00AM') | 2019-01-04 00:00:00.000 | 2019-01-04 00:00:00.000 | *      |
+      | md5('1002') | <null>                  | Tablet      | md5('TABLET\|\|^^')                  | 2019-01-05 00:00:00.000 | 2019-01-05 00:00:00.000 | *      |
     Then the SAT_CUSTOMER_PROFILE table should contain expected data
       | CUSTOMER_PK | DASHBOARD_COLOUR | DISPLAY_NAME | HASHDIFF              | EFFECTIVE_FROM          | LOAD_DATE               | SOURCE |
       | md5('1001') | red              | ab12         | md5('RED\|\|AB12')    | 2019-01-02 00:00:00.000 | 2019-01-02 00:00:00.000 | *      |
@@ -84,9 +77,8 @@ Feature: pit (sqlserver)
       | md5('1001') | 2019-01-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-04 00:00:00.000   |
       | md5('1001') | 2019-01-05 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-04 00:00:00.000   |
 
-
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
+  Scenario: [SF-PIT-002] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -122,17 +114,16 @@ Feature: pit (sqlserver)
       | 2019-01-04 00:00:00.000 |
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS  |
-      | md5('1001') | 2019-01-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-02 00:00:00.000 | md5('1001')             | 2019-01-02 00:00:00.000    |
-      | md5('1001') | 2019-01-03 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-03 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000    |
-      | md5('1001') | 2019-01-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-04 00:00:00.000    |
-      | md5('1002') | 2019-01-02 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | md5('1002')             | 2019-01-02 00:00:00.000    |
-      | md5('1002') | 2019-01-03 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | md5('1002')             | 2019-01-03 00:00:00.000    |
-      | md5('1002') | 2019-01-04 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | md5('1002')           | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000    |
-
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS |
+      | md5('1001') | 2019-01-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-02 00:00:00.000 | md5('1001')             | 2019-01-02 00:00:00.000   |
+      | md5('1001') | 2019-01-03 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-03 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000   |
+      | md5('1001') | 2019-01-04 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | md5('1001')           | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-04 00:00:00.000   |
+      | md5('1002') | 2019-01-02 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | md5('1002')             | 2019-01-02 00:00:00.000   |
+      | md5('1002') | 2019-01-03 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | md5('1002')             | 2019-01-03 00:00:00.000   |
+      | md5('1002') | 2019-01-04 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | md5('1002')           | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000   |
 
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
+  Scenario: [SF-PIT-003] Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -179,7 +170,7 @@ Feature: pit (sqlserver)
       | md5('1002') | 2019-01-01 11:15:00 | md5('1002')             | 2018-12-01 00:00:00.000   | md5('1002')           | 2019-01-01 11:15:00     | md5('1002')             | 2019-01-01 11:15:00       |
 
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table where the AS OF table dates are before the satellites have received any entry's
+  Scenario: [SF-PIT-004] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -223,11 +214,10 @@ Feature: pit (sqlserver)
       | md5('1001') | 2017-01-04 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1002') | 2017-01-02 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1002') | 2017-01-03 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
-      | md5('1002') | 2017-01-04 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
-
+    | md5('1002') | 2017-01-04 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table where the AS OF table dates are after the most recent satellite entry's
+  Scenario: [SF-PIT-005] Load into a pit table where the AS OF table dates are after the most recent satellite entry's
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -273,9 +263,8 @@ Feature: pit (sqlserver)
       | md5('1002') | 2019-01-06 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | md5('1002')           | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000   |
       | md5('1002') | 2019-01-07 00:00:00.000 | md5('1002')             | 2018-12-01 00:00:00.000   | md5('1002')           | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000   |
 
-
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table over several cycles where new record is introduced on the 3rd day
+  Scenario: [SF-PIT-006] Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -313,13 +302,13 @@ Feature: pit (sqlserver)
       | 2019-01-04 00:00:00.000 |
     When I load the vault
     Then the PIT_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS  | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS |
-      | md5('1001') | 2019-01-02 00:00:00.000 | md5('1001')             | 2019-01-01 00:00:00.000 | md5('1001')              | 2019-01-02 00:00:00.000 | md5('1001')             | 2019-01-02 00:00:00.000   |
-      | md5('1001') | 2019-01-03 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000 | md5('1001')              | 2019-01-03 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000   |
-      | md5('1001') | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000 | md5('1001')              | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-04 00:00:00.000   |
-      | md5('1002') | 2019-01-02 00:00:00.000 | md5('1002')             | 2019-01-01 00:00:00.000 | md5('1002')              | 2019-01-02 00:00:00.000 | md5('1002')             | 2019-01-02 00:00:00.000   |
-      | md5('1002') | 2019-01-03 00:00:00.000 | md5('1002')             | 2019-01-01 00:00:00.000 | md5('1002')              | 2019-01-03 00:00:00.000 | md5('1002')             | 2019-01-03 00:00:00.000   |
-      | md5('1002') | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000 | md5('1002')              | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000   |
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS | SAT_CUSTOMER_PROFILE_PK | SAT_CUSTOMER_PROFILE_LDTS |
+      | md5('1001') | 2019-01-02 00:00:00.000 | md5('1001')             | 2019-01-01 00:00:00.000   | md5('1001')           | 2019-01-02 00:00:00.000 | md5('1001')             | 2019-01-02 00:00:00.000   |
+      | md5('1001') | 2019-01-03 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000   | md5('1001')           | 2019-01-03 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000   |
+      | md5('1001') | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-03 00:00:00.000   | md5('1001')           | 2019-01-04 00:00:00.000 | md5('1001')             | 2019-01-04 00:00:00.000   |
+      | md5('1002') | 2019-01-02 00:00:00.000 | md5('1002')             | 2019-01-01 00:00:00.000   | md5('1002')           | 2019-01-02 00:00:00.000 | md5('1002')             | 2019-01-02 00:00:00.000   |
+      | md5('1002') | 2019-01-03 00:00:00.000 | md5('1002')             | 2019-01-01 00:00:00.000   | md5('1002')           | 2019-01-03 00:00:00.000 | md5('1002')             | 2019-01-03 00:00:00.000   |
+      | md5('1002') | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000   | md5('1002')           | 2019-01-04 00:00:00.000 | md5('1002')             | 2019-01-04 00:00:00.000   |
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-04 06:00:00.000 | Tablet      | 2019-01-05 00:00:00.000 | *      |
@@ -377,9 +366,8 @@ Feature: pit (sqlserver)
       | md5('1003') | 2019-01-05 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2019-01-06 00:00:00.000 | md5('1003')             | 2019-01-06 00:00:00.000   | md5('1003')           | 2019-01-06 00:00:00.000 | md5('1003')             | 2019-01-06 00:00:00.000   |
 
-
   @fixture.pit_sqlserver
-  Scenario: Load into a pit table where the as_of_dates table changes
+  Scenario: [SF-PIT-008] Load into a pit table where the as_of_dates table changes
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |

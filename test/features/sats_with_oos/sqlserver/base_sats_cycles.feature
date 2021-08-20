@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Satellites Loaded using separate manual loads (sqlserver)
 
   @fixture.satellite_cycle_sqlserver

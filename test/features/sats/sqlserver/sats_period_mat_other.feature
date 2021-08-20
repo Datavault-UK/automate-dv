@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Satellites Loaded using Period Materialization for other scenarios (sqlserver)
 
   # ABORTED LOADS

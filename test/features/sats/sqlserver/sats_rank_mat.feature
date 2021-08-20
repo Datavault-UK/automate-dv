@@ -1,4 +1,3 @@
-@fixture.set_workdir
 Feature: Satellites Loaded using Rank Materialization (sqlserver)
 
   @fixture.satellite_sqlserver
