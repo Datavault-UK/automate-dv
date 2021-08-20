@@ -1,5 +1,4 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites - Loading using Period Materialization (sqlserver)
+Feature: Multi Active Satellites - Loading using Period Materialization
 
   @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
@@ -18,7 +17,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -47,7 +46,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -79,7 +78,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1235 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -126,7 +125,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -170,7 +169,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
 #      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
-#    And I create the STG_CUSTOMER stage
+#    And I stage the STG_CUSTOMER data
 #    And I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
 #
 #    # ================ LOAD 2 ===================
@@ -182,7 +181,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
 #      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
-#    And I create the STG_CUSTOMER stage
+#    And I stage the STG_CUSTOMER data
 #    And I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATE
 #
 #    # ================ CHECK ===================
@@ -208,7 +207,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
 #      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-#    And I create the STG_CUSTOMER_TS stage
+#    And I stage the STG_CUSTOMER_TS data
 #    And I insert by period into the MULTI_ACTIVE_SATELLITE_TS ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATETIME
 #
 #    # ================ LOAD 2 ===================
@@ -220,7 +219,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization (sqlserv
 #      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 #      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-#    And I create the STG_CUSTOMER_TS stage
+#    And I stage the STG_CUSTOMER_TS data
 #    And I insert by period into the MULTI_ACTIVE_SATELLITE_TS ma_sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATETIME
 #
 #    # ================ CHECK ===================

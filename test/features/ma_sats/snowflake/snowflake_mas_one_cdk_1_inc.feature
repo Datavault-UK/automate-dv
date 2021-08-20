@@ -1,5 +1,5 @@
 Feature: [SF-MAS-1CD-I] Multi Active Satellites
-  Incremental loads with actual MAS behaviour with one CDK
+  Incremental loads with MAS behaviour with one CDK
 
   @fixture.multi_active_satellite
   Scenario: [SF-MAS-1CD-I-001] Load data into a populated multi-active satellite where all records load

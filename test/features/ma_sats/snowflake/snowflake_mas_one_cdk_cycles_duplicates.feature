@@ -1,10 +1,10 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with duplicates and one CDK (sqlserver)
+Feature: [SF-MAS-1CD-D] Multi Active Satellites
+  Loading in cycles using separate manual loads of MAS behaviour with duplicates and one CDK
   This is a series of 4 day loading cycles testing different duplicate record loads
   and different hashdiff configurations, i.e. incl. PK and CDK, excl. CDK, excl. PK and CDK
 
-  @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with a mix of duplicate record change cases
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SF-MAS-1CD-D-001] Load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -21,7 +21,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1244 | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 2 ===================
@@ -38,7 +38,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 2019-01-02     | 2019-01-02 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 2019-01-02     | 2019-01-02 | *      |
       | 1010        | Jenny         | 17-214-233-1244 | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 3 ===================
@@ -59,7 +59,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenna         | 17-214-233-1234 | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 4 ===================
@@ -85,7 +85,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # =============== CHECKS ===================
@@ -111,9 +111,8 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1234')   | Jenna         | 17-214-233-1234 | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1244')   | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
 
-
-  @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SF-MAS-1CD-D-002] Load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is empty
 
@@ -130,7 +129,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1244 | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
 
     # ================ DAY 2 ===================
@@ -147,7 +146,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 2019-01-02     | 2019-01-02 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 2019-01-02     | 2019-01-02 | *      |
       | 1010        | Jenny         | 17-214-233-1244 | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
 
     # ================ DAY 3 ===================
@@ -168,7 +167,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenna         | 17-214-233-1234 | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
-    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
 
     # ================ DAY 4 ===================
@@ -194,7 +193,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
 
     # =============== CHECKS ===================
@@ -220,8 +219,8 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1234 | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE-DUPLICATES] MULTI_ACTIVE_SATELLITE load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
+  @fixture.multi_active_satellite_cycle
+  Scenario: [SF-MAS-1CD-D-003] Load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
 
@@ -238,7 +237,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1244 | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
 
     # ================ DAY 2 ===================
@@ -255,7 +254,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 2019-01-02     | 2019-01-02 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 2019-01-02     | 2019-01-02 | *      |
       | 1010        | Jenny         | 17-214-233-1244 | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
 
     # ================ DAY 3 ===================
@@ -276,7 +275,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenna         | 17-214-233-1234 | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
-    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
 
     # ================ DAY 4 ===================
@@ -302,7 +301,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     And I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
 
     # =============== CHECKS ===================

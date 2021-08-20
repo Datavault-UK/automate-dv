@@ -1,8 +1,8 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites - Loading in cycles using separate manual loads of base satellites behaviour with one CDK (sqlserver)
+Feature: [SF-MAS-1CD-C] Multi Active Satellites
+  Loading in cycles using separate manual loads of base satellites behaviour with one CDK
 
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
+  Scenario: [SF-MAS-1CD-C-001] Load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -14,7 +14,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Charley       | 17-214-233-1213   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Jenny         | 17-214-233-1214   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 17-214-233-1215   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 2 ===================
@@ -24,7 +24,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Chris         |  17-214-233-1213   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         |  17-214-233-1210   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         |  17-214-233-1216   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 3 ===================
@@ -34,7 +34,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Claire        | 17-214-233-1213   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Elwyn         | 17-214-233-1218   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 17-214-233-1216   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 4 ===================
@@ -45,7 +45,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1007        | Geoff         | 17-214-233-1219  | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 17-214-233-1217  | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 17-214-233-1218  | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # =============== CHECKS ===================
@@ -72,7 +72,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
 
   @fixture.multi_active_satellite_cycle_sqlserver
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
+  Scenario: [SF-MAS-1CD-C-002] Load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -84,7 +84,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Charley       | 17-214-233-1213   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Jenny         | 17-214-233-1214   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 17-214-233-1215   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 2 ===================
@@ -94,7 +94,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Chris         |  17-214-233-1213   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         |  17-214-233-1210   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         |  17-214-233-1216   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 3 ===================
@@ -104,7 +104,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Claire        | 17-214-233-1213   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Elwyn         | 17-214-233-1218   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 17-214-233-1216   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # ================ DAY 4 ===================
@@ -115,7 +115,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1007        | Geoff         | 17-214-233-1219  | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 17-214-233-1217  | 2019-05-07     | 2019-05-07 | *      |
 #      | 1010        | Jenny         | 17-214-233-1216  | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the MULTI_ACTIVE_SATELLITE ma_sat
 
     # =============== CHECKS ===================

@@ -1,8 +1,8 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour with one CDK (sqlserver)
+Feature: [SQLS-MAS-1CD-I] Multi Active Satellites
+  Incremental loads with MAS behaviour with one CDK
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where all records load
+  Scenario: [SQLS-MAS-1CD-I-001] Load data into a populated multi-active satellite where all records load
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
@@ -25,7 +25,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1005        | Eric          | 17-214-233-1217 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1227 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1237 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -49,7 +49,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have fewer records
+  Scenario: [SQLS-MAS-1CD-I-002] Load data into a populated multi-active satellite where sets of records have fewer records
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -69,7 +69,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1235 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -90,7 +90,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some sets of records have extra records
+  Scenario: [SQLS-MAS-1CD-I-003] Load data into a populated multi-active satellite where some sets of records have extra records
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -116,7 +116,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -143,7 +143,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1004') | Dom           | 17-214-233-1257 | md5('1004\|\|DOM\|\|17-214-233-1257')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets have the same number of records after records have been added and removed in the stage
+  Scenario: [SQLS-MAS-1CD-I-004] Load data into a populated multi-active satellite where sets have the same number of records after records have been added and removed in the stage
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -166,7 +166,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -190,7 +190,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1004') | Dom           | 17-214-233-1257 | md5('1004\|\|DOM\|\|17-214-233-1257')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets have the same number of records but some records have different hashdiffs
+  Scenario: [SQLS-MAS-1CD-I-005] Load data into a populated multi-active satellite where sets have the same number of records but some records have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -216,7 +216,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1006        | Frida         | 17-214-233-1214 | 1993-01-02 | *      |
       | 1006        | Fridax        | 17-214-233-1224 | 1993-01-02 | *      |
       | 1006        | Frida         | 17-214-233-1234 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                 | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -243,7 +243,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234')  | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some sets of records varying group size and some have different hashdiffs
+  Scenario: [SQLS-MAS-1CD-I-006] Load data into a populated multi-active satellite where some sets of records varying group size and some have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -278,7 +278,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1006        | Frida         | 17-214-233-1214 | 1993-01-02 | *      |
       | 1006        | Fridax        | 17-214-233-1224 | 1993-01-02 | *      |
       | 1006        | Frida         | 17-214-233-1234 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                 | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -311,7 +311,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234')  | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
+  Scenario: [SQLS-MAS-1CD-I-007] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1212 | md5('1002\|\|BOB\|\|17-214-233-1212')   | 1993-01-01     | 1993-01-01 | *      |
@@ -328,7 +328,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | <null>      | Bob           | 17-214-233-1222 | 1993-01-02 | *      |
       | 1002        | <null>        | 17-214-233-1222 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1232 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -342,7 +342,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1002') | Bob           | 17-214-233-1232 | md5('1002\|\|BOB\|\|17-214-233-1232')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
+  Scenario: [SQLS-MAS-1CD-I-008] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
@@ -359,7 +359,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | <null>      | Bob           | 17-214-233-1222 | 1993-01-02 | *      |
       | 1002        | <null>        | 17-214-233-1222 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1232 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -373,7 +373,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1002') | Bob           | 17-214-233-1232 | md5('1002\|\|BOB\|\|17-214-233-1232')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD-NULLS] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
+  Scenario: [SQLS-MAS-1CD-I-009] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
@@ -385,7 +385,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE | LOAD_DATE  | SOURCE |
       | <null>      | <null>        | <null>         | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -397,7 +397,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1006') | Frida         | 17-214-233-1236 | md5('1006\|\|FRIDA\|\|17-214-233-1236') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where hashdiff does not include CDKs
+  Scenario: [SQLS-MAS-1CD-I-010] Load data into a populated multi-active satellite where hashdiff does not include CDKs
     Given the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -408,7 +408,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1226 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     When I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -420,7 +420,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1003') | Chad          | 17-214-233-1246 | md5('1003\|\|CHAD') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
+  Scenario: [SQLS-MAS-1CD-I-011] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
     Given the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -429,7 +429,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     When I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -439,7 +439,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1003') | Chad          | 17-214-233-1246 | md5('1003\|\|CHAD') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where hashdiff does not include PKs nor CDKs
+  Scenario: [SQLS-MAS-1CD-I-012] Load data into a populated multi-active satellite where hashdiff does not include PKs nor CDKs
     Given the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -450,7 +450,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1226 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     When I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -462,7 +462,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
       | md5('1003') | Chad          | 17-214-233-1246 | md5('CHAD') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PKs nor CDKs
+  Scenario: [SQLS-MAS-1CD-I-013] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PKs nor CDKs
     Given the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -471,7 +471,7 @@ Feature: Multi Active Satellites  - Incremental loads with actual MAS behaviour 
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     When I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

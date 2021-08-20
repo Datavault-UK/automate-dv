@@ -1,8 +1,8 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one CDK (sqlserver)
+Feature: [SQLS-MAS-1CD-B] Multi Active Satellites 
+  Base loads with MAS behaviour with one CDK
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
+  Scenario: [SQLS-MAS-1CD-B-001] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -18,7 +18,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -36,7 +36,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD] Load duplicated data into a non-existent multi-active satellite
+  Scenario: [SQLS-MAS-1CD-B-002] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -61,7 +61,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -79,7 +79,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD-EMPTY] Load data into an empty multi-active satellite
+  Scenario: [SQLS-MAS-1CD-B-003] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -95,7 +95,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -113,7 +113,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD-EMPTY] Load duplicated data into an empty multi-active satellite
+  Scenario: [SQLS-MAS-1CD-B-004] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -138,7 +138,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -156,7 +156,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD-NULLS] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
+  Scenario: [SQLS-MAS-1CD-B-005] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -176,7 +176,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | 1005        | Frida         | 17-214-233-1228 | 1993-01-01 | *      |
       | <null>      | <null>        | <null>          | 1993-01-01 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -192,7 +192,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | md5('1005') | Frida         | 17-214-233-1228 | md5('1005\|\|FRIDA\|\|17-214-233-1228') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD] Load data with timestamps into a non-existent multi-active satellite
+  Scenario: [SQLS-MAS-1CD-B-006] Load data with timestamps into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -208,7 +208,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with one
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 11:14:54.396 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 11:14:54.396 | *      |
-    And I create the STG_CUSTOMER_TS stage
+    And I stage the STG_CUSTOMER_TS data
     When I load the MULTI_ACTIVE_SATELLITE_TS ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
