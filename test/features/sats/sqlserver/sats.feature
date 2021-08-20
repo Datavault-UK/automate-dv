@@ -10,7 +10,7 @@ Feature: Satellites (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -33,7 +33,7 @@ Feature: Satellites (sqlserver)
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -51,7 +51,7 @@ Feature: Satellites (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -71,7 +71,7 @@ Feature: Satellites (sqlserver)
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | <null>      | <null>        | <null>       | <null>          | 1993-01-01 | *      |
       |             | <null>        | <null>       | <null>          | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -105,7 +105,7 @@ Feature: Satellites (sqlserver)
       | 1011        | <null>        | 1977-07-07   | 17-214-233-1221 | 1993-01-01 | *      |
       | <null>      | Charlie       | 1988-08-08   | 17-214-233-1222 | 1993-01-01 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -135,7 +135,7 @@ Feature: Satellites (sqlserver)
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -156,7 +156,7 @@ Feature: Satellites (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -181,7 +181,7 @@ Feature: Satellites (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -215,7 +215,7 @@ Feature: Satellites (sqlserver)
       | 1006        | George        | 1998-04-14   | 17-214-233-1219 | 1993-01-02 | *      |
       | 1007        | Hary          | 1988-04-13   | 17-214-233-1220 | 1993-01-02 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -244,7 +244,7 @@ Feature: Satellites (sqlserver)
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE | LOAD_DATE  | SOURCE |
       | <null>      | <null>        | <null>       | <null>         | 1993-01-02 | *      |
       |             | <null>        | <null>       | <null>         | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -279,7 +279,7 @@ Feature: Satellites (sqlserver)
       | 1006        | George        | <null>       | 17-214-233-1219 | 1993-01-02 | *      |
       | 1007        | <null>        | 1988-04-13   | 17-214-233-1220 | 1993-01-02 | *      |
       | <null>      | Charlie       | 1988-08-08   | 17-214-233-1222 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -326,7 +326,7 @@ Feature: Satellites (sqlserver)
       | 1016        | George        | <null>       | 17-214-233-1219 | 1993-01-02 | *      |
       | 1017        | <null>        | 1988-04-13   | 17-214-233-1220 | 1993-01-02 | *      |
       | <null>      | Charlie       | 1988-08-08   | 17-214-233-1222 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -359,7 +359,7 @@ Feature: Satellites (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                      | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

@@ -13,7 +13,7 @@ Feature: [SQLS-BRG-1L] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -55,7 +55,7 @@ Feature: [SQLS-BRG-1L] Bridge table
       | 1002        | 200      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-02 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-30 00:00:00.000 |
@@ -93,7 +93,7 @@ Feature: [SQLS-BRG-1L] Bridge table
       | 1002        | 200      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-02 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-03 00:00:00.000 |
@@ -141,7 +141,7 @@ Feature: [SQLS-BRG-1L] Bridge table
       | 1002        | 201      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 301      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 00:00:00.000 |

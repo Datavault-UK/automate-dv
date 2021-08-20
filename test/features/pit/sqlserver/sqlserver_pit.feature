@@ -14,7 +14,7 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-01 02:00:00.000 | Phone       | 2019-01-02 00:00:00.000 | *      |
@@ -24,7 +24,7 @@ Feature: pit (sqlserver)
       | 1002        | 2019-01-02 06:00:00.000 | Tablet      | 2019-01-03 00:00:00.000 | *      |
       | 1002        | 2019-01-03 08:00:00.000 | Tablet      | 2019-01-04 00:00:00.000 | *      |
       | 1002        | <null>                  | Tablet      | 2019-01-05 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000 | *      |
@@ -33,7 +33,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-02 00:00:00.000 | *      |
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-02 00:00:00.000 |
@@ -98,14 +98,14 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-01 02:00:00.000 | Phone       | 2019-01-02 00:00:00.000 | *      |
       | 1001        | 2019-01-02 03:00:00.000 | Phone       | 2019-01-03 00:00:00.000 | *      |
       | 1001        | 2019-01-03 01:00:00.000 | Laptop      | 2019-01-04 00:00:00.000 | *      |
       | 1002        | 2019-01-03 08:00:00.000 | Tablet      | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000 | *      |
@@ -114,7 +114,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-02 00:00:00.000 | *      |
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-02 00:00:00.000 |
@@ -144,7 +144,7 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE           | SOURCE |
       | 1001        | 2019-01-01 10:01:00.000 | Phone       | 2019-01-01 10:15:00 | *      |
@@ -153,7 +153,7 @@ Feature: pit (sqlserver)
       | 1002        | 2019-01-01 09:55:00.000 | Tablet      | 2019-01-01 10:15:00 | *      |
       | 1002        | 2019-01-01 10:22:00.000 | Tablet      | 2019-01-01 10:45:00 | *      |
       | 1002        | 2019-01-01 11:14:00.000 | Tablet      | 2019-01-01 11:15:00 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE           | SOURCE |
       | 1001        | red              | ab12         | 2019-01-01 10:15:00 | *      |
@@ -162,7 +162,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-01 10:15:00 | *      |
       | 1002        | yellow           | ef56         | 2019-01-01 10:45:00 | *      |
       | 1002        | pink             | ef56         | 2019-01-01 11:15:00 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE          |
       | 2019-01-01 10:15:00 |
@@ -191,7 +191,7 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-01 02:00:00.000 | Phone       | 2019-01-02 00:00:00.000 | *      |
@@ -200,7 +200,7 @@ Feature: pit (sqlserver)
       | 1002        | 2019-01-01 05:00:00.000 | Tablet      | 2019-01-02 00:00:00.000 | *      |
       | 1002        | 2019-01-02 06:00:00.000 | Tablet      | 2019-01-03 00:00:00.000 | *      |
       | 1002        | 2019-01-03 08:00:00.000 | Tablet      | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000 | *      |
@@ -209,7 +209,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-02 00:00:00.000 | *      |
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2017-01-02 00:00:00.000 |
@@ -239,7 +239,7 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-01 02:00:00.000 | Phone       | 2019-01-02 00:00:00.000 | *      |
@@ -248,7 +248,7 @@ Feature: pit (sqlserver)
       | 1002        | 2019-01-01 05:00:00.000 | Tablet      | 2019-01-02 00:00:00.000 | *      |
       | 1002        | 2019-01-02 06:00:00.000 | Tablet      | 2019-01-03 00:00:00.000 | *      |
       | 1002        | 2019-01-03 08:00:00.000 | Tablet      | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000 | *      |
@@ -257,7 +257,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-02 00:00:00.000 | *      |
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-05 00:00:00.000 |
@@ -287,7 +287,7 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 5 Forrest road Hampshire | 1997-04-24   | 2019-01-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2019-01-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-01 02:00:00.000 | Phone       | 2019-01-02 00:00:00.000 | *      |
@@ -296,7 +296,7 @@ Feature: pit (sqlserver)
       | 1002        | 2019-01-01 05:00:00.000 | Tablet      | 2019-01-02 00:00:00.000 | *      |
       | 1002        | 2019-01-02 06:00:00.000 | Tablet      | 2019-01-03 00:00:00.000 | *      |
       | 1002        | 2019-01-03 08:00:00.000 | Tablet      | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000 | *      |
@@ -305,7 +305,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-02 00:00:00.000 | *      |
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-02 00:00:00.000 |
@@ -324,12 +324,12 @@ Feature: pit (sqlserver)
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-04 06:00:00.000 | Tablet      | 2019-01-05 00:00:00.000 | *      |
       | 1002        | 2019-01-04 04:00:00.000 | Laptop      | 2019-01-05 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | black            | ab12         | 2019-01-05 00:00:00.000 | *      |
       | 1002        | red              | ef56         | 2019-01-05 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-03 00:00:00.000 |
@@ -352,13 +352,13 @@ Feature: pit (sqlserver)
       | 1001        | 2019-01-05 06:00:00.000 | Tablet      | 2019-01-06 00:00:00.000 | *      |
       | 1002        | 2019-01-05 04:00:00.000 | Laptop      | 2019-01-06 00:00:00.000 | *      |
       | 1003        | 2019-01-05 03:00:00.000 | Laptop      | 2019-01-06 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | yellow           | ab12         | 2019-01-06 00:00:00.000 | *      |
       | 1002        | purple           | ef56         | 2019-01-06 00:00:00.000 | *      |
       | 1003        | black            | gh78         | 2019-01-06 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-04 00:00:00.000 |
@@ -391,7 +391,7 @@ Feature: pit (sqlserver)
       | 1001        | Alice         | 5 Forrest road Hampshire | 1997-04-24   | 2019-01-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2019-01-01 00:00:00.000 | *      |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-01 02:00:00.000 | Phone       | 2019-01-02 00:00:00.000 | *      |
@@ -400,7 +400,7 @@ Feature: pit (sqlserver)
       | 1002        | 2019-01-01 05:00:00.000 | Tablet      | 2019-01-02 00:00:00.000 | *      |
       | 1002        | 2019-01-02 06:00:00.000 | Tablet      | 2019-01-03 00:00:00.000 | *      |
       | 1002        | 2019-01-03 08:00:00.000 | Tablet      | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000 | *      |
@@ -409,7 +409,7 @@ Feature: pit (sqlserver)
       | 1002        | yellow           | cd34         | 2019-01-02 00:00:00.000 | *      |
       | 1002        | yellow           | ef56         | 2019-01-03 00:00:00.000 | *      |
       | 1002        | pink             | ef56         | 2019-01-04 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-02 00:00:00.000 |
@@ -428,12 +428,12 @@ Feature: pit (sqlserver)
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE               | SOURCE |
       | 1001        | 2019-01-04 06:00:00.000 | Tablet      | 2019-01-05 00:00:00.000 | *      |
       | 1002        | 2019-01-04 04:00:00.000 | Laptop      | 2019-01-05 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE               | SOURCE |
       | 1001        | black            | ab12         | 2019-01-05 00:00:00.000 | *      |
       | 1002        | red              | ef56         | 2019-01-05 00:00:00.000 | *      |
-    And I create the STG_CUSTOMER_PROFILE stage
+    And I stage the STG_CUSTOMER_PROFILE data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-01-03 00:00:00.000 |

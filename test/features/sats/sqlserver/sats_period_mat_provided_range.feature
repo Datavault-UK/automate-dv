@@ -26,7 +26,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
@@ -64,7 +64,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -112,7 +112,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | 1013        | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
 
     # =============== CHECKS ===================
@@ -170,7 +170,7 @@ Feature: Satellites Loaded using Period Materialization for provided date ranges
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-05 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

@@ -13,7 +13,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-21 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -38,7 +38,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-21 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -62,7 +62,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-21 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -86,7 +86,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 | SAP    |
       | <null>      | <null>   | <null>             | 2019-09-19       | DR   | 3567.34  | 2019-09-21 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -109,7 +109,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 | SAP    |
       | <null>      | <null>   | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-21 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -132,7 +132,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 | SAP    |
       | <null>      | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-21 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -163,7 +163,7 @@ Feature: Transactional Links (sqlserver)
       | 1237        | 1242     | 12345689           | 2019-09-20       | DR   | 10000.00 | 2019-09-22 | SAP    |
       | 1238        | 1243     | 12345690           | 2019-09-20       | CR   | 6823.55  | 2019-09-22 | SAP    |
       | 1238        | 1244     | 12345691           | 2019-09-20       | CR   | 4578.34  | 2019-09-22 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -202,7 +202,7 @@ Feature: Transactional Links (sqlserver)
       | 1237        | 1242     | 12345689           | 2019-09-20       | DR   | 10000.00 | 2019-09-22 | SAP    |
       | 1238        | 1243     | 12345690           | 2019-09-20       | CR   | 6823.55  | 2019-09-22 | SAP    |
       | 1238        | 1244     | 12345691           | 2019-09-20       | CR   | 4578.34  | 2019-09-22 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the T_LINK t_link
     And the RAW_STAGE is loaded
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -265,7 +265,7 @@ Feature: Transactional Links (sqlserver)
       | 1235        | 4325     | 12345682           | 2019-09-20       | CR   | 37645.34 | 2019-09-22 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-20       | CR   | 236.55   | 2019-09-22 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-20       | DR   | 3567.34  | 2019-09-22 | SAP    |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

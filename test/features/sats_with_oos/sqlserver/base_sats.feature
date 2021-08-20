@@ -10,7 +10,7 @@ Feature: Out of Sequence Satellites retain base functionality (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -33,7 +33,7 @@ Feature: Out of Sequence Satellites retain base functionality (sqlserver)
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -51,7 +51,7 @@ Feature: Out of Sequence Satellites retain base functionality (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -74,7 +74,7 @@ Feature: Out of Sequence Satellites retain base functionality (sqlserver)
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -95,7 +95,7 @@ Feature: Out of Sequence Satellites retain base functionality (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -120,7 +120,7 @@ Feature: Out of Sequence Satellites retain base functionality (sqlserver)
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

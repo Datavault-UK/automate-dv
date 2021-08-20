@@ -17,7 +17,7 @@ Feature: [SQLS-BRG] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -50,7 +50,7 @@ Feature: [SQLS-BRG] Bridge table
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1001        | 101      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1002        | 100      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -113,7 +113,7 @@ Feature: [SQLS-BRG] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -145,7 +145,7 @@ Feature: [SQLS-BRG] Bridge table
     Given the RAW_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1001        | 101      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-30 00:00:00.000 |
@@ -177,7 +177,7 @@ Feature: [SQLS-BRG] Bridge table
     Given the RAW_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1002        | 100      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -248,7 +248,7 @@ Feature: [SQLS-BRG] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -283,7 +283,7 @@ Feature: [SQLS-BRG] Bridge table
       | 1011        | 111      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1002        | 100      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1012        | 200      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -371,7 +371,7 @@ Feature: [SQLS-BRG] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -404,7 +404,7 @@ Feature: [SQLS-BRG] Bridge table
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1002        | 100      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1012        | 200      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -454,7 +454,7 @@ Feature: [SQLS-BRG] Bridge table
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1001        | 100      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1002        | 200      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -541,14 +541,14 @@ Feature: [SQLS-BRG] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the RAW_ORDER_PRODUCT table contains data
       | ORDER_ID | PRODUCT_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 100      | AAA        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 200      | BBB        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 300      | CCC        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 400      | DDD        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_ORDER_PRODUCT stage
+    And I stage the STG_ORDER_PRODUCT data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -595,7 +595,7 @@ Feature: [SQLS-BRG] Bridge table
       | 1011        | 111      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1002        | 100      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1012        | 200      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the RAW_ORDER_PRODUCT table contains data
       | ORDER_ID | PRODUCT_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 100      | AAB        | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | *      |
@@ -604,7 +604,7 @@ Feature: [SQLS-BRG] Bridge table
       | 300      | CCA        | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 400      | DDDA       | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 400      | DDDB       | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_ORDER_PRODUCT stage
+    And I stage the STG_ORDER_PRODUCT data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -725,14 +725,14 @@ Feature: [SQLS-BRG] Bridge table
       | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the RAW_ORDER_PRODUCT table contains data
       | ORDER_ID | PRODUCT_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 100      | AAA        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 200      | BBB        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 300      | CCC        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 400      | DDD        | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_ORDER_PRODUCT stage
+    And I stage the STG_ORDER_PRODUCT data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -777,14 +777,14 @@ Feature: [SQLS-BRG] Bridge table
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1002        | 100      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1012        | 200      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the RAW_ORDER_PRODUCT table contains data
       | ORDER_ID | PRODUCT_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 100      | AAB        | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 200      | BBBB       | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 300      | CCA        | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 400      | DDDA       | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_ORDER_PRODUCT stage
+    And I stage the STG_ORDER_PRODUCT data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |
@@ -868,14 +868,14 @@ Feature: [SQLS-BRG] Bridge table
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1001        | 100      | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 1002        | 200      | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_ORDER stage
+    And I stage the STG_CUSTOMER_ORDER data
     And the RAW_ORDER_PRODUCT table contains data
       | ORDER_ID | PRODUCT_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 100      | AAA        | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 200      | BBB        | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 300      | CCC        | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
       | 400      | DDD        | 2018-06-02 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I create the STG_ORDER_PRODUCT stage
+    And I stage the STG_ORDER_PRODUCT data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.000 |

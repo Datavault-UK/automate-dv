@@ -36,7 +36,7 @@ Feature: Out of Sequence Satellites (sqlserver)
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS sat
     Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -88,7 +88,7 @@ Feature: Out of Sequence Satellites (sqlserver)
       | 1001        | Chris         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS sat
     Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -142,7 +142,7 @@ Feature: Out of Sequence Satellites (sqlserver)
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS sat
     Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -170,7 +170,7 @@ Feature: Out of Sequence Satellites (sqlserver)
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1002        | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS sat
     Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -197,7 +197,7 @@ Feature: Out of Sequence Satellites (sqlserver)
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1992-12-31 | *      | 1992-12-31     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS_EARLY sat
     Then the SAT_CUSTOMER_OOS_EARLY table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -227,7 +227,7 @@ Feature: Out of Sequence Satellites (sqlserver)
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Chris         | 1997-04-24   | 17-214-233-1214 | 1992-12-31 | *      | 1992-12-31     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS_EARLY sat
     Then the SAT_CUSTOMER_OOS_EARLY table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -257,7 +257,7 @@ Feature: Out of Sequence Satellites (sqlserver)
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Bob           | 1997-04-24   | 17-214-233-1216 | 1993-01-09 | *      | 1993-01-09     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS_LATE sat
     Then the SAT_CUSTOMER_OOS_LATE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -286,7 +286,7 @@ Feature: Out of Sequence Satellites (sqlserver)
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
       | 1001        | Chris         | 1997-04-24   | 17-214-233-1216 | 1993-01-09 | *      | 1993-01-09     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS_LATE sat
     Then the SAT_CUSTOMER_OOS_LATE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -346,7 +346,7 @@ Feature: Out of Sequence Satellites (sqlserver)
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1003        | Harry         | 1997-08-25   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
       | 1003        | Harry         | 1997-08-25   | 17-214-233-1214 | 1993-01-03 | *      | 1993-01-03     |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     When I load the SAT_CUSTOMER_OOS sat
     Then the SAT_CUSTOMER_OOS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
@@ -418,7 +418,7 @@ Feature: Out of Sequence Satellites (sqlserver)
       | 1002        | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-01 01:01:03 | *      | 1993-01-01 01:01:03 |
       | 1003        | Harry         | 1997-08-25   | 17-214-233-1214 | 1993-01-01 01:01:03 | *      | 1993-01-01 01:01:03 |
       | 1003        | Harry         | 1997-08-25   | 17-214-233-1214 | 1993-01-01 01:01:03 | *      | 1993-01-01 01:01:03 |
-    And I create the STG_CUSTOMER_TIMESTAMP stage
+    And I stage the STG_CUSTOMER_TIMESTAMP data
     When I load the SAT_CUSTOMER_OOS_TIMESTAMP sat
     Then the SAT_CUSTOMER_OOS_TIMESTAMP table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME       | EFFECTIVE_FROM      | SOURCE |

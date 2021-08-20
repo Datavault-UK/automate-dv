@@ -19,7 +19,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATE  | SOURCE |
       | 1001        | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-02 | *      |
@@ -31,7 +31,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.000 | Phone       | 2018-06-01 | *      |
       | 1003        | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-01 | *      |
       | 1003        | 2018-06-01 00:00:00.000 | Laptop      | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -115,7 +115,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.010 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the RAW_STAGE_LOGIN_TS table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE |
       | 1001        | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-01 00:00:00.020 | *      |
@@ -127,7 +127,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.000 | Phone       | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.010 | Tablet      | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.020 | Laptop      | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_LOGIN_TS stage
+    And I stage the STG_CUSTOMER_LOGIN_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.996 |
@@ -211,7 +211,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.010 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the RAW_STAGE_LOGIN_TS table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE |
       | 1001        | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-01 00:00:00.020 | *      |
@@ -223,7 +223,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.000 | Phone       | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.010 | Tablet      | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.020 | Laptop      | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_LOGIN_TS stage
+    And I stage the STG_CUSTOMER_LOGIN_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -291,7 +291,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE |
       | 1001        | 2018-06-01      | Tablet      | 2018-06-02 | *      |
@@ -303,7 +303,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01      | Phone       | 2018-06-01 | *      |
       | 1003        | 2018-06-01      | Tablet      | 2018-06-01 | *      |
       | 1003        | 2018-06-01      | Laptop      | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.996 |
@@ -381,7 +381,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-02 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-03 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE |
       | 1001        | 2018-06-01      | Tablet      | 2018-06-03 | *      |
@@ -393,7 +393,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01      | Phone       | 2018-06-01 | *      |
       | 1003        | 2018-06-01      | Tablet      | 2018-06-01 | *      |
       | 1003        | 2018-06-01      | Laptop      | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -439,7 +439,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE |
       | 1001        | 2018-06-03      | Tablet      | 2018-06-04 | *      |
@@ -448,7 +448,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01      | Tablet      | 2018-06-05 | *      |
       | 1003        | 2018-06-01      | Laptop      | 2018-06-05 | *      |
       | 1004        | 2018-06-04      | Laptop      | 2018-06-04 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-01 |
@@ -516,7 +516,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.010 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the RAW_STAGE_LOGIN_TS table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE |
       | 1001        | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-01 00:00:00.020 | *      |
@@ -528,7 +528,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.000 | Phone       | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.010 | Tablet      | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.020 | Laptop      | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_LOGIN_TS stage
+    And I stage the STG_CUSTOMER_LOGIN_TS data
 #    Given the HUB_CUSTOMER_TS hub is already populated with data
 #      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE                  | SOURCE |
 #      | md5('1001') | 1001        | 2018-06-01 00:00:00.000000 | *      |
@@ -582,7 +582,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.010 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     When the RAW_STAGE_LOGIN_TS is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE |
       | 1001        | 2018-06-02 00:00:00.020 | Phone       | 2018-06-02 12:00:00.010 | *      |
@@ -591,7 +591,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.004 | Tablet      | 2018-06-02 00:00:00.000 | *      |
       | 1003        | 2018-06-01 00:00:00.005 | Laptop      | 2018-06-02 00:00:00.000 | *      |
       | 1004        | 2018-06-02 12:00:00.020 | Phone       | 2018-06-02 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_LOGIN_TS stage
+    And I stage the STG_CUSTOMER_LOGIN_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-02 00:00:00.000 |
@@ -659,7 +659,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.010 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the RAW_STAGE_LOGIN_TS table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE |
       | 1001        | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-01 00:00:00.020 | *      |
@@ -671,7 +671,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.000 | Phone       | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.010 | Tablet      | 2018-06-01 23:59:59.996 | *      |
       | 1003        | 2018-06-01 00:00:00.020 | Laptop      | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_LOGIN_TS stage
+    And I stage the STG_CUSTOMER_LOGIN_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -717,7 +717,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-01 12:00:00.010 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     When the RAW_STAGE_LOGIN_TS is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE |
       | 1001        | 2018-06-02 00:00:00.020 | Phone       | 2018-06-02 00:00:00.010 | *      |
@@ -726,7 +726,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01 00:00:00.004 | Tablet      | 2018-06-02 00:00:00.000 | *      |
       | 1003        | 2018-06-01 00:00:00.005 | Laptop      | 2018-06-02 00:00:00.000 | *      |
       | 1004        | 2018-06-02 12:00:00.020 | Phone       | 2018-06-02 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_LOGIN_TS stage
+    And I stage the STG_CUSTOMER_LOGIN_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-01 |
@@ -764,7 +764,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-02 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-03 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE |
       | 1001        | 2018-06-01      | Tablet      | 2018-06-02 | *      |
@@ -776,7 +776,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01      | Phone       | 2018-06-01 | *      |
       | 1003        | 2018-06-01      | Tablet      | 2018-06-01 | *      |
       | 1003        | 2018-06-01      | Laptop      | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.996 |
@@ -830,7 +830,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE |
       | 1001        | 2018-06-03      | Tablet      | 2018-06-04 | *      |
@@ -839,7 +839,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and two sat
       | 1003        | 2018-06-01      | Tablet      | 2018-06-05 | *      |
       | 1003        | 2018-06-01      | Laptop      | 2018-06-05 | *      |
       | 1004        | 2018-06-02      | Laptop      | 2018-06-03 | *      |
-    And I create the STG_CUSTOMER_LOGIN stage
+    And I stage the STG_CUSTOMER_LOGIN data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-02 00:00:00.000 |
