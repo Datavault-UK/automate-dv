@@ -1,7 +1,7 @@
-Feature: Satellites Loaded using separate manual loads (sqlserver)
+Feature: [SQLS-SAT-OOS-CYC] Satellites Loaded using separate manual loads
 
   @fixture.satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE] Satellite load over several cycles
+  Scenario: [SQLS-SAT-OOS-CYC-001] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -70,7 +70,7 @@ Feature: Satellites Loaded using separate manual loads (sqlserver)
 
   @fixture.satellite_cycle_sqlserver
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] Satellite load over several cycles
+  Scenario: [SQLS-SAT-OOS-CYC-002] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
