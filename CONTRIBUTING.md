@@ -11,7 +11,21 @@ Run `pipenv install --dev`
 
 ## Setting up your development environment
 
-### 1. Create environment files from templates
+### 1. Getting the code
+
+#### For external contributors
+
+In general, we follow the ["fork-and-pull"](https://github.com/susam/gitpr) Git workflow
+
+- Fork the repository to your own GitHub account
+- Clone the project to your machine
+- Create a branch (from `develop`) locally with a succinct but descriptive name. 
+- If it's a new feature, prefix the branch name with `feat/`
+- Commit changes to the branch
+- Push changes to your fork
+- Open a PR in our repository
+
+### 2. Create environment files from templates
 ##### NOTE: If you are an internal contributor (e.g. Datavault employee) then you may skip this step
 
 In the `<project_root>/env/templates` folder you will find two files: `db.tpl.env` and `profiles.tpl.yml`.
@@ -49,7 +63,7 @@ replace the empty quotes with your own credentials.
 - Next, Replace the empty quotes with your own credentials.
 
 
-### 2. Run the setup command
+### 3. Run the setup command
 
 ### Without 1Password integration
 ##### Recommended for External Contributors
