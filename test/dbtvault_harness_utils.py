@@ -70,7 +70,8 @@ def con_details(plt):
             else:
                 return details
     else:
-        test.logger.error(f"'{test.OP_DB_FILE}' not found. Please run 'inv setup'")
+        test.logger.error(f"'{test.OP_DB_FILE}' not found. Please run 'inv setup' "
+                          f"or provide a 'db.env' file using the provided env/tpl/db.tpl.env")
         sys.exit(0)
 
 
