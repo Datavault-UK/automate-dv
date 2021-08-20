@@ -1,8 +1,8 @@
-@fixture.set_workdir
-Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three links (sqlserver)
+Feature: [SQLS-BRG-1L] Bridge table
+  Base Bridge behaviour with one hub and one/two/three links
 
   @fixture.bridge_sqlserver
-  Scenario: [BASE-LOAD] Base load into a bridge table from one hub and one link with the AS_OF date and LDTS equal
+  Scenario: [SQLS-BRG-1L-001] Base load into a bridge table from one hub and one link with the AS_OF date and LDTS equal
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -44,7 +44,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.bridge_sqlserver
-  Scenario: [BASE-LOAD] Base load into a bridge table from one hub and one link with AS_OF dates in the past
+  Scenario: [SQLS-BRG-1L-002] Base load into a bridge table from one hub and one link with AS_OF dates in the past
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -82,7 +82,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
     Then the BRIDGE_CUSTOMER_ORDER table should contain no data
 
   @fixture.bridge_sqlserver
-  Scenario: [BASE-LOAD] Base load into a bridge table from one hub and one link with AS_OF dates in the future
+  Scenario: [SQLS-BRG-1L-003] Base load into a bridge table from one hub and one link with AS_OF dates in the future
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -129,7 +129,7 @@ Feature: Bridge table - Base Bridge behaviour with one hub and one/two/three lin
       | md5('1004') | 2018-06-04 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.bridge_sqlserver
-  Scenario: [BASE-LOAD] Base load into a bridge table from one hub and one link with multiple loads and an encompassing range of AS OF dates
+  Scenario: [SQLS-BRG-1L-004] Base load into a bridge table from one hub and one link with multiple loads and an encompassing range of AS OF dates
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |

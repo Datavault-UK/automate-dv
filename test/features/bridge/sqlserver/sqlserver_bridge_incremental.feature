@@ -1,9 +1,9 @@
-@fixture.set_workdir
-Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two links (sqlserver)
+Feature: [SQLS-BRG] Bridge table
+  Incremental Bridge behaviour with one hub and one/two links
 
   @fixture.enable_auto_end_date
   @fixture.bridge_sqlserver
-  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 1
+  Scenario: [SQLS-BRG-001] Bridge on one hub and one link
     Incremental load with auto end-dating with more recent AS OF dates and new orders
     New order or changed order are assigned only to existing customers
 
@@ -99,7 +99,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge_sqlserver
-  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 2
+  Scenario: [SQLS-BRG-003] Bridge on one hub and one link
     Incremental load with auto end-dating with new AS OF dates in the past
     Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
 
@@ -234,7 +234,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge_sqlserver
-  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 3
+  Scenario: [SQLS-BRG-004] Bridge on one hub and one link
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
 
@@ -357,7 +357,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge_sqlserver
-  Scenario: [INCR-LOAD] Bridge on one hub and one link; Test 4
+  Scenario: [SQLS-BRG-005] Bridge on one hub and one link
     Incremental load with auto end-dating with more recent AS OF dates and changed orders
     The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
 
@@ -525,7 +525,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge_sqlserver
-  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 5
+  Scenario: [SQLS-BRG-005] Bridge on one hub and two links
     Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
     New orders or changed orders are assigned to existing customers, as well as to new ones
     New orders or changed orders get assigned existing or new products
@@ -709,7 +709,7 @@ Feature: Bridge table - Incremental Bridge behaviour with one hub and one/two li
 
   @fixture.enable_auto_end_date
   @fixture.bridge_sqlserver
-  Scenario: [INCR-LOAD] Bridge on one hub and two links; Test 6
+  Scenario: [SQLS-BRG-006] Bridge on one hub and two links
     Incremental load with auto end-dating and more recent AS OF dates.
     An existing order gets assigned either to another existing customer or to a new customer,
     it gets reassigned to the initial customer

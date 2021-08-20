@@ -1,8 +1,7 @@
-@fixture.set_workdir
-Feature: Full Vault Cycles (sqlserver)
+Feature: [SQLS-CYC] Full Vault Cycles
 
   @fixture.cycle_sqlserver
-  Scenario: [VAULT-CYCLE] Test several load cycles of a raw vault
+  Scenario: [SQLS-CYC-001] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
       | HUB          | LINK                  | SAT                       |
       | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |

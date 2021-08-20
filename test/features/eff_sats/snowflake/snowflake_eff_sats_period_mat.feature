@@ -125,7 +125,7 @@ Feature: [SF-EFF-PM] Effectivity Satellites Loaded using Period Materialization
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
-  Scenario: [SF-INCREMENTAL-LOAD-PM] One load; and different number of CUSTOMERS per ldts; going from an empty table to 3 CUSTOMERS per ORDER
+  Scenario: [SF-EFF-PM-007] One load; and different number of CUSTOMERS per ldts; going from an empty table to 3 CUSTOMERS per ORDER
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -152,7 +152,7 @@ Feature: [SF-EFF-PM] Effectivity Satellites Loaded using Period Materialization
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
-  Scenario: [SF-EFF-PM-007] One load; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
+  Scenario: [SF-EFF-PM-008] One load; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
