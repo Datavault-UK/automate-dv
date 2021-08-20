@@ -1,7 +1,8 @@
-two_cdk_ma_sats_cycles.feature@fixture.set_workdir
+
+@fixture.set_workdir
 Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with two CDKs
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_bigquery
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with sets of records keeping the count of records the same while having one or more records changed
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -80,7 +81,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1254\|\|12331')   | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_bigquery
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -222,7 +223,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1003') | md5('1003\|\|CHRIS\|\|17-214-233-1224\|\|12321')   | Chris         | 17-214-233-1224 | 12321     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1003') | md5('1003\|\|CHRISS\|\|17-214-233-1223\|\|12321')  | Chriss        | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_bigquery
   Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
@@ -359,7 +360,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1334\|\|12331')   | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_bigquery
   Scenario: [SAT-CYCLE-NULLS] MULTI_ACTIVE_SATELLITE load over several cycles with NULL records
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -455,7 +456,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1222\|\|12312')    | Beth          | 17-214-233-1222 | 12312     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1232\|\|12313')    | Beah          | 17-214-233-1232 | 12313     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle
+  @fixture.multi_active_satellite_cycle_bigquery
   @fixture.sha
   Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
