@@ -1,7 +1,8 @@
-Feature: Multi Active Satellites - Loading using Period Materialization
+Feature: [SQLS-MAS-PM] Multi Active Satellites
+  Loading using Period Materialization
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite
+  Scenario: [SQLS-MAS-PM-001] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -35,7 +36,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where all records load
+  Scenario: [SQLS-MAS-PM-002] Load data into a populated multi-active satellite where all records load
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
@@ -58,7 +59,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization
       | md5('1006') | Frida         | 17-214-233-1214 | md5('1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where sets of records have fewer records
+  Scenario: [SQLS-MAS-PM-003] Load data into a populated multi-active satellite where sets of records have fewer records
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -99,7 +100,7 @@ Feature: Multi Active Satellites - Loading using Period Materialization
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load data into a populated multi-active satellite where some sets of records have extra records
+  Scenario: [SQLS-MAS-PM-004] Load data into a populated multi-active satellite where some sets of records have extra records
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -151,12 +152,12 @@ Feature: Multi Active Satellites - Loading using Period Materialization
       | md5('1004') | Dom           | 17-214-233-1247 | md5('1004\|\|DOM\|\|17-214-233-1247')   | 1993-01-02     | 1993-01-02 | *      |
       | md5('1004') | Dom           | 17-214-233-1257 | md5('1004\|\|DOM\|\|17-214-233-1257')   | 1993-01-02     | 1993-01-02 | *      |
 
-############################### CYCLE TESTS ###################################
+  # CYCLE TESTS
 
-# TODO ??? Not considering out of sequence loads at this time
-
+  # TODO ??? Not considering out of sequence loads at this time
+#
 #  @fixture.multi_active_satellite_cycle_sqlserver
-#  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
+#  Scenario: [SQLS-MAS-PM-005] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
 #    Given the RAW_STAGE stage is empty
 #    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 #
@@ -192,9 +193,9 @@ Feature: Multi Active Satellites - Loading using Period Materialization
 #      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
-
+#
 #  @fixture.multi_active_satellite_cycle_sqlserver
-#  Scenario: [SAT-RANK-MAT-BASE-CYCLE-TS] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
+#  Scenario: [SQLS-MAS-PM-006] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
 #    Given the RAW_STAGE_TS stage is empty
 #    And the MULTI_ACTIVE_SATELLITE_TS ma_sat is empty
 #

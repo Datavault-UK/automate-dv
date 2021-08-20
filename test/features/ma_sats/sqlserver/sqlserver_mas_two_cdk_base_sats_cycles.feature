@@ -1,7 +1,8 @@
-Feature: [SQLS-MAS-2CD-C] Multi Active Satellites - Loading in cycles using separate manual loads of base satellites behaviour with two CDKs
+Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
+  Loading in cycles using separate manual loads of base satellites behaviour with two CDKs
 
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SQLS-MAS-2CD-C-001] Load over several cycles
+  Scenario: [SQLS-MAS-2CD-BCD-001] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -70,7 +71,7 @@ Feature: [SQLS-MAS-2CD-C] Multi Active Satellites - Loading in cycles using sepa
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218\|\|123')   | 123       | Jenny         | 17-214-233-1218   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SQLS-MAS-2CD-C-001] Load over several cycles with Timestamps
+  Scenario: [SQLS-MAS-2CD-BCD-001] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
 
@@ -139,7 +140,7 @@ Feature: [SQLS-MAS-2CD-C] Multi Active Satellites - Loading in cycles using sepa
 
   @fixture.multi_active_satellite_cycle_sqlserver
   @fixture.sha
-  Scenario: [SQLS-MAS-2CD-C-001] Load over several cycles
+  Scenario: [SQLS-MAS-2CD-BCD-001] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
