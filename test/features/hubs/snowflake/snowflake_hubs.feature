@@ -1,4 +1,4 @@
-Feature: [SF-H] Hubs
+Feature: [SF-HUB] Hubs
 
   @fixture.single_source_hub
   Scenario: [SF-HUB-001] Simple load of stage data into an empty hub
@@ -150,7 +150,7 @@ Feature: [SF-H] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-009] Load of stage data into a hub
+  Scenario: [SF-HUB-008] Load of stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -171,7 +171,7 @@ Feature: [SF-H] Hubs
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-010] Load of distinct stage data into a hub
+  Scenario: [SF-HUB-009] Load of distinct stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -197,7 +197,7 @@ Feature: [SF-H] Hubs
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-011] Keys with NULL or empty values are not loaded into a hub
+  Scenario: [SF-HUB-010] Keys with NULL or empty values are not loaded into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -223,7 +223,7 @@ Feature: [SF-H] Hubs
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.multi_source_hub
-  Scenario: [SF-HUB-012] Union three staging tables to feed a empty hub which does not exist
+  Scenario: [SF-HUB-011] Union three staging tables to feed a empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
@@ -265,7 +265,7 @@ Feature: [SF-H] Hubs
       | md5('1006') | 1006    | 1993-01-01 | *      |
 
   @fixture.multi_source_hub
-  Scenario: [SF-HUB-013] Keys with NULL or empty values in the union of three staging tables are not feed into an empty hub which does not exist
+  Scenario: [SF-HUB-012] Keys with NULL or empty values in the union of three staging tables are not feed into an empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
