@@ -1,4 +1,4 @@
-Feature: [SF-S] Satellites
+Feature: [SF-SAT] Satellites
 
   @fixture.satellite
   Scenario: [SF-SAT-001] Load data into a non-existent satellite
