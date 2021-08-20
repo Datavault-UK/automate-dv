@@ -11,26 +11,31 @@ logger = logging.getLogger('dbtvault')
 
 
 @task()
-def setup(c, platform=None, project=None):
+def setup(c, platform=None, project=None, external_contributor=False):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
         :param platform: dbt profile platform (Optional if defaults already set)
         (Optional if defaults already set)
+        :param external_contributor: Flag for external contributors
         :param project: dbt project to run with (Optional if defaults already set)
     """
-
     if platform:
         c.platform = platform
     if project:
         c.project = project
 
     set_defaults(c, platform=c.platform, project=c.project)
-
     logger.info(f"Platform set to '{c.platform}'")
     logger.info(f"Project set to '{c.project}'")
-    logger.info(f'Injecting credentials to files...')
-    inject_for_platform(c, platform)
+
+    if not external_contributor:
+        logger.info(f'Injecting credentials to files...')
+        inject_for_platform(c, platform)
+    else:
+        logger.info('Checking dbt connection... (running dbt debug)')
+        run_dbt(c, 'debug', platform=platform, project='test', external_contributor=external_contributor)
+
     logger.info(f'Installing dbtvault-dev in test project...')
     run_dbt(c, 'deps', platform=platform, project='test')
     logger.info(f'Setup complete!')
@@ -168,7 +173,7 @@ def check_platform(c, platform):
 
 
 @task
-def run_dbt(c, dbt_args, platform=None, project=None):
+def run_dbt(c, dbt_args, platform=None, project=None, external_contributor=False):
     """
     Run dbt in the context of the provided project with the provided dbt args.
         :param c: invoke context
@@ -176,14 +181,16 @@ def run_dbt(c, dbt_args, platform=None, project=None):
         :param platform: dbt profile platform
         :param project: dbt project to run with, either core (public dbtvault project),
         dev (dev project) or test (test project)
+        :param external_contributor: Flag for external contributors
     """
 
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
 
-    # Set dbt profiles dir
-    os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
+    if not external_contributor:
+        # Set dbt profiles dir
+        os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
 
     command = f"op run --no-masking -- dbt {dbt_args}"
 
