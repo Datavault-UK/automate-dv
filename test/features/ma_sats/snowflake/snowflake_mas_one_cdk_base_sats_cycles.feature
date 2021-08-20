@@ -1,5 +1,5 @@
 Feature: [SF-MAS-1CD-C] Multi Active Satellites
-  Loading in cycles using separate manual loads of base satellites behaviour with one CDK
+  Loading in cycles using in cycles for base satellite behaviour with one CDK
 
   @fixture.multi_active_satellite_cycle
   Scenario: [SF-MAS-1CD-C-001] Load over several cycles

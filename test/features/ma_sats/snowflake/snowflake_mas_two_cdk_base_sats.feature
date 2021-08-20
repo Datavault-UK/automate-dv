@@ -1,4 +1,5 @@
-Feature: [SF-MAS-2CD] Multi Active Satellites - Base satellite behaviour with two CDKs
+Feature: [SF-MAS-2CD] Multi Active Satellites
+  Base satellite behaviour with two CDKs
 
   @fixture.multi_active_satellite
   Scenario: [SF-MAS-2CD-001] Load data into a non-existent multi-active satellite
