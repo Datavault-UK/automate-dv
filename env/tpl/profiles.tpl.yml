@@ -38,4 +38,4 @@ dbtvault:
       user: "{{ env_var('SQLSERVER_DB_USER') }}"
       password: "{{ env_var('SQLSERVER_DB_PW') }}"
 
-  target: "{{ env_var('TARGET') }}"
+  target: "{{ env_var('PLATFORM') }}"
