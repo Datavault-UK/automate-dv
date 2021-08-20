@@ -6,8 +6,10 @@ import yaml
 from invoke import Collection, task
 
 import test
+from test import dbtvault_harness_utils
 
 logger = logging.getLogger('dbtvault')
+logger.setLevel(logging.INFO)
 
 
 @task()
@@ -37,7 +39,7 @@ def setup(c, platform=None, project=None, disable_op=False):
         inject_for_platform(c, platform)
 
     logger.info(f'Installing dbtvault-dev in test project...')
-    run_dbt(c, 'deps', platform=platform, project='test')
+    run_dbt(c, 'deps', platform=platform, project='test', disable_op=disable_op)
     logger.info(f'Setup complete!')
 
 
@@ -102,7 +104,7 @@ def inject_for_platform(c, platform):
         db_from_file = 'env/sqlserver/db_sqlserver.tpl.env'
 
     else:
-        raise ValueError(f"platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+        raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
 
     inject_to_file(c, from_file=profiles_from_file, to_file='env/profiles.yml')
     inject_to_file(c, from_file=db_from_file, to_file='env/db.env')
@@ -169,7 +171,7 @@ def check_platform(c, platform):
     """
 
     if platform in test.AVAILABLE_PLATFORMS:
-        logger.info(f"Platform '{platform}' is available.")
+        logger.debug(f"Platform '{platform}' is available.")
         return True
     else:
         logger.error(f"Unexpected platform: '{platform}', available platforms: {', '.join(test.AVAILABLE_PLATFORMS)}")
@@ -198,15 +200,13 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
 
         command = f"op run --no-masking -- dbt {dbt_args}"
     else:
+        dbtvault_harness_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
-    with c.cd(project_dir):
-        logger.info(f'Project: {project}')
-        logger.info(f'Platform: {platform}')
-        logger.info(f"Profiles.yml: {test.PROFILE_DIR / 'profiles.yml'}")
 
+    with c.cd(project_dir):
         c.run(command)
 
 

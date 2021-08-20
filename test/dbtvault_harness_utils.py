@@ -43,45 +43,45 @@ def platform():
         sys.exit(0)
 
 
-def con_details(plt):
-    if os.path.isfile(test.OP_DB_FILE):
-
+def setup_db_creds(plt):
+    try:
         with open(test.OP_DB_FILE) as config:
             config_dict = yaml.safe_load(config)
 
-            if plt == "snowflake":
+            required_keys = {
+                "snowflake": [
+                    "SNOWFLAKE_DB_ACCOUNT", "SNOWFLAKE_DB_USER",
+                    "SNOWFLAKE_DB_PW", "SNOWFLAKE_DB_ROLE",
+                    "SNOWFLAKE_DB_DATABASE", "SNOWFLAKE_DB_WH",
+                    "SNOWFLAKE_DB_SCHEMA"],
+                "bigquery": [
+                    "GCP_PROJECT_ID", "GCP_DATASET"],
+                "sqlserver": [
+                    "SQLSERVER_DB_SERVER", "SQLSERVER_DB_PORT",
+                    "SQLSERVER_DB_DATABASE", "SQLSERVER_DB_SCHEMA",
+                    "SQLSERVER_DB_USER", "SQLSERVER_DB_PW"
+                ]
+            }
 
-                details = {"SNOWFLAKE_DB_USER": os.getenv('SNOWFLAKE_DB_USER',
-                                                          config_dict.get('SNOWFLAKE_DB_USER', None)),
-                           "SNOWFLAKE_DB_DATABASE": os.getenv('SNOWFLAKE_DB_DATABASE',
-                                                              config_dict.get('SNOWFLAKE_DB_DATABASE', None)),
-                           "SNOWFLAKE_DB_SCHEMA": os.getenv('SNOWFLAKE_DB_SCHEMA',
-                                                            config_dict.get('SNOWFLAKE_DB_SCHEMA', None))}
-
-            elif plt == "bigquery":
-                details = {
-                    "GCP_DATASET": os.getenv('GCP_DATASET',
-                                             config_dict.get('GCP_DATASET', None)),
-                    "GCP_USER": os.getenv('GCP_USER',
-                                          config_dict.get('GCP_USER', None))}
+            details = {key: os.getenv(key, config_dict.get(key, None)) for key in required_keys[plt]}
 
             if not all([v for v in details.values()]):
-                raise ValueError(f"{str(plt).title()} environment details unavailable. Please run 'inv setup'")
+                raise ValueError(f"{str(plt).title()} environment details incomplete or not found. "
+                                 f"Please run 'inv setup' or check your 'env/db.env' file.")
             else:
-                return details
-    else:
+                for k, v in details.items():
+                    os.environ[k] = v
+
+    except (ValueError, OSError):
         test.logger.error(f"'{test.OP_DB_FILE}' not found. Please run 'inv setup' "
-                          f"or provide a 'db.env' file using the provided env/tpl/db.tpl.env")
+                          f"or provide a 'env/db.env' file using the template provided in 'env/templates/db.tpl.env'")
         sys.exit(0)
 
 
 def setup_environment():
     p = platform()
-    db_details = con_details(plt=p)
+    setup_db_creds(plt=p)
     os.environ['PLATFORM'] = p
-
-    for key, val in db_details.items():
-        os.environ[key] = val
 
 
 def inject_parameters(file_contents: str, parameters: dict):
@@ -308,23 +308,19 @@ def set_custom_names():
     def sanitise_strings(unsanitised_str):
         return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
 
-    db_details = con_details(platform())
-
-    snowflake_db_user = db_details["SNOWFLAKE_DB_USER"]
-    snowflake_db_database = db_details["SNOWFLAKE_DB_DATABASE"]
-    snowflake_db_schema = db_details["SNOWFLAKE_DB_SCHEMA"]
+    setup_db_creds(platform())
 
     circleci_metadata = {
         "snowflake": {
-            "SCHEMA_NAME": f"{snowflake_db_schema}_{snowflake_db_user}"
+            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
                            f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
         }
     }
 
     local_metadata = {
         "snowflake": {
-            "SCHEMA_NAME": f"{snowflake_db_schema}_{snowflake_db_user}".upper(),
-            "DATABASE_NAME": snowflake_db_database
+            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}".upper(),
+            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
         },
         "bigquery": {
             "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
@@ -334,7 +330,6 @@ def set_custom_names():
     if is_pipeline():
         return {k: sanitise_strings(v) for k, v in circleci_metadata[platform()].items()}
     else:
-
         return {k: sanitise_strings(v) for k, v in local_metadata[platform()].items()}
 
 
