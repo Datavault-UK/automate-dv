@@ -1,7 +1,7 @@
 @fixture.set_workdir
 Feature: Hubs Loaded using Rank Materialization
 
-  @fixture.single_source_hub
+  @fixture.single_source_hub_bigquery
   Scenario: [BASE-RANK-MAT] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
@@ -25,7 +25,7 @@ Feature: Hubs Loaded using Rank Materialization
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.enable_full_refresh
-  @fixture.single_source_hub
+  @fixture.single_source_hub_bigquery
   Scenario: [RANK-BASE] Full refresh of loaded hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
@@ -44,7 +44,7 @@ Feature: Hubs Loaded using Rank Materialization
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
-  @fixture.multi_source_hub
+  @fixture.multi_source_hub_bigquery
   Scenario: [BASE-UNION-RANK-MAT] Simple load of stage data from multiple sources into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
