@@ -1,8 +1,7 @@
-@fixture.set_workdir
-Feature: Transactional Links using Rank Materialization (sqlserver)
+Feature: [SQLS-TLK-RM] Transactional Links using Rank Materialization
 
   @fixture.t_link_sqlserver
-  Scenario: [BASE-LOAD] Load an a non-existent Transactional Link with the rank materialisation
+  Scenario: [SQLS-TLK-RM-001] Load an a non-existent Transactional Link with the rank materialisation
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -28,7 +27,7 @@ Feature: Transactional Links using Rank Materialization (sqlserver)
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_sqlserver
-  Scenario: [BASE-LOAD] Load an empty Transactional Link with the rank materialisation
+  Scenario: [SQLS-TLK-RM-002] Load an empty Transactional Link with the rank materialisation
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -54,7 +53,7 @@ Feature: Transactional Links using Rank Materialization (sqlserver)
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_sqlserver
-  Scenario: [INCREMENTAL-LOAD] Load a populated Transactional Link with the rank materialisation
+  Scenario: [SQLS-TLK-RM-003] Load a populated Transactional Link with the rank materialisation
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |
