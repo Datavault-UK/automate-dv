@@ -44,7 +44,6 @@
            ) AS row_number
     FROM {{ ref(src) }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),
 
@@ -87,7 +86,6 @@ stage_mat_filter AS (
            ) AS row_rank_number
     FROM {{ ns.last_cte }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 

@@ -7,7 +7,6 @@
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
 
-{%- do log(("columns " ~ source_columns), True) -%}
 {%- for compare_col in compare_columns -%}
     {%- if target.type == 'bigquery' -%}
         {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
@@ -23,7 +22,6 @@
     {%- do source_columns_list.append(source_col.column) -%}
     {%- if target.type == 'bigquery' -%}
         {%- if source_col.data_type == 'BYTES' -%}
-            {%- do log("this is bytes" ~source_col, true) -%}
             {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
         {%- else -%}
             {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
