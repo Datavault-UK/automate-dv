@@ -94,7 +94,6 @@
             {% do adapter.commit() %}
 
         {% endfor %}
-
         {% call noop_statement('main', "INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
             {{ filtered_sql }}
         {%- endcall %}
