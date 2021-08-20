@@ -108,10 +108,10 @@ source_data AS (
         SELECT stage.*
         FROM source_data AS stage
         INNER JOIN latest_records
-            ON CAST({{ dbtvault.prefix([src_pk], 'stage') }} AS STRING) = {{ dbtvault.prefix([src_pk], 'latest_records') }}
-            AND CAST({{ dbtvault.prefix([src_hashdiff], 'stage') }} AS STRING) = {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
+            ON {{ dbtvault.prefix([src_pk], 'stage') }} = {{ dbtvault.prefix([src_pk], 'latest_records') }}
+            AND {{ dbtvault.prefix([src_hashdiff], 'stage') }}= {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }}
         {%- for child_key in src_cdk %}
-            AND CAST({{ dbtvault.prefix([child_key], 'stage') }} AS STRING) = {{ dbtvault.prefix([child_key], 'latest_records') }}
+            AND {{ dbtvault.prefix([child_key], 'stage') }} = {{ dbtvault.prefix([child_key], 'latest_records') }}
         {%- endfor %}
     ),
 
