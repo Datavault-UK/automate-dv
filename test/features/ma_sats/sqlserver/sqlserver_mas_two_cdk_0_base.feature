@@ -1,5 +1,4 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two CDKs (sqlserver)
+Feature: Multi Active Satellites - Base loads with MAS behaviour with two CDKs
 
   @fixture.multi_active_satellite_sqlserver
   Scenario: [BASE-LOAD] Load data into a non-existent multi-active satellite, where some customers have the same phone number but different extensions and others have different phone numbers but the same extensions
@@ -18,7 +17,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | 1004        | Dom           | 17-214-233-1217 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 12331     | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -54,7 +53,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | 1004        | Dom           | 17-214-233-1217 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 12331     | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -88,7 +87,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | 1004        | Dom           | 17-214-233-1217 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 12331     | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -124,7 +123,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | 1004        | Dom           | 17-214-233-1217 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 12331     | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 12331     | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -164,7 +163,7 @@ Feature: Multi Active Satellites - Base loads with actual MAS behaviour with two
       | 1004        | Dom           | <null>          | 12321     | 1993-01-01 | *      |
       | 1004        | <null>        | 17-214-233-1217 | 12321     | 1993-01-01 | *      |
       | <null>      | Dom           | 17-214-233-1217 | <null>    | 1993-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

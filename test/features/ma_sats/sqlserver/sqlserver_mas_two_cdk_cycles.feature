@@ -1,8 +1,7 @@
-@fixture.set_workdir
-Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with two CDKs (sqlserver)
+Feature: Multi Active Satellites - Loading in cycles using separate manual loads of MAS behaviour with two CDKs
 
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with sets of records keeping the count of records the same while having one or more records changed
+  Scenario: [SAT-CYCLE] Load over several cycles with sets of records keeping the count of records the same while having one or more records changed
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -22,7 +21,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1224 | 12331     | 2019-01-01     | 2019-01-01 | *      |
       | 1010        | Jenny         | 17-214-233-1234 | 12331     | 2019-01-01     | 2019-01-01 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
@@ -35,7 +34,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Charley       | 17-214-233-1223 | 12321     | 2019-01-02     | 2019-01-02 | *      |
       | 1003        | Charley       | 17-214-233-1243 | 12321     | 2019-01-02     | 2019-01-02 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
@@ -48,7 +47,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1244 | 12331     | 2019-01-03     | 2019-01-03 | *      |
       | 1010        | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
@@ -79,9 +78,8 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1244\|\|12331')   | Jenny         | 17-214-233-1244 | 12331     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1254\|\|12331')   | Jenny         | 17-214-233-1254 | 12331     | 2019-01-03     | 2019-01-03 | *      |
 
-
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles
+  Scenario: [SAT-CYCLE] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -103,7 +101,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1012        | Albert        | 17-214-233-1215 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
@@ -126,7 +124,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1012        | Albert        | 17-214-233-1215 | 92341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
@@ -144,7 +142,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Chris         | 17-214-233-1224 | 12321     | 2019-01-03     | 2019-01-03 | *      |
       | 1003        | Chriss        | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
@@ -164,7 +162,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
@@ -223,7 +221,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1003') | md5('1003\|\|CHRISS\|\|17-214-233-1223\|\|12321')  | Chriss        | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE] MULTI_ACTIVE_SATELLITE load over several cycles with Timestamps
+  Scenario: [SAT-CYCLE] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
 
@@ -245,7 +243,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1012        | Albert        | 17-214-233-1215 | 12341     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-01 11:14:54.396 | 2019-01-01 11:14:54.396 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I stage the STG_CUSTOMER_TWO_CDK_TS data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 2 ===================
@@ -268,7 +266,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1012        | Albert        | 17-214-233-1215 | 92341     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-02 11:14:54.396 | 2019-01-02 11:14:54.396 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I stage the STG_CUSTOMER_TWO_CDK_TS data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 3 ===================
@@ -284,7 +282,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
 #      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03 11:14:54.396 | 2019-01-03 11:14:54.396 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I stage the STG_CUSTOMER_TWO_CDK_TS data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # ================ DAY 4 ===================
@@ -304,7 +302,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
       | 1010        | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK_TS stage
+    And I stage the STG_CUSTOMER_TWO_CDK_TS data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
 
     # =============== CHECKS ===================
@@ -360,7 +358,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1344\|\|12331')   | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04 11:14:54.396 | 2019-01-04 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite_cycle_sqlserver
-  Scenario: [SAT-CYCLE-NULLS] MULTI_ACTIVE_SATELLITE load over several cycles with NULL records
+  Scenario: [SAT-CYCLE-NULLS] Load over several cycles with NULL records
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -376,7 +374,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Charley       | 17-214-233-1213 | 12321     | 2019-01-01     | 2019-01-01 | *      |
       | 1003        | Charley       | 17-214-233-1223 | 12322     | 2019-01-01     | 2019-01-01 | *      |
       | 1003        | Charley       | 17-214-233-1233 | 12323     | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
@@ -395,7 +393,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1001        | <null>        | 17-214-233-1211 | 12301     | 2019-01-02     | 2019-01-02 | *      |
       | <null>      | Albert        | 17-214-233-1211 | 12301     | 2019-01-02     | 2019-01-02 | *      |
       | 1001        | Albert        | 17-214-233-1221 | 12301     | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
@@ -416,7 +414,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1002        | Beth          | 17-214-233-1222 | 12312     | 2019-01-03     | 2019-01-03 | *      |
       | 1002        | Beah          | 17-214-233-1232 | 12313     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
@@ -434,7 +432,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1003        | Charley       | <null>          | 12321     | 2019-01-04     | 2019-01-04 | *      |
       | <null>      | Charley       | 17-214-233-1213 | 12321     | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
@@ -457,7 +455,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
 
   @fixture.multi_active_satellite_cycle_sqlserver
   @fixture.sha
-  Scenario: [SAT-CYCLE-SHA] MULTI_ACTIVE_SATELLITE load over several cycles
+  Scenario: [SAT-CYCLE-SHA] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
@@ -479,7 +477,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1012        | Albert        | 17-214-233-1215 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
@@ -502,7 +500,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1012        | Albert        | 17-214-233-1215 | 92341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1225 | 12341     | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 12341     | 2019-01-02     | 2019-01-02 | *      |
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
@@ -518,7 +516,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1006        | Freia         | 17-214-233-1212 | 12311     | 2019-01-03     | 2019-01-03 | *      |
 #      | 1003        | Chris         | 17-214-233-1223 | 12321     | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
@@ -538,7 +536,7 @@ Feature: Multi Active Satellites - Loading in cycles using separate manual loads
       | 1010        | Jenny         | 17-214-233-1334 | 12331     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenny         | 17-214-233-1344 | 12331     | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_TWO_CDK stage
+    And I stage the STG_CUSTOMER_TWO_CDK data
     And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
 
     # =============== CHECKS ===================

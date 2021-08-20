@@ -1,4 +1,4 @@
-Feature: [SF-MAS-2CD-B] Multi Active Satellites - Base loads with actual MAS behaviour with two CDKs
+Feature: [SF-MAS-2CD-B] Multi Active Satellites - Base loads with MAS behaviour with two CDKs
 
   @fixture.multi_active_satellite
   Scenario: [SF-MAS-2CD-B-001] Load data into a non-existent multi-active satellite, where some customers have the same phone number but different extensions and others have different phone numbers but the same extensions
