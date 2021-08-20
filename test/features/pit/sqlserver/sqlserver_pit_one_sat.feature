@@ -18,7 +18,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-29 |
@@ -64,7 +64,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -114,7 +114,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-02 |
@@ -160,7 +160,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-06 |
@@ -206,7 +206,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -269,7 +269,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE                 |
       | 2018-05-31 12:00:00.001 |
@@ -315,7 +315,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.993 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.990 |
@@ -365,7 +365,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.001 |
@@ -419,7 +419,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2019-06-02 00:00:00.000 |
@@ -457,7 +457,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.001 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.996 |
@@ -517,7 +517,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.001 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 00:00:00.002 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-02 |
@@ -557,7 +557,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.001 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 00:00:00.002 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-29 |
@@ -597,7 +597,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.010 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 00:00:00.020 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -638,7 +638,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-01 00:00:00.010 |
@@ -678,7 +678,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 00:00:00.000 |
@@ -718,7 +718,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 | *      |
       | 1003        | Chad          | 3 Forrest road Hampshire | 1988-02-12   | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 23:59:59.996 |
@@ -768,7 +768,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
 #      | <null>      | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01  | *      |
 #      | 1002        | <null>        | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01  | *      |
 #      | 1003        | Chad          | <null>                   | 1988-02-12   | 2018-06-01  | *      |
-#    And I create the STG_CUSTOMER_DETAILS stage
+#    And I stage the STG_CUSTOMER_DETAILS data
 #    And the AS_OF_DATE table is created and populated with data
 #      | AS_OF_DATE |
 #      | 2019-01-02 |
@@ -803,7 +803,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
 #      | <null>      | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01  | *      |
 #      | 1002        | <null>        | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01  | *      |
 #      | 1003        | Chad          | <null>                   | 1988-02-12   | 2018-06-01  | *      |
-#    And I create the STG_CUSTOMER_DETAILS stage
+#    And I stage the STG_CUSTOMER_DETAILS data
 #    And the AS_OF_DATE table is created and populated with data
 #      | AS_OF_DATE |
 #      | 2018-01-02 |
@@ -838,7 +838,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
 #      | <null>      | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01  | *      |
 #      | 1002        | <null>        | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01  | *      |
 #      | 1003        | Chad          | <null>                   | 1988-02-12   | 2018-06-01  | *      |
-#    And I create the STG_CUSTOMER_DETAILS stage
+#    And I stage the STG_CUSTOMER_DETAILS data
 #    And the AS_OF_DATE table is created and populated with data
 #      | AS_OF_DATE |
 #      | 2018-01-02 |
@@ -882,7 +882,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-02 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-03 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -904,7 +904,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-01 |
@@ -941,7 +941,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.010 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 12:00:00.000 |
@@ -971,7 +971,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.010 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-02 00:00:00.000 |
@@ -1008,7 +1008,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 00:00:00.000 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 12:00:00.010 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-01 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-05-31 |
@@ -1043,7 +1043,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.010 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.996 | *      |
-    And I create the STG_CUSTOMER_DETAILS_TS stage
+    And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
       | 2018-06-01 |
@@ -1080,7 +1080,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-02 | *      |
       | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-03 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 12:00:00.000 |
@@ -1102,7 +1102,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
       | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-02 00:00:00.000 |
@@ -1134,7 +1134,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-05-31 12:00:00.000 |
@@ -1149,7 +1149,7 @@ Feature: Point-In-Time (PIT) table - Base PIT behaviour with one hub and one sat
     When the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alicia        | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-03 | *      |
-    And I create the STG_CUSTOMER_DETAILS stage
+    And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
       | 2018-06-02 00:00:00.000 |

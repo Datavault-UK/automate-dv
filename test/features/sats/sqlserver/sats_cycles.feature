@@ -14,7 +14,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Jenny         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
@@ -24,7 +24,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
@@ -34,7 +34,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
@@ -45,7 +45,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # =============== CHECKS ===================
@@ -84,7 +84,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1005        | Frida         | 1990-02-05   | 2019-01-01     | 2019-01-01 | *      |
       | 1006        | George        | 1990-02-06   | 2019-01-01     | 2019-01-01 | *      |
       | 1007        | Harry         | 1990-02-07   | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
@@ -101,7 +101,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | <null>        | 1990-02-03   | 2019-01-02     | 2019-01-02 | *      |
       | 1004        | Dom           | <null>       | 2019-01-02     | 2019-01-02 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
@@ -112,7 +112,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1007        | <null>        | 1990-02-07   | 2019-01-03     | 2019-01-03 | *      |
       | <null>      | Charlie       | 1988-08-08   | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
@@ -126,7 +126,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1006        | George        | 1990-02-06   | 2019-01-04     | 2019-01-04 | *      |
       | 1007        | Harry         | 1990-02-07   | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # =============== CHECKS ===================
@@ -169,7 +169,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1005        | Frida         | 1990-02-05   | 2019-01-01     | 2019-01-01 | *      |
       | 1006        | George        | 1990-02-06   | 2019-01-01     | 2019-01-01 | *      |
       | 1007        | Harry         | 1990-02-07   | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
@@ -186,7 +186,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | <null>        | 1990-02-03   | 2019-01-02     | 2019-01-02 | *      |
       | 1004        | Dom           | <null>       | 2019-01-02     | 2019-01-02 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
@@ -197,7 +197,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1007        | <null>        | 1990-02-07   | 2019-01-03     | 2019-01-03 | *      |
       | <null>      | Charlie       | 1988-08-08   | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
@@ -211,7 +211,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1006        | George        | 1990-02-06   | 2019-01-04     | 2019-01-04 | *      |
       | 1007        | Harry         | 1990-02-07   | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # =============== CHECKS ===================
@@ -251,7 +251,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1002        | Beth          | 1990-02-02   | 2019-01-01     | 2019-01-01 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-01-01     | 2019-01-01 | *      |
       | 1004        | Dom           | 1990-02-04   | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
@@ -264,7 +264,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1004        | Dom           | 1990-02-04   | 2019-01-02     | 2019-01-02 | *      |
       | 1005        | Frida         | 1990-02-05   | 2019-01-02     | 2019-01-02 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
@@ -285,7 +285,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1005        | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
       | 1005        | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
@@ -304,7 +304,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1005        | Freya         | 1990-02-15   | 2019-01-04     | 2019-01-04 | *      |
       | 1005        | Freya         | 1990-02-15   | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # =============== CHECKS ===================
@@ -332,7 +332,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1002        | Beth          | 1990-02-02   | 2019-01-01     | 2019-01-01 | *      |
       | 1003        | Charley       | 1990-02-03   | 2019-01-01     | 2019-01-01 | *      |
       | 1004        | Dom           | 1990-02-04   | 2019-01-01     | 2019-01-01 | *      |
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
@@ -345,7 +345,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1004        | Dom           | 1990-02-04   | 2019-01-02     | 2019-01-02 | *      |
       | 1005        | Frida         | 1990-02-05   | 2019-01-02     | 2019-01-02 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
@@ -366,7 +366,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1005        | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
       | 1005        | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
@@ -385,7 +385,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1005        | Freya         | 1990-02-15   | 2019-01-04     | 2019-01-04 | *      |
       | 1005        | Freya         | 1990-02-15   | 2019-01-04     | 2019-01-04 | *      |
 
-    And I create the STG_CUSTOMER_NO_PK_HASHDIFF stage
+    And I stage the STG_CUSTOMER_NO_PK_HASHDIFF data
     And I load the SATELLITE sat
 
     # =============== CHECKS ===================
@@ -416,7 +416,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
       | 1010        | Jenny         | 1991-03-21   | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 2 ===================
@@ -426,7 +426,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 3 ===================
@@ -436,7 +436,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1003        | Claire        | 1990-02-03   | 2019-05-06     | 2019-05-06 | *      |
       | 1005        | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # ================ DAY 4 ===================
@@ -447,7 +447,7 @@ Feature: Satellites Loaded in cycles using separate manual loads (sqlserver)
       | 1007        | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 1991-03-25   | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
-    And I create the STG_CUSTOMER stage
+    And I stage the STG_CUSTOMER data
     And I load the SATELLITE sat
 
     # =============== CHECKS ===================
