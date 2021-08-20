@@ -43,12 +43,12 @@ seeds:
         ORDER_FK: BYTES
         LOADDATE: DATE
     temp:
-      multi_active_satellite_expected_seed:
+      raw_stage_two_cdk_ts_seed:
         +column_types:
-          CUSTOMER_PK: STRING
+          CUSTOMER_ID: STRING
           CUSTOMER_NAME: STRING
           CUSTOMER_PHONE: STRING
-          HASHDIFF: STRING
-          EFFECTIVE_FROM: DATE
-          LOAD_DATE: DATE
+          EXTENSION: NUMERIC
+          EFFECTIVE_FROM: DATETIME
+          LOAD_DATETIME: DATETIME
           SOURCE: STRING
