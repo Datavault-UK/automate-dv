@@ -129,7 +129,7 @@ Feature: [SF-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
-      | CUSTOMER_NK                               | EFFECTIVE_FROM | SOURCE     |
+      | CUSTOMER_NK                                  | EFFECTIVE_FROM | SOURCE     |
       | [SF-CUSTOMER_NAME, CUSTOMER_DOB, !RAW_STAGE] | LOAD_DATE      | !RAW_STAGE |
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK | HASHDIFF                                              |
