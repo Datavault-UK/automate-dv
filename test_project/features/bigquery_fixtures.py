@@ -723,7 +723,7 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -733,7 +733,7 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -787,7 +787,7 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -799,7 +799,7 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
@@ -811,7 +811,7 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -823,7 +823,7 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "EXTENSION": "STRING",
+                "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
