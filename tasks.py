@@ -196,11 +196,12 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         # Set dbt profiles dir
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
 
-    command = f"op run --no-masking -- dbt {dbt_args}"
+        command = f"op run --no-masking -- dbt {dbt_args}"
+    else:
+        command = f"dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
-
     with c.cd(project_dir):
         logger.info(f'Project: {project}')
         logger.info(f'Platform: {platform}')
