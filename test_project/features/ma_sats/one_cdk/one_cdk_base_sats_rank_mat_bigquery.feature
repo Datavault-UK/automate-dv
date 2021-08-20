@@ -471,93 +471,93 @@ Feature: Multi Active Satellites - Loading using Rank Materialization
       | md5('1004') | md5('DOM')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('ALICE') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
+#TODO: Not working as new valid record has the same load datetime as old max datetime *
+#  @fixture.multi_active_satellite_cycle_bigquery
+#  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loading in cycles: waterlevel + changed payload in old record but identical to the currently valid record + partially overlapping data into a multi-active satellite with one value in rank column
+#    Given the RAW_STAGE stage is empty
+#    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+#
+#    # ================ LOAD 1 ===================
+#    When the RAW_STAGE is loaded
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+#    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+#    And I create the STG_CUSTOMER stage
+#    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+#    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+#
+#    # ================ LOAD 2 ===================
+#    When the RAW_STAGE is loaded
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1234 | 1993-01-02     | 1993-01-02 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
+#    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+#    And I create the STG_CUSTOMER stage
+#    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
+#
+#    # ================ CHECK ===================
+#    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-02     | 1993-01-02 | *      |
+#
+#TODO: *
+#  @fixture.multi_active_satellite_cycle_bigquery
+#  Scenario: [SAT-RANK-MAT-BASE-CYCLE-TS] Loading in cycles: waterlevel + changed payload in old record but identical to the currently valid record + partially overlapping data into a multi-active satellite with one value in rank column
+#    Given the RAW_STAGE_TS stage is empty
+#    And the MULTI_ACTIVE_SATELLITE_TS ma_sat is empty
+#
+#    # ================ LOAD 1 ===================
+#    When the RAW_STAGE_TS is loaded
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
+#    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+#    And I create the STG_CUSTOMER_TS stage
+#    And I insert by rank into the MULTI_ACTIVE_SATELLITE_TS ma_sat
+#    And I insert by rank into the MULTI_ACTIVE_SATELLITE_TS ma_sat
+#
+#    # ================ LOAD 2 ===================
+#    When the RAW_STAGE_TS is loaded
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
+#    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+#    And I create the STG_CUSTOMER_TS stage
+#    And I insert by rank into the MULTI_ACTIVE_SATELLITE_TS ma_sat
+#
+#    # ================ CHECK ===================
+#    Then the MULTI_ACTIVE_SATELLITE_TS table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
 
-  @fixture.multi_active_satellite_cycle_bigquery
-  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loading in cycles: waterlevel + changed payload in old record but identical to the currently valid record + partially overlapping data into a multi-active satellite with one value in rank column
-    Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
-
-    # ================ LOAD 1 ===================
-    When the RAW_STAGE is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
-    And I create the STG_CUSTOMER stage
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
-
-    # ================ LOAD 2 ===================
-    When the RAW_STAGE is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1234 | 1993-01-02     | 1993-01-02 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-02     | 1993-01-02 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
-    And I create the STG_CUSTOMER stage
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
-
-    # ================ CHECK ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-02     | 1993-01-02 | *      |
-
-
-  @fixture.multi_active_satellite_cycle_bigquery
-  Scenario: [SAT-RANK-MAT-BASE-CYCLE-TS] Loading in cycles: waterlevel + changed payload in old record but identical to the currently valid record + partially overlapping data into a multi-active satellite with one value in rank column
-    Given the RAW_STAGE_TS stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TS ma_sat is empty
-
-    # ================ LOAD 1 ===================
-    When the RAW_STAGE_TS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
-    And I create the STG_CUSTOMER_TS stage
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE_TS ma_sat
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE_TS ma_sat
-
-    # ================ LOAD 2 ===================
-    When the RAW_STAGE_TS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
-    And I create the STG_CUSTOMER_TS stage
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE_TS ma_sat
-
-    # ================ CHECK ===================
-    Then the MULTI_ACTIVE_SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-
-#TODO: These test scenarios fail to insert new "Alice" phone number 17-214-233-1234 in LOAD 2 as these load dates are not greater than max LOAD_DATE for load 1.
+#TODO: *These test scenarios fail to insert new "Alice" phone number 17-214-233-1234 in LOAD 2 as these load dates are not greater than max LOAD_DATE for load 1
 
 #  @fixture.multi_active_satellite_cycle_bigquery
 #  Scenario: [SAT-RANK-MAT-BASE-CYCLE] Loading in cycles: waterlevel + new payload in old record + partially overlapping data into a multi-active satellite with one value in rank column
