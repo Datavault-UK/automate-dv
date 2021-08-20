@@ -40,7 +40,7 @@ Feature: Transactional Links using Period Materialization
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26 | SAP    |
     And I create the STG_CUSTOMER stage
-    And I insert by period into the T_LINK t_link by day
+    And I insert by period _bigqueryinto the T_LINK t_link by day
     And I insert by period into the T_LINK t_link by day
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

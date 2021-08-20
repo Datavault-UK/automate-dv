@@ -2275,7 +2275,6 @@ def multi_active_satellite_cycle_bigquery(context):
         }
     }
 
-
 @fixture
 def pit_two_sats_bigquery(context):
     """
