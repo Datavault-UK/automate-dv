@@ -11,13 +11,13 @@ logger = logging.getLogger('dbtvault')
 
 
 @task()
-def setup(c, platform=None, project=None, external_contributor=False):
+def setup(c, platform=None, project=None, disable_op=False):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
         :param platform: dbt profile platform (Optional if defaults already set)
         (Optional if defaults already set)
-        :param external_contributor: Flag for external contributors
+        :param disable_op: Disable 1Password
         :param project: dbt project to run with (Optional if defaults already set)
     """
     if platform:
@@ -29,12 +29,12 @@ def setup(c, platform=None, project=None, external_contributor=False):
     logger.info(f"Platform set to '{c.platform}'")
     logger.info(f"Project set to '{c.project}'")
 
-    if not external_contributor:
+    if disable_op:
+        logger.info('Checking dbt connection... (running dbt debug)')
+        run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
+    else:
         logger.info(f'Injecting credentials to files...')
         inject_for_platform(c, platform)
-    else:
-        logger.info('Checking dbt connection... (running dbt debug)')
-        run_dbt(c, 'debug', platform=platform, project='test', external_contributor=external_contributor)
 
     logger.info(f'Installing dbtvault-dev in test project...')
     run_dbt(c, 'deps', platform=platform, project='test')
@@ -60,7 +60,7 @@ def set_defaults(c, platform=None, project='test'):
         logger.error(f"platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
         exit(0)
 
-    with open(test.INVOKE_YML_FILE, 'w') as file:
+    with open(test.INVOKE_YML_FILE, 'w+') as file:
         yaml.dump(dict_file, file)
         logger.info(f'Defaults set.')
         logger.info(f'Project: {c.project}')
@@ -135,18 +135,22 @@ def check_project(c, project='test'):
 
 
 @task
-def change_platform(c, platform):
+def change_platform(c, platform, disable_op=False):
     """
     Change default platform platform
         :param c: invoke context
         :param platform: dbt profile platform (Optional if defaults already set)
+        :param disable_op: Disable 1Password
     """
 
     check_platform(c, platform)
 
     c.platform = platform
 
-    inject_for_platform(c, platform=platform)
+    if disable_op:
+        pass
+    else:
+        inject_for_platform(c, platform=platform)
 
     dict_file = {
         'project': c.project,
@@ -173,7 +177,7 @@ def check_platform(c, platform):
 
 
 @task
-def run_dbt(c, dbt_args, platform=None, project=None, external_contributor=False):
+def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
     """
     Run dbt in the context of the provided project with the provided dbt args.
         :param c: invoke context
@@ -181,14 +185,14 @@ def run_dbt(c, dbt_args, platform=None, project=None, external_contributor=False
         :param platform: dbt profile platform
         :param project: dbt project to run with, either core (public dbtvault project),
         dev (dev project) or test (test project)
-        :param external_contributor: Flag for external contributors
+        :param disable_op: Disable 1Password
     """
 
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
 
-    if not external_contributor:
+    if not disable_op:
         # Set dbt profiles dir
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
 
