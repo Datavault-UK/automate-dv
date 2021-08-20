@@ -5,8 +5,6 @@ from test import dbtvault_harness_utils
 macro_name = "alias"
 
 
-# TODO: Re-factor to allow different expectations for different platforms
-
 @pytest.mark.macro
 def test_alias_single_correctly_generates_sql(request, generate_model):
     var_dict = {'alias_config': {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"}, 'prefix': 'c'}
