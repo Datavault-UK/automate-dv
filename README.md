@@ -1,123 +1,78 @@
-# dbtvault Developer Quick Setup
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png" alt="dbtvault">
+</p>
 
-## Prerequisites
-
-- Python 3.9.6
-- Pipenv
-
-## Install dependencies
-
-Run `pipenv install --dev` 
-
-## Setting up your development environment
-
-### 1. Create environment files from templates
-##### NOTE: If you are an internal contributor (e.g. Datavault employee) then you may skip this step
-
-In the `<project_root>/env/templates` folder you will find two files: `db.tpl.env` and `profiles.tpl.yml`.
-
-#### profiles.tpl.yml
-
-This file is a template which can be used as a drop-in replacement for your dbt `profiles.yml` file, or added to an existing `profiles.yml`.
-
-- Copy and paste `profiles.tpl.yml` to your local dbt profiles directory, (by default, a `.dbt` directory in your home/user directory)
-- Rename `profiles.tpl.yml` to `profiles.yml`. This file can be used as-is.
-
-#### db.tpl.env
-
-This file holds key-value pairs in YAML format. Each key is the key for an environment variable. You will 
-replace the empty quotes with your own credentials. 
-
-**WARNING: `db.env` IS IN THE GIT IGNORES, BUT PLEASE TAKE CARE NOT TO COMMIT THIS FILE.**
-
-- Copy and paste `db.tpl.yml` to your to the root of the `<project_root>/env/` directory.
-- Rename `db.tpl.yml` to `db.yml`. 
-- Remove the sections for the platforms you are not developing. For example, if you are developing only for snowflake, 
-  your file should resemble the following:
-
-    ```yaml
-    # Snowflake
-    SNOWFLAKE_DB_ACCOUNT: ""
-    SNOWFLAKE_DB_USER: ""
-    SNOWFLAKE_DB_PW: ""
-    SNOWFLAKE_DB_ROLE: ""
-    SNOWFLAKE_DB_DATABASE: ""
-    SNOWFLAKE_DB_WH: ""
-    SNOWFLAKE_DB_SCHEMA: ""
-    ```
-
-- Next, Replace the empty quotes with your own credentials.
+<p align="center">
+  <a href="https://dbtvault.readthedocs.io/en/stable/?badge=stable"><img
+    src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
+    alt="Documentation Status"
+  /></a>
+  <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
+    src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
+    alt="Join our slack"
+  /></a>
+</p>
 
 
-### 2. Run the setup command
+[Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
 
-### Without 1Password integration
-##### Recommended for External Contributors
+# dbtvault by [Datavault](https://www.data-vault.co.uk)
 
-Inside the virtual environment, run `inv setup -p <platform> -d`
+Build your own Data Vault data warehouse! dbtvault is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on a Snowflake database.
 
-e.g. `inv setup -p snowflake -d`
+What does dbtvault offer?
+- productivity gains, fewer errors
+- multi-threaded execution of the generated SQL
+- your data modeller can generate most of the ETL code directly from their mapping metadata
+- your ETL developers can focus on the 5% of the SQL code that is different
+- dbt generates documentation and data flow diagrams
 
-### With 1Password integration
-##### Recommended for Datavault Employees
+powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
 
-Inside the virtual environment, run `inv setup -p <platform>`
+## Worked example project
 
-e.g. `inv setup -p snowflake`
+Learn quickly with our worked example:
 
-#### Options:
+- [Read the docs](https://dbtvault.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
-`-p, --platform` Sets the development platform environment which the dbtvault test harness will be executed under.
+- [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
-`platform` must be one of:
+## Currently supported databases:
 
-- snowflake
-- bigquery
-- sqlserver
+- [snowflake](https://www.snowflake.com/about/)
 
-`-d, --disable-op` Disables 1Password CLI integration, which is used by Datavault Developers internally for secrets management. 
+## Installation
 
-A successful run should produce something similar to the following output:
+Check [dbt Hub](https://hub.getdbt.com/datavault-uk/dbtvault/latest/) for the latest installation instructions, 
+or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/) for more information on installing packages.
 
-```shell
-(dbtvault) INFO: Defaults set.
-(dbtvault) INFO: Project: test
-(dbtvault) INFO: Platform: snowflake
-(dbtvault) INFO: Platform set to 'snowflake'
-(dbtvault) INFO: Project set to 'test'
-(dbtvault) INFO: Checking dbt connection... (running dbt debug)
-(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
-Running with dbt=0.20.0
-dbt version: 0.20.0
-python version: 3.9.0
-python path: ~/venvs/dbtvault/bin/python
-os info: Linux-5.4.0-81-generic-x86_64-with-glibc2.31
-Using profiles.yml file at ~/.dbt/profiles.yml
-Using dbt_project.yml file at .../dbtvault/test/dbtvault_test/dbt_project.yml
+## Usage
 
-Configuration:
-  profiles.yml file [OK found and valid]
-  dbt_project.yml file [OK found and valid]
+1. Create a model for your table.
+2. Provide metadata
+3. Call the appropriate template macro
 
-Required dependencies:
- - git [OK found]
+```bash
+# Configure model
+{{- config(...)                          -}}
 
-Connection:
-  account: <redacted>
-  user: <redacted>
-  database: <redacted>
-  schema: <redacted>
-  warehouse: <redacted>
-  role: <redacted>
-  client_session_keep_alive: False
-  Connection test: OK connection ok
+# Set metadata
+{%- set src_pk = ...                     -%}
+...
 
-(dbtvault) INFO: Installing dbtvault-dev in test project...
-(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
-Running with dbt=0.20.0
-Installing ../../dbtvault-dev
-  Installed from <local @ ../../dbtvault-dev>
-Installing dbt-labs/dbt_utils@0.7.0
-  Installed from version 0.7.0
-(dbtvault) INFO: Setup complete!
+# Call the macro
+{{ dbtvault.hub(src_pk, src_nk, src_ldts,
+                src_source, source_model) }}
 ```
+
+## Join our Slack Channel
+
+Talk to our developers and other members of our growing community, get support and discuss anything related to dbtvault or Data Vault 2.0
+
+[![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
+
+## Contributing
+[View our contribution guidelines](CONTRIBUTING.md)
+
+## License
+[Apache 2.0](LICENSE.md)
