@@ -1,7 +1,6 @@
 import logging
 import os
 from pathlib import Path
-from typing import Tuple
 
 import yaml
 from invoke import Collection, task
