@@ -194,14 +194,13 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
 
-    if not disable_op:
-        # Set dbt profiles dir
-        os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-
-        command = f"op run --no-masking -- dbt {dbt_args}"
-    else:
+    if disable_op:
         dbtvault_harness_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
+    else:
+        # Set dbt profiles dir
+        os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
+        command = f"op run --no-masking -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)

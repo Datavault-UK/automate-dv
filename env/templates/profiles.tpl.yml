@@ -2,15 +2,15 @@ dbtvault:
   outputs:
     snowflake:
       type: snowflake
-      account: "{{ env_var('SNOWFLAKE_DB_ACCOUNT') }}"
+      account: ""
 
-      user: "{{ env_var('SNOWFLAKE_DB_USER') }}"
-      password: "{{ env_var('SNOWFLAKE_DB_PW') }}"
+      user: ""
+      password: ""
 
-      role: "{{ env_var('SNOWFLAKE_DB_ROLE') }}"
-      database: "{{ env_var('SNOWFLAKE_DB_DATABASE') }}"
-      warehouse: "{{ env_var('SNOWFLAKE_DB_WH') }}"
-      schema: "{{ env_var('SNOWFLAKE_DB_SCHEMA') }}"
+      role: ""
+      database: ""
+      warehouse: ""
+      schema: ""
       
       threads: 4
       client_session_keep_alive: False
@@ -20,8 +20,8 @@ dbtvault:
       
       method: oauth
       
-      project: "{{ env_var('GCP_PROJECT_ID') }}"
-      dataset: "{{ env_var('GCP_DATASET') }}"
+      project: ""
+      dataset: ""
 
       threads: 4
       timeout_seconds: 300
@@ -31,11 +31,11 @@ dbtvault:
     sqlserver:
       type: sqlserver
       driver: "ODBC Driver 17 for SQL Server"
-      server: "{{ env_var('SQLSERVER_DB_SERVER') }}"
-      port: "{{ env_var('SQLSERVER_DB_PORT') | int }}"
-      database: "{{ env_var('SQLSERVER_DB_DATABASE') }}"
-      schema: "{{ env_var('SQLSERVER_DB_SCHEMA') }}"
-      user: "{{ env_var('SQLSERVER_DB_USER') }}"
-      password: "{{ env_var('SQLSERVER_DB_PW') }}"
+      server: ""
+      port: ""
+      database: ""
+      schema: ""
+      user: ""
+      password: ""
 
-  target: "{{ env_var('PLATFORM') }}"
+  target: snowflake
