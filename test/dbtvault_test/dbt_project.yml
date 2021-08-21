@@ -34,3 +34,15 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOAD_DATE: DATE
+    raw_source_bq:
+      +column_types:
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
+        LOAD_DATE: DATE
+    raw_source_2_bq:
+      +column_types:
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
+        LOAD_DATE: DATE
