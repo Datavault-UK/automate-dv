@@ -30,7 +30,6 @@
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
-
         {% do to_drop.append(tmp_relation) %}
 
     {% elif existing_relation.is_view or full_refresh_mode %}
