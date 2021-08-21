@@ -38,4 +38,4 @@ dbtvault:
       user: "{{ op://private/sqlserver/user }}"
       password: "{{ op://private/sqlserver/password }}"
 
-  target: "{{ env_var('PLATFORM') }}"
+  target: "sqlserver"

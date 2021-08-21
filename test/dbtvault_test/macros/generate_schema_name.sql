@@ -11,15 +11,15 @@
 
     {%- set schema_name = "{}_{}{}".format(target.schema, target.user, pipeline_string) -%}
 
-    {% do return(schema_name) %}
+    {% do return(clean_schema_name(schema_name)) %}
 
 {%- endmacro -%}
 
 {%- macro bigquery__get_schema_name() -%}
 
-    {%- set schema_name = "{}_{}{}".format(target.dataset, target.project, pipeline_string) -%}
+    {%- set schema_name = "{}_{}{}".format(target.dataset, target.project, pipeline_string)  -%}
 
-    {% do return(schema_name) %}
+    {% do return(clean_schema_name(schema_name)) %}
 
 {%- endmacro %}
 
@@ -27,9 +27,16 @@
 
     {%- set schema_name = "{}_{}{}".format(target.schema, target.user, pipeline_string) -%}
 
-    {% do return(schema_name) %}
+    {% do return(clean_schema_name(schema_name)) %}
 
 {%- endmacro %}
+
+{%- macro clean_schema_name(schema_name) -%}
+
+    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_')) -%}
+
+{%- endmacro -%}
+
 
 {%- macro append_pipeline_string() -%}
 

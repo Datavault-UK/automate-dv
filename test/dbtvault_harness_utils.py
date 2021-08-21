@@ -77,7 +77,7 @@ def setup_environment():
     p = platform()
     setup_db_creds(plt=p)
 
-    if not os.getenv('DBT_PROFILES_DIR') and os.path.isfile(test.PROFILE_DIR):
+    if not os.getenv('DBT_PROFILES_DIR') and os.path.isfile(test.PROFILE_DIR / 'profiles.yml'):
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
 
     os.environ['PLATFORM'] = p
