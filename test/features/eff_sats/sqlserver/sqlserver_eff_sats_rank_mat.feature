@@ -1,6 +1,6 @@
 Feature: [SQLS-EFF-RM] Effectivity Satellites Loaded using Rank Materialization
 
-  @fixture.eff_satellite_sqlserver
+  @fixture.eff_satellite
   Scenario: [SQLS-EFF-RM-001] Load data into a non-existent effectivity satellite
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
@@ -17,7 +17,7 @@ Feature: [SQLS-EFF-RM] Effectivity Satellites Loaded using Rank Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
-  @fixture.eff_satellite_sqlserver
+  @fixture.eff_satellite
   Scenario: [SQLS-EFF-RM-002] Load data into an empty effectivity satellite
     Given the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
@@ -34,7 +34,7 @@ Feature: [SQLS-EFF-RM] Effectivity Satellites Loaded using Rank Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
 
-  @fixture.eff_satellite_sqlserver
+  @fixture.eff_satellite
   Scenario: [SQLS-EFF-RM-003] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

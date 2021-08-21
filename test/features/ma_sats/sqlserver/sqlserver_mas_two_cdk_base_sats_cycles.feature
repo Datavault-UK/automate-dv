@@ -1,7 +1,7 @@
 Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
   Loading in cycles using separate manual loads of base satellites behaviour with two CDKs
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-BCD-001] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -70,7 +70,7 @@ Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217\|\|123')   | 123       | Karen         | 17-214-233-1217   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218\|\|123')   | 123       | Jenny         | 17-214-233-1218   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-BCD-001] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
@@ -138,7 +138,7 @@ Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
       | md5('1007') | md5('1007\|\|GEOFF\|\|17-214-233-1219\|\|123')   | 123       | Geoff         | 17-214-233-1219  | 2019-05-07 11:14:54.396 | 2019-05-07 11:14:54.396 | *      |
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217\|\|123')   | 123       | Karen         | 17-214-233-1217  | 2019-05-07 11:14:54.396 | 2019-05-07 11:14:54.396 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SQLS-MAS-2CD-BCD-001] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty

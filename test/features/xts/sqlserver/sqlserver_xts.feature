@@ -1,6 +1,6 @@
 Feature: [SQLS-XTS] Extended Record Tracking Satellites
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-001] Load one stage of records into an empty single satellite XTS
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
@@ -18,7 +18,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-002] Load one stage of data into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
@@ -36,7 +36,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-003] Load duplicated data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
@@ -49,7 +49,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-004] Load duplicated data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
@@ -68,7 +68,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-005] Loads records from a single stage to an XTS linked to two satellites.
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -92,7 +92,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('2013-02-04\|\|1003\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-006] Loads from a single stage to an XTS linked to two satellites with repeating records in the first satellite
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -115,7 +115,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('2013-02-04\|\|1003\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-007] Loads data from a single stage to an XTS linked to two satellites with repeating records in the second satellite
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -139,7 +139,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('2006-04-17\|\|1003\|\|17-214-233-1215') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-008] Loads from a single stage to an XTS linked to two satellites with repeating records in the both satellites
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -161,7 +161,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1002') | md5('2006-04-17\|\|1002\|\|17-214-233-1215') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1002') | md5('2018-04-13\|\|1002\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-009] Loads records from a single stage to an XTS linked to three satellites
     Given I have an empty RAW_STAGE_3SAT raw stage
     And I have an empty STG_CUSTOMER_3SAT primed stage
@@ -189,7 +189,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('LINCOLN\|\|LINCOLNSHIRE\|\|1003')       | SAT_CUSTOMER_LOCATION | 1993-01-01 | *      |
       | md5('1004') | md5('BRIGHTON\|\|EAST SUSSEX\|\|1004')       | SAT_CUSTOMER_LOCATION | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-010] Loads data from two simultaneous stages in an XTS accepting feeds to a single satellite
     Given the XTS xts is empty
     And the RAW_STAGE_1 table contains data
@@ -218,7 +218,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-011] Loads from two stages each containing feeds to one satellite with repeats between stages
     Given the XTS xts is empty
     And the RAW_STAGE_1 table contains data
@@ -245,7 +245,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1006') | md5('FRED\|\|1006\|\|FIELD')     | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-012] Loads from two stages each containing feeds to one satellite with repeated records in the first stage
     Given the XTS xts is empty
     And the RAW_STAGE_1 table contains data
@@ -273,7 +273,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-013] Loads from numerous stages each containing feeds to one satellite with repeated records in both stages
     Given the XTS xts is empty
     And the RAW_STAGE_1 table contains data
@@ -299,7 +299,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1006') | md5('FRED\|\|1006\|\|FIELD')      | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-014] Loads from numerous stages each containing feeds to multiple satellites
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -338,7 +338,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1007') | md5('2013-02-04\|\|1007\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1008') | md5('2018-04-13\|\|1008\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-015] Null unique identifier values are not loaded into an empty existing XTS
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
@@ -355,7 +355,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-016] Null unique identifier values are not loaded into a non-existent XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
@@ -372,7 +372,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-017] Load record into a pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
@@ -395,7 +395,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-018] Load multiple subsequent stages into a single stage XTS with no timeline change
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
@@ -421,7 +421,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-02 | *      |
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-03 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-019] Load duplicated data into a pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
@@ -440,7 +440,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-020] Subsequent loads with no timeline change into a pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                  | SATELLITE_NAME | LOAD_DATE  | SOURCE |
@@ -479,7 +479,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-03 | *      |
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-03 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-021] Loads from a single stage to multiple satellites and a pre-populated xts
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -514,7 +514,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1003') | md5('2013-02-04\|\|1003\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-022] Loads from numerous stages each containing feeds to one satellite and a pre-populated xts
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
@@ -552,7 +552,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1007') | md5('GEORGE\|\|1007\|\|GARDENER') | SAT_CUSTOMER   | 1993-01-01 | *      |
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-023] Loads from numerous stages each containing feeds to multiple satellites and a pre-populated xts
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
@@ -598,7 +598,7 @@ Feature: [SQLS-XTS] Extended Record Tracking Satellites
       | md5('1007') | md5('2013-02-04\|\|1007\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
       | md5('1008') | md5('2018-04-13\|\|1008\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
-  @fixture.xts_sqlserver
+  @fixture.xts
   Scenario: [SQLS-XTS-024] Null unique identifier values are not loaded into an pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |

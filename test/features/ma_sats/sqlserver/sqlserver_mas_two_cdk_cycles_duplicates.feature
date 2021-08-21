@@ -3,7 +3,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
   This is a series of 4 day loading cycles testing different duplicate record loads
   and different hashdiff configurations, i.e. incl. PK and CDKs, excl. CDKs, excl. PK and CDKs
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-001] Load over several cycles with EXTENSION not changing and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -111,7 +111,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1234\|\|12301')   | Jenna         | 17-214-233-1234 | 12301     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1244\|\|12301')   | Jenna         | 17-214-233-1244 | 12301     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-002] Load over several cycles with EXTENSION changing and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -219,7 +219,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1214\|\|12334')   | Jenna         | 17-214-233-1214 | 12334     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1214\|\|12344')   | Jenna         | 17-214-233-1214 | 12344     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-003] Load over several cycles with CUSTOMER_PHONE and EXTENSION changing and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
@@ -327,7 +327,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1234\|\|12334')   | Jenna         | 17-214-233-1234 | 12334     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1244\|\|12344')   | Jenna         | 17-214-233-1244 | 12344     | 2019-01-03     | 2019-01-03 | *      |
   
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-004] Load over several cycles with no CDKs in HASHDIFF, with EXTENSION not changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is empty
@@ -435,7 +435,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1234 | 12301     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1244 | 12301     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-005] Load over several cycles with no CDKs in HASHDIFF, with EXTENSION changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is empty
@@ -543,7 +543,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1214 | 12334     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1214 | 12344     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-006] Load over several cycles with no CDKs in HASHDIFF, with CUSTOMER_PHONE and EXTENSION changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is empty
@@ -651,7 +651,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1234 | 12334     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1244 | 12344     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-007] Load over several cycles with no PK nor CDKs in HASHDIFF, with EXTENSION not changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is empty
@@ -759,7 +759,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1234 | 12301     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1244 | 12301     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-008] Load over several cycles with no PK nor CDKs in HASHDIFF, with EXTENSION changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is empty
@@ -867,7 +867,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1214 | 12334     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1214 | 12344     | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-009] Load over several cycles with no PK nor CDKs in HASHDIFF, with CUSTOMER_PHONE and EXTENSION changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is empty

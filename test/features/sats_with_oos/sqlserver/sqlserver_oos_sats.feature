@@ -1,6 +1,6 @@
 Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-001] Inserts no new records if hashdiff matches previous loaddate hashdiff
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
@@ -48,7 +48,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1002') | md5('1999-12-07\|\|1002\|\|CHAD\|\|17-214-233-1216')  | Chad          | 1999-12-07   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1002') | md5('1999-12-07\|\|1002\|\|DOM\|\|17-214-233-1216')   | Dom           | 1999-12-07   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-002] Inserts a record if hashdiff does not matches previous loaddate hashdiff but matches the next loaddate hashdiff
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
@@ -106,7 +106,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1002') | md5('1999-12-07\|\|1002\|\|DOM\|\|17-214-233-1216')   | Dom           | 1999-12-07   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
       | md5('1002') | md5('1999-12-07\|\|1002\|\|ETHAN\|\|17-214-233-1214') | Ethan         | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-003] Inserts a record if hashdiff does not match previous loaddate hashdiff and the previous loaddate hashdiff matches the next loaddate hashdiff
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
@@ -158,7 +158,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1002') | md5('1999-12-07\|\|1002\|\|CHAD\|\|17-214-233-1216')  | Chad          | 1999-12-07   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1002') | md5('1999-12-07\|\|1002\|\|DOM\|\|17-214-233-1216')   | Dom           | 1999-12-07   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-004] Empty xts, empty sat fed by staging should result in one line in sat.
     Given the XTS xts is empty
     And the SAT_CUSTOMER_OOS sat is empty
@@ -176,7 +176,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
       | md5('1002') | md5('1999-12-07\|\|1002\|\|CHAD\|\|17-214-233-1214')  | Chad          | 1999-12-07   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-005] Late arriving sat is on 1992-12-31 is the same, pre-populated sat as above. Row inserted.
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME         | LOAD_DATE  | SOURCE |
@@ -206,7 +206,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1216') | Alice         | 1997-04-24   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | Bob           | 1997-04-24   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-006] Late arriving sat is on 1992-12-31 is different, pre-populated sat as above. Row inserted.
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME         | LOAD_DATE  | SOURCE |
@@ -236,7 +236,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1216') | Alice         | 1997-04-24   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | Bob           | 1997-04-24   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-007] Late arriving sat is on 1993-01-09 is the same, pre-populated as above. No insert.
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME        | LOAD_DATE  | SOURCE |
@@ -265,7 +265,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1216') | Alice         | 1997-04-24   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | Bob           | 1997-04-24   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-008] Late arriving sat is on 1993-01-09 is different, pre-populated as above. Row inserted.
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME        | LOAD_DATE  | SOURCE |
@@ -295,7 +295,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1001') | md5('1997-04-24\|\|1001\|\|BOB\|\|17-214-233-1216')   | Bob           | 1997-04-24   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|CHRIS\|\|17-214-233-1216') | Chris         | 1997-04-24   | 17-214-233-1216 | 1993-01-09 | 1993-01-09     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-009] Several customers mix and match.
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
@@ -367,7 +367,7 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1003') | md5('1997-08-25\|\|1003\|\|FRED\|\|17-214-233-1216')  | Fred          | 1997-08-25   | 17-214-233-1216 | 1993-01-07 | 1993-01-07     | *      |
       | md5('1003') | md5('1997-08-25\|\|1003\|\|GREGG\|\|17-214-233-1216') | Gregg         | 1997-08-25   | 17-214-233-1216 | 1993-01-08 | 1993-01-08     | *      |
 
-  @fixture.out_of_sequence_satellite_sqlserver
+  @fixture.out_of_sequence_satellite
   Scenario: [SQLS-SAT-OOS-010] Several customers mix and match with datetime instead of date..
     Given the XTS_TIMESTAMP xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME             | LOAD_DATETIME       | SOURCE |

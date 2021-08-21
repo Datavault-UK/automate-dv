@@ -2,7 +2,7 @@ Feature: [SQLS-SAT-PM-O] Satellites Loaded using Period Materialization for othe
 
   # ABORTED LOADS
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-O-001] Simulate a restart of an aborted load
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -54,7 +54,7 @@ Feature: [SQLS-SAT-PM-O] Satellites Loaded using Period Materialization for othe
 
   # INFERRED DATE RANGE (MONTHLY)
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-O-002] Satellite load over several monthly cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty

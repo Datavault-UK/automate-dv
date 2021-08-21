@@ -1,7 +1,7 @@
 Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
 
   @fixture.enable_full_refresh
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-001] Base load of a satellite using full refresh should only contain first period records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -20,7 +20,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
 
   # INFERRED DATE RANGE (DAILY)
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-002] Satellite load over several daily cycles with insert_by_period into non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -66,7 +66,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-003] Satellite load over several daily cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -112,7 +112,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-004] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -165,7 +165,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1013') | md5('1995-06-16\|\|1013\|\|ZACH')    | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-005] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -223,7 +223,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
 
   # PROVIDED DATE RANGE (DAILY)
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-006] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -260,7 +260,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN')  | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')  | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-007] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -302,7 +302,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN')   | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')   | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-008] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -356,7 +356,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-009] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -406,7 +406,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
 
   # ABORTED LOADS
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-010] Simulate a restart of an aborted load
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -458,7 +458,7 @@ Feature: [SQLS-SAT-OOS-PM] Satellites Loaded using Period Materialization
 
   # INFERRED DATE RANGE (MONTHLY)
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-OOS-PM-011] Satellite load over several monthly cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty

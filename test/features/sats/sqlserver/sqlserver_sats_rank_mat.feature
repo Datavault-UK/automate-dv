@@ -1,6 +1,6 @@
 Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-001] Base load of a satellite with one value in rank column loads first rank
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -21,7 +21,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-002] Base load of a satellite with one value in rank column excludes NULL PKs and loads first rank,
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -43,7 +43,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-003] Incremental load of a satellite with one value in rank column loads all records
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -63,7 +63,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-004] Incremental load of a satellite with one value in rank column loads all records, excluding NULL PKs
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -84,7 +84,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-005] Base load of a satellite with multiple and duplicated values in rank column loads first rank
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -102,7 +102,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-03     | 1993-01-03 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04     | 1993-01-04 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-006] Incremental load of a satellite with multiple and duplicated values in rank column loads all records
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -122,7 +122,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-03     | 1993-01-03 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04     | 1993-01-04 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-007] Base load of a satellite with one timestamp value in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -141,7 +141,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-008] Incremental load of a satellite with multiple timestamps over different days in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -161,7 +161,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-03 11:14:54.396 | 1993-01-03 11:14:54.396 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-009] Base load of a satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -187,7 +187,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-010] Incremental load of a satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -216,7 +216,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 2018-04-13   | 1993-01-04 12:14:54.393 | 1993-01-04 12:14:54.393 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-RM-011] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data

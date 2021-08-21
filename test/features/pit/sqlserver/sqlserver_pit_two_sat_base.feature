@@ -2,7 +2,7 @@ Feature: [SQLS-PIT-2SB] Point in Time
   Base PIT behaviour with one hub and two satellites - Base Loads
 
   # DATES
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SB-001] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -89,7 +89,7 @@ Feature: [SQLS-PIT-2SB] Point in Time
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   | md5('1003')           | 2018-06-01 00:00:00.000 |
 
   # TIMESTAMPS
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SB-002] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -176,7 +176,7 @@ Feature: [SQLS-PIT-2SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.010 | md5('1003')                | 2018-06-01 23:59:59.996      | md5('1003')              | 2018-06-01 23:59:59.996    |
 
   # AS OF - LOWER GRANULARITY
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SB-003] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -247,7 +247,7 @@ Feature: [SQLS-PIT-2SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.996      | md5('1003')              | 2018-06-01 23:59:59.996    |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SB-004] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables

@@ -2,7 +2,7 @@ Feature: [SQLS-PIT-1SI] Point in Time
   Base PIT behaviour with one hub and one satellite - Incremental Loads
 
   # DATES
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SI-001] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -61,7 +61,7 @@ Feature: [SQLS-PIT-1SI] Point in Time
       | md5('1004') | 2018-06-05 00:00:00.000 | md5('1004')             | 2018-06-05 00:00:00.000   |
 
   # TIMESTAMPS
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SI-002] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -128,7 +128,7 @@ Feature: [SQLS-PIT-1SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.996      |
 
   # AS OF - LOWER GRANULARITY
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SI-003] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -200,7 +200,7 @@ Feature: [SQLS-PIT-1SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.996      |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SI-004] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -259,7 +259,7 @@ Feature: [SQLS-PIT-1SI] Point in Time
       | md5('1004') | 2018-06-06 00:00:00.000 | md5('1004')             | 2018-06-05 00:00:00.000   |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SI-006] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables

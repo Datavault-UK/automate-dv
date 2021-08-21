@@ -2,7 +2,7 @@ Feature: [SQLS-PIT-2SI] Point in Time
   Base PIT behaviour with one hub and two satellites - Incremental Loads
 
   # DATES
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SI-001] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -83,7 +83,7 @@ Feature: [SQLS-PIT-2SI] Point in Time
       | md5('1004') | 2018-06-05 | md5('1004')             | 2018-06-05                | md5('1004')           | 2018-06-04              |
 
   # TIMESTAMPS
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SI-002] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -172,7 +172,7 @@ Feature: [SQLS-PIT-2SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.996      | md5('1004')              | 2018-06-02 23:59:59.996    |
 
   # AS OF - LOWER GRANULARITY
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SI-003] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -253,7 +253,7 @@ Feature: [SQLS-PIT-2SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.996      | md5('1004')              | 2018-06-02 23:59:59.996    |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_two_sats_sqlserver
+  @fixture.pit_two_sats
   Scenario: [SQLS-PIT-2SI-004] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables

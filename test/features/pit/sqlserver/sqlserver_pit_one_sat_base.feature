@@ -2,7 +2,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
   Base PIT behaviour with one hub and one satellite - Base Loads
 
   # DATES
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-001] Base load into a pit table from one satellite with dates with AS OF dates all in the past
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -48,7 +48,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-30 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-002] Base load into a pit table from one satellite with dates with AS OF dates in the past and in between LDTS
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -98,7 +98,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-01 00:00:00.000   |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-003] Base load into a pit table from one satellite with dates with AS OF dates in between LDTS and some in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -144,7 +144,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-004] Base load into a pit table from one satellite with dates with all AS OF dates in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -190,7 +190,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-07 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
       | md5('1003') | 2018-06-08 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-005] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
@@ -253,7 +253,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
   # TIMESTAMPS
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-006] Base load into a pit table from one satellite with timestamps with al AS OF timestamps in the past
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -299,7 +299,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 23:59:59.998 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 23:59:59.996 | 0000000000000000           | 1900-01-01 00:00:00.000      |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-007] Base load into a pit table from one satellite with timestamps with some AS OF timestamps in the past and some in between LDTS
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -349,7 +349,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 12:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
       | md5('1003') | 2018-06-01 23:59:59.990 | md5('1003')                | 2018-06-01 12:00:00.001      |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-008] Base load into a pit table from one satellite with timestamps with AS OF timestamps in between LDTS and some in the future
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -403,7 +403,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 23:59:59.996 | md5('1003')                | 2018-06-01 23:59:59.996      |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.996      |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-009] Base load into a pit table from one satellite with timestamps with all AS OF timestamps in the future
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -441,7 +441,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1002') | 2019-06-02 00:00:00.000 | md5('1002')                | 2018-06-01 23:59:59.996      |
       | md5('1003') | 2019-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.996      |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-010] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
@@ -504,7 +504,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.996      |
 
   # AS OF - LOWER GRANULARITY
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-011] Base load into a pit table from one satellite with timestamps where AS OF dates are in the future
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -544,7 +544,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-03 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.002      |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.002      |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-012] Base load into a pit table from one satellite with timestamps where AS OF dates are in the past
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -584,7 +584,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-30 00:00:00.000 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000           | 1900-01-01 00:00:00.000      |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-013] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
@@ -625,7 +625,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.020      |
 
   # AS OF - HIGHER GRANULARITY
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-014] Base load into a pit table from one satellite with dates where AS OF timestamps are in the future
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -665,7 +665,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 12:00:00.010 | md5('1003')             | 2018-06-01 00:00:00.000   |
       | md5('1003') | 2018-06-02 00:00:00.010 | md5('1003')             | 2018-06-01 00:00:00.000   |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-015] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -705,7 +705,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 12:30:00.010 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 23:59:59.996 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
-  @fixture.pit_one_sat_sqlserver
+  @fixture.pit_one_sat
   Scenario: [SQLS-PIT-1SB-016] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
@@ -755,7 +755,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
 
 
 #  # NULLS
-#  @fixture.pit_one_sat_sqlserver
+#  @fixture.pit_one_sat
 #  Scenario: [SQLS-PIT-1SB-017] Base load into a pit table from one satellite with NULL values & with dates where the AS OF table is already established with increments of a day & all as of dates are in the future
 #    Given the PIT table does not exist
 #    And the raw vault contains empty tables
@@ -790,7 +790,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
 #      | md5('1003') | 2019-01-03 | md5('1003')             | 2018-06-01                |
 #      | md5('1003') | 2019-01-04 | md5('1003')             | 2018-06-01                |
 #
-#  @fixture.pit_one_sat_sqlserver
+#  @fixture.pit_one_sat
 #  Scenario: [SQLS-PIT-1SB-018] Base load into a pit table from one satellite with NULL values & with dates where the AS OF table is already established with increments of a day & all as of dates are in the past
 #    Given the PIT table does not exist
 #    And the raw vault contains empty tables
@@ -825,7 +825,7 @@ Feature: [SQLS-PIT-1SB] Point in Time
 #      | md5('1003') | 2018-01-03 | 0000000000000000        | 1900-01-01                |
 #      | md5('1003') | 2018-01-04 | 0000000000000000        | 1900-01-01                |
 #
-#  @fixture.pit_one_sat_sqlserver
+#  @fixture.pit_one_sat
 #  Scenario: [SQLS-PIT-1SB-019] Base load into a pit table from one satellite with NULL values & with dates where the AS OF table is already established with increments of a day & some as of dates are in the past
 #    Given the PIT table does not exist
 #    And the raw vault contains empty tables

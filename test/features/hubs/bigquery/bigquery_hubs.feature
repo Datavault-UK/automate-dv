@@ -222,7 +222,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-03 | TPCH   |
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
-  @fixture.multi_source_hub_bigquery
+  @fixture.multi_source_hub
   Scenario: [BQ-HUB-011] Union three staging tables to feed a empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
@@ -264,7 +264,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-01 | *      |
       | md5('1006') | 1006    | 1993-01-01 | *      |
 
-  @fixture.multi_source_hub_bigquery
+  @fixture.multi_source_hub
   Scenario: [BQ-HUB-012] Keys with NULL or empty values in the union of three staging tables are not feed into an empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
@@ -310,7 +310,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-01 | LINE   |
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
-  @fixture.multi_source_hub_bigquery
+  @fixture.multi_source_hub
   Scenario: [BQ-HUB-013] Union three staging tables to feed an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE_PARTS table contains data
@@ -352,7 +352,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-01 | LINE   |
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
-  @fixture.multi_source_hub_bigquery
+  @fixture.multi_source_hub
   Scenario: [BQ-HUB-014] Union three staging tables to feed an empty hub over two cycles
     Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -425,7 +425,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1008') | 1008    | 1993-01-03 | *      |
       | md5('1009') | 1009    | 1993-01-03 | *      |
 
-  @fixture.multi_source_hub_bigquery
+  @fixture.multi_source_hub
   Scenario: [BQ-HUB-015] Union three staging tables to feed a populated hub
     Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -470,7 +470,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-02 | LINE   |
       | md5('1006') | 1006    | 1993-01-02 | SUPP   |
 
-  @fixture.multi_source_hub_bigquery
+  @fixture.multi_source_hub
   Scenario: [BQ-HUB-016] Keys with a NULL or empty value in a union of three staging tables are not fed into a populated hub
     Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |

@@ -1,6 +1,6 @@
 Feature: [SF-LNK-PM] Links Loaded using Period Materialization
 
-  @fixture.single_source_link_sqlserver
+  @fixture.single_source_link
   Scenario: [SF-LNK-PM-001] Load a simple stage table into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
@@ -21,7 +21,7 @@ Feature: [SF-LNK-PM] Links Loaded using Period Materialization
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-03 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-04 | CRM    |
 
-  @fixture.multi_source_link_sqlserver
+  @fixture.multi_source_link
   Scenario: [SF-LNK-PM-002] Union three staging tables to feed empty link
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
