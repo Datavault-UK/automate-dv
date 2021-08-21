@@ -38,4 +38,4 @@ dbtvault:
       user: ""
       password: ""
 
-  target: "{{ env_var('PLATFORM') }}"
+  target: "snowflake"
