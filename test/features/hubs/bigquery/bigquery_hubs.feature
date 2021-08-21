@@ -43,7 +43,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  @fixture.sha
+  @fixture.enable_sha
   Scenario: [BQ-HUB-003] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data

@@ -565,7 +565,6 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | 1003        | Chad          | 17-214-233-1246 | 12311     | 1993-01-02 | *      |
       | 1005        | Dom           | 17-214-233-1217 | 12324     | 1993-01-02 | *      |
       | 1005        | Dom           | 17-214-233-1217 | 12325     | 1993-01-02 | *      |
-
     And I stage the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF table should contain expected data
@@ -648,7 +647,6 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | 1003        | Chad          | 17-214-233-1246 | 12311     | 1993-01-02 | *      |
       | 1005        | Dom           | 17-214-233-1217 | 12324     | 1993-01-02 | *      |
       | 1005        | Dom           | 17-214-233-1217 | 12325     | 1993-01-02 | *      |
-
     And I stage the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF data
     When I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF table should contain expected data

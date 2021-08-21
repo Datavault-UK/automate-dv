@@ -455,7 +455,7 @@ Feature: Multi Active Satellites
       | md5('1002') | md5('1002\|\|BEAH\|\|17-214-233-1232\|\|12313')    | Beah          | 17-214-233-1232 | 12313     | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  @fixture.sha
+  @fixture.enable_sha
   Scenario: [SAT-CYCLE-SHA] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
