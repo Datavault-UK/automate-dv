@@ -1,6 +1,6 @@
 Feature: [SQLS-HUB-PM] Hubs Loaded using Period Materialization
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-PM-001] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
@@ -23,7 +23,7 @@ Feature: [SQLS-HUB-PM] Hubs Loaded using Period Materialization
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.enable_full_refresh
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-PM-002] Full refresh of loaded hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
@@ -39,7 +39,7 @@ Feature: [SQLS-HUB-PM] Hubs Loaded using Period Materialization
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-PM-003] Simple load of stage data from multiple sources into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data

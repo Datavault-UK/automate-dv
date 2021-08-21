@@ -1,6 +1,6 @@
 Feature: [SQLS-SAT-CYC] Satellites Loaded in cycles using separate manual loads (sqlserver)
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-CYC-001] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -68,7 +68,7 @@ Feature: [SQLS-SAT-CYC] Satellites Loaded in cycles using separate manual loads 
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-CYC-002] SATELLITE load over several cycles with NULL records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -153,7 +153,7 @@ Feature: [SQLS-SAT-CYC] Satellites Loaded in cycles using separate manual loads 
       | md5('1006') | George        | 1990-02-06   | md5('1990-02-06\|\|1006\|\|GEORGE') | 2019-01-04     | 2019-01-04 | *      |
       | md5('1007') | Harry         | 1990-02-07   | md5('1990-02-07\|\|1007\|\|HARRY')  | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-CYC-003] SATELLITE load over several cycles no PK in HASHDIFF and NULL records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -238,7 +238,7 @@ Feature: [SQLS-SAT-CYC] Satellites Loaded in cycles using separate manual loads 
       | md5('1006') | md5('1990-02-06\|\|GEORGE') | George        | 1990-02-06   | 2019-01-04     | 2019-01-04 | *      |
       | md5('1007') | md5('1990-02-07\|\|HARRY')  | Harry         | 1990-02-07   | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-CYC-004] SATELLITE load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -319,7 +319,7 @@ Feature: [SQLS-SAT-CYC] Satellites Loaded in cycles using separate manual loads 
       | md5('1004') | md5('1990-02-14\|\|1004\|\|DOM')     | Dom           | 1990-02-14   | 2019-01-03     | 2019-01-03 | *      |
       | md5('1005') | md5('1990-02-15\|\|1005\|\|FREYA')   | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-CYC-005] SATELLITE load over several cycles with no PK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -401,7 +401,7 @@ Feature: [SQLS-SAT-CYC] Satellites Loaded in cycles using separate manual loads 
       | md5('1004') | md5('1990-02-14\|\|DOM')     | Dom           | 1990-02-14   | 2019-01-03     | 2019-01-03 | *      |
       | md5('1005') | md5('1990-02-15\|\|FREYA')   | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   @fixture.sha
   Scenario: [SQLS-SAT-CYC-006] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty

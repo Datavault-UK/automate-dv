@@ -1,6 +1,6 @@
 Feature: [SQLS-EFF-DAU] Effectivity Satellites without automatic end-dating (sqlserver)
 
-  @fixture.eff_satellite_sqlserver
+  @fixture.eff_satellite
   Scenario: [SQLS-EFF-DAU-001] Link is Changed with auto end-dating off
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -19,7 +19,7 @@ Feature: [SQLS-EFF-DAU] Effectivity Satellites without automatic end-dating (sql
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
-  @fixture.eff_satellite_sqlserver
+  @fixture.eff_satellite
   Scenario: [SQLS-EFF-DAU-002] 2 loads, Link is Changed Back Again with auto end-dating off
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

@@ -1,7 +1,7 @@
 Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
   Loading in cycles using in cycles for base satellite behaviour with one CDK
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-001] Load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -70,7 +70,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1011') | md5('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218')   | Jenny         | 17-214-233-1218 | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SQLS-MAS-1CD-C-002] Load over several cycles
     Given the RAW_STAGE stage is empty
@@ -139,7 +139,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | sha('1007') | sha('1007\|\|GEOFF\|\|17-214-233-1219')   | Geoff         | 17-214-233-1219 | 2019-05-07     | 2019-05-07 | *      |
       | sha('1011') | sha('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-003] Load over several cycles with sets of records keeping the group size the same while having one or more records changed
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -210,7 +210,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHARLEY\|\|17-214-233-1323') | Charley       | 17-214-233-1323 | 2019-01-04     | 2019-01-04 | *      |
       | md5('1003') | md5('1003\|\|CHARLIE\|\|17-214-233-1333') | Charlie       | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-004] Load over several cycles with NULL records
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -287,7 +287,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1323')      | <null>        | 17-214-233-1323 | 2019-01-04     | 2019-01-04 | *      |
       | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1333')      | <null>        | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-005] Load over several cycles with a mix of record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -414,7 +414,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1332')   | Jenny         | 17-214-233-1332 | 2019-01-04     | 2019-01-04 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1342')   | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   @fixture.sha
   Scenario: [SQLS-MAS-1CD-C-006] Load over several cycles
     Given the RAW_STAGE stage is empty
@@ -542,7 +542,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | sha('1010') | sha('1010\|\|JENNY\|\|17-214-233-1332')   | Jenny         | 17-214-233-1332 | 2019-01-04     | 2019-01-04 | *      |
       | sha('1010') | sha('1010\|\|JENNY\|\|17-214-233-1342')   | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-007] 1-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -587,7 +587,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1012') | md5('1012\|\|ALBERT\|\|17-214-233-1225')  | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1012') | md5('1012\|\|ALBERT\|\|17-214-233-1235')  | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-008] 2-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -663,7 +663,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1232')   | Jenny         | 17-214-233-1232 | 2019-01-02     | 2019-01-02 | *      |
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1242')   | Jenny         | 17-214-233-1242 | 2019-01-02     | 2019-01-02 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-009] 3-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -760,7 +760,7 @@ Feature: [SQLS-MAS-1CD-C] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DAVID\|\|17-214-233-1226')   | David         | 17-214-233-1226 | 2019-01-03     | 2019-01-03 | *      |
       | md5('1006') | md5('1006\|\|FREIA\|\|17-214-233-1212')   | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-1CD-C-010] 4-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty

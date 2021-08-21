@@ -1,6 +1,6 @@
 Feature: [SQLS-STG] Staging
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-001] Staging with derived, hashed, ranked and source columns.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -26,7 +26,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 1             |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 1             |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-002] Staging with derived, hashed and source columns.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -49,7 +49,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-003] Staging with hashed, ranked and source columns.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -72,7 +72,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1             |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-004] Staging with hashed and ranked columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -96,7 +96,7 @@ Feature: [SQLS-STG] Staging
       | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
       | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1             |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-005] Staging with derived, ranked and source columns.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -119,7 +119,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-006] Staging where some derived columns are composite values
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -142,7 +142,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | Chad\|\|2013-02-04\|\|RAW_STAGE  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | Dom\|\|2018-04-13\|\|RAW_STAGE   | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-007] Staging where a derived column is used as a component in the hashdiff
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -165,7 +165,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018      |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-008] Staging with only source and hashed columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -185,7 +185,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | *      |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-009] Staging with only source and derived columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -205,7 +205,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-010] Staging with no source columns and derived column as part of a hashdiff
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -229,7 +229,7 @@ Feature: [SQLS-STG] Staging
       | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      |
       | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018      |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-011] Staging for only derived columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -250,7 +250,7 @@ Feature: [SQLS-STG] Staging
       | 1993-01-01     | RAW_STAGE |
       | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-012] Staging for only hashed columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -271,7 +271,7 @@ Feature: [SQLS-STG] Staging
       | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  |
       | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-013] Staging for only ranked columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -292,7 +292,7 @@ Feature: [SQLS-STG] Staging
       | 1             |
       | 1             |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-014] Staging with derived, source columns and hashed with exclude flag.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -315,7 +315,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-015] Staging with only source columns and hashed columns with exclude flag
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -335,7 +335,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | *      |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-016] Staging with derived, source columns and hashed when a derived column transforms a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -358,7 +358,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018      |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-017] Staging with derived, source columns and hashed when a derived column overrides a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -381,7 +381,7 @@ Feature: [SQLS-STG] Staging
       | 1003        | Chad          | 04-02-2013   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-018] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER_HASH table does not exist
     And the RAW_STAGE table contains data
@@ -404,7 +404,7 @@ Feature: [SQLS-STG] Staging
       | md5('CHAD')  | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | md5('DOM')   | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
-  @fixture.staging_sqlserver
+  @fixture.staging
   Scenario: [SQLS-STG-019] Staging with derived, source columns and hashed when a derived and a hashed column overrides a source column.
     Given the STG_CUSTOMER_HASH table does not exist
     And the RAW_STAGE table contains data

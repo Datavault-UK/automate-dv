@@ -1,6 +1,6 @@
 Feature: [SQLS-SAT-PM-B] Satellites Loaded using Period Materialization for base loads
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-PM-B-001] Base load of a satellite with one value in rank column loads first rank
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -20,7 +20,7 @@ Feature: [SQLS-SAT-PM-B] Satellites Loaded using Period Materialization for base
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-PM-B-002] Incremental load of a satellite with one value in rank column loads all records
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -38,7 +38,7 @@ Feature: [SQLS-SAT-PM-B] Satellites Loaded using Period Materialization for base
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.satellite_sqlserver
+  @fixture.satellite
   Scenario: [SQLS-SAT-PM-B-003] Incremental load of a satellite should not load PK NULLs
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -59,7 +59,7 @@ Feature: [SQLS-SAT-PM-B] Satellites Loaded using Period Materialization for base
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.enable_full_refresh
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-B-004] Base load of a satellite using full refresh and start and end dates should only contain first period records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -76,7 +76,7 @@ Feature: [SQLS-SAT-PM-B] Satellites Loaded using Period Materialization for base
       | CUSTOMER_PK | HASHDIFF                           | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID') | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-B-005] Base load of a satellite should not load PK NULLs
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -97,7 +97,7 @@ Feature: [SQLS-SAT-PM-B] Satellites Loaded using Period Materialization for base
       | md5('1003') | md5('1990-02-03\|\|1003\|\|CHARLEY') | Charley       | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
   @fixture.enable_full_refresh
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-B-006] Base load of a satellite using full refresh and only start date should only contain first period records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data

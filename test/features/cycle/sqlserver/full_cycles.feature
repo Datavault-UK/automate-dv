@@ -1,6 +1,6 @@
 Feature: [SQLS-CYC] Full Vault Cycles
 
-  @fixture.cycle_sqlserver
+  @fixture.cycle
   Scenario: [SQLS-CYC-001] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
       | HUB          | LINK                  | SAT                       |

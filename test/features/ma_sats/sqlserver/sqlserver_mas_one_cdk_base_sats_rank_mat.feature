@@ -1,7 +1,7 @@
 Feature: [SQLS-MAS-RM] Multi Active Satellites
   Loading using Rank Materialization
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-001] Base load of a multi-active satellite with one value in rank column loads first rank
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -24,7 +24,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-02     | 1993-01-02 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-002] Base load of a multi-active satellite with one value in rank column excludes NULL PKs and loads first rank,
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -46,7 +46,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-003] Incremental load of a multi-active satellite with one value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -66,7 +66,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-004] Incremental load of a multi-active satellite with one value in rank column excluding NULL PKs, loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -87,7 +87,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-005] Base load of a multi-active satellite with multiple and duplicated values in rank column loads first rank
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -105,7 +105,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-03     | 1993-01-03 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04     | 1993-01-04 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-006] Incremental load of a multi-active satellite with multiple and duplicated values in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -125,7 +125,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-03     | 1993-01-03 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04     | 1993-01-04 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-007] Base load of a multi-active satellite with one timestamp value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -144,7 +144,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-008] Incremental load of a multi-active satellite with multiple timestamps over different days in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -164,7 +164,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-03 11:14:54.396 | 1993-01-03 11:14:54.396 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-008] Base load of a multi-active satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -190,7 +190,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-009] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -221,7 +221,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       #| md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.393 | 1993-01-04 11:14:54.393 | *      |
       | md5('1004') | md5('1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 1993-01-04 12:14:54.393 | 1993-01-04 12:14:54.393 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-010] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
@@ -241,7 +241,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
 
-  @fixture.multi_active_satellite_sqlserver
+  @fixture.multi_active_satellite
   Scenario: [SQLS-MAS-RM-011] Incremental load of a multi-active satellite with multiple sets of records per load, loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -266,7 +266,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
 
 
   # CYCLE TESTS
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-RM-012] Loading in cycles: identical data into a multi-active satellite with one value in rank column loads first rank only and once only
 
     Given the RAW_STAGE stage is empty
@@ -306,7 +306,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-RM-014] Loading in cycles: waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -347,7 +347,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-RM-015] Loading in cycles: waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TS ma_sat is empty
@@ -388,7 +388,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
       | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-RM-016] Loading in cycles: no CDK hashdiff + waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is empty
@@ -429,7 +429,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALICE') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
-  @fixture.multi_active_satellite_cycle_sqlserver
+  @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-RM-017] Loading in cycles: no PK & CDK hashdiff + waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
@@ -472,7 +472,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
 
 # TODO ??? Not considering out of sequence loads at this time
 
-#  @fixture.multi_active_satellite_cycle_sqlserver
+#  @fixture.multi_active_satellite_cycle
 #  Scenario: [SQLS-MAS-RM-018] Loading in cycles: waterlevel + changed payload in old record but identical to the currently valid record + partially overlapping data into a multi-active satellite with one value in rank column
 #    Given the RAW_STAGE stage is empty
 #    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -514,7 +514,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-02     | 1993-01-02 | *      |
 
-#  @fixture.multi_active_satellite_cycle_sqlserver
+#  @fixture.multi_active_satellite_cycle
 #  Scenario: [SQLS-MAS-RM-019] Loading in cycles: waterlevel + changed payload in old record but identical to the currently valid record + partially overlapping data into a multi-active satellite with one value in rank column
 #    Given the RAW_STAGE_TS stage is empty
 #    And the MULTI_ACTIVE_SATELLITE_TS ma_sat is empty
@@ -556,7 +556,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
 
-#  @fixture.multi_active_satellite_cycle_sqlserver
+#  @fixture.multi_active_satellite_cycle
 #  Scenario: [SQLS-MAS-RM-020] Loading in cycles: waterlevel + new payload in old record + partially overlapping data into a multi-active satellite with one value in rank column
 #    Given the RAW_STAGE stage is empty
 #    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
@@ -598,7 +598,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-02     | 1993-01-02 | *      |
 
-#  @fixture.multi_active_satellite_cycle_sqlserver
+#  @fixture.multi_active_satellite_cycle
 #  Scenario: [SQLS-MAS-RM-021] Loading in cycles: waterlevel + new payload in old record + partially overlapping data into a multi-active satellite with one value in rank column
 #    Given the RAW_STAGE_TS stage is empty
 #    And the MULTI_ACTIVE_SATELLITE_TS ma_sat is empty

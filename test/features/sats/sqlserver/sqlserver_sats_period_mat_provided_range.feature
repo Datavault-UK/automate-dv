@@ -2,7 +2,7 @@ Feature: [SQLS-SAT-PM-P] Satellites Loaded using Period Materialization for prov
 
   # PROVIDED DATE RANGE [START-AND-STOP] (DAILY)
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-P-001] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -39,7 +39,7 @@ Feature: [SQLS-SAT-PM-P] Satellites Loaded using Period Materialization for prov
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN')  | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')  | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-P-002] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
@@ -81,7 +81,7 @@ Feature: [SQLS-SAT-PM-P] Satellites Loaded using Period Materialization for prov
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN')   | Elwyn         | 2001-07-23   | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA')   | Freia         | 1960-01-01   | 2019-05-06     | 2019-05-06 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-P-003] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
@@ -135,7 +135,7 @@ Feature: [SQLS-SAT-PM-P] Satellites Loaded using Period Materialization for prov
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF')   | Geoff         | 1990-02-03   | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
-  @fixture.satellite_cycle_sqlserver
+  @fixture.satellite_cycle
   Scenario: [SQLS-SAT-PM-P-004] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data

@@ -1,6 +1,6 @@
 Feature: [SQLS-HUB] Hubs
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-001] Simple load of stage data into an empty hub, PK is a hash of a single column
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -21,7 +21,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-002] Simple load of stage data into an empty hub, PK is a hash of a list of columns
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -42,7 +42,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003\|\|CHAD')  | 1003        | 1993-01-01 | TPCH   |
       | md5('1004\|\|DOM')   | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-003] Simple load of distinct stage data into an empty hub
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -63,7 +63,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   @fixture.sha
   Scenario: [SQLS-HUB-004] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB_CUSTOMER_SHA hub is empty
@@ -85,7 +85,7 @@ Feature: [SQLS-HUB] Hubs
       | sha('1003') | 1003        | 1993-01-01 | TPCH   |
       | sha('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-005] Keys with NULL or empty values are not loaded into empty hub that does not exist
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
@@ -108,7 +108,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-006] Simple load of stage data into an empty hub
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
@@ -126,7 +126,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-007] Simple load of distinct stage data into an empty hub
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
@@ -147,7 +147,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-008] Keys with NULL or empty values are not loaded into an empty hub
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
@@ -170,7 +170,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-009] Load of stage data into a hub
     Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -203,7 +203,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-010] Load of distinct stage data into a hub
     Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -229,7 +229,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-011] Keys with NULL or empty values are not loaded into a hub
     Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -255,7 +255,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-03 | TPCH   |
       | md5('1004') | 1004        | 1993-01-04 | TPCH   |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-012] Union three staging tables to feed a empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
@@ -297,7 +297,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-01 | *      |
       | md5('1006') | 1006    | 1993-01-01 | *      |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-013] Keys with NULL or empty values in the union of three staging tables are not feed into an empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
@@ -343,7 +343,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-01 | LINE   |
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-014] Union three staging tables to feed an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE_PARTS table contains data
@@ -385,7 +385,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-01 | LINE   |
       | md5('1006') | 1006    | 1993-01-01 | SUPP   |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-015] Union three staging tables to feed a populated hub over two cycles
     Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -480,7 +480,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1008') | 1008    | 1993-01-03 | *      |
       | md5('1009') | 1009    | 1993-01-03 | *      |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-016] Union three staging tables to feed a populated hub
     Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -525,7 +525,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-02 | LINE   |
       | md5('1006') | 1006    | 1993-01-02 | SUPP   |
 
-  @fixture.multi_source_hub_sqlserver
+  @fixture.multi_source_hub
   Scenario: [SQLS-HUB-017] Keys with a NULL or empty value in a union of three staging tables are not fed into a populated hub
     Given the HUB hub is already populated with data
       | PART_PK     | PART_ID | LOAD_DATE  | SOURCE |
@@ -574,7 +574,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1005') | 1005    | 1993-01-02 | LINE   |
       | md5('1006') | 1006    | 1993-01-02 | SUPP   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-018] Load of stage data into a hub, test of dbt_test_utils.py revision
     Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -595,7 +595,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-02 | TPCH   |
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-019] Simple load of stage data into an empty hub, PK is a hash of a single column, test of dbt_test_utils.py revision
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
@@ -616,7 +616,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1003') | 1003        | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
-  @fixture.single_source_hub_sqlserver
+  @fixture.single_source_hub
   Scenario: [SQLS-HUB-020] Load of stage data into a hub, test of dbt_test_utils.py revision "table is created and populated with data" (MSSQL)
     Given the HUB_CUSTOMER table is created and populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |

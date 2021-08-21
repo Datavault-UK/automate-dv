@@ -160,6 +160,82 @@ def single_source_hub_bigquery(context):
 
 
 @fixture
+def multi_source_hub_bigquery(context):
+    """
+    Define the structures and metadata to load multi-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_PARTS": {
+            "PART_PK": "PART_ID"
+        },
+        "STG_SUPPLIER": {
+            "PART_PK": "PART_ID",
+            "SUPPLIER_PK": "SUPPLIER_ID"
+        },
+        "STG_LINEITEM": {
+            "PART_PK": "PART_ID",
+            "SUPPLIER_PK": "SUPPLIER_ID",
+            "ORDER_PK": "ORDER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": "PART_PK",
+            "src_nk": "PART_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "+column_types": {
+                "PART_PK": "STRING",
+                "PART_ID": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_PARTS": {
+            "+column_types": {
+                "PART_ID": "STRING",
+                "PART_NAME": "STRING",
+                "PART_TYPE": "STRING",
+                "PART_SIZE": "STRING",
+                "PART_RETAILPRICE": "NUMERIC",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_SUPPLIER": {
+            "+column_types": {
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
+                "AVAILQTY": "FLOAT",
+                "SUPPLYCOST": "NUMERIC",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_LINEITEM": {
+            "+column_types": {
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "SUPPLIER_ID": "STRING",
+                "LINENUMBER": "FLOAT",
+                "QUANTITY": "FLOAT",
+                "EXTENDED_PRICE": "NUMERIC",
+                "DISCOUNT": "NUMERIC",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+@fixture
 def single_source_hub_sqlserver(context):
     """
     Define the structures and metadata to load single-source hubs

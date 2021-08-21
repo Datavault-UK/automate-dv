@@ -4,7 +4,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
   # ORDER_FK is DRIVING KEY
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-001] Three loads; adding (completely) new relationships in each load
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -61,7 +61,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1005\|\|500') | md5('1005') | md5('500') | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-002] Three loads; the same CUSTOMER placing a varying number of ORDERS at different times
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -113,7 +113,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1001\|\|103') | md5('1001') | md5('103') | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-003] Three loads; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -162,7 +162,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-004] Three loads; the last load will bring new open, new reopen and closed records in the eff sat
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -225,7 +225,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
   # CUSTOMER_FK is DRIVING KEY
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-005] Two loads; going from 1 ORDER to another (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
@@ -257,7 +257,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-006] Two loads; changing the ORDER to another ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
@@ -289,7 +289,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-007] Two loads; going from 1 ORDER to 3 (new) ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
@@ -327,7 +327,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1001\|\|103') | md5('1001') | md5('103') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-008] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to 1 (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
@@ -389,7 +389,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
       | md5('1001\|\|104') | md5('1001') | md5('104') | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating_sqlserver
+  @fixture.eff_satellite_testing_auto_end_dating
   Scenario: [SQLS-EFF-AUI-009] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to the initial ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data

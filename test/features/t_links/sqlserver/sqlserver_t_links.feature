@@ -1,6 +1,6 @@
 Feature: [SQLS-TLK] Transactional Links
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-001] Load a non-existent Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -25,7 +25,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.disable_payload
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-002] Load a non-existent Transactional Link without a payload
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -49,7 +49,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 2019-09-19     | 2019-09-21 | SAP    |
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 2019-09-19     | 2019-09-21 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-003] Load an empty Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -73,7 +73,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-21 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-004] Load an empty Transactional Link without loading records where all keys are NULL
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -96,7 +96,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-19     | 2019-09-21 | SAP    |
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-005] Load an empty Transactional Link without loading records where foreign keys are NULL
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -119,7 +119,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-19     | 2019-09-21 | SAP    |
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-006] Load an empty Transactional Link without loading records where the primary key is NULL
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
@@ -142,7 +142,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-19     | 2019-09-21 | SAP    |
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-007] Load a populated Transactional Link
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -181,7 +181,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1238\|\|1243\|\|12345690') | md5('1238') | md5('1243') | 12345690           | 2019-09-20       | CR   | 6823.55  | 2019-09-20     | 2019-09-22 | SAP    |
       | md5('1238\|\|1244\|\|12345691') | md5('1238') | md5('1244') | 12345691           | 2019-09-20       | CR   | 4578.34  | 2019-09-20     | 2019-09-22 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-008] Load populated Transactional Link over two cycles
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -237,7 +237,7 @@ Feature: [SQLS-TLK] Transactional Links
       | md5('1239\|\|1250\|\|12345697') | md5('1239') | md5('1250') | 12345697           | 2019-09-21       | DR   | 34.87    | 2019-09-21     | 2019-09-23 | SAP    |
       | md5('1239\|\|1251\|\|12345698') | md5('1239') | md5('1251') | 12345698           | 2019-09-21       | CR   | 4567.87  | 2019-09-21     | 2019-09-23 | SAP    |
 
-  @fixture.t_link_sqlserver
+  @fixture.t_link
   Scenario: [SQLS-TLK-009] Erroneous duplicate load of Transactional Link does not load duplicates
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

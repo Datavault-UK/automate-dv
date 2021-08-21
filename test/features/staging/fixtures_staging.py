@@ -36,6 +36,40 @@ def staging(context):
 
 
 @fixture
+def staging_bigquery(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "+column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+@fixture
 def staging_sqlserver(context):
     """
     Define the structures and metadata to load a hashed staging layer
