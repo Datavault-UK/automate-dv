@@ -326,7 +326,7 @@ Feature: [SQLS-MAS-2CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1224\|\|12324')   | Jenna         | 17-214-233-1224 | 12324     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1234\|\|12334')   | Jenna         | 17-214-233-1234 | 12334     | 2019-01-03     | 2019-01-03 | *      |
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1244\|\|12344')   | Jenna         | 17-214-233-1244 | 12344     | 2019-01-03     | 2019-01-03 | *      |
-  
+
   @fixture.multi_active_satellite_cycle
   Scenario: [SQLS-MAS-2CD-D-004] Load over several cycles with no CDKs in HASHDIFF, with EXTENSION not changing, and a mix of duplicate record change cases
     Given the RAW_STAGE_TWO_CDK stage is empty

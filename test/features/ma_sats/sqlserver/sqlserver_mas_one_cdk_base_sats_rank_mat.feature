@@ -165,7 +165,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-008] Base load of a multi-active satellite with multiple timestamps in the same day in rank column only loads first rank
+  Scenario: [SQLS-MAS-RM-009] Base load of a multi-active satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -191,7 +191,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-009] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column loads records without duplicates
+  Scenario: [SQLS-MAS-RM-010] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -222,7 +222,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 1993-01-04 12:14:54.393 | 1993-01-04 12:14:54.393 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-010] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records
+  Scenario: [SQLS-MAS-RM-011] Incremental load of a multi-active satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -242,7 +242,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-011] Incremental load of a multi-active satellite with multiple sets of records per load, loads all records
+  Scenario: [SQLS-MAS-RM-012] Incremental load of a multi-active satellite with multiple sets of records per load, loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -267,8 +267,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
 
   # CYCLE TESTS
   @fixture.multi_active_satellite_cycle
-  Scenario: [SQLS-MAS-RM-012] Loading in cycles: identical data into a multi-active satellite with one value in rank column loads first rank only and once only
-
+  Scenario: [SQLS-MAS-RM-013] Loading in cycles: identical data into a multi-active satellite with one value in rank column loads first rank only and once only
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 

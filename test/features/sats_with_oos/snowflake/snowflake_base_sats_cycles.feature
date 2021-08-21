@@ -69,7 +69,7 @@ Feature: [SF-SAT-OOS-CYC] Out of Sequence Satellites retain base functionality w
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
   @fixture.satellite_cycle
-  @fixture.sha
+  @fixture.enable_sha
   Scenario: [SF-SAT-OOS-CYC-002] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty

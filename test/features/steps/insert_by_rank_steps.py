@@ -62,11 +62,14 @@ def define_rank_column(context, rank_column, stage_name, partition_by_column, or
         if not context.ranked_columns.get(stage_name, None):
             context.ranked_columns[stage_name] = dict()
 
-        context.ranked_columns[stage_name] = ({**context.ranked_columns[stage_name],
-            rank_column: {
-                "partition_by": partition_by_column,
-                "order_by": order_by_column
-            }})
+        context.ranked_columns[stage_name] = (
+            {**context.ranked_columns[stage_name],
+                rank_column: {
+                    "partition_by": partition_by_column,
+                    "order_by": order_by_column
+                }
+            }
+        )
 
     else:
 

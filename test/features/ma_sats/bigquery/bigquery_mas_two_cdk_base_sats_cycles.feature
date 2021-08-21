@@ -1,13 +1,13 @@
-Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
+Feature: [BQ-MAS-2CD-BSC] Multi Active Satellites
   Loading in cycles using separate manual loads of base satellites behaviour with two CDKs
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SQLS-MAS-2CD-BSC-001] Load over several cycles
+  Scenario: [BQ-MAS-2CD-BSC-001] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_TWO_CDK is loaded
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 123       | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 123       | 2019-05-04     | 2019-05-04 | *      |
@@ -71,7 +71,7 @@ Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1218\|\|123')   | 123       | Jenny         | 17-214-233-1218 | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SQLS-MAS-2CD-BSC-002] Load over several cycles with Timestamps
+  Scenario: [BQ-MAS-2CD-BSC-002] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
 
@@ -139,12 +139,12 @@ Feature: [SQLS-MAS-2CD-BSC] Multi Active Satellites
 
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha
-  Scenario: [SQLS-MAS-2CD-BSC-003] Load over several cycles
+  Scenario: [BQ-MAS-2CD-BSC-003] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
     And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
-    When the RAW_STAGE_TWO_CDK is loaded
+    When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 123       | 2019-05-04     | 2019-05-04 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 123       | 2019-05-04     | 2019-05-04 | *      |
