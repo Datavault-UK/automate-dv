@@ -17,9 +17,9 @@
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set cdk_cols = dbtvault.expand_column_list(columns=[src_cdk]) -%}
 
-{% if model.config.materialized == 'vault_insert_by_rank' %}
+{%- if model.config.materialized == 'vault_insert_by_rank' -%}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{% endif %}
+{%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
