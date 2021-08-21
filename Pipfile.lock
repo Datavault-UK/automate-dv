@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "15227bce011a485d8ec35a0abb5d6fbc581d11847a8362a2cdc0d742739589be"
+            "sha256": "0dd3be91e9cc7eaa2dd992ce9d9d6b439753f7713fb4869225bb3b5e251a9f5d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -329,10 +329,10 @@
         },
         "google-cloud-bigquery": {
             "hashes": [
-                "sha256:1d5a48933556b511d13793d626d955812c38184f56342e7e910845bccc4899a9",
-                "sha256:44a3ae2732d820ea4295e8b1c1bde50206ca078de2016cec2059f00362b6826b"
+                "sha256:8111d23e2af87a96c0646a82a83f62d694b6c8829e7881eb4e437b754471649f",
+                "sha256:f9d118a0e408d213f00eb3b5bfb07027a79a6604b078dae86276f6c4938a9c9a"
             ],
-            "version": "==2.24.0"
+            "version": "==2.24.1"
         },
         "google-cloud-core": {
             "hashes": [
@@ -373,15 +373,14 @@
                 "sha256:ea170341a4a9078a067b431044cd56c73553425833a7c2bb81734777a230ad4b",
                 "sha256:ef2ed6d0ac4de4ac602903e203eccd25ec8e37f1446fe1a3d2953a658035e0a5"
             ],
-            "markers": "python_version >= '3.5'",
             "version": "==1.1.2"
         },
         "google-resumable-media": {
             "hashes": [
-                "sha256:092f39153cd67a4e409924edf08129f43cc72e630a1eb22abec93e80155df4ba",
-                "sha256:ce38555d250bd70b0c2598bf61e99003cb8c569b0176ec0e3f38b86f9ffff581"
+                "sha256:094c0381734649ac939083ea3833bd239b7fba904d246342d1268984029f2167",
+                "sha256:c65f9e08a4fe1df532138c8f00eeafcd7fe0d4db35dff70d7428b6ea659b2888"
             ],
-            "version": "==1.3.3"
+            "version": "==2.0.0"
         },
         "googleapis-common-protos": {
             "hashes": [
@@ -485,7 +484,6 @@
                 "sha256:1b5a0ea5c0e7b166b2f5895b91a08c14de8915afda4407fb5022a195224958ac",
                 "sha256:fa9e232dfa0c498bd0b8a3a73b8d8a31978304dcef0515adc859d4e096f96f4f"
             ],
-            "markers": "sys_platform == 'linux'",
             "version": "==0.7.1"
         },
         "jinja2": {
@@ -1339,7 +1337,6 @@
                 "sha256:50b6f157849174217d0656f99dc82fe932884fb250826c18350e159ec6cdf342",
                 "sha256:779383f6086d90c99ae41cf0ff39aac8a7937a9283ce0a414e5dd782f4c94a84"
             ],
-            "markers": "python_version < '3.10'",
             "version": "==3.10.0.0"
         },
         "urllib3": {
@@ -1348,6 +1345,7 @@
                 "sha256:a637e5fae88995b256e3409dc4d52c2e2e0ba32c42a6365fee8bbd2238de3cfb"
             ],
             "index": "pypi",
+            "markers": "python_version != '3.4'",
             "version": "==1.24.3"
         },
         "werkzeug": {
@@ -1387,6 +1385,14 @@
             ],
             "version": "==0.9.1"
         },
+        "environs": {
+            "hashes": [
+                "sha256:72b867ff7b553076cdd90f3ee01ecc1cf854987639c9c459f0ed0d3d44ae490c",
+                "sha256:ee5466156b50fe03aa9fec6e720feea577b5bf515d7f21b2c46608272557ba26"
+            ],
+            "index": "pypi",
+            "version": "==9.3.3"
+        },
         "execnet": {
             "hashes": [
                 "sha256:8f694f3ba9cc92cab508b152dcfe322153975c29bda272e2fd7f3f00f36e47c5",
@@ -1409,6 +1415,13 @@
             ],
             "index": "pypi",
             "version": "==1.6.0"
+        },
+        "marshmallow": {
+            "hashes": [
+                "sha256:c67929438fd73a2be92128caa0325b1b5ed8b626d91a094d2f7f2771bf1f1c0e",
+                "sha256:dd4724335d3c2b870b641ffe4a2f8728a1380cd2e7e2312756715ffeaa82b842"
+            ],
+            "version": "==3.13.0"
         },
         "packaging": {
             "hashes": [
@@ -1482,6 +1495,13 @@
             ],
             "index": "pypi",
             "version": "==2.3.0"
+        },
+        "python-dotenv": {
+            "hashes": [
+                "sha256:aae25dc1ebe97c420f50b81fb0e5c949659af713f31fdb63c749ca68748f34b1",
+                "sha256:f521bc2ac9a8e03c736f62911605c5d83970021e3fa95b37d769e2bbbe9b6172"
+            ],
+            "version": "==0.19.0"
         },
         "rich": {
             "hashes": [
