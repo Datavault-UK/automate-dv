@@ -16,6 +16,6 @@ test/backup_files/dbt_project.bak.yml
 *db.env
 *invoke.yml
 
-.pytest_cache/
+*.pytest_cache
 /dbtvault-dev/dbt_modules/
 
