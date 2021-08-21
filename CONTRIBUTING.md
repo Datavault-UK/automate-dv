@@ -11,7 +11,21 @@ Run `pipenv install --dev`
 
 ## Setting up your development environment
 
-### 1. Create environment files from templates
+### 1. Getting the code
+
+#### For external contributors
+
+In general, we follow the ["fork-and-pull"](https://github.com/susam/gitpr) Git workflow
+
+- Fork the repository to your own GitHub account
+- Clone the project to your machine
+- Create a branch (from `develop`) locally with a succinct but descriptive name. 
+- If it's a new feature, prefix the branch name with `feat/`
+- Commit changes to the branch
+- Push changes to your fork
+- Open a PR in our repository
+
+### 2. Create environment files from templates
 ##### NOTE: If you are an internal contributor (e.g. Datavault employee) then you may skip this step
 
 In the `<project_root>/env/templates` folder you will find two files: `db.tpl.env` and `profiles.tpl.yml`.
@@ -23,33 +37,36 @@ This file is a template which can be used as a drop-in replacement for your dbt 
 - Copy and paste `profiles.tpl.yml` to your local dbt profiles directory, (by default, a `.dbt` directory in your home/user directory)
 - Rename `profiles.tpl.yml` to `profiles.yml`. This file can be used as-is.
 
+[Read the dbt docs](https://docs.getdbt.com/dbt-cli/configure-your-profile) to learn more about `profiles.yml`
+
 #### db.tpl.env
 
-This file holds key-value pairs in YAML format. Each key is the key for an environment variable. You will 
+This file holds key-value pairs. Each key will be the key for an environment variable. You will 
 replace the empty quotes with your own credentials. 
 
-**WARNING: `db.env` IS IN THE GIT IGNORES, BUT PLEASE TAKE CARE NOT TO COMMIT THIS FILE.**
+**WARNING: `db.env` IS IGNORED IN GIT, BUT PLEASE TAKE CARE NOT TO COMMIT THIS FILE ACCIDENTALLY. 
+IN THE EVEN THIS HAPPENS, PLEASE CHANGE YOUR DATABASE CREDENTIALS IMMEDIATELY**
 
-- Copy and paste `db.tpl.yml` to your to the root of the `<project_root>/env/` directory.
-- Rename `db.tpl.yml` to `db.yml`. 
-- Remove the sections for the platforms you are not developing. For example, if you are developing only for snowflake, 
+- Copy and paste `db.tpl.env` to your to the root of the `<project_root>/env/` directory.
+- Rename `db.tpl.env` to `db.env`. 
+- Remove the sections for the platforms you are not developing for. For example, if you are developing only for snowflake, 
   your file should resemble the following:
 
     ```yaml
     # Snowflake
-    SNOWFLAKE_DB_ACCOUNT: ""
-    SNOWFLAKE_DB_USER: ""
-    SNOWFLAKE_DB_PW: ""
-    SNOWFLAKE_DB_ROLE: ""
-    SNOWFLAKE_DB_DATABASE: ""
-    SNOWFLAKE_DB_WH: ""
-    SNOWFLAKE_DB_SCHEMA: ""
+    SNOWFLAKE_DB_ACCOUNT=""
+    SNOWFLAKE_DB_USER=""
+    SNOWFLAKE_DB_PW=""
+    SNOWFLAKE_DB_ROLE=""
+    SNOWFLAKE_DB_DATABASE=""
+    SNOWFLAKE_DB_WH=""
+    SNOWFLAKE_DB_SCHEMA=""
     ```
 
 - Next, Replace the empty quotes with your own credentials.
 
 
-### 2. Run the setup command
+### 3. Run the setup command
 
 ### Without 1Password integration
 ##### Recommended for External Contributors
@@ -61,7 +78,8 @@ e.g. `inv setup -p snowflake -d`
 ### With 1Password integration
 ##### Recommended for Datavault Employees
 
-Inside the virtual environment, run `inv setup -p <platform>`
+- First, sign in to 1Password, following internal guides. 
+- Inside the virtual environment, run `inv setup -p <platform>`
 
 e.g. `inv setup -p snowflake`
 
