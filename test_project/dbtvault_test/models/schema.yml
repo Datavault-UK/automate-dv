@@ -1,9 +1,0 @@
-version: 2
-
-sources:
-  - name: test_unit
-    database: "{{ env_var('GCP_DATASET') }}"
-    schema: "{{- target.schema -}}_{{ env_var('GCP_USER') }}"
-    tables:
-      - name: source
-        identifier: raw_source_table

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png">
+  <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png" alt="dbtvault">
 </p>
 
 <p align="center">
@@ -10,10 +10,6 @@
   <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
     src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
     alt="Join our slack"
-  /></a>
-  <a href="https://circleci.com/gh/Datavault-UK/dbtvault"><img
-    src="https://circleci.com/gh/Datavault-UK/dbtvault/tree/develop.svg?style=shield" 
-    alt="CircleCI"
   /></a>
 </p>
 
@@ -74,18 +70,6 @@ or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-m
 Talk to our developers and other members of our growing community, get support and discuss anything related to dbtvault or Data Vault 2.0
 
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
-
-## Sign up for early-bird announcements 
-
-[![Sign up](https://img.shields.io/badge/Email-Sign--up-blue)](https://www.data-vault.co.uk/dbtvault/)
-
-Get notified of new features and new releases before anyone else!
-
-## Starting a Data Vault project 
-
-Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
-
-<a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
 
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)

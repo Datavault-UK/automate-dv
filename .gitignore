@@ -1,24 +1,21 @@
+logs/
+.idea/
 *__pycache__*
 *.pyc
 
-*.user.yml
-*invoke.yml
 *target/
-*pycharm.env
-.idea/
-logs/
 
-dbtvault_test/data/temp/
+test/dbtvault_test/dbt_modules/
+test/dbtvault_test/models/*.sql
+test/dbtvault_test/data/temp/*
+test/dbtvault_test/models/schema_test.yml
+test/backup_files/dbt_project.bak.yml
 
-test_project/dbtvault_test/dbt_modules/
-test_project/dbtvault_test/models/feature/dummy.sql
-test_project/features/csv_temp/*.csv
-test_project/dbtvault_test/data/temp/*.csv
-test_project/dbtvault_test/models/feature/*.sql
-test_project/dbtvault_test/models/schema_test.yml
+*.user.yml
+*profiles.yml
+*db.env
+*invoke.yml
 
-secrethub/secrethub_dev.env
+*.pytest_cache
+/dbtvault-dev/dbt_modules/
 
-
-
-.run/OOS Sats.run.xml

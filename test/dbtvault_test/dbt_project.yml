@@ -1,0 +1,48 @@
+name: dbtvault_test
+version: 0.7.5
+require-dbt-version: ['>=0.18.0', <0.21.0]
+config-version: 2
+profile: dbtvault
+
+source-paths: [models]
+analysis-paths: [analysis]
+test-paths: [tests]
+data-paths: [data]
+macro-paths: [macros]
+docs-paths: [docs]
+
+target-path: target
+clean-targets:
+  - target
+  - dbt_modules
+
+vars:
+  max_date: TO_DATE("9999-12-31")
+
+seeds:
+  +quote_columns: true
+  dbtvault_test:
+    raw_source:
+      +column_types:
+        CUSTOMER_PK: BINARY(16)
+        BOOKING_FK: BINARY(16)
+        ORDER_FK: BINARY(16)
+        LOAD_DATE: DATE
+    raw_source_2:
+      +column_types:
+        CUSTOMER_PK: BINARY(16)
+        BOOKING_FK: BINARY(16)
+        ORDER_FK: BINARY(16)
+        LOAD_DATE: DATE
+    raw_source_bq:
+      +column_types:
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
+        LOAD_DATE: DATE
+    raw_source_2_bq:
+      +column_types:
+        CUSTOMER_PK: BYTES
+        BOOKING_FK: BYTES
+        ORDER_FK: BYTES
+        LOAD_DATE: DATE
