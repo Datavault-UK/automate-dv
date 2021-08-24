@@ -27,10 +27,8 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
-          - script: pip install pipenv
-            displayName: 'Install pipenv'
-          - script: pipenv install --dev
-            displayName: 'Install Pipenv dependencies'
+          - script: pip install -r requirements.txt
+            displayName: 'Install Python dependencies'
           - script: |
               curl -sSfo op.zip \
                 https://bucket.agilebits.com/cli-private-beta/v2/op_linux_amd64_v2-alpha1.zip \
