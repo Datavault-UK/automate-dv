@@ -1,7 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
-import dbtvault_generator
-import dbtvault_harness_utils
+from test import dbtvault_generator
+from test import dbtvault_harness_utils
 import test
 from test.features.behave_fixtures import *
 from test.features.bridge import fixtures_bridge
