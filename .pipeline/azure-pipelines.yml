@@ -38,11 +38,9 @@ stages:
                 && rm op.zip
             displayName: "Install 1Password"
           - script: op read op://dbtvault/snowflake/database
-          - script: op read op://dbtvault/snowflake/database
             env:
-              OP_CONNECT_TOKEN: "$(OP_CONNECT_TOKEN)"
-              OP_CONNECT_HOST: "$(OP_CONNECT_HOST)"
-
+              OP_CONNECT_TOKEN: "$(token)"
+              OP_CONNECT_HOST: "$(url)"
 
 
 #version: 2.1
