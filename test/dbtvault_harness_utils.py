@@ -59,7 +59,8 @@ def setup_db_creds(plt):
 
     env = Env()
 
-    env.read_env(test.OP_DB_FILE)
+    if os.path.isfile(test.OP_DB_FILE):
+        env.read_env(test.OP_DB_FILE)
 
     details = {key: env(key) for key in required_keys[plt]}
 
