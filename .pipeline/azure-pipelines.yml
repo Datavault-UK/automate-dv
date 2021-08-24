@@ -9,10 +9,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-env:
-  OP_CONNECT_TOKEN: "$(OP_CONNECT_TOKEN)"
-  OP_CONNECT_HOST: "$(OP_CONNECT_HOST)"
-
 variables:
   SNOWFLAKE_DB_ACCOUNT: "{{ op://dbtvault/snowflake/account }}"
   SNOWFLAKE_DB_USER: "{{ op://private/snowflake/user }}"
@@ -42,6 +38,10 @@ stages:
                 && rm op.zip
             displayName: "Install 1Password"
           - script: op read op://private/snowflake/user
+            env:
+              OP_CONNECT_TOKEN: "$(OP_CONNECT_TOKEN)"
+              OP_CONNECT_HOST: "$(OP_CONNECT_HOST)"
+
 
 
 #version: 2.1
