@@ -9,9 +9,11 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
+env:
   OP_CONNECT_TOKEN: "$(OP_CONNECT_TOKEN)"
   OP_CONNECT_HOST: "$(OP_CONNECT_HOST)"
+
+variables:
   SNOWFLAKE_DB_ACCOUNT: "{{ op://dbtvault/snowflake/account }}"
   SNOWFLAKE_DB_USER: "{{ op://private/snowflake/user }}"
   SNOWFLAKE_DB_PW: "{{ op://private/snowflake/password }}"
