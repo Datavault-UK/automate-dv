@@ -27,7 +27,7 @@ What does dbtvault offer?
 - your ETL developers can focus on the 5% of the SQL code that is different
 - dbt generates documentation and data flow diagrams
 
-powered by [dbt](https://www.getdbt.com/), a registered trademark of [Fishtown Analytics](https://www.fishtownanalytics.com/)
+powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](https://www.getdbt.com/dbt-labs/about-us/)
 
 ## Worked example project
 
