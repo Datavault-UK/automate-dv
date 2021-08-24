@@ -4,26 +4,24 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- feat/harness-refactor
 
+pool:
+  vmImage: ubuntu-latest
 
+stages:
+  - stage: 'Build_environment'
+    jobs:
+      - job: 'install_dependencies'
 
-jobs:
-  - job: 'Setup'
-    pool:
-      vmImage: ubuntu-latest
-
-    steps:
-      - task: UsePythonVersion@0
-        inputs:
-          versionSpec: '3.9.6'
-      - script: pip install pipenv
-        displayName: 'Install pipenv'
-      - script: pipenv install --dev
-        displayName: 'Install Pipenv dependencies'
-      - script: pip install onepasswordconnectsdk
-        displayName: 'Install 1Password'
-
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - script: pip install pipenv
+            displayName: 'Install pipenv'
+          - script: pipenv install --dev
+            displayName: 'Install Pipenv dependencies'
 
 #version: 2.1
 
