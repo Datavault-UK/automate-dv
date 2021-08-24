@@ -1,7 +1,7 @@
 from behave import *
 
-import dbtvault_generator
-import dbtvault_harness_utils
+from test import dbtvault_generator
+from test import dbtvault_harness_utils
 
 
 @step("I insert by rank into the {model_name} {vault_structure} with a {rank_column} rank column")

@@ -1,6 +1,6 @@
 from behave import *
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 
 @step("I have ranked columns in the {processed_stage_name} model")
