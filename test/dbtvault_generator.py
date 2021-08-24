@@ -86,8 +86,9 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
     template = f"""
     {depends_on}    
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, src_ldts={src_ldts},
-                      src_source={src_source}, source_model={source_model})   }}}}
+    {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, 
+                      src_ldts={src_ldts}, src_source={src_source}, 
+                      source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
@@ -109,8 +110,9 @@ def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.link({src_pk}, {src_fk}, {src_ldts},
-                       {src_source}, {source_model})   }}}}
+    {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, src_ldts={src_ldts},
+                       src_source={src_source}, 
+                       source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
@@ -135,8 +137,9 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.t_link({src_pk}, {src_fk}, {src_payload if src_payload else 'none'}, 
-                         {src_eff}, {src_ldts}, {src_source}, {source_model}) }}}}
+    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, src_payload={src_payload if src_payload else 'none'}, 
+                         src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -144,7 +147,7 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
 
 def sat(model_name, src_pk, src_hashdiff, src_payload,
         src_eff, src_ldts, src_source, source_model,
-        config, depends_on=""):
+        config, depends_on="", out_of_sequence=None):
     """
     Generate a satellite model template
         :param model_name: Name of the model file
@@ -155,6 +158,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
+        :param out_of_sequence: Out of sequence configuration
         :param config: Optional model config
         :param depends_on: Optional forced dependency
     """
@@ -162,9 +166,10 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.sat({src_pk}, {src_hashdiff}, {src_payload},
-                      {src_eff}, {src_ldts}, {src_source}, 
-                      {source_model})   }}}}
+    {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
+                      src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
+                      source_model={source_model}, 
+                      out_of_sequence={out_of_sequence if out_of_sequence else 'none'}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -192,10 +197,10 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.eff_sat({src_pk}, {src_dfk}, {src_sfk},
-                          {src_start_date}, {src_end_date},
-                          {src_eff}, {src_ldts}, {src_source},
-                          {source_model}) }}}}
+    {{{{ dbtvault.eff_sat(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
+                          src_start_date={src_start_date}, src_end_date={src_end_date},
+                          src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source},
+                          source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -219,9 +224,10 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
 
     template = f"""
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.ma_sat({src_pk}, {src_cdk}, {src_hashdiff}, {src_payload},
-                      {src_eff}, {src_ldts}, {src_source}, 
-                      {source_model})   }}}}
+    {{{{ dbtvault.ma_sat(src_pk={src_pk}, src_cdk={src_cdk}, src_hashdiff={src_hashdiff}, 
+                         src_payload={src_payload}, src_eff={src_eff}, 
+                         src_ldts={src_ldts}, src_source={src_source}, 
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -243,8 +249,9 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, c
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.xts({src_pk}, {src_satellite}, {src_ldts}, {src_source},
-                      {source_model})   }}}}
+    {{{{ dbtvault.xts(src_pk={src_pk}, src_satellite={src_satellite}, 
+                      src_ldts={src_ldts}, src_source={src_source},
+                      source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -268,7 +275,11 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.pit({src_pk}, {as_of_dates_table}, {satellites},{stage_tables},{src_ldts}, {source_model}) }}}}
+    {{{{ dbtvault.pit(src_pk={src_pk}, 
+                      as_of_dates_table={as_of_dates_table}, 
+                      satellites{satellites}, 
+                      stage_tables={stage_tables},
+                      src_ldts={src_ldts}, source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -291,7 +302,9 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.bridge({src_pk}, {as_of_dates_table}, {bridge_walk}, {stage_tables_ldts}, {src_ldts}, {source_model}) }}}}
+    {{{{ dbtvault.bridge(src_pk={src_pk}, as_of_dates_table={as_of_dates_table}, 
+                         bridge_walk={bridge_walk}, stage_tables_ldts={stage_tables_ldts}, 
+                         src_ldts={src_ldts}, source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
