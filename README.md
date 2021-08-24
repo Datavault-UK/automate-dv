@@ -71,18 +71,6 @@ Talk to our developers and other members of our growing community, get support a
 
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 
-## Sign up for early-bird announcements 
-
-[![Sign up](https://img.shields.io/badge/Email-Sign--up-blue)](https://www.data-vault.co.uk/dbtvault/)
-
-Get notified of new features and new releases before anyone else!
-
-## Starting a Data Vault project 
-
-Looking to use dbtvault or Data Vault in your project? We've written a document to give you a head start.
-
-<a href="https://www.data-vault.co.uk/using-dbtvault-in-datavault-project-download/">Download for FREE now! </a>
-
 ## Contributing
 [View our contribution guidelines](CONTRIBUTING.md)
 
