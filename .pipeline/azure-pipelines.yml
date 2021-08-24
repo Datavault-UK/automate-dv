@@ -10,6 +10,8 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+  OP_CONNECT_TOKEN: "$(OP_CONNECT_TOKEN)"
+  OP_CONNECT_HOST: "$(OP_CONNECT_HOST)"
   SNOWFLAKE_DB_ACCOUNT: "{{ op://dbtvault/snowflake/account }}"
   SNOWFLAKE_DB_USER: "{{ op://private/snowflake/user }}"
   SNOWFLAKE_DB_PW: "{{ op://private/snowflake/password }}"
