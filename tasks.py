@@ -235,11 +235,6 @@ def run_macro_tests(c, platform=None, disable_op=False):
 
     c.run(command)
 
-    # TODO: Re-factor this:
-    # command = f"secrethub run --no-masking --env-file={PROJECT_ROOT}/{env_file} -v env={target} -v user={user}" \
-    #           f" -- pytest {'$(cat /tmp/macro-tests-to-run)' if user == 'circleci' else ''} --ignore=tests/test_utils/test_dbt_test_utils.py -n 4 -vv " \
-    #           f"--junitxml=test-results/macro_tests/junit.xml"
-
 
 ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
                 check_platform, run_dbt, run_macro_tests)
