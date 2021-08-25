@@ -355,7 +355,7 @@ def run_dbt_command(command) -> str:
     return logs
 
 
-def run_dbt_seed(seed_file_name=None) -> str:
+def run_dbt_seed(seed_file_name=None, full_refresh=False) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -365,6 +365,9 @@ def run_dbt_seed(seed_file_name=None) -> str:
 
     if seed_file_name:
         command.extend(['--select', seed_file_name, '--full-refresh'])
+
+    if "full-refresh" not in command and full_refresh:
+        command.append('--full-refresh')
 
     return run_dbt_command(command)
 
