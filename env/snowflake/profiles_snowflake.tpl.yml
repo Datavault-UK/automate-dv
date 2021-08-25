@@ -4,7 +4,7 @@ dbtvault:
       type: snowflake
       account: "{{ op://dbtvault/snowflake/account }}"
 
-      user: "{{ op://private/snowflake/user }}"
+      user: "{{ op://private/snowflake/username }}"
       password: "{{ op://private/snowflake/password }}"
 
       role: "{{ op://dbtvault/snowflake/role }}"
