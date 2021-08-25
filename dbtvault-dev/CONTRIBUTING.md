@@ -1,35 +1,141 @@
-## Contributing new features
+# dbtvault Contributor Quick Setup
 
-Please refer to our contribution guidelines over on our [development repository](https://github.com/Datavault-UK/dbtvault-dev/blob/master/CONTRIBUTING.md)
+## Prerequisites
 
-## We'd love to hear from you
+- Python >= 3.9.6
+- Pipenv
 
-dbtvault is very much a work in progress – we’re constantly adding quality of life improvements and will be adding
-new table types regularly.
+## Install dependencies
 
-Rest assured we’re working on future releases – [our roadmap contains information on what’s coming](https://dbtvault.readthedocs.io/en/latest/roadmap/).
- 
-If you spot anything you’d like to bring to our attention, have a request for new features, have spotted an improvement we could make, 
-or want to tell us about a typo or bug, then please don’t hesitate to let us know via [github](https://github.com/Datavault-UK/dbtvault/issues). 
+Run `pipenv install --dev` 
 
-We’d rather know you are making active use of this package than hearing nothing from all of you out there! 
+## Setting up your development environment
 
-Happy Data Vaulting!
+### 1. Getting the code
 
-## Issue guidelines
+#### For external contributors
 
-### If it's a bug
-We've tested the package rigorously, but if you think you've found a bug please provide the following 
-at a minimum (or use the issue templates) so we can fix it as quickly as possible:
+In general, we follow the ["fork-and-pull"](https://github.com/susam/gitpr) Git workflow
 
-- The version of dbt being used
-- The version of dbtvault being used.
-- Steps to reproduce the issue
-- Any error messages or dbt log files which can give more detail of the problem
+- Fork the repository to your own GitHub account
+- Clone the project to your machine
+- Create a branch (from `develop`) locally with a succinct but descriptive name. 
+- If it's a new feature, prefix the branch name with `feat/`
+- Commit changes to the branch
+- Push changes to your fork
+- Open a PR in our repository
 
-### If it's a feature request
-We'd love to add new features to make this package even more useful for the community,
-please feel free to submit ideas and thoughts!
+### 2. Create environment files from templates
+##### NOTE: If you are an internal contributor (e.g. Datavault employee) then you may skip this step
 
-### If it's an idea, feedback or a general inquiry
-Create a post with as much detail as possible; We'll be happy to reply and work with you.
+In the `<project_root>/env/templates` folder you will find two files: `db.tpl.env` and `profiles.tpl.yml`.
+
+#### profiles.tpl.yml
+
+This file is a template which can be used as a drop-in replacement for your dbt `profiles.yml` file, or added to an existing `profiles.yml`.
+
+- Copy and paste `profiles.tpl.yml` to your local dbt profiles directory, (by default, a `.dbt` directory in your home/user directory)
+- Rename `profiles.tpl.yml` to `profiles.yml`. This file can be used as-is.
+
+[Read the dbt docs](https://docs.getdbt.com/dbt-cli/configure-your-profile) to learn more about `profiles.yml`
+
+#### db.tpl.env
+
+This file holds key-value pairs. Each key will be the key for an environment variable. You will 
+replace the empty quotes with your own credentials. 
+
+**WARNING: `db.env` IS IGNORED IN GIT, BUT PLEASE TAKE CARE NOT TO COMMIT THIS FILE ACCIDENTALLY. 
+IN THE EVEN THIS HAPPENS, PLEASE CHANGE YOUR DATABASE CREDENTIALS IMMEDIATELY**
+
+- Copy and paste `db.tpl.env` to your to the root of the `<project_root>/env/` directory.
+- Rename `db.tpl.env` to `db.env`. 
+- Remove the sections for the platforms you are not developing for. For example, if you are developing only for snowflake, 
+  your file should resemble the following:
+
+    ```yaml
+    # Snowflake
+    SNOWFLAKE_DB_ACCOUNT=""
+    SNOWFLAKE_DB_USER=""
+    SNOWFLAKE_DB_PW=""
+    SNOWFLAKE_DB_ROLE=""
+    SNOWFLAKE_DB_DATABASE=""
+    SNOWFLAKE_DB_WH=""
+    SNOWFLAKE_DB_SCHEMA=""
+    ```
+
+- Next, Replace the empty quotes with your own credentials.
+
+
+### 3. Run the setup command
+
+### Without 1Password integration
+##### Recommended for External Contributors
+
+Inside the virtual environment, run `inv setup -p <platform> -d`
+
+e.g. `inv setup -p snowflake -d`
+
+### With 1Password integration
+##### Recommended for Datavault Employees
+
+- First, sign in to 1Password, following internal guides. 
+- Inside the virtual environment, run `inv setup -p <platform>`
+
+e.g. `inv setup -p snowflake`
+
+#### Options:
+
+`-p, --platform` Sets the development platform environment which the dbtvault test harness will be executed under.
+
+`platform` must be one of:
+
+- snowflake
+- bigquery
+- sqlserver
+
+`-d, --disable-op` Disables 1Password CLI integration, which is used by Datavault Developers internally for secrets management. 
+
+A successful run should produce something similar to the following output:
+
+```shell
+(dbtvault) INFO: Defaults set.
+(dbtvault) INFO: Project: test
+(dbtvault) INFO: Platform: snowflake
+(dbtvault) INFO: Platform set to 'snowflake'
+(dbtvault) INFO: Project set to 'test'
+(dbtvault) INFO: Checking dbt connection... (running dbt debug)
+(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
+Running with dbt=0.20.0
+dbt version: 0.20.0
+python version: 3.9.0
+python path: ~/venvs/dbtvault/bin/python
+os info: Linux-5.4.0-81-generic-x86_64-with-glibc2.31
+Using profiles.yml file at ~/.dbt/profiles.yml
+Using dbt_project.yml file at .../dbtvault/test/dbtvault_test/dbt_project.yml
+
+Configuration:
+  profiles.yml file [OK found and valid]
+  dbt_project.yml file [OK found and valid]
+
+Required dependencies:
+ - git [OK found]
+
+Connection:
+  account: <redacted>
+  user: <redacted>
+  database: <redacted>
+  schema: <redacted>
+  warehouse: <redacted>
+  role: <redacted>
+  client_session_keep_alive: False
+  Connection test: OK connection ok
+
+(dbtvault) INFO: Installing dbtvault-dev in test project...
+(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
+Running with dbt=0.20.0
+Installing ../../dbtvault-dev
+  Installed from <local @ ../../dbtvault-dev>
+Installing dbt-labs/dbt_utils@0.7.0
+  Installed from version 0.7.0
+(dbtvault) INFO: Setup complete!
+```
