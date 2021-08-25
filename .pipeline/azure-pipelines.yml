@@ -4,7 +4,9 @@
 # https://aka.ms/yaml
 
 trigger:
-- feat/harness-refactor
+  branches:
+    include:
+      - develop
 
 pool:
   vmImage: ubuntu-latest
