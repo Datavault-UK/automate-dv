@@ -150,20 +150,11 @@ def before_all(context):
     # Env setup
     dbtvault_harness_utils.setup_environment()
 
-    # Clean dbt folders and generated files
-    dbtvault_harness_utils.clean_csv()
-    dbtvault_harness_utils.clean_models()
-    dbtvault_harness_utils.clean_target()
-
     # Restore modified YAML to starting state
     dbtvault_generator.clean_test_schema_file()
 
     # Backup YAML prior to run
     dbtvault_generator.backup_project_yml()
-
-    dbtvault_harness_utils.create_dummy_model()
-
-    dbtvault_harness_utils.replace_test_schema()
 
 
 def after_all(context):

@@ -11,6 +11,7 @@ from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
+import pexpect
 import yaml
 from _pytest.fixtures import FixtureRequest
 from behave.model import Table
@@ -339,23 +340,20 @@ def run_dbt_command(command) -> str:
     """
 
     if 'dbt' not in command and isinstance(command, list):
-        dbt_cmd = ['dbt']
-        dbt_cmd.extend(command)
-        command = dbt_cmd
+        command = ['dbt'] + command
     elif 'dbt' not in command and isinstance(command, str):
         command = ['dbt', command]
 
-    p = Popen(command, stdout=PIPE, stderr=STDOUT, cwd=test.TESTS_DBT_ROOT)
+    joined_command = " ".join(command)
+    test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
+    child = pexpect.spawn(command=joined_command, cwd=test.TESTS_DBT_ROOT, encoding="utf-8")
 
-    stdout, _ = p.communicate()
+    child.logfile_read = sys.stdout
 
-    p.wait()
+    logs = child.read()
+    child.close()
 
-    logs = stdout.decode('utf-8')
-
-    test.logger.log(msg=f"Running with dbt command: {' '.join(command)}", level=logging.DEBUG)
-
-    test.logger.log(msg=logs, level=logging.DEBUG)
+    assert child.exitstatus == 0
 
     return logs
 
@@ -406,7 +404,7 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         command.append('--full-refresh')
 
     if args:
-        command.extend(['--vars', f"{json.dumps(args)}"])
+        command.extend([f"--vars '{args}'"])
 
     return run_dbt_command(command)
 
@@ -422,7 +420,7 @@ def run_dbt_operation(macro_name: str, args=None) -> str:
 
     if args:
         args = str(args).replace('\'', '')
-        command.extend(['--args', f'{args}'])
+        command.extend(['--args', f"'{args}'"])
 
     return run_dbt_command(command)
 
