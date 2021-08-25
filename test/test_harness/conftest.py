@@ -5,7 +5,7 @@ from pathlib import Path
 import pytest
 
 import test
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 
 def dict_to_directories(dir_dict: dict, root_path: Path):
