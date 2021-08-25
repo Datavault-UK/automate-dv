@@ -346,10 +346,9 @@ def run_dbt_command(command) -> str:
 
     joined_command = " ".join(command)
     test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
+
     child = pexpect.spawn(command=joined_command, cwd=test.TEST_PROJECT_ROOT, encoding="utf-8")
-
     child.logfile_read = sys.stdout
-
     logs = child.read()
     child.close()
 
@@ -402,7 +401,7 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         command.append('--full-refresh')
 
     if args:
-        command.extend([f"--vars '{args}'"])
+        command.extend([f"--vars '{json.dumps(args)}'"])
 
     return run_dbt_command(command)
 
@@ -418,7 +417,7 @@ def run_dbt_operation(macro_name: str, args=None) -> str:
 
     if args:
         args = str(args).replace('\'', '')
-        command.extend(['--args', f"'{args}'"])
+        command.extend([f"--args '{json.dumps(args)}'"])
 
     return run_dbt_command(command)
 
