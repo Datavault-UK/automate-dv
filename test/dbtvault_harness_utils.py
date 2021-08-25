@@ -14,11 +14,11 @@ import pandas as pd
 import yaml
 from _pytest.fixtures import FixtureRequest
 from behave.model import Table
+from environs import Env
 from numpy import NaN
 from pandas import Series
 
 import test
-from environs import Env
 
 
 def platform():
@@ -194,7 +194,7 @@ def parse_hashdiffs(columns_as_series: Series) -> Series:
     return Series(columns)
 
 
-def parse_lists_in_dicts(dicts_with_lists: List[dict]):
+def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
     """
     Convert string representations of lists in dict values, in a list of dicts
         :param dicts_with_lists: A list of dictionaries
@@ -489,9 +489,9 @@ def context_table_to_csv(table: Table, model_name: str) -> str:
     return csv_fqn.stem
 
 
-def context_table_to_dict(table: Table, orient='index', use_nan=True):
+def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> List[dict]:
     """
-    Converts a context table in a feature file into a dictionary
+    Converts a context table in a feature file into a list of dictionaries
         :param use_nan:
         :param table: The context.table from a scenario
         :param orient: orient for df to_dict
@@ -502,11 +502,12 @@ def context_table_to_dict(table: Table, orient='index', use_nan=True):
 
     table_dict = table_df.to_dict(orient=orient)
 
-    table_dict = parse_lists_in_dicts(table_dict)
+    table_dicts = parse_lists_in_dicts(table_dict)
 
-    return table_dict
+    return table_dicts
 
 
+# TODO: Look into re-factoring and testing
 def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
     """
     Creates a model from a feature file data table
@@ -517,7 +518,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
         :return: Seed file name
     """
 
-    feature_data = context_table_to_dict(table=table, orient="index", use_nan=False)
+    feature_data = context_table_to_dicts(table=table, orient="index", use_nan=False)
     column_types = seed_config[model_name]["+column_types"]
 
     sql_command = ""

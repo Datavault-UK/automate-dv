@@ -7,7 +7,7 @@ from test import dbtvault_harness_utils
 def ranked_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
 
-    ranked_column_data = dbtvault_harness_utils.context_table_to_dict(table=context.table, orient="index").items()
+    ranked_column_data = dbtvault_harness_utils.context_table_to_dicts(table=context.table, orient="index").items()
 
     ranked_metadata = {v[1]['NAME']: {'partition_by': v[1]['PARTITION_BY'],
                                       'order_by': v[1]['ORDER_BY']}
@@ -21,15 +21,15 @@ def ranked_columns(context, processed_stage_name):
 @step("I have hashed columns in the {processed_stage_name} model")
 def hashed_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
-    context.hashed_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dict(table=context.table,
-                                                                                                 orient="records")[0]}
+    context.hashed_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
+                                                                                                  orient="records")[0]}
 
 
 @step("I have derived columns in the {processed_stage_name} model")
 def derive_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
-    context.derived_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dict(table=context.table,
-                                                                                                  orient="records")[0]}
+    context.derived_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
+                                                                                                   orient="records")[0]}
 
 
 @step("I do not include source columns")
