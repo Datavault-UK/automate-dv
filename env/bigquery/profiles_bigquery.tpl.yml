@@ -1,0 +1,41 @@
+dbtvault:
+  outputs:
+    snowflake:
+      type: snowflake
+      account: ""
+
+      user: ""
+      password: ""
+
+      role: ""
+      database: ""
+      warehouse: ""
+      schema: ""
+
+      threads: 4
+      client_session_keep_alive: False
+
+    bigquery:
+      type: bigquery
+
+      method: oauth
+
+      project: "{{ op://private/bigquery/project_id }}"
+      dataset: "{{ op://private/bigquery/dataset }}"
+
+      threads: 4
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
+
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: ""
+      port: ""
+      database: ""
+      schema: ""
+      user: ""
+      password: ""
+
+  target: "bigquery"
