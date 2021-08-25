@@ -113,7 +113,7 @@ def clean_target():
     Faster than running dbt clean.
     """
 
-    shutil.rmtree(test.TESTS_DBT_ROOT / 'target', ignore_errors=True)
+    shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
 def clean_csv():
@@ -346,14 +346,12 @@ def run_dbt_command(command) -> str:
 
     joined_command = " ".join(command)
     test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
-    child = pexpect.spawn(command=joined_command, cwd=test.TESTS_DBT_ROOT, encoding="utf-8")
+    child = pexpect.spawn(command=joined_command, cwd=test.TEST_PROJECT_ROOT, encoding="utf-8")
 
     child.logfile_read = sys.stdout
 
     logs = child.read()
     child.close()
-
-    assert child.exitstatus == 0
 
     return logs
 
