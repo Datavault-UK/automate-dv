@@ -65,8 +65,8 @@ def check_exists(context, model_name):
 def clear_schema(context):
     dbtvault_harness_utils.replace_test_schema()
 
-    model_names = dbtvault_harness_utils.context_table_to_dict(table=context.table,
-                                                               orient="list")
+    model_names = dbtvault_harness_utils.context_table_to_dicts(table=context.table,
+                                                                orient="list")
 
     context.vault_model_names = model_names
 
