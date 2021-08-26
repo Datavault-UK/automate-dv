@@ -113,7 +113,7 @@ def clean_target():
     Faster than running dbt clean.
     """
 
-    shutil.rmtree(test.TESTS_DBT_ROOT / 'target', ignore_errors=True)
+    shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
 def clean_csv():
@@ -346,19 +346,16 @@ def run_dbt_command(command) -> str:
 
     joined_command = " ".join(command)
     test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
-    child = pexpect.spawn(command=joined_command, cwd=test.TESTS_DBT_ROOT, encoding="utf-8")
 
+    child = pexpect.spawn(command=joined_command, cwd=test.TEST_PROJECT_ROOT, encoding="utf-8")
     child.logfile_read = sys.stdout
-
     logs = child.read()
     child.close()
-
-    assert child.exitstatus == 0
 
     return logs
 
 
-def run_dbt_seed(seed_file_name=None) -> str:
+def run_dbt_seed(seed_file_name=None, full_refresh=False) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -368,6 +365,9 @@ def run_dbt_seed(seed_file_name=None) -> str:
 
     if seed_file_name:
         command.extend(['--select', seed_file_name, '--full-refresh'])
+
+    if "full-refresh" not in command and full_refresh:
+        command.append('--full-refresh')
 
     return run_dbt_command(command)
 
@@ -404,7 +404,7 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         command.append('--full-refresh')
 
     if args:
-        command.extend([f"--vars '{args}'"])
+        command.extend([f"--vars '{json.dumps(args)}'"])
 
     return run_dbt_command(command)
 
@@ -420,7 +420,7 @@ def run_dbt_operation(macro_name: str, args=None) -> str:
 
     if args:
         args = str(args).replace('\'', '')
-        command.extend(['--args', f"'{args}'"])
+        command.extend([f"--args '{json.dumps(args)}'"])
 
     return run_dbt_command(command)
 

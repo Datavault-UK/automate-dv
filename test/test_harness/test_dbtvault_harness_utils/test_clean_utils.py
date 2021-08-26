@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 directory_dict = {
     'csv': {
@@ -42,7 +42,7 @@ def test_clean_target_success(sample_directory_tree):
 
     assert set(os.listdir(tmp_target_dir)) == {path.name for path in paths['target']}
 
-    with patch('test.TESTS_DBT_ROOT', tmp_dir):
+    with patch('test.TEST_PROJECT_ROOT', tmp_dir):
         dbtvault_harness_utils.clean_target()
 
     assert 'target' not in os.listdir(tmp_dir)

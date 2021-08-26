@@ -6,7 +6,7 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 from test import AVAILABLE_PLATFORMS
 
 
@@ -26,8 +26,7 @@ def test_platform_correctly_read(tmp_path):
         assert actual_dict == expected_dict['platform']
 
 
-@pytest.mark.skip(reason="Need to work around propagate=False")
-def test_platform_invalid_target_error(tmp_path, caplog):
+def test_platform_invalid_target_error(tmp_path, caplog, temporary_prop):
     file = tempfile.NamedTemporaryFile(prefix="test_invoke", suffix='.yml', dir=tmp_path)
 
     expected_dict = {
@@ -43,13 +42,12 @@ def test_platform_invalid_target_error(tmp_path, caplog):
             with pytest.raises(SystemExit):
                 dbtvault_harness_utils.platform()
 
-    expected_error_msg = f"Target must be set to one of: {', '.join(AVAILABLE_PLATFORMS)} " \
+    expected_error_msg = f"Platform must be set to one of: {', '.join(AVAILABLE_PLATFORMS)} " \
                          f"in '{Path(file.name)}'"
     assert expected_error_msg in caplog.text
 
 
-@pytest.mark.skip(reason="Need to work around propagate=False")
-def test_platform_missing_file_error(tmp_path, caplog):
+def test_platform_missing_file_error(tmp_path, caplog, temporary_prop):
     missing_file_path = Path(tmp_path / 'my_missing_file.yml')
 
     with patch('test.INVOKE_YML_FILE', missing_file_path):

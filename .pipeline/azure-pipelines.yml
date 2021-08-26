@@ -7,6 +7,7 @@ trigger:
   branches:
     include:
       - develop
+      - feat/harness-refactor
 
 pool:
   vmImage: ubuntu-latest
