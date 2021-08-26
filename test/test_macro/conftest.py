@@ -28,7 +28,7 @@ def generate_model(request):
         selected_mark = list(applied_marks & available_marks)
 
         if selected_mark:
-            if selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] is not "macro":
+            if selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] != "macro":
                 dbtvault_generator.raw_vault_structure(model_name=request.node.name,
                                                        vault_structure=macro_name,
                                                        **mark_metadata_mapping[selected_mark[0]]())
