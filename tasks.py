@@ -167,7 +167,7 @@ def change_platform(c, platform, disable_op=False):
 def check_platform(c, platform):
     """
     Check specified platform is available
-        :param platform: platform to check
+        :param platform: dbt profile platform/target
     """
 
     if platform in test.AVAILABLE_PLATFORMS:
@@ -184,7 +184,7 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
     Run dbt in the context of the provided project with the provided dbt args.
         :param c: invoke context
         :param dbt_args: Arguments to run db with (proceeding dbt)
-        :param platform: dbt profile platform
+        :param platform: dbt profile platform/target
         :param project: dbt project to run with, either core (public dbtvault project),
         dev (dev project) or test (test project)
         :param disable_op: Disable 1Password
@@ -200,7 +200,7 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
     else:
         # Set dbt profiles dir
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        command = f"op run --no-masking -- dbt {dbt_args}"
+        command = f"op run -- dbt {dbt_args}"
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
@@ -209,6 +209,33 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         c.run(command)
 
 
+@task
+def run_macro_tests(c, platform=None, disable_op=False):
+    """
+    Run macro tests with secrets
+        :param c: invoke context
+        :param platform: dbt profile platform/target
+        :param disable_op: Disable 1Password
+    """
+
+    platform = c.platform if not platform else platform
+
+    # Select dbt profile
+    if check_platform(c, platform):
+        os.environ['PLATFORM'] = platform
+        logger.info(f"Running macro tests tests for '{platform}'.")
+
+    pytest_command = f"pytest {str(test.TEST_MACRO_ROOT.absolute())} -n 4 -vv"
+
+    if disable_op:
+        dbtvault_harness_utils.setup_db_creds(platform)
+        command = pytest_command
+    else:
+        command = f"op run -- {pytest_command}"
+
+    c.run(command)
+
+
 ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
-                check_platform, run_dbt)
+                check_platform, run_dbt, run_macro_tests)
 ns.configure({'project': 'test', 'platform': 'snowflake'})

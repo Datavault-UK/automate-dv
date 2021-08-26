@@ -45,7 +45,7 @@ This file holds key-value pairs. Each key will be the key for an environment var
 replace the empty quotes with your own credentials. 
 
 **WARNING: `db.env` IS IGNORED IN GIT, BUT PLEASE TAKE CARE NOT TO COMMIT THIS FILE ACCIDENTALLY. 
-IN THE EVEN THIS HAPPENS, PLEASE CHANGE YOUR DATABASE CREDENTIALS IMMEDIATELY**
+IN THE EVENT THIS HAPPENS, PLEASE CHANGE YOUR DATABASE CREDENTIALS IMMEDIATELY**
 
 - Copy and paste `db.tpl.env` to your to the root of the `<project_root>/env/` directory.
 - Rename `db.tpl.env` to `db.env`. 

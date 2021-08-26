@@ -1,3 +1,4 @@
+import logging
 import os
 import tempfile
 from pathlib import Path
@@ -5,7 +6,7 @@ from pathlib import Path
 import pytest
 
 import test
-import dbtvault_harness_utils
+from test import dbtvault_harness_utils
 
 
 def dict_to_directories(dir_dict: dict, root_path: Path):
@@ -39,10 +40,18 @@ def sample_directory_tree(tmp_path):
     return _convert
 
 
+@pytest.fixture()
+def temporary_prop():
+    logger = logging.getLogger('dbtvault')
+    logger.propagate = True
+    yield
+    logger.propagate = False
+
+
 @pytest.fixture(scope='session', autouse=True)
 def setup():
     dbtvault_harness_utils.setup_environment()
-    os.chdir(test.TESTS_DBT_ROOT)
+    os.chdir(test.TEST_PROJECT_ROOT)
     yield
 
 
