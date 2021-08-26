@@ -1,3 +1,4 @@
+import logging
 import os
 import tempfile
 from pathlib import Path
@@ -37,6 +38,14 @@ def sample_directory_tree(tmp_path):
         return paths, tmp_path
 
     return _convert
+
+
+@pytest.fixture()
+def temporary_prop():
+    logger = logging.getLogger('dbtvault')
+    logger.propagate = True
+    yield
+    logger.propagate = False
 
 
 @pytest.fixture(scope='session', autouse=True)
