@@ -25,6 +25,7 @@ pymdown-extensions = "==7.1"
 "ruamel.yaml" = "==0.17.10"
 dbt = "==0.20.0"
 pexpect = "*"
+filelock = "*"
 
 [requires]
 python_full_version = "3.9.6"
