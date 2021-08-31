@@ -12,15 +12,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  SNOWFLAKE_DB_ACCOUNT: "{{ op://dbtvault/snowflake/account }}"
-  SNOWFLAKE_DB_USER: "{{ op://private/snowflake/user }}"
-  SNOWFLAKE_DB_PW: "{{ op://private/snowflake/password }}"
-  SNOWFLAKE_DB_ROLE: "{{ op://dbtvault/snowflake/role }}"
-  SNOWFLAKE_DB_DATABASE: "{{ op://dbtvault/snowflake/database }}"
-  SNOWFLAKE_DB_WH: "{{ op://dbtvault/snowflake/warehouse }}"
-  SNOWFLAKE_DB_SCHEMA: "{{ op://dbtvault/snowflake/schema }}"
-
 stages:
   - stage: 'Build_environment'
     jobs:
