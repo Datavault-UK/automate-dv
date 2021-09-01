@@ -116,15 +116,21 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
-def clean_csv():
+def clean_csv(model_name=None):
     """
     Deletes csv files in csv folder.
     """
 
-    delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
+    if model_name:
+        delete_files = [test.CSV_DIR / f"{model_name.lower()}.csv"]
+    else:
+        delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
 
     for file in delete_files:
-        os.remove(file)
+        try:
+            os.remove(file)
+        except OSError:
+            pass
 
 
 def clean_models():
@@ -382,6 +388,41 @@ def run_dbt_seed_model(seed_model_name=None) -> str:
 
     if seed_model_name:
         command.extend(['-m', seed_model_name, '--full-refresh'])
+
+    return run_dbt_command(command)
+
+
+def run_dbt_model(*, mode='compile', model_name: str, args=None, full_refresh=False,
+                  include_model_deps=False, include_tag=False) -> str:
+    """
+    Run or Compile a specific dbt model, with optionally provided variables.
+
+        :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
+        :param model_name: Model name for dbt to run
+        :param args: variable dictionary to provide to dbt
+        :param full_refresh: Run a full refresh
+        :param include_model_deps: Include model dependencies (+)
+        :param include_tag: Include tag string (tag:)
+        :return Log output of dbt run operation
+    """
+
+    if include_tag:
+        model_name = f'tag:{model_name}'
+
+    if include_model_deps:
+        model_name = f'+{model_name}'
+
+    if full_refresh:
+        command = ['dbt', mode, '-m', model_name, '--full-refresh']
+    else:
+        command = ['dbt', mode, '-m', model_name]
+
+    if args:
+        if not any(x in str(args) for x in ['(', ')']):
+            yaml_str = str(args).replace('\'', '"')
+        else:
+            yaml_str = str(args)
+        command.extend(['--vars', yaml_str])
 
     return run_dbt_command(command)
 
