@@ -227,13 +227,13 @@ def load_populated_table(context, model_name, vault_structure):
         context.target_model_name = model_name
 
         seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=context.table,
-	                                                         model_name=model_name)
+                                                                     model_name=model_name)
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-	                                   seed_config=context.seed_config[model_name])
+                                           seed_config=context.seed_config[model_name])
 
         dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
-   
+
         metadata = {"source_model": seed_file_name, **context.vault_structure_columns[model_name]}
 
         context.vault_structure_metadata = metadata
@@ -378,12 +378,12 @@ def create_csv(context, table_name):
 
         run_logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[table_name],
                                                          args=args, full_refresh=True)
-  
+
         context.raw_stage_models = seed_file_name
 
         assert "Completed successfully" in seed_logs
         assert "Completed successfully" in run_logs
-   
+
 
 @step("the {raw_stage_model_name} is loaded")
 def create_csv(context, raw_stage_model_name):
@@ -450,7 +450,6 @@ def stage_processing(context, processed_stage_name):
 
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
-
     if dbtvault_harness_utils.platform() == "sqlserver":
 
         expected_model_name = f"{model_name}_EXPECTED"
@@ -507,7 +506,6 @@ def expect_data(context, model_name):
 
 @then("the {model_name} table should be empty")
 def expect_data(context, model_name):
-
     if dbtvault_harness_utils.platform() == "sqlserver":
 
         # Create seed file with no data rows
@@ -560,7 +558,7 @@ def expect_data(context, model_name):
                                                                      expected_output_csv=expected_output_csv_name,
                                                                      unique_id=unique_id,
                                                                      columns_to_compare=columns_to_compare)
- 
+
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
         dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
