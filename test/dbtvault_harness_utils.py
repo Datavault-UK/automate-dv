@@ -1,5 +1,4 @@
 import glob
-import json
 import logging
 import os
 import re
@@ -7,7 +6,6 @@ import shutil
 import sys
 from hashlib import md5, sha256
 from pathlib import Path
-from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
