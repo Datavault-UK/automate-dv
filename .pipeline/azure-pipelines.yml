@@ -12,15 +12,6 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
-variables:
-  SNOWFLAKE_DB_ACCOUNT: "{{ op://dbtvault/snowflake/account }}"
-  SNOWFLAKE_DB_USER: "{{ op://private/snowflake/user }}"
-  SNOWFLAKE_DB_PW: "{{ op://private/snowflake/password }}"
-  SNOWFLAKE_DB_ROLE: "{{ op://dbtvault/snowflake/role }}"
-  SNOWFLAKE_DB_DATABASE: "{{ op://dbtvault/snowflake/database }}"
-  SNOWFLAKE_DB_WH: "{{ op://dbtvault/snowflake/warehouse }}"
-  SNOWFLAKE_DB_SCHEMA: "{{ op://dbtvault/snowflake/schema }}"
-
 stages:
   - stage: 'Build_environment'
     jobs:
@@ -34,6 +25,7 @@ stages:
             displayName: 'Install pipenv'
           - script: pipenv install --dev
             displayName: 'Install Pipenv dependencies'
+          - script: echo $OP_CONNECT_HOST
           - script: |
               curl -sSfo op.zip \
                 https://bucket.agilebits.com/cli-private-beta/v2/op_linux_amd64_v2-alpha1.zip \
@@ -43,7 +35,6 @@ stages:
           - script: op read op://dbtvault/snowflake/database
             env:
               OP_CONNECT_TOKEN: "$(token)"
-              OP_CONNECT_HOST: "$(url)"
 
 
 #version: 2.1
