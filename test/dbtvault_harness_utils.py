@@ -1,5 +1,4 @@
 import glob
-import json
 import logging
 import os
 import re
@@ -7,7 +6,6 @@ import shutil
 import sys
 from hashlib import md5, sha256
 from pathlib import Path
-from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
@@ -361,16 +359,19 @@ def run_dbt_command(command) -> str:
     return logs
 
 
-def run_dbt_seed(seed_file_name=None, full_refresh=False) -> str:
+def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
     """
 
+    if isinstance(seed_file_names, str):
+        seed_file_names = [seed_file_names]
+
     command = ['dbt', 'seed']
 
-    if seed_file_name:
-        command.extend(['--select', seed_file_name, '--full-refresh'])
+    if seed_file_names:
+        command.extend(['--select', " ".join(seed_file_names), '--full-refresh'])
 
     if "full-refresh" not in command and full_refresh:
         command.append('--full-refresh')
