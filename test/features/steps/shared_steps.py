@@ -6,7 +6,6 @@ from behave.model import Table, Row
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
 
-platform = dbtvault_harness_utils.platform()
 
 def set_stage_metadata(context, stage_model_name) -> dict:
     """
@@ -193,7 +192,7 @@ def load_populated_table(context, model_name, vault_structure):
     Create a table with data pre-populated from the context table.
     """
 
-    if platform == 'sqlserver':
+    if dbtvault_harness_utils.platform() == "sqlserver":
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=model_name,
@@ -207,9 +206,6 @@ def load_populated_table(context, model_name, vault_structure):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        # dbtvault_generator.add_seed_config(seed_name=seed_model_name,
-        #                                    seed_config=context.seed_config[model_name])
-
         seed_logs = dbtvault_harness_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
         metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
@@ -218,7 +214,6 @@ def load_populated_table(context, model_name, vault_structure):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        # logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=model_name)
         logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
         assert "Completed successfully" in seed_logs
@@ -295,15 +290,7 @@ def load_vault(context):
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
-    if platform == 'sqlserver':
-
-        # seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=context.table,
-        #                                                              model_name=raw_stage_model_name)
-        #
-        # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-        #                                    seed_config=context.seed_config[raw_stage_model_name])
-        #
-        # logs = dbtvault_harness_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    if dbtvault_harness_utils.platform() == "sqlserver":
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=raw_stage_model_name,
@@ -340,15 +327,7 @@ def create_csv(context, raw_stage_model_name):
 def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
-    if platform == 'sqlserver':
-
-        # seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=context.table,
-        #                                                              model_name=table_name)
-        #
-        # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-        #                                    seed_config=context.seed_config[table_name])
-        #
-        # seed_logs = dbtvault_harness_utils.run_dbt_seed(seed_file_name=seed_file_name)
+    if dbtvault_harness_utils.platform() == "sqlserver":
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=table_name,
@@ -367,10 +346,8 @@ def create_csv(context, table_name):
                                                source_model=seed_model_name,
                                                config={'materialized': 'table'})
 
-        # run_logs = dbtvault_harness_utils.run_dbt_model(mode="run", model_name=table_name,
-        #                                                 args=args, full_refresh=True)
         run_logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[table_name],
-                                                        args=args, full_refresh=True)
+                                                         args=args, full_refresh=True)
 
         context.raw_stage_models = seed_model_name
 
@@ -410,21 +387,13 @@ def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
     """
 
-    if platform == 'sqlserver':
+    if dbtvault_harness_utils.platform() == "sqlserver":
 
         # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
         # For Snowflake deletion of seed file is not required but does not cause a problem if performed
         dbtvault_harness_utils.clean_csv(raw_stage_model_name.lower() + "_seed")
 
         context.raw_stage_model_name = raw_stage_model_name
-
-        # seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=context.table,
-        #                                                              model_name=raw_stage_model_name)
-        #
-        # dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-        #                                    seed_config=context.seed_config[raw_stage_model_name])
-        #
-        # logs = dbtvault_harness_utils.run_dbt_seed(seed_file_name=seed_file_name)
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=raw_stage_model_name,
@@ -479,7 +448,7 @@ def stage_processing(context, processed_stage_name):
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
 
-    if platform == 'sqlserver':
+    if dbtvault_harness_utils.platform() == "sqlserver":
 
         expected_model_name = f"{model_name}_EXPECTED"
 
@@ -490,10 +459,6 @@ def expect_data(context, model_name):
         context.target_model_name = seed_model_name
 
         columns_to_compare = context.table.headings
-
-        # dbtvault_generator.add_seed_config(seed_name=seed_model_name,
-        #                                    include_columns=columns_to_compare,
-        #                                    seed_config=context.seed_config[model_name])
 
         seed_logs = dbtvault_harness_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
