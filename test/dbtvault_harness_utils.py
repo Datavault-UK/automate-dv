@@ -1,5 +1,4 @@
 import glob
-import json
 import logging
 import os
 import re
@@ -7,7 +6,6 @@ import shutil
 import sys
 from hashlib import md5, sha256
 from pathlib import Path
-from subprocess import PIPE, Popen, STDOUT
 from typing import List
 
 import pandas as pd
@@ -29,9 +27,9 @@ def platform():
 
         with open(test.INVOKE_YML_FILE) as config:
             config_dict = yaml.safe_load(config)
-            plt = config_dict.get('platform')
+            plt = config_dict.get('platform').lower()
 
-            if plt.lower() not in test.AVAILABLE_PLATFORMS:
+            if plt not in test.AVAILABLE_PLATFORMS:
                 test.logger.error(f"Platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
                                   f"in '{test.INVOKE_YML_FILE}'")
                 sys.exit(0)
@@ -116,15 +114,19 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
-def clean_csv():
+def clean_csv(model_name=None):
     """
     Deletes csv files in csv folder.
     """
 
-    delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
+    if model_name:
+        delete_files = [test.CSV_DIR / f"{model_name.lower()}.csv"]
+    else:
+        delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
 
     for file in delete_files:
-        os.remove(file)
+        if os.path.isfile(file):
+            os.remove(file)
 
 
 def clean_models():
@@ -135,7 +137,8 @@ def clean_models():
     delete_files = [file for file in glob.glob(str(test.TEST_MODELS_ROOT / '*.sql'), recursive=True)]
 
     for file in delete_files:
-        os.remove(file)
+        if os.path.isfile(file):
+            os.remove(file)
 
 
 def create_dummy_model():
@@ -355,16 +358,19 @@ def run_dbt_command(command) -> str:
     return logs
 
 
-def run_dbt_seed(seed_file_name=None, full_refresh=False) -> str:
+def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
     """
 
+    if isinstance(seed_file_names, str):
+        seed_file_names = [seed_file_names]
+
     command = ['dbt', 'seed']
 
-    if seed_file_name:
-        command.extend(['--select', seed_file_name, '--full-refresh'])
+    if seed_file_names:
+        command.extend(['--select', " ".join(seed_file_names), '--full-refresh'])
 
     if "full-refresh" not in command and full_refresh:
         command.append('--full-refresh')

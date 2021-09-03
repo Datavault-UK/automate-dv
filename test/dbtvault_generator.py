@@ -310,7 +310,7 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.pit(src_pk={src_pk}, 
                       as_of_dates_table={as_of_dates_table}, 
-                      satellites{satellites}, 
+                      satellites={satellites}, 
                       stage_tables={stage_tables},
                       src_ldts={src_ldts}, source_model={source_model}) }}}}
     """

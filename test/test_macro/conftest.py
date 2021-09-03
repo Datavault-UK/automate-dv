@@ -55,7 +55,7 @@ def setup(tmp_path_factory, worker_id):
         dbtvault_harness_utils.clean_models()
         dbtvault_harness_utils.clean_target()
         dbtvault_harness_utils.replace_test_schema()
-        dbtvault_harness_utils.run_dbt_seed()
+        dbtvault_harness_utils.run_dbt_seeds()
 
     # If not parallel
     if worker_id == "master":

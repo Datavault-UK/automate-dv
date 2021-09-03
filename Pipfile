@@ -26,6 +26,7 @@ pymdown-extensions = "==7.1"
 dbt = "==0.20.0"
 pexpect = "*"
 filelock = "*"
+dbt-sqlserver = "*"
 
 [requires]
 python_full_version = "3.9.6"

@@ -2,7 +2,7 @@ Feature: [SQLS-HUB-RM] Hubs Loaded using Rank Materialization
 
   @fixture.single_source_hub
   Scenario: [SQLS-HUB-RM-001] Simple load of stage data into an empty hub
-    Given the HUB table does not exist
+    Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1993-01-01 | TPCH   |
@@ -17,9 +17,9 @@ Feature: [SQLS-HUB-RM] Hubs Loaded using Rank Materialization
       | 1001        | Alice         | 1993-01-05 | TPCH   |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
-    And I insert by rank into the HUB hub
-    And I insert by rank into the HUB hub
-    Then the HUB table should contain expected data
+    And I insert by rank into the HUB_CUSTOMER hub
+    And I insert by rank into the HUB_CUSTOMER hub
+    Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-02 | TPCH   |
@@ -29,7 +29,7 @@ Feature: [SQLS-HUB-RM] Hubs Loaded using Rank Materialization
   @fixture.enable_full_refresh
   @fixture.single_source_hub
   Scenario: [SQLS-HUB-RM-002] Full refresh of loaded hub
-    Given the HUB table does not exist
+    Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
@@ -38,8 +38,8 @@ Feature: [SQLS-HUB-RM] Hubs Loaded using Rank Materialization
       | 1004        | Daniel        | 1984-01-01   | 1993-01-02 | TPCH   |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
-    And I insert by rank into the HUB hub
-    Then the HUB table should contain expected data
+    And I insert by rank into the HUB_CUSTOMER hub
+    Then the HUB_CUSTOMER table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
