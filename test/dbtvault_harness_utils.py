@@ -27,9 +27,9 @@ def platform():
 
         with open(test.INVOKE_YML_FILE) as config:
             config_dict = yaml.safe_load(config)
-            plt = config_dict.get('platform')
+            plt = config_dict.get('platform').lower()
 
-            if plt.lower() not in test.AVAILABLE_PLATFORMS:
+            if plt not in test.AVAILABLE_PLATFORMS:
                 test.logger.error(f"Platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
                                   f"in '{test.INVOKE_YML_FILE}'")
                 sys.exit(0)
@@ -114,15 +114,19 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
-def clean_csv():
+def clean_csv(model_name=None):
     """
     Deletes csv files in csv folder.
     """
 
-    delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
+    if model_name:
+        delete_files = [test.CSV_DIR / f"{model_name.lower()}.csv"]
+    else:
+        delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
 
     for file in delete_files:
-        os.remove(file)
+        if os.path.isfile(file):
+            os.remove(file)
 
 
 def clean_models():
@@ -133,7 +137,8 @@ def clean_models():
     delete_files = [file for file in glob.glob(str(test.TEST_MODELS_ROOT / '*.sql'), recursive=True)]
 
     for file in delete_files:
-        os.remove(file)
+        if os.path.isfile(file):
+            os.remove(file)
 
 
 def create_dummy_model():
