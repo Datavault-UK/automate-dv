@@ -125,10 +125,8 @@ def clean_csv(model_name=None):
         delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
 
     for file in delete_files:
-        try:
+        if os.path.isfile(file):
             os.remove(file)
-        except OSError:
-            pass
 
 
 def clean_models():
@@ -139,7 +137,8 @@ def clean_models():
     delete_files = [file for file in glob.glob(str(test.TEST_MODELS_ROOT / '*.sql'), recursive=True)]
 
     for file in delete_files:
-        os.remove(file)
+        if os.path.isfile(file):
+            os.remove(file)
 
 
 def create_dummy_model():
