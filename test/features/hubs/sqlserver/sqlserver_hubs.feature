@@ -4,14 +4,14 @@ Feature: [SQLS-HUB] Hubs
   Scenario: [SQLS-HUB-001] Simple load of stage data into an empty hub, PK is a hash of a single column
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1993-01-01 | TPCH   |
-      | 1001        | Alice         | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-01 | TPCH   |
-      | 1003        | Chad          | 1993-01-01 | TPCH   |
-      | 1004        | Dom           | 1993-01-01 | TPCH   |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+      | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
+      | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
     And I stage the STG_CUSTOMER data
     When I load the HUB_CUSTOMER hub
     Then the HUB_CUSTOMER table should contain expected data
@@ -25,14 +25,14 @@ Feature: [SQLS-HUB] Hubs
   Scenario: [SQLS-HUB-002] Simple load of stage data into an empty hub, PK is a hash of a list of columns
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1993-01-01 | TPCH   |
-      | 1001        | Alice         | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-01 | TPCH   |
-      | 1003        | Chad          | 1993-01-01 | TPCH   |
-      | 1004        | Dom           | 1993-01-01 | TPCH   |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 2006-04-17   | 1993-01-01 | TPCH   |
+      | 1003        | Chad          | 2013-02-04   | 1993-01-01 | TPCH   |
+      | 1004        | Dom           | 2018-04-13   | 1993-01-01 | TPCH   |
     And I stage the STG_CUSTOMER_HASHLIST data
     When I load the HUB_CUSTOMER hub
     Then the HUB_CUSTOMER table should contain expected data
