@@ -27,6 +27,7 @@ stages:
             displayName: "Install 1Password"
 
       - job: 'setup_harness'
+        dependsOn: 'install_dependencies'
         steps:
           - script: pipenv run inv setup -p snowflake
 
