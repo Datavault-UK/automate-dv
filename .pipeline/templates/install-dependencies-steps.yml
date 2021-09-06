@@ -1,0 +1,13 @@
+steps:
+  - script: pip install pipenv
+    displayName: 'Install pipenv'
+  - script: python -m pipenv lock --dev -r > requirements.txt
+    displayName: 'Generate requirements file'
+  - script: pip install -r requirements.txt
+    displayName: 'Install Python dependencies'
+  - script: |
+      curl -sSfo op.zip \
+        https://bucket.agilebits.com/cli-private-beta/v2/op_linux_amd64_v2-alpha1.zip \
+        && unzip -od /usr/local/bin/ op.zip \
+        && rm op.zip
+    displayName: "Install 1Password"
