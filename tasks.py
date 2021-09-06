@@ -236,6 +236,33 @@ def run_macro_tests(c, platform=None, disable_op=False):
     c.run(command)
 
 
+@task
+def run_harness_tests(c, platform=None, disable_op=False):
+    """
+    Run harness tests with secrets
+        :param c: invoke context
+        :param platform: dbt profile platform/target
+        :param disable_op: Disable 1Password
+    """
+
+    platform = c.platform if not platform else platform
+
+    # Select dbt profile
+    if check_platform(c, platform):
+        os.environ['PLATFORM'] = platform
+        logger.info(f"Running harness tests tests for '{platform}'.")
+
+    pytest_command = f"pytest {str(test.TEST_HARNESS_TESTS_ROOT.absolute())} -n 4 -vv"
+
+    if disable_op:
+        dbtvault_harness_utils.setup_db_creds(platform)
+        command = pytest_command
+    else:
+        command = f"op run -- {pytest_command}"
+
+    c.run(command)
+
+
 ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
                 check_platform, run_dbt, run_macro_tests)
 ns.configure({'project': 'test', 'platform': 'snowflake'})
