@@ -11,7 +11,6 @@ stages:
   - stage: 'Build_environment'
     jobs:
       - job: 'install_dependencies'
-
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -26,4 +25,29 @@ stages:
                 && unzip -od /usr/local/bin/ op.zip \
                 && rm op.zip
             displayName: "Install 1Password"
-          - script: op read op://dbtvault/snowflake/database
+
+      - job: 'setup_harness'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - script: inv setup -p snowflake
+
+  - stage: 'run_harness_tests'
+    jobs:
+      - job: 'run_harness'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - script: pipenv run inv run-harness-tests -p snowflake
+
+  - stage: 'run_macro_tests'
+    jobs:
+      - job: 'run_snowflake'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - script: pipenv run inv run-macro-tests -p snowflake
+
