@@ -8,52 +8,26 @@ pool:
   vmImage: ubuntu-latest
 
 stages:
-  - stage: 'Build_environment'
+  - stage: 'unit_tests'
+    displayName: 'Run Unit Tests'
     jobs:
-      - job: 'install_dependencies'
+      - job: 'run_harness_tests'
+        displayName: 'Run Test Harness Unit Tests'
         steps:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
-          - script: pip install pipenv
-            displayName: 'Install pipenv'
-          - script: python -m pipenv lock --dev -r > requirements.txt
-            displayName: 'Generate requirements file'
-          - script: pip install -r requirements.txt
-            displayName: 'Install Python dependencies'
-          - script: |
-              curl -sSfo op.zip \
-                https://bucket.agilebits.com/cli-private-beta/v2/op_linux_amd64_v2-alpha1.zip \
-                && unzip -od /usr/local/bin/ op.zip \
-                && rm op.zip
-            displayName: "Install 1Password"
+          - template: templates/install-dependencies-steps.yml
+          - script: python -m inv setup -p snowflake
+          - script: python -m inv run-harness-tests -p snowflake
 
-      - job: 'setup_harness'
-        displayName: 'Setup Test Harness'
-        dependsOn: 'install_dependencies'
+      - job: 'run_snowflake_tests'
+        displayName: 'Run Snowflake Macro Unit Tests'
         steps:
           - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.9'
-          - script: pipenv run inv setup -p snowflake
-
-  - stage: 'run_harness_tests'
-    displayName: 'Run Test Harness Tests'
-    jobs:
-      - job: 'run_harness'
-        steps:
-          - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.9'
-          - script: pipenv run inv run-harness-tests -p snowflake
-
-  - stage: 'run_macro_tests'
-    displayName: 'Run Macro Harness Tests'
-    jobs:
-      - job: 'run_snowflake'
-        steps:
-          - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.9'
-          - script: pipenv run inv run-macro-tests -p snowflake
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: python -m inv setup -p snowflake
+          - script: python -m inv run-macro-tests -p snowflake
 
