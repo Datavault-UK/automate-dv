@@ -4,13 +4,13 @@ dbtvault:
       type: snowflake
       account: "{{ op://dbtvault/snowflake/account }}"
 
-      user: "{{ op://dbtvault/snowflake/username_pipeline }}"
-      password: "{{ op://dbtvault/snowflake/password_pipeline }}"
+      user: "{{ op://dbtvault/snowflake-pipeline/username }}"
+      password: "{{ op://dbtvault/snowflake-pipeline/password }}"
 
-      role: "{{ op://dbtvault/snowflake/role }}"
-      database: "{{ op://dbtvault/snowflake/database }}"
-      warehouse: "{{ op://dbtvault/snowflake/warehouse }}"
-      schema: "{{ op://dbtvault/snowflake/schema }}"
+      role: "{{ op://dbtvault/snowflake-pipeline/role }}"
+      database: "{{ op://dbtvault/snowflake-pipeline/database }}"
+      warehouse: "{{ op://dbtvault/snowflake-pipeline/warehouse }}"
+      schema: "{{ op://dbtvault/snowflake-pipeline/schema }}"
 
       threads: 4
       client_session_keep_alive: False
