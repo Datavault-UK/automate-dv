@@ -17,8 +17,10 @@ stages:
               versionSpec: '3.9'
           - script: pip install pipenv
             displayName: 'Install pipenv'
-          - script: pipenv install --dev
-            displayName: 'Install Pipenv dependencies'
+          - script: python -m pipenv lock --dev -r > requirements.txt
+            displayName: 'Generate requirements file'
+          - script: pip install -r requirements.txt
+            displayName: 'Install Python dependencies'
           - script: |
               curl -sSfo op.zip \
                 https://bucket.agilebits.com/cli-private-beta/v2/op_linux_amd64_v2-alpha1.zip \
@@ -27,19 +29,31 @@ stages:
             displayName: "Install 1Password"
 
       - job: 'setup_harness'
+        displayName: 'Setup Test Harness'
         dependsOn: 'install_dependencies'
         steps:
+          - task: UsePythonVersion@0
+              inputs:
+                versionSpec: '3.9'
           - script: pipenv run inv setup -p snowflake
 
   - stage: 'run_harness_tests'
+    displayName: 'Run Test Harness Tests'
     jobs:
       - job: 'run_harness'
         steps:
+          - task: UsePythonVersion@0
+              inputs:
+                versionSpec: '3.9'
           - script: pipenv run inv run-harness-tests -p snowflake
 
   - stage: 'run_macro_tests'
+    displayName: 'Run Macro Harness Tests'
     jobs:
       - job: 'run_snowflake'
         steps:
+          - task: UsePythonVersion@0
+              inputs:
+                versionSpec: '3.9'
           - script: pipenv run inv run-macro-tests -p snowflake
 
