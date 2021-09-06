@@ -31,7 +31,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
-          - script: inv setup -p snowflake
+          - script: pipenv run inv setup -p snowflake
 
   - stage: 'run_harness_tests'
     jobs:
