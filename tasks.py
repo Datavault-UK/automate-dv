@@ -13,7 +13,7 @@ logger.setLevel(logging.INFO)
 
 
 @task()
-def setup(c, platform=None, project=None, disable_op=False):
+def setup(c, platform=None, project=None, disable_op=False, env='local'):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
@@ -21,22 +21,26 @@ def setup(c, platform=None, project=None, disable_op=False):
         (Optional if defaults already set)
         :param disable_op: Disable 1Password
         :param project: dbt project to run with (Optional if defaults already set)
+        :param env: Environment to run in. local or pipeline
     """
     if platform:
         c.platform = platform
     if project:
         c.project = project
+    if env:
+        c.env = env
 
     set_defaults(c, platform=c.platform, project=c.project)
     logger.info(f"Platform set to '{c.platform}'")
     logger.info(f"Project set to '{c.project}'")
+    logger.info(f"Environment set to '{c.env}'")
 
     if disable_op:
         logger.info('Checking dbt connection... (running dbt debug)')
         run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
     else:
         logger.info(f'Injecting credentials to files...')
-        inject_for_platform(c, platform)
+        inject_for_platform(c, platform, env=env)
 
     logger.info(f'Installing dbtvault-dev in test project...')
     run_dbt(c, 'deps', platform=platform, project='test', disable_op=disable_op)
@@ -90,24 +94,43 @@ def inject_to_file(c, from_file, to_file):
 
 
 @task
-def inject_for_platform(c, platform):
-    if platform == 'snowflake':
-        profiles_from_file = 'env/snowflake/profiles_snowflake.tpl.yml'
-        db_from_file = 'env/snowflake/db_snowflake.tpl.env'
+def inject_for_platform(c, platform, env='local'):
+    available_envs = ["pipeline", "local"]
 
-    elif platform == 'bigquery':
-        profiles_from_file = 'env/bigquery/profiles_bigquery.tpl.yml'
-        db_from_file = 'env/bigquery/db_bigquery.tpl.env'
+    files = {
+        "snowflake": {
+            "local": {
+                "profile": 'env/snowflake/profiles_snowflake.tpl.yml',
+                "db": 'env/snowflake/db_snowflake.tpl.env'
+            },
+            "pipeline": {
+                "profile": 'env/snowflake/profiles_snowflake_pipeline.tpl.yml',
+                "db": 'env/snowflake/db_snowflake_pipeline.tpl.env'
+            }
+        },
+        "bigquery": {
+            "local": {
+                "profile": 'env/bigquery/profiles_bigquery.tpl.yml',
+                "db": 'env/bigquery/db_bigquery.tpl.env'
+            }
+        },
+        "sqlserver": {
+            "local": {
+                "profile": 'env/sqlserver/profiles_sqlserver.tpl.yml',
+                "db": 'env/sqlserver/db_sqlserver.tpl.env'
+            }
+        }
+    }
 
-    elif platform == 'sqlserver':
-        profiles_from_file = 'env/sqlserver/profiles_sqlserver.tpl.yml'
-        db_from_file = 'env/sqlserver/db_sqlserver.tpl.env'
-
-    else:
+    if platform not in files.keys():
         raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
-
-    inject_to_file(c, from_file=profiles_from_file, to_file='env/profiles.yml')
-    inject_to_file(c, from_file=db_from_file, to_file='env/db.env')
+    else:
+        if env in available_envs:
+            if files[platform].get(env, None):
+                inject_to_file(c, from_file=files[platform][env]['profile'], to_file='env/profiles.yml')
+                inject_to_file(c, from_file=files[platform][env]['db'], to_file='env/db.env')
+            else:
+                raise ValueError(f"Environment '{env}' not available for platform '{platform}'")
 
 
 @task
@@ -137,12 +160,13 @@ def check_project(c, project='test'):
 
 
 @task
-def change_platform(c, platform, disable_op=False):
+def change_platform(c, platform, disable_op=False, env='local'):
     """
     Change default platform platform
         :param c: invoke context
         :param platform: dbt profile platform (Optional if defaults already set)
         :param disable_op: Disable 1Password
+        :param env: Environment to run in. local or pipeline
     """
 
     check_platform(c, platform)
@@ -152,7 +176,7 @@ def change_platform(c, platform, disable_op=False):
     if disable_op:
         pass
     else:
-        inject_for_platform(c, platform=platform)
+        inject_for_platform(c, platform=platform, env=env)
 
     dict_file = {
         'project': c.project,
@@ -264,5 +288,5 @@ def run_harness_tests(c, platform=None, disable_op=False):
 
 
 ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
-                check_platform, run_dbt, run_macro_tests)
-ns.configure({'project': 'test', 'platform': 'snowflake'})
+                check_platform, run_dbt, run_macro_tests, run_harness_tests)
+ns.configure({'project': 'test', 'platform': 'snowflake', 'env': 'local'})
