@@ -1,19 +1,17 @@
-{%- macro eff_sat_oos(src_pk, src_dfk, src_sfk, src_hashdiff, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro eff_sat_oos(src_pk, src_dfk, src_sfk, status, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- adapter.dispatch('eff_sat_oos', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                src_start_date=src_start_date, src_end_date=src_end_date,
-                                                src_hashdiff = src_hadhsiff, src_eff=src_eff, src_ldts=src_ldts,
+                                                status=status, src_eff=src_eff, src_ldts=src_ldts,
                                                 src_source=src_source, source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__eff_sat_oos(src_pk, src_dfk, src_sfk,src_hashdiff, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__eff_sat_oos(src_pk, src_dfk, src_sfk, status, src_eff, src_ldts, src_source, source_model) -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                       src_start_date=src_start_date, src_end_date=src_end_date,
-                                       src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                       src_hashdiff = src_hadhsiff ,source_model=source_model) -}}
+                                       status=status, src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                       source_model=source_model) -}}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_hashdiff, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
@@ -22,8 +20,10 @@
 
 {%- set max_date = '9999-12-31 23:59:59.999' %}
 
+
 WITH source_data AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }},
+           ('TRUE'::BOOLEAN) AS {{ status }}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
@@ -38,7 +38,7 @@ WITH source_data AS (
 
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
+    SELECT {{ dbtvault.alias_all(source_cols, 'b') }}, b.{{- status }},
            ROW_NUMBER() OVER (
                 PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
@@ -51,20 +51,21 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('{{ max_date }}')
+    WHERE status = 'TRUE'
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}, {{ status }}
     FROM latest_records AS d
-    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('{{ max_date }}')
+    WHERE status= 'FALSE'
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ dbtvault.alias_all(source_cols, 'f') }}
+        {{ dbtvault.alias_all(source_cols, 'f') }},
+        'TRUE'::BOOLEAN AS {{ status }}
     FROM source_data AS f
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
@@ -76,11 +77,10 @@ new_reopened_records AS (
     SELECT DISTINCT
         lc.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lc') }},
-        lc.{{ src_start_date }} AS {{ src_start_date }},
-        g.{{ src_end_date }} AS {{ src_end_date }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
-        g.{{ src_source }}
+        g.{{ src_source }},
+        'TRUE'::BOOLEAN AS {{ status }}
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
@@ -94,12 +94,10 @@ new_closed_records AS (
     SELECT DISTINCT
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        lo.{{ src_start_date }} AS {{ src_start_date }},
-
-        h.{{ src_eff }} AS {{ src_end_date }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
-        lo.{{ src_source }}
+        lo.{{ src_source }},
+        'FALSE'::BOOLEAN AS {{ status }}
     FROM source_data AS h
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
@@ -122,7 +120,8 @@ records_to_insert AS (
 {%- else %}
 
 records_to_insert AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'i') }},
+    {{ status }}
     FROM source_data AS i
 )
 

@@ -208,7 +208,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
 
 
 def eff_sat_oos(model_name, src_pk, src_dfk, src_sfk,
-                src_start_date, src_hashdiff, src_end_date, src_eff, src_ldts, src_source,
+                status, src_eff, src_ldts, src_source,
                 source_model, config, depends_on=""):
     """
     Generate an effectivity satellite model template
@@ -217,22 +217,20 @@ def eff_sat_oos(model_name, src_pk, src_dfk, src_sfk,
         :param src_dfk: Source driving foreign key
         :param src_sfk: Source surrogate foreign key
         :param src_eff: Source effective from
-        :param src_start_date: Source start date
-        :param src_end_date: Source end date
+        :param src_start_date: Status flag that shows if link is active or not.
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
         :param config: Optional model config
         :param depends_on: Optional forced dependency
-        :param src_hashdiff: Hashdiff made of the Start_Date and End_date
     """
 
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.eff_sat_oos(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
-                          src_start_date={src_start_date}, src_end_date={src_end_date},
-                          src_hashdiff={src_hashdiff}, src_eff={src_eff}, src_ldts={src_ldts}, 
+                          status={status}, 
+                          src_eff={src_eff}, src_ldts={src_ldts}, 
                           src_source={src_source}, source_model={source_model}) }}}}
     """
 

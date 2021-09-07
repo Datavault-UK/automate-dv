@@ -11,9 +11,7 @@ def eff_satellite_oos(context):
         "STG_CUSTOMER": {
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["START_DATE", "END_DATE"]}
+            "ORDER_PK": "ORDER_ID"
         }
     }
 
@@ -22,9 +20,7 @@ def eff_satellite_oos(context):
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
+            "status": "STATUS",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -47,9 +43,7 @@ def eff_satellite_oos(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "HASHDIFF": "BINARY(16)",
-                "START_DATE": "DATE",
-                "END_DATE": "DATE",
+                "STATUS": "BOOLEAN",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
