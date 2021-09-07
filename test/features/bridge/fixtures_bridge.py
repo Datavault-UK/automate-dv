@@ -387,6 +387,7 @@ def bridge(context):
     }
 
 
+@fixture
 def bridge_bigquery(context):
     """
     Define the structures and metadata to perform bridge load

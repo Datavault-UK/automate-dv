@@ -1,5 +1,7 @@
 {%- macro pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model ) -%}
 
+{# TODO Should the length of the ghost_pk zero hash be determined by the hashing option being used, i.e. MD5 = 16, SHA = 32 ? #}
+
     {{- adapter.dispatch('pit', 'dbtvault')(source_model=source_model, src_pk=src_pk,
                                             as_of_dates_table=as_of_dates_table,
                                             satellites=satellites,
