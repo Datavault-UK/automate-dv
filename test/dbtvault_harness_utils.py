@@ -129,6 +129,21 @@ def clean_csv(model_name=None):
             os.remove(file)
 
 
+def clean_sql(model_name=None):
+    """
+    Deletes csv files in csv folder.
+    """
+
+    if model_name:
+        delete_files = [test.TEST_MODELS_ROOT / f"{model_name.lower()}.sql"]
+    else:
+        delete_files = [file for file in glob.glob(str(test.TEST_MODELS_ROOT / '*.sql'), recursive=True)]
+
+    for file in delete_files:
+        if os.path.isfile(file):
+            os.remove(file)
+
+
 def clean_models():
     """
     Deletes models in features folder.
