@@ -515,6 +515,10 @@ def expect_data(context, model_name):
 def expect_data(context, model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
+        # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_sql(model_name.lower() + "_expected_seed")
+
         # Create seed file with no data rows
         expected_model_name = f"{model_name}_EXPECTED"
 
@@ -524,14 +528,14 @@ def expect_data(context, model_name):
 
         empty_table = Table(headings=headings, rows=row)
 
-        seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+        seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=empty_table,
                                                                      model_name=expected_model_name)
 
         # Create empty expected data table using empty seed file
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[model_name])
 
-        seed_logs = context.dbt_test_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
+        seed_logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         # Run comparison test between target table and expected data table
         unique_id = context.vault_structure_columns[model_name]['src_pk']
@@ -543,7 +547,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = context.dbt_test_utils.run_dbt_command(["dbt", "test"])
+        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
