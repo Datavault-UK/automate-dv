@@ -94,7 +94,6 @@ Feature: [SQLS-BRG] Bridge table
       | 2018-05-31 00:00:00.000 |
     When I load the vault
     Then the BRIDGE_CUSTOMER_ORDER table should be empty
-      | CUSTOMER_PK | AS_OF_DATE | LINK_CUSTOMER_ORDER_PK |
     Given the RAW_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
       | 1002        | 100      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
