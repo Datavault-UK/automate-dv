@@ -3,7 +3,8 @@ trigger:
   branches:
     include:
       - develop
-      - feat/harness-refactor
+    exclude:
+      - feat/*
 
 pool:
   vmImage: ubuntu-latest
