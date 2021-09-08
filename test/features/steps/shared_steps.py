@@ -459,6 +459,10 @@ def stage_processing(context, processed_stage_name):
 def expect_data(context, model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
+        # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_sql(model_name.lower() + "_expected_seed")
+
         expected_model_name = f"{model_name}_EXPECTED"
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
@@ -522,11 +526,10 @@ def expect_data(context, model_name):
         # Create seed file with no data rows
         expected_model_name = f"{model_name}_EXPECTED"
 
-        headings = [k for k, v in context.seed_config[model_name]['+column_types'].items()]
+        table_headings = list(context.seed_config[model_name]["+column_types"].keys())
+        row = Row(cells=[], headings=table_headings)
 
-        row = Row(cells=[], headings=headings)
-
-        empty_table = Table(headings=headings, rows=row)
+        empty_table = Table(headings=table_headings, rows=row)
 
         seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=empty_table,
                                                                      model_name=expected_model_name)
@@ -543,7 +546,7 @@ def expect_data(context, model_name):
         test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                      expected_output_csv=seed_file_name,
                                                                      unique_id=unique_id,
-                                                                     columns_to_compare=headings)
+                                                                     columns_to_compare=table_headings)
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
