@@ -49,7 +49,7 @@ latest_records AS (
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'c') }}, c.{{- status }}
     FROM latest_records AS c
     WHERE status = 'TRUE'
 ),
@@ -65,7 +65,7 @@ latest_closed AS (
 new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'f') }},
-        'TRUE'::BOOLEAN AS {{ status }}
+        f.{{ status }}
     FROM source_data AS f
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
@@ -109,8 +109,6 @@ new_closed_records AS (
 
 records_to_insert AS (
     SELECT * FROM new_open_records
-    UNION
-    SELECT * FROM new_reopened_records
     {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM new_closed_records
