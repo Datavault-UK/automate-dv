@@ -461,7 +461,7 @@ def expect_data(context, model_name):
 
         # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
-        dbtvault_harness_utils.clean_sql(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
 
         expected_model_name = f"{model_name}_EXPECTED"
 
@@ -521,7 +521,7 @@ def expect_data(context, model_name):
 
         # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
-        dbtvault_harness_utils.clean_sql(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
 
         # Create seed file with no data rows
         expected_model_name = f"{model_name}_EXPECTED"
