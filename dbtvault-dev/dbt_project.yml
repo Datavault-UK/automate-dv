@@ -17,7 +17,7 @@ clean-targets:
 
 vars:
   hash: MD5
-  max_datetime: '9999-12-31 23:59:59.999'
+  max_datetime: '{{ dbtvault.max_datetime() }}'
 
 dispatch:
   - macro_namespace: dbt_sqlserver
