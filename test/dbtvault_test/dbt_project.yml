@@ -18,6 +18,8 @@ clean-targets:
 
 vars:
   max_date: TO_DATE("9999-12-31")
+  hash: MD5
+  max_datetime: '{{ dbtvault.max_datetime() }}'
 
 seeds:
   +quote_columns: true
@@ -46,13 +48,3 @@ seeds:
         BOOKING_FK: BYTES
         ORDER_FK: BYTES
         LOAD_DATE: DATE
-    temp:
-      satellite_seed:
-        +column_types:
-          CUSTOMER_PK: BINARY(16)
-          CUSTOMER_NAME: VARCHAR
-          CUSTOMER_DOB: DATE
-          HASHDIFF: BINARY(16)
-          EFFECTIVE_FROM: DATE
-          LOAD_DATE: DATE
-          SOURCE: VARCHAR
