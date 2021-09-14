@@ -61,6 +61,11 @@ fixtures_registry = {
          "bigquery": fixtures_t_link.t_link_comppk_bigquery,
          "sqlserver": fixtures_t_link.t_link_comppk_sqlserver},
 
+    "fixture.t_link_tw":
+        {"snowflake": fixtures_t_link.t_link_tw,
+         "bigquery": fixtures_t_link.t_link_tw_bigquery,
+         "sqlserver": fixtures_t_link.t_link_tw_sqlserver},
+
     "fixture.satellite":
         {"snowflake": fixtures_sat.satellite,
          "bigquery": fixtures_sat.satellite_bigquery,

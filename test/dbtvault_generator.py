@@ -119,7 +119,7 @@ def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config,
 
 
 def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-           src_payload=None, depends_on=""):
+           src_payload=None, depends_on="", time_window_period=None, time_window_value=None):
     """
     Generate a t-link model template
         :param model_name: Name of the model file
@@ -132,6 +132,8 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
         :param source_model: Model name to select from
         :param config: Optional model config
         :param depends_on: Optional forced dependency
+        :param time_window_period: Optional year, month, week, etc.
+        :param time_window_value: Optional last nn time window periods
     """
 
     template = f"""
@@ -139,7 +141,7 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
     {{{{ config({config}) }}}}
     {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, src_payload={src_payload if src_payload else 'none'}, 
                          src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
-                         source_model={source_model}) }}}}
+                         source_model={source_model}, time_window_period={time_window_period}, time_window_value={time_window_value}) }}}}
     """
 
     template_to_file(template, model_name)
