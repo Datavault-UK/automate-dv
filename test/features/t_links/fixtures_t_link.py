@@ -419,7 +419,7 @@ def t_link_tw(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "T_LINK": {
+        "T_LINK_TW": {
             "+column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
@@ -483,7 +483,7 @@ def t_link_tw_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
-        "T_LINK": {
+        "T_LINK_TW": {
             "+column_types": {
                 "TRANSACTION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
