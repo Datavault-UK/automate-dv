@@ -295,6 +295,9 @@ def create_csv(context, raw_stage_model_name):
 
     if dbtvault_harness_utils.platform() == "sqlserver":
 
+        # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        dbtvault_harness_utils.clean_csv(raw_stage_model_name.lower() + "_seed")
+
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=raw_stage_model_name,
                                                                         target_model_name=raw_stage_model_name)
@@ -331,6 +334,9 @@ def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
     if dbtvault_harness_utils.platform() == "sqlserver":
+
+        # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        dbtvault_harness_utils.clean_csv(table_name.lower() + "_seed")
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=table_name,
@@ -392,6 +398,7 @@ def create_csv(context, raw_stage_model_name):
 
     if dbtvault_harness_utils.platform() == "sqlserver":
 
+        # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
         # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
         # For Snowflake deletion of seed file is not required but does not cause a problem if performed
         dbtvault_harness_utils.clean_csv(raw_stage_model_name.lower() + "_seed")
@@ -452,6 +459,10 @@ def stage_processing(context, processed_stage_name):
 def expect_data(context, model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
+        # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
+
         expected_model_name = f"{model_name}_EXPECTED"
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
@@ -508,23 +519,26 @@ def expect_data(context, model_name):
 def expect_data(context, model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
+        # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
+
         # Create seed file with no data rows
         expected_model_name = f"{model_name}_EXPECTED"
 
-        headings = [k for k, v in context.seed_config[model_name]['+column_types'].items()]
+        table_headings = list(context.seed_config[model_name]["+column_types"].keys())
+        row = Row(cells=[], headings=table_headings)
 
-        row = Row(cells=[], headings=headings)
+        empty_table = Table(headings=table_headings, rows=row)
 
-        empty_table = Table(headings=headings, rows=row)
-
-        seed_file_name = context.dbt_test_utils.context_table_to_csv(table=empty_table,
+        seed_file_name = dbtvault_harness_utils.context_table_to_csv(table=empty_table,
                                                                      model_name=expected_model_name)
 
         # Create empty expected data table using empty seed file
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[model_name])
 
-        seed_logs = context.dbt_test_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
+        seed_logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         # Run comparison test between target table and expected data table
         unique_id = context.vault_structure_columns[model_name]['src_pk']
@@ -532,11 +546,11 @@ def expect_data(context, model_name):
         test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                      expected_output_csv=seed_file_name,
                                                                      unique_id=unique_id,
-                                                                     columns_to_compare=headings)
+                                                                     columns_to_compare=table_headings)
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = context.dbt_test_utils.run_dbt_command(["dbt", "test"])
+        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
