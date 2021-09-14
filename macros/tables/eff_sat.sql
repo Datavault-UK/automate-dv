@@ -20,7 +20,7 @@
 
 {{- dbtvault.prepend_generated_by() }}
 
-{%- set max_date = '9999-12-31 23:59:59.999' %}
+{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') %}
 
 WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
@@ -51,14 +51,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('{{ max_date }}')
+    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('{{ max_datetime }}')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('{{ max_date }}')
+    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -146,7 +146,7 @@ SELECT * FROM records_to_insert
 
 {{- dbtvault.prepend_generated_by() }}
 
-{%- set max_date = '9999-12-31 23:59:59.996' %}
+{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.9999999') %}
 
 WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
@@ -181,14 +181,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE CONVERT(DATE, c.{{ src_end_date }}) = CONVERT(DATE, '{{ max_date }}')
+    WHERE CONVERT(DATE, c.{{ src_end_date }}) = CONVERT(DATE, '{{ max_datetime }}')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE CONVERT(DATE, d.{{ src_end_date }}) != CONVERT(DATE, '{{ max_date }}')
+    WHERE CONVERT(DATE, d.{{ src_end_date }}) != CONVERT(DATE, '{{ max_datetime }}')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -272,7 +272,8 @@ SELECT * FROM records_to_insert
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
-{%- set max_date = '9999-12-31 23:59:59.999' -%}
+
+{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999') %}
 
 {{- dbtvault.prepend_generated_by() }}
 
@@ -310,14 +311,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE DATE(c.{{ src_end_date }}) = DATE('{{max_date}}')
+    WHERE DATE(c.{{ src_end_date }}) = DATE('{{max_datetime}}')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE DATE(d.{{ src_end_date }}) != DATE('{{max_date}}')
+    WHERE DATE(d.{{ src_end_date }}) != DATE('{{max_datetime}}')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
