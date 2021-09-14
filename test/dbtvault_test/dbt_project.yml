@@ -17,7 +17,6 @@ clean-targets:
   - dbt_modules
 
 vars:
-  max_date: TO_DATE("9999-12-31")
   hash: MD5
   max_datetime: '{{ dbtvault.max_datetime() }}'
 
