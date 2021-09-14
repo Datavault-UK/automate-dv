@@ -51,7 +51,7 @@ Feature: [SQLS-TLK_COMPPK] Transactional Links
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SQLS-TLK-COMPPK-002] Load an a non-existent Transactional Link with the period materialisation, duplicates should not be loaded
+  Scenario: [SQLS-TLK-COMPPK-003] Load an a non-existent Transactional Link with the period materialisation, duplicates should not be loaded
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -80,7 +80,7 @@ Feature: [SQLS-TLK_COMPPK] Transactional Links
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SQLS-TLK-COMPPK-003] Load a populated Transactional Link
+  Scenario: [SQLS-TLK-COMPPK-004] Load a populated Transactional Link
     Given the T_LINK_COMPPK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |
