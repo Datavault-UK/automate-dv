@@ -730,8 +730,8 @@ class DBTVAULTGenerator:
         {{{{ config({config}) }}}}
         {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, src_payload={src_payload if src_payload else 'none'}, 
                              src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
-                             source_model={source_model}, time_window_period={time_window_period},
-                             time_window_value={time_window_value}) }}}}
+                             time_window_period={time_window_period}, time_window_value={time_window_value}
+                             source_model={source_model},) }}}}
         """
 
         self.template_to_file(template, model_name)
