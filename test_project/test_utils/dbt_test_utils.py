@@ -708,7 +708,7 @@ class DBTVAULTGenerator:
         self.template_to_file(template, model_name)
 
     def t_link(self, model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-               src_payload=None, depends_on="", time_window_period=None, time_window_value=None):
+               time_window_period=None, time_window_value=None, src_payload=None, depends_on=""):
         """
         Generate a t-link model template
             :param model_name: Name of the model file

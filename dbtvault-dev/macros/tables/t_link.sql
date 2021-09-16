@@ -1,9 +1,10 @@
 {%- macro t_link(src_pk, src_fk, src_payload, src_eff, src_ldts, src_source, source_model, time_window_period, time_window_value) -%}
 
-    {{- adapter.dispatch('t_link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
-                                               src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                               source_model=source_model,
-                                               time_window_period=time_window_period, time_window_value=time_window_value) -}}
+    {{- adapter.dispatch('t_link', packages = dbtvault.get_dbtvault_namespaces())(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
+                                                                                  src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                                                  source_model=source_model,
+                                                                                  time_window_period=time_window_period,
+                                                                                  time_window_value=time_window_value) -}}
 
 {%- endmacro %}
 
@@ -11,7 +12,9 @@
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk, src_eff=src_eff,
                                        src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
+                                       source_model=source_model,
+                                       time_window_period=time_window_period,
+                                       time_window_value=time_window_value) -}}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
