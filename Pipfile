@@ -29,4 +29,4 @@ filelock = "*"
 dbt-sqlserver = "*"
 
 [requires]
-python_full_version = "3.9.6"
+python_version = "3.9"
