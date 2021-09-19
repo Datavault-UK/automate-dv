@@ -1,4 +1,5 @@
 import glob
+import json
 import logging
 import os
 import re
@@ -413,6 +414,7 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         command.append('--full-refresh')
 
     if args:
+        args = json.dumps(args)
         command.extend([f"--vars '{args}'"])
 
     return run_dbt_command(command)
