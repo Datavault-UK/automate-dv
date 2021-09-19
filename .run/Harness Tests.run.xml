@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Harness Tests" type="tests" factoryName="py.test" activateToolWindowBeforeRun="false">
+  <configuration default="false" name="Harness Tests" type="tests" factoryName="py.test">
     <module name="dbtvault" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />

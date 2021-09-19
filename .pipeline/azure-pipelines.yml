@@ -13,8 +13,8 @@ stages:
   - stage: 'unit_tests'
     displayName: 'Run Unit Tests'
     jobs:
-      - job: 'run_harness_tests'
-        displayName: 'Run Test Harness Unit Tests'
+      - job: 'run_unit_tests'
+        displayName: 'Run Unit Tests'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -24,15 +24,5 @@ stages:
             displayName: "Setup harness - Snowflake"
           - script: inv run-harness-tests -p snowflake
             displayName: "Run harness tests"
-
-      - job: 'run_snowflake_tests'
-        displayName: 'Run Snowflake Macro Unit Tests'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness - Snowflake"
           - script: inv run-macro-tests -p snowflake
             displayName: "Run macro tests - Snowflake"
