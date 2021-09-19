@@ -1,3 +1,4 @@
+import glob
 import logging
 import os
 from pathlib import Path
@@ -247,7 +248,7 @@ def run_macro_tests(c, platform=None, disable_op=False):
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
-        logger.info(f"Running macro tests tests for '{platform}'.")
+        logger.info(f"Running macro tests for '{platform}'.")
 
     pytest_command = f"pytest {str(test.TEST_MACRO_ROOT.absolute())} -n 4 -vv"
 
@@ -274,7 +275,7 @@ def run_harness_tests(c, platform=None, disable_op=False):
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
-        logger.info(f"Running harness tests tests for '{platform}'.")
+        logger.info(f"Running harness tests for '{platform}'.")
 
     pytest_command = f"pytest {str(test.TEST_HARNESS_TESTS_ROOT.absolute())} -n 4 -vv"
 
@@ -287,6 +288,46 @@ def run_harness_tests(c, platform=None, disable_op=False):
     c.run(command)
 
 
+@task
+def run_integration_tests(c, structures=None, platform=None, disable_op=False):
+    feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats', 'ma_sats',
+                           'xts', 'cycle', 'bridge', 'pit'}
+
+    structures = set(str(structures).split(","))
+
+    platform = c.platform if not platform else platform
+
+    # Select dbt profile
+    if check_platform(c, platform):
+        os.environ['PLATFORM'] = platform
+        logger.info(f"Running integration tests for '{platform}'.")
+
+    feature_directories.intersection_update(structures)
+
+    collected_files = dict.fromkeys(feature_directories)
+
+    logger.info(f"Running specific integration tests: {', '.join(feature_directories)}")
+
+    for feat_dir in feature_directories:
+        feat_files = glob.glob(f'**/{feat_dir}/{platform}/*.feature', recursive=True)
+        collected_files[feat_dir] = feat_files
+
+        for file in feat_files:
+            pytest_command = f"behave '{file}'"
+
+            if disable_op:
+                dbtvault_harness_utils.setup_db_creds(platform)
+                command = pytest_command
+            else:
+                command = f"op run -- {pytest_command}"
+
+            c.run(command)
+
+    for struct, file_list in collected_files.items():
+        logger.info(f"Using the following feature files from {struct} directory: {', '.join(file_list)}")
+
+
 ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
-                check_platform, run_dbt, run_macro_tests, run_harness_tests)
+                check_platform, run_dbt, run_macro_tests, run_harness_tests, run_integration_tests)
+
 ns.configure({'project': 'test', 'platform': 'snowflake', 'env': 'local'})
