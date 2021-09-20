@@ -16,7 +16,7 @@ stages:
   - stage: 'unit_tests'
     displayName: 'Run Unit Tests'
     jobs:
-      - job: 'run_unit_tests'
+      - job: 'unit_tests_00'
         displayName: 'Run Unit Tests'
         steps:
           - task: UsePythonVersion@0
@@ -29,11 +29,14 @@ stages:
             displayName: "Run harness tests"
           - script: inv run-macro-tests -p snowflake
             displayName: "Run macro tests - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
   - stage: 'integration_tests_snowflake'
     displayName: 'Run Integration Tests (Snowflake)'
     jobs:
       - job: 'hubs_links_01'
-        displayName: 'Run Integration Tests - Snowflake - Hubs & Links'
+        displayName: 'Integration Snowflake Hubs Links'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -45,8 +48,9 @@ stages:
             displayName: "Run Integration tests - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'sats_02'
-        displayName: 'Run Integration Tests - Snowflake - Satellites'
+        displayName: 'Integration Snowflake Satellites'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -56,3 +60,5 @@ stages:
             displayName: "Setup harness - Snowflake"
           - script: inv run-integration-tests -s sats -p snowflake
             displayName: "Run Integration tests - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
