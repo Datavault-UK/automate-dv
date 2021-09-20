@@ -163,7 +163,7 @@ def is_successful_run(dbt_logs: str):
 
 
 def is_pipeline():
-    return os.getenv('PIPELINE_NODE_INDEX') and os.getenv('PIPELINE_JOB') and os.getenv('PIPELINE_BRANCH')
+    return os.getenv('PIPELINE_JOB') and os.getenv('PIPELINE_BRANCH')
 
 
 def parse_hashdiffs(columns_as_series: Series) -> Series:
@@ -319,7 +319,7 @@ def set_custom_names():
     pipeline_metadata = {
         "snowflake": {
             "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
-                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}_{os.getenv('PIPELINE_NODE_INDEX')}"
+                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}"
         }
     }
 

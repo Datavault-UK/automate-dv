@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: test_macro
     database: "{{ target.database }}"
-    schema: "{{- target.schema -}}_{{ target.user }}{{ '_' ~ env_var('PIPELINE_BRANCH', '') | replace('-','_') | replace('.','_') | replace('/','_') if env_var('PIPELINE_BRANCH', '') }}{{ '_' ~ env_var('PIPELINE_JOB', '') if env_var('PIPELINE_JOB', '') }}{{ '_' ~ env_var('PIPELINE_NODE_INDEX', '') if env_var('PIPELINE_NODE_INDEX', '') }}"
+    schema: "{{- target.schema -}}_{{ target.user }}{{ pipeline_string() }}"
     tables:
       - name: source
         identifier: raw_source_table`
