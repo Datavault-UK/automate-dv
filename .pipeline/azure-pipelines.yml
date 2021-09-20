@@ -49,9 +49,6 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-  - stage: 'integration_tests_snowflake'
-    displayName: 'Run Integration Tests (Snowflake)'
-    jobs:
       - job: 'hubs_02'
         displayName: 'Integration Snowflake Hubs'
         steps:
