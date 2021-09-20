@@ -163,7 +163,7 @@ def is_successful_run(dbt_logs: str):
 
 
 def is_pipeline():
-    return os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH')
+    return os.getenv('PIPELINE_NODE_INDEX') and os.getenv('PIPELINE_JOB') and os.getenv('PIPELINE_BRANCH')
 
 
 def parse_hashdiffs(columns_as_series: Series) -> Series:
@@ -316,10 +316,10 @@ def set_custom_names():
     def sanitise_strings(unsanitised_str):
         return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
 
-    circleci_metadata = {
+    pipeline_metadata = {
         "snowflake": {
             "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
-                           f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}_{os.getenv('PIPELINE_NODE_INDEX')}"
         }
     }
 
@@ -334,7 +334,7 @@ def set_custom_names():
     }
 
     if is_pipeline():
-        return {k: sanitise_strings(v) for k, v in circleci_metadata[platform()].items()}
+        return {k: sanitise_strings(v) for k, v in pipeline_metadata[platform()].items()}
     else:
         return {k: sanitise_strings(v) for k, v in local_metadata[platform()].items()}
 
