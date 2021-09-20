@@ -9,45 +9,55 @@ trigger:
 pool:
   vmImage: ubuntu-latest
 
+variables:
+  PIPELINE_BRANCH: $(Build.SourceBranchName)
+
 stages:
-  - stage: 'unit_tests'
-    displayName: 'Run Unit Tests'
+  - stage: 'check'
     jobs:
-      - job: 'run_unit_tests'
-        displayName: 'Run Unit Tests'
+      - job: 'check_vars'
         steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness - Snowflake"
-          - script: inv run-harness-tests -p snowflake
-            displayName: "Run harness tests"
-          - script: inv run-macro-tests -p snowflake
-            displayName: "Run macro tests - Snowflake"
-  - stage: 'integration_tests_snowflake'
-    displayName: 'Run Integration Tests (Snowflake)'
-    jobs:
-      - job: 'run_integration_tests_sf_hl'
-        displayName: 'Run Integration Tests - Snowflake - Hubs & Links'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s hubs,links -p snowflake
-            displayName: "Run Integration tests - Snowflake"
-      - job: 'run_integration_tests_sf_s'
-        displayName: 'Run Integration Tests - Snowflake - Satellites'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s sats -p snowflake
-            displayName: "Run Integration tests - Snowflake"
+          - script: echo $PIPELINE_BRANCH
+          - script: echo $PIPELINE_JOB
+          - script: echo $PIPELINE_NODE_INDEX
+#  - stage: 'unit_tests'
+#    displayName: 'Run Unit Tests'
+#    jobs:
+#      - job: 'run_unit_tests'
+#        displayName: 'Run Unit Tests'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p snowflake -e pipeline
+#            displayName: "Setup harness - Snowflake"
+#          - script: inv run-harness-tests -p snowflake
+#            displayName: "Run harness tests"
+#          - script: inv run-macro-tests -p snowflake
+#            displayName: "Run macro tests - Snowflake"
+#  - stage: 'integration_tests_snowflake'
+#    displayName: 'Run Integration Tests (Snowflake)'
+#    jobs:
+#      - job: 'run_integration_tests_sf_hl'
+#        displayName: 'Run Integration Tests - Snowflake - Hubs & Links'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p snowflake -e pipeline
+#            displayName: "Setup harness - Snowflake"
+#          - script: inv run-integration-tests -s hubs,links -p snowflake
+#            displayName: "Run Integration tests - Snowflake"
+#      - job: 'run_integration_tests_sf_s'
+#        displayName: 'Run Integration Tests - Snowflake - Satellites'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p snowflake -e pipeline
+#            displayName: "Setup harness - Snowflake"
+#          - script: inv run-integration-tests -s sats -p snowflake
+#            displayName: "Run Integration tests - Snowflake"
