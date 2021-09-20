@@ -291,7 +291,7 @@ def run_harness_tests(c, platform=None, disable_op=False):
 @task
 def run_integration_tests(c, structures=None, platform=None, disable_op=False):
     feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats', 'ma_sats',
-                           'xts', 'cycle', 'bridge', 'pit'}
+                           'xts', 'bridge', 'pit', 'cycle'}
 
     structures = set(str(structures).split(","))
 
