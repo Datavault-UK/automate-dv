@@ -17,7 +17,6 @@ clean-targets:
   - dbt_modules
 
 vars:
-  max_date: TO_DATE("9999-12-31")
   hash: MD5
   max_datetime: '{{ dbtvault.max_datetime() }}'
 
@@ -35,16 +34,4 @@ seeds:
         CUSTOMER_PK: BINARY(16)
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
-        LOAD_DATE: DATE
-    raw_source_bq:
-      +column_types:
-        CUSTOMER_PK: BYTES
-        BOOKING_FK: BYTES
-        ORDER_FK: BYTES
-        LOAD_DATE: DATE
-    raw_source_2_bq:
-      +column_types:
-        CUSTOMER_PK: BYTES
-        BOOKING_FK: BYTES
-        ORDER_FK: BYTES
         LOAD_DATE: DATE
