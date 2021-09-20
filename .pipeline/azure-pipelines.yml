@@ -35,8 +35,8 @@ stages:
   - stage: 'integration_tests_snowflake'
     displayName: 'Run Integration Tests (Snowflake)'
     jobs:
-      - job: 'hubs_links_01'
-        displayName: 'Integration Snowflake Hubs Links'
+      - job: 'hubs_01'
+        displayName: 'Integration Snowflake Hubs'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -44,12 +44,26 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s hubs,links -p snowflake
+          - script: inv run-integration-tests -s hubs -p snowflake
             displayName: "Run Integration tests - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'sats_02'
+      - job: 'links_02'
+        displayName: 'Integration Snowflake Links'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s links -p snowflake
+            displayName: "Run Integration tests - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_03'
         displayName: 'Integration Snowflake Satellites'
         steps:
           - task: UsePythonVersion@0
