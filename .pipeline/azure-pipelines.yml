@@ -35,7 +35,24 @@ stages:
   - stage: 'integration_tests_snowflake'
     displayName: 'Run Integration Tests (Snowflake)'
     jobs:
-      - job: 'hubs_01'
+      - job: 'staging_01'
+        displayName: 'Integration Snowflake Staging'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s staging -p snowflake
+            displayName: "Staging - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+  - stage: 'integration_tests_snowflake'
+    displayName: 'Run Integration Tests (Snowflake)'
+    jobs:
+      - job: 'hubs_02'
         displayName: 'Integration Snowflake Hubs'
         steps:
           - task: UsePythonVersion@0
@@ -45,11 +62,11 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
           - script: inv run-integration-tests -s hubs -p snowflake
-            displayName: "Run Integration tests - Snowflake"
+            displayName: "Hubs - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'links_02'
+      - job: 'links_03'
         displayName: 'Integration Snowflake Links'
         steps:
           - task: UsePythonVersion@0
@@ -59,12 +76,26 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
           - script: inv run-integration-tests -s links -p snowflake
-            displayName: "Run Integration tests - Snowflake"
+            displayName: "Links - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'sats_03'
-        displayName: 'Integration Snowflake Satellites'
+      - job: 'tlinks_04'
+        displayName: 'Integration Snowflake TLinks'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s t_links -p snowflake
+            displayName: "Transactional Links - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_05'
+        displayName: 'Integration Snowflake Sats'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -73,6 +104,119 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
           - script: inv run-integration-tests -s sats -p snowflake
-            displayName: "Run Integration tests - Snowflake"
+            displayName: "Satellites - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_with_oos_06'
+        displayName: 'Integration Snowflake Sats OOS'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s sats_with_oos -p snowflake
+            displayName: "Satellites (Out of Sequence) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'eff_sats_07'
+        displayName: 'Integration Snowflake Eff Sats'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s eff_sats -p snowflake
+            displayName: "Effectivity Satellites - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      # Split this further
+      - job: 'ma_sats_08'
+        displayName: 'Integration Snowflake MA Sats'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s ma_sats -p snowflake
+            displayName: "Multi-Active Satellites - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+#      - job: 'ma_sats_1cdk_09'
+#        displayName: 'Integration Snowflake MA Sats 1CDK'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p snowflake -e pipeline
+#            displayName: "Setup harness - Snowflake"
+#          - script: inv run-integration-tests -s ma_sats -p snowflake
+#            displayName: "Multi-Active Satellites - Snowflake"
+#            env:
+#              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'xts_10'
+        displayName: 'Integration Snowflake XT Sats'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s xts -p snowflake
+            displayName: "Extended Tracking Satellites - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'bridge_11'
+        displayName: 'Integration Snowflake Bridges'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s bridge -p snowflake
+            displayName: "Bridges - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'pit_12'
+        displayName: 'Integration Snowflake PITs'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s pit -p snowflake
+            displayName: "Point In Time - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'cycle_13'
+        displayName: 'Integration Snowflake Cycles'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s cycle -p snowflake
+            displayName: "Cycles - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
