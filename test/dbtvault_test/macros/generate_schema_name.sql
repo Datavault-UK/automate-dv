@@ -41,9 +41,9 @@
 {%- macro append_pipeline_string() -%}
 
     {%- set pipeline_string -%}
-        {{- '_' ~ env_var('CIRCLE_BRANCH', '') | replace('-','_') | replace('.','_') | replace('/','_') if env_var('CIRCLE_BRANCH', '') -}}
-        {{- '_' ~ env_var('CIRCLE_JOB', '') if env_var('CIRCLE_JOB', '') -}}
-        {{- '_' ~ env_var('CIRCLE_NODE_INDEX', '') if env_var('CIRCLE_NODE_INDEX', '') -}}
+        {{- '_' ~ env_var('PIPELINE_BRANCH', '') | replace('-','_') | replace('.','_') | replace('/','_') if env_var('PIPELINE_BRANCH', '') -}}
+        {{- '_' ~ env_var('PIPELINE_JOB', '') if env_var('PIPELINE_JOB', '') -}}
+        {{- '_' ~ env_var('PIPELINE_NODE_INDEX', '') if env_var('PIPELINE_NODE_INDEX', '') -}}
     {%- endset -%}
 
     {% do return(pipeline_string) %}
