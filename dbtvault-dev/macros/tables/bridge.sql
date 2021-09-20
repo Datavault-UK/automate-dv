@@ -300,8 +300,6 @@ SELECT * FROM bridge
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
-{%  do log("max_datetime: " ~ max_datetime, true) %}
-
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
     {{- "-- depends_on: " ~ ref(stg) -}}
