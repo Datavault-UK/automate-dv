@@ -314,12 +314,13 @@ def set_custom_names():
     """
 
     def sanitise_strings(unsanitised_str):
-        return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
+        return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_").replace(' ', '_')
 
     pipeline_metadata = {
         "snowflake": {
             "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
-                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}"
+                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper(),
+            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
         }
     }
 
