@@ -148,19 +148,75 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-#      - job: 'ma_sats_1cdk_09'
-#        displayName: 'Integration Snowflake MA Sats 1CDK'
-#        steps:
-#          - task: UsePythonVersion@0
-#            inputs:
-#              versionSpec: '3.9'
-#          - template: templates/install-dependencies-steps.yml
-#          - script: inv setup -p snowflake -e pipeline
-#            displayName: "Setup harness - Snowflake"
-#          - script: inv run-integration-tests -s ma_sats -p snowflake
-#            displayName: "Multi-Active Satellites - Snowflake"
-#            env:
-#              PIPELINE_JOB: $(Agent.JobName)
+      - job: 'ma_sats_1cdk_09'
+        displayName: 'Integration Snowflake MA Sats 1CDK'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s ma_sats --subtype 1cdk -p snowflake
+            displayName: "Multi-Active Satellites (1CDK) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'ma_sats_1cdk_cyc_09'
+        displayName: 'Integration Snowflake MA Sats 1CDK-Cycles'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s ma_sats --subtype 1cdk_cycles -p snowflake
+            displayName: "Multi-Active Satellites (1CDK-Cycles) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'ma_sats_2cdk_09'
+        displayName: 'Integration Snowflake MA Sats 2CDK'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s ma_sats --subtype 2cdk -p snowflake
+            displayName: "Multi-Active Satellites (2CDK) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'ma_sats_2cdk_cyc_09'
+        displayName: 'Integration Snowflake MA Sats 2CDK-Cycles'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s ma_sats --subtype 2cdk_cycles -p snowflake
+            displayName: "Multi-Active Satellites (2CDK-Cycles) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'ma_sats_pm_09'
+        displayName: 'Integration Snowflake MA Sats PM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s ma_sats --subtype pm -p snowflake
+            displayName: "Multi-Active Satellites (PM) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'xts_10'
         displayName: 'Integration Snowflake XT Sats'
