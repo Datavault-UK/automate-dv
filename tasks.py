@@ -289,9 +289,35 @@ def run_harness_tests(c, platform=None, disable_op=False):
 
 
 @task
-def run_integration_tests(c, structures=None, platform=None, disable_op=False):
-    feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats', 'ma_sats',
-                           'xts', 'bridge', 'pit', 'cycle'}
+def run_integration_tests(c, structures=None, subtype=None, platform=None, disable_op=False):
+    feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats',
+                           'ma_sats', 'xts', 'bridge', 'pit', 'cycle'}
+
+    sub_types = {
+        'ma_sats': {
+            '1cdk': [
+                'mas_one_cdk_0_base',
+                'mas_one_cdk_1_inc',
+                'mas_one_cdk_base_sats'
+            ],
+            '1cdk_cycles': [
+                'mas_one_cdk_base_sats_cycles',
+                'mas_one_cdk_cycles_duplicates'
+            ],
+            '2cdk': [
+                'mas_two_cdk_0_base',
+                'mas_two_cdk_1_inc',
+                'mas_two_cdk_base_sats'
+            ],
+            '2cdk_cycles': [
+                'mas_two_cdk_base_sats_cycles',
+                'mas_two_cdk_cycles_duplicates'
+            ],
+            'pm': [
+                'mas_period_mat'
+            ]
+        }
+    }
 
     structures = set(str(structures).split(","))
 
@@ -312,7 +338,25 @@ def run_integration_tests(c, structures=None, platform=None, disable_op=False):
         feat_files = glob.glob(f'**/{feat_dir}/{platform}/*.feature', recursive=True)
         collected_files[feat_dir] = feat_files
 
-        for file in feat_files:
+        files = []
+
+        if subtype:
+            logger.info(f"Running subset of feature files: {feat_dir}/{subtype}")
+            if feat_dir in sub_types:
+                if subtype in sub_types[feat_dir]:
+
+                    for file_substring in sub_types[feat_dir][subtype]:
+                        for file_str in collected_files[feat_dir]:
+                            if f'{platform}_{file_substring}.feature' == Path(file_str).name:
+                                files.append(file_str)
+
+                collected_files[feat_dir] = files
+
+        for struct, file_list in collected_files.items():
+            logger.info(
+                f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
+
+        for file in files:
             pytest_command = f"behave '{file}'"
 
             if disable_op:
@@ -322,9 +366,6 @@ def run_integration_tests(c, structures=None, platform=None, disable_op=False):
                 command = f"op run -- {pytest_command}"
 
             c.run(command)
-
-    for struct, file_list in collected_files.items():
-        logger.info(f"Using the following feature files from {struct} directory: {', '.join(file_list)}")
 
 
 ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
