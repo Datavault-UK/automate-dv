@@ -772,5 +772,140 @@ def multi_source_comppk_hub_sqlserver(context):
     }
 
 
+@fixture
+def single_source_comppknk_hub(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK1": "CUSTOMER_ID",
+            "CUSTOMER_PK2": "CUSTOMER_CK"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": ["CUSTOMER_PK1", "CUSTOMER_PK2"],
+            "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "+column_types": {
+                "CUSTOMER_PK1": "BINARY(16)",
+                "CUSTOMER_PK2": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
+def single_source_comppknk_hub_bigquery(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK1": "CUSTOMER_ID",
+            "CUSTOMER_PK2": "CUSTOMER_CK"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": ["CUSTOMER_PK1", "CUSTOMER_PK2"],
+            "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "+column_types": {
+                "CUSTOMER_PK1": "STRING",
+                "CUSTOMER_PK2": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+@fixture
+def single_source_comppknk_hub_sqlserver(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK1": "CUSTOMER_ID",
+            "CUSTOMER_PK2": "CUSTOMER_CK"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": ["CUSTOMER_PK1", "CUSTOMER_PK2"],
+            "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "+column_types": {
+                "CUSTOMER_PK1": "BINARY(16)",
+                "CUSTOMER_PK2": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_CK": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_CK": "VARCHAR(4)",
+                "CUSTOMER_NAME": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        }
+    }
+
+
 
 

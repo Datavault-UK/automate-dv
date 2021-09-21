@@ -41,6 +41,11 @@ fixtures_registry = {
          "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comppk_hub_sqlserver},
 
+    "fixture.single_source_comppknk_hub":
+        {"snowflake": fixtures_hub.single_source_comppknk_hub,
+         "bigquery": fixtures_hub.single_source_comppknk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver},
+
     "fixture.multi_source_hub":
         {"snowflake": fixtures_hub.multi_source_hub,
          "bigquery": fixtures_hub.multi_source_hub_bigquery,
