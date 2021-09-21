@@ -356,7 +356,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
             logger.info(
                 f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
 
-        for file in files:
+        for file in collected_files[feat_dir]:
             pytest_command = f"behave '{file}'"
 
             if disable_op:
