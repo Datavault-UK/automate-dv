@@ -294,6 +294,23 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                            'ma_sats', 'xts', 'bridge', 'pit', 'cycle'}
 
     sub_types = {
+        'sats': {
+            'main': [
+                'sats',
+                'sats_cycles'
+            ],
+            'pm_standard': [
+                'snowflake_sats_period_mat_base',
+                'snowflake_sats_period_mat_other'
+            ],
+            'pm_ranges': [
+                'sats_period_mat_inferred_range',
+                'sats_period_mat_provided_range'
+            ],
+            'rank': [
+              'sats_rank_mat'
+            ]
+        },
         'ma_sats': {
             '1cdk': [
                 'mas_one_cdk_0_base',

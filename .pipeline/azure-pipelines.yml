@@ -91,8 +91,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'sats_05'
-        displayName: 'Integration Snowflake Sats'
+      - job: 'sats_main_05'
+        displayName: 'Integration Snowflake Sats Main'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -100,12 +100,54 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s sats -p snowflake
-            displayName: "Satellites - Snowflake"
+          - script: inv run-integration-tests -s sats --subtype main -p snowflake
+            displayName: "Satellites (Main) - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'sats_with_oos_06'
+      - job: 'sats_pms_06'
+        displayName: 'Integration Snowflake Sats PM Standard'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s sats --subtype pm_standard -p snowflake
+            displayName: "Satellites (PM Standard) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_pmr_07'
+        displayName: 'Integration Snowflake Sats PM Ranges'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s sats --subtype pm_ranges -p snowflake
+            displayName: "Satellites (PM Ranges) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_rm_08'
+        displayName: 'Integration Snowflake Sats RM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s sats --subtype rank -p snowflake
+            displayName: "Satellites (RM Ranges) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_with_oos_09'
         displayName: 'Integration Snowflake Sats OOS'
         steps:
           - task: UsePythonVersion@0
@@ -119,7 +161,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'eff_sats_07'
+      - job: 'eff_sats_10'
         displayName: 'Integration Snowflake Eff Sats'
         steps:
           - task: UsePythonVersion@0
@@ -133,7 +175,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_1cdk_08'
+      - job: 'ma_sats_1cdk_11'
         displayName: 'Integration Snowflake MA Sats 1CDK'
         steps:
           - task: UsePythonVersion@0
@@ -147,7 +189,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_1cdk_cyc_09'
+      - job: 'ma_sats_1cdk_cyc_12'
         displayName: 'Integration Snowflake MA Sats 1CDK-Cycles'
         steps:
           - task: UsePythonVersion@0
@@ -161,7 +203,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_2cdk_10'
+      - job: 'ma_sats_2cdk_13'
         displayName: 'Integration Snowflake MA Sats 2CDK'
         steps:
           - task: UsePythonVersion@0
@@ -175,7 +217,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_2cdk_cyc_11'
+      - job: 'ma_sats_2cdk_cyc_14'
         displayName: 'Integration Snowflake MA Sats 2CDK-Cycles'
         steps:
           - task: UsePythonVersion@0
@@ -189,7 +231,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_pm_12'
+      - job: 'ma_sats_pm_15'
         displayName: 'Integration Snowflake MA Sats PM'
         steps:
           - task: UsePythonVersion@0
@@ -203,7 +245,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'xts_13'
+      - job: 'xts_16'
         displayName: 'Integration Snowflake XT Sats'
         steps:
           - task: UsePythonVersion@0
@@ -217,7 +259,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'bridge_14'
+      - job: 'bridge_17'
         displayName: 'Integration Snowflake Bridges'
         steps:
           - task: UsePythonVersion@0
@@ -231,7 +273,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'pit_15'
+      - job: 'pit_18'
         displayName: 'Integration Snowflake PITs'
         steps:
           - task: UsePythonVersion@0
@@ -245,7 +287,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'cycle_16'
+      - job: 'cycle_19'
         displayName: 'Integration Snowflake Cycles'
         steps:
           - task: UsePythonVersion@0
