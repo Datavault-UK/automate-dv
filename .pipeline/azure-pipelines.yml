@@ -133,22 +133,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      # Split this further
-      - job: 'ma_sats_08'
-        displayName: 'Integration Snowflake MA Sats'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s ma_sats -p snowflake
-            displayName: "Multi-Active Satellites - Snowflake"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'ma_sats_1cdk_09'
+      - job: 'ma_sats_1cdk_08'
         displayName: 'Integration Snowflake MA Sats 1CDK'
         steps:
           - task: UsePythonVersion@0
@@ -176,7 +161,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_2cdk_09'
+      - job: 'ma_sats_2cdk_10'
         displayName: 'Integration Snowflake MA Sats 2CDK'
         steps:
           - task: UsePythonVersion@0
@@ -190,7 +175,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_2cdk_cyc_09'
+      - job: 'ma_sats_2cdk_cyc_11'
         displayName: 'Integration Snowflake MA Sats 2CDK-Cycles'
         steps:
           - task: UsePythonVersion@0
@@ -204,7 +189,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'ma_sats_pm_09'
+      - job: 'ma_sats_pm_12'
         displayName: 'Integration Snowflake MA Sats PM'
         steps:
           - task: UsePythonVersion@0
@@ -218,7 +203,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'xts_10'
+      - job: 'xts_13'
         displayName: 'Integration Snowflake XT Sats'
         steps:
           - task: UsePythonVersion@0
@@ -232,7 +217,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'bridge_11'
+      - job: 'bridge_14'
         displayName: 'Integration Snowflake Bridges'
         steps:
           - task: UsePythonVersion@0
@@ -246,7 +231,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'pit_12'
+      - job: 'pit_15'
         displayName: 'Integration Snowflake PITs'
         steps:
           - task: UsePythonVersion@0
@@ -260,7 +245,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'cycle_13'
+      - job: 'cycle_16'
         displayName: 'Integration Snowflake Cycles'
         steps:
           - task: UsePythonVersion@0
