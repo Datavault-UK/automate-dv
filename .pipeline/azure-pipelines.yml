@@ -25,6 +25,8 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
+          - script: inv run-dbt "run-operation recreate_current_schemas" -p snowflake
+            displayName: "Reset schemas"
           - script: inv run-harness-tests -p snowflake
             displayName: "Run harness tests"
           - script: inv run-macro-tests -p snowflake
@@ -49,7 +51,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'hubs_'
+      - job: 'hubs'
         displayName: 'Hubs'
         steps:
           - task: UsePythonVersion@0
