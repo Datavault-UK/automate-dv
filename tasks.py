@@ -297,6 +297,9 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
         'sats': {
             'main': [
                 'sats',
+
+            ],
+            'cycles': [
                 'sats_cycles'
             ],
             'pm_standard': [
@@ -333,7 +336,34 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
             'pm': [
                 'mas_period_mat'
             ]
-        }
+        },
+        'pit': {
+            'main': [
+                'pit'
+            ],
+            '1sat': [
+                'pit_one_sat_base',
+                'pit_one_sat_inc'
+            ],
+            '2sat': [
+                'pit_two_sat_base',
+                'pit_two_sat_inc'
+            ]
+        },
+        'bridge': {
+            'inc': [
+                'bridge_incremental'
+            ],
+            '1link': [
+                'bridge_one_hub_one_link'
+            ],
+            '2link': [
+                'bridge_one_hub_two_links'
+            ],
+            '3link': [
+                'bridge_one_hub_three_links'
+            ]
+        },
     }
 
     structures = set(str(structures).split(","))

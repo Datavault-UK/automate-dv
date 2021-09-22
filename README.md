@@ -1,18 +1,13 @@
 <p align="center">
+
+<div align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png" alt="dbtvault">
-</p>
 
-<p align="center">
-  <a href="https://dbtvault.readthedocs.io/en/stable/?badge=stable"><img
-    src="https://readthedocs.org/projects/dbtvault/badge/?version=stable" 
-    alt="Documentation Status"
-  /></a>
-  <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
-    src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
-    alt="Join our slack"
-  /></a>
-</p>
-
+  [![Build Status](https://dev.azure.com/data-vault/dbtvault/_apis/build/status/Datavault-UK.dbtvault?branchName=develop)](https://dev.azure.com/data-vault/dbtvault/_build/latest?definitionId=5&branchName=develop)
+  [![Docs](https://readthedocs.org/projects/dbtvault/badge/?version=stable)](https://dbtvault.readthedocs.io/en/stable/?badge=stable)
+  [![Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
+  
+</div>
 
 [Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
 
