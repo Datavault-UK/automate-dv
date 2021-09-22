@@ -175,8 +175,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'eff_sats'
-        displayName: 'Integration Snowflake Eff Sats'
+      - job: 'eff_sats_main'
+        displayName: 'Integration Snowflake Eff Sats Main'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -184,8 +184,50 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s eff_sats -p snowflake
-            displayName: "Effectivity Satellites - Snowflake"
+          - script: inv run-integration-tests -s eff_sats --subtype main -p snowflake
+            displayName: "Effectivity Satellites (Main) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'eff_sats_auto'
+        displayName: 'Integration Snowflake Eff Sats Auto'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s eff_sats --subtype auto -p snowflake
+            displayName: "Effectivity Satellites (Auto end-dating) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'eff_sats_multi_part'
+        displayName: 'Integration Snowflake Eff Sats Multi Part'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s eff_sats --subtype multi_part -p snowflake
+            displayName: "Effectivity Satellites (Multi-part Keys) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'eff_sats_mat'
+        displayName: 'Integration Snowflake Eff Sats Mat'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s eff_sats --subtype mat -p snowflake
+            displayName: "Effectivity Satellites (Materialisations) - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
