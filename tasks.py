@@ -334,7 +334,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                 logger.info(
                     f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
             else:
-                logger.error(f"No feature files found for for {platform}/{struct}. This is most likely unintended "
+                logger.error(f"No feature files found for for {platform}/{struct}. This is most likely unintended, "
                              f"please check available feature directories and sub-types.")
                 raise SystemExit()
 

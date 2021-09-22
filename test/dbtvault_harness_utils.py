@@ -643,7 +643,7 @@ def feature_sub_types():
             'cycles': [
                 'sats_cycles'
             ],
-            'pm_standard': [
+            'pm': [
                 'sats_period_mat_base',
                 'sats_period_mat_other'
                 'sats_period_mat_inferred_range',
