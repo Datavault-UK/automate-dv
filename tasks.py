@@ -300,15 +300,15 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                 'sats_cycles'
             ],
             'pm_standard': [
-                'snowflake_sats_period_mat_base',
-                'snowflake_sats_period_mat_other'
+                'sats_period_mat_base',
+                'sats_period_mat_other'
             ],
             'pm_ranges': [
                 'sats_period_mat_inferred_range',
                 'sats_period_mat_provided_range'
             ],
             'rank': [
-              'sats_rank_mat'
+                'sats_rank_mat'
             ]
         },
         'ma_sats': {
@@ -370,8 +370,14 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                 collected_files[feat_dir] = files
 
         for struct, file_list in collected_files.items():
-            logger.info(
-                f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
+
+            if collected_files[struct]:
+                logger.info(
+                    f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
+            else:
+                logger.error(f"No feature files found for for {platform}/{struct}. This is most likely unintended "
+                             f"please check available feature directories and sub-types.")
+                raise SystemExit()
 
         for file in collected_files[feat_dir]:
             pytest_command = f"behave '{file}'"
