@@ -646,8 +646,6 @@ def feature_sub_types():
             'pm_standard': [
                 'sats_period_mat_base',
                 'sats_period_mat_other'
-            ],
-            'pm_ranges': [
                 'sats_period_mat_inferred_range',
                 'sats_period_mat_provided_range'
             ],
@@ -699,8 +697,10 @@ def feature_sub_types():
             'main': [
                 'pit'
             ],
-            '1sat': [
+            '1sat_base': [
                 'pit_one_sat_base',
+            ],
+            '1sat_inc': [
                 'pit_one_sat_inc'
             ],
             '2sat': [

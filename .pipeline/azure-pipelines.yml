@@ -119,8 +119,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'sats_pms'
-        displayName: 'Integration Snowflake Sats PM Standard'
+      - job: 'sats_pm'
+        displayName: 'Integration Snowflake Sats PM'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -128,22 +128,8 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s sats --subtype pm_standard -p snowflake
-            displayName: "Satellites (PM Standard) - Snowflake"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_pmr'
-        displayName: 'Integration Snowflake Sats PM Ranges'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s sats --subtype pm_ranges -p snowflake
-            displayName: "Satellites (PM Ranges) - Snowflake"
+          - script: inv run-integration-tests -s sats --subtype pm -p snowflake
+            displayName: "Satellites (PM) - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
@@ -329,8 +315,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
               
-      - job: 'pit_1sat'
-        displayName: 'Integration Snowflake PITs 1 Sat'
+      - job: 'pit_1sat_base'
+        displayName: 'Integration Snowflake PITs 1 Sat Base'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -338,11 +324,25 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness - Snowflake"
-          - script: inv run-integration-tests -s pit --subtype 1sat -p snowflake
-            displayName: "Point In Time (1Sat) - Snowflake"
+          - script: inv run-integration-tests -s pit --subtype 1sat_base -p snowflake
+            displayName: "Point In Time (1Sat Base) - Snowflake"
             env:
               PIPELINE_JOB: $(Agent.JobName)
-              
+
+      - job: 'pit_1sat_inc'
+        displayName: 'Integration Snowflake PITs 1 Sat Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness - Snowflake"
+          - script: inv run-integration-tests -s pit --subtype 1sat_inc -p snowflake
+            displayName: "Point In Time (1Sat Incremental) - Snowflake"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'pit_2sat'
         displayName: 'Integration Snowflake PITs 2 Sat'
         steps:
