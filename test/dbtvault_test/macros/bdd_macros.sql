@@ -35,8 +35,17 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
-    {% do log("Schema '{}' dropped.".format(schema_name), true) %}
+    {% set list_custom_schemas_sql %}
+    SELECT SCHEMA_NAME FROM {{ target.database }}."INFORMATION_SCHEMA"."SCHEMATA"
+    WHERE SCHEMA_NAME LIKE '{{ schema_name }}%'
+    {% endset %}
+
+    {% set custom_schema_list = dbt_utils.get_query_results_as_dict(list_custom_schemas_sql) %}
+
+    {% for custom_schema_name in custom_schema_list['SCHEMA_NAME'] %}
+        {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) %}
+        {% do log("Schema '{}' dropped.".format(custom_schema_name), true) %}
+    {% endfor %}
 
 {% endmacro %}
 
