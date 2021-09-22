@@ -130,8 +130,7 @@ def out_of_sequence_satellite(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-                "EFFECTIVE_FROM": "DATE"
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_TIMESTAMP": {
@@ -141,8 +140,7 @@ def out_of_sequence_satellite(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "TIMESTAMP",
-                "SOURCE": "VARCHAR",
-                "EFFECTIVE_FROM": "TIMESTAMP"
+                "SOURCE": "VARCHAR"
             }
         },
         "SAT_CUSTOMER_OOS": {
