@@ -293,48 +293,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
     feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats',
                            'ma_sats', 'xts', 'bridge', 'pit', 'cycle'}
 
-    sub_types = {
-        'sats': {
-            'main': [
-                'sats',
-                'sats_cycles'
-            ],
-            'pm_standard': [
-                'snowflake_sats_period_mat_base',
-                'snowflake_sats_period_mat_other'
-            ],
-            'pm_ranges': [
-                'sats_period_mat_inferred_range',
-                'sats_period_mat_provided_range'
-            ],
-            'rank': [
-              'sats_rank_mat'
-            ]
-        },
-        'ma_sats': {
-            '1cdk': [
-                'mas_one_cdk_0_base',
-                'mas_one_cdk_1_inc',
-                'mas_one_cdk_base_sats'
-            ],
-            '1cdk_cycles': [
-                'mas_one_cdk_base_sats_cycles',
-                'mas_one_cdk_cycles_duplicates'
-            ],
-            '2cdk': [
-                'mas_two_cdk_0_base',
-                'mas_two_cdk_1_inc',
-                'mas_two_cdk_base_sats'
-            ],
-            '2cdk_cycles': [
-                'mas_two_cdk_base_sats_cycles',
-                'mas_two_cdk_cycles_duplicates'
-            ],
-            'pm': [
-                'mas_period_mat'
-            ]
-        }
-    }
+    sub_types = dbtvault_harness_utils.feature_sub_types()
 
     structures = set(str(structures).split(","))
 
@@ -370,8 +329,14 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                 collected_files[feat_dir] = files
 
         for struct, file_list in collected_files.items():
-            logger.info(
-                f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
+
+            if collected_files[struct]:
+                logger.info(
+                    f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
+            else:
+                logger.error(f"No feature files found for for {platform}/{struct}. This is most likely unintended, "
+                             f"please check available feature directories and sub-types.")
+                raise SystemExit()
 
         for file in collected_files[feat_dir]:
             pytest_command = f"behave '{file}'"

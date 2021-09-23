@@ -632,3 +632,94 @@ def retrieve_expected_sql(request: FixtureRequest):
         processed_file = inject_parameters("".join(file), set_custom_names())
 
         return processed_file
+
+
+def feature_sub_types():
+    return {
+        'sats': {
+            'main': [
+                'sats',
+            ],
+            'cycles': [
+                'sats_cycles'
+            ],
+            'pm': [
+                'sats_period_mat_base',
+                'sats_period_mat_other'
+                'sats_period_mat_inferred_range',
+                'sats_period_mat_provided_range'
+            ],
+            'rank': [
+                'sats_rank_mat'
+            ]
+        },
+        'eff_sats': {
+            'main': [
+                'eff_sats',
+                'eff_sats_disabled_end_dating'
+            ],
+            'auto': [
+                'eff_sat_auto_end_dating_detail_base',
+                'eff_sat_auto_end_dating_detail_inc'
+            ],
+            'multi_part': [
+                'eff_sats_multi_part'
+            ],
+            'mat': [
+                'eff_sats_period_mat',
+                'eff_sats_rank_mat'
+            ]
+        },
+        'ma_sats': {
+            '1cdk': [
+                'mas_one_cdk_0_base',
+                'mas_one_cdk_1_inc',
+                'mas_one_cdk_base_sats'
+            ],
+            '1cdk_cycles': [
+                'mas_one_cdk_base_sats_cycles',
+                'mas_one_cdk_cycles_duplicates'
+            ],
+            '2cdk': [
+                'mas_two_cdk_0_base',
+                'mas_two_cdk_1_inc',
+                'mas_two_cdk_base_sats'
+            ],
+            '2cdk_cycles': [
+                'mas_two_cdk_base_sats_cycles',
+                'mas_two_cdk_cycles_duplicates'
+            ],
+            'pm': [
+                'mas_period_mat'
+            ]
+        },
+        'pit': {
+            'main': [
+                'pit'
+            ],
+            '1sat_base': [
+                'pit_one_sat_base',
+            ],
+            '1sat_inc': [
+                'pit_one_sat_inc'
+            ],
+            '2sat': [
+                'pit_two_sat_base',
+                'pit_two_sat_inc'
+            ]
+        },
+        'bridge': {
+            'inc': [
+                'bridge_incremental'
+            ],
+            '1link': [
+                'bridge_one_hub_one_link'
+            ],
+            '2link': [
+                'bridge_one_hub_two_links'
+            ],
+            '3link': [
+                'bridge_one_hub_three_links'
+            ]
+        },
+    }
