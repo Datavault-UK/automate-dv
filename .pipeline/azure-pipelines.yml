@@ -14,7 +14,7 @@ variables:
 
 stages:
   - stage: 'unit_tests'
-    displayName: 'Run Unit Tests'
+    displayName: 'Unit Tests'
     jobs:
       - job: 'unit_tests'
         displayName: 'Run Unit Tests'
@@ -25,8 +25,8 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-dbt "run-operation recreate_current_schemas" -p snowflake
-            displayName: "Reset schemas"
+          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
+            displayName: "Drop all custom schemas"
           - script: inv run-harness-tests -p snowflake
             displayName: "Run harness tests"
           - script: inv run-macro-tests -p snowflake
