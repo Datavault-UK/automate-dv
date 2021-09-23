@@ -31,9 +31,13 @@
 
 {% endmacro %}
 
-{% macro drop_all_custom_schemas() %}
+{% macro drop_all_custom_schemas(schema_prefix=none) %}
 
-    {% set schema_name = dbtvault_test.get_schema_name() %}
+    {% if not schema_prefix %}
+        {% set schema_name = dbtvault_test.get_schema_name() %}
+    {% else %}
+        {% set schema_name = schema_prefix %}
+    {% endif %}
 
     {% set list_custom_schemas_sql %}
     SELECT SCHEMA_NAME FROM {{ target.database }}."INFORMATION_SCHEMA"."SCHEMATA"
@@ -53,8 +57,8 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) %}
-    {% do log("Schema '{}' dropped.".format(custom_schema_name), true) %}
+    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
+    {% do log("Schema '{}' dropped.".format(schema_name), true) %}
 
 {% endmacro %}
 
