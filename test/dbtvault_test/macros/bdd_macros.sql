@@ -55,7 +55,6 @@
 
     {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) %}
     {% do log("Schema '{}' dropped.".format(custom_schema_name), true) %}
-    {% endfor %}
 
 {% endmacro %}
 
