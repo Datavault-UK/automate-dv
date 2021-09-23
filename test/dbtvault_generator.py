@@ -217,7 +217,7 @@ def eff_sat_oos(model_name, src_pk, src_dfk, src_sfk,
         :param src_dfk: Source driving foreign key
         :param src_sfk: Source surrogate foreign key
         :param src_eff: Source effective from
-        :param src_start_date: Status flag that shows if link is active or not.
+        :param status:
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from

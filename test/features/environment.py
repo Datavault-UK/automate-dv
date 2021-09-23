@@ -7,7 +7,7 @@ from test.features.behave_fixtures import *
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
-from test.features.eff_sats_oos import fixtures_eff_sat_oos
+from test.features.eff_sats_oos import fixtures_eff_sat_status
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
@@ -72,11 +72,6 @@ fixtures_registry = {
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver},
 
-    "fixture.eff_satellite_oos":
-        {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos,
-         "bigquery": "",
-         "sqlserver": ""},
-
     "fixture.eff_satellite_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating,
          "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
@@ -86,6 +81,16 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver},
+
+    "fixture.eff_satellite_oos":
+        {"snowflake": fixtures_eff_sat_status.eff_satellite_oos,
+         "bigquery": "",
+         "sqlserver": ""},
+
+    "fixture.eff_satellite_status_testing_auto_end_dating":
+        {"snowflake": fixtures_eff_sat_status.eff_satellite_status_testing_auto_end_dating,
+         "bigquery": '',
+         "sqlserver": ''},
 
     "fixture.out_of_sequence_satellite":
         {"snowflake": fixtures_oos_sat.out_of_sequence_satellite,

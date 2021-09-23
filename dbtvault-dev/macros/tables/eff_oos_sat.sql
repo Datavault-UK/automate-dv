@@ -22,8 +22,8 @@
 
 
 WITH source_data AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }},
-           ('TRUE'::BOOLEAN) AS {{ status }}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}, a.{{ status }}
+    {#   derived column    ('TRUE'::BOOLEAN) AS {{ status }}   #}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
