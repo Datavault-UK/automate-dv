@@ -31,7 +31,7 @@
 
 {% endmacro %}
 
-{%- macro drop_test_schemas() -%}
+{% macro drop_all_custom_schemas() %}
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
@@ -45,6 +45,16 @@
     {% for custom_schema_name in custom_schema_list['SCHEMA_NAME'] %}
         {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) %}
         {% do log("Schema '{}' dropped.".format(custom_schema_name), true) %}
+    {% endfor %}
+
+{% endmacro %}
+
+{%- macro drop_test_schemas() -%}
+
+    {% set schema_name = dbtvault_test.get_schema_name() %}
+
+    {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) %}
+    {% do log("Schema '{}' dropped.".format(custom_schema_name), true) %}
     {% endfor %}
 
 {% endmacro %}
