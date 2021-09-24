@@ -82,13 +82,18 @@ fixtures_registry = {
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver},
 
-    "fixture.eff_satellite_oos":
-        {"snowflake": fixtures_eff_sat_status.eff_satellite_oos,
+    "fixture.eff_satellite_status":
+        {"snowflake": fixtures_eff_sat_status.eff_satellite_status,
          "bigquery": "",
          "sqlserver": ""},
 
     "fixture.eff_satellite_status_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status_testing_auto_end_dating,
+         "bigquery": '',
+         "sqlserver": ''},
+
+    "fixture.eff_satellite_status_multipart":
+        {"snowflake": fixtures_eff_sat_status.eff_satellite_status_multipart,
          "bigquery": '',
          "sqlserver": ''},
 

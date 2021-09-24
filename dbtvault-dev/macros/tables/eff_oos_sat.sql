@@ -109,6 +109,8 @@ new_closed_records AS (
 
 records_to_insert AS (
     SELECT * FROM new_open_records
+    UNION
+    SELECT * FROM new_reopened_records
     {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM new_closed_records

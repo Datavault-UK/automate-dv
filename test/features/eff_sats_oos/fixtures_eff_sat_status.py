@@ -2,7 +2,7 @@ from behave import fixture
 
 
 @fixture
-def eff_satellite_oos(context):
+def eff_satellite_status(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -16,7 +16,7 @@ def eff_satellite_oos(context):
     }
 
     context.vault_structure_columns = {
-        "EFF_SAT_OOS": {
+        "EFF_SAT": {
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
@@ -37,7 +37,7 @@ def eff_satellite_oos(context):
                 "STATUS": "BOOLEAN"
             }
         },
-        "EFF_SAT_OOS": {
+        "EFF_SAT": {
             "+column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
@@ -53,7 +53,7 @@ def eff_satellite_oos(context):
 
 
 @fixture
-def eff_satellite_oos_multipart(context):
+def eff_satellite_status_multipart(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
@@ -74,11 +74,10 @@ def eff_satellite_oos_multipart(context):
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK", "PLATFORM_PK", "ORGANISATION_PK"],
             "src_sfk": ["CUSTOMER_PK", "NATION_PK"],
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
+            "src_source": "SOURCE",
+            "status": "STATUS",
         }
     }
 
@@ -90,8 +89,6 @@ def eff_satellite_oos_multipart(context):
                 "ORDER_ID": "VARCHAR",
                 "PLATFORM_ID": "VARCHAR",
                 "ORGANISATION_ID": "VARCHAR",
-                "START_DATE": "DATE",
-                "END_DATE": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
                 "STATUS": "BOOLEAN"
@@ -105,11 +102,10 @@ def eff_satellite_oos_multipart(context):
                 "ORGANISATION_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "NATION_PK": "BINARY(16)",
-                "START_DATE": "DATE",
-                "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
+                "STATUS": "BOOLEAN"
             }
         }
     }
