@@ -2,7 +2,7 @@ Feature: [SQLS-MAS-2CD-B] Multi Active Satellites
   Base loads with MAS behaviour with two CDKs
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-2CD-B-001] Load data into a non-existent multi-active satellite, where some customers have the same phone number but different extensions and others have different phone numbers but the same extensions
+  Scenario: [BQ-MAS-2CD-B-01] Load data into a non-existent multi-active satellite, where some customers have the same phone number but different extensions and others have different phone numbers but the same extensions
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -36,7 +36,7 @@ Feature: [SQLS-MAS-2CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-2CD-B-002] Load duplicated data into a non-existent multi-active satellite
+  Scenario: [BQ-MAS-2CD-B-02] Load duplicated data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK table does not exist
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -72,7 +72,7 @@ Feature: [SQLS-MAS-2CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-2CD-B-003] Load data into an empty multi-active satellite
+  Scenario: [BQ-MAS-2CD-B-03] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -106,7 +106,7 @@ Feature: [SQLS-MAS-2CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-2CD-B-004] Load duplicated data into an empty multi-active satellite
+  Scenario: [BQ-MAS-2CD-B-04] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |
@@ -142,7 +142,7 @@ Feature: [SQLS-MAS-2CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | Dom           | 17-214-233-1237 | 12331     | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-2CD-B-005] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
+  Scenario: [BQ-MAS-2CD-B-05] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
     And the RAW_STAGE_TWO_CDK table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATE  | SOURCE |

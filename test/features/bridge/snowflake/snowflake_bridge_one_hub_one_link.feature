@@ -2,7 +2,7 @@ Feature: [SF-BRG-1L] Bridge table
   Base Bridge behaviour with one hub and one link
 
   @fixture.bridge
-  Scenario: [SF-BRG-1L-001] Base load into a bridge table from one hub and one link with the AS_OF date and LDTS equal
+  Scenario: [SF-BRG-1L-01] Base load into a bridge table from one hub and one link with the AS_OF date and LDTS equal
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -26,7 +26,7 @@ Feature: [SF-BRG-1L] Bridge table
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.bridge
-  Scenario: [SF-BRG-1L-002] Base load into a bridge table from one hub and one link with AS_OF dates in the past
+  Scenario: [SF-BRG-1L-02] Base load into a bridge table from one hub and one link with AS_OF dates in the past
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -46,7 +46,7 @@ Feature: [SF-BRG-1L] Bridge table
     Then the BRIDGE_CUSTOMER_ORDER table should be empty
 
   @fixture.bridge
-  Scenario: [SF-BRG-1L-003] Base load into a bridge table from one hub and one link with AS_OF dates in the future
+  Scenario: [SF-BRG-1L-03] Base load into a bridge table from one hub and one link with AS_OF dates in the future
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
@@ -75,7 +75,7 @@ Feature: [SF-BRG-1L] Bridge table
       | md5('1004') | 2018-06-04 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.bridge
-  Scenario: [SF-BRG-1L-004] Base load into a bridge table from one hub and one link with multiple loads and an encompassing range of AS OF dates
+  Scenario: [SF-BRG-1L-04] Base load into a bridge table from one hub and one link with multiple loads and an encompassing range of AS OF dates
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                | EFF_SAT                | BRIDGE                |
