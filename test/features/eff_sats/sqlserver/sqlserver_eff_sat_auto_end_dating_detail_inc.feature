@@ -5,7 +5,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-001] Three loads; adding (completely) new relationships in each load
+  Scenario: [SQLS-EFF-AUI-01] Three loads; adding (completely) new relationships in each load
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -62,7 +62,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-002] Three loads; the same CUSTOMER placing a varying number of ORDERS at different times
+  Scenario: [SQLS-EFF-AUI-02] Three loads; the same CUSTOMER placing a varying number of ORDERS at different times
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -114,7 +114,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-003] Three loads; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
+  Scenario: [SQLS-EFF-AUI-03] Three loads; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -163,7 +163,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-004] Three loads; the last load will bring new open, new reopen and closed records in the eff sat
+  Scenario: [SQLS-EFF-AUI-04] Three loads; the last load will bring new open, new reopen and closed records in the eff sat
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -226,7 +226,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-005] Two loads; going from 1 ORDER to another (new) ORDER
+  Scenario: [SQLS-EFF-AUI-05] Two loads; going from 1 ORDER to another (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -258,7 +258,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-006] Two loads; changing the ORDER to another ORDER
+  Scenario: [SQLS-EFF-AUI-06] Two loads; changing the ORDER to another ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -290,7 +290,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-007] Two loads; going from 1 ORDER to 3 (new) ORDERS
+  Scenario: [SQLS-EFF-AUI-07] Two loads; going from 1 ORDER to 3 (new) ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -328,7 +328,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-008] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to 1 (new) ORDER
+  Scenario: [SQLS-EFF-AUI-08] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to 1 (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -390,7 +390,7 @@ Feature: [SQLS-EFF-AUI] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUI-009] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to the initial ORDER
+  Scenario: [SQLS-EFF-AUI-09] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to the initial ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |

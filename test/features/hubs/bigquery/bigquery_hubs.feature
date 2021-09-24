@@ -1,7 +1,7 @@
 Feature: [BQ-HUB] Hubs
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-001] Simple load of stage data into an empty hub
+  Scenario: [BQ-HUB-01] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -22,7 +22,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-002] Simple load of distinct stage data into an empty hub
+  Scenario: [BQ-HUB-02] Simple load of distinct stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -44,7 +44,7 @@ Feature: [BQ-HUB] Hubs
 
   @fixture.single_source_hub
   @fixture.enable_sha
-  Scenario: [BQ-HUB-003] Simple load of distinct stage data into an empty hub using SHA hashing
+  Scenario: [BQ-HUB-03] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -65,7 +65,7 @@ Feature: [BQ-HUB] Hubs
       | sha('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-004] Keys with NULL or empty values are not loaded into empty hub that does not exist
+  Scenario: [BQ-HUB-04] Keys with NULL or empty values are not loaded into empty hub that does not exist
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -88,7 +88,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-005] Simple load of stage data into an empty hub
+  Scenario: [BQ-HUB-05] Simple load of stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -106,7 +106,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-006] Simple load of distinct stage data into an empty hub
+  Scenario: [BQ-HUB-06] Simple load of distinct stage data into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -127,7 +127,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-007] Keys with NULL or empty values are not loaded into an empty hub
+  Scenario: [BQ-HUB-07] Keys with NULL or empty values are not loaded into an empty hub
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -150,7 +150,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-008] Load of stage data into a hub
+  Scenario: [BQ-HUB-08] Load of stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -171,7 +171,7 @@ Feature: [BQ-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-009] Load of distinct stage data into a hub
+  Scenario: [BQ-HUB-09] Load of distinct stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |

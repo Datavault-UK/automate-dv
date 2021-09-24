@@ -1,7 +1,7 @@
 Feature: [SQLS-LNK] Links
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-001] Load a simple stage table into a non-existent link table
+  Scenario: [SF-LNK-01] Load a simple stage table into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -21,7 +21,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-002] Load a stage table with duplicates into a non-existent link table
+  Scenario: [SF-LNK-02] Load a stage table with duplicates into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -46,7 +46,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-003] Load a simple stage table into a non-existent link and exclude records with NULL foreign keys
+  Scenario: [SF-LNK-03] Load a simple stage table into a non-existent link and exclude records with NULL foreign keys
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -65,7 +65,7 @@ Feature: [SQLS-LNK] Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-004] Load a simple stage table into an empty link table
+  Scenario: [SF-LNK-04] Load a simple stage table into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -85,7 +85,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-005] Load a stage table with duplicates into an empty link table
+  Scenario: [SF-LNK-05] Load a stage table with duplicates into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -110,7 +110,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-006] Load a simple stage table into a populated link.
+  Scenario: [SF-LNK-06] Load a simple stage table into a populated link.
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -137,7 +137,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-007] Load a stage table with duplicates into a populated link
+  Scenario: [SF-LNK-07] Load a stage table with duplicates into a populated link
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -167,7 +167,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-008] Load a stage table where a foreign key is NULL, no link is inserted
+  Scenario: [SF-LNK-08] Load a stage table where a foreign key is NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -198,7 +198,7 @@ Feature: [SQLS-LNK] Links
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-009] Load a stage table where a primary keys components are all NULL, no link is inserted
+  Scenario: [SF-LNK-09] Load a stage table where a primary keys components are all NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |

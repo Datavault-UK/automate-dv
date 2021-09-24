@@ -1,7 +1,7 @@
 Feature: [BQ-SAT-CYC] Satellites Loaded in cycles using separate manual loads
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-CYC-001] SATELLITE load over several cycles
+  Scenario: [BQ-SAT-CYC-01] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -69,7 +69,7 @@ Feature: [BQ-SAT-CYC] Satellites Loaded in cycles using separate manual loads
       | md5('1012') | md5('1990-02-03\|\|1012\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-04 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-CYC-002] SATELLITE load over several cycles with NULL records
+  Scenario: [BQ-SAT-CYC-02] SATELLITE load over several cycles with NULL records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -154,7 +154,7 @@ Feature: [BQ-SAT-CYC] Satellites Loaded in cycles using separate manual loads
       | md5('1007') | Harry         | 1990-02-07   | md5('1990-02-07\|\|1007\|\|HARRY')  | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-CYC-003] SATELLITE load over several cycles no PK in HASHDIFF and NULL records
+  Scenario: [BQ-SAT-CYC-03] SATELLITE load over several cycles no PK in HASHDIFF and NULL records
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -239,7 +239,7 @@ Feature: [BQ-SAT-CYC] Satellites Loaded in cycles using separate manual loads
       | md5('1007') | md5('1990-02-07\|\|HARRY')  | Harry         | 1990-02-07   | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-CYC-004] SATELLITE load over several cycles with a mix of duplicate record change cases
+  Scenario: [BQ-SAT-CYC-04] SATELLITE load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -320,7 +320,7 @@ Feature: [BQ-SAT-CYC] Satellites Loaded in cycles using separate manual loads
       | md5('1005') | md5('1990-02-15\|\|1005\|\|FREYA')   | Freya         | 1990-02-15   | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-CYC-005] SATELLITE load over several cycles with no PK in HASHDIFF and a mix of duplicate record change cases
+  Scenario: [BQ-SAT-CYC-05] SATELLITE load over several cycles with no PK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -403,7 +403,7 @@ Feature: [BQ-SAT-CYC] Satellites Loaded in cycles using separate manual loads
 
   @fixture.satellite_cycle
   @fixture.enable_sha
-  Scenario: [BQ-SAT-CYC-006] SATELLITE load over several cycles
+  Scenario: [BQ-SAT-CYC-06] SATELLITE load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 

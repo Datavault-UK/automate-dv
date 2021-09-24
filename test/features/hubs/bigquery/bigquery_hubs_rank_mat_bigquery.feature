@@ -1,7 +1,7 @@
 Feature: [BQ-HUB-RM] Hubs Loaded using Rank Materialization
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-RM-001] Simple load of stage data into an empty hub
+  Scenario: [BQ-HUB-RM-01] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -25,7 +25,7 @@ Feature: [BQ-HUB-RM] Hubs Loaded using Rank Materialization
 
   @fixture.enable_full_refresh
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-RM-002] Full refresh of loaded hub
+  Scenario: [BQ-HUB-RM-02] Full refresh of loaded hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -44,7 +44,7 @@ Feature: [BQ-HUB-RM] Hubs Loaded using Rank Materialization
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.multi_source_hub
-  Scenario: [BQ-HUB-RM-003] Simple load of stage data from multiple sources into an empty hub
+  Scenario: [BQ-HUB-RM-03] Simple load of stage data from multiple sources into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |

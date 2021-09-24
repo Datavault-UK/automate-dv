@@ -2,7 +2,7 @@ Feature: [SF-BRG-2L] Bridge table
   Base Bridge behaviour with one hub and two links
 
   @fixture.bridge
-  Scenario: [SF-BRG-2L-001] Base load into a bridge table
+  Scenario: [SF-BRG-2L-01] Base load into a bridge table
     From one hub and two links with the AS_OF date and LDTS equal
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist
@@ -36,7 +36,7 @@ Feature: [SF-BRG-2L] Bridge table
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
 
   @fixture.bridge
-  Scenario: [SF-BRG-2L-002] Base load into a bridge table
+  Scenario: [SF-BRG-2L-02] Base load into a bridge table
     From one hub and two links with AS_OF dates in the past
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist
@@ -66,7 +66,7 @@ Feature: [SF-BRG-2L] Bridge table
     Then the BRIDGE_CUSTOMER_ORDER_PRODUCT table should be empty
 
   @fixture.bridge
-  Scenario: [SF-BRG-2L-003] Base load into a bridge table
+  Scenario: [SF-BRG-2L-03] Base load into a bridge table
     From one hub and two links with AS_OF dates in the future
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist
@@ -100,7 +100,7 @@ Feature: [SF-BRG-2L] Bridge table
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
 
   @fixture.bridge
-  Scenario: [SF-BRG-2L-004] Base load into a bridge table
+  Scenario: [SF-BRG-2L-04] Base load into a bridge table
     From one hub and two links with multiple loads and an encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist
@@ -145,7 +145,7 @@ Feature: [SF-BRG-2L] Bridge table
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
 
   @fixture.bridge
-  Scenario: [SF-BRG-2L-005] Base load into a bridge table
+  Scenario: [SF-BRG-2L-05] Base load into a bridge table
     From one hub and two links with history and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT table does not exist

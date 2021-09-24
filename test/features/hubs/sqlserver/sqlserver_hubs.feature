@@ -1,7 +1,7 @@
 Feature: [SQLS-HUB] Hubs
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-001] Simple load of stage data into an empty hub, PK is a hash of a single column
+  Scenario: [SQLS-HUB-01] Simple load of stage data into an empty hub, PK is a hash of a single column
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -22,7 +22,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-002] Simple load of stage data into an empty hub, PK is a hash of a list of columns
+  Scenario: [SQLS-HUB-02] Simple load of stage data into an empty hub, PK is a hash of a list of columns
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -43,7 +43,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1004\|\|DOM')   | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-003] Simple load of distinct stage data into an empty hub
+  Scenario: [SQLS-HUB-03] Simple load of distinct stage data into an empty hub
     Given the HUB_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -65,7 +65,7 @@ Feature: [SQLS-HUB] Hubs
 
   @fixture.single_source_hub
   @fixture.enable_sha
-  Scenario: [SQLS-HUB-004] Simple load of distinct stage data into an empty hub using SHA hashing
+  Scenario: [SQLS-HUB-04] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB_CUSTOMER_SHA hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -86,7 +86,7 @@ Feature: [SQLS-HUB] Hubs
       | sha('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-005] Keys with NULL or empty values are not loaded into empty hub that does not exist
+  Scenario: [SQLS-HUB-05] Keys with NULL or empty values are not loaded into empty hub that does not exist
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -109,7 +109,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-006] Simple load of stage data into an empty hub
+  Scenario: [SQLS-HUB-06] Simple load of stage data into an empty hub
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -127,7 +127,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-007] Simple load of distinct stage data into an empty hub
+  Scenario: [SQLS-HUB-07] Simple load of distinct stage data into an empty hub
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -148,7 +148,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-008] Keys with NULL or empty values are not loaded into an empty hub
+  Scenario: [SQLS-HUB-08] Keys with NULL or empty values are not loaded into an empty hub
     Given the HUB_CUSTOMER hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -171,7 +171,7 @@ Feature: [SQLS-HUB] Hubs
       | md5('1004') | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SQLS-HUB-009] Load of stage data into a hub
+  Scenario: [SQLS-HUB-09] Load of stage data into a hub
     Given the HUB_CUSTOMER hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |

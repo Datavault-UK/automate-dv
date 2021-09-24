@@ -2,7 +2,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
   Loading using Rank Materialization
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-001] Base load of a multi-active satellite with one value in rank column loads first rank
+  Scenario: [SQLS-MAS-RM-01] Base load of a multi-active satellite with one value in rank column loads first rank
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -25,7 +25,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-002] Base load of a multi-active satellite with one value in rank column excludes NULL PKs and loads first rank,
+  Scenario: [SQLS-MAS-RM-02] Base load of a multi-active satellite with one value in rank column excludes NULL PKs and loads first rank,
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -47,7 +47,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-003] Incremental load of a multi-active satellite with one value in rank column loads all records
+  Scenario: [SQLS-MAS-RM-03] Incremental load of a multi-active satellite with one value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -67,7 +67,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-004] Incremental load of a multi-active satellite with one value in rank column excluding NULL PKs, loads all records
+  Scenario: [SQLS-MAS-RM-04] Incremental load of a multi-active satellite with one value in rank column excluding NULL PKs, loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -88,7 +88,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-005] Base load of a multi-active satellite with multiple and duplicated values in rank column loads first rank
+  Scenario: [SQLS-MAS-RM-05] Base load of a multi-active satellite with multiple and duplicated values in rank column loads first rank
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -106,7 +106,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04     | 1993-01-04 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-006] Incremental load of a multi-active satellite with multiple and duplicated values in rank column loads all records
+  Scenario: [SQLS-MAS-RM-06] Incremental load of a multi-active satellite with multiple and duplicated values in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -126,7 +126,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04     | 1993-01-04 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-007] Base load of a multi-active satellite with one timestamp value in rank column loads all records
+  Scenario: [SQLS-MAS-RM-07] Base load of a multi-active satellite with one timestamp value in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -145,7 +145,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-008] Incremental load of a multi-active satellite with multiple timestamps over different days in rank column loads all records
+  Scenario: [SQLS-MAS-RM-08] Incremental load of a multi-active satellite with multiple timestamps over different days in rank column loads all records
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -165,7 +165,7 @@ Feature: [SQLS-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SQLS-MAS-RM-009] Base load of a multi-active satellite with multiple timestamps in the same day in rank column only loads first rank
+  Scenario: [SQLS-MAS-RM-09] Base load of a multi-active satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
