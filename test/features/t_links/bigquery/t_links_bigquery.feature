@@ -1,7 +1,7 @@
 Feature: [BQ-TLK] Transactional Links
 
   @fixture.t_link
-  Scenario: [BQ-TLK-001] Load a non-existent Transactional Link
+  Scenario: [BQ-TLK-01] Load a non-existent Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -26,7 +26,7 @@ Feature: [BQ-TLK] Transactional Links
 
   @fixture.disable_payload
   @fixture.t_link
-  Scenario: [BQ-TLK-002] Load a non-existent Transactional Link without a payload
+  Scenario: [BQ-TLK-02] Load a non-existent Transactional Link without a payload
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -50,7 +50,7 @@ Feature: [BQ-TLK] Transactional Links
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.t_link
-  Scenario: [BQ-TLK-003] Load an empty Transactional Link
+  Scenario: [BQ-TLK-03] Load an empty Transactional Link
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -74,7 +74,7 @@ Feature: [BQ-TLK] Transactional Links
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.t_link
-  Scenario: [BQ-TLK-004] Load an empty Transactional Link without loading records where all keys are NULL
+  Scenario: [BQ-TLK-04] Load an empty Transactional Link without loading records where all keys are NULL
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -97,7 +97,7 @@ Feature: [BQ-TLK] Transactional Links
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.t_link
-  Scenario: [BQ-TLK-005] Load an empty Transactional Link without loading records where foreign keys are NULL
+  Scenario: [BQ-TLK-05] Load an empty Transactional Link without loading records where foreign keys are NULL
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -120,7 +120,7 @@ Feature: [BQ-TLK] Transactional Links
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.t_link
-  Scenario: [BQ-TLK-006] Load an empty Transactional Link without loading records where the primary key is NULL
+  Scenario: [BQ-TLK-06] Load an empty Transactional Link without loading records where the primary key is NULL
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -143,7 +143,7 @@ Feature: [BQ-TLK] Transactional Links
       | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.t_link
-  Scenario: [BQ-TLK-007] Load a populated Transactional Link
+  Scenario: [BQ-TLK-07] Load a populated Transactional Link
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |
@@ -182,7 +182,7 @@ Feature: [BQ-TLK] Transactional Links
       | md5('1238\|\|1244\|\|12345691') | md5('1238') | md5('1244') | 12345691           | 2019-09-20       | CR   | 4578.34  | 2019-09-20     | 2019-09-22 | SAP    |
 
   @fixture.t_link
-  Scenario: [BQ-TLK-008] Load populated Transactional Link over two cycles
+  Scenario: [BQ-TLK-08] Load populated Transactional Link over two cycles
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |

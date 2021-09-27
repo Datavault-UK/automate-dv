@@ -1,7 +1,7 @@
 Feature: [SQLS-SAT-OOS-CYC] Satellites Loaded using separate manual loads
 
   @fixture.satellite_cycle
-  Scenario: [SQLS-SAT-OOS-CYC-001] Satellite load over several cycles
+  Scenario: [SQLS-SAT-OOS-CYC-01] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 
@@ -70,7 +70,7 @@ Feature: [SQLS-SAT-OOS-CYC] Satellites Loaded using separate manual loads
 
   @fixture.satellite_cycle
   @fixture.enable_sha
-  Scenario: [SQLS-SAT-OOS-CYC-002] Satellite load over several cycles
+  Scenario: [SQLS-SAT-OOS-CYC-02] Satellite load over several cycles
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
 

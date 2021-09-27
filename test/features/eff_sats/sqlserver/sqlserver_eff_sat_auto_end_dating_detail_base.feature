@@ -5,7 +5,7 @@ Feature: [SQLS-EFF-AUB] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUB-001] One load; going from an empty table to 1 CUSTOMER per ORDER
+  Scenario: [SQLS-EFF-AUB-01] One load; going from an empty table to 1 CUSTOMER per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -28,7 +28,7 @@ Feature: [SQLS-EFF-AUB] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUB-002] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
+  Scenario: [SQLS-EFF-AUB-02] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -51,7 +51,7 @@ Feature: [SQLS-EFF-AUB] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUB-003] One load; going from an empty table to 3 CUSTOMERS per ORDER
+  Scenario: [SQLS-EFF-AUB-03] One load; going from an empty table to 3 CUSTOMERS per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -76,7 +76,7 @@ Feature: [SQLS-EFF-AUB] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [SQLS-EFF-AUB-003] One load; going from an empty table to 3 ORDERS
+  Scenario: [SQLS-EFF-AUB-03] One load; going from an empty table to 3 ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |

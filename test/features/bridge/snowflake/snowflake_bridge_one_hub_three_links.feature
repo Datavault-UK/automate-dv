@@ -2,7 +2,7 @@ Feature: [SF-BRG-3L] Bridge table
   Base Bridge behaviour with one hub and three links
 
   @fixture.bridge
-  Scenario: [SF-BRG-3L-001] Base load into a bridge table
+  Scenario: [SF-BRG-3L-01] Base load into a bridge table
     From one hub and three links with the AS_OF date and LDTS equal
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -44,7 +44,7 @@ Feature: [SF-BRG-3L] Bridge table
       | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
   @fixture.bridge
-  Scenario: [SF-BRG-3L-002] Base load into a bridge table
+  Scenario: [SF-BRG-3L-02] Base load into a bridge table
     From one hub and three links with the AS_OF dates in the past
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -81,7 +81,7 @@ Feature: [SF-BRG-3L] Bridge table
     Then the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table should be empty
 
   @fixture.bridge
-  Scenario: [SF-BRG-3L-003] Base load into a bridge table
+  Scenario: [SF-BRG-3L-03] Base load into a bridge table
     From one hub and three links with the AS_OF dates in the future
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -123,7 +123,7 @@ Feature: [SF-BRG-3L] Bridge table
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
   @fixture.bridge
-  Scenario: [SF-BRG-3L-004] Base load into a bridge table
+  Scenario: [SF-BRG-3L-04] Base load into a bridge table
     From one hub and three links with history only in EFF_SAT_ORDER_PRODUCT and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -204,7 +204,7 @@ Feature: [SF-BRG-3L] Bridge table
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
   @fixture.bridge
-  Scenario: [SF-BRG-3L-005] Base load into a bridge table
+  Scenario: [SF-BRG-3L-05] Base load into a bridge table
     From one hub and three links with history only in EFF_SAT_PRODUCT_COMPONENT and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
@@ -307,7 +307,7 @@ Feature: [SF-BRG-3L] Bridge table
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
   @fixture.bridge
-  Scenario: [SF-BRG-3L-006] Base load into a bridge table
+  Scenario: [SF-BRG-3L-06] Base load into a bridge table
     From one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, and encompassing range of AS_OF dates
 
     Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist

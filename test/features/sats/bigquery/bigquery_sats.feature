@@ -1,7 +1,7 @@
 Feature: [BQ-SAT] Satellites
 
   @fixture.satellite
-  Scenario: [BQ-SAT-001] Load data into a non-existent satellite
+  Scenario: [BQ-SAT-01] Load data into a non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -19,7 +19,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-002] Load duplicated data into a non-existent satellite
+  Scenario: [BQ-SAT-02] Load duplicated data into a non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -42,7 +42,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-003] Load data into an empty satellite
+  Scenario: [BQ-SAT-03] Load data into an empty satellite
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -60,7 +60,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-004] Load data into an empty satellite where payload/hashdiff data is all null and PKs are NULL
+  Scenario: [BQ-SAT-04] Load data into an empty satellite where payload/hashdiff data is all null and PKs are NULL
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -80,7 +80,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-005] Load data into an empty satellite where payload/hashdiff data is partially null and some PKs are NULL
+  Scenario: [BQ-SAT-05] Load data into an empty satellite where payload/hashdiff data is partially null and some PKs are NULL
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -120,7 +120,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1011') | <null>        | 17-214-233-1221 | 1977-07-07   | md5('1977-07-07\|\|1011\|\|^^\|\|17-214-233-1221')    | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-006] Load duplicated data into an empty satellite
+  Scenario: [BQ-SAT-06] Load duplicated data into an empty satellite
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -143,7 +143,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-007] Load data into a populated satellite where all records load
+  Scenario: [BQ-SAT-07] Load data into a populated satellite where all records load
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
@@ -166,7 +166,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1006') | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-008] Load data into a populated satellite where some records overlap
+  Scenario: [BQ-SAT-08] Load data into a populated satellite where some records overlap
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -191,7 +191,7 @@ Feature: [BQ-SAT] Satellites
       | md5('1006') | Frida         | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1217') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [BQ-SAT-009] Load data into a populated satellite where all PKs have a changed hashdiff/payload
+  Scenario: [BQ-SAT-09] Load data into a populated satellite where all PKs have a changed hashdiff/payload
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')  | 1993-01-01     | 1993-01-01 | *      |

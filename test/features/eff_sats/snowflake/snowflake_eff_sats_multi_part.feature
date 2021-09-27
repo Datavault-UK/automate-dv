@@ -2,7 +2,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-001] Load data into a non-existent effectivity satellite
+  Scenario: [SF-EFF-MUL-01] Load data into a non-existent effectivity satellite
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | NATION_ID | PLATFORM_ID | ORGANISATION_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -19,7 +19,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-002] Load data into an empty effectivity satellite
+  Scenario: [SF-EFF-MUL-02] Load data into an empty effectivity satellite
     Given the EFF_SAT eff_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | NATION_ID | PLATFORM_ID | ORGANISATION_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -36,7 +36,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-003] No Effectivity Change when duplicates are loaded
+  Scenario: [SF-EFF-MUL-03] No Effectivity Change when duplicates are loaded
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -57,7 +57,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-004] New Link record Added
+  Scenario: [SF-EFF-MUL-04] New Link record Added
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -77,7 +77,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-005] Link is Changed
+  Scenario: [SF-EFF-MUL-05] Link is Changed
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -98,7 +98,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-006] 2 loads, Link is Changed Back Again, driving key is ORDER_PK,PLATFORM_PK,ORGANISATION_PK
+  Scenario: [SF-EFF-MUL-06] 2 loads, Link is Changed Back Again, driving key is ORDER_PK,PLATFORM_PK,ORGANISATION_PK
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -123,7 +123,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-007] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
+  Scenario: [SF-EFF-MUL-07] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -142,7 +142,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-008] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
+  Scenario: [SF-EFF-MUL-08] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat is already closed
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
@@ -161,7 +161,7 @@ Feature: [SF-EFF-MUL] Effectivity Satellites with multi-part keys
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_multipart
-  Scenario: [SF-EFF-MUL-009] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed
+  Scenario: [SF-EFF-MUL-09] No New Eff Sat Added if Secondary Foreign Key is NULL and Latest EFF Sat with Common DFK is Closed
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK                                | CUSTOMER_PK | ORDER_PK   | NATION_PK  | PLATFORM_PK   | ORGANISATION_PK  | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA\|\|GBR\|\|ONLINE\|\|DATAVAULT') | md5('1000') | md5('AAA') | md5('GBR') | md5('ONLINE') | md5('DATAVAULT') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |

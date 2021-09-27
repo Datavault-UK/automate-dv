@@ -1,7 +1,7 @@
 Feature: [SF-LNK-RM] Links Loaded using Rank Materialization
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-RM-001] Load a simple stage table into a non-existent link table
+  Scenario: [SF-LNK-RM-01] Load a simple stage table into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -23,7 +23,7 @@ Feature: [SF-LNK-RM] Links Loaded using Rank Materialization
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-04 | CRM    |
 
   @fixture.multi_source_link
-  Scenario: [SF-LNK-RM-002] Union three staging tables to feed empty link
+  Scenario: [SF-LNK-RM-02] Union three staging tables to feed empty link
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
