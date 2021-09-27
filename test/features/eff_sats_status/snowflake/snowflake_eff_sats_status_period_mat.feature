@@ -9,7 +9,7 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
       | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
@@ -18,14 +18,14 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
 
   @fixture.eff_satellite_status
   Scenario: [SF-SEF-PM-002] Load data into an empty effectivity satellite
-    Given the EFF_SAT eff_sat_oos is empty
+    Given the EFF_SAT eff_sat_status is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
       | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
       | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
@@ -46,8 +46,8 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 4000        | CCC      | 2020-01-12     | 2020-01-13 | orders | FALSE  |
       | 5000        | CCC      | 2020-01-12     | 2020-01-13 | orders | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
@@ -71,8 +71,8 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 5000        | EEE      | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders | TRUE   |
       | 5000        | <null>   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
@@ -84,7 +84,7 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_status
   Scenario: [SF-SEF-PM-005] Loading data into a populated eff sat; driving key is ORDER_PK
-    Given the EFF_SAT eff_sat_oos is already populated with data
+    Given the EFF_SAT eff_sat_status is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
@@ -94,7 +94,7 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders | TRUE   |
       | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
@@ -115,8 +115,8 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 1000        | BBB      | 2020-01-02     | 2020-01-02 | *      | TRUE   |
       | 1000        | CCC      | 2020-01-03     | 2020-01-03 | *      | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01     | 2020-01-01 | *      | TRUE   |
@@ -136,8 +136,8 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 5000        | AAA      | 2020-01-03     | 2020-01-03 | *      | TRUE   |
       | 6000        | AAA      | 2020-01-03     | 2020-01-03 | *      | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01     | 2020-01-01 | *      | TRUE   |
@@ -160,8 +160,8 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | 2000        | AAA      | 2020-01-02     | 2020-01-02 | *      | TRUE   |
       | 1000        | AAA      | 2020-01-03     | 2020-01-03 | *      | TRUE   |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the EFF_SAT eff_sat_oos by day
-    And I insert by period into the EFF_SAT eff_sat_oos by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
+    And I insert by period into the EFF_SAT eff_sat_status by day
     Then the EFF_SAT table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-01     | 2020-01-01 | *      | TRUE   |

@@ -7,7 +7,7 @@ from test.features.behave_fixtures import *
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
-from test.features.eff_sats_oos import fixtures_eff_sat_status
+from test.features.eff_sats_status import fixtures_eff_sat_status
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
