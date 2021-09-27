@@ -26,6 +26,7 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "sat": sat,
         "eff_sat": eff_sat,
         "eff_sat_status": eff_sat_status,
+        "eff_sat_hashdiff": eff_sat_hashdiff,
         "t_link": t_link,
         "xts": xts,
         "ma_sat": ma_sat,
@@ -229,6 +230,35 @@ def eff_sat_status(model_name, src_pk, src_dfk, src_sfk,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.eff_sat_status(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
+                          status={status}, 
+                          src_eff={src_eff}, src_ldts={src_ldts}, 
+                          src_source={src_source}, source_model={source_model}) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+def eff_sat_hashdiff(model_name, src_pk, src_dfk, src_sfk,
+                status, src_eff, src_ldts, src_source,
+                source_model, config, depends_on=""):
+    """
+    Generate an effectivity satellite model template
+        :param model_name: Name of the model file
+        :param src_pk: Source pk
+        :param src_dfk: Source driving foreign key
+        :param src_sfk: Source surrogate foreign key
+        :param src_eff: Source effective from
+        :param status:
+        :param src_ldts: Source load date timestamp
+        :param src_source: Source record source column
+        :param source_model: Model name to select from
+        :param config: Optional model config
+        :param depends_on: Optional forced dependency
+    """
+
+    template = f"""
+    {depends_on}
+    {{{{ config({config}) }}}}
+    {{{{ dbtvault.eff_sat_hashdiff(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
                           status={status}, 
                           src_eff={src_eff}, src_ldts={src_ldts}, 
                           src_source={src_source}, source_model={source_model}) }}}}
@@ -509,6 +539,7 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "sat": "incremental",
         "eff_sat": "incremental",
         "eff_sat_status": "incremental",
+        "eff_sat_hashdiff": "incremental",
         "xts": "incremental",
         "t_link": "incremental",
         "ma_sat": "incremental",

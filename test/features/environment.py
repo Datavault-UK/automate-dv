@@ -8,6 +8,7 @@ from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
 from test.features.eff_sats_status import fixtures_eff_sat_status
+from test.features.eff_sat_hashdiff import fixtures_eff_sat_hashdiff
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
@@ -17,6 +18,7 @@ from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
+
 
 fixture_registry_utils = {
     "fixture.enable_sha": enable_sha,
@@ -96,6 +98,11 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status_multipart,
          "bigquery": '',
          "sqlserver": ''},
+
+    "fixture.eff_satellite_hashdiff":
+        {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff,
+         "bigquery": "",
+         "sqlserver": ""},
 
     "fixture.out_of_sequence_satellite":
         {"snowflake": fixtures_oos_sat.out_of_sequence_satellite,
