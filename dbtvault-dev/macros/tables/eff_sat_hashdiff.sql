@@ -1,30 +1,25 @@
 {%- macro eff_sat_hashdiff(src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- adapter.dispatch('eff_sat_hashdiff', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                status=status, src_hashdiff=src_hashdiff, src_eff=src_eff,
-                                                 src_ldts=src_ldts, src_source=src_source, source_model=source_model) -}}
+                                                         status=status, src_hashdiff=src_hashdiff, src_eff=src_eff,
+                                                         src_ldts=src_ldts, src_source=src_source, source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat_hashdiff(src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source, source_model) -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                        status=status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
-                                        src_source=src_source, source_model=source_model) -}}
+                                       src_source=src_source, source_model=source_model) -}}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_eff, src_ldts, src_source, status, src_hashdiff]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
 {{- dbtvault.prepend_generated_by() }}
 
-
-
-
 WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
-            , a.{{ status }}
-            , a.HASHDIFF_T AS {{ src_hashdiff }}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
@@ -40,14 +35,14 @@ WITH source_data AS (
 {# Getting the hashdiff for the status flag #}
 flag_hash AS (
     SELECT DISTINCT
-        HASHDIFF_T
+        HASHDIFF AS HASHDIFF_T,
         HASHDIFF_F
     FROM {{ ref(source_model) }}
 ),
 
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'b') }}, b.{{- status }},  b.{{ src_hashdiff }},
+    SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY b.{{ src_pk }}
                 ORDER BY b.{{ src_ldts }} DESC
@@ -58,24 +53,22 @@ latest_records AS (
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'c') }}, c.{{- status }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
     WHERE status = 'TRUE'
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}, {{ status }},{{ src_hashdiff }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE status= 'FALSE'
+    WHERE status = 'FALSE'
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ dbtvault.alias_all(source_cols, 'f') }},
-        f.{{ status }},
-        f.{{ src_hashdiff }}
+        {{ dbtvault.alias_all(source_cols, 'f') }}
     FROM source_data AS f
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
@@ -132,9 +125,7 @@ records_to_insert AS (
 {%- else %}
 
 records_to_insert AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'i') }},
-    {{ status }},
-    {{ src_hashdiff }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
     FROM source_data AS i
 )
 

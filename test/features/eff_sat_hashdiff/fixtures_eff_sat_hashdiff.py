@@ -20,8 +20,10 @@ def eff_satellite_hashdiff(context):
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
-            "HASHDIFF_T": "STATUS_FLAG_T",
-            "HASHDIFF_F": "STATUS_FLAG_F"
+            "HASHDIFF": {"is_hashdiff": True,
+                           "columns": ["STATUS_FLAG_T"]},
+            "HASHDIFF_F": {"is_hashdiff": True,
+                           "columns": ["STATUS_FLAG_F"]}
         }
     }
 
@@ -62,5 +64,3 @@ def eff_satellite_hashdiff(context):
             }
         }
     }
-
-
