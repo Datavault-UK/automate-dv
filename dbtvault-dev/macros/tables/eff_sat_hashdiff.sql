@@ -11,7 +11,7 @@
                                        status=status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
                                        src_source=src_source, source_model=source_model) -}}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_eff, src_ldts, src_source, status, src_hashdiff]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
@@ -80,11 +80,11 @@ new_reopened_records AS (
     SELECT DISTINCT
         g.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'g') }},
+        'TRUE'::BOOLEAN AS {{ status }},
+        g.{{ src_hashdiff }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
-        g.{{ src_source }},
-        'TRUE'::BOOLEAN AS {{ status }},
-        g.{{ src_hashdiff }}
+        g.{{ src_source }}
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
@@ -98,11 +98,11 @@ new_closed_records AS (
     SELECT DISTINCT
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        h.{{ src_eff }} AS {{ src_eff }},
-        h.{{ src_ldts }},
-        lo.{{ src_source }},
         'FALSE'::BOOLEAN AS {{ status }},
         (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }}
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
     FROM source_data AS h
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}

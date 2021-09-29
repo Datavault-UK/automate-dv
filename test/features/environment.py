@@ -104,6 +104,16 @@ fixtures_registry = {
          "bigquery": "",
          "sqlserver": ""},
 
+    "fixture.eff_satellite_hashdiff_testing_auto_end_dating":
+        {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_testing_auto_end_dating,
+         "bigquery": '',
+         "sqlserver": ''},
+
+    "fixture.eff_satellite_hashdiff_multipart":
+        {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_multipart,
+         "bigquery": '',
+         "sqlserver": ''},
+
     "fixture.out_of_sequence_satellite":
         {"snowflake": fixtures_oos_sat.out_of_sequence_satellite,
          "bigquery": "",
