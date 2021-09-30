@@ -95,7 +95,7 @@ backfill_as_of AS (
 ),
 
 new_rows_pks AS (
-    SELECT a.{{ src_pk }}
+    SELECT {{ dbtvault.prefix([src_pk], 'a') }}
     FROM {{ ref(source_model) }} AS a
     WHERE a.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
 ),
@@ -113,7 +113,7 @@ overlap AS (
     SELECT a.*
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
-    ON a.{{ src_pk }} = b.{{ src_pk }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
     WHERE a.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
     AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     AND a.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
@@ -123,7 +123,7 @@ overlap AS (
 
 backfill_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -132,7 +132,7 @@ backfill_rows_as_of_dates AS (
 
 backfill AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
@@ -159,13 +159,13 @@ backfill AS (
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
 ),
 {%- endif %}
 
 new_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
@@ -174,7 +174,7 @@ new_rows_as_of_dates AS (
 
 new_rows AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
@@ -202,7 +202,7 @@ new_rows AS (
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
 ),
 
 pit AS (
@@ -309,7 +309,7 @@ backfill_as_of AS (
 ),
 
 new_rows_pks AS (
-    SELECT a.{{ src_pk }}
+    SELECT {{ dbtvault.prefix([src_pk], 'a') }}
     FROM {{ ref(source_model) }} AS a
     INNER JOIN last_safe_load_datetime as l
     ON a.{{ src_ldts }} >= l.LAST_SAFE_LOAD_DATETIME
@@ -329,7 +329,7 @@ overlap AS (
     SELECT a.*
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
-    ON a.{{ src_pk }} = b.{{ src_pk }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
     INNER JOIN min_date
     ON 1 = 1
     INNER JOIN last_safe_load_datetime
@@ -345,7 +345,7 @@ overlap AS (
 
 backfill_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -354,7 +354,7 @@ backfill_rows_as_of_dates AS (
 
 backfill AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
@@ -377,14 +377,14 @@ backfill AS (
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
     ORDER BY (1)
 ),
 {%- endif %}
 
 new_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
@@ -393,7 +393,7 @@ new_rows_as_of_dates AS (
 
 new_rows AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
@@ -418,7 +418,7 @@ new_rows AS (
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
     ORDER BY (1)
 ),
 
