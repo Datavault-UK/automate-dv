@@ -10,10 +10,10 @@
 
 {%- macro default__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = "||" -%}
-{%- set null_placeholder_string = "^^" -%}
-
 {%- set hash = var('hash', 'MD5') -%}
+{%- set concat_string = var('concat_string', '||') -%}
+{%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
+
 
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
@@ -78,8 +78,8 @@
 
 {%- macro bigquery__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = '||' -%}
-{%- set null_placeholder_string = "^^" -%}
+{%- set hash = var('hash', 'MD5') -%}
+{%- set concat_string = var('concat_string', '||') -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
@@ -140,8 +140,8 @@
 
 {%- macro sqlserver__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = "||" -%}
-{%- set null_placeholder_string = "^^" -%}
+{%- set hash = var('hash', 'MD5') -%}
+{%- set concat_string = var('concat_string', '||') -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 
