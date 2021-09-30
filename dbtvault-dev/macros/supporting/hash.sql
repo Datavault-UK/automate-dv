@@ -14,7 +14,6 @@
 {%- set concat_string = var('concat_string', '||') -%}
 {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
-
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
     {%- set hash_alg = 'MD5_BINARY' -%}
@@ -80,8 +79,7 @@
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set concat_string = var('concat_string', '||') -%}
-
-{%- set hash = var('hash', 'MD5') -%}
+{%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
 {#- Select hashing algorithm -#}
 
@@ -142,8 +140,8 @@
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set concat_string = var('concat_string', '||') -%}
+{%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
-{%- set hash = var('hash', 'MD5') -%}
 
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
