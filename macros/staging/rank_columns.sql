@@ -12,9 +12,9 @@
 
         {%- if columns[col] is mapping and columns[col].partition_by and columns[col].order_by -%}
 
-            {% set order_by = columns[col].order_by %}
-            {% set partition_by = columns[col].partition_by %}
-            {% set dense_rank = columns[col].dense_rank %}
+            {%- set order_by = columns[col].order_by -%}
+            {%- set partition_by = columns[col].partition_by -%}
+            {%- set dense_rank = columns[col].dense_rank -%}
 
             {%- if dbtvault.is_nothing(dense_rank) %}
                 {%- set rank_type = "RANK()" -%}
