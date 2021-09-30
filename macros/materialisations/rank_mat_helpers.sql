@@ -24,6 +24,29 @@
     {% do return(filtered_sql) %}
 {% endmacro %}
 
+{% macro sqlserver__replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) %}
+
+    {%- set rank_filter -%}
+        CAST({{ rank_column }} AS INT) = CAST({{ rank_iteration }} AS INT)
+    {%- endset -%}
+
+    {%- set filtered_sql = core_sql | replace("__RANK_FILTER__", rank_filter) -%}
+
+    {% do return(filtered_sql) %}
+{% endmacro %}
+
+
+{% macro bigquery__replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) %}
+    {%- set rank_filter -%}
+        CAST({{ rank_column }} AS INTEGER) = CAST({{ rank_iteration }} AS INTEGER)
+    {%- endset -%}
+    
+    {%- set filtered_sql = core_sql | replace("__RANK_FILTER__", rank_filter) -%}
+
+    {% do return(filtered_sql) %}
+{% endmacro %}
+
+
 
 {#-- OTHER MACROS #}
 
@@ -46,7 +69,7 @@
             FROM stage
         {% endset %}
 
-        {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
+        {% set min_max_dict = dbtvault.get_query_results_as_dict(query_sql) %}
 
         {% set min_rank = min_max_dict['MIN'][0] | string %}
         {% set max_rank = min_max_dict['MAX'][0] | string %}

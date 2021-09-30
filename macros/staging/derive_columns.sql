@@ -24,8 +24,12 @@
                 {%- set column_str = dbtvault.as_constant(concat_component) -%}
                 {%- do column_list.append(column_str) -%}
             {%- endfor -%}
-
-            {%- set concat_string = "CONCAT_WS(" ~ "'||', " ~ column_list | join(", ") ~ ") AS " ~ col -%}
+            {% if target.type == 'bigquery' %}
+                {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
+                {%- set concat_string = "({}) AS {}".format(concat, col) -%}
+            {% else %}
+                {% set concat_string = "CONCAT_WS(" ~ "'||', " ~ column_list | join(", ") ~ ") AS " ~ col %}
+            {% endif %}
 
             {%- do der_columns.append(concat_string) -%}
             {%- set exclude_columns = exclude_columns + columns[col] -%}
