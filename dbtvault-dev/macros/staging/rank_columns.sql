@@ -12,6 +12,16 @@
 
         {%- if columns[col] is mapping and columns[col].partition_by and columns[col].order_by -%}
 
+            {%- if dbtvault.is_nothing(columns[col].dense_rank) %}
+                {%- set rank_type = "RANK()" -%}
+            {%- elif columns[col].dense_rank is true -%}
+                {%- set rank_type = "DENSE_RANK()" -%}
+            {%- else -%}
+                {%- if execute -%}
+                    {%- do exceptions.raise_compiler_error('If dense_rank is provided, it must be true or false, not {}'.format(columns[col].dense_rank)) -%}
+                {% endif %}
+            {%- endif -%}
+
             {%- if dbtvault.is_list(columns[col].order_by) -%}
                 {%- set order_by_str = columns[col].order_by | join(", ") -%}
             {%- else -%}
@@ -23,8 +33,8 @@
             {%- else -%}
                 {%- set partition_by_str = columns[col].partition_by -%}
             {%- endif -%}
-{# TODO Configurable ranking function defaulting to DENSE_RANK() to eliminate unnecessary incremental processing cycles? #}
-            {{- "RANK() OVER (PARTITION BY {} ORDER BY {}) AS {}".format(partition_by_str, order_by_str, col) | indent(4) -}}
+
+            {{- "{} OVER (PARTITION BY {} ORDER BY {}) AS {}".format(rank_type, partition_by_str, order_by_str, col) | indent(4) -}}
 
         {%- endif -%}
 
