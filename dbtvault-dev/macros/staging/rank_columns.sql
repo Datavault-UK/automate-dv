@@ -22,28 +22,29 @@
                 {% endif %}
             {%- endif -%}
 
-            {%- if dbtvault.is_list(columns[col].order_by) -%}
+            {% set order_by = columns[col].order_by %}
 
-                {%- if columns[col].order_by is mapping %}
-                    {%- do log('order by: {}'.format(columns[col].order_by, true)) -%}
-{#                    {%- set column_name, direction = columns[col].order_by.items()[0] -%}#}
-{#                {%- else -%}#}
-{#                    {%- set column_name = columns[col].order_by -%}#}
-{#                    {%- set direction = '' -%}#}
+            {%- if dbtvault.is_list(order_by) -%}
+
+                {%- if order_by is mapping %}
+                    {%- set column_name, direction = order_by.items()|first -%}
+
+                {%- else -%}
+                    {%- set column_name = order_by -%}
+                    {%- set direction = '' -%}
                 {%- endif -%}
 
-                {%- set order_by_str = "{} {}".format(column_name, direction) | join(", ") -%}
+                {%- set order_by_str = "{} {}".format(column_name, direction) | join(", ") | trim -%}
             {%- else -%}
 
-                {%- if columns[col].order_by is mapping %}
-                    {%- do log('order by: {}'.format(columns[col].order_by, true)) -%}
-{#                    {%- set column_name, direction = columns[col].order_by.items()[0] -%}#}
-{#                {%- else -%}#}
-{#                    {%- set column_name = columns[col].order_by -%}#}
-{#                    {%- set direction = '' -%}#}
+                {%- if order_by is mapping %}
+                    {%- set column_name, direction = order_by.items()|first -%}
+                {%- else -%}
+                    {%- set column_name = order_by -%}
+                    {%- set direction = '' -%}
                 {%- endif -%}
 
-                {%- set order_by_str = "{} {}".format(column_name, direction) -%}
+                {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
             {%- endif -%}
 
             {%- if dbtvault.is_list(columns[col].partition_by) -%}
