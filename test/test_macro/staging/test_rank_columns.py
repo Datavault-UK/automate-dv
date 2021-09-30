@@ -6,7 +6,7 @@ macro_name = "rank_columns"
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_single_columns(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -28,7 +28,29 @@ def test_rank_columns_correctly_generates_hashed_columns_for_single_columns(requ
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_multi_part(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_asc(request, generate_model):
+    metadata = {
+        "columns": {
+            "DBTVAULT_RANK": {
+                "partition_by": "CUSTOMER_ID",
+                "order_by": {"BOOKING_DATE": "ASC"}
+            }
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_part(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -51,7 +73,7 @@ def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_mult
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_multi_order(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_order(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -73,7 +95,7 @@ def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_mult
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_multi_part_order(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_part_order(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -96,7 +118,7 @@ def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_mult
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_multi_part_order_dense(request,
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_part_order_dense(request,
                                                                                                    generate_model):
     metadata = {
         "columns": {
@@ -121,7 +143,7 @@ def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_mult
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_dense_rank(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_dense_rank(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -144,7 +166,7 @@ def test_rank_columns_correctly_generates_hashed_columns_for_single_columns_dens
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_multiple_columns(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -170,7 +192,33 @@ def test_rank_columns_correctly_generates_hashed_columns_for_multiple_columns(re
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_multiple_columns_dense_rank(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_asc_desc(request, generate_model):
+    metadata = {
+        "columns": {
+            "DBTVAULT_RANK": {
+                "partition_by": "CUSTOMER_ID",
+                "order_by": {"BOOKING_DATE": "ASC"}
+            },
+            "SAT_RANK": {
+                "partition_by": "TRANSACTION_ID",
+                "order_by": {"TRANSACTION_DATE": "DESC"}
+            }
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_dense_rank(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
@@ -198,7 +246,7 @@ def test_rank_columns_correctly_generates_hashed_columns_for_multiple_columns_de
 
 
 @pytest.mark.macro
-def test_rank_columns_correctly_generates_hashed_columns_for_multiple_columns_some_dense_rank(request, generate_model):
+def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_some_dense_rank(request, generate_model):
     metadata = {
         "columns": {
             "DBTVAULT_RANK": {
