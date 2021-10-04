@@ -16,19 +16,10 @@
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
-{%- set HASHDIFF_F = dbtvault.hash(columns=none, values= '0', alias=src_hashdiff, is_hashdiff=false) -%}
-{%- set HASHDIFF_T = dbtvault.hash(columns=none, values= '1', alias=src_hashdiff, is_hashdiff=false) -%}
-
 {{- dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    SELECT {# dbtvault.prefix(source_cols, 'a', alias_target='source') #}
-        a.{{ src_pk }},
-        {{ dbtvault.alias_all(fk_cols, 'a') }},
-        a.{{ status }},
-        a.{{ src_eff }},
-        a.{{ src_ldts }},
-        a.{{ src_source }}
+    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.multikey(src_dfk, prefix='a', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_sfk, prefix='a', condition='IS NOT NULL') }}
@@ -40,6 +31,14 @@ WITH source_data AS (
 ),
 
 {%- if dbtvault.is_any_incremental() %}
+
+{# Getting the hashdiff for the status flag #}
+flag_hash AS (
+    SELECT DISTINCT
+        HASHDIFF AS HASHDIFF_T,
+        HASHDIFF_F
+    FROM {{ ref(source_model) }}
+),
 
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
@@ -69,13 +68,7 @@ latest_closed AS (
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        f.{{ src_pk }},
-        {{ dbtvault.alias_all(fk_cols, 'f') }},
-        f.{{ status }},
-        {{ HASHDIFF_T }},
-        f.{{ src_eff }},
-        f.{{ src_ldts }},
-        f.{{ src_source }}
+        {{ dbtvault.alias_all(source_cols, 'f') }}
     FROM source_data AS f
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
@@ -87,9 +80,9 @@ new_reopened_records AS (
     SELECT DISTINCT
         g.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'g') }},
-        g.{{ status }},
-        {{ HASHDIFF_T }},
-        g.{{ src_eff }},
+        'TRUE'::BOOLEAN AS {{ status }},
+        g.{{ src_hashdiff }},
+        g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
         g.{{ src_source }}
     FROM source_data AS g
@@ -106,8 +99,8 @@ new_closed_records AS (
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         'FALSE'::BOOLEAN AS {{ status }},
-        {{HASHDIFF_F }},
-        h.{{ src_eff }},
+        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }},
+        h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
@@ -132,14 +125,7 @@ records_to_insert AS (
 {%- else %}
 
 records_to_insert AS (
-    SELECT
-        i.{{ src_pk }},
-        {{ dbtvault.alias_all(fk_cols, 'i') }},
-        i.{{ status }},
-        i.{{ src_eff }},
-        {{ HASHDIFF_T }},
-        i.{{ src_ldts }},
-        i.{{ src_source }}
+    SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
     FROM source_data AS i
 )
 

@@ -9,8 +9,9 @@ def eff_satellite_hashdiff(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
-            "STATUS": "'TRUE' ::BOOLEAN"
-
+            "STATUS": "'TRUE' ::BOOLEAN",
+            "STATUS_FLAG_T": "1 ::INT",
+            "STATUS_FLAG_F": "0 ::INT"
         },
     }
 
@@ -18,7 +19,11 @@ def eff_satellite_hashdiff(context):
         "STG_CUSTOMER": {
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
+            "ORDER_PK": "ORDER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                           "columns": ["STATUS_FLAG_T"]},
+            "HASHDIFF_F": {"is_hashdiff": True,
+                           "columns": ["STATUS_FLAG_F"]}
         }
     }
 
@@ -51,9 +56,9 @@ def eff_satellite_hashdiff(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
                 "STATUS": "BOOLEAN",
                 "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -141,10 +146,14 @@ def eff_satellite_hashdiff_testing_auto_end_dating(context):
 
         context.derived_columns = {
             "STG_CUSTOMER_ORDER": {
-                "STATUS": "'TRUE' ::BOOLEAN"
+                "STATUS": "'TRUE' ::BOOLEAN",
+                "STATUS_FLAG_T": "1 ::INT",
+                "STATUS_FLAG_F": "0 ::INT"
             },
             "STG_ORDER_CUSTOMER": {
-                "STATUS": "'TRUE' ::BOOLEAN"
+                "STATUS": "'TRUE' ::BOOLEAN",
+                "STATUS_FLAG_T": "1 ::INT",
+                "STATUS_FLAG_F": "0 ::INT"
             },
         }
 
@@ -152,12 +161,20 @@ def eff_satellite_hashdiff_testing_auto_end_dating(context):
             "STG_CUSTOMER_ORDER": {
                 "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
                 "CUSTOMER_PK": "CUSTOMER_ID",
-                "ORDER_PK": "ORDER_ID"
+                "ORDER_PK": "ORDER_ID",
+                "HASHDIFF": {"is_hashdiff": True,
+                             "columns": ["STATUS_FLAG_T"]},
+                "HASHDIFF_F": {"is_hashdiff": True,
+                               "columns": ["STATUS_FLAG_F"]}
             },
             "STG_ORDER_CUSTOMER": {
                 "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
                 "CUSTOMER_PK": "CUSTOMER_ID",
-                "ORDER_PK": "ORDER_ID"
+                "ORDER_PK": "ORDER_ID",
+                "HASHDIFF": {"is_hashdiff": True,
+                             "columns": ["STATUS_FLAG_T"]},
+                "HASHDIFF_F": {"is_hashdiff": True,
+                               "columns": ["STATUS_FLAG_F"]}
             }
         }
 
