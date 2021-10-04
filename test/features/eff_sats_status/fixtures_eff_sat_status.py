@@ -7,6 +7,12 @@ def eff_satellite_status(context):
     Define the structures and metadata to load effectivity satellites
     """
 
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "STATUS": "'TRUE' ::BOOLEAN",
+        },
+    }
+
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
@@ -33,8 +39,7 @@ def eff_satellite_status(context):
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "ORDER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-                "STATUS": "BOOLEAN"
+                "SOURCE": "VARCHAR"
             }
         },
         "EFF_SAT": {
@@ -51,12 +56,17 @@ def eff_satellite_status(context):
     }
 
 
-
 @fixture
 def eff_satellite_status_multipart(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "STATUS": "'TRUE' ::BOOLEAN",
+        },
+    }
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -90,8 +100,7 @@ def eff_satellite_status_multipart(context):
                 "PLATFORM_ID": "VARCHAR",
                 "ORGANISATION_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-                "STATUS": "BOOLEAN"
+                "SOURCE": "VARCHAR"
             }
         },
         "EFF_SAT": {
@@ -116,6 +125,15 @@ def eff_satellite_status_testing_auto_end_dating(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
+
+    context.derived_columns = {
+        "STG_CUSTOMER_ORDER": {
+            "STATUS": "'TRUE' ::BOOLEAN",
+        },
+        "STG_ORDER_CUSTOMER": {
+            "STATUS": "'TRUE' ::BOOLEAN",
+        }
+    }
 
     context.hashed_columns = {
         "STG_CUSTOMER_ORDER": {
@@ -174,8 +192,7 @@ def eff_satellite_status_testing_auto_end_dating(context):
                 "ORDER_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR",
-                "STATUS": "BOOLEAN"
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_ORDER_CUSTOMER": {
@@ -184,8 +201,7 @@ def eff_satellite_status_testing_auto_end_dating(context):
                 "ORDER_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
-                "SOURCE": "VARCHAR",
-                "STATUS": "BOOLEAN"
+                "SOURCE": "VARCHAR"
             }
         },
         "LINK_CUSTOMER_ORDER": {
