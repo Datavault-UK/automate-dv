@@ -1,8 +1,8 @@
 {%- macro hash(columns=none, alias=none, is_hashdiff=false) -%}
 
-    {% if is_hashdiff is none %}
+    {%- if is_hashdiff is none -%}
         {%- set is_hashdiff = false -%}
-    {% endif %}
+    {%- endif -%}
 
     {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
 
@@ -10,10 +10,9 @@
 
 {%- macro default__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = "||" -%}
-{%- set null_placeholder_string = "^^" -%}
-
 {%- set hash = var('hash', 'MD5') -%}
+{%- set concat_string = var('concat_string', '||') -%}
+{%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
@@ -78,10 +77,9 @@
 
 {%- macro bigquery__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = '||' -%}
-{%- set null_placeholder_string = "^^" -%}
-
 {%- set hash = var('hash', 'MD5') -%}
+{%- set concat_string = var('concat_string', '||') -%}
+{%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
 {#- Select hashing algorithm -#}
 
@@ -140,10 +138,9 @@
 
 {%- macro sqlserver__hash(columns, alias, is_hashdiff) -%}
 
-{%- set concat_string = "||" -%}
-{%- set null_placeholder_string = "^^" -%}
-
 {%- set hash = var('hash', 'MD5') -%}
+{%- set concat_string = var('concat_string', '||') -%}
+{%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
