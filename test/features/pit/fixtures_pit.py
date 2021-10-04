@@ -999,15 +999,13 @@ def pit_bigquery(context):
              "CUSTOMER_ADDRESS",
              "CUSTOMER_DOB",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
         "RAW_STAGE_LOGIN":
             ["CUSTOMER_ID",
              "LAST_LOGIN_DATE",
              "DEVICE_USED",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
         "RAW_STAGE_PROFILE":
             ["CUSTOMER_ID",
              "DASHBOARD_COLOUR",
@@ -1877,15 +1875,13 @@ def pit_sqlserver(context):
              "CUSTOMER_ADDRESS",
              "CUSTOMER_DOB",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
         "RAW_STAGE_LOGIN":
             ["CUSTOMER_ID",
              "LAST_LOGIN_DATE",
              "DEVICE_USED",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
         "RAW_STAGE_PROFILE":
             ["CUSTOMER_ID",
              "DASHBOARD_COLOUR",
