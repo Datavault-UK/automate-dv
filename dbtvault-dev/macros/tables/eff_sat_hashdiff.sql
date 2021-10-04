@@ -99,7 +99,7 @@ new_closed_records AS (
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         'FALSE'::BOOLEAN AS {{ status }},
-        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }}
+        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
