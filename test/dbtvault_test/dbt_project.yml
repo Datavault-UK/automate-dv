@@ -35,3 +35,11 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOAD_DATE: DATE
+    temp:
+      link_customer_order_expected_seed:
+        +column_types:
+          CUSTOMER_ORDER_PK: BINARY(16)
+          CUSTOMER_PK: BINARY(16)
+          ORDER_PK: BINARY(16)
+          LOAD_DATETIME: DATETIME
+          SOURCE: VARCHAR
