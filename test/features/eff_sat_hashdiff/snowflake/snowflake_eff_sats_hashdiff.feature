@@ -85,9 +85,9 @@ Feature: [SF-EFH] Effectivity Satellites with a Hashdiff
   Scenario: [SF-EFH-05] Link is Changed
     Given the EFF_SAT eff_sat_hashdiff is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | HASHDIFF        | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('md5('1')') | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | md5('md5('1')') | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('md5('1')') | 2020-01-09     | 2020-01-10 | orders |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 4000        | CCC      | 2020-01-11     | 2020-01-12 | orders |
