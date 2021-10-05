@@ -28,36 +28,6 @@
     {% do return(filtered_sql) %}
 {% endmacro %}
 
-{% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-
-    {%- set period_filter -%}
-            (DATE({{ timestamp_field }}) >= DATE_TRUNC(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
-             DATE({{ timestamp_field }}) < DATE_TRUNC(DATE_ADD(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
-      AND DATE({{ timestamp_field }}) >= DATE('{{ start_timestamp }}'))
-    {%- endset -%}
-
-    {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
-
-    {% do return(filtered_sql) %}
-{% endmacro %}
-
-{% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-
-    {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
-    {% set start_timestamp_mssql = start_timestamp[0:23] %}
-
-    {%- set period_filter -%}
-            (CAST({{ timestamp_field }} AS DATE) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME))), 0) AND
-             CAST({{ timestamp_field }} AS DATE) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME)))
-      AND (CAST({{ timestamp_field }} AS DATE) >= CAST('{{ start_timestamp_mssql }}' AS DATE)))
-    {%- endset -%}
-
-    {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
-
-    {% do return(filtered_sql) %}
-{% endmacro %}
-
-
 {#-- GET_PERIOD_FILTER_SQL #}
 
 {%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
@@ -84,20 +54,6 @@
                                                                                        offset, period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
-
-{% macro sqlserver__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
-
-    {%- set filtered_sql = {'sql': base_sql} -%}
-
-    {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_period_filter(filtered_sql.sql,
-                                                                                       timestamp_field,
-                                                                                       start_timestamp,
-                                                                                       stop_timestamp,
-                                                                                       offset, period)}) -%}
-    {# MSSQL does not allow CTEs in a subquery #}
-    {{ filtered_sql.sql }}
-{%- endmacro %}
-
 
 {#-- GET_PERIOD_BOUNDARIES #}
 
@@ -135,68 +91,6 @@
         FROM period_data
     {%- endset %}
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
-
-    {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
-                                'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
-                                'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
-
-    {% do return(period_boundaries) %}
-{%- endmacro %}
-
-{% macro sqlserver__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
-
-    {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
-    {% set start_date_mssql = start_date[0:23] %}
-    {% set stop_date_mssql  = stop_date[0:23] %}
-
-    {% set period_boundary_sql -%}
-        WITH period_data AS (
-            SELECT
-                CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS DATETIME)) AS DATETIME) AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399996, "CAST(NULLIF('" ~ stop_date_mssql | lower ~ "','none') AS DATETIME)") }},
-                         {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
-            FROM {{ target_schema }}.{{ target_table }}
-        )
-        SELECT
-            start_timestamp,
-            stop_timestamp,
-            {{ dbt_utils.datediff('start_timestamp',
-                                  'stop_timestamp',
-                                  period) }} + 1 AS num_periods
-        FROM period_data
-    {%- endset %}
-
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
-
-    {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
-                                'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
-                                'num_periods': period_boundaries_dict['NUM_PERIODS'][0] | int} %}
-
-    {% do return(period_boundaries) %}
-{%- endmacro %}
-
-
-{% macro bigquery__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
-
-    {% set period_boundary_sql -%}
-        with data as (
-            select
-                coalesce(CAST(max({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
-                coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')") }},
-                         CAST(CURRENT_TIMESTAMP() AS DATETIME) ) as STOP_TIMESTAMP
-            from {{ target_schema }}.{{ target_table }}
-        )
-        select
-            START_TIMESTAMP,
-            STOP_TIMESTAMP,
-            {{ dbt_utils.datediff('start_timestamp',
-                                  'stop_timestamp',
-                                  period) }} + 1 as NUM_PERIODS
-        from data
-    {%- endset %}
-
-
     {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
@@ -226,41 +120,13 @@
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{ start_timestamp }}'))) AS period_of_load
     {%- endset %}
 
-    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
-
-    {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
-
-    {% do return(period_of_load) %}
-{%- endmacro -%}
-
-{%- macro sqlserver__get_period_of_load(period, offset, start_timestamp) -%}
-
-
-    {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
-    {% set start_timestamp_mssql = start_timestamp[0:23] %}
-
-    {% set period_of_load_sql -%}
-        SELECT DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME))), 0) AS period_of_load
-    {%- endset %}
-
-    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
-
-    {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
-
-    {% do return(period_of_load) %}
-{%- endmacro -%}
-
-{%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
-    {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC(DATE_ADD( DATE('{{start_timestamp}}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
-    {%- endset %}
-
     {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}
 
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
     {% do return(period_of_load) %}
 {%- endmacro -%}
+
 
 {#-- OTHER MACROS #}
 
@@ -304,7 +170,7 @@
             FROM stage
         {% endset %}
 
-        {% set min_max_dict = dbtvault.get_query_results_as_dict(query_sql) %}
+        {% set min_max_dict = dbt_utils.get_query_results_as_dict(query_sql) %}
 
         {% set start_date = min_max_dict['MIN'][0] | string %}
         {% set stop_date = min_max_dict['MAX'][0] | string %}
