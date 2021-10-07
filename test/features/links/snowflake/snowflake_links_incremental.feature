@@ -81,9 +81,9 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-      | md5('1008\|\|ITA') | md5('1008') | md5('GBR') | 1993-01-03 | CRM    |
-      | md5('1009\|\|DEU') | md5('1009') | md5('FRA') | 1993-01-03 | CRM    |
-      | md5('1010\|\|ITA') | md5('1010') | md5('IND') | 1993-01-03 | CRM    |
+      | md5('1008\|\|GBR') | md5('1008') | md5('GBR') | 1993-01-03 | CRM    |
+      | md5('1009\|\|FRA') | md5('1009') | md5('FRA') | 1993-01-03 | CRM    |
+      | md5('1010\|\|IND') | md5('1010') | md5('IND') | 1993-01-03 | CRM    |
       | md5('1011\|\|GHA') | md5('1011') | md5('GHA') | 1993-01-04 | CRM    |
       | md5('1012\|\|MEX') | md5('1012') | md5('MEX') | 1993-01-04 | CRM    |
       | md5('1013\|\|GBR') | md5('1013') | md5('GBR') | 1993-01-04 | CRM    |
@@ -180,9 +180,11 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | GBR       | Alicia        | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
+      | 1005        | CHN       | Erik          | 1990-01-01   | 17-214-233-1218 | 1993-01-02 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
-      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1007        | ITA       | Dominic       | 1993-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
@@ -192,6 +194,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
       | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
+      | md5('1005\|\|CHN') | md5('1005') | md5('CHN') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
