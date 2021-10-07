@@ -68,7 +68,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alicia        | 1993-01-03 | TPCH   |
       | 1002        | Bob           | 1993-01-03 | TPCH   |
-      | 1003        | Chad          | 1993-01-03 | TPCH   |
+      | 1003        | Chadwick          | 1993-01-03 | TPCH   |
       | 1004        | Dom           | 1993-01-03 | TPCH   |
       | 1005        | Ewan          | 1993-01-03 | TPCH   |
       | 1006        | Fred          | 1993-01-03 | TPCH   |
@@ -104,7 +104,6 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  @fixture.enable_sha
   Scenario: [SF-HUB-IM-05] Load of stage data into an empty hub - one cycle
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
@@ -119,7 +118,6 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  @fixture.enable_sha
   Scenario: [SF-HUB-IM-06] Load of mixed stage data into an empty hub - two cycles
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
@@ -144,7 +142,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-07] Load of empty stage data into a populated hub - one cycle
+  Scenario: [SF-HUB-IM-07] Load of empty stage data into a populated hub - one cycle
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -159,7 +157,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-08] Load of stage data into a populated hub - one cycle
+  Scenario: [SF-HUB-IM-08] Load of stage data into a populated hub - one cycle
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
@@ -178,7 +176,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-09] Load of stage data into a populated hub - two cycles
+  Scenario: [SF-HUB-IM-09] Load of stage data into a populated hub - two cycles
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
