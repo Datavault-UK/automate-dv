@@ -421,6 +421,7 @@ def macro_model(model_name, macro_name, metadata=None):
         "prefix": prefix_macro,
         "derive_columns": derive_columns_macro,
         "hash_columns": hash_columns_macro,
+        "rank_columns": rank_columns_macro,
         "stage": stage_macro,
         "expand_column_list": expand_column_list_macro,
         "as_constant": as_constant_macro,
@@ -466,6 +467,16 @@ def hash_columns_macro(model_name, metadata):
                f"{{%- endset -%}}\n\n" \
                f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
                f"{{{{ dbtvault.hash_columns(columns=metadata_dict['columns']) }}}}"
+
+    template_to_file(textwrap.dedent(template), model_name)
+
+
+def rank_columns_macro(model_name, metadata):
+    template = f"{{%- set yaml_metadata -%}}\n" \
+               f"{dict_to_yaml_string(metadata)}" \
+               f"{{%- endset -%}}\n\n" \
+               f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
+               f"{{{{ dbtvault.rank_columns(columns=metadata_dict['columns']) }}}}"
 
     template_to_file(textwrap.dedent(template), model_name)
 

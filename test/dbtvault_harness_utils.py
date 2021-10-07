@@ -670,6 +670,14 @@ def feature_sub_types():
                 'eff_sats_rank_mat'
             ]
         },
+        'xts': {
+          'main': [
+              'xts'
+          ],
+          'inc': [
+              'xts_inc'
+          ]
+        },
         'ma_sats': {
             '1cdk': [
                 'mas_one_cdk_0_base',

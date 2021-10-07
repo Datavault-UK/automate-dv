@@ -6,7 +6,7 @@
 
 {%- macro default__as_constant(column_str) -%}
 
-    {% if column_str is not none and column_str is string and column_str %}
+    {%- if column_str is not none and column_str is string and column_str -%}
 
         {%- if column_str | first == "!" -%}
         
