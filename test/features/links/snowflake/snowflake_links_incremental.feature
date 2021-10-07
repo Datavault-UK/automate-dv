@@ -14,6 +14,7 @@ Feature: [SF-LNK] Links
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
@@ -37,6 +38,7 @@ Feature: [SF-LNK] Links
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
@@ -69,6 +71,7 @@ Feature: [SF-LNK] Links
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
@@ -94,6 +97,7 @@ Feature: [SF-LNK] Links
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
@@ -109,6 +113,7 @@ Feature: [SF-LNK] Links
     And I stage the STG_CUSTOMER data
     And I load the LINK link
     Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
@@ -132,6 +137,7 @@ Feature: [SF-LNK] Links
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
@@ -168,9 +174,12 @@ Feature: [SF-LNK] Links
       | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | CRM    |
+      | 1002        | POL       | Alicia        | 2006-04-17   | 17-214-233-1214 | 1993-01-02 | CRM    |
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
+      | 1004        | ITA       | Dave          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
     And I stage the STG_CUSTOMER data
     When I load the LINK link
     Then the LINK table should contain expected data
