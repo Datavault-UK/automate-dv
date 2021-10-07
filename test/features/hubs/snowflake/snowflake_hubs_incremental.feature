@@ -67,7 +67,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alicia        | 1993-01-03 | TPCH   |
-      | 1002        | Bobby         | 1993-01-03 | TPCH   |
+      | 1002        | Bob           | 1993-01-03 | TPCH   |
       | 1003        | Chad          | 1993-01-03 | TPCH   |
       | 1004        | Dom           | 1993-01-03 | TPCH   |
       | 1005        | Ewan          | 1993-01-03 | TPCH   |
