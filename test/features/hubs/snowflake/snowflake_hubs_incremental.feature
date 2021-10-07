@@ -85,6 +85,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
 
 
   @fixture.single_source_hub
+  @fixture.enable_sha
   Scenario: [SF-HUB-IM-04] Load of empty stage data into an empty hub - two cycles
     Given the HUB table is empty
     And the RAW_STAGE table contains data
@@ -93,6 +94,8 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | 1002        | Bob           | 1993-01-01 | TPCH   |
     And I stage the STG_CUSTOMER data
     And I load the HUB hub
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER data
     And I load the HUB hub
     Then the HUB table should contain expected data
@@ -101,6 +104,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
+  @fixture.enable_sha
   Scenario: [SF-HUB-IM-05] Load of stage data into an empty hub - one cycle
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
@@ -115,6 +119,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
+  @fixture.enable_sha
   Scenario: [SF-HUB-IM-06] Load of mixed stage data into an empty hub - two cycles
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
