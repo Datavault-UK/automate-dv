@@ -3,8 +3,8 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
 # Tests from snowflake_hubs.feature that should be moved here:
 # [SF-HUB-08] Load of stage data into a hub
 # [SF-HUB-09] Load of distinct stage data into a hub  (?)
-"# [SF-HUB-014] Union three staging tables to feed an empty hub over two cycles
-# [SF-HUB-015] Union three staging tables to feed a populated hub"
+# [SF-HUB-014] Union three staging tables to feed an empty hub over two cycles
+# [SF-HUB-015] Union three staging tables to feed a populated hub
 
 
   @fixture.single_source_hub
