@@ -8,8 +8,8 @@ Feature: [SF-EFH-DAU] Effectivity Satellites without automatic end-dating
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 4000        | CCC      | TRUE   | 2020-01-11     | 2020-01-12 | orders |
     And I stage the STG_CUSTOMER data
     When I load the EFF_SAT eff_sat_hashdiff
     Then the EFF_SAT table should contain expected data
@@ -29,8 +29,8 @@ Feature: [SF-EFH-DAU] Effectivity Satellites without automatic end-dating
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | FALSE  | md5('0') | 2020-01-11     | 2020-01-12 | orders | FALSE  |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | TRUE   | md5('1') | 2020-01-11     | 2020-01-12 | orders | TRUE   |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
-      | 5000        | CCC      | 2020-01-12     | 2020-01-13 | orders | TRUE   |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
+      | 5000        | CCC      | TRUE   | 2020-01-12     | 2020-01-13 | orders | TRUE   |
     And I stage the STG_CUSTOMER data
     When I load the EFF_SAT eff_sat_hashdiff
     Then the EFF_SAT table should contain expected data

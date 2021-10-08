@@ -7,13 +7,6 @@ def eff_satellite_hashdiff(context):
     Define the structures and metadata to load effectivity satellites
     """
 
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "STATUS": "'TRUE' ::BOOLEAN",
-            "STATUS_FLAG_T": "1 ::INT",
-            "STATUS_FLAG_F": "0 ::INT"
-        },
-    }
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -21,9 +14,7 @@ def eff_satellite_hashdiff(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                           "columns": ["STATUS_FLAG_T"]},
-            "HASHDIFF_F": {"is_hashdiff": True,
-                           "columns": ["STATUS_FLAG_F"]}
+                           "columns": ["STATUS::INT"]}
         }
     }
 
@@ -46,7 +37,8 @@ def eff_satellite_hashdiff(context):
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "ORDER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
+                "STATUS": "BOOLEAN"
 
             }
         },
@@ -72,14 +64,6 @@ def eff_satellite_hashdiff_multipart(context):
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
 
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "STATUS": "'TRUE' ::BOOLEAN",
-            "STATUS_FLAG_T": "1 ::INT",
-            "STATUS_FLAG_F": "0 ::INT"
-        },
-    }
-
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID", "NATION_ID", "PLATFORM_ID", "ORGANISATION_ID"],
@@ -88,10 +72,8 @@ def eff_satellite_hashdiff_multipart(context):
             "ORDER_PK": "ORDER_ID",
             "PLATFORM_PK": "PLATFORM_ID",
             "ORGANISATION_PK": "ORGANISATION_ID",
-             "HASHDIFF": {"is_hashdiff": True,
-                            "columns": ["STATUS_FLAG_T"]},
-             "HASHDIFF_F": {"is_hashdiff": True,
-                            "columns": ["STATUS_FLAG_F"]}
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["STATUS::INT"]}
         }
     }
 
@@ -117,7 +99,8 @@ def eff_satellite_hashdiff_multipart(context):
                 "PLATFORM_ID": "VARCHAR",
                 "ORGANISATION_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR",
+                "STATUS": "BOOLEAN"
             }
         },
         "EFF_SAT": {
@@ -144,37 +127,20 @@ def eff_satellite_hashdiff_testing_auto_end_dating(context):
         Define the structures and metadata to load effectivity satellites
         """
 
-        context.derived_columns = {
-            "STG_CUSTOMER_ORDER": {
-                "STATUS": "'TRUE' ::BOOLEAN",
-                "STATUS_FLAG_T": "1 ::INT",
-                "STATUS_FLAG_F": "0 ::INT"
-            },
-            "STG_ORDER_CUSTOMER": {
-                "STATUS": "'TRUE' ::BOOLEAN",
-                "STATUS_FLAG_T": "1 ::INT",
-                "STATUS_FLAG_F": "0 ::INT"
-            },
-        }
-
         context.hashed_columns = {
             "STG_CUSTOMER_ORDER": {
                 "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
                 "CUSTOMER_PK": "CUSTOMER_ID",
                 "ORDER_PK": "ORDER_ID",
                 "HASHDIFF": {"is_hashdiff": True,
-                             "columns": ["STATUS_FLAG_T"]},
-                "HASHDIFF_F": {"is_hashdiff": True,
-                               "columns": ["STATUS_FLAG_F"]}
+                             "columns": ["STATUS::INT"]}
             },
             "STG_ORDER_CUSTOMER": {
                 "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
                 "CUSTOMER_PK": "CUSTOMER_ID",
                 "ORDER_PK": "ORDER_ID",
                 "HASHDIFF": {"is_hashdiff": True,
-                             "columns": ["STATUS_FLAG_T"]},
-                "HASHDIFF_F": {"is_hashdiff": True,
-                               "columns": ["STATUS_FLAG_F"]}
+                             "columns": ["STATUS::INT"]}
             }
         }
 
@@ -224,7 +190,8 @@ def eff_satellite_hashdiff_testing_auto_end_dating(context):
                     "ORDER_ID": "VARCHAR",
                     "EFFECTIVE_FROM": "DATETIME",
                     "LOAD_DATETIME": "DATETIME",
-                    "SOURCE": "VARCHAR"
+                    "SOURCE": "VARCHAR",
+                    "STATUS": "BOOLEAN"
                 }
             },
             "RAW_STAGE_ORDER_CUSTOMER": {
@@ -233,7 +200,8 @@ def eff_satellite_hashdiff_testing_auto_end_dating(context):
                     "ORDER_ID": "VARCHAR",
                     "EFFECTIVE_FROM": "DATETIME",
                     "LOAD_DATETIME": "DATETIME",
-                    "SOURCE": "VARCHAR"
+                    "SOURCE": "VARCHAR",
+                    "STATUS": "BOOLEAN"
                 }
             },
             "LINK_CUSTOMER_ORDER": {

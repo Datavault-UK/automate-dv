@@ -7,10 +7,10 @@ Feature: [SF-EFH-AUB] Effectivity Satellites
   Scenario: [SF-EFH-AUB-01] One load; going from an empty table to 1 CUSTOMER per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1002        | 200      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1003        | 300      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
+      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1002        | 200      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1003        | 300      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
     And I stage the STG_ORDER_CUSTOMER data
     When I load the LINK_ORDER_CUSTOMER link
     Then the LINK_ORDER_CUSTOMER table should contain expected data
@@ -30,10 +30,10 @@ Feature: [SF-EFH-AUB] Effectivity Satellites
   Scenario: [SF-EFH-AUB-02] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1001        | 101      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1001        | 102      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
+      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1001        | 101      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1001        | 102      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
     And I stage the STG_ORDER_CUSTOMER data
     When I load the LINK_ORDER_CUSTOMER link
     Then the LINK_ORDER_CUSTOMER table should contain expected data
@@ -53,10 +53,10 @@ Feature: [SF-EFH-AUB] Effectivity Satellites
   Scenario: [SF-EFH-AUB-03] One load; going from an empty table to 3 CUSTOMERS per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1002        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1003        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
+      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1002        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1003        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
     And I stage the STG_ORDER_CUSTOMER data
     When I load the LINK_ORDER_CUSTOMER link
     Then the LINK_ORDER_CUSTOMER table should contain expected data
@@ -77,10 +77,10 @@ Feature: [SF-EFH-AUB] Effectivity Satellites
   Scenario: [SF-EFH-AUB-04] One load; going from an empty table to 3 ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1001        | 101      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-      | 1001        | 102      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
+      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
+      | 1001        | 100      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1001        | 101      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
+      | 1001        | 102      | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      | TRUE   |
     And I stage the STG_CUSTOMER_ORDER data
     When I load the LINK_CUSTOMER_ORDER link
     Then the LINK_CUSTOMER_ORDER table should contain expected data

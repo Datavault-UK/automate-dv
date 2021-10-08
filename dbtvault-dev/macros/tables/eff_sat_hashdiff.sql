@@ -15,6 +15,8 @@
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+{%- set HASHDIFF_F = dbtvault.hash(columns=none, values= '0', alias=src_hashdiff, is_hashdiff=false) -%}
+{%- set HASHDIFF_T = dbtvault.hash(columns=none, values= '1', alias=src_hashdiff, is_hashdiff=false) -%}
 
 {{- dbtvault.prepend_generated_by() }}
 
@@ -33,12 +35,6 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Getting the hashdiff for the status flag #}
-flag_hash AS (
-    SELECT DISTINCT
-        HASHDIFF AS HASHDIFF_T,
-        HASHDIFF_F
-    FROM {{ ref(source_model) }}
-),
 
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
@@ -80,7 +76,7 @@ new_reopened_records AS (
     SELECT DISTINCT
         g.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'g') }},
-        'TRUE'::BOOLEAN AS {{ status }},
+        g.{{ status }},
         g.{{ src_hashdiff }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
@@ -88,6 +84,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
+    WHERE g.{{ status }} = 'TRUE'::BOOLEAN
 ),
 
 {%- if is_auto_end_dating %}
@@ -99,7 +96,7 @@ new_closed_records AS (
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         'FALSE'::BOOLEAN AS {{ status }},
-        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }},
+        {{ HASHDIFF_F }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -107,6 +104,26 @@ new_closed_records AS (
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
+),
+{% else %}
+
+new_closed_records AS (
+    SELECT DISTINCT
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        h.{{ STATUS }},
+        h.{{ src_hashdiff }}
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
+    FROM source_data AS h
+    LEFT JOIN Latest_open AS lo
+    ON lo.{{ src_pk }} = h.{{ src_pk }}
+    LEFT JOIN latest_closed AS lc
+    ON lc.{{ src_pk }} = h.{{ src_pk }}
+     WHERE g.{{ status }} = 'FALSE'::BOOLEAN
+    AND lo.{{ src_pk }} IS NOT NULL
+    AND lc.{{ src_pk }} IS NULL
 ),
 
 {#- end if is_auto_end_dating -#}
@@ -116,10 +133,8 @@ records_to_insert AS (
     SELECT * FROM new_open_records
     UNION
     SELECT * FROM new_reopened_records
-    {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM new_closed_records
-    {%- endif %}
 )
 
 {%- else %}
