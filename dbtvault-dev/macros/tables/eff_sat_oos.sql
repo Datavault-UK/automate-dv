@@ -16,6 +16,8 @@
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
+{%- set HASHDIFF_F = dbtvault.hash(columns=none, values= '0', alias=src_hashdiff, is_hashdiff=false) -%}
+{%- set HASHDIFF_T = dbtvault.hash(columns=none, values= '1', alias=src_hashdiff, is_hashdiff=false) -%}
 
 {%- if out_of_sequence is not none %}
     {%- set xts_model = out_of_sequence["source_xts"] %}
@@ -40,14 +42,6 @@ WITH source_data AS (
 ),
 
 {%- if dbtvault.is_any_incremental() %}
-
-{# Getting the hashdiff for the status flag #}
-flag_hash AS (
-    SELECT DISTINCT
-        HASHDIFF AS HASHDIFF_T,
-        HASHDIFF_F
-    FROM {{ ref(source_model) }}
-),
 
 {%- if out_of_sequence is not none %}
 insert_date AS (
@@ -104,11 +98,11 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
+    WHERE g.{{ status }} = 'TRUE'::BOOLEAN
 {%- if out_of_sequence is not none %}
-    WHERE g.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
-
-),
+    AND g.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
+),
 {%- if is_auto_end_dating %}
 
 {# Creating the closing records -#}
@@ -118,7 +112,7 @@ new_closed_records AS (
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         'FALSE'::BOOLEAN AS {{ status }},
-        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }},
+        {{ HASHDIFF_F }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -130,7 +124,26 @@ new_closed_records AS (
     AND h.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
 ),
+{% else %}
 
+new_closed_records AS (
+    SELECT DISTINCT
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        h.{{ STATUS }},
+        h.{{ src_hashdiff }}
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
+    FROM source_data AS h
+    LEFT JOIN Latest_open AS lo
+    ON lo.{{ src_pk }} = h.{{ src_pk }}
+    LEFT JOIN latest_closed AS lc
+    ON lc.{{ src_pk }} = h.{{ src_pk }}
+     WHERE g.{{ status }} = 'FALSE'::BOOLEAN
+    AND lo.{{ src_pk }} IS NOT NULL
+    AND lc.{{ src_pk }} IS NULL
+),
 {#- end if is_auto_end_dating -#}
 {%- endif %}
 
@@ -201,9 +214,13 @@ matching_xts_stg_records AS (
       AND (({{ dbtvault.prefix([src_ldts], 'b') }}
   BETWEEN XTS_LOAD_DATE
   AND NEXT_RECORD_DATE)
-  OR  (({{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE)))
+  OR  ( XTS_LOAD_DATE = CASE
+            WHEN ({{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE) THEN FIRST_SEEN_DATE
+            ELSE NULL
+            END ))
   ORDER BY {{ src_pk }}, XTS_LOAD_DATE
 ),
+
 
 records_from_sat AS (
   SELECT
@@ -227,7 +244,7 @@ close_new_inserted_records AS(
         a.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'a') }},
         'FALSE'::BOOLEAN AS {{ status }},
-        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }},
+        {{ HASHDIFF_F }},
         a.NEXT_RECORD_DATE AS {{ src_eff }},
         a.NEXT_RECORD_DATE AS {{ src_ldts }},
         a.{{ src_source }}
@@ -241,7 +258,7 @@ close_previosuly_active AS (
         b.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'b') }},
         'FALSE'::BOOLEAN AS {{ status }},
-        (SELECT HASHDIFF_F FROM flag_hash) AS {{ src_hashdiff }},
+        {{ HASHDIFF_F }},
         a.{{ src_eff }} AS {{ src_eff }},
         a.{{ src_ldts }} AS {{ src_ldts }},
         b.{{ src_source }}
@@ -256,7 +273,7 @@ re_open_previous_link AS (
         b.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'b') }},
         'TRUE'::BOOLEAN AS {{ status }},
-        (SELECT HASHDIFF_T FROM flag_hash) AS {{ src_hashdiff }},
+        {{ HASHDIFF_T }},
         a.{{ src_eff }} AS {{ src_eff }},
         a.{{ src_ldts }} AS {{ src_ldts }},
         b.{{ src_source }}
@@ -288,10 +305,8 @@ records_to_insert AS (
     SELECT * FROM new_open_records
     UNION
     SELECT * FROM new_reopened_records
-    {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM new_closed_records
-    {%- endif %}
     {% if out_of_sequence is not none  -%}
     UNION
     SELECT * FROM out_of_sequence_inserts

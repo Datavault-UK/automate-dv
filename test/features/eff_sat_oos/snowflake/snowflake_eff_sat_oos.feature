@@ -347,7 +347,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-02     | 2020-01-02 | orders |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | FALSE  | md5('0') | 2020-01-12     | 2020-01-12 | orders |
       | md5('3000\|\|AAA') | md5('3000') | md5('AAA') | TRUE   | md5('1') | 2020-01-12     | 2020-01-12 | orders |
-      | md5('3000\|\|AAA') | md5('3000') | md5('AAA') | FASLE  | md5('0') | 2020-01-13     | 2020-01-13 | orders |
+      | md5('3000\|\|AAA') | md5('3000') | md5('AAA') | FALSE  | md5('0') | 2020-01-13     | 2020-01-13 | orders |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | FALSE  | md5('0') | 2020-01-13     | 2020-01-13 | orders |
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
