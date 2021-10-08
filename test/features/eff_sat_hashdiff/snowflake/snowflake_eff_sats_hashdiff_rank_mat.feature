@@ -4,10 +4,10 @@ Feature: [SF-EFH-RM] Effectivity Satellites Loaded using Rank Materialization
   Scenario: [SF-EFH-RM-01] Load data into a non-existent effectivity satellite
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the EFF_SAT eff_sat_hashdiff
@@ -21,10 +21,10 @@ Feature: [SF-EFH-RM] Effectivity Satellites Loaded using Rank Materialization
   Scenario: [SF-EFH-RM-02] Load data into an empty effectivity satellite
     Given the EFF_SAT eff_sat_hashdiff is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the EFF_SAT eff_sat_hashdiff
@@ -37,13 +37,13 @@ Feature: [SF-EFH-RM] Effectivity Satellites Loaded using Rank Materialization
   @fixture.eff_satellite_hashdiff
   Scenario: [SF-EFH-RM-03] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
-      | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
-      | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
-      | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders | TRUE   |
-      | 4000        | DDD      | 2020-01-10     | 2020-01-11 | orders | TRUE   |
-      | 5000        | EEE      | 2020-01-10     | 2020-01-11 | orders | TRUE   |
-      | 5000        | <null>   | 2020-01-12     | 2020-01-13 | orders | TRUE   |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders | TRUE   |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders | TRUE   |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders | TRUE   |
+      | 4000        | DDD      | TRUE   | 2020-01-10     | 2020-01-11 | orders | TRUE   |
+      | 5000        | EEE      | TRUE   | 2020-01-10     | 2020-01-11 | orders | TRUE   |
+      | 5000        | <null>   | TRUE   | 2020-01-12     | 2020-01-13 | orders | TRUE   |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the EFF_SAT eff_sat_hashdiff

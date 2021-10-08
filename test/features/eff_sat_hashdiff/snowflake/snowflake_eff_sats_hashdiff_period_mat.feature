@@ -4,10 +4,10 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-01] Load data into a non-existent effectivity satellite
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     Then the EFF_SAT table should contain expected data
@@ -20,10 +20,10 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-02] Load data into an empty effectivity satellite
     Given the EFF_SAT eff_sat_hashdiff is empty
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     Then the EFF_SAT table should contain expected data
@@ -63,13 +63,13 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-04] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
-      | 4000        | DDD      | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | 5000        | EEE      | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
-      | 5000        | <null>   | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 4000        | DDD      | TRUE   | 2020-01-10     | 2020-01-11 | orders |
+      | 5000        | EEE      | TRUE   | 2020-01-10     | 2020-01-11 | orders |
+      | 5000        | <null>   | TRUE   | 2020-01-12     | 2020-01-13 | orders |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
@@ -90,9 +90,9 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
-      | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-13 | orders |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | STATUS | LOAD_DATE  | SOURCE |
+      | 4000        | CCC      | 2020-01-11 | TRUE   | 2020-01-12 | orders |
+      | 5000        | CCC      | 2020-01-12 | TRUE   | 2020-01-13 | orders |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     Then the EFF_SAT table should contain expected data
@@ -110,10 +110,10 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-06] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-01     | 2020-01-01 | *      |
-      | 1000        | BBB      | 2020-01-02     | 2020-01-02 | *      |
-      | 1000        | CCC      | 2020-01-03     | 2020-01-03 | *      |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-01     | 2020-01-01 | *      |
+      | 1000        | BBB      | TRUE   | 2020-01-02     | 2020-01-02 | *      |
+      | 1000        | CCC      | TRUE   | 2020-01-03     | 2020-01-03 | *      |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
@@ -128,13 +128,13 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-07] One load; and different number of CUSTOMERS per ldts; going from an empty table to 3 CUSTOMERS per ORDER
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-01     | 2020-01-01 | *      |
-      | 2000        | AAA      | 2020-01-02     | 2020-01-02 | *      |
-      | 3000        | AAA      | 2020-01-02     | 2020-01-02 | *      |
-      | 4000        | AAA      | 2020-01-03     | 2020-01-03 | *      |
-      | 5000        | AAA      | 2020-01-03     | 2020-01-03 | *      |
-      | 6000        | AAA      | 2020-01-03     | 2020-01-03 | *      |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-01     | 2020-01-01 | *      |
+      | 2000        | AAA      | TRUE   | 2020-01-02     | 2020-01-02 | *      |
+      | 3000        | AAA      | TRUE   | 2020-01-02     | 2020-01-02 | *      |
+      | 4000        | AAA      | TRUE   | 2020-01-03     | 2020-01-03 | *      |
+      | 5000        | AAA      | TRUE   | 2020-01-03     | 2020-01-03 | *      |
+      | 6000        | AAA      | TRUE   | 2020-01-03     | 2020-01-03 | *      |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
@@ -155,10 +155,10 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-08] One load; going from an empty table to 1 CUSTOMER per ORDER + flip-flop situation
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-01     | 2020-01-01 | *      |
-      | 2000        | AAA      | 2020-01-02     | 2020-01-02 | *      |
-      | 1000        | AAA      | 2020-01-03     | 2020-01-03 | *      |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-01     | 2020-01-01 | *      |
+      | 2000        | AAA      | TRUE   | 2020-01-02     | 2020-01-02 | *      |
+      | 1000        | AAA      | TRUE   | 2020-01-03     | 2020-01-03 | *      |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
