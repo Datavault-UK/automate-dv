@@ -103,7 +103,7 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [SF-HUB-IM-05] Load of mixed stage data into an empty hub - one cycle
+  Scenario: [SF-HUB-IM-05] Load of stage data into an empty hub - one cycle
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
