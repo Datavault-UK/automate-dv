@@ -187,8 +187,8 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
       | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 | CRM    |
-      | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1004\|\|DEU') | md5('1004') | md5('DEU') | 1993-01-01 | CRM    |
+      | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
   Scenario: [SF-LNK-IM-08] Load of mixed stage data into a populated link - one cycle
