@@ -19,10 +19,11 @@
 {%- set HASHDIFF_F = dbtvault.hash(columns=none, values= '0', alias=src_hashdiff, is_hashdiff=false) -%}
 {%- set HASHDIFF_T = dbtvault.hash(columns=none, values= '1', alias=src_hashdiff, is_hashdiff=false) -%}
 
+
 {%- if out_of_sequence is not none %}
     {%- set xts_model = out_of_sequence["source_xts"] %}
     {%- set sat_name_col = out_of_sequence["sat_name_col"] %}
-    {%- set insert_date = out_of_sequence["insert_date"] %}
+    {%- set out_of_sequence_columns = ('PREV_RECORD_PK','NEXT_RECORD_PK','NEXT_CHANGED_RECORD_DATE') -%}
     -- depends_on: {{ ref(xts_model) }}
     -- depends_on: {{ this }}
 {% endif -%}
@@ -83,6 +84,9 @@ new_open_records AS (
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
+{%- if out_of_sequence is not none %}
+    AND f.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
+{%- endif -%}
 ),
 
 {# Identifying the currently closed link relationships to be reopened in eff sat -#}
@@ -130,8 +134,8 @@ new_closed_records AS (
     SELECT DISTINCT
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        h.{{ STATUS }},
-        h.{{ src_hashdiff }}
+        h.{{ status }},
+        h.{{ src_hashdiff }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -140,7 +144,7 @@ new_closed_records AS (
     ON lo.{{ src_pk }} = h.{{ src_pk }}
     LEFT JOIN latest_closed AS lc
     ON lc.{{ src_pk }} = h.{{ src_pk }}
-     WHERE g.{{ status }} = 'FALSE'::BOOLEAN
+     WHERE h.{{ status }} = 'FALSE'::BOOLEAN
     AND lo.{{ src_pk }} IS NOT NULL
     AND lc.{{ src_pk }} IS NULL
 ),
@@ -150,13 +154,13 @@ new_closed_records AS (
 {%- if out_of_sequence is not none %}
 
 sat_records_before_insert_date AS (
-  SELECT DISTINCT
-    {{ dbtvault.prefix(source_cols, 'a') }},
-    {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE,
-    {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
-  FROM {{ this }} AS a
-  LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
-  WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < (select distinct {{ src_ldts }} from insert_date)
+    SELECT DISTINCT
+       {{ dbtvault.prefix(source_cols, 'a') }},
+       {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE,
+       {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
+    FROM {{ this }} AS a
+    LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
+    WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < (select distinct {{ src_ldts }} from insert_date)
 ),
 
 driving_keys AS (
@@ -177,8 +181,68 @@ xts_dfk_enhanced AS (
     WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this.identifier }}'
 ),
 
+new_oos_links AS (
+    SELECT DISTINCT
+        {{ dbtvault.alias_all(source_cols, 'f') }}
+    FROM source_data AS f
+    LEFT JOIN {{ this }} AS v
+    ON f.{{ src_pk }} = v.{{ src_pk }}
+    WHERE v.{{ src_pk }} IS NULL
+    ),
+
+{%- if is_auto_end_dating %}
+matching_xts_stg_records_dfk_new_later_links AS (
+    SELECT
+      {{ dbtvault.prefix(source_cols, 'b') }},
+      {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
+      FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+          PARTITION BY {{ dbtvault.alias_all([src_dfk], 'a') }}
+          ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DATE
+      {%- if is_auto_end_dating %},
+      LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }})  AS NEXT_CHANGED_RECORD_DATE,
+      LAG({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
+          PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
+          ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_PK,
+      LEAD({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
+          PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
+          ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_PK
+      {% endif %}
+    FROM new_oos_links AS b
+    LEFT JOIN xts_dfk_enhanced AS a
+    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
+    QUALIFY ({{ dbtvault.prefix([src_ldts], 'b') }}
+    BETWEEN XTS_LOAD_DATE
+    AND NEXT_CHANGED_RECORD_DATE)
+
+),
+
+
+matching_xts_stg_records_dfk_new_earlier_links AS (
+    SELECT
+      {{ dbtvault.prefix(source_cols, 'b') }},
+      a.{{ src_ldts }} AS XTS_LOAD_DATE,
+      FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+          PARTITION BY {{ dbtvault.alias_all([src_dfk], 'a') }}
+          ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DATE
+      {%- if is_auto_end_dating %},
+      FIRST_SEEN_DATE  AS NEXT_CHANGED_RECORD_DATE,
+      NULL AS PREV_RECORD_PK,
+    {{ dbtvault.prefix([src_pk], 'a') }} AS NEXT_RECORD_PK
+      {% endif %}
+    FROM new_oos_links AS b
+    LEFT JOIN xts_dfk_enhanced AS a
+    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
+    QUALIFY  {{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE
+    AND XTS_LOAD_DATE = FIRST_SEEN_DATE
+
+),
+
+{% endif %}
+
 matching_xts_stg_records AS (
-  SELECT
+    SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
     {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
     FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
@@ -193,7 +257,30 @@ matching_xts_stg_records AS (
     LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
-    {%- if is_auto_end_dating %},
+    FROM xts_dfk_enhanced AS a
+    INNER JOIN source_data AS b
+    ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
+    QUALIFY ((PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }} )
+             OR (PREV_RECORD_HASHDIFF IS NULL)
+             OR (PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
+             AND NEXT_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}))
+        AND (({{ dbtvault.prefix([src_ldts], 'b') }}
+    BETWEEN XTS_LOAD_DATE
+    AND NEXT_RECORD_DATE)
+    OR  ( XTS_LOAD_DATE = CASE
+              WHEN ({{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE) THEN FIRST_SEEN_DATE
+              ELSE NULL
+              END ))
+),
+
+{%- if is_auto_end_dating %}
+matching_xts_stg_records_on_dfk_later_links AS (
+    SELECT
+    {{ dbtvault.prefix(source_cols, 'b') }},
+    {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
+     FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DFK_DATE,
     LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_CHANGED_RECORD_DATE,
@@ -203,39 +290,60 @@ matching_xts_stg_records AS (
     LEAD({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_PK
-    {% endif %}
-  FROM xts_dfk_enhanced AS a
-  INNER JOIN source_data AS b
-  ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
-  QUALIFY ((PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }} )
-           OR (PREV_RECORD_HASHDIFF IS NULL)
-           OR (PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
-           AND NEXT_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}))
-      AND (({{ dbtvault.prefix([src_ldts], 'b') }}
-  BETWEEN XTS_LOAD_DATE
-  AND NEXT_RECORD_DATE)
-  OR  ( XTS_LOAD_DATE = CASE
-            WHEN ({{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE) THEN FIRST_SEEN_DATE
-            ELSE NULL
-            END ))
-  ORDER BY {{ src_pk }}, XTS_LOAD_DATE
+    FROM xts_dfk_enhanced AS a
+    INNER JOIN matching_xts_stg_records AS b
+    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
+    QUALIFY ( b.{{ src_ldts }}
+    BETWEEN a.{{ src_ldts }}
+    AND NEXT_CHANGED_RECORD_DATE)
+    AND  b.{{ src_ldts }} > FIRST_SEEN_DFK_DATE
 ),
 
 
+matching_xts_stg_records_on_dfk_earlier_links AS (
+    SELECT
+    {{ dbtvault.prefix(source_cols, 'b') }},
+    {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
+    FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DFK_DATE,
+    a.{{ src_ldts }} AS NEXT_CHANGED_RECORD_DATE,
+    NULL AS PREV_RECORD_PK,
+    a.{{ src_pk }} AS NEXT_RECORD_PK
+    FROM xts_dfk_enhanced AS a
+    INNER JOIN matching_xts_stg_records AS b
+    ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
+    QUALIFY b.{{ src_ldts }} < FIRST_SEEN_DFK_DATE
+    AND a.{{ src_ldts }} = FIRST_SEEN_DFK_DATE
+),
+
+xts_union AS (
+ SELECT {{ dbtvault.prefix(source_cols, 'L') }},{{ dbtvault.prefix(out_of_sequence_columns, 'L') }} FROM matching_xts_stg_records_on_dfk_later_links AS L
+ UNION
+ SELECT {{ dbtvault.prefix(source_cols, 'E') }},{{ dbtvault.prefix(out_of_sequence_columns, 'E') }} FROM matching_xts_stg_records_on_dfk_earlier_links AS E
+ UNION
+ SELECT {{ dbtvault.prefix(source_cols, 'NLL') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLL') }} FROM matching_xts_stg_records_dfk_new_later_links AS NLL
+ UNION
+ SELECT {{ dbtvault.prefix(source_cols, 'NLE') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLE') }} FROM matching_xts_stg_records_dfk_new_earlier_links AS NLE
+
+),
+{% endif %}
+
 records_from_sat AS (
-  SELECT
-    d.{{ src_pk }},
-    {{ dbtvault.alias_all(fk_cols, 'd') }},
-    'TRUE'::BOOLEAN AS {{ status }},
-    d.{{ src_hashdiff }},
-    c.NEXT_RECORD_DATE AS {{ src_ldts }},
-    c.NEXT_RECORD_DATE AS {{ src_eff }},
-    {{ dbtvault.prefix([src_source], 'd') }}
-  FROM matching_xts_stg_records AS c
-  INNER JOIN sat_records_before_insert_date AS d
-  ON {{dbtvault.prefix([src_pk], 'c') }} = {{dbtvault.prefix([src_pk], 'd') }}
-  WHERE  c.PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'c') }}
-  AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF
+    SELECT
+        d.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'd') }},
+        'TRUE'::BOOLEAN AS {{ status }},
+        d.{{ src_hashdiff }},
+        c.NEXT_RECORD_DATE AS {{ src_ldts }},
+        c.NEXT_RECORD_DATE AS {{ src_eff }},
+        {{ dbtvault.prefix([src_source], 'd') }}
+    FROM matching_xts_stg_records AS c
+    INNER JOIN sat_records_before_insert_date AS d
+    ON {{dbtvault.prefix([src_pk], 'c') }} = {{dbtvault.prefix([src_pk], 'd') }}
+    WHERE  c.PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'c') }}
+    AND c.PREV_RECORD_HASHDIFF = c.NEXT_RECORD_HASHDIFF
+    AND c.PREV_RECORD_HASHDIFF IS NOT NULL
 ),
 
 {%- if is_auto_end_dating %}
@@ -245,12 +353,11 @@ close_new_inserted_records AS(
         {{ dbtvault.alias_all(fk_cols, 'a') }},
         'FALSE'::BOOLEAN AS {{ status }},
         {{ HASHDIFF_F }},
-        a.NEXT_RECORD_DATE AS {{ src_eff }},
-        a.NEXT_RECORD_DATE AS {{ src_ldts }},
+        a.NEXT_CHANGED_RECORD_DATE AS {{ src_eff }},
+        a.NEXT_CHANGED_RECORD_DATE AS {{ src_ldts }},
         a.{{ src_source }}
-    FROM matching_xts_stg_records a
+    FROM xts_union a
     WHERE a.NEXT_RECORD_PK != a.{{ src_pk }}
-
 ),
 
 close_previosuly_active AS (
@@ -259,13 +366,13 @@ close_previosuly_active AS (
         {{ dbtvault.alias_all(fk_cols, 'b') }},
         'FALSE'::BOOLEAN AS {{ status }},
         {{ HASHDIFF_F }},
-        a.{{ src_eff }} AS {{ src_eff }},
-        a.{{ src_ldts }} AS {{ src_ldts }},
+        a.{{ src_eff }},
+        a.{{ src_ldts }},
         b.{{ src_source }}
-    FROM matching_xts_stg_records a
+    FROM xts_union a
     INNER JOIN {{ this }} b
     ON a.PREV_RECORD_PK = b.{{ src_pk }}
-    WHERE a.PREV_RECORD_HASHDIFF != a.{{ src_pk }}
+    WHERE a.PREV_RECORD_PK != a.{{ src_pk }}
 ),
 
 re_open_previous_link AS (
@@ -274,10 +381,10 @@ re_open_previous_link AS (
         {{ dbtvault.alias_all(fk_cols, 'b') }},
         'TRUE'::BOOLEAN AS {{ status }},
         {{ HASHDIFF_T }},
-        a.{{ src_eff }} AS {{ src_eff }},
-        a.{{ src_ldts }} AS {{ src_ldts }},
+        a.NEXT_changed_RECORD_DATE AS {{ src_eff }},
+        a.NEXT_CHANGED_RECORD_DATE AS {{ src_ldts }},
         b.{{ src_source }}
-    FROM matching_xts_stg_records a
+    FROM xts_union a
     INNER JOIN {{ this }} b
     ON a.NEXT_RECORD_PK = b.{{ src_pk }}
     WHERE a.PREV_RECORD_PK = a.NEXT_RECORD_PK
@@ -286,16 +393,18 @@ re_open_previous_link AS (
 {%- endif -%}
 
 out_of_sequence_inserts AS (
-  SELECT {{ dbtvault.alias_all(source_cols, 'xts') }} FROM matching_xts_stg_records AS xts
-  UNION
-  SELECT * FROM records_from_sat
+    SELECT {{ dbtvault.alias_all(source_cols, 'xts') }} FROM matching_xts_stg_records AS xts
+    UNION
+    SELECT * FROM records_from_sat
+    UNION
+    SELECT * FROM new_oos_links
 {%- if is_auto_end_dating %}
-  UNION
-  SELECT {{ dbtvault.alias_all(source_cols, 'new') }} FROM close_new_inserted_records AS new
-  UNION
-  SELECT {{ dbtvault.alias_all(source_cols, 'cl_prev') }} FROM close_previosuly_active AS cl_prev
-  UNION
-  SELECT {{ dbtvault.alias_all(source_cols, 'op_prev') }}  FROM re_open_previous_link as op_prev
+    UNION
+    SELECT {{ dbtvault.alias_all(source_cols, 'new') }} FROM close_new_inserted_records AS new
+    UNION
+    SELECT {{ dbtvault.alias_all(source_cols, 'cl_prev') }} FROM close_previosuly_active AS cl_prev
+    UNION
+    SELECT {{ dbtvault.alias_all(source_cols, 'op_prev') }}  FROM re_open_previous_link as op_prev
 {% endif %}
 ),
 {%- endif %}
