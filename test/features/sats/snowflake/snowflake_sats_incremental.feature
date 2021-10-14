@@ -1,5 +1,5 @@
 Feature: [SF-SAT] Sats loaded using Incremental Materialization
-
+#[SF-SAT-IM-04] and [SF-SAT-IM-05] do not pass when tests are run altogether
 # Tests from snowflake_sats.feature that should be moved here:
 # [SF-SAT-03] Load data into an empty satellite
 # [SF-SAT-07] Load data into a populated satellite where all records load
