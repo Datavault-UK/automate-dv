@@ -6,7 +6,6 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
 # [SF-HUB-014] Union three staging tables to feed an empty hub over two cycles
 # [SF-HUB-015] Union three staging tables to feed a populated hub
 
-
   @fixture.single_source_hub
   Scenario: [SF-HUB-IM-01] Load of empty stage into an non-existent hub - one cycle
     Given the HUB table does not exist
@@ -83,10 +82,9 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1005') | 1005        | 1993-01-03 | TPCH   |
       | md5('1006') | 1006        | 1993-01-03 | TPCH   |
 
-
   @fixture.single_source_hub
   Scenario: [SF-HUB-IM-04] Load of empty stage data into an empty hub - two cycles
-    Given the HUB table is empty
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1993-01-01 | TPCH   |
@@ -206,5 +204,4 @@ Feature: [SF-HUB] Hubs Loaded using Incremental Materialization
       | md5('1004') | 1004        | 1993-01-02 | TPCH   |
       | md5('1005') | 1005        | 1993-01-03 | TPCH   |
       | md5('1006') | 1006        | 1993-01-03 | TPCH   |
-
 
