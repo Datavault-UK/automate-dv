@@ -104,7 +104,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1013\|\|GBR') | md5('1013') | md5('GBR') | 1993-01-04 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-04] Load of empty stage data into an empty link - two cycles
+  Scenario: [SF-LNK-IM-04] Load of stage data + empty stage data into an empty link - two cycles
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
