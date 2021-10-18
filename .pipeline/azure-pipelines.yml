@@ -219,7 +219,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-     - job: 'eff_sats_closed'
+      - job: 'eff_sats_closed'
         displayName: 'Eff Sats Closed'
         steps:
           - task: UsePythonVersion@0
