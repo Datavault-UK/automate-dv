@@ -84,6 +84,7 @@ new_open_records AS (
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
+{#- not selecting any thing out of sequence -#}
 {%- if out_of_sequence is not none %}
     AND f.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
@@ -103,6 +104,7 @@ new_reopened_records AS (
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
     WHERE g.{{ status }} = 'TRUE'::BOOLEAN
+{#- not selecting any thing out of sequence -#}
 {%- if out_of_sequence is not none %}
     AND g.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
@@ -124,6 +126,7 @@ new_closed_records AS (
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
+{#- not selecting any thing out of sequence -#}
 {%- if out_of_sequence is not none %}
     AND h.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
@@ -153,6 +156,7 @@ new_closed_records AS (
 
 {%- if out_of_sequence is not none %}
 
+{# Selecting the rocrds from the eff sat that are before the out of sequence insert date #}
 sat_records_before_insert_date AS (
     SELECT DISTINCT
        {{ dbtvault.prefix(source_cols, 'a') }},
@@ -163,12 +167,26 @@ sat_records_before_insert_date AS (
     WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < (select distinct {{ src_ldts }} from insert_date)
 ),
 
+        {# selecting a list of driving keys #}
 driving_keys AS (
     SELECT eff.{{ src_pk }}, {{ dbtvault.alias_all(dfk_cols, 'eff') }} FROM {{ this }} AS eff
     UNION
     SELECT sd.{{ src_pk }}, {{ dbtvault.alias_all(dfk_cols, 'sd') }} FROM source_data AS sd
 ),
 
+    {# identifying the new link hash keys to be added sat #}
+new_oos_links AS (
+    SELECT DISTINCT
+        {{ dbtvault.alias_all(source_cols, 'f') }}
+    FROM source_data AS f
+    LEFT JOIN {{ this }} AS v
+    ON f.{{ src_pk }} = v.{{ src_pk }}
+    WHERE v.{{ src_pk }} IS NULL
+    ),
+
+{%- if is_auto_end_dating %}
+
+    {# Dfk information added to xts #}
 xts_dfk_enhanced AS (
     SELECT
         a.{{ src_pk }},
@@ -181,16 +199,7 @@ xts_dfk_enhanced AS (
     WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this.identifier }}'
 ),
 
-new_oos_links AS (
-    SELECT DISTINCT
-        {{ dbtvault.alias_all(source_cols, 'f') }}
-    FROM source_data AS f
-    LEFT JOIN {{ this }} AS v
-    ON f.{{ src_pk }} = v.{{ src_pk }}
-    WHERE v.{{ src_pk }} IS NULL
-    ),
-
-{%- if is_auto_end_dating %}
+    {# matches the xts records on the new link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
 matching_xts_stg_records_dfk_new_later_links AS (
     SELECT
       {{ dbtvault.prefix(source_cols, 'b') }},
@@ -218,7 +227,7 @@ matching_xts_stg_records_dfk_new_later_links AS (
 
 ),
 
-
+   {# matches the xts records on the new link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
 matching_xts_stg_records_dfk_new_earlier_links AS (
     SELECT
       {{ dbtvault.prefix(source_cols, 'b') }},
@@ -241,6 +250,7 @@ matching_xts_stg_records_dfk_new_earlier_links AS (
 
 {% endif %}
 
+    {# normal oos logic for lnk hash keys where the records are comapred to the xts on hashdiff #}
 matching_xts_stg_records AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -274,6 +284,7 @@ matching_xts_stg_records AS (
 ),
 
 {%- if is_auto_end_dating %}
+ {# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
 matching_xts_stg_records_on_dfk_later_links AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -299,7 +310,7 @@ matching_xts_stg_records_on_dfk_later_links AS (
     AND  b.{{ src_ldts }} > FIRST_SEEN_DFK_DATE
 ),
 
-
+ {# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
 matching_xts_stg_records_on_dfk_earlier_links AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -329,6 +340,7 @@ xts_union AS (
 ),
 {% endif %}
 
+    {#   looking for changes in hashdiffs #}
 records_from_sat AS (
     SELECT
         d.{{ src_pk }},
