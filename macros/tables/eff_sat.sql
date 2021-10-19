@@ -106,7 +106,7 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-{#- end if is_auto_end_dating -#}
+{#- else if is_auto_end_dating -#}
 {% else %}
 
 new_closed_records AS (
@@ -128,6 +128,7 @@ new_closed_records AS (
     AND lc.{{ src_pk }} IS NULL
 ),
 
+{#- end if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
@@ -138,18 +139,16 @@ records_to_insert AS (
     SELECT * FROM new_closed_records
 )
 
+{#- else if not dbtvault.is_any_incremental() -#}
 {%- else %}
-
 
 records_to_insert AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'i') }}
     FROM source_data AS i
-
 )
 
 {#- end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
-
 
 SELECT * FROM records_to_insert
 {%- endmacro -%}
@@ -237,6 +236,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
+    WHERE CAST((g.{{ src_end_date }}) AS DATE) = CAST(('{{ max_datetime }}') AS DATE)
 ),
 
 {%- if is_auto_end_dating %}
@@ -258,6 +258,28 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
+{#- else if is_auto_end_dating -#}
+{% else %}
+
+new_closed_records AS (
+    SELECT DISTINCT
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        lo.{{ src_start_date }} AS {{ src_start_date }},
+        h.{{ src_eff }} AS {{ src_end_date }},
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
+    FROM source_data AS h
+    LEFT JOIN Latest_open AS lo
+    ON lo.{{ src_pk }} = h.{{ src_pk }}
+    LEFT JOIN latest_closed AS lc
+    ON lc.{{ src_pk }} = h.{{ src_pk }}
+    WHERE CAST((h.{{ src_end_date }}) AS DATE) != CAST(('{{ max_datetime }}') AS DATE)
+    AND lo.{{ src_pk }} IS NOT NULL
+    AND lc.{{ src_pk }} IS NULL
+),
+
 {#- end if is_auto_end_dating -#}
 {%- endif %}
 
@@ -265,12 +287,11 @@ records_to_insert AS (
     SELECT * FROM new_open_records
     UNION
     SELECT * FROM new_reopened_records
-    {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM new_closed_records
-    {%- endif %}
 )
 
+{#- else if not dbtvault.is_any_incremental() -#}
 {%- else %}
 
 records_to_insert AS (
@@ -283,6 +304,7 @@ records_to_insert AS (
 
 SELECT * FROM records_to_insert
 {%- endmacro -%}
+
 
 {%- macro bigquery__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
@@ -349,10 +371,7 @@ new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'f') }}
     FROM source_data AS f
-    LEFT JOIN
-            latest_records
-
-        AS lr
+    LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
 ),
@@ -370,6 +389,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
+    WHERE CAST((g.{{ src_end_date }}) AS DATE) = CAST(('{{ max_datetime }}') AS DATE)
 ),
 
 {%- if is_auto_end_dating %}
@@ -391,20 +411,40 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-{#-
-end if is_auto_end_dating -#}
+{#- else if is_auto_end_dating -#}
+{% else %}
+
+new_closed_records AS (
+    SELECT DISTINCT
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        lo.{{ src_start_date }} AS {{ src_start_date }},
+        h.{{ src_eff }} AS {{ src_end_date }},
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
+    FROM source_data AS h
+    LEFT JOIN Latest_open AS lo
+    ON lo.{{ src_pk }} = h.{{ src_pk }}
+    LEFT JOIN latest_closed AS lc
+    ON lc.{{ src_pk }} = h.{{ src_pk }}
+    WHERE CAST((h.{{ src_end_date }}) AS DATE) != CAST(('{{ max_datetime }}') AS DATE)
+    AND lo.{{ src_pk }} IS NOT NULL
+    AND lc.{{ src_pk }} IS NULL
+),
+
+{#- end if is_auto_end_dating -#}
 {%- endif %}
 
 records_to_insert AS (
     SELECT * FROM new_open_records
     UNION DISTINCT
     SELECT * FROM new_reopened_records
-    {%- if is_auto_end_dating %}
     UNION DISTINCT
     SELECT * FROM new_closed_records
-    {%- endif %}
 )
 
+{#- else if not dbtvault.is_any_incremental() -#}
 {%- else %}
 
 records_to_insert AS (
@@ -412,9 +452,10 @@ records_to_insert AS (
     FROM source_data AS i
 )
 
-{#-
-end if not dbtvault.is_any_incremental() -#}
+{#- end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
 SELECT *
-FROM records_to_insert {%- endmacro -%}
+FROM records_to_insert
+
+{%- endmacro -%}
