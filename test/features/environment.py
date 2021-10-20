@@ -1,21 +1,17 @@
 from behave.fixture import use_fixture_by_tag
 
+import test
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
-import test
 from test.features.behave_fixtures import *
-from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
-from test.features.sats_with_oos import fixtures_oos_sat
-from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
-from test.features.xts import fixtures_xts
 
 fixture_registry_utils = {
     "fixture.enable_sha": enable_sha,
@@ -81,11 +77,6 @@ fixtures_registry = {
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver},
 
-    "fixture.out_of_sequence_satellite":
-        {"snowflake": fixtures_oos_sat.out_of_sequence_satellite,
-         "bigquery": "",
-         "sqlserver": fixtures_oos_sat.out_of_sequence_satellite_sqlserver},
-
     "fixture.multi_active_satellite":
         {"snowflake": fixtures_ma_sat.multi_active_satellite,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
@@ -95,31 +86,6 @@ fixtures_registry = {
         {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle,
          "bigquery": fixtures_ma_sat.multi_active_satellite_cycle_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver},
-
-    "fixture.xts":
-        {"snowflake": fixtures_xts.xts,
-         "bigquery": fixtures_xts.xts_bigquery,
-         "sqlserver": fixtures_xts.xts_sqlserver},
-
-    "fixture.pit":
-        {"snowflake": fixtures_pit.pit,
-         "bigquery": fixtures_pit.pit_bigquery,
-         "sqlserver": fixtures_pit.pit_sqlserver},
-
-    "fixture.pit_one_sat":
-        {"snowflake": fixtures_pit.pit_one_sat,
-         "bigquery": fixtures_pit.pit_one_sat_bigquery,
-         "sqlserver": fixtures_pit.pit_one_sat_sqlserver},
-
-    "fixture.pit_two_sats":
-        {"snowflake": fixtures_pit.pit_two_sats,
-         "bigquery": fixtures_pit.pit_two_sats_bigquery,
-         "sqlserver": fixtures_pit.pit_two_sats_sqlserver},
-
-    "fixture.bridge":
-        {"snowflake": fixtures_bridge.bridge,
-         "bigquery": fixtures_bridge.bridge_bigquery,
-         "sqlserver": fixtures_bridge.bridge_sqlserver},
 
     "fixture.cycle":
         {"snowflake": fixtures_cycle.cycle,
