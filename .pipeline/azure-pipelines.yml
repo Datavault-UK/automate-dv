@@ -205,6 +205,20 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
+      - job: 'eff_sats_closed'
+        displayName: 'Eff Sats Closed'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s eff_sats --subtype closed -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'ma_sats_1cdk'
         displayName: 'MA Sats 1CDK'
         steps:
