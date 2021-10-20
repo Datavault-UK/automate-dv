@@ -19,13 +19,13 @@
 
     {%- set error_message -%}
     Staging error: Missing source_model configuration. A source model name must be provided.
-    e.g. 
+    e.g.
     [REF STYLE]
     source_model: model_name
     OR
     [SOURCES STYLE]
     source_model:
-        source_name: source_table_name"
+        source_name: source_table_name
     {%- endset -%}
 
     {{- exceptions.raise_compiler_error(error_message) -}}
