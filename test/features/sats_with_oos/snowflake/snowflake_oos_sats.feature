@@ -440,7 +440,8 @@ Feature: [SF-SAT-OOS] Out of Sequence Satellites
       | md5('1003') | md5('1997-08-25\|\|1003\|\|GREGG\|\|17-214-233-1216') | Gregg         | 1997-08-25   | 17-214-233-1216 | 1993-01-01 01:01:08 | 1993-01-01 01:01:08 | *      |
 
   @fixture.out_of_sequence_satellite
-  Scenario: [SF-SAT-OOS-11] Inserts no new records if hashdiff matches previous loaddate hashdiff
+  Scenario: [SQLS-SAT-OOS-11] Inserts no new records if hashdiff matches previous loaddate hashdiff
+    Testing that the staged Tom record is compared to the preceding Alice record and NOT to the Tom record preceding the preceding Alice record
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-02 | *      |
