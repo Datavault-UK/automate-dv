@@ -23,7 +23,6 @@
     {% if existing_relation is none %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
@@ -57,8 +56,11 @@
 
             {% set tmp_relation = make_temp_relation(this) %}
 
+            {# This call statement drops and then creates a temporary table #}
+            {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
+            {# See MSSQL note and drop code below #}
             {% call statement() -%}
-                {{ dbt.create_table_as(True, tmp_relation, filtered_sql) }}
+                {{ create_table_as(True, tmp_relation, filtered_sql) }}
             {%- endcall %}
 
             {{ adapter.expand_target_column_types(from_relation=tmp_relation,
@@ -66,10 +68,10 @@
 
             {%- set insert_query_name = 'main-' ~ i -%}
             {% call statement(insert_query_name, fetch_result=True) -%}
-                insert into {{ target_relation }} ({{ target_cols_csv }})
+                INSERT INTO {{ target_relation }} ({{ target_cols_csv }})
                 (
-                    select {{ target_cols_csv }}
-                    from {{ tmp_relation.include(schema=True) }}
+                    SELECT {{ target_cols_csv }}
+                    FROM {{ tmp_relation.include(schema=True) }}
                 );
             {%- endcall %}
 
@@ -89,12 +91,10 @@
                                                                                           rows_inserted,
                                                                                           model.unique_id)) }}
 
-
             {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
 
         {% endfor %}
-
         {% call noop_statement('main', "INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
             {{ filtered_sql }}
         {%- endcall %}
