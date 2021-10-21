@@ -47,14 +47,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE status = 'TRUE'
+    WHERE c.{{ status }} = 'TRUE'
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE status= 'FALSE'
+    WHERE d.{{ status }} = 'FALSE'
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}

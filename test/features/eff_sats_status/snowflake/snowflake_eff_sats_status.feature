@@ -31,10 +31,10 @@ Feature: [SF-SEF] Status Effectivity Satellites
     And I stage the STG_CUSTOMER data
     When I load the EFF_SAT eff_sat_status
     Then the EFF_SAT table should contain expected data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09     | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09     | 2020-01-10 | orders |
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | 2020-01-09     | 2020-01-10 | orders |
 
 
   @fixture.enable_auto_end_date
@@ -53,10 +53,10 @@ Feature: [SF-SEF] Status Effectivity Satellites
     And I stage the STG_CUSTOMER data
     When I load the EFF_SAT eff_sat_status
     Then the EFF_SAT table should contain expected data
-      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM | STATUS | LOAD_DATE  | SOURCE |
-      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | 2020-01-09     | TRUE   | 2020-01-10 | orders |
-      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | 2020-01-09     | TRUE   | 2020-01-10 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | 2020-01-09     | TRUE   | 2020-01-10 | orders |
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | 2020-01-09     | 2020-01-10 | orders |
 
 
   @fixture.enable_auto_end_date
