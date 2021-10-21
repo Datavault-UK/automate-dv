@@ -149,8 +149,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'sats_with_oos'
-        displayName: 'Sats OOS'
+      - job: 'sats_with_oos_main'
+        displayName: 'Sats OOS - Main'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -158,7 +158,35 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos -p snowflake
+          - script: inv run-integration-tests -s sats_with_oos --subtype main -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_with_oos_cycles'
+        displayName: 'Sats OOS - Cycles'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats_with_oos --subtype cycles -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_with_oos_mat'
+        displayName: 'Sats OOS - Mat'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats_with_oos --subtype mat -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -299,48 +327,6 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype pm -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_with_oos_main'
-        displayName: 'Oos Sats Main'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos --subtype main -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_with_oos_cycles'
-        displayName: 'Oos Sats Cycles'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos --subtype cycles -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_with_oos_mat'
-        displayName: 'Oos Sats Mat'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos --subtype mat -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
