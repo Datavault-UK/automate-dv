@@ -673,6 +673,18 @@ def feature_sub_types():
                 'eff_sat_closed_records'
             ]
         },
+        'sats_with_oos': {
+            'main': [
+                'base_sats',
+                'oos_sats'
+            ],
+            'cycles': [
+                'base_sats_cycles'
+            ],
+            'mat': [
+                'base_sats_period_mat'
+            ]
+        },
         'xts': {
           'main': [
               'xts'
