@@ -1,154 +1,61 @@
-{%- macro _standardize_hash_input(expr, output_str_if_null='^^') -%}
-{#-
-    Casts any field into a standardized string to prepare for hashing
+{%- macro bigquery__hash(columns, alias, is_hashdiff) -%}
 
-    Arguments:
-        expr {str} - the expression to standardize for hashing
-        output_str_if_null {str} - the string to output if the input expression is null (default: '^^')
+{%- set concat_string = '||' -%}
+{%- set null_placeholder_string = "^^" -%}
 
-    Example expression input -> output:
+{%- set hash = var('hash', 'MD5') -%}
 
-    123 -> '123'
-    ' a123  ' -> 'A123'
-    '' -> '^^'
-    TRUE -> 'TRUE'
--#}
-    IFNULL(NULLIF(UPPER(TRIM(CAST({{- expr }} AS {{ dbtvault_bq.type_string() }}))), ''), '{{ output_str_if_null }}')
-{%- endmacro %}
+{#- Select hashing algorithm -#}
 
+{%- if hash == 'MD5' -%}
+    {%- set hash_alg = 'MD5' -%}
+{%- elif hash == 'SHA' -%}
+    {%- set hash_alg = 'SHA256' -%}
+{%- endif -%}
 
-{%- macro hash(columns=none, alias=none, is_hashdiff=false, hash_algo=none) -%}
-{#-
-    Hash a field or list of fields into a single string value
+{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS STRING))), '')" %}
 
-    Arguments:
-        columns {Union[str, List(str)]} - either a string representing a column or a list of columns to be hashed
-        alias {str} - the name of the final hashed column
-        hashdiff {bool} - is this a hashdiff? if true, columns are sorted in ascending order before hashing for consistency. (default: false)
-        hash_algo {str} - The hashing algorithm to use. Depends on the database adapter.
-                            Snowflake: MD5, SHA
-                            Bigquery: MD5
+{#- Alpha sort columns before hashing if a hashdiff -#}
+{%- if is_hashdiff and dbtvault.is_list(columns) -%}
+    {%- set columns = columns|sort -%}
+{%- endif -%}
 
-    Example:
+{#- If single column to hash -#}
+{%- if columns is string -%}
+    {%- set column_str = dbtvault.as_constant(columns) -%}
+    {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
 
-        Input Table:
+{#- Else a list of columns to hash -#}
+{%- else -%}
+ {%- set all_null = [] -%}
+    {%- if is_hashdiff -%}
+        {{- "UPPER(TO_HEX({}(CONCAT(".format(hash_alg) | indent(4) -}}
 
-        | size | color |
-        |------+-------|
-        | s    | red   |
-        | s    | blue  |
-        | m    | red   |
-
-
-        Example 1:
-
-        hash('size', 'size_hash')
-
-        Output Table:
-
-        | size | color | size_hash         |
-        |------+-------+-------------------|
-        | s    | red   | < Hash of 'S'  >  |
-        | s    | blue  | < Hash of 'S'  >  |
-        | m    | red   | < Hash of 'M'  >  |
-
-
-        Example 2:
-
-        hash(['size', 'color'], 'my_hashdiff', hashdiff=true)
-
-        Output Table:
-
-        | size | color | my_hashdiff           |
-        |------+-------+-----------------------|
-        | s    | red   | < Hash of 'RED||S'  > |
-        | s    | blue  | < Hash of 'BLUE||S' > |
-        | m    | red   | < Hash of 'RED||M'  > |
-
-    Raises:
-        Compilation Error - if an unsupported hashing algorithm is passed in
--#}
-    {#- standardize columns as list -#}
-    {%- set col_list = [ columns ] if columns is string else columns -%}
-
-    {#- Alpha sort columns before hashing -#}
-    {%- set col_list = col_list | sort if (is_hashdiff and columns is not string) else col_list -%}
-
-    {# Standardize and concatenate the list of columns using the delimeter #}
-    {%- set columns_prehash -%}
-CONCAT(
-        {%- for col in col_list %}
-            {{- dbtvault_bq._standardize_hash_input(col) }}
-            {%- if not loop.last -%}, '||', {%- endif %}
-        {%- endfor %}
-)
-    {%- endset -%}
-
-    {# Call the appropriate database adapter hash function -#}
-    {{ adapter.dispatch('hash', packages=['dbtvault_bq'])(columns_prehash, hash_algo) }} AS {{ alias }}
-{%- endmacro %}
-
-
-{% macro default__hash(columns, alias, is_hashdiff, hash_algo) %}
-    {%- if execute -%}
-        {{ exceptions.raise_compiler_error("The 'hash' macro does not support your database engine. Supported Databases: Snowflake, Bigquery") }}
-    {%- endif -%}
-{%- endmacro %}
-
-
-{%- macro bigquery__hash(expr, hash_algo) -%}
-{#-
-    Hashes an expression using the provided hashing algorithm.
-
-    Arguments:
-        expr {str} - The sql expression to hash
-        hash_algo {str} - The hashing algorithm to use. Currently only 'MD5' is allowed. (default: 'MD5')
-
-    Example:
-        bigquery__hash('ABC') -> '902fbdd2b1df0c4f70b4a5d23525e932'
-
-    Raises:
-        Compilation Error - if an unsupported hashing algorithm is passed in
--#}
-    {%- if hash_algo != 'MD5' and execute -%}
-        {% do exceptions.raise_compiler_error("The '_bigquery_hash_single' macro does not support the hash algorithm '" ~ hash_algo ~ "'. Supported hash algorithms are: 'MD5'") %}
-    {%- endif -%}
-    {%- if hash_algo == 'MD5' -%}
-TO_HEX(MD5(
-	{{ expr|indent}}
-))
-    {%- endif -%}
-{%- endmacro -%}
-
-
- {%- macro snowflake__hash(expr, hash_algo) -%}
-{#-
-    Hashes an expression using the provided hashing algorithm.
-
-    Arguments:
-        expr {str} - The sql expression to hash
-        hash_algo {str} - The hashing algorithm to use. Currently only 'MD5' is allowed. (default: 'MD5')
-
-    Example:
-        snowflake__hash('ABC') -> '902fbdd2b1df0c4f70b4a5d23525e932'
-
-    Raises:
-        Compilation Error - if an unsupported hashing algorithm is passed in
--#}
-    {%- if hash_algo == 'MD5' -%}
-        {%- set db_hash_algo = 'MD5_BINARY' -%}
-        {%- set hash_size = 16 -%}
-    {%- elif hash_algo == 'SHA' -%}
-        {%- set db_hash_algo = 'SHA2_BINARY' -%}
-        {%- set hash_size = 32 -%}
     {%- else -%}
-        {% do   exceptions.raise_compiler_error(
-                    "_snowflake_hash_single received an unknown hashing algorithm: " ~ hash_algo ~
-                    ". Supported hashing algorithms are: 'MD5', 'SHA'"
-                )
-        %}
+        {{- "UPPER(TO_HEX({}(NULLIF(CONCAT(".format(hash_alg) | indent(4) -}}
     {%- endif -%}
 
-CAST({{ db_hash_algo }}({{ expr }}) AS BINARY({{ hash_size }}))
+    {%- for column in columns -%}
+
+        {%- do all_null.append(null_placeholder_string) -%}
+
+        {%- set column_str = dbtvault.as_constant(column) -%}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+        {{- ",'{}',".format(concat_string) if not loop.last -}}
+        {%- if loop.last -%}
+
+            {% if is_hashdiff %}
+                {{- "\n)))) AS {}".format(alias) -}}
+            {%- else -%}
+                {{- "\n), '{}')))) AS {}".format(all_null | join(""), alias) -}}
+            {%- endif -%}
+        {%- else -%}
+
+            {%- do all_null.append(concat_string) -%}
+        {%- endif -%}
+
+    {%- endfor -%}
+
+{%- endif -%}
 
 {%- endmacro -%}

@@ -13,7 +13,7 @@
 {%- endset -%}
 
 {{
-  dbtvault_bq.sat(
+  dbtvault.sat(
     src_pk='ENTITY_HK',
     src_hashdiff='SAT_HASHDIFF',
     src_payload=fromyaml(src_payload),

@@ -1,6 +1,5 @@
 {% macro timestamp_add(datepart, interval, from_date_or_timestamp) %}
-  {{ adapter.dispatch('timestamp_add', packages = dbtvault_bq._get_dispatch_lookup_packages()
-    )(datepart, interval, from_date_or_timestamp) }}
+  {{ adapter.dispatch('timestamp_add', 'dbtvault_bq')(datepart, interval, from_date_or_timestamp) }}
 {% endmacro %}
 
 

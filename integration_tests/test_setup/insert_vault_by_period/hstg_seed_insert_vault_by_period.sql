@@ -19,7 +19,7 @@ EFFECTIVE_FROM: 'load_dts'
 
 
 {{
-  dbtvault_bq.stage(
+  dbtvault.stage(
     include_source_columns=true,
     source_model='seed_insert_vault_by_period',
     hashed_columns=fromyaml(hashed_columns),
