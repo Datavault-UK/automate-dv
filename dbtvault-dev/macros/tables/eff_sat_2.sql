@@ -1,11 +1,11 @@
-{%- macro eff_sat_status(src_pk, src_dfk, src_sfk, status, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro eff_sat_2(src_pk, src_dfk, src_sfk, status, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('eff_sat_status', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+    {{- adapter.dispatch('eff_sat_2', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                                 status=status, src_eff=src_eff, src_ldts=src_ldts,
                                                 src_source=src_source, source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__eff_sat_status(src_pk, src_dfk, src_sfk, status, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__eff_sat_2(src_pk, src_dfk, src_sfk, status, src_eff, src_ldts, src_source, source_model) -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                        status=status, src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,

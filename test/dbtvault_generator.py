@@ -25,7 +25,7 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "link": link,
         "sat": sat,
         "eff_sat": eff_sat,
-        "eff_sat_status": eff_sat_status,
+        "eff_sat_2": eff_sat_2,
         "t_link": t_link,
         "xts": xts,
         "ma_sat": ma_sat,
@@ -207,7 +207,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     template_to_file(template, model_name)
 
 
-def eff_sat_status(model_name, src_pk, src_dfk, src_sfk,
+def eff_sat_2(model_name, src_pk, src_dfk, src_sfk,
                 status, src_eff, src_ldts, src_source,
                 source_model, config, depends_on=""):
     """
@@ -228,7 +228,7 @@ def eff_sat_status(model_name, src_pk, src_dfk, src_sfk,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.eff_sat_status(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
+    {{{{ dbtvault.eff_sat_2(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
                           status={status}, 
                           src_eff={src_eff}, src_ldts={src_ldts}, 
                           src_source={src_source}, source_model={source_model}) }}}}
@@ -519,7 +519,7 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "link": "incremental",
         "sat": "incremental",
         "eff_sat": "incremental",
-        "eff_sat_status": "incremental",
+        "eff_sat_2": "incremental",
         "xts": "incremental",
         "t_link": "incremental",
         "ma_sat": "incremental",
