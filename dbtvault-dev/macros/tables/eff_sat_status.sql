@@ -99,6 +99,28 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
+{#- else if is_auto_end_dating -#}
+{% else %}
+
+new_closed_records AS (
+    SELECT DISTINCT
+        lo.{{ src_pk }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        lo.{{ src_start_date }} AS {{ src_start_date }},
+        h.{{ src_eff }} AS {{ src_end_date }},
+        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_ldts }},
+        lo.{{ src_source }}
+    FROM source_data AS h
+    LEFT JOIN Latest_open AS lo
+    ON lo.{{ src_pk }} = h.{{ src_pk }}
+    LEFT JOIN latest_closed AS lc
+    ON lc.{{ src_pk }} = h.{{ src_pk }}
+    WHERE TO_DATE(h.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
+    AND lo.{{ src_pk }} IS NOT NULL
+    AND lc.{{ src_pk }} IS NULL
+),
+
 {#- end if is_auto_end_dating -#}
 {%- endif %}
 
@@ -112,6 +134,7 @@ records_to_insert AS (
     {%- endif %}
 )
 
+{#- else if not dbtvault.is_any_incremental() -#}
 {%- else %}
 
 records_to_insert AS (
@@ -122,6 +145,8 @@ records_to_insert AS (
 {#- end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
-SELECT * FROM records_to_insert
+SELECT *
+FROM records_to_insert
+
 {%- endmacro -%}
 
