@@ -150,7 +150,9 @@ records_to_insert AS (
 {#- end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
-SELECT * FROM records_to_insert
+SELECT *
+FROM records_to_insert
+
 {%- endmacro -%}
 
 
@@ -302,7 +304,9 @@ records_to_insert AS (
 {#- end if not dbtvault.is_any_incremental() -#}
 {%- endif %}
 
-SELECT * FROM records_to_insert
+SELECT *
+FROM records_to_insert
+
 {%- endmacro -%}
 
 
