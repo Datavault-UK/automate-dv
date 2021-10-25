@@ -1,8 +1,8 @@
 name: 'dbtvault_bq'
 config-version: 2
 # Match this version to the dbtvault repo to reflect compatibility
-version: '0.7.7'
-require-dbt-version: [">=0.20.0", "<0.21.0"]
+version: '0.7.8'
+require-dbt-version: [">=0.20.0", "<0.22.0"]
 
 source-paths: ["models"]
 analysis-paths: ["analysis"]
