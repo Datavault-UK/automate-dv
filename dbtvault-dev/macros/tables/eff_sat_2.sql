@@ -107,6 +107,7 @@ new_closed_records AS (
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         h.{{ status }},
+        h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
@@ -126,10 +127,8 @@ records_to_insert AS (
     SELECT * FROM new_open_records
     UNION
     SELECT * FROM new_reopened_records
-    {%- if is_auto_end_dating %}
     UNION
     SELECT * FROM new_closed_records
-    {%- endif %}
 )
 
 {#- else if not dbtvault.is_any_incremental() -#}
