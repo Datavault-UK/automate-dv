@@ -106,9 +106,7 @@ new_closed_records AS (
     SELECT DISTINCT
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        lo.{{ src_start_date }} AS {{ src_start_date }},
-        h.{{ src_eff }} AS {{ src_end_date }},
-        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ status }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
@@ -116,7 +114,7 @@ new_closed_records AS (
     ON lo.{{ src_pk }} = h.{{ src_pk }}
     LEFT JOIN latest_closed AS lc
     ON lc.{{ src_pk }} = h.{{ src_pk }}
-    WHERE TO_DATE(h.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
+    WHERE h.{{ status }} = 'FALSE'
     AND lo.{{ src_pk }} IS NOT NULL
     AND lc.{{ src_pk }} IS NULL
 ),
