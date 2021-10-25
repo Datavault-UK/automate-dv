@@ -25,8 +25,8 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "link": link,
         "sat": sat,
         "eff_sat": eff_sat,
-        "eff_sat_status": eff_sat_status,
         "eff_sat_hashdiff": eff_sat_hashdiff,
+        "eff_sat_2": eff_sat_2,
         "t_link": t_link,
         "xts": xts,
         "ma_sat": ma_sat,
@@ -208,7 +208,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     template_to_file(template, model_name)
 
 
-def eff_sat_status(model_name, src_pk, src_dfk, src_sfk,
+def eff_sat_2(model_name, src_pk, src_dfk, src_sfk,
                 status, src_eff, src_ldts, src_source,
                 source_model, config, depends_on=""):
     """
@@ -229,7 +229,7 @@ def eff_sat_status(model_name, src_pk, src_dfk, src_sfk,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.eff_sat_status(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
+    {{{{ dbtvault.eff_sat_2(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
                           status={status}, 
                           src_eff={src_eff}, src_ldts={src_ldts}, 
                           src_source={src_source}, source_model={source_model}) }}}}
@@ -387,6 +387,7 @@ def macro_model(model_name, macro_name, metadata=None):
         "prefix": prefix_macro,
         "derive_columns": derive_columns_macro,
         "hash_columns": hash_columns_macro,
+        "rank_columns": rank_columns_macro,
         "stage": stage_macro,
         "expand_column_list": expand_column_list_macro,
         "as_constant": as_constant_macro,
@@ -432,6 +433,16 @@ def hash_columns_macro(model_name, metadata):
                f"{{%- endset -%}}\n\n" \
                f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
                f"{{{{ dbtvault.hash_columns(columns=metadata_dict['columns']) }}}}"
+
+    template_to_file(textwrap.dedent(template), model_name)
+
+
+def rank_columns_macro(model_name, metadata):
+    template = f"{{%- set yaml_metadata -%}}\n" \
+               f"{dict_to_yaml_string(metadata)}" \
+               f"{{%- endset -%}}\n\n" \
+               f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
+               f"{{{{ dbtvault.rank_columns(columns=metadata_dict['columns']) }}}}"
 
     template_to_file(textwrap.dedent(template), model_name)
 
@@ -540,8 +551,8 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "link": "incremental",
         "sat": "incremental",
         "eff_sat": "incremental",
-        "eff_sat_status": "incremental",
         "eff_sat_hashdiff": "incremental",
+        "eff_sat_2": "incremental",
         "xts": "incremental",
         "t_link": "incremental",
         "ma_sat": "incremental",

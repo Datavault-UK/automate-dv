@@ -9,7 +9,7 @@ def eff_satellite_status(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
-            "STATUS": "'TRUE' ::BOOLEAN",
+            "STATUS": "'TRUE'::BOOLEAN",
         },
     }
 
@@ -64,7 +64,7 @@ def eff_satellite_status_multipart(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
-            "STATUS": "'TRUE' ::BOOLEAN",
+            "STATUS": "'TRUE'::BOOLEAN",
         },
     }
 
@@ -128,10 +128,10 @@ def eff_satellite_status_testing_auto_end_dating(context):
 
     context.derived_columns = {
         "STG_CUSTOMER_ORDER": {
-            "STATUS": "'TRUE' ::BOOLEAN",
+            "STATUS": "'TRUE'::BOOLEAN",
         },
         "STG_ORDER_CUSTOMER": {
-            "STATUS": "'TRUE' ::BOOLEAN",
+            "STATUS": "'TRUE'::BOOLEAN",
         }
     }
 
