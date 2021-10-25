@@ -106,5 +106,3 @@ records_to_insert AS (
 SELECT * FROM records_to_insert
 
 {%- endmacro -%}
-
-{%- endmacro -%}
