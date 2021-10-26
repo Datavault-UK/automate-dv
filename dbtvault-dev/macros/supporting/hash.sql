@@ -10,8 +10,6 @@
 
 {%- macro default__hash(columns, values, alias, is_hashdiff) -%}
 
-{% do log('values: {}'.format(values), true) %}
-
 {%- set hash = var('hash', 'MD5') -%}
 {%- set concat_string = var('concat_string', '||') -%}
 {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}

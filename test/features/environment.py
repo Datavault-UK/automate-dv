@@ -7,6 +7,7 @@ from test.features.behave_fixtures import *
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
+from test.features.eff_sats_2 import fixtures_eff_sat_2
 from test.features.eff_sats_status import fixtures_eff_sat_status
 from test.features.eff_sats_hashdiff import fixtures_eff_sat_hashdiff
 from test.features.hubs import fixtures_hub
@@ -83,6 +84,11 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver},
+
+    "fixture.eff_satellite_2":
+        {"snowflake": fixtures_eff_sat_2.eff_satellite_2,
+         "bigquery": "",
+         "sqlserver": ""},
 
     "fixture.eff_satellite_status":
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status,
