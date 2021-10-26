@@ -9,7 +9,7 @@
 }}
 
 {{
-  dbtvault_bq.hub(
+  dbtvault.hub(
     src_pk='ENTITY_HK',
     src_nk='entity_id',
     src_ldts='load_dts',
