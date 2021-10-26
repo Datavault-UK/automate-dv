@@ -18,7 +18,7 @@ Feature: [SF-SEF-AUB] Effectivity Satellites
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
       | md5('1002\|\|200') | md5('1002') | md5('200') | 2018-06-01 00:00:00.000 | *      |
       | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | *      |
-    When I load the EFF_SAT_ORDER_CUSTOMER eff_sat_2
+    When I load the EFF_SAT_ORDER_CUSTOMER eff_sat_status
     Then the EFF_SAT_ORDER_CUSTOMER table should contain expected data
       | ORDER_CUSTOMER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | TRUE   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
@@ -41,7 +41,7 @@ Feature: [SF-SEF-AUB] Effectivity Satellites
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 00:00:00.000 | *      |
       | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 00:00:00.000 | *      |
-    When I load the EFF_SAT_ORDER_CUSTOMER eff_sat_2
+    When I load the EFF_SAT_ORDER_CUSTOMER eff_sat_status
     Then the EFF_SAT_ORDER_CUSTOMER table should contain expected data
       | ORDER_CUSTOMER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | TRUE   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
@@ -64,7 +64,7 @@ Feature: [SF-SEF-AUB] Effectivity Satellites
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
       | md5('1002\|\|100') | md5('1002') | md5('100') | 2018-06-01 00:00:00.000 | *      |
       | md5('1003\|\|100') | md5('1003') | md5('100') | 2018-06-01 00:00:00.000 | *      |
-    When I load the EFF_SAT_ORDER_CUSTOMER eff_sat_2
+    When I load the EFF_SAT_ORDER_CUSTOMER eff_sat_status
     Then the EFF_SAT_ORDER_CUSTOMER table should contain expected data
       | ORDER_CUSTOMER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | TRUE   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
@@ -88,7 +88,7 @@ Feature: [SF-SEF-AUB] Effectivity Satellites
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | *      |
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 00:00:00.000 | *      |
       | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 00:00:00.000 | *      |
-    When I load the EFF_SAT_CUSTOMER_ORDER eff_sat_2
+    When I load the EFF_SAT_CUSTOMER_ORDER eff_sat_status
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | TRUE   | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
