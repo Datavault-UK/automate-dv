@@ -673,6 +673,23 @@ def feature_sub_types():
                 'eff_sat_closed_records'
             ]
         },
+        'eff_sats_2': {
+            'main': [
+                'eff_sats_2',
+                'eff_sats_2_disabled_end_dating'
+            ],
+            'auto': [
+                'eff_sat_2_auto_end_dating_detail_base',
+                'eff_sat_2_auto_end_dating_detail_inc'
+            ],
+            'multi_part': [
+                'eff_sats_2_multi_part'
+            ],
+            'mat': [
+                'eff_sats_2_period_mat',
+                'eff_sats_2_rank_mat'
+            ]
+        },
         'sats_with_oos': {
             'main': [
                 'base_sats',
