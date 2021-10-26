@@ -111,8 +111,8 @@ new_closed_records AS (
     SELECT DISTINCT
         lo.{{ src_pk }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        h.{{ STATUS }},
-        h.{{ src_hashdiff }}
+        h.{{ status }},
+        h.{{ src_hashdiff }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -121,7 +121,7 @@ new_closed_records AS (
     ON lo.{{ src_pk }} = h.{{ src_pk }}
     LEFT JOIN latest_closed AS lc
     ON lc.{{ src_pk }} = h.{{ src_pk }}
-     WHERE g.{{ status }} = 'FALSE'::BOOLEAN
+    WHERE h.{{ status }} = 'FALSE'::BOOLEAN
     AND lo.{{ src_pk }} IS NOT NULL
     AND lc.{{ src_pk }} IS NULL
 ),

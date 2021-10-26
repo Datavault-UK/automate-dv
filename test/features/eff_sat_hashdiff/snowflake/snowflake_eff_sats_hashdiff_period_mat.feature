@@ -37,14 +37,14 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [SF-SEF-PM-03] 2 loads, Link is Changed Back Again, driving key is ORDER_PK
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1000        | AAA      | 2020-01-09     | 2020-01-10 | orders |
-      | 2000        | BBB      | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-09     | 2020-01-10 | orders |
-      | 3000        | CCC      | 2020-01-11     | 2020-01-12 | orders |
-      | 4000        | CCC      | 2020-01-11     | 2020-01-12 | orders |
-      | 4000        | CCC      | 2020-01-12     | 2020-01-13 | orders |
-      | 5000        | CCC      | 2020-01-12     | 2020-01-13 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TRUE   | 2020-01-11     | 2020-01-12 | orders |
+      | 4000        | CCC      | TRUE   | 2020-01-11     | 2020-01-12 | orders |
+      | 4000        | CCC      | TRUE   | 2020-01-12     | 2020-01-13 | orders |
+      | 5000        | CCC      | TRUE   | 2020-01-12     | 2020-01-13 | orders |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
@@ -90,9 +90,9 @@ Feature: [SF-SEF-PM] Effectivity Satellites Loaded using Period Materialization
       | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | STATUS | LOAD_DATE  | SOURCE |
-      | 4000        | CCC      | 2020-01-11 | TRUE   | 2020-01-12 | orders |
-      | 5000        | CCC      | 2020-01-12 | TRUE   | 2020-01-13 | orders |
+      | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 4000        | CCC      | TRUE   | 2020-01-11     | 2020-01-12 | orders |
+      | 5000        | CCC      | TRUE   | 2020-01-12     | 2020-01-13 | orders |
     And I stage the STG_CUSTOMER data
     And I insert by period into the EFF_SAT eff_sat_hashdiff by day
     Then the EFF_SAT table should contain expected data
