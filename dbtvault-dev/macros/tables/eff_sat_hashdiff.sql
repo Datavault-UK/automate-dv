@@ -51,14 +51,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE status = 'TRUE'
+    WHERE status = 'TRUE'::BOOLEAN
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE status = 'FALSE'
+    WHERE status = 'FALSE'::BOOLEAN
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -78,7 +78,7 @@ new_reopened_records AS (
         {{ dbtvault.alias_all(fk_cols, 'g') }},
         g.{{ status }},
         g.{{ src_hashdiff }},
-        g.{{ src_eff }} AS {{ src_eff }},
+        g.{{ src_eff }},
         g.{{ src_ldts }},
         g.{{ src_source }}
     FROM source_data AS g
@@ -97,7 +97,7 @@ new_closed_records AS (
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         'FALSE'::BOOLEAN AS {{ status }},
         {{ HASHDIFF_F }},
-        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
@@ -105,6 +105,8 @@ new_closed_records AS (
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
+
+{#- else if is_auto_end_dating -#}
 {% else %}
 
 new_closed_records AS (
@@ -113,7 +115,7 @@ new_closed_records AS (
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         h.{{ status }},
         h.{{ src_hashdiff }},
-        h.{{ src_eff }} AS {{ src_eff }},
+        h.{{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
@@ -137,6 +139,7 @@ records_to_insert AS (
     SELECT * FROM new_closed_records
 )
 
+{#- else if not dbtvault.is_any_incremental() -#}
 {%- else %}
 
 records_to_insert AS (
