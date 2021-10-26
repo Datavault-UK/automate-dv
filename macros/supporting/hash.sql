@@ -1,3 +1,4 @@
+{# Copied from dbtvault feat/bigquery branch #}
 {%- macro bigquery__hash(columns, alias, is_hashdiff) -%}
 
 {%- set concat_string = '||' -%}
