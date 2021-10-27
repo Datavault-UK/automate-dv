@@ -266,6 +266,60 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_as
 
 
 @pytest.mark.macro
+def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_multi_order_asc_desc(request,
+                                                                                                   generate_model):
+    metadata = {
+        "columns": {
+            "DBTVAULT_RANK": {
+                "partition_by": "CUSTOMER_ID",
+                "order_by": [{"BOOKING_DATE": "ASC"}, {"ORDER_DATE": "DESC"}]
+            },
+            "SAT_RANK": {
+                "partition_by": "TRANSACTION_ID",
+                "order_by": {"TRANSACTION_DATE": "DESC"}
+            }
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_multi_order_asc_none(request,
+                                                                                                   generate_model):
+    metadata = {
+        "columns": {
+            "DBTVAULT_RANK": {
+                "partition_by": "CUSTOMER_ID",
+                "order_by": [{"BOOKING_DATE": "ASC"}, "ORDER_DATE"]
+            },
+            "SAT_RANK": {
+                "partition_by": "TRANSACTION_ID",
+                "order_by": {"TRANSACTION_DATE": "DESC"}
+            }
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
 def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_dense_rank(request, generate_model):
     metadata = {
         "columns": {
