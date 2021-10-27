@@ -1,6 +1,6 @@
 name: dbtvault_test
-version: 0.7.5
-require-dbt-version: ['>=0.18.0', <0.21.0]
+version: 0.7.8
+require-dbt-version: [">=0.20.0", "<0.22.0"]
 config-version: 2
 profile: dbtvault
 
