@@ -100,6 +100,11 @@ fixtures_registry = {
          "bigquery": '',
          "sqlserver": ''},
 
+    "fixture.eff_satellite_2_closed":
+        {"snowflake": fixtures_eff_sat_2.eff_satellite_2_closed,
+         "bigquery": "",
+         "sqlserver": ""},
+
     "fixture.eff_satellite_status":
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status,
          "bigquery": "",

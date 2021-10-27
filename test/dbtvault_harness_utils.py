@@ -688,6 +688,9 @@ def feature_sub_types():
             'mat': [
                 'eff_sats_2_period_mat',
                 'eff_sats_2_rank_mat'
+            ],
+            'closed': [
+                'eff_sat_2_closed_records'
             ]
         },
         'sats_with_oos': {
