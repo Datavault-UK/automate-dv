@@ -163,7 +163,7 @@ def is_successful_run(dbt_logs: str):
 
 
 def is_pipeline():
-    return os.getenv('CIRCLE_NODE_INDEX') and os.getenv('CIRCLE_JOB') and os.getenv('CIRCLE_BRANCH')
+    return os.getenv('PIPELINE_JOB') and os.getenv('PIPELINE_BRANCH')
 
 
 def parse_hashdiffs(columns_as_series: Series) -> Series:
@@ -314,12 +314,13 @@ def set_custom_names():
     """
 
     def sanitise_strings(unsanitised_str):
-        return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_")
+        return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_").replace(' ', '_')
 
-    circleci_metadata = {
+    pipeline_metadata = {
         "snowflake": {
             "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
-                           f"_{os.getenv('CIRCLE_BRANCH')}_{os.getenv('CIRCLE_JOB')}_{os.getenv('CIRCLE_NODE_INDEX')}"
+                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper(),
+            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
         }
     }
 
@@ -334,7 +335,7 @@ def set_custom_names():
     }
 
     if is_pipeline():
-        return {k: sanitise_strings(v) for k, v in circleci_metadata[platform()].items()}
+        return {k: sanitise_strings(v) for k, v in pipeline_metadata[platform()].items()}
     else:
         return {k: sanitise_strings(v) for k, v in local_metadata[platform()].items()}
 
@@ -631,3 +632,117 @@ def retrieve_expected_sql(request: FixtureRequest):
         processed_file = inject_parameters("".join(file), set_custom_names())
 
         return processed_file
+
+
+def feature_sub_types():
+    return {
+        'sats': {
+            'main': [
+                'sats',
+            ],
+            'cycles': [
+                'sats_cycles'
+            ],
+            'pm': [
+                'sats_period_mat_base',
+                'sats_period_mat_other'
+                'sats_period_mat_inferred_range',
+                'sats_period_mat_provided_range'
+            ],
+            'rank': [
+                'sats_rank_mat'
+            ]
+        },
+        'eff_sats': {
+            'main': [
+                'eff_sats',
+                'eff_sats_disabled_end_dating'
+            ],
+            'auto': [
+                'eff_sat_auto_end_dating_detail_base',
+                'eff_sat_auto_end_dating_detail_inc'
+            ],
+            'multi_part': [
+                'eff_sats_multi_part'
+            ],
+            'mat': [
+                'eff_sats_period_mat',
+                'eff_sats_rank_mat'
+            ],
+            'closed': [
+                'eff_sat_closed_records'
+            ]
+        },
+        'sats_with_oos': {
+            'main': [
+                'base_sats',
+                'oos_sats'
+            ],
+            'cycles': [
+                'base_sats_cycles'
+            ],
+            'mat': [
+                'base_sats_period_mat'
+            ]
+        },
+        'xts': {
+          'main': [
+              'xts'
+          ],
+          'inc': [
+              'xts_inc'
+          ]
+        },
+        'ma_sats': {
+            '1cdk': [
+                'mas_one_cdk_0_base',
+                'mas_one_cdk_1_inc',
+                'mas_one_cdk_base_sats'
+            ],
+            '1cdk_cycles': [
+                'mas_one_cdk_base_sats_cycles',
+                'mas_one_cdk_cycles_duplicates'
+            ],
+            '2cdk': [
+                'mas_two_cdk_0_base',
+                'mas_two_cdk_1_inc',
+                'mas_two_cdk_base_sats'
+            ],
+            '2cdk_cycles': [
+                'mas_two_cdk_base_sats_cycles',
+                'mas_two_cdk_cycles_duplicates'
+            ],
+            'pm': [
+                'mas_period_mat'
+            ]
+        },
+        'pit': {
+            'main': [
+                'pit'
+            ],
+            '1sat_base': [
+                'pit_one_sat_base',
+            ],
+            '1sat_inc': [
+                'pit_one_sat_inc'
+            ],
+            '2sat': [
+                'pit_two_sat_base',
+                'pit_two_sat_inc'
+            ]
+        },
+        'bridge': {
+            'inc': [
+                'bridge_incremental'
+            ],
+            '1link': [
+                'bridge_one_hub_one_link'
+            ],
+            '2link': [
+                'bridge_one_hub_two_links'
+            ],
+            '3link': [
+                'bridge_one_hub_three_links'
+            ]
+        },
+    }

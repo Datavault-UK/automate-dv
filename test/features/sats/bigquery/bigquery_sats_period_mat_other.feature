@@ -3,7 +3,7 @@ Feature: [BQ-SAT-PM-O] Satellites Loaded using Period Materialization for other 
   # ABORTED LOADS
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-PM-O-001] Simulate a restart of an aborted load
+  Scenario: [BQ-SAT-PM-O-01] Simulate a restart of an aborted load
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -55,7 +55,7 @@ Feature: [BQ-SAT-PM-O] Satellites Loaded using Period Materialization for other 
   # INFERRED DATE RANGE (MONTHLY)
 
   @fixture.satellite_cycle
-  Scenario: [BQ-SAT-PM-O-002] Satellite load over several monthly cycles with insert_by_period into empty satellite.
+  Scenario: [BQ-SAT-PM-O-02] Satellite load over several monthly cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
     When the RAW_STAGE is loaded

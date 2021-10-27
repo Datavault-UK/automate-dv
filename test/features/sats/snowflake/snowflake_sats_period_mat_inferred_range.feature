@@ -1,7 +1,7 @@
 Feature: [SF-SAT-PM-I] Satellites Loaded using Period Materialization and inferred date ranges
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-I-001] Satellite load over several daily cycles with insert_by_period into non-existent satellite
+  Scenario: [SF-SAT-PM-I-01] Satellite load over several daily cycles with insert_by_period into non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -47,7 +47,7 @@ Feature: [SF-SAT-PM-I] Satellites Loaded using Period Materialization and inferr
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-I-002] Satellite load over several daily cycles with insert_by_period into empty satellite.
+  Scenario: [SF-SAT-PM-I-02] Satellite load over several daily cycles with insert_by_period into empty satellite.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
     When the RAW_STAGE is loaded
@@ -93,7 +93,7 @@ Feature: [SF-SAT-PM-I] Satellites Loaded using Period Materialization and inferr
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-I-003] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates.
+  Scenario: [SF-SAT-PM-I-03] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -146,7 +146,7 @@ Feature: [SF-SAT-PM-I] Satellites Loaded using Period Materialization and inferr
       | md5('1013') | md5('1995-06-16\|\|1013\|\|ZACH')    | Zach          | 1995-06-16   | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-I-004] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates.
+  Scenario: [SF-SAT-PM-I-04] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates.
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

@@ -1,7 +1,7 @@
 Feature: [BQ-XTS] XTS
 
   @fixture.xts
-  Scenario: [BQ-XTS-001] Load one stage of records into an empty single satellite XTS
+  Scenario: [BQ-XTS-01] Load one stage of records into an empty single satellite XTS
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -19,7 +19,7 @@ Feature: [BQ-XTS] XTS
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-002] Load one stage of data into a non-existent single satellite XTS
+  Scenario: [BQ-XTS-02] Load one stage of data into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -37,7 +37,7 @@ Feature: [BQ-XTS] XTS
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-003] Load duplicated data in one stage into a non-existent single satellite XTS
+  Scenario: [BQ-XTS-03] Load duplicated data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -50,7 +50,7 @@ Feature: [BQ-XTS] XTS
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-004] Load duplicated data in one stage into a non-existent single satellite XTS
+  Scenario: [BQ-XTS-04] Load duplicated data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -69,7 +69,7 @@ Feature: [BQ-XTS] XTS
       | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-005] Loads records from a single stage to an XTS linked to two satellites.
+  Scenario: [BQ-XTS-05] Loads records from a single stage to an XTS linked to two satellites.
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty
@@ -93,7 +93,7 @@ Feature: [BQ-XTS] XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-006] Loads from a single stage to an XTS linked to two satellites with repeating records in the first satellite
+  Scenario: [BQ-XTS-06] Loads from a single stage to an XTS linked to two satellites with repeating records in the first satellite
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty
@@ -116,7 +116,7 @@ Feature: [BQ-XTS] XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-007] Loads data from a single stage to an XTS linked to two satellites with repeating records in the second satellite
+  Scenario: [BQ-XTS-07] Loads data from a single stage to an XTS linked to two satellites with repeating records in the second satellite
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty
@@ -140,7 +140,7 @@ Feature: [BQ-XTS] XTS
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-008] Loads from a single stage to an XTS linked to two satellites with repeating records in the both satellites
+  Scenario: [BQ-XTS-08] Loads from a single stage to an XTS linked to two satellites with repeating records in the both satellites
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty
@@ -162,7 +162,7 @@ Feature: [BQ-XTS] XTS
       | md5('1002') | md5('2018-04-13\|\|1002\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [BQ-XTS-009] Loads records from a single stage to an XTS linked to three satellites
+  Scenario: [BQ-XTS-09] Loads records from a single stage to an XTS linked to three satellites
     Given I have an empty RAW_STAGE_3SAT raw stage
     And I have an empty STG_CUSTOMER_3SAT primed stage
     And the XTS_3SAT xts is empty

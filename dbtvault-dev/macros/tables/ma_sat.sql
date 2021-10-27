@@ -50,17 +50,6 @@ WITH source_data AS (
     {%- endif %}
 ),
 
-{# Dedupe source data #}
-source_data AS (
-    SELECT x.*
-    FROM (
-        SELECT s.*
-            ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} ORDER BY {{ dbtvault.prefix([src_ldts], 's') }} ASC) AS source_rank
-        FROM source_data_filtered s
-    ) AS x
-    WHERE x.source_rank = 1
-),
-
 {% if dbtvault.is_any_incremental() %}
 
 {# Select latest records from satellite together with count of distinct hashdiff + cdk combinations for each hashkey #}

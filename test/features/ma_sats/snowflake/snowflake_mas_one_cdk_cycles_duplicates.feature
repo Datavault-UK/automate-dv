@@ -4,7 +4,7 @@ Feature: [SF-MAS-1CD-D] Multi Active Satellites
   and different hashdiff configurations, i.e. incl. PK and CDK, excl. CDK, excl. PK and CDK
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SF-MAS-1CD-D-001] Load over several cycles with a mix of duplicate record change cases
+  Scenario: [SF-MAS-1CD-D-01] Load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -112,7 +112,7 @@ Feature: [SF-MAS-1CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA\|\|17-214-233-1244')   | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SF-MAS-1CD-D-002] Load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
+  Scenario: [SF-MAS-1CD-D-02] Load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is empty
 
@@ -220,7 +220,7 @@ Feature: [SF-MAS-1CD-D] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNA')   | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [SF-MAS-1CD-D-003] Load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
+  Scenario: [SF-MAS-1CD-D-03] Load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
 

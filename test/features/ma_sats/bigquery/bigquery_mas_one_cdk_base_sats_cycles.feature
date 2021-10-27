@@ -2,7 +2,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
   Loading in cycles using separate manual loads of base satellites behaviour with one CDK
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-001] Load over several cycles
+  Scenario: [BQ-MAS-1CD-C-01] Load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -72,7 +72,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
 
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha
-  Scenario: [BQ-MAS-1CD-C-002] Load over several cycles
+  Scenario: [BQ-MAS-1CD-C-02] Load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -140,7 +140,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
       | sha('1011') | sha('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-003] Load over several cycles with sets of records keeping the group size the same while having one or more records changed
+  Scenario: [BQ-MAS-1CD-C-03] Load over several cycles with sets of records keeping the group size the same while having one or more records changed
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -211,7 +211,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHARLIE\|\|17-214-233-1333') | Charlie       | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-004] Load over several cycles with NULL records
+  Scenario: [BQ-MAS-1CD-C-04] Load over several cycles with NULL records
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -288,7 +288,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
       | md5('1003') | md5('1003\|\|^^\|\|17-214-233-1333')      | <null>        | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-005] Load over several cycles with a mix of record change cases
+  Scenario: [BQ-MAS-1CD-C-05] Load over several cycles with a mix of record change cases
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -416,7 +416,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
 
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha
-  Scenario: [BQ-MAS-1CD-C-006] Load over several cycles
+  Scenario: [BQ-MAS-1CD-C-06] Load over several cycles
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -543,7 +543,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
       | sha('1010') | sha('1010\|\|JENNY\|\|17-214-233-1342')   | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-007] 1-day cycle
+  Scenario: [BQ-MAS-1CD-C-07] 1-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -588,7 +588,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
       | md5('1012') | md5('1012\|\|ALBERT\|\|17-214-233-1235')  | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-008] 2-day cycle
+  Scenario: [BQ-MAS-1CD-C-08] 2-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 
@@ -664,7 +664,7 @@ Feature: [BQ-MAS-1CD-C] Multi Active Satellites
       | md5('1010') | md5('1010\|\|JENNY\|\|17-214-233-1242')   | Jenny         | 17-214-233-1242 | 2019-01-02     | 2019-01-02 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [BQ-MAS-1CD-C-009] 3-day cycle
+  Scenario: [BQ-MAS-1CD-C-09] 3-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 

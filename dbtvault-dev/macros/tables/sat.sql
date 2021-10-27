@@ -76,9 +76,7 @@ latest_records AS (
 
 sat_records_before_insert_date AS (
   SELECT DISTINCT
-    {{ dbtvault.prefix(source_cols, 'a') }},
-    {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE,
-    {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
+    {{ dbtvault.prefix(source_cols, 'a') }}
   FROM {{ this }} AS a
   LEFT JOIN {{ ref(source_model) }} AS b
   ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
@@ -92,9 +90,7 @@ matching_xts_stg_records AS (
     LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_DATE,
-    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
-        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_HASHDIFF,
+    {{ dbtvault.prefix([src_pk], 'a') }} AS PREV_RECORD_HASHDIFF,
     LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
@@ -107,9 +103,7 @@ matching_xts_stg_records AS (
            OR (PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
            AND NEXT_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}))
   AND {{ dbtvault.prefix([src_ldts], 'b') }}
-  BETWEEN XTS_LOAD_DATE
-  AND NEXT_RECORD_DATE
-  ORDER BY {{ dbtvault.prefix([src_pk], 'a') }}, XTS_LOAD_DATE
+  BETWEEN XTS_LOAD_DATE AND NEXT_RECORD_DATE
 ),
 
 records_from_sat AS (
@@ -227,9 +221,7 @@ latest_records AS (
 
 sat_records_before_insert_date AS (
   SELECT DISTINCT
-    {{ dbtvault.prefix(source_cols, 'a') }},
-    {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE,
-    {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
+    {{ dbtvault.prefix(source_cols, 'a') }}
   FROM {{ this }} AS a
   LEFT JOIN {{ ref(source_model) }} AS b
   ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
@@ -243,9 +235,7 @@ matching_xts_stg_records AS (
     LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_DATE,
-    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
-        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_HASHDIFF,
+    {{ dbtvault.prefix([src_pk], 'a') }} AS PREV_RECORD_HASHDIFF,
     LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
@@ -258,9 +248,7 @@ matching_xts_stg_records AS (
            OR (PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}
            AND NEXT_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'b') }}))
   AND {{ dbtvault.prefix([src_ldts], 'b') }}
-  BETWEEN XTS_LOAD_DATE
-  AND NEXT_RECORD_DATE
-  ORDER BY {{ dbtvault.prefix([src_pk], 'a') }}, XTS_LOAD_DATE
+  BETWEEN XTS_LOAD_DATE AND NEXT_RECORD_DATE
 ),
 
 records_from_sat AS (
@@ -374,9 +362,7 @@ latest_records AS (
 
 sat_records_before_insert_date AS (
   SELECT DISTINCT
-    {{ dbtvault.prefix(source_cols, 'a') }},
-    {{ dbtvault.prefix([src_ldts], 'b') }} AS STG_LOAD_DATE,
-    {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
+    {{ dbtvault.prefix(source_cols, 'a') }}
   FROM {{ this }} AS a
   LEFT JOIN {{ ref(source_model) }} AS b
   ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
@@ -392,9 +378,7 @@ matching_xts_stg_records AS (
         LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
             PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_DATE,
-        LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
-            PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-            ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_HASHDIFF,
+        {{ dbtvault.prefix([src_pk], 'a') }} AS PREV_RECORD_HASHDIFF,
         LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
             PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
@@ -408,8 +392,7 @@ matching_xts_stg_records AS (
            OR (mr.PREV_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'mr') }}
            AND mr.NEXT_RECORD_HASHDIFF != {{ dbtvault.prefix([src_hashdiff], 'mr') }}))
   AND {{ dbtvault.prefix([src_ldts], 'mr') }}
-  BETWEEN mr.XTS_LOAD_DATE
-  AND mr.NEXT_RECORD_DATE
+  BETWEEN mr.XTS_LOAD_DATE AND mr.NEXT_RECORD_DATE
 ),
 
 records_from_sat AS (

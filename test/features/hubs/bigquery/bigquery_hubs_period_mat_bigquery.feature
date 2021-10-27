@@ -1,7 +1,7 @@
 Feature: [BQ-HUB-PM] Hubs Loaded using Period Materialization
 
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-PM-001] Simple load of stage data into an empty hub
+  Scenario: [BQ-HUB-PM-01] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -24,7 +24,7 @@ Feature: [BQ-HUB-PM] Hubs Loaded using Period Materialization
 
   @fixture.enable_full_refresh
   @fixture.single_source_hub
-  Scenario: [BQ-HUB-PM-002] Full refresh of loaded hub
+  Scenario: [BQ-HUB-PM-02] Full refresh of loaded hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -40,7 +40,7 @@ Feature: [BQ-HUB-PM] Hubs Loaded using Period Materialization
       | md5('1002') | 1002        | 1993-01-01 | TPCH   |
 
   @fixture.multi_source_hub
-  Scenario: [BQ-HUB-PM-003] Simple load of stage data from multiple sources into an empty hub
+  Scenario: [BQ-HUB-PM-03] Simple load of stage data from multiple sources into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |

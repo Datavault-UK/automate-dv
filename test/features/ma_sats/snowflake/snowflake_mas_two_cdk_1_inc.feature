@@ -2,7 +2,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
   Incremental loads with MAS behaviour with two CDKs
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-001] Load data into a populated multi-active satellite where all records load
+  Scenario: [SF-MAS-2CD-I-01] Load data into a populated multi-active satellite where all records load
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1217\|\|12331')   | 1993-01-01     | 1993-01-01 | *      |
@@ -54,7 +54,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1214 | 12343     | md5('1006\|\|FRIDA\|\|17-214-233-1214\|\|12343') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-002] Load data into a populated multi-active satellite where some records overlap
+  Scenario: [SF-MAS-2CD-I-02] Load data into a populated multi-active satellite where some records overlap
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -109,7 +109,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1238 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1238\|\|12341') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-003] Load data into a populated multi-active satellite where sets of records have fewer records
+  Scenario: [SF-MAS-2CD-I-03] Load data into a populated multi-active satellite where sets of records have fewer records
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -154,7 +154,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1004') | Dom           | 17-214-233-1237 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1237\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-004] Load data into a populated multi-active satellite where some sets of records have extra records
+  Scenario: [SF-MAS-2CD-I-04] Load data into a populated multi-active satellite where some sets of records have extra records
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -209,7 +209,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1004') | Dom           | 17-214-233-1257 | 12331     | md5('1004\|\|DOM\|\|17-214-233-1257\|\|12331')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-005] Load data into a populated multi-active satellite where sets maintain group size after records have been added and removed in the stage
+  Scenario: [SF-MAS-2CD-I-05] Load data into a populated multi-active satellite where sets maintain group size after records have been added and removed in the stage
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -270,7 +270,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1254 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1254\|\|12341') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-006] Load data into a populated multi-active satellite where sets maintain group size but some records have different hashdiffs
+  Scenario: [SF-MAS-2CD-I-06] Load data into a populated multi-active satellite where sets maintain group size but some records have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -324,7 +324,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1234 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1234\|\|12341')  | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-007] Load data into a populated multi-active satellite where sets of records have varying group size and some have different hashdiffs
+  Scenario: [SF-MAS-2CD-I-07] Load data into a populated multi-active satellite where sets of records have varying group size and some have different hashdiffs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1215\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -401,7 +401,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1234 | 12341     | md5('1006\|\|FRIDA\|\|17-214-233-1234\|\|12341')  | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-008] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
+  Scenario: [SF-MAS-2CD-I-08] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1212 | 12311     | md5('1002\|\|BOB\|\|17-214-233-1212\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -441,7 +441,7 @@ Feature: [SF-MAS-2CD-I] Multi Active Satellites
       | md5('1002') | <null>        | 17-214-233-1212 | 12311     | md5('1002\|\|^^\|\|17-214-233-1212\|\|12311')    | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-I-009] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
+  Scenario: [SF-MAS-2CD-I-09] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |

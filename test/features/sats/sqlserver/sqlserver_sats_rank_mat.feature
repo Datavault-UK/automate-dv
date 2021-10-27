@@ -1,7 +1,7 @@
 Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-001] Base load of a satellite with one value in rank column loads first rank
+  Scenario: [SQLS-SAT-RM-01] Base load of a satellite with one value in rank column loads first rank
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -22,7 +22,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-002] Base load of a satellite with one value in rank column excludes NULL PKs and loads first rank,
+  Scenario: [SQLS-SAT-RM-02] Base load of a satellite with one value in rank column excludes NULL PKs and loads first rank,
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -44,7 +44,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-003] Incremental load of a satellite with one value in rank column loads all records
+  Scenario: [SQLS-SAT-RM-03] Incremental load of a satellite with one value in rank column loads all records
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -64,7 +64,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-004] Incremental load of a satellite with one value in rank column loads all records, excluding NULL PKs
+  Scenario: [SQLS-SAT-RM-04] Incremental load of a satellite with one value in rank column loads all records, excluding NULL PKs
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -85,7 +85,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-005] Base load of a satellite with multiple and duplicated values in rank column loads first rank
+  Scenario: [SQLS-SAT-RM-05] Base load of a satellite with multiple and duplicated values in rank column loads first rank
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -103,7 +103,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04     | 1993-01-04 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-006] Incremental load of a satellite with multiple and duplicated values in rank column loads all records
+  Scenario: [SQLS-SAT-RM-06] Incremental load of a satellite with multiple and duplicated values in rank column loads all records
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -123,7 +123,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04     | 1993-01-04 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-007] Base load of a satellite with one timestamp value in rank column loads all records
+  Scenario: [SQLS-SAT-RM-07] Base load of a satellite with one timestamp value in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -142,7 +142,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-008] Incremental load of a satellite with multiple timestamps over different days in rank column loads all records
+  Scenario: [SQLS-SAT-RM-08] Incremental load of a satellite with multiple timestamps over different days in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -162,7 +162,7 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-RM-009] Base load of a satellite with multiple timestamps in the same day in rank column only loads first rank
+  Scenario: [SQLS-SAT-RM-09] Base load of a satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
