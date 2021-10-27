@@ -120,12 +120,12 @@ new_closed_records AS (
         lo.{{ src_source }}
     FROM source_data AS h
     LEFT JOIN Latest_open AS lo
-    ON lo.{{ src_pk }} = h.{{ src_pk }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['lo', 'h'], condition='=') }}
     LEFT JOIN latest_closed AS lc
-    ON lc.{{ src_pk }} = h.{{ src_pk }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['lc', 'h'], condition='=') }}
     WHERE TO_DATE(h.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
-    AND lo.{{ src_pk }} IS NOT NULL
-    AND lc.{{ src_pk }} IS NULL
+    AND {{ dbtvault.multikey(src_pk, prefix='lo', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(src_pk, prefix='lc', condition='IS NULL') }}
 ),
 
 {#- end if is_auto_end_dating -#}
