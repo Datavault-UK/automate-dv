@@ -438,3 +438,31 @@ Feature: [SQLS-SAT-OOS] Out of Sequence Satellites
       | md5('1003') | md5('1997-08-25\|\|1003\|\|FRED\|\|17-214-233-1215')  | Fred          | 1997-08-25   | 17-214-233-1215 | 1993-01-01 01:01:06 | 1993-01-01 01:01:06 | *      |
       | md5('1003') | md5('1997-08-25\|\|1003\|\|FRED\|\|17-214-233-1216')  | Fred          | 1997-08-25   | 17-214-233-1216 | 1993-01-01 01:01:07 | 1993-01-01 01:01:07 | *      |
       | md5('1003') | md5('1997-08-25\|\|1003\|\|GREGG\|\|17-214-233-1216') | Gregg         | 1997-08-25   | 17-214-233-1216 | 1993-01-01 01:01:08 | 1993-01-01 01:01:08 | *      |
+
+  @fixture.out_of_sequence_satellite
+  Scenario: [SQLS-SAT-OOS-11] Inserts no new records if hashdiff matches previous loaddate hashdiff
+    Testing that the staged Tom record is compared to the preceding Alice record and NOT to the Tom record preceding the preceding Alice record
+    Given the XTS xts is already populated with data
+      | CUSTOMER_PK | HASHDIFF                                              | SATELLITE_NAME   | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-02 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|TOM\|\|17-214-233-1214')   | SAT_CUSTOMER_OOS | 1993-01-03 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-04 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-06 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | SAT_CUSTOMER_OOS | 1993-01-07 | *      |
+    And the SAT_CUSTOMER_OOS sat is already populated with data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|TOM\|\|17-214-233-1214')   | Tom           | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-04 | 1993-01-04     | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | EFFECTIVE_FROM |
+      | 1001        | Tom           | 1997-04-24   | 17-214-233-1214 | 1993-01-05 | *      | 1993-01-05     |
+    And I stage the STG_CUSTOMER data
+    When I load the SAT_CUSTOMER_OOS sat
+    Then the SAT_CUSTOMER_OOS table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-02 | 1993-01-02     | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|TOM\|\|17-214-233-1214')   | Tom           | 1997-04-24   | 17-214-233-1214 | 1993-01-03 | 1993-01-03     | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-04 | 1993-01-04     | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|TOM\|\|17-214-233-1214')   | Tom           | 1997-04-24   | 17-214-233-1214 | 1993-01-05 | 1993-01-05     | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-06 | 1993-01-06     | *      |
