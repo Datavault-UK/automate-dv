@@ -28,14 +28,21 @@
 
             {%- if dbtvault.is_list(order_by) -%}
 
-                {%- if order_by is mapping %}
-                    {%- set column_name, direction = order_by.items()|first -%}
-                    {%- set order_by_str = "{} {}".format(column_name, direction) | trim | join(", ") | trim -%}
-                {%- else -%}
-                    {%- set column_name = order_by -%}
-                    {%- set direction = '' -%}
-                    {%- set order_by_str = order_by | join(", ") -%}
-                {%- endif -%}
+                {%- set order_by_str_lst = [] -%}
+
+                {% for order_by_col in order_by %}
+
+                    {%- if order_by_col is mapping %}
+                        {%- set column_name, direction = order_by_col.items()|first -%}
+                        {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
+                    {%- else -%}
+                        {%- set order_by_str = order_by_col -%}
+                    {%- endif -%}
+
+                    {%- do order_by_str_lst.append(order_by_str) -%}
+                {%- endfor -%}
+
+                {%- set order_by_str = order_by_str_lst | join(", ") -%}
 
             {%- else -%}
 
