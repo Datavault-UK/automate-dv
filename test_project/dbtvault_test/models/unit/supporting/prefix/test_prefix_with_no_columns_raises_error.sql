@@ -1,1 +1,0 @@
-{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none)) }}

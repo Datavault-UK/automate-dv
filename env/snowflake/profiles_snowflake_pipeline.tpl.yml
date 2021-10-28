@@ -1,0 +1,41 @@
+dbtvault:
+  outputs:
+    snowflake:
+      type: snowflake
+      account: "{{ op://dbtvault/snowflake/account }}"
+
+      user: "{{ op://dbtvault/snowflake_pipeline/username }}"
+      password: "{{ op://dbtvault/snowflake_pipeline/password }}"
+
+      role: "{{ op://dbtvault/snowflake_pipeline/role }}"
+      database: "{{ op://dbtvault/snowflake_pipeline/database }}"
+      warehouse: "{{ op://dbtvault/snowflake_pipeline/warehouse }}"
+      schema: "{{ op://dbtvault/snowflake_pipeline/schema }}"
+
+      threads: 4
+      client_session_keep_alive: False
+
+    bigquery:
+      type: bigquery
+
+      method: oauth
+
+      project: ""
+      dataset: ""
+
+      threads: 4
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
+
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: ""
+      port: ""
+      database: ""
+      schema: ""
+      user: ""
+      password: ""
+
+  target: "snowflake"
