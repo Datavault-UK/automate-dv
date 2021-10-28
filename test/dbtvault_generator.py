@@ -27,6 +27,7 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "eff_sat": eff_sat,
         "eff_sat_status": eff_sat_status,
         "eff_sat_hashdiff": eff_sat_hashdiff,
+        "eff_sat_oos": eff_sat_oos,
         "eff_sat_2": eff_sat_2,
         "t_link": t_link,
         "xts": xts,
@@ -268,6 +269,7 @@ def eff_sat_status(model_name, src_pk, src_dfk, src_sfk,
 
     template_to_file(template, model_name)
 
+
 def eff_sat_hashdiff(model_name, src_pk, src_dfk, src_sfk,
                 status, src_hashdiff, src_eff, src_ldts, src_source,
                 source_model, config, depends_on=""):
@@ -294,6 +296,38 @@ def eff_sat_hashdiff(model_name, src_pk, src_dfk, src_sfk,
                           status={status}, src_hashdiff={src_hashdiff},
                           src_eff={src_eff}, src_ldts={src_ldts}, 
                           src_source={src_source}, source_model={source_model}) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def eff_sat_oos(model_name, src_pk, src_dfk, src_sfk,
+                status, src_hashdiff, src_eff, src_ldts, src_source,
+                source_model, config, depends_on="",out_of_sequence=None):
+    """
+    Generate an effectivity satellite model template
+        :param model_name: Name of the model file
+        :param src_pk: Source pk
+        :param src_dfk: Source driving foreign key
+        :param src_sfk: Source surrogate foreign key
+        :param src_eff: Source effective from
+        :param src_hashdiff: Source hashdiff
+        :param status: True or false active flag
+        :param src_ldts: Source load date timestamp
+        :param src_source: Source record source column
+        :param source_model: Model name to select from
+        :param config: Optional model config
+        :param depends_on: Optional forced dependency
+    """
+
+    template = f"""
+    {depends_on}
+    {{{{ config({config}) }}}}
+    {{{{ dbtvault.eff_sat_oos(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
+                          status={status}, src_hashdiff={src_hashdiff},
+                          src_eff={src_eff}, src_ldts={src_ldts}, 
+                          src_source={src_source}, source_model={source_model},
+                          out_of_sequence={out_of_sequence if out_of_sequence else 'none'}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -584,6 +618,7 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "eff_sat": "incremental",
         "eff_sat_status": "incremental",
         "eff_sat_hashdiff": "incremental",
+        "eff_sat_oos": "incremental",
         "eff_sat_2": "incremental",
         "xts": "incremental",
         "t_link": "incremental",

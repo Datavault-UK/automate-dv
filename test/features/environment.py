@@ -9,7 +9,8 @@ from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
 from test.features.eff_sats_2 import fixtures_eff_sat_2
 from test.features.eff_sats_status import fixtures_eff_sat_status
-from test.features.eff_sats_hashdiff import fixtures_eff_sat_hashdiff
+from test.features.eff_sat_hashdiff import fixtures_eff_sat_hashdiff
+from test.features.eff_sat_oos import fixtures_eff_sat_oos
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
@@ -124,6 +125,11 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_testing_auto_end_dating,
          "bigquery": '',
          "sqlserver": ''},
+
+    "fixture.eff_satellite_oos":
+        {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos,
+         "bigquery": "",
+         "sqlserver": ""},
 
     "fixture.eff_satellite_hashdiff_multipart":
         {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_multipart,
