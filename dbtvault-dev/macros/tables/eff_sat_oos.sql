@@ -48,7 +48,8 @@ WITH source_data AS (
 insert_date AS (
     SELECT DISTINCT {{ src_ldts }}
     FROM source_data
-    ),
+),
+
 {%- endif -%}
 
 {# Selecting the most recent records for each link hashkey -#}
@@ -84,7 +85,7 @@ new_open_records AS (
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
-{#- not selecting any thing out of sequence -#}
+{#- not selecting anything out of sequence -#}
 {%- if out_of_sequence is not none %}
     AND f.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
@@ -104,11 +105,12 @@ new_reopened_records AS (
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
     WHERE g.{{ status }} = 'TRUE'::BOOLEAN
-{#- not selecting any thing out of sequence -#}
+{#- not selecting anything out of sequence -#}
 {%- if out_of_sequence is not none %}
     AND g.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
 ),
+
 {%- if is_auto_end_dating %}
 
 {# Creating the closing records -#}
@@ -131,6 +133,7 @@ new_closed_records AS (
     AND h.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
 {%- endif -%}
 ),
+
 {% else %}
 
 new_closed_records AS (
@@ -151,6 +154,7 @@ new_closed_records AS (
     AND lo.{{ src_pk }} IS NOT NULL
     AND lc.{{ src_pk }} IS NULL
 ),
+
 {#- end if is_auto_end_dating -#}
 {%- endif %}
 
@@ -167,14 +171,14 @@ sat_records_before_insert_date AS (
     WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < (select distinct {{ src_ldts }} from insert_date)
 ),
 
-        {# selecting a list of driving keys #}
+{# selecting a list of driving keys #}
 driving_keys AS (
     SELECT eff.{{ src_pk }}, {{ dbtvault.alias_all(dfk_cols, 'eff') }} FROM {{ this }} AS eff
     UNION
     SELECT sd.{{ src_pk }}, {{ dbtvault.alias_all(dfk_cols, 'sd') }} FROM source_data AS sd
 ),
 
-    {# identifying the new link hash keys to be added sat #}
+{# identifying the new link hash keys to be added sat #}
 new_oos_links AS (
     SELECT DISTINCT
         {{ dbtvault.alias_all(source_cols, 'f') }}
@@ -182,11 +186,9 @@ new_oos_links AS (
     LEFT JOIN {{ this }} AS v
     ON f.{{ src_pk }} = v.{{ src_pk }}
     WHERE v.{{ src_pk }} IS NULL
-    ),
+),
 
-{%- if is_auto_end_dating %}
-
-    {# Dfk information added to xts #}
+{# Dfk information added to xts #}
 xts_dfk_enhanced AS (
     SELECT
         a.{{ src_pk }},
@@ -199,7 +201,9 @@ xts_dfk_enhanced AS (
     WHERE {{ dbtvault.prefix([sat_name_col], 'a') }} = '{{ this.identifier }}'
 ),
 
-    {# matches the xts records on the new link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
+{%- if is_auto_end_dating %}
+
+{# matches the xts records on the new link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
 matching_xts_stg_records_dfk_new_later_links AS (
     SELECT
       {{ dbtvault.prefix(source_cols, 'b') }},
@@ -224,10 +228,9 @@ matching_xts_stg_records_dfk_new_later_links AS (
     QUALIFY ({{ dbtvault.prefix([src_ldts], 'b') }}
     BETWEEN XTS_LOAD_DATE
     AND NEXT_CHANGED_RECORD_DATE)
-
 ),
 
-   {# matches the xts records on the new link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
+{# matches the xts records on the new link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
 matching_xts_stg_records_dfk_new_earlier_links AS (
     SELECT
       {{ dbtvault.prefix(source_cols, 'b') }},
@@ -245,12 +248,11 @@ matching_xts_stg_records_dfk_new_earlier_links AS (
     ON {{ dbtvault.multikey(src_dfk, prefix=['a', 'b'], condition='=') }}
     QUALIFY  {{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE
     AND XTS_LOAD_DATE = FIRST_SEEN_DATE
-
 ),
 
 {% endif %}
 
-    {# normal oos logic for lnk hash keys where the records are comapred to the xts on hashdiff #}
+{# normal oos logic for lnk hash keys where the records are comapred to the xts on hashdiff #}
 matching_xts_stg_records AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -284,7 +286,7 @@ matching_xts_stg_records AS (
 ),
 
 {%- if is_auto_end_dating %}
- {# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
+{# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
 matching_xts_stg_records_on_dfk_later_links AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -310,7 +312,7 @@ matching_xts_stg_records_on_dfk_later_links AS (
     AND  b.{{ src_ldts }} > FIRST_SEEN_DFK_DATE
 ),
 
- {# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
+{# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
 matching_xts_stg_records_on_dfk_earlier_links AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
@@ -336,11 +338,11 @@ xts_union AS (
  SELECT {{ dbtvault.prefix(source_cols, 'NLL') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLL') }} FROM matching_xts_stg_records_dfk_new_later_links AS NLL
  UNION
  SELECT {{ dbtvault.prefix(source_cols, 'NLE') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLE') }} FROM matching_xts_stg_records_dfk_new_earlier_links AS NLE
-
 ),
+
 {% endif %}
 
-    {#   looking for changes in hashdiffs #}
+{#   looking for changes in hashdiffs #}
 records_from_sat AS (
     SELECT
         d.{{ src_pk }},
@@ -419,8 +421,8 @@ out_of_sequence_inserts AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'op_prev') }}  FROM re_open_previous_link as op_prev
 {% endif %}
 ),
-{%- endif %}
 
+{%- endif %}
 
 records_to_insert AS (
     SELECT * FROM new_open_records
@@ -445,5 +447,6 @@ records_to_insert AS (
 {%- endif %}
 
 SELECT * FROM records_to_insert
+
 {%- endmacro -%}
 

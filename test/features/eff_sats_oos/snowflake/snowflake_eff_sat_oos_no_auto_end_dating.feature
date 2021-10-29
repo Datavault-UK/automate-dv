@@ -1,8 +1,8 @@
-Feature: [SF-EFO-OOS] Out of Sequence Satellites
+Feature: [SF-EFO-DAU-OOS] Out of Sequence Satellites without automatic end-dating
 
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-01]
+  Scenario:  [SF-EFO-DAU-01]
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-06 | orders |
@@ -46,7 +46,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
 
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-02] ONE New Eff Sat added when the same record is added earlier than the start date of the EFF SAT
+  Scenario:  [SF-EFO-DAU-02] ONE New Eff Sat added when the same record is added earlier than the start date of the EFF SAT
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -80,7 +80,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-03] ONE New Eff Sat added when a new LINK change is established earlier than the start date of the EFF SAT
+  Scenario:  [SF-EFO-DAU-03] ONE New Eff Sat added when a new LINK change is established earlier than the start date of the EFF SAT
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -114,7 +114,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-04] NO New Eff Sat added when the same record is loaded while that link is still active
+  Scenario:  [SF-EFO-DAU-04] NO New Eff Sat added when the same record is loaded while that link is still active
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -147,7 +147,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
 
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-05] TWO NEW inserts when a change to the link is loaded in the middle of a previously continuous link
+  Scenario:  [SF-EFO-DAU-05] TWO NEW inserts when a change to the link is loaded in the middle of a previously continuous link
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -180,7 +180,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
       @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-06] TWO NEW inserts when a change to the link is loaded in the middle of a previously continuous link
+  Scenario:  [SF-EFO-DAU-06] TWO NEW inserts when a change to the link is loaded in the middle of a previously continuous link
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -213,7 +213,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-07] NO new inserts when the same link is loaded at the end.
+  Scenario:  [SF-EFO-DAU-07] NO new inserts when the same link is loaded at the end.
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -245,7 +245,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-08] ONE new inserts when the a change to the link is loaded with an earlier start date
+  Scenario:  [SF-EFO-DAU-08] ONE new inserts when the a change to the link is loaded with an earlier start date
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -278,7 +278,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | TRUE   | md5('1') | 2020-01-13     | 2020-01-13 | orders |
 
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EOD-09] ONE new inserts when the a change to the link is loaded with an earlier start date
+  Scenario:  [SF-EFO-DAU-09] ONE new inserts when the a change to the link is loaded with an earlier start date
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
