@@ -34,9 +34,9 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
 #      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
-#      | 5000        | AAA      | 2020-07-01     | 2020-01-07 | orders | TRUE   |
-#      | 4000        | CCC      | 2020-07-01     | 2020-01-07 | orders | TRUE   |
-#      | 2000        | BBB      | 2020-07-01     | 2020-01-07 | orders | TRUE   |
+##      | 5000        | AAA      | 2020-01-07     | 2020-01-07 | orders | TRUE   |
+##      | 4000        | CCC      | 2020-01-07     | 2020-01-07 | orders | TRUE   |
+#      | 2000        | BBB      | 2020-01-07     | 2020-01-07 | orders | TRUE   |
 #    And I stage the STG_CUSTOMER data
 #    When I load the EFF_SAT eff_sat_oos
 #    Then the EFF_SAT table should contain expected data
@@ -46,10 +46,17 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
 #      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-05     | 2020-01-06 | orders |
 #      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | FALSE  | md5('0') | 2020-01-09     | 2020-01-10 | orders |
 #      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
-#      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | FALSE  | md5('0') | 2020-01-07     | 2020-01-07 | orders |
-#      | md5('5000\|\|AAA') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-07     | 2020-01-07 | orders |
-#      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-07     | 2020-01-07 | orders |
-#      | md5('5000\|\|AAA') | md5('2000') | md5('BBB') | FALSE  | md5('0') | 2020-01-07     | 2020-01-07 | orders |
+#
+##      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | HASHDIFF | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+##      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-05     | 2020-01-06 | orders |
+##      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-05     | 2020-01-06 | orders |
+##      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-05     | 2020-01-06 | orders |
+##      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | FALSE  | md5('0') | 2020-01-09     | 2020-01-10 | orders |
+##      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
+##      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | FALSE  | md5('0') | 2020-01-07     | 2020-01-07 | orders |
+##      | md5('5000\|\|AAA') | md5('2000') | md5('BBB') | TRUE   | md5('1') | 2020-01-07     | 2020-01-07 | orders |
+##      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-07     | 2020-01-07 | orders |
+##      | md5('5000\|\|AAA') | md5('2000') | md5('BBB') | FALSE  | md5('0') | 2020-01-07     | 2020-01-07 | orders |
 
 
   @fixture.enable_auto_end_date
@@ -63,7 +70,6 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-05 | orders |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-06 | orders |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-07 | orders |
-      | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-08 | orders |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-08 | orders |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-09 | orders |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-10 | orders |
@@ -165,7 +171,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EFO-05A] FOUR NEW inserts when a change to the link is loaded in the middle of a previously continuous link
+  Scenario:  [SF-EFO-05A] FOUR NEW inserts when a change to an existing link via an existing key is loaded in the middle of a previously continuous link
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |
@@ -204,7 +210,7 @@ Feature: [SF-EFO-OOS] Out of Sequence Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_oos
-  Scenario:  [SF-EFO-05B] FOUR NEW inserts when a change to the link is loaded in the middle of a previously continuous link
+  Scenario:  [SF-EFO-05B] FOUR NEW inserts when a change to an existing link via a new key is loaded in the middle of a previously continuous link
     Given the XTS xts is already populated with data
       | CUSTOMER_ORDER_PK  | HASHDIFF | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1') | EFF_SAT        | 2020-01-02 | orders |

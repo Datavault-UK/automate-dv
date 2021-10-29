@@ -45,9 +45,10 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {%- if out_of_sequence is not none %}
+
 insert_date AS (
-    SELECT DISTINCT {{ src_ldts }}
-    FROM source_data
+    SELECT MAX({{ src_ldts }}) AS {{ src_ldts }}
+    FROM {{ this }}
 ),
 
 {%- endif -%}
@@ -134,6 +135,7 @@ new_closed_records AS (
 {%- endif -%}
 ),
 
+{# else if is_auto_end_dating #}
 {% else %}
 
 new_closed_records AS (
@@ -168,7 +170,7 @@ sat_records_before_insert_date AS (
        {{ dbtvault.prefix([src_eff], 'b') }} AS STG_EFFECTIVE_FROM
     FROM {{ this }} AS a
     LEFT JOIN {{ ref(source_model) }} AS b ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
-    WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < (select distinct {{ src_ldts }} from insert_date)
+    WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < (SELECT {{ src_ldts }} FROM insert_date)
 ),
 
 {# selecting a list of driving keys #}
@@ -215,9 +217,7 @@ matching_xts_stg_records_dfk_new_later_links AS (
       LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }})  AS NEXT_CHANGED_RECORD_DATE,
-      LAG({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
-          PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
-          ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_PK,
+      {{ dbtvault.prefix([src_pk], 'a') }} AS PREV_RECORD_PK,
       LEAD({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
           PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
           ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_PK
@@ -234,14 +234,14 @@ matching_xts_stg_records_dfk_new_later_links AS (
 matching_xts_stg_records_dfk_new_earlier_links AS (
     SELECT
       {{ dbtvault.prefix(source_cols, 'b') }},
-      a.{{ src_ldts }} AS XTS_LOAD_DATE,
+      {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
       FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
           PARTITION BY {{ dbtvault.alias_all([src_dfk], 'a') }}
           ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DATE
       {%- if is_auto_end_dating %},
-      FIRST_SEEN_DATE  AS NEXT_CHANGED_RECORD_DATE,
+      FIRST_SEEN_DATE AS NEXT_CHANGED_RECORD_DATE,
       NULL AS PREV_RECORD_PK,
-    {{ dbtvault.prefix([src_pk], 'a') }} AS NEXT_RECORD_PK
+      {{ dbtvault.prefix([src_pk], 'a') }} AS NEXT_RECORD_PK
       {% endif %}
     FROM new_oos_links AS b
     LEFT JOIN xts_dfk_enhanced AS a
@@ -252,8 +252,8 @@ matching_xts_stg_records_dfk_new_earlier_links AS (
 
 {% endif %}
 
-{# normal oos logic for lnk hash keys where the records are comapred to the xts on hashdiff #}
-matching_xts_stg_records AS (
+{# normal oos logic for lnk hash keys where the records are compared to the xts on hashdiff #}
+matching_xts_stg_records_later AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
     {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
@@ -263,9 +263,7 @@ matching_xts_stg_records AS (
     LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_DATE,
-    LAG({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
-        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_HASHDIFF,
+    {{ dbtvault.prefix([src_hashdiff], 'a') }} AS PREV_RECORD_HASHDIFF,
     LEAD({{ dbtvault.prefix([src_hashdiff], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_HASHDIFF
@@ -285,21 +283,48 @@ matching_xts_stg_records AS (
               END ))
 ),
 
+{# normal oos logic for lnk hash keys where the records are compared to the xts on hashdiff #}
+{# and the ldts of lnk hash key is < the min first seen date for pk #}
+matching_xts_stg_records_earlier AS (
+    SELECT
+    {{ dbtvault.prefix(source_cols, 'b') }},
+    {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
+    FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+        PARTITION BY {{ dbtvault.prefix([src_pk], 'a') }}
+        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DATE,
+    {{ dbtvault.prefix([src_ldts], 'a') }} AS NEXT_RECORD_DATE,
+    NULL AS PREV_RECORD_HASHDIFF,
+    {{ dbtvault.prefix([src_hashdiff], 'a') }} AS NEXT_RECORD_HASHDIFF
+    FROM xts_dfk_enhanced AS a
+    INNER JOIN source_data AS b
+    ON {{ dbtvault.prefix([src_pk], 'a') }} = {{ dbtvault.prefix([src_pk], 'b') }}
+    QUALIFY
+    {{ dbtvault.prefix([src_ldts], 'b') }} < FIRST_SEEN_DATE
+    AND {{ dbtvault.prefix([src_ldts], 'a') }} = FIRST_SEEN_DATE
+),
+
+matching_xts_stg_records AS (
+
+  SELECT * FROM matching_xts_stg_records_later
+  UNION
+  SELECT * FROM matching_xts_stg_records_earlier
+
+),
+
 {%- if is_auto_end_dating %}
+
 {# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is > the min first seen date for dfk #}
 matching_xts_stg_records_on_dfk_later_links AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'b') }},
     {{ dbtvault.prefix([src_ldts], 'a') }} AS XTS_LOAD_DATE,
-     FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
+    FIRST_VALUE({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS FIRST_SEEN_DFK_DATE,
     LEAD({{ dbtvault.prefix([src_ldts], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_CHANGED_RECORD_DATE,
-    LAG({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
-        PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
-        ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS PREV_RECORD_PK,
+    {{ dbtvault.prefix([src_pk], 'a') }} AS PREV_RECORD_PK,
     LEAD({{ dbtvault.prefix([src_pk], 'a') }}) OVER(
         PARTITION BY {{ dbtvault.alias_all(dfk_cols, 'a') }}
         ORDER BY {{ dbtvault.prefix([src_ldts], 'a') }}) AS NEXT_RECORD_PK
@@ -309,7 +334,7 @@ matching_xts_stg_records_on_dfk_later_links AS (
     QUALIFY ( b.{{ src_ldts }}
     BETWEEN a.{{ src_ldts }}
     AND NEXT_CHANGED_RECORD_DATE)
-    AND  b.{{ src_ldts }} > FIRST_SEEN_DFK_DATE
+    AND b.{{ src_ldts }} > FIRST_SEEN_DFK_DATE
 ),
 
 {# matches the xts records on the link hash keys on the dfk where the ldts of lnk hash key is < the min first seen date for dfk #}
@@ -331,13 +356,13 @@ matching_xts_stg_records_on_dfk_earlier_links AS (
 ),
 
 xts_union AS (
- SELECT {{ dbtvault.prefix(source_cols, 'L') }},{{ dbtvault.prefix(out_of_sequence_columns, 'L') }} FROM matching_xts_stg_records_on_dfk_later_links AS L
- UNION
- SELECT {{ dbtvault.prefix(source_cols, 'E') }},{{ dbtvault.prefix(out_of_sequence_columns, 'E') }} FROM matching_xts_stg_records_on_dfk_earlier_links AS E
- UNION
- SELECT {{ dbtvault.prefix(source_cols, 'NLL') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLL') }} FROM matching_xts_stg_records_dfk_new_later_links AS NLL
- UNION
- SELECT {{ dbtvault.prefix(source_cols, 'NLE') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLE') }} FROM matching_xts_stg_records_dfk_new_earlier_links AS NLE
+    SELECT {{ dbtvault.prefix(source_cols, 'L') }},{{ dbtvault.prefix(out_of_sequence_columns, 'L') }} FROM matching_xts_stg_records_on_dfk_later_links AS L
+    UNION
+    SELECT {{ dbtvault.prefix(source_cols, 'E') }},{{ dbtvault.prefix(out_of_sequence_columns, 'E') }} FROM matching_xts_stg_records_on_dfk_earlier_links AS E
+    UNION
+    SELECT {{ dbtvault.prefix(source_cols, 'NLL') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLL') }} FROM matching_xts_stg_records_dfk_new_later_links AS NLL
+    UNION
+    SELECT {{ dbtvault.prefix(source_cols, 'NLE') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLE') }} FROM matching_xts_stg_records_dfk_new_earlier_links AS NLE
 ),
 
 {% endif %}
@@ -361,6 +386,7 @@ records_from_sat AS (
 ),
 
 {%- if is_auto_end_dating %}
+
 close_new_inserted_records AS(
     SELECT
         a.{{ src_pk }},
@@ -436,6 +462,7 @@ records_to_insert AS (
     {%- endif %}
 )
 
+{#- else if not dbtvault.is_any_incremental() -#}
 {%- else %}
 
 records_to_insert AS (
