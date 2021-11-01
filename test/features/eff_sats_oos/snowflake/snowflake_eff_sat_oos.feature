@@ -1,5 +1,6 @@
 Feature: [SF-EFO-OOS] Out of Sequence Satellites
 
+# TODO macro does does not work for intraday loads, in this scenario there are intraday loads on 2020-01-07
 #  @fixture.enable_auto_end_date
 #  @fixture.eff_satellite_oos
 #  Scenario:  [SF-EFO-01] NO New Eff Sat added if there is no change
