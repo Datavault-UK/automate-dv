@@ -131,6 +131,11 @@ fixtures_registry = {
          "bigquery": "",
          "sqlserver": ""},
 
+    "fixture.eff_satellite_oos_in_sequence":
+        {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos_in_sequence,
+         "bigquery": "",
+         "sqlserver": ""},
+
     "fixture.eff_satellite_hashdiff_multipart":
         {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_multipart,
          "bigquery": '',
