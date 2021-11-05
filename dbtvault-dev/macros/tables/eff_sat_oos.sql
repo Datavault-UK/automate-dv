@@ -3,7 +3,7 @@
     {{- adapter.dispatch('eff_sat_oos', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                                          status=status, src_hashdiff=src_hashdiff, src_eff=src_eff,
                                                          src_ldts=src_ldts, src_source=src_source, source_model=source_model,
-                                                          out_of_sequence=out_of_sequence) -}}
+                                                         out_of_sequence=out_of_sequence) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat_oos(src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
@@ -86,10 +86,10 @@ new_open_records AS (
     LEFT JOIN latest_records AS lr
     ON f.{{ src_pk }} = lr.{{ src_pk }}
     WHERE lr.{{ src_pk }} IS NULL
-{#- not selecting anything out of sequence -#}
-{%- if out_of_sequence is not none %}
+    {#- not selecting anything out of sequence -#}
+    {%- if out_of_sequence is not none %}
     AND f.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
-{%- endif -%}
+    {%- endif -%}
 ),
 
 {# Identifying the currently closed link relationships to be reopened in eff sat -#}
@@ -106,10 +106,10 @@ new_reopened_records AS (
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
     WHERE g.{{ status }} = 'TRUE'::BOOLEAN
-{#- not selecting anything out of sequence -#}
-{%- if out_of_sequence is not none %}
+    {#- not selecting anything out of sequence -#}
+    {%- if out_of_sequence is not none %}
     AND g.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
-{%- endif -%}
+    {%- endif -%}
 ),
 
 {%- if is_auto_end_dating %}
@@ -129,10 +129,10 @@ new_closed_records AS (
     INNER JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_dfk, prefix=['lo', 'h'], condition='=') }}
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
-{#- not selecting any thing out of sequence -#}
-{%- if out_of_sequence is not none %}
+    {#- not selecting any thing out of sequence -#}
+    {%- if out_of_sequence is not none %}
     AND h.{{ src_ldts }} > (SELECT {{ src_ldts }} FROM insert_date)
-{%- endif -%}
+    {%- endif -%}
 ),
 
 {# else if is_auto_end_dating #}
@@ -250,6 +250,7 @@ matching_xts_stg_records_dfk_new_earlier_links AS (
     AND XTS_LOAD_DATE = FIRST_SEEN_DATE
 ),
 
+{#- end if is_auto_end_dating -#}
 {% endif %}
 
 {# normal oos logic for lnk hash keys where the records are compared to the xts on hashdiff #}
@@ -365,6 +366,7 @@ xts_union AS (
     SELECT {{ dbtvault.prefix(source_cols, 'NLE') }},{{ dbtvault.prefix(out_of_sequence_columns, 'NLE') }} FROM matching_xts_stg_records_dfk_new_earlier_links AS NLE
 ),
 
+{#- end if is_auto_end_dating -#}
 {% endif %}
 
 {#   looking for changes in hashdiffs #}
@@ -430,6 +432,7 @@ re_open_previous_link AS (
     WHERE a.PREV_RECORD_PK = a.NEXT_RECORD_PK
 ),
 
+{#- end if is_auto_end_dating -#}
 {%- endif -%}
 
 out_of_sequence_inserts AS (
@@ -438,16 +441,17 @@ out_of_sequence_inserts AS (
     SELECT * FROM records_from_sat
     UNION
     SELECT * FROM new_oos_links
-{%- if is_auto_end_dating %}
+    {%- if is_auto_end_dating %}
     UNION
     SELECT {{ dbtvault.alias_all(source_cols, 'new') }} FROM close_new_inserted_records AS new
     UNION
     SELECT {{ dbtvault.alias_all(source_cols, 'cl_prev') }} FROM close_previosuly_active AS cl_prev
     UNION
     SELECT {{ dbtvault.alias_all(source_cols, 'op_prev') }}  FROM re_open_previous_link as op_prev
-{% endif %}
+    {% endif %}
 ),
 
+{#- end if out_of_sequence is not none -#}
 {%- endif %}
 
 records_to_insert AS (
