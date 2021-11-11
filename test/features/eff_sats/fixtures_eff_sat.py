@@ -31,10 +31,11 @@ def eff_satellite(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -213,13 +214,14 @@ def eff_satellite_multipart(context):
     context.seed_config = {
         "RAW_STAGE": {
             "+column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "PLATFORM_ID": "VARCHAR",
                 "ORGANISATION_ID": "VARCHAR",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -276,6 +278,7 @@ def eff_satellite_bigquery(context):
                 "ORDER_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -461,6 +464,7 @@ def eff_satellite_multipart_bigquery(context):
                 "ORGANISATION_ID": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
