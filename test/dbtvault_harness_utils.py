@@ -714,7 +714,8 @@ def feature_sub_types():
                 'mas_two_cdk_cycles_duplicates'
             ],
             'pm': [
-                'mas_period_mat'
+                'mas_period_mat',
+                'mas_rank_mat'
             ]
         },
         'pit': {
