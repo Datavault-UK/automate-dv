@@ -697,7 +697,8 @@ def feature_sub_types():
             '1cdk': [
                 'mas_one_cdk_0_base',
                 'mas_one_cdk_1_inc',
-                'mas_one_cdk_base_sats'
+                'mas_one_cdk_base_sats',
+                'mas_one_cdk_base_sats_rank_mat'
             ],
             '1cdk_cycles': [
                 'mas_one_cdk_base_sats_cycles',
@@ -713,7 +714,8 @@ def feature_sub_types():
                 'mas_two_cdk_cycles_duplicates'
             ],
             'pm': [
-                'mas_period_mat'
+                'mas_period_mat',
+                'mas_rank_mat'
             ]
         },
         'pit': {
