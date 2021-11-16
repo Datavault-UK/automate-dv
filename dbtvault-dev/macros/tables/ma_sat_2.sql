@@ -47,6 +47,7 @@ WITH source_data AS (
 -- if any_incremental
 {% if dbtvault.is_any_incremental() %}
 
+-- Select latest records from satellite, restricted to PKs in source data
 latest_records AS (
     SELECT *
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
