@@ -96,7 +96,6 @@ records_to_insert AS (
                 ,{{ dbtvault.prefix([src_hashdiff], 'lr') }}
                 ,{{ dbtvault.prefix([src_cdk], 'lr') }}
                 ,{{ dbtvault.prefix([src_ldts], 'lr') }}
-                ,lr.check_rank
                 ,lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
