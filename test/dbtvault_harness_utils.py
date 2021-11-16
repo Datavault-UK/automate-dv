@@ -686,19 +686,18 @@ def feature_sub_types():
             ]
         },
         'xts': {
-          'main': [
-              'xts'
-          ],
-          'inc': [
-              'xts_inc'
-          ]
+            'main': [
+                'xts'
+            ],
+            'inc': [
+                'xts_inc'
+            ]
         },
         'ma_sats': {
             '1cdk': [
                 'mas_one_cdk_0_base',
                 'mas_one_cdk_1_inc',
-                'mas_one_cdk_base_sats',
-                'mas_one_cdk_base_sats_rank_mat'
+                'mas_one_cdk_base_sats'
             ],
             '1cdk_cycles': [
                 'mas_one_cdk_base_sats_cycles',
@@ -715,7 +714,10 @@ def feature_sub_types():
             ],
             'pm': [
                 'mas_period_mat',
-                'mas_rank_mat'
+            ],
+            'rm': [
+                'mas_rank_mat',
+                'mas_one_cdk_base_sats_rank_mat'
             ]
         },
         'pit': {
