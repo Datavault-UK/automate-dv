@@ -305,6 +305,7 @@ Feature: [SF-MAS-RM] Multi Active Satellites
       | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 
+  # todo: failing test
   @fixture.multi_active_satellite_cycle
   Scenario: [SF-MAS-RM-014] Loading in cycles: waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE stage is empty
@@ -346,6 +347,7 @@ Feature: [SF-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
+  # todo: failing test
   @fixture.multi_active_satellite_cycle
   Scenario: [SF-MAS-RM-015] Loading in cycles: waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE_TS stage is empty
@@ -387,6 +389,7 @@ Feature: [SF-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
       | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
 
+  # todo: failing test
   @fixture.multi_active_satellite_cycle
   Scenario: [SF-MAS-RM-016] Loading in cycles: no CDK hashdiff + waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE stage is empty
@@ -428,6 +431,7 @@ Feature: [SF-MAS-RM] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALICE') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
 
+  # todo: failing test
   @fixture.multi_active_satellite_cycle
   Scenario: [SF-MAS-RM-017] Loading in cycles: no PK & CDK hashdiff + waterlevel + identical data into a multi-active satellite with one value in rank column
     Given the RAW_STAGE stage is empty
