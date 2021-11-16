@@ -30,8 +30,10 @@ WITH source_data AS (
     {%- else %}
     SELECT DISTINCT {{ dbtvault.prefix(source_cols, 's', alias_target='source') }}
     {%- endif %}
+    {% if dbtvault.is_any_incremental() %}
         ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix([src_cdk], 's', alias_target='source') }})
             OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}) AS source_count
+    {% endif %}
     FROM {{ ref(source_model) }} AS s
     WHERE {{ dbtvault.multikey([src_pk], 's', condition='IS NOT NULL') }}
     {%- for child_key in src_cdk %}
