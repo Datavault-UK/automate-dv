@@ -51,28 +51,35 @@ WITH source_data AS (
 
 -- Select latest records from satellite, restricted to PKs in source data
 latest_records AS (
-    SELECT *
+    SELECT {{ dbtvault.prefix([src_pk], 'mas') }}
+        ,{{ dbtvault.prefix([src_hashdiff], 'mas') }}
+        ,{{ dbtvault.prefix([src_cdk], 'mas') }}
+        ,{{ dbtvault.prefix([src_ldts], 'mas') }}
+        ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
             ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
     FROM
     (
-    SELECT mas.*
-        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_ldts], 'mas') }} DESC) AS latest_rank
-    FROM {{ this }} AS mas
+    SELECT {{ dbtvault.prefix([src_pk], 'inner_mas') }}
+        ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas') }}
+        ,{{ dbtvault.prefix([src_cdk], 'inner_mas') }}
+        ,{{ dbtvault.prefix([src_ldts], 'inner_mas') }}
+        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
+            ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
+    FROM {{ this }} AS inner_mas
     INNER JOIN (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
-        ON {{ dbtvault.multikey([src_pk], ['mas', 'spk'], condition='=') }}
+        ON {{ dbtvault.multikey([src_pk], ['inner_mas', 'spk'], condition='=') }}
     QUALIFY latest_rank = 1
     ) AS mas
 ),
 
 -- Select summary details for each group of latest records
 latest_group_details AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'msat') }}
-        ,{{ dbtvault.prefix([src_ldts], 'msat') }}
-        ,MAX(msat.check_rank) AS latest_count
-    FROM latest_records AS msat
-    GROUP BY {{ dbtvault.prefix([src_pk], 'msat') }}, {{ dbtvault.prefix([src_ldts], 'msat') }}
+    SELECT {{ dbtvault.prefix([src_pk], 'lr') }}
+        ,{{ dbtvault.prefix([src_ldts], 'lr') }}
+        ,MAX(lr.check_rank) AS latest_count
+    FROM latest_records AS lr
+    GROUP BY {{ dbtvault.prefix([src_pk], 'lr') }}, {{ dbtvault.prefix([src_ldts], 'lr') }}
 ),
 
 -- endif any_incremental
