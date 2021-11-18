@@ -1,10 +1,10 @@
-Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
+Feature: [SF-MAS-1CD-B] Multi Active Satellites
   Base loads with MAS behaviour with one CDK
 
-### ONE LDTS PER PK
+### Tests with one LDTS per PK
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-1CD-B-Updated-01] Load data into a non-existent multi-active satellite
+  Scenario: [SF-MAS-1CD-B-01] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -38,7 +38,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | Dominik       | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-1CD-B-Updated-02] Load duplicated CDK & LTDS (with identical payload) into a non-existent multi-active satellite
+  Scenario: [SF-MAS-1CD-B-02] Load duplicated CDK & LTDS (with identical payload) into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -83,7 +83,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
 # BAD DATA TESTS
 
 #  @fixture.multi_active_satellite
-#  Scenario: [SF-MAS-1CD-B-Updated-03] Load duplicated PK & CDK & LDTS (with different payload) into a non-existent multi-active satellite
+#  Scenario: [SF-MAS-1CD-B-03] Load duplicated PK & CDK & LDTS (with different payload) into a non-existent multi-active satellite
 #    Given the MULTI_ACTIVE_SATELLITE table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -126,7 +126,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 #
 #  @fixture.multi_active_satellite
-#  Scenario: [SF-MAS-1CD-B-Updated-04] Load duplicated PK & LDTS (with different CDK & payload) into a non-existent multi-active satellite
+#  Scenario: [SF-MAS-1CD-B-04] Load duplicated PK & LDTS (with different CDK & payload) into a non-existent multi-active satellite
 #    Given the MULTI_ACTIVE_SATELLITE table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -168,9 +168,8 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
-#########
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-1CD-B-Updated-05] Load data into an empty multi-active satellite
+  Scenario: [SF-MAS-1CD-B-05] Load data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -204,7 +203,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | Dominik       | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-1CD-B-Updated-06] Load duplicated data into an empty multi-active satellite
+  Scenario: [SF-MAS-1CD-B-06] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -247,7 +246,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
       | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-1CD-B-Updated-07] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
+  Scenario: [SF-MAS-1CD-B-07] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -266,7 +265,6 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
       | 1005        | <null>        | 17-214-233-1218 | 1993-01-01 | *      |
       | 1005        | Frida         | 17-214-233-1228 | 1993-01-01 | *      |
       | <null>      | <null>        | <null>          | 1993-01-01 | *      |
-
     And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -283,7 +281,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
       | md5('1005') | Frida         | 17-214-233-1228 | md5('1005\|\|FRIDA\|\|17-214-233-1228') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-1CD-B-Updated-08] Load data with timestamps into a non-existent multi-active satellite
+  Scenario: [SF-MAS-1CD-B-08] Load data with timestamps into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -319,7 +317,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
 # BAD DATA TESTS
 
 #  @fixture.multi_active_satellite
-#  Scenario: [SF-MAS-1CD-B-Updated-09] Load duplicated PK & CDK & LDTS (with different payload) into an empty multi-active satellite
+#  Scenario: [SF-MAS-1CD-B-09] Load duplicated PK & CDK & LDTS (with different payload) into an empty multi-active satellite
 #    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -362,7 +360,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 #
 #  @fixture.multi_active_satellite
-#  Scenario: [SF-MAS-1CD-B-Updated-10] Load duplicated PK & LDTS (with different CDK & payload) into an empty multi-active satellite
+#  Scenario: [SF-MAS-1CD-B-10] Load duplicated PK & LDTS (with different CDK & payload) into an empty multi-active satellite
 #    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -404,7 +402,7 @@ Feature: [SF-MAS-1CD-B-Updated] Multi Active Satellites
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
-### MULTIPLE LDTSs PER PK
+### Tests to be added: MULTIPLE LDTSs PER PK
   # Identical PK + CDK + PAYLOAD, different LDTS
   # Identical PK + CDK, different payload + LDTS
   # Identical PK + payload, different CDK + LDTS
