@@ -686,12 +686,12 @@ def feature_sub_types():
             ]
         },
         'xts': {
-          'main': [
-              'xts'
-          ],
-          'inc': [
-              'xts_inc'
-          ]
+            'main': [
+                'xts'
+            ],
+            'inc': [
+                'xts_inc'
+            ]
         },
         'ma_sats': {
             '1cdk': [
@@ -714,6 +714,10 @@ def feature_sub_types():
             ],
             'pm': [
                 'mas_period_mat'
+            ],
+            'rm': [
+                'mas_rank_mat',
+                'mas_one_cdk_base_sats_rank_mat'
             ]
         },
         'pit': {

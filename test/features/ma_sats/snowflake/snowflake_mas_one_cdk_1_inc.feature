@@ -480,3 +480,30 @@ Feature: [SF-MAS-1CD-I] Multi Active Satellites
       | md5('1003') | Chad          | 17-214-233-1236 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1246 | md5('CHAD') | 1993-01-02     | 1993-01-02 | *      |
 
+  @fixture.multi_active_satellite
+  Scenario: [SF-MAS-1CD-I-014] Load data into a populated multi-active satellite where groups of records in the satellite have multiple ldts
+    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | Bob           | 17-214-233-1235 | md5('1002\|\|BOB\|\|17-214-233-1235')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD\|\|17-214-233-1226')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD\|\|17-214-233-1236')  | 1993-01-01     | 1993-01-01 | *      |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1002        | Bob           | 17-214-233-1225 | 1993-01-03 | *      |
+      | 1002        | Bob           | 17-214-233-1235 | 1993-01-03 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1002') | Bob           | 17-214-233-1235 | md5('1002\|\|BOB\|\|17-214-233-1235')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD\|\|17-214-233-1226')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD\|\|17-214-233-1236')  | 1993-01-01     | 1993-01-01 | *      |
+# Commented out last two lines of expected data because currently not testing for difference of ldts only
+#      | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-03     | 1993-01-03 | *      |
+#      | md5('1002') | Bob           | 17-214-233-1235 | md5('1002\|\|BOB\|\|17-214-233-1235')   | 1993-01-03     | 1993-01-03 | *      |
