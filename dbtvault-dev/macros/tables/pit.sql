@@ -57,7 +57,7 @@ last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
     {%- for stg in stage_tables -%}
         {%- set stage_ldts = stage_tables[stg] %}
-        {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
+        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ (ref(stg)) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
     ) a
@@ -139,11 +139,11 @@ backfill AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
         {%- if adapter_type == "sqlserver" -%}
-        {{ "CONVERT(BINARY(16), '{}', 2) AS {}_{}".format(ghost_pk, sat_name, sat_pk_name) }},
+        CONVERT(BINARY(16), '{{ ghost_pk }}', 2) AS {{ sat_name }}_{{ sat_pk_name }},
         {%  else  %}
-        {{ "CAST('{}' AS BINARY(16)) AS {}_{}".format(ghost_pk, sat_name, sat_pk_name) }},
+        CAST('{{ ghost_pkp }}' AS BINARY(16)) AS {{ sat_name }}_{{ sat_pk_name }},
         {%  endif  %}
-        {{ "CAST('{}' AS {}) AS {}_{}".format(ghost_date, dbtvault.type_timestamp(), sat_name, sat_ldts_name) }}
+        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -153,9 +153,9 @@ backfill AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
@@ -182,11 +182,11 @@ new_rows AS (
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
         {%- if adapter_type == "sqlserver" -%}
-        {{ ("COALESCE(MAX({}_src.{}), CONVERT(BINARY(16), '{}', 2)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_pk }}), CONVERT(BINARY(16), '{{ ghost_pk }}', 2)) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
         {%- else -%}
-        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS BINARY(16))) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_pk }}), CAST('{{ ghost_pk }}' AS BINARY(16))) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
         {%- endif -%}
-        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS {})) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, dbtvault.type_timestamp(), sat_name | upper, sat_ldts_name | upper)) }}
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_ldts }}), CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }})) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
@@ -196,9 +196,9 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
@@ -270,7 +270,7 @@ last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
     {%- for stg in stage_tables -%}
         {%- set stage_ldts = stage_tables[stg] %}
-        {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
+        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
     )
@@ -360,8 +360,8 @@ backfill AS (
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {{ "'{}' AS {}_{}".format(ghost_pk, sat_name, sat_key_name) }},
-        {{ "PARSE_DATETIME('%F %H:%M:%E6S', '{}') AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
+        '{{ ghost_pk }}' AS {{ sat_name }}_{{ sat_key_name }},
+        PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}') AS {{ sat_name }}_{{ sat_ldts_name }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -371,9 +371,9 @@ backfill AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
@@ -400,8 +400,8 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
-        {{ ("COALESCE(MAX({}_src.{}), '{}') AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
-        {{ ("COALESCE(MAX({}_src.{}), PARSE_DATETIME('%F %H:%M:%E6S',  '{}')) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_pk }}), '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_ldts }}), PARSE_DATETIME('%F %H:%M:%E6S',  '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
@@ -412,9 +412,9 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
