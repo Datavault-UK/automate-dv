@@ -1,6 +1,8 @@
 Feature: [BQ-MAS-1CD-B] Multi Active Satellites
   Base loads with MAS behaviour with one CDK
 
+### ONE LDTS PER PK
+
   @fixture.multi_active_satellite
   Scenario: [BQ-MAS-1CD-B-01] Load data into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
@@ -11,32 +13,32 @@ Feature: [BQ-MAS-1CD-B] Multi Active Satellites
       | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
       | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1235 | 1993-01-01 | *      |
+      | 1002        | Bobby         | 17-214-233-1235 | 1993-01-01 | *      |
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1226 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1236 | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1226 | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1236 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+      | 1004        | Don           | 17-214-233-1227 | 1993-01-01 | *      |
+      | 1004        | Dominik       | 17-214-233-1237 | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')   | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1235')   | Bob           | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1226')  | Chad          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1236')  | Chad          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')   | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')   | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234')   | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')     | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')     | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | Bobby         | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')    | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | Chaz          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | Chaz          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | Don           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | Dominik       | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-1CD-B-02] Load duplicated data into a non-existent multi-active satellite
+  Scenario: [BQ-MAS-1CD-B-02] Load duplicated CDK & LTDS (with identical payload) into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -78,8 +80,131 @@ Feature: [BQ-MAS-1CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
+# BAD DATA TESTS
+
+#  @fixture.multi_active_satellite
+#  Scenario: [BQ-MAS-1CD-B-03] Load duplicated PK & CDK & LDTS (with different payload) into a non-existent multi-active satellite
+#    Given the MULTI_ACTIVE_SATELLITE table does not exist
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1235 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1226 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1236 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1001        | Alicia        | 17-214-233-1214 | 1993-01-01 | *      |
+#      | 1002        | Bobby         | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1003        | Chaz          | 17-214-233-1216 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Don           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+#    And I stage the STG_CUSTOMER data
+#    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+#    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')   | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1235')   | Bob           | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1226')  | Chad          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1236')  | Chad          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
+#
+#  @fixture.multi_active_satellite
+#  Scenario: [BQ-MAS-1CD-B-04] Load duplicated PK & LDTS (with different CDK & payload) into a non-existent multi-active satellite
+#    Given the MULTI_ACTIVE_SATELLITE table does not exist
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1235 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1226 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1236 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1244 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1245 | 1993-01-01 | *      |
+#      | 1003        | Chaz          | 17-214-233-1246 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Don           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1247 | 1993-01-01 | *      |
+#    And I stage the STG_CUSTOMER data
+#    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+#    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')   | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1235')   | Bob           | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1226')  | Chad          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1236')  | Chad          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
+
+#########
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-1CD-B-03] Load data into an empty multi-active satellite
+  Scenario: [BQ-MAS-1CD-B-05] Load data into an empty multi-active satellite
+    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 | *      |
+      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+      | 1002        | Bobby         | 17-214-233-1235 | 1993-01-01 | *      |
+      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1226 | 1993-01-01 | *      |
+      | 1003        | Chaz          | 17-214-233-1236 | 1993-01-01 | *      |
+      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+      | 1004        | Don           | 17-214-233-1227 | 1993-01-01 | *      |
+      | 1004        | Dominik       | 17-214-233-1237 | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')   | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')   | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234')   | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')     | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')     | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | Bobby         | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')    | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | Chaz          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | Chaz          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | Don           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | Dominik       | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.multi_active_satellite
+  Scenario: [BQ-MAS-1CD-B-06] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -95,40 +220,6 @@ Feature: [BQ-MAS-1CD-B] Multi Active Satellites
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | Alice         | 17-214-233-1224 | md5('1001\|\|ALICE\|\|17-214-233-1224') | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Alice         | 17-214-233-1234 | md5('1001\|\|ALICE\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Alice         | 17-214-233-1214 | md5('1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1235 | md5('1002\|\|BOB\|\|17-214-233-1235')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD\|\|17-214-233-1226')  | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD\|\|17-214-233-1236')  | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dom           | 17-214-233-1227 | md5('1004\|\|DOM\|\|17-214-233-1227')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
-
-  @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-1CD-B-04] Load duplicated data into an empty multi-active satellite
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 | *      |
-      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
-      | 1002        | Bob           | 17-214-233-1235 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1226 | 1993-01-01 | *      |
-      | 1003        | Chad          | 17-214-233-1236 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
-      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
       | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
       | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
@@ -156,7 +247,7 @@ Feature: [BQ-MAS-1CD-B] Multi Active Satellites
       | md5('1004') | Dom           | 17-214-233-1237 | md5('1004\|\|DOM\|\|17-214-233-1237')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-1CD-B-05] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
+  Scenario: [BQ-MAS-1CD-B-07] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
     Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -192,7 +283,7 @@ Feature: [BQ-MAS-1CD-B] Multi Active Satellites
       | md5('1005') | Frida         | 17-214-233-1228 | md5('1005\|\|FRIDA\|\|17-214-233-1228') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [BQ-MAS-1CD-B-06] Load data with timestamps into a non-existent multi-active satellite
+  Scenario: [BQ-MAS-1CD-B-08] Load data with timestamps into a non-existent multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -225,3 +316,96 @@ Feature: [BQ-MAS-1CD-B] Multi Active Satellites
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
       | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
 
+# BAD DATA TESTS
+
+#  @fixture.multi_active_satellite
+#  Scenario: [BQ-MAS-1CD-B-09] Load duplicated PK & CDK & LDTS (with different payload) into an empty multi-active satellite
+#    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1235 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1226 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1236 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1001        | Alicia        | 17-214-233-1214 | 1993-01-01 | *      |
+#      | 1002        | Bobby         | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1003        | Chaz          | 17-214-233-1216 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Don           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+#    And I stage the STG_CUSTOMER data
+#    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+#    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')   | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1235')   | Bob           | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1226')  | Chad          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1236')  | Chad          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
+#
+#  @fixture.multi_active_satellite
+#  Scenario: [BQ-MAS-1CD-B-10] Load duplicated PK & LDTS (with different CDK & payload) into an empty multi-active satellite
+#    Given the MULTI_ACTIVE_SATELLITE ma_sat is empty
+#    And the RAW_STAGE table contains data
+#      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+#      | 1001        | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1224 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1234 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1235 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1216 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1226 | 1993-01-01 | *      |
+#      | 1003        | Chad          | 17-214-233-1236 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1001        | Alice         | 17-214-233-1244 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1215 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1225 | 1993-01-01 | *      |
+#      | 1002        | Bob           | 17-214-233-1245 | 1993-01-01 | *      |
+#      | 1003        | Chaz          | 17-214-233-1246 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
+#      | 1004        | Don           | 17-214-233-1237 | 1993-01-01 | *      |
+#      | 1004        | Dom           | 17-214-233-1247 | 1993-01-01 | *      |
+#    And I stage the STG_CUSTOMER data
+#    When I load the MULTI_ACTIVE_SATELLITE ma_sat
+#    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234') | Alice         | 17-214-233-1234 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')   | Bob           | 17-214-233-1225 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1235')   | Bob           | 17-214-233-1235 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1226')  | Chad          | 17-214-233-1226 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1236')  | Chad          | 17-214-233-1236 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1227')   | Dom           | 17-214-233-1227 | 1993-01-01     | 1993-01-01 | *      |
+#      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1237')   | Dom           | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
+
+### MULTIPLE LDTSs PER PK
+  # Identical PK + CDK + PAYLOAD, different LDTS
+  # Identical PK + CDK, different payload + LDTS
+  # Identical PK + payload, different CDK + LDTS
+  # Identical PK, different CDK + payload + LDTS
