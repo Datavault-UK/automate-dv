@@ -696,7 +696,6 @@ def feature_sub_types():
         'ma_sats': {
             '1cdk': [
                 'mas_one_cdk_0_base',
-                'mas_one_cdk_0_base_updated',
                 'mas_one_cdk_1_inc',
                 'mas_one_cdk_base_sats'
             ],
