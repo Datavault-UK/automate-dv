@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://dbtvault.readthedocs.io/en/stable"><img
-    src="https://img.shields.io/badge/docs-latest-blue" 
+    src="https://img.shields.io/badge/docs-stable-blue" 
     alt="Documentation"
   /></a>
   <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
