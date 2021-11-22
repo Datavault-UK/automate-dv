@@ -3,9 +3,9 @@
 </p>
 
 <p align="center">
-  <a href="https://dbtvault.readthedocs.io/en/stable/?badge=v0.7.7"><img
-    src="https://readthedocs.org/projects/dbtvault/badge/?version=v0.7.7" 
-    alt="Documentation Status"
+  <a href="https://dbtvault.readthedocs.io/en/stable"><img
+    src="https://img.shields.io/badge/docs-latest-blue" 
+    alt="Documentation"
   /></a>
   <a href="https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA"><img
     src="https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack" 
