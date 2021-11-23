@@ -714,14 +714,14 @@ def feature_sub_types():
             ],
             'pm': [
                 'mas_period_mat',
-                'mas_one_cdk_period_duplicates.feature',
-                'mas_two_cdk_period_duplicates.feature'
+                'mas_one_cdk_period_duplicates',
+                'mas_two_cdk_period_duplicates'
             ],
             'rm': [
                 'mas_rank_mat',
                 'mas_one_cdk_base_sats_rank_mat',
-                'mas_one_cdk_rank_duplicates.feature',
-                'mas_two_cdk_rank_duplicates.feature'
+                'mas_one_cdk_rank_duplicates',
+                'mas_two_cdk_rank_duplicates'
             ]
         },
         'pit': {
