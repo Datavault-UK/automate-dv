@@ -1,4 +1,4 @@
-Feature: [SQLS-COMPK-HUB] Hubs with composite src_pk
+Feature: [SQLS-COMPPK-HUB] Hubs with composite src_pk
 
   @fixture.single_source_comppk_hub
   Scenario: [SQLS-HUB-COMPPK-001] Simple load of stage data into an empty hub
