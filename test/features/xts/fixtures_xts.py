@@ -109,6 +109,21 @@ def xts(context):
             },
             "src_source": "SOURCE"
         },
+        "XTS_COMPPK": {
+            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
+            "src_ldts": "LOAD_DATE",
+            "src_satellite": {
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
+            },
+            "src_source": "SOURCE"
+        },
         "XTS_2SAT": {
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
@@ -323,6 +338,16 @@ def xts(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "XTS_COMPPK": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SATELLITE_NAME": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "XTS_2SAT": {
             "+column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -439,6 +464,21 @@ def xts_bigquery(context):
     context.vault_structure_columns = {
         "XTS": {
             "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_satellite": {
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
+            },
+            "src_source": "SOURCE"
+        },
+        "XTS_COMPPK": {
+            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
@@ -666,6 +706,16 @@ def xts_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "XTS_COMPPK": {
+            "+column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "LOAD_DATE": "DATE",
+                "SATELLITE_NAME": "STRING",
+                "HASHDIFF": "STRING",
+                "SOURCE": "STRING"
+            }
+        },
         "XTS_2SAT": {
             "+column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -782,6 +832,21 @@ def xts_sqlserver(context):
     context.vault_structure_columns = {
         "XTS": {
             "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_satellite": {
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
+            },
+            "src_source": "SOURCE"
+        },
+        "XTS_COMPPK": {
+            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
@@ -1005,6 +1070,16 @@ def xts_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SATELLITE_NAME": "VARCHAR(50)",
+                "HASHDIFF": "BINARY(16)",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "XTS_COMPPK": {
+            "+column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SATELLITE_NAME": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",
                 "SOURCE": "VARCHAR(50)"
             }
