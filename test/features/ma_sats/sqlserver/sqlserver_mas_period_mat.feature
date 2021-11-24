@@ -154,8 +154,7 @@ Feature: [SQLS-MAS-PM] Multi Active Satellites
 
   # CYCLE TESTS
 
-  # TODO ??? Not considering out of sequence loads at this time
-#
+  # todo: failing test (out of sequence)
 #  @fixture.multi_active_satellite_cycle
 #  Scenario: [SQLS-MAS-PM-05] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
 #    Given the RAW_STAGE stage is empty
@@ -193,7 +192,8 @@ Feature: [SQLS-MAS-PM] Multi Active Satellites
 #      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 1993-01-01     | 1993-01-01 | *      |
 #      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 1993-01-01     | 1993-01-01 | *      |
 #      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224') | Alice         | 17-214-233-1224 | 1993-01-02     | 1993-01-02 | *      |
-#
+
+  # todo: failing test (out of sequence)
 #  @fixture.multi_active_satellite_cycle
 #  Scenario: [SQLS-MAS-PM-06] Loading in cycles: waterlevel + identical data into a satellite with one value in rank column
 #    Given the RAW_STAGE_TS stage is empty
