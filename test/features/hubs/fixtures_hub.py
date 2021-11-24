@@ -387,7 +387,7 @@ def multi_source_hub_sqlserver(context):
 @fixture
 def single_source_comppk_hub(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -430,7 +430,7 @@ def single_source_comppk_hub(context):
 @fixture
 def single_source_comppk_hub_bigquery(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -473,7 +473,7 @@ def single_source_comppk_hub_bigquery(context):
 @fixture
 def single_source_comppk_hub_sqlserver(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -535,7 +535,7 @@ def single_source_comppk_hub_sqlserver(context):
 @fixture
 def multi_source_comppk_hub(context):
     """
-    Define the structures and metadata to load multi-source hubs
+    Define the structures and metadata to load multi-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -615,7 +615,7 @@ def multi_source_comppk_hub(context):
 @fixture
 def multi_source_comppk_hub_bigquery(context):
     """
-    Define the structures and metadata to load multi-source hubs
+    Define the structures and metadata to load multi-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -695,7 +695,7 @@ def multi_source_comppk_hub_bigquery(context):
 @fixture
 def multi_source_comppk_hub_sqlserver(context):
     """
-    Define the structures and metadata to load multi-source hubs
+    Define the structures and metadata to load multi-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -775,7 +775,7 @@ def multi_source_comppk_hub_sqlserver(context):
 @fixture
 def single_source_comppknk_hub(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK and NK
     """
 
     context.hashed_columns = {
@@ -820,7 +820,7 @@ def single_source_comppknk_hub(context):
 @fixture
 def single_source_comppknk_hub_bigquery(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -865,7 +865,7 @@ def single_source_comppknk_hub_bigquery(context):
 @fixture
 def single_source_comppknk_hub_sqlserver(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK
     """
 
     context.hashed_columns = {
