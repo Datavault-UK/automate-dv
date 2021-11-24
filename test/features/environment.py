@@ -61,6 +61,11 @@ fixtures_registry = {
          "bigquery": fixtures_link.single_source_link_bigquery,
          "sqlserver": fixtures_link.single_source_link_sqlserver},
 
+    "fixture.single_source_comppk_link":
+        {"snowflake": fixtures_link.single_source_comppk_link,
+         "bigquery": fixtures_link.single_source_comppk_link_bigquery,
+         "sqlserver": fixtures_link.single_source_comppk_link_sqlserver},
+
     "fixture.multi_source_link":
         {"snowflake": fixtures_link.multi_source_link,
          "bigquery": fixtures_link.multi_source_link_bigquery,
