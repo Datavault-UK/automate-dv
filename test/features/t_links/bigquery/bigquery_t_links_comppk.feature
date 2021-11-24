@@ -1,7 +1,7 @@
-Feature: [SF-TLK_COMPPK] Transactional Links with composite src_pk
+Feature: [BQ-TLK_COMPPK] Transactional Links with composite src_pk
 
   @fixture.t_link_comppk
-  Scenario: [SF-TLK-COMPPK_001] Load a non-existent Transactional Link
+  Scenario: [BQ-TLK-COMPPK_001] Load a non-existent Transactional Link
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -25,7 +25,7 @@ Feature: [SF-TLK_COMPPK] Transactional Links with composite src_pk
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-21 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SF-TLK-COMPPK-002] Load an a non-existent Transactional Link with the period materialisation
+  Scenario: [BQ-TLK-COMPPK-002] Load an a non-existent Transactional Link with the period materialisation
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -50,7 +50,7 @@ Feature: [SF-TLK_COMPPK] Transactional Links with composite src_pk
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SF-TLK-COMPPK-003] Load an a non-existent Transactional Link with the period materialisation, duplicates should not be loaded
+  Scenario: [BQ-TLK-COMPPK-003] Load an a non-existent Transactional Link with the period materialisation, duplicates should not be loaded
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -78,7 +78,7 @@ Feature: [SF-TLK_COMPPK] Transactional Links with composite src_pk
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SF-TLK-COMPPK-004] Load a populated Transactional Link
+  Scenario: [BQ-TLK-COMPPK-004] Load a populated Transactional Link
     Given the T_LINK_COMPPK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |
@@ -117,7 +117,7 @@ Feature: [SF-TLK_COMPPK] Transactional Links with composite src_pk
       | md5('1238\|\|1244\|\|12345691') | md5('1238') | md5('1244') | 12345691           | 2019-09-20       | CR   | 4578.34  | 2019-09-20     | 2019-09-22 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SF-TLK-COMPPK-005] Load an a non-existent Transactional Link with the rank materialisation
+  Scenario: [BQ-TLK-COMPPK-005] Load an a non-existent Transactional Link with the rank materialisation
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -143,7 +143,7 @@ Feature: [SF-TLK_COMPPK] Transactional Links with composite src_pk
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link_comppk
-  Scenario: [SF-TLK-COMPPK-006] Load an a non-existent Transactional Link with the incremental materialisation
+  Scenario: [BQ-TLK-COMPPK-006] Load an a non-existent Transactional Link with the incremental materialisation
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
