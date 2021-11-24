@@ -1,4 +1,4 @@
-Feature: [SF-COMPPK-HUB] Hubs with composite src_pk
+Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
 
   @fixture.single_source_comppk_hub
   Scenario: [SF-HUB-COMPPK-001] Simple load of stage data into an empty hub

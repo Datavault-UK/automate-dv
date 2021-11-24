@@ -1,4 +1,4 @@
-Feature: [BQ-COMPPK-HUB] Hubs with composite src_pk
+Feature: [BQ-HUB-COMPPK] Hubs with composite src_pk
 
   @fixture.single_source_comppk_hub
   Scenario: [BQ-HUB-COMPPK-001] Simple load of stage data into an empty hub

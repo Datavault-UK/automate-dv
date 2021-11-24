@@ -1,7 +1,7 @@
-Feature: [SF-COMPPK-LNK] Links with composite src_pk
+Feature: [SF-LNK-COMPPK] Links with composite src_pk
 
   @fixture.single_source_comppk_link
-  Scenario: [SF-COMPPK-LNK-01] Load a simple stage table into a non-existent link table
+  Scenario: [SF-LNK-COMPPK-01] Load a simple stage table into a non-existent link table
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -21,7 +21,7 @@ Feature: [SF-COMPPK-LNK] Links with composite src_pk
       | md5('1007\|\|ITA') | md5('1007') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_comppk_link
-  Scenario: [SF-COMPPK-LNK-02] Load a simple stage table into an empty link table
+  Scenario: [SF-LNK-COMPPK-02] Load a simple stage table into an empty link table
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -41,7 +41,7 @@ Feature: [SF-COMPPK-LNK] Links with composite src_pk
       | md5('1007\|\|ITA') | md5('1007') | md5('1007') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_comppk_link
-  Scenario: [SF-COMPPK-LNK-03] Load a simple stage table into a populated link table
+  Scenario: [SF-LNK-COMPPK-03] Load a simple stage table into a populated link table
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | COMP_PK     | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -68,7 +68,7 @@ Feature: [SF-COMPPK-LNK] Links with composite src_pk
       | md5('1007\|\|ITA') | md5('1007') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
   @fixture.single_source_comppk_link
-  Scenario: [SF-COMPPK-LNK-04] Load a stage table where a primary keys components are all NULL, no link is inserted
+  Scenario: [SF-LNK-COMPPK-04] Load a stage table where a primary keys components are all NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | COMP_PK     | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
