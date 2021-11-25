@@ -346,18 +346,18 @@ stages:
               PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'ma_sats_incremental'
-          displayName: 'MA Sats Incremental'
-          steps:
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.9'
-            - template: templates/install-dependencies-steps.yml
-            - script: inv setup -p snowflake -e pipeline
-              displayName: "Setup harness"
-            - script: inv run-integration-tests -s ma_sats --subtype incremental -p snowflake
-              displayName: "Run feature files"
-              env:
-                PIPELINE_JOB: $(Agent.JobName)
+        displayName: 'MA Sats Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s ma_sats --subtype incremental -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'ma_sats_pm'
         displayName: 'MA Sats PM'
