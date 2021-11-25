@@ -687,7 +687,8 @@ def feature_sub_types():
         },
         'xts': {
             'main': [
-                'xts'
+                'xts',
+                'xts_comppk'
             ],
             'inc': [
                 'xts_inc'
