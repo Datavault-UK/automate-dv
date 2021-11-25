@@ -141,7 +141,7 @@ backfill AS (
         {%- if adapter_type == "sqlserver" -%}
         CONVERT(BINARY(16), '{{ ghost_pk }}', 2) AS {{ sat_name }}_{{ sat_pk_name }},
         {%  else  %}
-        CAST('{{ ghost_pkp }}' AS BINARY(16)) AS {{ sat_name }}_{{ sat_pk_name }},
+        CAST('{{ ghost_pk }}' AS BINARY(16)) AS {{ sat_name }}_{{ sat_pk_name }},
         {%  endif  %}
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {{- ',' if not loop.last -}}
