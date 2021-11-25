@@ -121,6 +121,20 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
+      - job: 'sats_incremental'
+        displayName: 'Sats Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats --subtype incremental -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'sats_pm'
         displayName: 'Sats PM'
         steps:
@@ -215,6 +229,20 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s eff_sats --subtype auto -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'eff_sats_incremental'
+        displayName: 'Eff Sats Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s eff_sats --subtype incremental -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -316,6 +344,20 @@ stages:
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'ma_sats_incremental'
+          displayName: 'MA Sats Incremental'
+          steps:
+            - task: UsePythonVersion@0
+              inputs:
+                versionSpec: '3.9'
+            - template: templates/install-dependencies-steps.yml
+            - script: inv setup -p snowflake -e pipeline
+              displayName: "Setup harness"
+            - script: inv run-integration-tests -s ma_sats --subtype incremental -p snowflake
+              displayName: "Run feature files"
+              env:
+                PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'ma_sats_pm'
         displayName: 'MA Sats PM'

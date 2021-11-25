@@ -101,7 +101,6 @@ def eff_satellite_testing_auto_end_dating(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
             "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
