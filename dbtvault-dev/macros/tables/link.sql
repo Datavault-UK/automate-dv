@@ -45,8 +45,8 @@ row_rank_{{ source_number }} AS (
            ) AS row_number
     FROM {{ ref(src) }} AS rr
     {%- if source_model | length == 1 %}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
@@ -147,8 +147,8 @@ row_rank_{{ source_number }} AS (
         ) AS row_number
     FROM {{ ref (src) }} AS rr
     {%- if source_model | length == 1 %}
-    WHERE {{ dbtvault.multikey(src_pk, condition ='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(fk_cols, condition ='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition ='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition ='IS NOT NULL') }}
     {%- endif %}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
     ),
@@ -254,8 +254,8 @@ row_rank_{{ source_number }} AS (
            ) AS row_number
     FROM {{ ref(src) }} AS rr
     {%- if source_model | length == 1 %}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(fk_cols, condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
+    AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
     ) l
     WHERE l.row_number = 1
