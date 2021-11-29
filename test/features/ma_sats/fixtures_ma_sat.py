@@ -78,6 +78,42 @@ def multi_active_satellite(context):
         }
     }
 
+    context.stage_columns = {
+        "RAW_STAGE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
+             "SOURCE"]
+    }
+
     context.vault_structure_columns = {
         "MULTI_ACTIVE_SATELLITE": {
             "src_pk": "CUSTOMER_PK",

@@ -643,6 +643,9 @@ def feature_sub_types():
             'cycles': [
                 'sats_cycles'
             ],
+            'incremental': [
+                'sats_incremental'
+            ],
             'pm': [
                 'sats_period_mat_base',
                 'sats_period_mat_other'
@@ -661,6 +664,10 @@ def feature_sub_types():
             'auto': [
                 'eff_sat_auto_end_dating_detail_base',
                 'eff_sat_auto_end_dating_detail_inc'
+            ],
+            'incremental': [
+                'eff_sat_auto_end_dating_incremental',
+                'eff_sat_disabled_end_dating_incremental'
             ],
             'multi_part': [
                 'eff_sats_multi_part'
@@ -712,12 +719,20 @@ def feature_sub_types():
                 'mas_two_cdk_base_sats_cycles',
                 'mas_two_cdk_cycles_duplicates'
             ],
+            'incremental': [
+                'mas_one_cdk_incremental',
+                'mas_two_cdk_incremental'
+            ],
             'pm': [
-                'mas_period_mat'
+                'mas_period_mat',
+                'mas_one_cdk_period_duplicates',
+                'mas_two_cdk_period_duplicates'
             ],
             'rm': [
                 'mas_rank_mat',
-                'mas_one_cdk_base_sats_rank_mat'
+                'mas_one_cdk_base_sats_rank_mat',
+                'mas_one_cdk_rank_duplicates',
+                'mas_two_cdk_rank_duplicates'
             ]
         },
         'pit': {
