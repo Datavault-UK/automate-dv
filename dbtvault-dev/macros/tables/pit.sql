@@ -11,13 +11,18 @@
 
 {%- macro default__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}
 
+{{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
+                                       satellites=satellites,
+                                       stage_tables=stage_tables,
+                                       src_ldts=src_ldts) -}}
+
 {{ dbtvault.prepend_generated_by() }}
 
 {% set adapter_type = dbtvault.get_adapter_type() %}
 
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
-    "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
+    "PIT error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
     {%- endset -%}
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
