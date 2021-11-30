@@ -636,6 +636,36 @@ def retrieve_expected_sql(request: FixtureRequest):
 
 def feature_sub_types():
     return {
+        'hubs': {
+            'main': [
+                'hubs',
+                'hubs_comppk'
+            ],
+            'incremental': [
+                'hubs_incremental'
+            ],
+            'pm': [
+                'hubs_period_mat'
+            ],
+            'rank': [
+                'hubs_rank_mat'
+            ]
+        },
+        'links': {
+            'main': [
+                'links',
+                'links_comppk'
+            ],
+            'incremental': [
+                'links_incremental'
+            ],
+            'pm': [
+                'links_period_mat'
+            ],
+            'rank': [
+                'links_rank_mat'
+            ]
+        },
         'sats': {
             'main': [
                 'sats',
