@@ -389,7 +389,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON g.{{ src_pk }} = lc.{{ src_pk }}
-    WHERE CAST((g.{{ src_end_date }}) AS DATE) = CAST(('{{ max_datetime }}') AS DATE)
+    WHERE DATE(g.{{ src_end_date }}) = DATE('{{ max_datetime }}')
 ),
 
 {%- if is_auto_end_dating %}
