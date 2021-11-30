@@ -65,6 +65,20 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
+      - job: 'hubs_comppk'
+        displayName: 'Hubs Comp PK'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype comppk -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'hubs_incremental'
         displayName: 'Hubs Incremental'
         steps:

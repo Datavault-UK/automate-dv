@@ -638,7 +638,9 @@ def feature_sub_types():
     return {
         'hubs': {
             'main': [
-                'hubs',
+                'hubs'
+            ],
+            'comppk': [
                 'hubs_comppk'
             ],
             'incremental': [
