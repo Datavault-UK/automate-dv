@@ -9,6 +9,11 @@
 
 {%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
+{{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
+                                       bridge_walk=bridge_walk,
+                                       stage_tables_ldts=stage_tables_ldts,
+                                       src_ldts=src_ldts) -}}
+
 {{ dbtvault.prepend_generated_by() }}
 
 {%- if (as_of_dates_table is none) and execute -%}
