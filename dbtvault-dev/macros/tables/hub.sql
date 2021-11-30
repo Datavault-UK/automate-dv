@@ -128,7 +128,7 @@ SELECT * FROM records_to_insert
 
 {%- set source_number = loop.index | string -%}
 
-    row_rank_{{ source_number }}_non_ranked AS (
+    row_rank_{{ source_number }} AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ source_cols_with_rank | join(', ') }},
     {%- else %}
@@ -140,12 +140,8 @@ SELECT * FROM records_to_insert
            ) AS row_number
     FROM {{ ref(src) }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
-),
-
-row_rank_{{ source_number }} AS (
-SELECT * FROM row_rank_{{ source_number }}_non_ranked
-WHERE row_number = 1
 ),
 
 
@@ -178,7 +174,7 @@ stage_mat_filter AS (
 {%- endif -%}
 {%- if source_model | length > 1 %}
 
-    row_rank_union_non_ranked AS (
+    row_rank_union AS (
     SELECT *,
            ROW_NUMBER() OVER(
                PARTITION BY {{ src_pk }}
@@ -186,13 +182,10 @@ stage_mat_filter AS (
            ) AS row_rank_number
     FROM {{ ns.last_cte }}
     WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 
-row_rank_union AS (
-    SELECT * FROM row_rank_union_non_ranked
-    WHERE row_rank_number = 1
-),
 
 {% endif %}
 records_to_insert AS (
