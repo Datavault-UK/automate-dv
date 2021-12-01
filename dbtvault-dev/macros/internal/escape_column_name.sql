@@ -2,6 +2,9 @@
 
 {# TODO: different platforms use different escape characters, the coding below is for Snowflake which uses double quotes #}
 
+    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
+    {%- set escape_char_right = var('escape_char_right', '"') -%}
+
     {%- if dbtvault.is_something(columns) -%}
 
         {%- set col_list = [] -%}

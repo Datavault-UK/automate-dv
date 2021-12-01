@@ -330,7 +330,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "expand_column_list": expand_column_list_macro,
         "as_constant": as_constant_macro,
         "alias": alias_macro,
-        "alias_all": alias_all_macro
+        "alias_all": alias_all_macro,
+        "escape_column_name": escape_column_name_macro
     }
 
     if generator_functions.get(macro_name):
@@ -400,6 +401,12 @@ def stage_macro(model_name, metadata):
 
 def expand_column_list_macro(model_name, **_):
     template = "{{- dbtvault.expand_column_list(columns=var('columns', none)) -}}"
+
+    template_to_file(template, model_name)
+
+
+def escape_column_name_macro(model_name, **_):
+    template = "{{- dbtvault.escape_column_name(columns=var('columns', none)) -}}"
 
     template_to_file(template, model_name)
 
