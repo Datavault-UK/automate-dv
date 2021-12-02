@@ -111,7 +111,7 @@ def test_escape_multiple_item_list_with_single_and_double_quotes_is_successful(r
 
 
 @pytest.mark.macro
-def test_escape_no_column_list_raises_error(request, generate_model):
+def test_escape_no_columns_is_successful(request, generate_model):
     var_dict = {}
 
     generate_model()
@@ -119,7 +119,19 @@ def test_escape_no_column_list_raises_error(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Expected a column name or a list of column names, got: None" in dbt_logs
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+
+
+@pytest.mark.macro
+def test_columns_is_none_is_successful(request, generate_model):
+    var_dict = {'columns': None}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
 
 
 @pytest.mark.macro
@@ -131,7 +143,7 @@ def test_escape_empty_column_string_raises_error(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Expected a column name or a list of column names, got: None" in dbt_logs
+    assert "Expected a column name or a list of column names, got an empty string" in dbt_logs
 
 
 @pytest.mark.macro
@@ -143,7 +155,7 @@ def test_escape_empty_column_list_raises_error(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Expected a column name or a list of column names, got: None" in dbt_logs
+    assert "Expected a column name or a list of column names, got an empty list" in dbt_logs
 
 
 @pytest.mark.macro
@@ -381,3 +393,16 @@ def test_escape_multiple_item_list_with_single_and_double_quotes_sbrackets_is_su
     assert actual_sql == expected_sql
 
 
+@pytest.mark.macro
+def test_column_is_none_is_successful(request, generate_model):
+    var_dict = {'columns': None}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == 'None'
