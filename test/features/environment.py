@@ -36,15 +36,35 @@ fixtures_registry = {
          "bigquery": fixtures_hub.single_source_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_hub_sqlserver},
 
+    "fixture.single_source_comppk_hub":
+        {"snowflake": fixtures_hub.single_source_comppk_hub,
+         "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comppk_hub_sqlserver},
+
+    "fixture.single_source_comppknk_hub":
+        {"snowflake": fixtures_hub.single_source_comppknk_hub,
+         "bigquery": fixtures_hub.single_source_comppknk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver},
+
     "fixture.multi_source_hub":
         {"snowflake": fixtures_hub.multi_source_hub,
          "bigquery": fixtures_hub.multi_source_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_hub_sqlserver},
 
+    "fixture.multi_source_comppk_hub":
+        {"snowflake": fixtures_hub.multi_source_comppk_hub,
+         "bigquery": fixtures_hub.multi_source_comppk_hub_bigquery,
+         "sqlserver": fixtures_hub.multi_source_comppk_hub_sqlserver},
+
     "fixture.single_source_link":
         {"snowflake": fixtures_link.single_source_link,
          "bigquery": fixtures_link.single_source_link_bigquery,
          "sqlserver": fixtures_link.single_source_link_sqlserver},
+
+    "fixture.single_source_comppk_link":
+        {"snowflake": fixtures_link.single_source_comppk_link,
+         "bigquery": fixtures_link.single_source_comppk_link_bigquery,
+         "sqlserver": fixtures_link.single_source_comppk_link_sqlserver},
 
     "fixture.multi_source_link":
         {"snowflake": fixtures_link.multi_source_link,
@@ -55,6 +75,11 @@ fixtures_registry = {
         {"snowflake": fixtures_t_link.t_link,
          "bigquery": fixtures_t_link.t_link_bigquery,
          "sqlserver": fixtures_t_link.t_link_sqlserver},
+
+    "fixture.t_link_comppk":
+        {"snowflake": fixtures_t_link.t_link_comppk,
+         "bigquery": fixtures_t_link.t_link_comppk_bigquery,
+         "sqlserver": fixtures_t_link.t_link_comppk_sqlserver},
 
     "fixture.satellite":
         {"snowflake": fixtures_sat.satellite,
