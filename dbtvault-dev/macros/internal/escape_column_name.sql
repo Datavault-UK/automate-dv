@@ -1,6 +1,6 @@
 {%- macro escape_column_name(columns=none) -%}
 
-{# TODO: different platforms use different escape characters, the coding below is for Snowflake which uses double quotes #}
+{# Different platforms use different escape characters, the default below is for Snowflake which uses double quotes #}
 
     {%- set escape_char_left  = var('escape_char_left',  '"') -%}
     {%- set escape_char_right = var('escape_char_right', '"') -%}
@@ -12,7 +12,7 @@
 
         {%- if columns is string -%}
 
-            {%- set col_string = '"'~ columns | replace('"', '') | trim ~'"' -%}
+            {%- set col_string = escape_char_left ~ columns | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
 
         {%- elif dbtvault.is_list(columns) -%}
 
@@ -20,7 +20,7 @@
 
                 {%- if col is string -%}
 
-                    {%- set escaped_col = '"'~ col | replace('"', '') | trim ~'"' -%}
+                    {%- set escaped_col = escape_char_left ~ col | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
 
                     {%- do col_list.append(escaped_col) -%}
 
