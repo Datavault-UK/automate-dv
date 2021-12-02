@@ -78,6 +78,8 @@ sat_records_before_insert_date AS (
   SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
   FROM {{ this }} AS a
+  LEFT JOIN {{ ref(source_model) }} AS b
+  ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < {{ dbtvault.date_timestamp(out_of_sequence) }}
 ),
 
@@ -200,12 +202,12 @@ latest_records_non_ranked AS (
         JOIN (
         SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}
         FROM source_data
-        ) AS source_records
-        ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
-        {%- if out_of_sequence is not none %}
-        WHERE {{ dbtvault.prefix([src_ldts], 'current_records') }} < {{ dbtvault.date_timestamp(out_of_sequence) }}
-        {%- endif %}
-        ) a
+    ) AS source_records
+    ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
+    {%- if out_of_sequence is not none %}
+    WHERE {{ dbtvault.prefix([src_ldts], 'current_records') }} < {{ dbtvault.date_timestamp(out_of_sequence) }}
+    {%- endif %}
+    ) a
     WHERE a.rank = 1
 ),
 
@@ -221,6 +223,8 @@ sat_records_before_insert_date AS (
   SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
   FROM {{ this }} AS a
+  LEFT JOIN {{ ref(source_model) }} AS b
+  ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < {{ dbtvault.date_timestamp(out_of_sequence) }}
 ),
 
@@ -360,6 +364,8 @@ sat_records_before_insert_date AS (
   SELECT DISTINCT
     {{ dbtvault.prefix(source_cols, 'a') }}
   FROM {{ this }} AS a
+  LEFT JOIN {{ ref(source_model) }} AS b
+  ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
   WHERE {{ dbtvault.prefix([src_ldts], 'a') }} < {{ dbtvault.date_timestamp(out_of_sequence) }}
 ),
 
