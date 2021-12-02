@@ -61,7 +61,7 @@ last_safe_load_datetime AS (
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
     {%- endfilter -%}
-    ) l
+    ) AS l
 ),
 
 as_of_grain_old_entries AS (
@@ -260,13 +260,13 @@ bridge AS (
         {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
         {{ ',c.' ~ bridge_link_pk }}
         {%- endfor %}
-    FROM candidate_rows c
+    FROM candidate_rows AS c
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
-    WHERE DATE({{ 'c.' ~ bridge_end_date }}) = DATE('{{ max_datetime }}')
+    WHERE TO_DATE({{ 'c.' ~ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
             {%- else %}
-        AND DATE({{ 'c.' ~ bridge_end_date }}) = DATE('{{ max_datetime }}')
+        AND TO_DATE({{ 'c.' ~ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
             {%- endif -%}
         {%- endfor %}
 )
@@ -330,7 +330,7 @@ last_safe_load_datetime AS (
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
     {%- endfilter -%}
-    ) l
+    ) AS l
 ),
 
 as_of_grain_old_entries AS (
@@ -521,7 +521,7 @@ candidate_rows AS (
                 {%- endfor %}
             ) AS row_num
     FROM all_rows
-    ) a
+    ) AS a
     WHERE a.row_num = 1
 ),
 
@@ -533,7 +533,7 @@ bridge AS (
         {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
         {{ ',c.' ~ bridge_link_pk }}
         {%- endfor %}
-    FROM candidate_rows c
+    FROM candidate_rows AS c
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
@@ -821,7 +821,7 @@ bridge AS (
         {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
         {{ ',c.' ~ bridge_link_pk }}
         {%- endfor %}
-    FROM candidate_rows c
+    FROM candidate_rows AS c
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
             {%- if loop.first %}
