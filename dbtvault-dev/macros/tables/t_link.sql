@@ -38,8 +38,8 @@ records_to_insert AS (
     FROM stage AS stg
     {% if dbtvault.is_any_incremental() -%}
     LEFT JOIN {{ this }} AS tgt
-    ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'tgt') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
+    ON {{ dbtvault.multikey(src_pk, prefix=['stg','tgt'], condition='=') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='tgt', condition='IS NULL') }}
     {%- endif %}
 )
 
@@ -79,8 +79,8 @@ records_to_insert AS (
     FROM stage AS stg
     {% if dbtvault.is_any_incremental() -%}
     LEFT JOIN {{ this }} AS tgt
-    ON {{ dbtvault.prefix([src_pk], 'stg') }} = {{ dbtvault.prefix([src_pk], 'tgt') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'tgt') }} IS NULL
+    ON {{ dbtvault.multikey(src_pk, prefix=['stg','tgt'], condition='=') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='tgt', condition='IS NULL') }}
     {%- endif %}
 )
 

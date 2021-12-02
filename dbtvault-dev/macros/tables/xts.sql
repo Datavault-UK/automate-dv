@@ -21,9 +21,9 @@
         {%- set hashdiff = (satellite[1]['hashdiff'].values() | list) [0] %}
 
         satellite_{{ satellite_name }}_from_{{ src }} AS (
-            SELECT {{ src_pk }}, {{ hashdiff }} AS HASHDIFF, {{ satellite_name }} AS SATELLITE_NAME, {{ src_ldts }}, {{ src_source }}
-            FROM {{ ref(src) }}
-            WHERE {{ src_pk }} IS NOT NULL
+            SELECT {{ dbtvault.prefix([src_pk], 's') }}, s.{{ hashdiff }} AS HASHDIFF, s.{{ satellite_name }} AS SATELLITE_NAME, s.{{ src_ldts }}, s.{{ src_source }}
+            FROM {{ ref(src) }} AS s
+            WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
         ),
     {%- endfor %}
 {%- endfor %}
@@ -75,9 +75,9 @@ SELECT * FROM records_to_insert
         {%- set hashdiff = (satellite[1]['hashdiff'].values() | list) [0] %}
 
         satellite_{{ satellite_name }}_from_{{ src }} AS (
-            SELECT {{ src_pk }}, {{ hashdiff }} AS HASHDIFF, {{ satellite_name }} AS SATELLITE_NAME, {{ src_ldts }}, {{ src_source }}
-            FROM {{ ref(src) }}
-            WHERE {{ src_pk }} IS NOT NULL
+            SELECT {{ dbtvault.prefix([src_pk], 's') }}, s.{{ hashdiff }} AS HASHDIFF, s.{{ satellite_name }} AS SATELLITE_NAME, s.{{ src_ldts }}, s.{{ src_source }}
+            FROM {{ ref(src) }} AS s
+            WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
         ),
     {%- endfor %}
 {%- endfor %}
