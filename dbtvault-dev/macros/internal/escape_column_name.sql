@@ -48,17 +48,15 @@
             {{- exceptions.raise_compiler_error("Expected a column name or a list of column names, got an empty string") -}}
         {%- endif -%}
 
-    {%- elif columns == [] -%}
-
-        {%- if execute -%}
-            {{- exceptions.raise_compiler_error("Expected a column name or a list of column names, got an empty list") -}}
-        {%- endif -%}
-
     {%- endif -%}
 
 {%- if columns is none -%}
 
     {%- do return(none) -%}
+
+{%- elif columns == [] -%}
+
+    {%- do return([]) -%}
 
 {%- elif columns is string -%}
 
