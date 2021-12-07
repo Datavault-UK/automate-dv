@@ -147,7 +147,7 @@ def test_escape_empty_column_string_raises_error(request, generate_model):
 
 
 @pytest.mark.macro
-def test_escape_empty_column_list_raises_error(request, generate_model):
+def test_escape_empty_column_list_is_successful(request, generate_model):
     var_dict = {'columns': []}
 
     generate_model()
@@ -155,7 +155,7 @@ def test_escape_empty_column_list_raises_error(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Expected a column name or a list of column names, got an empty list" in dbt_logs
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
 
 
 @pytest.mark.macro
