@@ -14,7 +14,7 @@
         
         {%- else -%}
         
-            {{- return(column_str) -}}
+            {{- return(dbtvault.escape_column_name(column_str)) -}}
         
         {%- endif -%}
     {%- else -%}

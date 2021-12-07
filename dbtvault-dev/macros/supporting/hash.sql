@@ -36,7 +36,7 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), hash_size, alias) | indent(4) -}}
+    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), hash_size, dbtvault.escape_column_name(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -53,15 +53,15 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
 
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n)) AS BINARY({})) AS {}".format(hash_size, alias) -}}
+                {{- "\n)) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_name(alias)) -}}
             {%- else -%}
-                {{- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, alias) -}}
+                {{- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_name(alias)) -}}
             {%- endif -%}
         {%- else -%}
 
@@ -99,7 +99,7 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), alias) | indent(4) -}}
+    {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), dbtvault.escape_column_name(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -116,14 +116,14 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), null_placeholder_string) | indent(4) -}}
         {{- ",'{}',".format(concat_string) if not loop.last -}}
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n)))) AS {}".format(alias) -}}
+                {{- "\n)))) AS {}".format(dbtvault.escape_column_name(alias)) -}}
             {%- else -%}
-                {{- "\n), '{}')))) AS {}".format(all_null | join(""), alias) -}}
+                {{- "\n), '{}')))) AS {}".format(all_null | join(""), dbtvault.escape_column_name(alias)) -}}
             {%- endif -%}
         {%- else -%}
 
@@ -164,7 +164,7 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST(HASHBYTES('{}', {}) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), hash_size, alias) | indent(4) -}}
+    {{- "CAST(HASHBYTES('{}', {}) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), hash_size, dbtvault.escape_column_name(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -181,15 +181,15 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {{- "\nISNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', column_str), null_placeholder_string) | indent(4) -}}
+        {{- "\nISNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
 
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n))) AS BINARY({})) AS {}".format(hash_size, alias) -}}
+                {{- "\n))) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_name(alias)) -}}
             {%- else -%}
-                {{- "\n), '{}'))) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, alias) -}}
+                {{- "\n), '{}'))) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_name(alias)) -}}
             {%- endif -%}
         {%- else -%}
 

@@ -42,7 +42,7 @@
                     {%- do order_by_str_lst.append(order_by_str) -%}
                 {%- endfor -%}
 
-                {%- set order_by_str = order_by_str_lst | join(", ") -%}
+                {%- set order_by_str = dbtvault.escape_column_name(order_by_str_lst) | join(", ") -%}
 
             {%- else -%}
 
@@ -53,16 +53,16 @@
                     {%- set direction = '' -%}
                 {%- endif -%}
 
-                {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
+                {%- set order_by_str = "{} {}".format(dbtvault.escape_column_name(column_name), direction) | trim -%}
             {%- endif -%}
 
             {%- if dbtvault.is_list(partition_by) -%}
-                {%- set partition_by_str = partition_by | join(", ") -%}
+                {%- set partition_by_str = dbtvault.escape_column_name(partition_by) | join(", ") -%}
             {%- else -%}
-                {%- set partition_by_str = partition_by -%}
+                {%- set partition_by_str = dbtvault.escape_column_name(partition_by) -%}
             {%- endif -%}
 
-            {{- "{} OVER (PARTITION BY {} ORDER BY {}) AS {}".format(rank_type, partition_by_str, order_by_str, col) | indent(4) -}}
+            {{- "{} OVER (PARTITION BY {} ORDER BY {}) AS {}".format(rank_type, partition_by_str, order_by_str, dbtvault.escape_column_name(col)) | indent(4) -}}
 
         {%- endif -%}
 
