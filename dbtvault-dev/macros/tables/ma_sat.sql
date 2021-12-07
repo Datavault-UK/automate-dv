@@ -31,12 +31,12 @@ WITH source_data AS (
     SELECT DISTINCT {{ dbtvault.prefix(source_cols, 's', alias_target='source') }}
     {%- endif %}
     {% if dbtvault.is_any_incremental() %}
-        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix([src_cdk], 's', alias_target='source') }})
+        ,COUNT(DISTINCT {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's', alias_target='source') }})
             OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}) AS source_count
     {% endif %}
     FROM {{ ref(source_model) }} AS s
-    WHERE {{ dbtvault.multikey([src_pk], prefix='s', condition='IS NOT NULL') }}
-    {%- for child_key in src_cdk %}
+    WHERE {{ dbtvault.multikey(cdk_cols, prefix='s', condition='IS NOT NULL') }}
+    {%- for child_key in cdk_cols %}
         AND {{ dbtvault.multikey(child_key, prefix='s', condition='IS NOT NULL') }}
     {%- endfor %}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
@@ -53,16 +53,16 @@ WITH source_data AS (
 latest_records AS (
     SELECT {{ dbtvault.prefix([src_pk], 'mas') }}
         ,{{ dbtvault.prefix([src_hashdiff], 'mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'mas') }}
+        ,{{ dbtvault.prefix(cdk_cols, 'mas') }}
         ,{{ dbtvault.prefix([src_ldts], 'mas') }}
         ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
+            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC) AS check_rank
     FROM
     (
     SELECT {{ dbtvault.prefix([src_pk], 'inner_mas') }}
         ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'inner_mas') }}
+        ,{{ dbtvault.prefix(cdk_cols, 'inner_mas') }}
         ,{{ dbtvault.prefix([src_ldts], 'inner_mas') }}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
@@ -103,7 +103,7 @@ records_to_insert AS (
             (
                 SELECT {{ dbtvault.prefix([src_pk], 'lr') }}
                 ,{{ dbtvault.prefix([src_hashdiff], 'lr') }}
-                ,{{ dbtvault.prefix([src_cdk], 'lr') }}
+                ,{{ dbtvault.prefix(cdk_cols, 'lr') }}
                 ,{{ dbtvault.prefix([src_ldts], 'lr') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
@@ -138,7 +138,7 @@ SELECT * FROM records_to_insert
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
-{%- set cdk_cols = dbtvault.expand_column_list(columns=[src_cdk]) -%}
+{%- set cdk_cols = dbtvault.expand_column_list(columns=cdk_cols) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' -%}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -186,16 +186,16 @@ source_data_with_count AS (
 latest_records AS (
     SELECT {{ dbtvault.prefix([src_pk], 'mas') }}
         ,{{ dbtvault.prefix([src_hashdiff], 'mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'mas') }}
+        ,{{ dbtvault.prefix(cdk_cols, 'mas') }}
         ,{{ dbtvault.prefix([src_ldts], 'mas') }}
         ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
+            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC) AS check_rank
     FROM
     (
     SELECT {{ dbtvault.prefix([src_pk], 'inner_mas') }}
         ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'inner_mas') }}
+        ,{{ dbtvault.prefix(cdk_cols, 'inner_mas') }}
         ,{{ dbtvault.prefix([src_ldts], 'inner_mas') }}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
@@ -240,7 +240,7 @@ records_to_insert AS (
             (
                 SELECT {{ dbtvault.prefix([src_pk], 'lr') }}
                 ,{{ dbtvault.prefix([src_hashdiff], 'lr') }}
-                ,{{ dbtvault.prefix([src_cdk], 'lr') }}
+                ,{{ dbtvault.prefix(cdk_cols, 'lr') }}
                 ,{{ dbtvault.prefix([src_ldts], 'lr') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
@@ -275,7 +275,7 @@ SELECT * FROM records_to_insert
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
-{%- set cdk_cols = dbtvault.expand_column_list(columns=[src_cdk]) -%}
+{%- set cdk_cols = dbtvault.expand_column_list(columns=cdk_cols) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' -%}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -323,16 +323,16 @@ source_data_with_count AS (
 latest_records AS (
     SELECT {{ dbtvault.prefix([src_pk], 'mas') }}
         ,{{ dbtvault.prefix([src_hashdiff], 'mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'mas') }}
+        ,{{ dbtvault.prefix(cdk_cols, 'mas') }}
         ,{{ dbtvault.prefix([src_ldts], 'mas') }}
         ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
+            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC) AS check_rank
     FROM
     (
     SELECT {{ dbtvault.prefix([src_pk], 'inner_mas') }}
         ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'inner_mas') }}
+        ,{{ dbtvault.prefix(cdk_cols, 'inner_mas') }}
         ,{{ dbtvault.prefix([src_ldts], 'inner_mas') }}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
@@ -377,7 +377,7 @@ records_to_insert AS (
             (
                 SELECT {{ dbtvault.prefix([src_pk], 'lr') }}
                 ,{{ dbtvault.prefix([src_hashdiff], 'lr') }}
-                ,{{ dbtvault.prefix([src_cdk], 'lr') }}
+                ,{{ dbtvault.prefix(cdk_cols, 'lr') }}
                 ,{{ dbtvault.prefix([src_ldts], 'lr') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
