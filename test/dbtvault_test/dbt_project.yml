@@ -1,6 +1,6 @@
 name: dbtvault_test
 version: 0.7.8
-require-dbt-version: [">=0.20.0", "<0.22.0"]
+require-dbt-version: ['>=0.20.0', <0.22.0]
 config-version: 2
 profile: dbtvault
 
@@ -35,3 +35,14 @@ seeds:
         BOOKING_FK: BINARY(16)
         ORDER_FK: BINARY(16)
         LOAD_DATE: DATE
+    temp:
+      satellite_expected_seed:
+        +column_types:
+          CUSTOMER_PK: STRING
+          CUSTOMER_NAME: STRING
+          CUSTOMER_PHONE: STRING
+          CUSTOMER_DOB: DATE
+          HASHDIFF: STRING
+          EFFECTIVE_FROM: DATE
+          LOAD_DATE: DATE
+          SOURCE: STRING
