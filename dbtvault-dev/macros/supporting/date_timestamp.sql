@@ -6,44 +6,22 @@
 
 {%- macro default__date_timestamp(out_of_sequence) %}
 
-{%- if 'insert_date' in out_of_sequence.keys() %}
+    {%- if 'insert_date' in out_of_sequence.keys() %}
 
-  {%- set insert_date = out_of_sequence['insert_date'] %}
+      {%- set insert_date = out_of_sequence['insert_date'] %}
 
-  DATE('{{ insert_date }}')
+      DATE('{{ insert_date }}')
 
-{%- elif 'insert_timestamp' in out_of_sequence.keys() %}
+    {%- elif 'insert_timestamp' in out_of_sequence.keys() %}
 
-  {%- set insert_timestamp = out_of_sequence['insert_timestamp']%}
+      {%- set insert_timestamp = out_of_sequence['insert_timestamp']%}
 
-  TO_TIMESTAMP('{{ insert_timestamp }}')
+      TO_TIMESTAMP('{{ insert_timestamp }}')
 
-{%- else %}
+    {%- else %}
 
-  {{- exceptions.raise_compiler_error("ERROR: Missing parameter either insert_date or insert_timestamp.") -}}
+      {{- exceptions.raise_compiler_error("ERROR: Missing parameter either insert_date or insert_timestamp.") -}}
 
-{% endif -%}
-
-{% endmacro -%}
-
-{%- macro sqlserver__date_timestamp(out_of_sequence) %}
-
-{%- if 'insert_date' in out_of_sequence.keys() %}
-
-  {%- set insert_date = out_of_sequence['insert_date'] %}
-
-  CONVERT(DATE, '{{ insert_date }}')
-
-{%- elif 'insert_timestamp' in out_of_sequence.keys() %}
-
-  {%- set insert_timestamp = out_of_sequence['insert_timestamp']%}
-
-  CONVERT(DATETIME, '{{ insert_timestamp }}', 121)
-
-{%- else %}
-
-  {{- exceptions.raise_compiler_error("ERROR: Missing parameter either insert_date or insert_timestamp.") -}}
-
-{% endif -%}
+    {% endif -%}
 
 {% endmacro -%}

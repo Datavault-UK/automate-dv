@@ -11,15 +11,3 @@
     {%- do return("snowflake") -%}
 
 {%- endmacro -%}
-
-{%- macro sqlserver__get_adapter_type() -%}
-
-    {%- do return("sqlserver") -%}
-
-{%- endmacro -%}
-
-{%- macro bigquery__get_adapter_type() -%}
-
-    {%- do return("bigquery") -%}
-
-{%- endmacro -%}

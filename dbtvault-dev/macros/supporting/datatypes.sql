@@ -5,7 +5,3 @@
 {% macro default__type_timestamp() %}
     {{ dbt_utils.type_timestamp() }}
 {% endmacro %}
-
-{% macro sqlserver__type_timestamp() %}
-    datetime
-{% endmacro %}
