@@ -124,7 +124,7 @@ overlap AS (
     AND a.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
 ),
 
--- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
+{#- Back-fill any newly arrived hubs, set all historical pit dates to ghost records -#}
 
 backfill_rows_as_of_dates AS (
     SELECT
@@ -346,7 +346,7 @@ overlap AS (
 		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
 
--- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
+{#- Back-fill any newly arrived hubs, set all historical pit dates to ghost records -#}
 
 backfill_rows_as_of_dates AS (
     SELECT
