@@ -109,7 +109,7 @@ Feature: [SQLS-SAT-PM] Satellites Loaded using Period Materialization
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1004        | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with start date: 2019-05-05
+    And I insert by period starting from 2019-05-05 by day into the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                           | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID') | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
