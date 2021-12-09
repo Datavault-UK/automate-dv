@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
       - develop
+      - stage/*
     exclude:
       - feat/*
 
