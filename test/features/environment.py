@@ -106,11 +106,6 @@ fixtures_registry = {
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver},
 
-    "fixture.out_of_sequence_satellite":
-        {"snowflake": fixtures_oos_sat.out_of_sequence_satellite,
-         "bigquery": "",
-         "sqlserver": fixtures_oos_sat.out_of_sequence_satellite_sqlserver},
-
     "fixture.multi_active_satellite":
         {"snowflake": fixtures_ma_sat.multi_active_satellite,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
