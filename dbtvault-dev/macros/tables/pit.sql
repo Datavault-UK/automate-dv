@@ -11,13 +11,18 @@
 
 {%- macro default__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}
 
+{{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
+                                       satellites=satellites,
+                                       stage_tables=stage_tables,
+                                       src_ldts=src_ldts) -}}
+
 {{ dbtvault.prepend_generated_by() }}
 
 {% set adapter_type = dbtvault.get_adapter_type() %}
 
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
-    "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
+    "PIT error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
     {%- endset -%}
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
@@ -57,7 +62,7 @@ last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
     {%- for stg in stage_tables -%}
         {%- set stage_ldts = stage_tables[stg] %}
-        {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
+        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ (ref(stg)) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
     ) a
@@ -95,7 +100,7 @@ backfill_as_of AS (
 ),
 
 new_rows_pks AS (
-    SELECT a.{{ src_pk }}
+    SELECT {{ dbtvault.prefix([src_pk], 'a') }}
     FROM {{ ref(source_model) }} AS a
     WHERE a.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
 ),
@@ -113,17 +118,17 @@ overlap AS (
     SELECT a.*
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
-    ON a.{{ src_pk }} = b.{{ src_pk }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
     WHERE a.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
     AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     AND a.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
 ),
 
--- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
+{#- Back-fill any newly arrived hubs, set all historical pit dates to ghost records -#}
 
 backfill_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -132,18 +137,18 @@ backfill_rows_as_of_dates AS (
 
 backfill AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
         {%- if adapter_type == "sqlserver" -%}
-        {{ "CONVERT(BINARY(16), '{}', 2) AS {}_{}".format(ghost_pk, sat_name, sat_pk_name) }},
+        CONVERT(BINARY(16), '{{ ghost_pk }}', 2) AS {{ sat_name }}_{{ sat_pk_name }},
         {%  else  %}
-        {{ "CAST('{}' AS BINARY(16)) AS {}_{}".format(ghost_pk, sat_name, sat_pk_name) }},
+        CAST('{{ ghost_pk }}' AS BINARY(16)) AS {{ sat_name }}_{{ sat_pk_name }},
         {%  endif  %}
-        {{ "CAST('{}' AS {}) AS {}_{}".format(ghost_date, dbtvault.type_timestamp(), sat_name, sat_ldts_name) }}
+        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -153,19 +158,19 @@ backfill AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
 ),
 {%- endif %}
 
 new_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
@@ -174,7 +179,7 @@ new_rows_as_of_dates AS (
 
 new_rows AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
@@ -182,11 +187,11 @@ new_rows AS (
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
         {%- if adapter_type == "sqlserver" -%}
-        {{ ("COALESCE(MAX({}_src.{}), CONVERT(BINARY(16), '{}', 2)) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_pk }}), CONVERT(BINARY(16), '{{ ghost_pk }}', 2)) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
         {%- else -%}
-        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS BINARY(16))) AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_pk }}), CAST('{{ ghost_pk }}' AS BINARY(16))) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
         {%- endif -%}
-        {{ ("COALESCE(MAX({}_src.{}), CAST('{}' AS {})) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, dbtvault.type_timestamp(), sat_name | upper, sat_ldts_name | upper)) }}
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_ldts }}), CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }})) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
@@ -196,13 +201,13 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
 ),
 
 pit AS (
@@ -270,7 +275,7 @@ last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
     {%- for stg in stage_tables -%}
         {%- set stage_ldts = stage_tables[stg] %}
-        {{ "SELECT MIN({}) AS LOAD_DATETIME FROM {}".format(stage_ldts, ref(stg)) }}
+        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
         {{ "UNION ALL" if not loop.last }}
     {%- endfor %}
     )
@@ -309,7 +314,7 @@ backfill_as_of AS (
 ),
 
 new_rows_pks AS (
-    SELECT a.{{ src_pk }}
+    SELECT {{ dbtvault.prefix([src_pk], 'a') }}
     FROM {{ ref(source_model) }} AS a
     INNER JOIN last_safe_load_datetime as l
     ON a.{{ src_ldts }} >= l.LAST_SAFE_LOAD_DATETIME
@@ -329,7 +334,7 @@ overlap AS (
     SELECT a.*
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
-    ON a.{{ src_pk }} = b.{{ src_pk }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
     INNER JOIN min_date
     ON 1 = 1
     INNER JOIN last_safe_load_datetime
@@ -341,11 +346,11 @@ overlap AS (
 		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
 
--- Back-fill any newly arrived hubs, set all historical pit dates to ghost records
+{#- Back-fill any newly arrived hubs, set all historical pit dates to ghost records -#}
 
 backfill_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -354,14 +359,14 @@ backfill_rows_as_of_dates AS (
 
 backfill AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {{ "'{}' AS {}_{}".format(ghost_pk, sat_name, sat_key_name) }},
-        {{ "PARSE_DATETIME('%F %H:%M:%E6S', '{}') AS {}_{}".format(ghost_date, sat_name, sat_ldts_name) }}
+        '{{ ghost_pk }}' AS {{ sat_name }}_{{ sat_key_name }},
+        PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}') AS {{ sat_name }}_{{ sat_ldts_name }}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -371,20 +376,20 @@ backfill AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
     ORDER BY (1)
 ),
 {%- endif %}
 
 new_rows_as_of_dates AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
@@ -393,15 +398,15 @@ new_rows_as_of_dates AS (
 
 new_rows AS (
     SELECT
-        a.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
-        {{ ("COALESCE(MAX({}_src.{}), '{}') AS {}_{}".format(sat_name | lower, sat_pk, ghost_pk, sat_name | upper, sat_pk_name | upper )) }},
-        {{ ("COALESCE(MAX({}_src.{}), PARSE_DATETIME('%F %H:%M:%E6S',  '{}')) AS {}_{}".format(sat_name | lower, sat_ldts, ghost_date, sat_name | upper, sat_ldts_name | upper)) }}
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_pk }}), '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        COALESCE(MAX({{ sat_name | lower }}_src.{{ sat_ldts }}), PARSE_DATETIME('%F %H:%M:%E6S',  '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
@@ -412,13 +417,13 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
-        LEFT JOIN {{ ref(sat_name) }} AS {{ "{}_src".format(sat_name | lower) }}
-        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ "{}_src.{}".format(sat_name | lower, sat_pk) }}
-        {{ "AND" | indent(4) }} {{ "{}_src.{}".format(sat_name | lower, sat_ldts) }} <= a.AS_OF_DATE
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower }}_src
+        {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+        {{ "AND" | indent(4) }} {{ sat_name | lower }}_src.{{ sat_ldts }} <= a.AS_OF_DATE
     {% endfor -%}
 
     GROUP BY
-        a.{{- src_pk }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
     ORDER BY (1)
 ),
 

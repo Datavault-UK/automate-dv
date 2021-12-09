@@ -56,75 +56,75 @@ Feature: [SQLS-BRG] Bridge table
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
-  @fixture.enable_auto_end_date
-  @fixture.bridge
-  Scenario: [SQLS-BRG-02] Bridge on one hub and one link
-    Incremental load with auto end-dating with new AS OF dates in the past
-    Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
-
-    Given the BRIDGE_CUSTOMER_ORDER table does not exist
-    And the raw vault contains empty tables
-      | HUB          | LINK                | EFF_SAT                | BRIDGE                |
-      | HUB_CUSTOMER | LINK_CUSTOMER_ORDER | EFF_SAT_CUSTOMER_ORDER | BRIDGE_CUSTOMER_ORDER |
-    And the RAW_CUSTOMER_ORDER table contains data
-      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
-      | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-      | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-      | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-      | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
-    And the AS_OF_DATE table is created and populated with data
-      | AS_OF_DATE              |
-      | 2018-06-01 00:00:00.000 |
-    When I load the vault
-    Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK |
-      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     |
-      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     |
-      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     |
-      | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
-    Given the RAW_CUSTOMER_ORDER table contains data
-      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
-      | 1001        | 101      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
-    And the AS_OF_DATE table is created and populated with data
-      | AS_OF_DATE              |
-      | 2018-05-30 00:00:00.000 |
-      | 2018-05-30 12:00:00.000 |
-      | 2018-05-31 00:00:00.000 |
-    When I load the vault
-    Then the BRIDGE_CUSTOMER_ORDER table should be empty
-    Given the RAW_CUSTOMER_ORDER table contains data
-      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
-      | 1002        | 100      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
-    And the AS_OF_DATE table is created and populated with data
-      | AS_OF_DATE              |
-      | 2018-06-01 00:00:00.000 |
-      | 2018-06-01 09:00:00.000 |
-      | 2018-06-01 18:00:00.000 |
-      | 2018-06-02 00:00:00.000 |
-    When I load the vault
-    Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
-      | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK |
-      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     |
-      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     |
-      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     |
-      | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
-      | md5('1001') | 2018-06-01 09:00:00.000 | md5('1001\|\|100')     |
-      | md5('1002') | 2018-06-01 09:00:00.000 | md5('1002\|\|200')     |
-      | md5('1003') | 2018-06-01 09:00:00.000 | md5('1003\|\|300')     |
-      | md5('1004') | 2018-06-01 09:00:00.000 | md5('1004\|\|400')     |
-      | md5('1002') | 2018-06-01 18:00:00.000 | md5('1002\|\|100')     |
-      | md5('1001') | 2018-06-01 18:00:00.000 | md5('1001\|\|101')     |
-      | md5('1002') | 2018-06-01 18:00:00.000 | md5('1002\|\|200')     |
-      | md5('1003') | 2018-06-01 18:00:00.000 | md5('1003\|\|300')     |
-      | md5('1004') | 2018-06-01 18:00:00.000 | md5('1004\|\|400')     |
-      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|100')     |
-      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     |
-      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|200')     |
-      | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     |
-      | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
+#  @fixture.enable_auto_end_date
+#  @fixture.bridge
+#  Scenario: [SQLS-BRG-002] Bridge on one hub and one link
+#    Incremental load with auto end-dating with new AS OF dates in the past
+#    Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
+#
+#    Given the BRIDGE_CUSTOMER_ORDER table does not exist
+#    And the raw vault contains empty tables
+#      | HUB          | LINK                | EFF_SAT                | BRIDGE                |
+#      | HUB_CUSTOMER | LINK_CUSTOMER_ORDER | EFF_SAT_CUSTOMER_ORDER | BRIDGE_CUSTOMER_ORDER |
+#    And the RAW_CUSTOMER_ORDER table contains data
+#      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+#      | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
+#      | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
+#      | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
+#      | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.996 | *      |
+#    And I stage the STG_CUSTOMER_ORDER data
+#    And the AS_OF_DATE table is created and populated with data
+#      | AS_OF_DATE              |
+#      | 2018-06-01 00:00:00.000 |
+#    When I load the vault
+#    Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
+#      | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK |
+#      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     |
+#      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     |
+#      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     |
+#      | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
+#    Given the RAW_CUSTOMER_ORDER table contains data
+#      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+#      | 1001        | 101      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.996 | *      |
+#    And I stage the STG_CUSTOMER_ORDER data
+#    And the AS_OF_DATE table is created and populated with data
+#      | AS_OF_DATE              |
+#      | 2018-05-30 00:00:00.000 |
+#      | 2018-05-30 12:00:00.000 |
+#      | 2018-05-31 00:00:00.000 |
+#    When I load the vault
+#    Then the BRIDGE_CUSTOMER_ORDER table should be empty
+#    Given the RAW_CUSTOMER_ORDER table contains data
+#      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+#      | 1002        | 100      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.996 | *      |
+#    And I stage the STG_CUSTOMER_ORDER data
+#    And the AS_OF_DATE table is created and populated with data
+#      | AS_OF_DATE              |
+#      | 2018-06-01 00:00:00.000 |
+#      | 2018-06-01 09:00:00.000 |
+#      | 2018-06-01 18:00:00.000 |
+#      | 2018-06-02 00:00:00.000 |
+#    When I load the vault
+#    Then the BRIDGE_CUSTOMER_ORDER table should contain expected data
+#      | CUSTOMER_PK | AS_OF_DATE              | LINK_CUSTOMER_ORDER_PK |
+#      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001\|\|100')     |
+#      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002\|\|200')     |
+#      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003\|\|300')     |
+#      | md5('1004') | 2018-06-01 00:00:00.000 | md5('1004\|\|400')     |
+#      | md5('1001') | 2018-06-01 09:00:00.000 | md5('1001\|\|100')     |
+#      | md5('1002') | 2018-06-01 09:00:00.000 | md5('1002\|\|200')     |
+#      | md5('1003') | 2018-06-01 09:00:00.000 | md5('1003\|\|300')     |
+#      | md5('1004') | 2018-06-01 09:00:00.000 | md5('1004\|\|400')     |
+#      | md5('1002') | 2018-06-01 18:00:00.000 | md5('1002\|\|100')     |
+#      | md5('1001') | 2018-06-01 18:00:00.000 | md5('1001\|\|101')     |
+#      | md5('1002') | 2018-06-01 18:00:00.000 | md5('1002\|\|200')     |
+#      | md5('1003') | 2018-06-01 18:00:00.000 | md5('1003\|\|300')     |
+#      | md5('1004') | 2018-06-01 18:00:00.000 | md5('1004\|\|400')     |
+#      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|100')     |
+#      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001\|\|101')     |
+#      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|200')     |
+#      | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     |
+#      | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     |
 
   @fixture.enable_auto_end_date
   @fixture.bridge
