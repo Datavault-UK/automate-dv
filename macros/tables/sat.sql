@@ -144,7 +144,7 @@ SELECT * FROM records_to_insert
 
 {%- endmacro -%}
 
-{%- macro bigquery__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro bigquery__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model, out_of_sequence) -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                                        src_ldts=src_ldts, src_source=src_source,
@@ -187,7 +187,7 @@ WITH source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-latest_records_non_ranked AS (
+latest_records AS (
 
     SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
     FROM (
@@ -207,11 +207,6 @@ latest_records_non_ranked AS (
         {%- endif %}
         ) a
     WHERE a.rank = 1
-),
-
-latest_records AS (
-    SELECT * FROM latest_records_non_ranked
-    WHERE rank = 1
 ),
 
 
