@@ -147,7 +147,7 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
 
 def sat(model_name, src_pk, src_hashdiff, src_payload,
         src_eff, src_ldts, src_source, source_model,
-        config, depends_on="", out_of_sequence=None):
+        config, depends_on=""):
     """
     Generate a satellite model template
         :param model_name: Name of the model file
@@ -158,7 +158,6 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
-        :param out_of_sequence: Out of sequence configuration
         :param config: Optional model config
         :param depends_on: Optional forced dependency
     """
@@ -168,8 +167,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
                       src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
-                      source_model={source_model}, 
-                      out_of_sequence={out_of_sequence if out_of_sequence else 'none'}) }}}}
+                      source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
