@@ -23,7 +23,7 @@ def eff_satellite(context):
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         }
     }
