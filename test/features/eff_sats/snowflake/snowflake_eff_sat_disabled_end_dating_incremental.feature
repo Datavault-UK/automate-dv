@@ -1,7 +1,7 @@
 Feature: [SF-EFF-DAU-INC] Effectively satellites, further incremental testing
 
 
-  @fixture.eff_satellite
+  @fixture.eff_satellite_datetime  
   Scenario: [SF-EFF-DAU-INC-01] Load mixed stage with one record changed into a non existent eff sat - one cycle
   Given the EFF_SAT table does not exist
   And the RAW_STAGE table contains data
@@ -29,7 +29,7 @@ Feature: [SF-EFF-DAU-INC] Effectively satellites, further incremental testing
     | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-09 00:00:00.000     | 2020-01-10 00:00:00.000 | orders |
     | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-10 00:00:00.000     | 2020-01-11 00:00:00.000 | orders |
 
-  @fixture.eff_satellite
+  @fixture.eff_satellite_datetime  
   Scenario: [SF-EFF-DAU-INC-02] Load mixed stage with one record changed and then reverted, into a non existent eff sat - two cycles
   Given the EFF_SAT table does not exist
   And the RAW_STAGE table contains data
@@ -74,7 +74,7 @@ Feature: [SF-EFF-DAU-INC] Effectively satellites, further incremental testing
     | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000     | 2020-01-12 00:00:00.000 | orders |
 
 
-  @fixture.eff_satellite
+  @fixture.eff_satellite_datetime  
   Scenario: [SF-EFF-DAU-INC-03] Load mixed stage with one record changed and then reverted, into an empty eff sat - two cycles
   Given the EFF_SAT eff_sat is empty
   And the RAW_STAGE table contains data
@@ -118,7 +118,7 @@ Feature: [SF-EFF-DAU-INC] Effectively satellites, further incremental testing
     | md5('4001\|\|DDD') | md5('4001') | md5('DDD') | 2020-01-10 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000     | 2020-01-12 00:00:00.000 | orders |
     | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-11 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000     | 2020-01-12 00:00:00.000 | orders |
 
-  @fixture.eff_satellite
+  @fixture.eff_satellite_datetime  
   Scenario: [SF-EFF-DAU-INC-04] Load mixed stage with one changed record into already populated eff sat - one cycle
   Given the EFF_SAT eff_sat is already populated with data
     | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM              | LOAD_DATETIME           | SOURCE |
@@ -143,7 +143,7 @@ Feature: [SF-EFF-DAU-INC] Effectively satellites, further incremental testing
     | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-10 00:00:00.000     | 2020-01-11 00:00:00.000 | orders |
 
 
- @fixture.eff_satellite
+ @fixture.eff_satellite_datetime  
   Scenario: [SF-EFF-DAU-INC-05] Load mixed stage with one record changed and then reverted, into already populated eff sat - two cycles
   Given the EFF_SAT eff_sat is already populated with data
     | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM              | LOAD_DATETIME           | SOURCE |
