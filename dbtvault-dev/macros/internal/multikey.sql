@@ -19,7 +19,7 @@
             {%- if prefix -%}
                 {{- dbtvault.prefix([col], prefix[0], alias_target='target') }} {{ condition }} {{ dbtvault.prefix([col], prefix[1]) -}}
             {%- endif %}
-            {%- if not loop.last %} {{ operator }} {% endif %}
+            {%- if not loop.last %} {{ operator }} {% endif -%}
         {% endfor -%}
     {%- else -%}
         {%- if dbtvault.is_list(columns) -%}
