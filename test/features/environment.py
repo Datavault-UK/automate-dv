@@ -10,7 +10,6 @@ from test.features.eff_sats import fixtures_eff_sat
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
-from test.features.sats_with_oos import fixtures_oos_sat
 from test.features.pit import fixtures_pit
 from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
