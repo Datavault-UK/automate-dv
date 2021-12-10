@@ -54,7 +54,7 @@ latest_records AS (
                 FROM source_data
             ) AS source_records
                 ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
-        ) AS a
+    ) AS a
     WHERE a.rank = 1
 ),
 
