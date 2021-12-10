@@ -23,7 +23,7 @@ def eff_satellite(context):
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
     }
@@ -49,6 +49,60 @@ def eff_satellite(context):
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
+def eff_satellite_datetime(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "EFF_SAT": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT": {
+            "+column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -298,6 +352,60 @@ def eff_satellite_bigquery(context):
 
 
 @fixture
+def eff_satellite_datetime_bigquery(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "EFF_SAT": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "NUMERIC",
+                "ORDER_ID": "STRING",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT": {
+            "+column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+@fixture
 def eff_satellite_testing_auto_end_dating_bigquery(context):
     """
     Define the structures and metadata to load effectivity satellites
@@ -534,6 +642,60 @@ def eff_satellite_sqlserver(context):
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
+
+
+@fixture
+def eff_satellite_datetime_sqlserver(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "EFF_SAT": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "+column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT": {
+            "+column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "START_DATE": "DATETIME",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(50)"
             }
         }
