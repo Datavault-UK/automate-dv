@@ -1,3 +1,4 @@
+import copy
 import io
 import os
 import shutil
@@ -581,11 +582,14 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
     yml.indent(sequence=4, offset=2)
-    properties_path = TEMP_SEED_DIR / 'properties.yml'
+    properties_path = SEEDS_DIR / 'vault_properties.yml'
+
+    new_config = copy.deepcopy(seed_config['+column_types'])
+    seed_config = new_config
 
     if include_columns:
-        seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if
-                                        k in include_columns}
+        seed_config = {k: v for k, v in seed_config.items() if
+                       k in include_columns}
 
     if properties_path.exists():
         with open(properties_path, 'r') as f:
@@ -595,7 +599,6 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     else:
         seed_properties = {
             'version': 2,
-
             'seeds': [
                 {'name': seed_name, 'config': seed_config}
             ]
@@ -701,7 +704,7 @@ def clean_seed_properties_file():
     Delete the schema_test.yml file if it exists
     """
 
-    properties_file = TEMP_SEED_DIR / 'properties.yml'
+    properties_file = SEEDS_DIR / 'vault_properties.yml'
 
     if properties_file.exists():
         os.remove(properties_file)

@@ -21,3 +21,5 @@ test/backup_files/dbt_project.bak.yml
 *.pytest_cache
 /dbtvault-dev/dbt_modules/
 
+
+test/dbtvault_test/seeds/vault_properties.yml
