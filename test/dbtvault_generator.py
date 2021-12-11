@@ -580,21 +580,28 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
 
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
+    yml.indent(sequence=4, offset=2)
+    properties_path = TEMP_SEED_DIR / 'properties.yml'
 
     if include_columns:
         seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if
                                         k in include_columns}
 
-    seed_properties = {
-        'version': 2,
+    if properties_path.exists():
+        with open(properties_path, 'r') as f:
+            existing_properties = yml.load(f)
+        existing_properties['seeds'].append({'name': seed_name, 'config': seed_config})
+        seed_properties = existing_properties
+    else:
+        seed_properties = {
+            'version': 2,
 
-        'seeds': [
-            {'name': seed_name, 'config': seed_config}
-        ]
-    }
+            'seeds': [
+                {'name': seed_name, 'config': seed_config}
+            ]
+        }
 
-    with open(TEMP_SEED_DIR / 'properties.yml', 'w+') as f:
-        yml.indent(sequence=4, offset=2)
+    with open(properties_path, 'w+') as f:
         yml.dump(seed_properties, f)
 
 
