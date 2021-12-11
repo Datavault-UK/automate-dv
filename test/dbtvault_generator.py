@@ -587,18 +587,12 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
                                        k in include_columns}
 
-    if properties_path.exists():
-        with open(properties_path, 'r') as f:
-            existing_properties = yml.load(f)
-        existing_properties['seeds'].append({'name': seed_name, 'config': seed_config})
-        seed_properties = existing_properties
-    else:
-        seed_properties = {
-            'version': 2,
-            'seeds': [
-                {'name': seed_name, 'config': seed_config}
-            ]
-        }
+    seed_properties = {
+        'version': 2,
+        'seeds': [
+            {'name': seed_name, 'config': seed_config}
+        ]
+    }
 
     with open(properties_path, 'w+') as f:
         yml.dump(seed_properties, f)
@@ -693,6 +687,7 @@ def clean_test_schema_file():
 
     if TEST_SCHEMA_YML_FILE.exists():
         os.remove(TEST_SCHEMA_YML_FILE)
+
 
 def backup_project_yml():
     """
