@@ -578,18 +578,14 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         :param seed_config: Configuration dict for seed file
         :param include_columns: A list of columns to add to the seed config, All if not provided
     """
-
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
     yml.indent(sequence=4, offset=2)
-    properties_path = SEEDS_DIR / 'vault_properties.yml'
-
-    new_config = copy.deepcopy(seed_config['+column_types'])
-    seed_config = new_config
+    properties_path = TEMP_SEED_DIR / 'vault_properties.yml'
 
     if include_columns:
-        seed_config = {k: v for k, v in seed_config.items() if
-                       k in include_columns}
+        seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
+                                       k in include_columns}
 
     if properties_path.exists():
         with open(properties_path, 'r') as f:
@@ -699,15 +695,17 @@ def clean_test_schema_file():
         os.remove(TEST_SCHEMA_YML_FILE)
 
 
-def clean_seed_properties_file():
+def clean_seed_temp_folder():
     """
-    Delete the schema_test.yml file if it exists
+    Delete the files in seeds/temp except .gitkeep
     """
 
-    properties_file = SEEDS_DIR / 'vault_properties.yml'
+    properties_file = TEMP_SEED_DIR / 'vault_properties.yml'
 
-    if properties_file.exists():
-        os.remove(properties_file)
+    for (dir_path, dir_names, filenames) in os.walk(properties_file.parent):
+        for filename in filenames:
+            if filename != ".gitkeep":
+                os.remove(Path(dir_path) / filename)
 
 
 def backup_project_yml():

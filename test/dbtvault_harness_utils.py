@@ -529,7 +529,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
     """
 
     feature_data = context_table_to_dicts(table=table, orient="index", use_nan=False)
-    column_types = seed_config[model_name]["+column_types"]
+    column_types = seed_config[model_name]["column_types"]
 
     sql_command = ""
     first_row = True

@@ -139,7 +139,7 @@ def load_empty_table(context, model_name, vault_structure):
 
 @given("I have an empty {raw_stage_name} raw stage")
 def create_empty_stage(context, raw_stage_name):
-    stage_headings = list(context.seed_config[raw_stage_name]["+column_types"].keys())
+    stage_headings = list(context.seed_config[raw_stage_name]["column_types"].keys())
 
     row = Row(cells=[], headings=stage_headings)
 
@@ -164,7 +164,7 @@ def create_empty_stage(context, raw_stage_name):
 
 @given("I have an empty {processed_stage_name} primed stage")
 def create_empty_stage(context, processed_stage_name):
-    stage_source_column_headings = list(context.seed_config[context.raw_stage_name]["+column_types"].keys())
+    stage_source_column_headings = list(context.seed_config[context.raw_stage_name]["column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
     stage_headings = stage_source_column_headings + stage_hashed_column_headings + stage_derived_column_headings
@@ -526,7 +526,7 @@ def expect_data(context, model_name):
         # Create seed file with no data rows
         expected_model_name = f"{model_name}_EXPECTED"
 
-        table_headings = list(context.seed_config[model_name]["+column_types"].keys())
+        table_headings = list(context.seed_config[model_name]["column_types"].keys())
         row = Row(cells=[], headings=table_headings)
 
         empty_table = Table(headings=table_headings, rows=row)
@@ -557,7 +557,7 @@ def expect_data(context, model_name):
 
     else:
 
-        table_headings = list(context.seed_config[model_name]["+column_types"].keys())
+        table_headings = list(context.seed_config[model_name]["column_types"].keys())
         row = Row(cells=[], headings=table_headings)
 
         empty_table = Table(headings=table_headings, rows=row)

@@ -171,7 +171,7 @@ def before_all(context):
 
     # Delete temp YAML files
     dbtvault_generator.clean_test_schema_file()
-    dbtvault_generator.clean_seed_properties_file()
+    dbtvault_generator.clean_seed_temp_folder()
 
     # Backup YAML prior to run
     dbtvault_generator.backup_project_yml()
