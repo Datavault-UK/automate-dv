@@ -685,8 +685,19 @@ def clean_test_schema_file():
     Delete the schema_test.yml file if it exists
     """
 
-    if os.path.exists(TEST_SCHEMA_YML_FILE):
+    if TEST_SCHEMA_YML_FILE.exists():
         os.remove(TEST_SCHEMA_YML_FILE)
+
+
+def clean_seed_properties_file():
+    """
+    Delete the schema_test.yml file if it exists
+    """
+
+    properties_file = TEMP_SEED_DIR / 'properties.yml'
+
+    if properties_file.exists():
+        os.remove(properties_file)
 
 
 def backup_project_yml():
