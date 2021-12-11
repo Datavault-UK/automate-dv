@@ -18,7 +18,9 @@ BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TEST_PROJECT_ROOT}/target/compiled/dbtvault_test/models/")
 
 FEATURES_ROOT = TESTS_ROOT / 'features'
-CSV_DIR = TEST_PROJECT_ROOT / 'seeds/temp'
+SEEDS_DIR = TEST_PROJECT_ROOT / 'seeds'
+TEMP_SEED_DIR = TEST_PROJECT_ROOT / 'seeds/temp'
+
 
 AVAILABLE_PLATFORMS = ['snowflake', 'bigquery', 'sqlserver']
 

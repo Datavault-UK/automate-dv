@@ -579,24 +579,23 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     """
 
     yml = ruamel.yaml.YAML()
+    yml.preserve_quotes = True
 
     if include_columns:
         seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if
                                         k in include_columns}
 
-    with open(DBT_PROJECT_YML_FILE, 'r+') as f:
-        project_file = yml.load(f)
+    seed_properties = {
+        'version': 2,
 
-        project_file["seeds"]["dbtvault_test"]["temp"] = {seed_name: seed_config}
+        'seeds': [
+            {'name': seed_name, 'config': seed_config}
+        ]
+    }
 
-        f.seek(0)
-        f.truncate()
-
-        yml.width = 150
-
+    with open(TEMP_SEED_DIR / 'properties.yml', 'w+') as f:
         yml.indent(sequence=4, offset=2)
-
-        yml.dump(project_file, f)
+        yml.dump(seed_properties, f)
 
 
 def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,

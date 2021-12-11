@@ -121,9 +121,9 @@ def clean_csv(model_name=None):
     """
 
     if model_name:
-        delete_files = [test.CSV_DIR / f"{model_name.lower()}.csv"]
+        delete_files = [test.TEMP_SEED_DIR / f"{model_name.lower()}.csv"]
     else:
-        delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
+        delete_files = [file for file in glob.glob(str(test.TEMP_SEED_DIR / '*.csv'), recursive=True)]
 
     for file in delete_files:
         if os.path.isfile(file):
@@ -490,7 +490,7 @@ def context_table_to_csv(table: Table, model_name: str) -> str:
 
     table_df = context_table_to_df(table)
 
-    csv_fqn = test.CSV_DIR / f'{model_name.lower()}_seed.csv'
+    csv_fqn = test.TEMP_SEED_DIR / f'{model_name.lower()}_seed.csv'
 
     table_df.to_csv(path_or_buf=csv_fqn, index=False)
 
