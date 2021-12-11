@@ -6,8 +6,10 @@ logs/
 *target/
 
 test/dbtvault_test/dbt_modules/
+test/dbtvault_test/dbt_packages/
 test/dbtvault_test/models/*.sql
 test/dbtvault_test/data/temp/*
+test/dbtvault_test/seeds/temp/*
 test/dbtvault_test/models/schema_test.yml
 test/backup_files/dbt_project.bak.yml
 
