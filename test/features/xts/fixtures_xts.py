@@ -182,7 +182,7 @@ def xts(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -195,7 +195,7 @@ def xts(context):
             }
         },
         "RAW_STAGE_1": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -208,7 +208,7 @@ def xts(context):
             }
         },
         "RAW_STAGE_2": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -221,7 +221,7 @@ def xts(context):
             }
         },
         "RAW_STAGE_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -234,7 +234,7 @@ def xts(context):
             }
         },
         "RAW_STAGE_2SAT_1": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -247,7 +247,7 @@ def xts(context):
             }
         },
         "RAW_STAGE_2SAT_2": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -260,7 +260,7 @@ def xts(context):
             }
         },
         "RAW_STAGE_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
@@ -273,7 +273,7 @@ def xts(context):
             }
         },
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
@@ -290,7 +290,7 @@ def xts(context):
             }
         },
         "STG_CUSTOMER_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF_1": "BINARY(16)",
                 "HASHDIFF_2": "BINARY(16)",
@@ -309,7 +309,7 @@ def xts(context):
             }
         },
         "STG_CUSTOMER_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF_1": "BINARY(16)",
                 "HASHDIFF_2": "BINARY(16)",
@@ -330,7 +330,7 @@ def xts(context):
             }
         },
         "XTS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SATELLITE_NAME": "VARCHAR",
@@ -339,7 +339,7 @@ def xts(context):
             }
         },
         "XTS_COMPPK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -349,7 +349,7 @@ def xts(context):
             }
         },
         "XTS_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "SATELLITE_NAME": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",
@@ -358,7 +358,7 @@ def xts(context):
             }
         },
         "XTS_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "SATELLITE_NAME": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",
@@ -550,7 +550,7 @@ def xts_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -563,7 +563,7 @@ def xts_bigquery(context):
             }
         },
         "RAW_STAGE_1": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -576,7 +576,7 @@ def xts_bigquery(context):
             }
         },
         "RAW_STAGE_2": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -589,7 +589,7 @@ def xts_bigquery(context):
             }
         },
         "RAW_STAGE_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -602,7 +602,7 @@ def xts_bigquery(context):
             }
         },
         "RAW_STAGE_2SAT_1": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -615,7 +615,7 @@ def xts_bigquery(context):
             }
         },
         "RAW_STAGE_2SAT_2": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -628,7 +628,7 @@ def xts_bigquery(context):
             }
         },
         "RAW_STAGE_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
@@ -641,7 +641,7 @@ def xts_bigquery(context):
             }
         },
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
@@ -658,7 +658,7 @@ def xts_bigquery(context):
             }
         },
         "STG_CUSTOMER_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF_1": "STRING",
                 "HASHDIFF_2": "STRING",
@@ -677,7 +677,7 @@ def xts_bigquery(context):
             }
         },
         "STG_CUSTOMER_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF_1": "STRING",
                 "HASHDIFF_2": "STRING",
@@ -698,7 +698,7 @@ def xts_bigquery(context):
             }
         },
         "XTS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SATELLITE_NAME": "STRING",
@@ -707,7 +707,7 @@ def xts_bigquery(context):
             }
         },
         "XTS_COMPPK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
@@ -717,7 +717,7 @@ def xts_bigquery(context):
             }
         },
         "XTS_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "SATELLITE_NAME": "STRING",
                 "HASHDIFF": "STRING",
@@ -726,7 +726,7 @@ def xts_bigquery(context):
             }
         },
         "XTS_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "SATELLITE_NAME": "STRING",
                 "HASHDIFF": "STRING",
@@ -918,7 +918,7 @@ def xts_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -931,7 +931,7 @@ def xts_sqlserver(context):
             }
         },
         "RAW_STAGE_1": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -944,7 +944,7 @@ def xts_sqlserver(context):
             }
         },
         "RAW_STAGE_2": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -957,7 +957,7 @@ def xts_sqlserver(context):
             }
         },
         "RAW_STAGE_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -970,7 +970,7 @@ def xts_sqlserver(context):
             }
         },
         "RAW_STAGE_2SAT_1": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -983,7 +983,7 @@ def xts_sqlserver(context):
             }
         },
         "RAW_STAGE_2SAT_2": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -996,7 +996,7 @@ def xts_sqlserver(context):
             }
         },
         "RAW_STAGE_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
@@ -1009,7 +1009,7 @@ def xts_sqlserver(context):
             }
         },
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
@@ -1026,7 +1026,7 @@ def xts_sqlserver(context):
             }
         },
         "STG_CUSTOMER_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF_1": "BINARY(16)",
                 "HASHDIFF_2": "BINARY(16)",
@@ -1045,7 +1045,7 @@ def xts_sqlserver(context):
             }
         },
         "STG_CUSTOMER_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF_1": "BINARY(16)",
                 "HASHDIFF_2": "BINARY(16)",
@@ -1066,7 +1066,7 @@ def xts_sqlserver(context):
             }
         },
         "XTS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SATELLITE_NAME": "VARCHAR(50)",
@@ -1075,7 +1075,7 @@ def xts_sqlserver(context):
             }
         },
         "XTS_COMPPK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
@@ -1085,7 +1085,7 @@ def xts_sqlserver(context):
             }
         },
         "XTS_2SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "SATELLITE_NAME": "VARCHAR(50)",
                 "HASHDIFF": "BINARY(16)",
@@ -1094,7 +1094,7 @@ def xts_sqlserver(context):
             }
         },
         "XTS_3SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "SATELLITE_NAME": "VARCHAR(50)",
                 "HASHDIFF": "BINARY(16)",
