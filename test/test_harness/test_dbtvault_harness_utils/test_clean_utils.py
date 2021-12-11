@@ -22,7 +22,7 @@ directory_dict = {
 }
 
 
-def test_clean_csv_success(sample_directory_tree):
+def test_clean_seeds_success(sample_directory_tree):
     paths, tmp_dir = sample_directory_tree(directory_dict)
 
     tmp_csv_dir = Path(tmp_dir) / 'csv'
@@ -30,7 +30,7 @@ def test_clean_csv_success(sample_directory_tree):
     assert set(os.listdir(tmp_csv_dir)) == {path.name for path in paths['csv']}
 
     with patch('test.TEMP_SEED_DIR', tmp_csv_dir):
-        dbtvault_harness_utils.clean_csv()
+        dbtvault_harness_utils.clean_seeds()
 
     assert not os.listdir(tmp_csv_dir)
 

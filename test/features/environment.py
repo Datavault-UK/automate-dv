@@ -171,7 +171,6 @@ def before_all(context):
 
     # Delete temp YAML files
     dbtvault_generator.clean_test_schema_file()
-    dbtvault_generator.clean_seed_temp_folder()
 
     # Backup YAML prior to run
     dbtvault_generator.backup_project_yml()
@@ -189,7 +188,7 @@ def before_scenario(context, scenario):
     dbtvault_harness_utils.create_dummy_model()
     dbtvault_harness_utils.replace_test_schema()
 
-    dbtvault_harness_utils.clean_csv()
+    dbtvault_harness_utils.clean_seeds()
     dbtvault_harness_utils.clean_models()
     dbtvault_harness_utils.clean_target()
 

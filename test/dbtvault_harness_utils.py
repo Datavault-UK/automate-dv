@@ -115,7 +115,7 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
-def clean_csv(model_name=None):
+def clean_seeds(model_name=None):
     """
     Deletes csv files in csv folder.
     """
@@ -123,7 +123,11 @@ def clean_csv(model_name=None):
     if model_name:
         delete_files = [test.TEMP_SEED_DIR / f"{model_name.lower()}.csv"]
     else:
-        delete_files = [file for file in glob.glob(str(test.TEMP_SEED_DIR / '*.csv'), recursive=True)]
+        delete_files = []
+        for (dir_path, dir_names, filenames) in os.walk(test.TEMP_SEED_DIR):
+            for filename in filenames:
+                if filename != ".gitkeep":
+                    delete_files.append(Path(dir_path) / filename)
 
     for file in delete_files:
         if os.path.isfile(file):

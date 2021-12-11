@@ -694,20 +694,6 @@ def clean_test_schema_file():
     if TEST_SCHEMA_YML_FILE.exists():
         os.remove(TEST_SCHEMA_YML_FILE)
 
-
-def clean_seed_temp_folder():
-    """
-    Delete the files in seeds/temp except .gitkeep
-    """
-
-    properties_file = TEMP_SEED_DIR / 'vault_properties.yml'
-
-    for (dir_path, dir_names, filenames) in os.walk(properties_file.parent):
-        for filename in filenames:
-            if filename != ".gitkeep":
-                os.remove(Path(dir_path) / filename)
-
-
 def backup_project_yml():
     """
     Restore dbt_project.yml from backup

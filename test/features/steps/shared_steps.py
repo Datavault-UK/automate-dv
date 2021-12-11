@@ -296,7 +296,7 @@ def create_csv(context, raw_stage_model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
         # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
-        dbtvault_harness_utils.clean_csv(raw_stage_model_name.lower() + "_seed")
+        dbtvault_harness_utils.clean_seeds(raw_stage_model_name.lower() + "_seed")
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=raw_stage_model_name,
@@ -336,7 +336,7 @@ def create_csv(context, table_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
         # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
-        dbtvault_harness_utils.clean_csv(table_name.lower() + "_seed")
+        dbtvault_harness_utils.clean_seeds(table_name.lower() + "_seed")
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=table_name,
@@ -401,7 +401,7 @@ def create_csv(context, raw_stage_model_name):
         # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
         # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
         # For Snowflake deletion of seed file is not required but does not cause a problem if performed
-        dbtvault_harness_utils.clean_csv(raw_stage_model_name.lower() + "_seed")
+        dbtvault_harness_utils.clean_seeds(raw_stage_model_name.lower() + "_seed")
 
         context.raw_stage_model_name = raw_stage_model_name
 
@@ -460,7 +460,7 @@ def expect_data(context, model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
         # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
-        dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_seeds(model_name.lower() + "_expected_seed")
         dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
 
         expected_model_name = f"{model_name}_EXPECTED"
@@ -520,7 +520,7 @@ def expect_data(context, model_name):
     if dbtvault_harness_utils.platform() == "sqlserver":
 
         # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
-        dbtvault_harness_utils.clean_csv(model_name.lower() + "_expected_seed")
+        dbtvault_harness_utils.clean_seeds(model_name.lower() + "_expected_seed")
         dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
 
         # Create seed file with no data rows
