@@ -15,10 +15,10 @@ def enable_sha(context):
 
         for k, v in config.items():
 
-            for c, t in config[k]["+column_types"].items():
+            for c, t in config[k]["column_types"].items():
 
                 if t == "BINARY(16)":
-                    config[k]["+column_types"][c] = "BINARY(32)"
+                    config[k]["column_types"][c] = "BINARY(32)"
 
     else:
         raise ValueError("sha behave.fixture used before vault structure behave.fixture.")
