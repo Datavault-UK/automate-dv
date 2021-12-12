@@ -147,7 +147,7 @@ def cycle(context):
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
@@ -157,7 +157,7 @@ def cycle(context):
             }
         },
         "RAW_STAGE_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_ID": "VARCHAR",
                 "CUSTOMER_ID": "VARCHAR",
                 "PRICE": "NUMBER(38,2)",
@@ -171,7 +171,7 @@ def cycle(context):
             }
         },
         "HUB_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -179,7 +179,7 @@ def cycle(context):
             }
         },
         "HUB_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_PK": "BINARY(16)",
                 "BOOKING_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -187,7 +187,7 @@ def cycle(context):
             }
         },
         "LINK_CUSTOMER_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_BOOKING_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "BOOKING_PK": "BINARY(16)",
@@ -196,7 +196,7 @@ def cycle(context):
             }
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -207,7 +207,7 @@ def cycle(context):
             }
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "PHONE": "VARCHAR",
@@ -218,7 +218,7 @@ def cycle(context):
             }
         },
         "SAT_BOOK_BOOKING_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "PRICE": "NUMBER(38,2)",
@@ -379,7 +379,7 @@ def cycle_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -389,7 +389,7 @@ def cycle_bigquery(context):
             }
         },
         "RAW_STAGE_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_ID": "STRING",
                 "CUSTOMER_ID": "STRING",
                 "PRICE": "STRING",
@@ -403,7 +403,7 @@ def cycle_bigquery(context):
             }
         },
         "HUB_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
@@ -411,7 +411,7 @@ def cycle_bigquery(context):
             }
         },
         "HUB_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_PK": "STRING",
                 "BOOKING_ID": "STRING",
                 "LOAD_DATE": "DATE",
@@ -419,7 +419,7 @@ def cycle_bigquery(context):
             }
         },
         "LINK_CUSTOMER_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_BOOKING_PK": "STRING",
                 "CUSTOMER_PK": "STRING",
                 "BOOKING_PK": "STRING",
@@ -428,7 +428,7 @@ def cycle_bigquery(context):
             }
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -439,7 +439,7 @@ def cycle_bigquery(context):
             }
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "PHONE": "STRING",
@@ -450,7 +450,7 @@ def cycle_bigquery(context):
             }
         },
         "SAT_BOOK_BOOKING_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "PRICE": "STRINGff",
@@ -611,7 +611,7 @@ def cycle_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
@@ -621,7 +621,7 @@ def cycle_sqlserver(context):
             }
         },
         "RAW_STAGE_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_ID": "VARCHAR(50)",
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "PRICE": "DECIMAL(38,2)",
@@ -635,7 +635,7 @@ def cycle_sqlserver(context):
             }
         },
         "HUB_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
@@ -643,7 +643,7 @@ def cycle_sqlserver(context):
             }
         },
         "HUB_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_PK": "BINARY(16)",
                 "BOOKING_ID": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
@@ -651,7 +651,7 @@ def cycle_sqlserver(context):
             }
         },
         "LINK_CUSTOMER_BOOKING": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_BOOKING_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "BOOKING_PK": "BINARY(16)",
@@ -660,7 +660,7 @@ def cycle_sqlserver(context):
             }
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
@@ -671,7 +671,7 @@ def cycle_sqlserver(context):
             }
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "PHONE": "VARCHAR(50)",
@@ -682,7 +682,7 @@ def cycle_sqlserver(context):
             }
         },
         "SAT_BOOK_BOOKING_DETAILS": {
-            "+column_types": {
+            "column_types": {
                 "BOOKING_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "PRICE": "DECIMAL(38,2)",
