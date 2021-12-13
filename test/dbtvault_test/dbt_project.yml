@@ -21,3 +21,6 @@ vars:
   max_datetime: '{{ dbtvault.max_datetime() }}'
   escape_char_left: '"'
   escape_char_right: '"'
+
+seeds:
+  +quote_columns: true
