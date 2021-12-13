@@ -44,7 +44,7 @@ def staging_escaped(context):
     context.seed_config = {
 
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER NAME": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -61,7 +61,7 @@ def staging_escaped(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
