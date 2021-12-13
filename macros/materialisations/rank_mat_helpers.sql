@@ -24,7 +24,6 @@
     {% do return(filtered_sql) %}
 {% endmacro %}
 
-
 {#-- OTHER MACROS #}
 
 {% macro get_min_max_ranks(rank_column, rank_source_models) %}
