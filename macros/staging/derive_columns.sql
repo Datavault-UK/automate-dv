@@ -25,7 +25,7 @@
                 {%- do column_list.append(column_str) -%}
             {%- endfor -%}
 
-            {%- set concat_string = "CONCAT_WS(" ~ "'||', " ~ column_list | join(", ") ~ ") AS " ~ col -%}
+            {% set concat_string = "CONCAT_WS(" ~ "'||', " ~ column_list | join(", ") ~ ") AS " ~ col %}
 
             {%- do der_columns.append(concat_string) -%}
             {%- set exclude_columns = exclude_columns + columns[col] -%}

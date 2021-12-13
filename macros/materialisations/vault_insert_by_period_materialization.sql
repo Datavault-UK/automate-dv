@@ -71,6 +71,9 @@
                                                                   period_boundaries.start_timestamp,
                                                                   period_boundaries.stop_timestamp, i) %}
 
+            {# This call statement drops and then creates a temporary table #}
+            {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
+            {# See MSSQL note and drop code below #}
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}

@@ -34,16 +34,16 @@
 
 row_rank_{{ source_number }} AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ source_cols_with_rank | join(', ') }},
+    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'rr') }},
     {%- else %}
-    SELECT {{ source_cols | join(', ') }},
+    SELECT {{ dbtvault.prefix(source_cols, 'rr') }},
     {%- endif %}
            ROW_NUMBER() OVER(
-               PARTITION BY {{ src_pk }}
-               ORDER BY {{ src_ldts }}
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'rr') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
-    FROM {{ ref(src) }}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    FROM {{ ref(src) }} AS rr
+    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
@@ -77,13 +77,13 @@ stage_mat_filter AS (
 {%- if source_model | length > 1 %}
 
 row_rank_union AS (
-    SELECT *,
+    SELECT ru.*,
            ROW_NUMBER() OVER(
-               PARTITION BY {{ src_pk }}
-               ORDER BY {{ src_ldts }}, {{ src_source }} ASC
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'ru') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'ru') }}, {{ dbtvault.prefix([src_source], 'ru') }} ASC
            ) AS row_rank_number
-    FROM {{ ns.last_cte }}
-    WHERE {{ dbtvault.multikey(src_pk, condition='IS NOT NULL') }}
+    FROM {{ ns.last_cte }} AS ru
+    WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
     QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
@@ -93,8 +93,8 @@ records_to_insert AS (
     FROM {{ ns.last_cte }} AS a
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON a.{{ src_pk }} = d.{{ src_pk }}
-    WHERE {{ dbtvault.prefix([src_pk], 'd') }} IS NULL
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','d'], condition='=') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='d', condition='IS NULL') }}
     {%- endif %}
 )
 
