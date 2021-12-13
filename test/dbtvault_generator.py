@@ -1,3 +1,4 @@
+import copy
 import io
 import os
 import shutil
@@ -584,26 +585,24 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         :param seed_config: Configuration dict for seed file
         :param include_columns: A list of columns to add to the seed config, All if not provided
     """
-
     yml = ruamel.yaml.YAML()
+    yml.preserve_quotes = True
+    yml.indent(sequence=4, offset=2)
+    properties_path = TEMP_SEED_DIR / 'vault_properties.yml'
 
     if include_columns:
-        seed_config['+column_types'] = {k: v for k, v in seed_config['+column_types'].items() if
-                                        k in include_columns}
+        seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
+                                       k in include_columns}
 
-    with open(DBT_PROJECT_YML_FILE, 'r+') as f:
-        project_file = yml.load(f)
+    seed_properties = {
+        'version': 2,
+        'seeds': [
+            {'name': seed_name, 'config': seed_config}
+        ]
+    }
 
-        project_file["seeds"]["dbtvault_test"]["temp"] = {seed_name: seed_config}
-
-        f.seek(0)
-        f.truncate()
-
-        yml.width = 150
-
-        yml.indent(sequence=4, offset=2)
-
-        yml.dump(project_file, f)
+    with open(properties_path, 'w+') as f:
+        yml.dump(seed_properties, f)
 
 
 def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
@@ -693,7 +692,7 @@ def clean_test_schema_file():
     Delete the schema_test.yml file if it exists
     """
 
-    if os.path.exists(TEST_SCHEMA_YML_FILE):
+    if TEST_SCHEMA_YML_FILE.exists():
         os.remove(TEST_SCHEMA_YML_FILE)
 
 
