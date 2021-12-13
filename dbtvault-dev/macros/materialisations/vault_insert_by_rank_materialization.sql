@@ -13,8 +13,6 @@
 
     {%- set to_drop = [] -%}
 
-    {% set adapter_type = dbtvault.get_adapter_type() %}
-
     {%- do dbtvault.check_placeholder(sql, "__RANK_FILTER__") -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}

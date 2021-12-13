@@ -18,8 +18,6 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-{% set adapter_type = dbtvault.get_adapter_type() %}
-
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
     "PIT error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."

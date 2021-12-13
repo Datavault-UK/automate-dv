@@ -14,8 +14,6 @@
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
 
-    {% set adapter_type = dbtvault.get_adapter_type() %}
-
     {%- do dbtvault.check_placeholder(sql) -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
