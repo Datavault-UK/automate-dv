@@ -10,7 +10,7 @@ def staging(context):
     context.seed_config = {
 
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
@@ -23,7 +23,7 @@ def staging(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
@@ -82,7 +82,7 @@ def staging_bigquery(context):
     context.seed_config = {
 
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "STRING",
@@ -95,7 +95,7 @@ def staging_bigquery(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "STRING",
@@ -116,7 +116,7 @@ def staging_sqlserver(context):
     context.seed_config = {
 
         "STG_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(5)",
                 "CUSTOMER_NAME": "VARCHAR(10)",
                 "CUSTOMER_DOB": "VARCHAR(10)",
@@ -132,7 +132,7 @@ def staging_sqlserver(context):
             }
         },
         "STG_CUSTOMER_HASH": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(10)",
                 "CUSTOMER_DOB": "VARCHAR(10)",
@@ -148,7 +148,7 @@ def staging_sqlserver(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(5)",
                 "CUSTOMER_NAME": "VARCHAR(10)",
                 "CUSTOMER_DOB": "VARCHAR(10)",

@@ -35,7 +35,7 @@ def t_link(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
@@ -47,7 +47,7 @@ def t_link(context):
             }
         },
         "T_LINK": {
-            "+column_types": {
+            "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
@@ -97,7 +97,7 @@ def t_link_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "ORDER_ID": "STRING",
                 "TRANSACTION_NUMBER": "STRING",
@@ -109,7 +109,7 @@ def t_link_bigquery(context):
             }
         },
         "T_LINK": {
-            "+column_types": {
+            "column_types": {
                 "TRANSACTION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
                 "ORDER_FK": "STRING",
@@ -159,7 +159,7 @@ def t_link_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",
@@ -171,7 +171,7 @@ def t_link_sqlserver(context):
             }
         },
         "T_LINK": {
-            "+column_types": {
+            "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
@@ -221,7 +221,7 @@ def t_link_comppk(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
@@ -233,7 +233,7 @@ def t_link_comppk(context):
             }
         },
         "T_LINK_COMPPK": {
-            "+column_types": {
+            "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
                 "CUSTOMER_FK": "BINARY(16)",
@@ -283,7 +283,7 @@ def t_link_comppk_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "ORDER_ID": "STRING",
                 "TRANSACTION_NUMBER": "STRING",
@@ -295,7 +295,7 @@ def t_link_comppk_bigquery(context):
             }
         },
         "T_LINK_COMPPK": {
-            "+column_types": {
+            "column_types": {
                 "TRANSACTION_PK": "STRING",
                 "TRANSACTION_NUMBER": "STRING",
                 "CUSTOMER_FK": "STRING",
@@ -345,7 +345,7 @@ def t_link_comppk_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",
@@ -357,7 +357,7 @@ def t_link_comppk_sqlserver(context):
             }
         },
         "T_LINK_COMPPK": {
-            "+column_types": {
+            "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",
                 "CUSTOMER_FK": "BINARY(16)",
