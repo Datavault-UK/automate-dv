@@ -49,7 +49,7 @@
 
     {%- endif -%}
 
-    {#- Makes sure the columns are appended in a logical order. Derived columns then source columns -#}
+    {#- Makes sure the columns are appended in a logical order. Source columns then derived columns -#}
     {%- set include_columns = src_columns + der_columns -%}
 
     {#- Print out all columns in includes -#}
