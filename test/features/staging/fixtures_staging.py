@@ -47,15 +47,15 @@ def staging_escaped(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER NAME": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DERIVED_CONCAT": "VARCHAR",
+                "SOURCE": "VARCHAR",
+                "COLUMN": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
                 "DBTVAULT_RANK": "VARCHAR",
                 "DBTVAULT_RANK2": "VARCHAR"
             }
