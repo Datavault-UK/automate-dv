@@ -160,7 +160,6 @@ row_rank_{{ source_number }} AS (
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
-    WHERE row_number = 1
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
