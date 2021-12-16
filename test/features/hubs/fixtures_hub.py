@@ -24,7 +24,7 @@ def single_source_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -32,7 +32,7 @@ def single_source_hub(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -74,7 +74,7 @@ def multi_source_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -82,7 +82,7 @@ def multi_source_hub(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR",
                 "PART_NAME": "VARCHAR",
                 "PART_TYPE": "VARCHAR",
@@ -93,7 +93,7 @@ def multi_source_hub(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
@@ -103,7 +103,7 @@ def multi_source_hub(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "+column_types": {
+            "column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PART_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
@@ -141,7 +141,7 @@ def single_source_hub_bigquery(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
@@ -149,7 +149,7 @@ def single_source_hub_bigquery(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "LOAD_DATE": "DATE",
@@ -191,7 +191,7 @@ def multi_source_hub_bigquery(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "PART_PK": "STRING",
                 "PART_ID": "STRING",
                 "LOAD_DATE": "DATE",
@@ -199,7 +199,7 @@ def multi_source_hub_bigquery(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "STRING",
                 "PART_NAME": "STRING",
                 "PART_TYPE": "STRING",
@@ -210,7 +210,7 @@ def multi_source_hub_bigquery(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "STRING",
                 "SUPPLIER_ID": "STRING",
                 "AVAILQTY": "FLOAT",
@@ -220,7 +220,7 @@ def multi_source_hub_bigquery(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "+column_types": {
+            "column_types": {
                 "ORDER_ID": "STRING",
                 "PART_ID": "STRING",
                 "SUPPLIER_ID": "STRING",
@@ -273,7 +273,7 @@ def single_source_hub_sqlserver(context):
 
     context.seed_config = {
         "HUB_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
@@ -281,7 +281,7 @@ def single_source_hub_sqlserver(context):
             }
         },
         "HUB_CUSTOMER_SHA": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(32)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
@@ -289,7 +289,7 @@ def single_source_hub_sqlserver(context):
             }
         },
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATE",
@@ -297,7 +297,7 @@ def single_source_hub_sqlserver(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "CUSTOMER_NAME": "VARCHAR(5)",
                 "CUSTOMER_DOB": "DATE",
@@ -340,7 +340,7 @@ def multi_source_hub_sqlserver(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATETIME",
@@ -348,7 +348,7 @@ def multi_source_hub_sqlserver(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "PART_NAME": "VARCHAR(10)",
                 "PART_TYPE": "VARCHAR(10)",
@@ -359,7 +359,7 @@ def multi_source_hub_sqlserver(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "SUPPLIER_ID": "VARCHAR(2)",
                 "AVAILQTY": "INT",
@@ -369,7 +369,7 @@ def multi_source_hub_sqlserver(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "+column_types": {
+            "column_types": {
                 "ORDER_ID": "VARCHAR(5)",
                 "PART_ID": "VARCHAR(4)",
                 "SUPPLIER_ID": "VARCHAR(2)",
@@ -407,7 +407,7 @@ def single_source_comppk_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_CK": "VARCHAR",
                 "CUSTOMER_ID": "VARCHAR",
@@ -416,7 +416,7 @@ def single_source_comppk_hub(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -450,7 +450,7 @@ def single_source_comppk_hub_bigquery(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_CK": "STRING",
                 "CUSTOMER_ID": "STRING",
@@ -459,7 +459,7 @@ def single_source_comppk_hub_bigquery(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_CK": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -493,7 +493,7 @@ def single_source_comppk_hub_sqlserver(context):
 
     context.seed_config = {
         "HUB_CUSTOMER": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_ID": "VARCHAR(4)",
@@ -502,7 +502,7 @@ def single_source_comppk_hub_sqlserver(context):
             }
         },
         "HUB_CUSTOMER_SHA": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(32)",
                 "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_ID": "VARCHAR(4)",
@@ -511,7 +511,7 @@ def single_source_comppk_hub_sqlserver(context):
             }
         },
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_ID": "VARCHAR(4)",
@@ -520,7 +520,7 @@ def single_source_comppk_hub_sqlserver(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_NAME": "VARCHAR(5)",
@@ -564,7 +564,7 @@ def multi_source_comppk_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_CK": "VARCHAR",
                 "PART_ID": "VARCHAR",
@@ -573,7 +573,7 @@ def multi_source_comppk_hub(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR",
                 "PART_CK": "VARCHAR",
                 "PART_NAME": "VARCHAR",
@@ -585,7 +585,7 @@ def multi_source_comppk_hub(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR",
                 "PART_CK": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
@@ -596,7 +596,7 @@ def multi_source_comppk_hub(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "+column_types": {
+            "column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PART_ID": "VARCHAR",
                 "PART_CK": "VARCHAR",
@@ -644,7 +644,7 @@ def multi_source_comppk_hub_bigquery(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "PART_PK": "STRING",
                 "PART_CK": "STRING",
                 "PART_ID": "STRING",
@@ -653,7 +653,7 @@ def multi_source_comppk_hub_bigquery(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "STRING",
                 "PART_CK": "STRING",
                 "PART_NAME": "STRING",
@@ -665,7 +665,7 @@ def multi_source_comppk_hub_bigquery(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "STRING",
                 "PART_CK": "STRING",
                 "SUPPLIER_ID": "STRING",
@@ -676,7 +676,7 @@ def multi_source_comppk_hub_bigquery(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "+column_types": {
+            "column_types": {
                 "ORDER_ID": "STRING",
                 "PART_ID": "STRING",
                 "PART_CK": "STRING",
@@ -724,7 +724,7 @@ def multi_source_comppk_hub_sqlserver(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_CK": "VARCHAR(4)",
                 "PART_ID": "VARCHAR(4)",
@@ -733,7 +733,7 @@ def multi_source_comppk_hub_sqlserver(context):
             }
         },
         "RAW_STAGE_PARTS": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "PART_CK": "VARCHAR(4)",
                 "PART_NAME": "VARCHAR(10)",
@@ -745,7 +745,7 @@ def multi_source_comppk_hub_sqlserver(context):
             }
         },
         "RAW_STAGE_SUPPLIER": {
-            "+column_types": {
+            "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "PART_CK": "VARCHAR(4)",
                 "SUPPLIER_ID": "VARCHAR(2)",
@@ -756,7 +756,7 @@ def multi_source_comppk_hub_sqlserver(context):
             }
         },
         "RAW_STAGE_LINEITEM": {
-            "+column_types": {
+            "column_types": {
                 "ORDER_ID": "VARCHAR(5)",
                 "PART_ID": "VARCHAR(4)",
                 "PART_CK": "VARCHAR(4)",
@@ -796,7 +796,7 @@ def single_source_comppknk_hub(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK1": "BINARY(16)",
                 "CUSTOMER_PK2": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -806,7 +806,7 @@ def single_source_comppknk_hub(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -841,7 +841,7 @@ def single_source_comppknk_hub_bigquery(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK1": "STRING",
                 "CUSTOMER_PK2": "STRING",
                 "CUSTOMER_ID": "STRING",
@@ -851,7 +851,7 @@ def single_source_comppknk_hub_bigquery(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_CK": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -886,7 +886,7 @@ def single_source_comppknk_hub_sqlserver(context):
 
     context.seed_config = {
         "HUB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK1": "BINARY(16)",
                 "CUSTOMER_PK2": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
@@ -896,7 +896,7 @@ def single_source_comppknk_hub_sqlserver(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_NAME": "VARCHAR(4)",
