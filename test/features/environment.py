@@ -32,8 +32,8 @@ fixtures_registry = {
 
     "fixture.staging_escaped":
         {"snowflake": fixtures_staging.staging_escaped,
-         "bigquery": "",
-         "sqlserver": ""},
+         "bigquery": fixtures_staging.staging_escaped,
+         "sqlserver": fixtures_staging.staging_escaped},
 
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub,

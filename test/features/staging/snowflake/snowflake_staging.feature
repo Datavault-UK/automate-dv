@@ -456,7 +456,7 @@ Feature: [SF-STG] Staging
 
   @fixture.staging_escaped
   Scenario: [SF-STG-21] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
-    The customer name column name in the RAW_STAGE table includes a SPACE character
+    The customer name column name in the RAW_STAGE table includes a SPACE character, and there is derived column called COLUMN
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
