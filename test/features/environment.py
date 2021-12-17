@@ -95,6 +95,11 @@ fixtures_registry = {
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver},
 
+    "fixture.eff_satellite_datetime":
+        {"snowflake": fixtures_eff_sat.eff_satellite_datetime,
+         "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
+         "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver},
+
     "fixture.eff_satellite_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating,
          "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
