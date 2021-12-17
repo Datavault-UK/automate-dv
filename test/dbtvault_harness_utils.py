@@ -208,8 +208,8 @@ def parse_hashdiffs(columns_as_series: Series) -> Series:
 
 def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
     """
-    Convert string representations of lists in dict values, in a list of dicts
-        :param dicts_with_lists: A list of dictionaries
+    Convert string representations of lists in dict values, in a list of dicts, or a dict containing list/dict values
+        :param dicts_with_lists: A list of dictionaries, or a dict containing list/dict values
     """
 
     if isinstance(dicts_with_lists, list):
@@ -238,6 +238,38 @@ def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
                     processed_dicts[i] = {col: dicts_with_lists[i]}
 
             return processed_dicts
+
+    elif isinstance(dicts_with_lists, dict):
+
+        processed_dicts = []
+        d = []
+
+        check_dicts = [k2 for k2, v2 in dicts_with_lists.items() if isinstance(k2, int) and isinstance(v2, dict)]
+
+        if not check_dicts:
+            return dicts_with_lists
+        else:
+
+            for k1, v1 in dicts_with_lists.items():
+                processed_dicts.append(dict())
+                d.append(dict())
+
+                if isinstance(v1, dict):
+                    for k, v in v1.items():
+
+                        if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
+                            v = v.replace("[", "")
+                            v = v.replace("]", "")
+                            v = [k.strip() for k in v.split(",")]
+
+                        d[k1][k] = v
+                else:
+                    d = dicts_with_lists[k1]
+
+                processed_dicts[k1] = {k1: d[k1]}
+
+            return processed_dicts
+
     else:
         return dicts_with_lists
 

@@ -251,6 +251,7 @@
 {%- endmacro -%}
 
 {%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
+
     {% set period_of_load_sql -%}
         SELECT DATE_TRUNC(DATE_ADD( DATE('{{start_timestamp}}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
     {%- endset %}

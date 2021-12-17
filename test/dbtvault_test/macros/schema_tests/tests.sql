@@ -16,20 +16,21 @@
 
 {%- for compare_col in compare_columns -%}
 
-    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
-    {%- do columns_processed.append(compare_col) -%}
+    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(dbtvault.escape_column_name(compare_col), dbtvault.escape_column_name(compare_col))) -%}
+    {%- do columns_processed.append(dbtvault.escape_column_name(compare_col)) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
 
-    {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- do source_columns_list.append(dbtvault.escape_column_name(source_col.column)) -%}
+    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(dbtvault.escape_column_name(source_col.column), dbtvault.escape_column_name(source_col.column))) -%}
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
+{%  set compare_columns = dbtvault.escape_column_name(compare_columns) %}
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}
