@@ -13,8 +13,6 @@
                                        source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_name(src_payload) -%}
 {%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_name(src_source) -%}
 
@@ -88,8 +86,6 @@ SELECT * FROM records_to_insert
                                        source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_name(src_payload) -%}
 {%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_name(src_source) -%}
 
@@ -169,8 +165,6 @@ SELECT * FROM records_to_insert
                                        source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_name(src_payload) -%}
 {%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_name(src_source) -%}
 
