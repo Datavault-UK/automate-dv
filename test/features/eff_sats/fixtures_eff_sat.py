@@ -84,7 +84,7 @@ def eff_satellite_datetime(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "START_DATE": "DATETIME",
@@ -95,7 +95,7 @@ def eff_satellite_datetime(context):
             }
         },
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
@@ -380,7 +380,7 @@ def eff_satellite_datetime_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMERIC",
                 "ORDER_ID": "STRING",
                 "START_DATE": "DATETIME",
@@ -391,7 +391,7 @@ def eff_satellite_datetime_bigquery(context):
             }
         },
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "STRING",
                 "CUSTOMER_PK": "STRING",
                 "ORDER_PK": "STRING",
@@ -677,7 +677,7 @@ def eff_satellite_datetime_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "ORDER_ID": "VARCHAR(50)",
                 "START_DATE": "DATETIME",
@@ -688,7 +688,7 @@ def eff_satellite_datetime_sqlserver(context):
             }
         },
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
