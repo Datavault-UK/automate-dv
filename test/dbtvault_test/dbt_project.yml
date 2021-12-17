@@ -19,6 +19,8 @@ clean-targets:
 vars:
   hash: MD5
   max_datetime: '{{ dbtvault.max_datetime() }}'
+  escape_char_left: '"'
+  escape_char_right: '"'
 
 seeds:
   +quote_columns: true
