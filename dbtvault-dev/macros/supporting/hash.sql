@@ -36,7 +36,12 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), hash_size, dbtvault.escape_column_name(alias)) | indent(4) -}}
+    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+        {%- set escaped_column_str = column_str -%}
+    {%- else -%}
+        {%- set escaped_column_str = dbtvault.escape_column_name(column_str) -%}
+    {%- endif -%}
+    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), hash_size, dbtvault.escape_column_name(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -53,7 +58,12 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), null_placeholder_string) | indent(4) -}}
+        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+            {%- set escaped_column_str = column_str -%}
+        {%- else -%}
+            {%- set escaped_column_str = dbtvault.escape_column_name(column_str) -%}
+        {%- endif -%}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
 
         {%- if loop.last -%}
@@ -99,7 +109,12 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), dbtvault.escape_column_name(alias)) | indent(4) -}}
+    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+        {%- set escaped_column_str = column_str -%}
+    {%- else -%}
+        {%- set escaped_column_str = dbtvault.escape_column_name(column_str) -%}
+    {%- endif -%}
+    {{- "CAST(UPPER(TO_HEX({}({}))) AS STRING) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), dbtvault.escape_column_name(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -116,7 +131,12 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), null_placeholder_string) | indent(4) -}}
+        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+            {%- set escaped_column_str = column_str -%}
+        {%- else -%}
+            {%- set escaped_column_str = dbtvault.escape_column_name(column_str) -%}
+        {%- endif -%}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
         {{- ",'{}',".format(concat_string) if not loop.last -}}
         {%- if loop.last -%}
 
@@ -164,7 +184,12 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {{- "CAST(HASHBYTES('{}', {}) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), hash_size, dbtvault.escape_column_name(alias)) | indent(4) -}}
+    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+        {%- set escaped_column_str = column_str -%}
+    {%- else -%}
+        {%- set escaped_column_str = dbtvault.escape_column_name(column_str) -%}
+    {%- endif -%}
+    {{- "CAST(HASHBYTES('{}', {}) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), hash_size, dbtvault.escape_column_name(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -181,7 +206,12 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {{- "\nISNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', dbtvault.escape_column_name(column_str)), null_placeholder_string) | indent(4) -}}
+        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+            {%- set escaped_column_str = column_str -%}
+        {%- else -%}
+            {%- set escaped_column_str = dbtvault.escape_column_name(column_str) -%}
+        {%- endif -%}
+        {{- "\nISNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
 
         {%- if loop.last -%}

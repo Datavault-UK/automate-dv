@@ -34,7 +34,7 @@
 
                     {%- if order_by_col is mapping %}
                         {%- set column_name, direction = order_by_col.items()|first -%}
-                        {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
+                        {%- set order_by_str = "{} {}".format(dbtvault.escape_column_name(column_name), direction) | trim -%}
                     {%- else -%}
                         {%- set order_by_str = order_by_col -%}
                     {%- endif -%}
@@ -42,7 +42,7 @@
                     {%- do order_by_str_lst.append(order_by_str) -%}
                 {%- endfor -%}
 
-                {%- set order_by_str = dbtvault.escape_column_name(order_by_str_lst) | join(", ") -%}
+                {%- set order_by_str = order_by_str_lst | join(", ") -%}
 
             {%- else -%}
 
