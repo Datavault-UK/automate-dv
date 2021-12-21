@@ -337,19 +337,15 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
-latest_records_unranked AS (
+latest_records AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_num
     FROM {{ this }} AS b
-),
-
-latest_records AS (
-    SELECT *
-    FROM latest_records_unranked
-    WHERE row_num = 1
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='b', condition='IS NOT NULL') }}
+    QUALIFY row_num = 1
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
