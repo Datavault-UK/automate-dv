@@ -15,7 +15,7 @@ def sts(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME"
+            "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
 
@@ -23,7 +23,7 @@ def sts(context):
         "STS": {
             "src_pk": "CUSTOMER_PK",
             "src_status": ["STATUS"],
-            "src_ldts": "LOAD_DATETIME",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
     }
@@ -32,7 +32,7 @@ def sts(context):
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
                 "STATUS": "VARCHAR"
             }
@@ -40,7 +40,7 @@ def sts(context):
         "STS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
                 "STATUS": "VARCHAR"
             }
