@@ -30,7 +30,8 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "xts": xts,
         "ma_sat": ma_sat,
         "bridge": bridge,
-        "pit": pit
+        "pit": pit,
+        "sts": sts
     }
 
     processed_metadata = process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -304,6 +305,31 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     {{{{ dbtvault.bridge(src_pk={src_pk}, as_of_dates_table={as_of_dates_table}, 
                          bridge_walk={bridge_walk}, stage_tables_ldts={stage_tables_ldts}, 
                          src_ldts={src_ldts}, source_model={source_model}) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def sts(model_name, src_pk, src_ldts, src_source,
+        src_status, source_model,
+        config, depends_on=""):
+    """
+    Generate a satellite model template
+        :param model_name: Name of the model file
+        :param src_pk: Source pk
+        :param src_ldts: Source load date timestamp
+        :param src_source: Source record source column
+        :param src_status: Source record status
+        :param source_model: Model name to select from
+        :param config: Optional model config
+        :param depends_on: Optional forced dependency
+    """
+
+    template = f"""
+    {depends_on}
+    {{{{ config({config}) }}}}
+    {{{{ dbtvault.sts(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source},
+                      src_status={src_status}, source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)

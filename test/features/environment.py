@@ -15,6 +15,7 @@ from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
+from test.features.sts import fixtures_sts
 
 fixture_registry_utils = {
     "fixture.enable_sha": enable_sha,
@@ -154,6 +155,9 @@ fixtures_registry = {
         {"snowflake": fixtures_cycle.cycle,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver},
+
+    "fixture.sts":
+        {"snowflake": fixtures_sts.sts},
 
 }
 
