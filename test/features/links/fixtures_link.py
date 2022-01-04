@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def single_source_link(context):
     """
@@ -175,6 +177,8 @@ def single_source_comppk_link(context):
         }
     }
 
+
+# BIGQUERY
 
 @fixture
 def single_source_link_bigquery(context):
@@ -351,6 +355,8 @@ def single_source_comppk_link_bigquery(context):
     }
 
 
+# SQLSERVER
+
 @fixture
 def single_source_link_sqlserver(context):
     """
@@ -524,5 +530,3 @@ def single_source_comppk_link_sqlserver(context):
             }
         }
     }
-
-

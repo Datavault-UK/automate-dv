@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def pit(context):
     """
@@ -879,6 +881,8 @@ def pit_two_sats(context):
     }
 
 
+# BIGQUERY
+
 @fixture
 def pit_bigquery(context):
     """
@@ -1754,6 +1758,8 @@ def pit_two_sats_bigquery(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def pit_sqlserver(context):

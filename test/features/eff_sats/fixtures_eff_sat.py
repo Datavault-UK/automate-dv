@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def eff_satellite(context):
     """
@@ -296,6 +298,8 @@ def eff_satellite_multipart(context):
         }
     }
 
+
+# BIGQUERY
 
 @fixture
 def eff_satellite_bigquery(context):
@@ -593,6 +597,8 @@ def eff_satellite_multipart_bigquery(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def eff_satellite_sqlserver(context):

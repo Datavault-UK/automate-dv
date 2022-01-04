@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def staging(context):
     """
@@ -73,6 +75,8 @@ def staging_escaped(context):
     }
 
 
+# BIGQUERY
+
 @fixture
 def staging_bigquery(context):
     """
@@ -144,6 +148,8 @@ def staging_escaped_bigquery(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def staging_sqlserver(context):
@@ -234,5 +240,3 @@ def staging_escaped_sqlserver(context):
             }
         }
     }
-
-

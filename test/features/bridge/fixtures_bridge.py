@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def bridge(context):
     """
@@ -387,6 +389,8 @@ def bridge(context):
     }
 
 
+# BIGQUERY
+
 @fixture
 def bridge_bigquery(context):
     """
@@ -772,6 +776,8 @@ def bridge_bigquery(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def bridge_sqlserver(context):

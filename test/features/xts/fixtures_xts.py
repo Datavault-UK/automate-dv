@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def xts(context):
     """
@@ -369,6 +371,8 @@ def xts(context):
     }
 
 
+# BIGQUERY
+
 @fixture
 def xts_bigquery(context):
     """
@@ -736,6 +740,8 @@ def xts_bigquery(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def xts_sqlserver(context):

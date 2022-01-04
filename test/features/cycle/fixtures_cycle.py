@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def cycle(context):
     """
@@ -233,6 +235,8 @@ def cycle(context):
     }
 
 
+# BIGQUERY
+
 @fixture
 def cycle_bigquery(context):
     """
@@ -464,6 +468,8 @@ def cycle_bigquery(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def cycle_sqlserver(context):

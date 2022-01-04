@@ -1,6 +1,8 @@
 from behave import fixture
 
 
+# SNOWFLAKE
+
 @fixture
 def satellite(context):
     """
@@ -168,6 +170,8 @@ def satellite_cycle(context):
         }
     }
 
+
+# BIGQUERY
 
 @fixture
 def satellite_bigquery(context):
@@ -337,6 +341,8 @@ def satellite_cycle_bigquery(context):
     }
 
 
+# SQLSERVER
+
 @fixture
 def satellite_sqlserver(context):
     """
@@ -503,4 +509,3 @@ def satellite_cycle_sqlserver(context):
             }
         }
     }
-

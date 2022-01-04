@@ -160,11 +160,13 @@ fixtures_registry = {
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
 fixture_registry_bigquery = {k: v['bigquery'] for k, v in fixtures_registry.items()}
 fixture_registry_sqlserver = {k: v['sqlserver'] for k, v in fixtures_registry.items()}
+fixture_registry_postgres = {k: v['postgres'] for k, v in fixtures_registry.items()}
 
 fixture_lookup = {
     'snowflake': fixture_registry_utils | fixture_registry_snowflake,
     'bigquery': fixture_registry_utils | fixture_registry_bigquery,
-    'sqlserver': fixture_registry_utils | fixture_registry_sqlserver
+    'sqlserver': fixture_registry_utils | fixture_registry_sqlserver,
+    'postgres': fixture_registry_utils | fixture_registry_postgres
 }
 
 
