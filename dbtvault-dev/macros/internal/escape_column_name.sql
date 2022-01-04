@@ -2,17 +2,15 @@
 
 {# Different platforms use different escape characters, the default below is for Snowflake which uses double quotes #}
 
-    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
-    {%- set escape_char_right = var('escape_char_right', '"') -%}
-
     {%- if dbtvault.is_something(columns) -%}
 
-        {%- set col_list = [] -%}
         {%- set col_string = '' -%}
+        {%- set col_list = [] -%}
+        {%- set col_mapping = {} -%}
 
         {%- if columns is string -%}
 
-            {%- set col_string = escape_char_left ~ columns | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+            {%- set col_string = dbtvault.escape_col(columns) -%}
 
         {%- elif dbtvault.is_list(columns) -%}
 
@@ -20,7 +18,7 @@
 
                 {%- if col is string -%}
 
-                    {%- set escaped_col = escape_char_left ~ col | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+                    {%- set escaped_col = dbtvault.escape_col(col) -%}
 
                     {%- do col_list.append(escaped_col) -%}
 
@@ -34,10 +32,26 @@
 
             {%- endfor -%}
 
+        {%- elif columns is mapping -%}
+
+            {%- if columns['source_column'] and columns['alias'] -%}
+
+                {%- set escaped_source_col = dbtvault.escape_col(columns['source_column']) -%}
+                {%- set escaped_alias_col = dbtvault.escape_col(columns['alias']) -%}
+                {%- set col_mapping = {"source_column": escaped_source_col, "alias": escaped_alias_col} -%}
+
+            {%- else -%}
+
+                {%- if execute -%}
+                    {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata.") -}}
+                {%- endif %}
+
+            {%- endif -%}
+
         {%- else -%}
 
             {%- if execute -%}
-                {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string or a list of strings.") -}}
+                {{- exceptions.raise_compiler_error("Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata.") -}}
             {%- endif %}
 
         {%- endif -%}
@@ -58,6 +72,10 @@
 
     {%- do return([]) -%}
 
+{%- elif columns == {} -%}
+
+    {%- do return({}) -%}
+
 {%- elif columns is string -%}
 
     {%- do return(col_string) -%}
@@ -66,6 +84,22 @@
 
     {%- do return(col_list) -%}
 
+{%- elif columns is mapping -%}
+
+    {%- do return(col_mapping) -%}
+
 {%- endif -%}
+
+{%- endmacro -%}
+
+
+{%- macro escape_col(column_name) -%}
+
+    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
+    {%- set escape_char_right = var('escape_char_right', '"') -%}
+
+    {%- set escaped_column_name = escape_char_left ~ column_name | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+
+    {%- do return(escaped_column_name)-%}
 
 {%- endmacro -%}
