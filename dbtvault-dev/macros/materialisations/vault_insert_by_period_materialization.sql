@@ -6,7 +6,7 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(this) -%}
 
-    {%- set timestamp_field = dbtvault.escape_column_name(config.require('timestamp_field')) -%}
+    {%- set timestamp_field = dbtvault.escape_column_names(config.require('timestamp_field')) -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}

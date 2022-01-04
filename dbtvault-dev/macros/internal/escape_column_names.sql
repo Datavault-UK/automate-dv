@@ -1,4 +1,4 @@
-{%- macro escape_column_name(columns=none) -%}
+{%- macro escape_column_names(columns=none) -%}
 
 {# Different platforms use different escape characters, the default below is for Snowflake which uses double quotes #}
 
@@ -10,7 +10,7 @@
 
         {%- if columns is string -%}
 
-            {%- set col_string = dbtvault.escape_col(columns) -%}
+            {%- set col_string = dbtvault.escape_column_name(columns) -%}
 
         {%- elif dbtvault.is_list(columns) -%}
 
@@ -18,7 +18,7 @@
 
                 {%- if col is string -%}
 
-                    {%- set escaped_col = dbtvault.escape_col(col) -%}
+                    {%- set escaped_col = dbtvault.escape_column_name(col) -%}
 
                     {%- do col_list.append(escaped_col) -%}
 
@@ -36,8 +36,8 @@
 
             {%- if columns['source_column'] and columns['alias'] -%}
 
-                {%- set escaped_source_col = dbtvault.escape_col(columns['source_column']) -%}
-                {%- set escaped_alias_col = dbtvault.escape_col(columns['alias']) -%}
+                {%- set escaped_source_col = dbtvault.escape_column_name(columns['source_column']) -%}
+                {%- set escaped_alias_col = dbtvault.escape_column_name(columns['alias']) -%}
                 {%- set col_mapping = {"source_column": escaped_source_col, "alias": escaped_alias_col} -%}
 
             {%- else -%}
@@ -93,12 +93,12 @@
 {%- endmacro -%}
 
 
-{%- macro escape_col(column_name) -%}
+{%- macro escape_column_name(column) -%}
 
     {%- set escape_char_left  = var('escape_char_left',  '"') -%}
     {%- set escape_char_right = var('escape_char_right', '"') -%}
 
-    {%- set escaped_column_name = escape_char_left ~ column_name | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
 
     {%- do return(escaped_column_name)-%}
 

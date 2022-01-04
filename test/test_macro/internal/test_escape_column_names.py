@@ -2,7 +2,7 @@ import pytest
 
 from test import dbtvault_harness_utils
 
-macro_name = "escape_column_name"
+macro_name = "escape_column_names"
 
 
 @pytest.mark.macro
