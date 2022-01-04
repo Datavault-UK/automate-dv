@@ -100,6 +100,6 @@
 
     {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
 
-    {%- do return(escaped_column_name)-%}
+    {%- do return(escaped_column_name) -%}
 
 {%- endmacro -%}
