@@ -911,3 +911,47 @@ def single_source_comppknk_hub_sqlserver(context):
             }
         }
     }
+
+
+# POSTGRES
+# TODO: UPDATE
+
+@fixture
+def single_source_hub_postgres(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }

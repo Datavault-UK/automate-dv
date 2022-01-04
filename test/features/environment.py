@@ -38,7 +38,8 @@ fixtures_registry = {
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
-         "sqlserver": fixtures_hub.single_source_hub_sqlserver},
+         "sqlserver": fixtures_hub.single_source_hub_sqlserver,
+         "postgres": fixtures_hub.single_source_hub_postgres},
 
     "fixture.single_source_comppk_hub":
         {"snowflake": fixtures_hub.single_source_comppk_hub,
@@ -160,7 +161,7 @@ fixtures_registry = {
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
 fixture_registry_bigquery = {k: v['bigquery'] for k, v in fixtures_registry.items()}
 fixture_registry_sqlserver = {k: v['sqlserver'] for k, v in fixtures_registry.items()}
-fixture_registry_postgres = {k: v['postgres'] for k, v in fixtures_registry.items()}
+fixture_registry_postgres = {k: v.get('postgres', None) for k, v in fixtures_registry.items()}
 
 fixture_lookup = {
     'snowflake': fixture_registry_utils | fixture_registry_snowflake,
