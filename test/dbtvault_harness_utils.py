@@ -753,8 +753,8 @@ def feature_sub_types():
                 'xts',
                 'xts_comppk'
             ],
-            'inc': [
-                'xts_inc'
+            'incremental': [
+                'xts_incremental'
             ]
         },
         'ma_sats': {
