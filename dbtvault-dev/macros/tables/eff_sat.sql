@@ -385,7 +385,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['g','lc'], condition='=') }}
-    WHERE CAST((g.{{ src_end_date }}) AS DATETIME) = CAST(('{{ max_datetime }}') AS DATETIME)
+    WHERE CAST((g.{{ src_end_date }}) AS DATE) = CAST(('{{ max_datetime }}') AS DATE)
 ),
 
 {%- if is_auto_end_dating %}
@@ -424,7 +424,7 @@ new_closed_records AS (
     ON lo.{{ src_pk }} = h.{{ src_pk }}
     LEFT JOIN latest_closed AS lc
     ON lc.{{ src_pk }} = h.{{ src_pk }}
-    WHERE CAST((h.{{ src_end_date }}) AS DATETIME) != CAST(('{{ max_datetime }}') AS DATETIME)
+    WHERE CAST((h.{{ src_end_date }}) AS DATE) != CAST(('{{ max_datetime }}') AS DATE)
     AND lo.{{ src_pk }} IS NOT NULL
     AND lc.{{ src_pk }} IS NULL
 ),
