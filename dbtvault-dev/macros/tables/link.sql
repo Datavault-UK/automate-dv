@@ -12,16 +12,16 @@
                                        src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
-{%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_fk = dbtvault.escape_column_name(src_fk) -%}
-{%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_name(src_source) -%}
+{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+{%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
+{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_name([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
