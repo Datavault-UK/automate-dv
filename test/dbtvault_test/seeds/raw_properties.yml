@@ -1,0 +1,16 @@
+version: 2
+seeds:
+  - name: raw_source
+    config:
+      column_types:
+        CUSTOMER_PK: BINARY(16)
+        BOOKING_FK: BINARY(16)
+        ORDER_FK: BINARY(16)
+        LOAD_DATE: DATE
+  - name: raw_source_2
+    config:
+      column_types:
+        CUSTOMER_PK: BINARY(16)
+        BOOKING_FK: BINARY(16)
+        ORDER_FK: BINARY(16)
+        LOAD_DATE: DATE

@@ -30,6 +30,11 @@ fixtures_registry = {
          "bigquery": fixtures_staging.staging_bigquery,
          "sqlserver": fixtures_staging.staging_sqlserver},
 
+    "fixture.staging_escaped":
+        {"snowflake": fixtures_staging.staging_escaped,
+         "bigquery": fixtures_staging.staging_escaped,
+         "sqlserver": fixtures_staging.staging_escaped},
+
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
@@ -94,6 +99,11 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat.eff_satellite,
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver},
+
+    "fixture.eff_satellite_datetime":
+        {"snowflake": fixtures_eff_sat.eff_satellite_datetime,
+         "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
+         "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver},
 
     "fixture.eff_satellite_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating,
@@ -169,7 +179,7 @@ def before_all(context):
     # Env setup
     dbtvault_harness_utils.setup_environment()
 
-    # Restore modified YAML to starting state
+    # Delete temp YAML files
     dbtvault_generator.clean_test_schema_file()
 
     # Backup YAML prior to run
@@ -188,7 +198,7 @@ def before_scenario(context, scenario):
     dbtvault_harness_utils.create_dummy_model()
     dbtvault_harness_utils.replace_test_schema()
 
-    dbtvault_harness_utils.clean_csv()
+    dbtvault_harness_utils.clean_seeds()
     dbtvault_harness_utils.clean_models()
     dbtvault_harness_utils.clean_target()
 
