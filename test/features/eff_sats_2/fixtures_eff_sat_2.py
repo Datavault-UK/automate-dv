@@ -32,7 +32,7 @@ def eff_satellite_2(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "ORDER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -43,7 +43,7 @@ def eff_satellite_2(context):
         },
 
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
@@ -90,7 +90,7 @@ def eff_satellite_2_multipart(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "NATION_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
@@ -102,7 +102,7 @@ def eff_satellite_2_multipart(context):
             }
         },
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
                 "PLATFORM_PK": "BINARY(16)",
@@ -182,7 +182,7 @@ def eff_satellite_2_testing_auto_end_dating(context):
 
         context.seed_config = {
             "RAW_STAGE_CUSTOMER_ORDER": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "VARCHAR",
                     "ORDER_ID": "VARCHAR",
                     "EFFECTIVE_FROM": "DATETIME",
@@ -192,7 +192,7 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 }
             },
             "RAW_STAGE_ORDER_CUSTOMER": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "VARCHAR",
                     "ORDER_ID": "VARCHAR",
                     "EFFECTIVE_FROM": "DATETIME",
@@ -202,7 +202,7 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 }
             },
             "LINK_CUSTOMER_ORDER": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ORDER_PK": "BINARY(16)",
                     "CUSTOMER_PK": "BINARY(16)",
                     "ORDER_PK": "BINARY(16)",
@@ -211,7 +211,7 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 }
             },
             "LINK_ORDER_CUSTOMER": {
-                "+column_types": {
+                "column_types": {
                     "ORDER_CUSTOMER_PK": "BINARY(16)",
                     "CUSTOMER_PK": "BINARY(16)",
                     "ORDER_PK": "BINARY(16)",
@@ -220,7 +220,7 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 }
             },
             "EFF_SAT_CUSTOMER_ORDER": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ORDER_PK": "BINARY(16)",
                     "CUSTOMER_PK": "BINARY(16)",
                     "ORDER_PK": "BINARY(16)",
@@ -232,7 +232,7 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 }
             },
             "EFF_SAT_ORDER_CUSTOMER": {
-                "+column_types": {
+                "column_types": {
                     "ORDER_CUSTOMER_PK": "BINARY(16)",
                     "CUSTOMER_PK": "BINARY(16)",
                     "ORDER_PK": "BINARY(16)",

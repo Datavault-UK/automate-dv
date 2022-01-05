@@ -52,7 +52,7 @@ def eff_satellite_oos(context):
     }
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "ORDER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -62,7 +62,7 @@ def eff_satellite_oos(context):
         },
 
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
@@ -74,7 +74,7 @@ def eff_satellite_oos(context):
             }
         },
         "XTS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SATELLITE_NAME": "VARCHAR",
@@ -115,7 +115,7 @@ def eff_satellite_oos_in_sequence(context):
     }
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "ORDER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -125,7 +125,7 @@ def eff_satellite_oos_in_sequence(context):
         },
 
         "EFF_SAT": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",

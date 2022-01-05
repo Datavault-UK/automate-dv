@@ -36,7 +36,7 @@
 {#- If single column to hash -#}
 {%- if columns is string and dbtvault.is_something(columns) -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) or "::" in column_str -%}
         {%- set escaped_column_str = column_str -%}
     {%- else -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
@@ -63,7 +63,7 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) or "::" in column_str -%}
             {%- set escaped_column_str = column_str -%}
         {%- else -%}
             {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
@@ -114,7 +114,7 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) or "::" in column_str -%}
         {%- set escaped_column_str = column_str -%}
     {%- else -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
@@ -136,7 +136,7 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) or "::" in column_str -%}
             {%- set escaped_column_str = column_str -%}
         {%- else -%}
             {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
@@ -189,7 +189,7 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+    {%- if "'" in column_str or ("(" in column_str and ")" in column_str) or "::" in column_str -%}
         {%- set escaped_column_str = column_str -%}
     {%- else -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
@@ -211,7 +211,7 @@
         {%- do all_null.append(null_placeholder_string) -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) -%}
+        {%- if "'" in column_str or ("(" in column_str and ")" in column_str) or "::" in column_str -%}
             {%- set escaped_column_str = column_str -%}
         {%- else -%}
             {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
