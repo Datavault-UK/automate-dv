@@ -1,7 +1,7 @@
-Feature: [SF-XTS-INC] Extended Record Tracking Satellites
+Feature: [SQLS-XTS-INC] Extended Record Tracking Satellites
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-001] Load multiple subsequent stages into a single stage XTS with no timeline change
+  Scenario: [SQLS-XTS-INC-001] Load multiple subsequent stages into a single stage XTS with no timeline change
     Given the XTS xts is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -27,7 +27,7 @@ Feature: [SF-XTS-INC] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-03 | *      |
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-002] Load duplicated data into a pre-populated XTS
+  Scenario: [SQLS-XTS-INC-002] Load duplicated data into a pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1992-12-31 | *      |
@@ -46,7 +46,7 @@ Feature: [SF-XTS-INC] Extended Record Tracking Satellites
       | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-003] Subsequent loads with no timeline change into a pre-populated XTS
+  Scenario: [SQLS-XTS-INC-003] Subsequent loads with no timeline change into a pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                  | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1000') | md5('ZAK\|\|1000\|\|ZON') | SAT_CUSTOMER   | 1992-12-31 | *      |
@@ -85,7 +85,7 @@ Feature: [SF-XTS-INC] Extended Record Tracking Satellites
       | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-03 | *      |
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-004] Loads from a single stage to multiple satellites and a pre-populated xts
+  Scenario: [SQLS-XTS-INC-004] Loads from a single stage to multiple satellites and a pre-populated xts
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty
@@ -120,7 +120,7 @@ Feature: [SF-XTS-INC] Extended Record Tracking Satellites
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-005] Loads from numerous stages each containing feeds to one satellite and a pre-populated xts
+  Scenario: [SQLS-XTS-INC-005] Loads from numerous stages each containing feeds to one satellite and a pre-populated xts
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1992-12-31 | *      |
@@ -158,7 +158,7 @@ Feature: [SF-XTS-INC] Extended Record Tracking Satellites
       | md5('1008') | md5('HEATHER\|\|1008\|\|HUGHES')  | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-006] Loads from numerous stages each containing feeds to multiple satellites and a pre-populated xts
+  Scenario: [SQLS-XTS-INC-006] Loads from numerous stages each containing feeds to multiple satellites and a pre-populated xts
     Given I have an empty RAW_STAGE_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty
@@ -204,7 +204,7 @@ Feature: [SF-XTS-INC] Extended Record Tracking Satellites
       | md5('1008') | md5('2018-04-13\|\|1008\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [SF-XTS-INC-007] Null unique identifier values are not loaded into an pre-populated XTS
+  Scenario: [SQLS-XTS-INC-007] Null unique identifier values are not loaded into an pre-populated XTS
     Given the XTS xts is already populated with data
       | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1992-12-31 | *      |

@@ -15,7 +15,6 @@ Feature: [SQLS-TLK-PM] Transactional Links using Period Materialization
     And I stage the STG_CUSTOMER data
     And I insert by period into the T_LINK t_link by day
     And I insert by period into the T_LINK t_link by day
-    When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |

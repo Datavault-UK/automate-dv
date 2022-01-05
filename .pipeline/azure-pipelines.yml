@@ -51,8 +51,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'hubs'
-        displayName: 'Hubs'
+      - job: 'hubs_main'
+        displayName: 'Hubs Main'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -60,13 +60,13 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s hubs -p snowflake
+          - script: inv run-integration-tests -s hubs --subtype main -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'links'
-        displayName: 'Links'
+      - job: 'hubs_comppk'
+        displayName: 'Hubs Comp PK'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -74,7 +74,105 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s links -p snowflake
+          - script: inv run-integration-tests -s hubs --subtype comppk -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_incremental'
+        displayName: 'Hubs Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype incremental -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_pm'
+        displayName: 'Hubs PM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype pm -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_rm'
+        displayName: 'Hubs RM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype rank -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_main'
+        displayName: 'Links Main'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype main -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_incremental'
+        displayName: 'Links Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype incremental -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_pm'
+        displayName: 'Links PM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype pm -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_rm'
+        displayName: 'Links RM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype rank -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -159,48 +257,6 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s sats --subtype rank -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_with_oos_main'
-        displayName: 'Sats OOS - Main'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos --subtype main -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_with_oos_cycles'
-        displayName: 'Sats OOS - Cycles'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos --subtype cycles -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'sats_with_oos_mat'
-        displayName: 'Sats OOS - Mat'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s sats_with_oos --subtype mat -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
