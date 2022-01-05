@@ -8,9 +8,9 @@
 
 {%- macro default__xts(src_pk, src_satellite, src_ldts, src_source, source_model) -%}
 
-{%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_name(src_source) -%}
+{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -25,7 +25,7 @@
         {%- set hashdiff = (satellite[1]['hashdiff'].values() | list) [0] %}
 
         satellite_{{ satellite_name }}_from_{{ src }} AS (
-            SELECT {{ dbtvault.prefix([src_pk], 's') }}, s.{{ dbtvault.escape_column_name(hashdiff) }} AS HASHDIFF, s.{{ dbtvault.escape_column_name(satellite_name) }} AS SATELLITE_NAME, s.{{ src_ldts }}, s.{{ src_source }}
+            SELECT {{ dbtvault.prefix([src_pk], 's') }}, s.{{ dbtvault.escape_column_names(hashdiff) }} AS HASHDIFF, s.{{ dbtvault.escape_column_names(satellite_name) }} AS SATELLITE_NAME, s.{{ src_ldts }}, s.{{ src_source }}
             FROM {{ ref(src) }} AS s
             WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
         ),

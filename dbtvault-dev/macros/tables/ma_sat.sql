@@ -13,12 +13,12 @@
                                        src_payload=src_payload, src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
-{%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_cdk = dbtvault.escape_column_name(src_cdk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_name(src_payload) -%}
-{%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_name(src_source) -%}
+{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+{%- set src_cdk = dbtvault.escape_column_names(src_cdk) -%}
+{%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
+{%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
+{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
@@ -133,12 +133,12 @@ SELECT * FROM records_to_insert
                                        src_payload=src_payload, src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
-{%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_cdk = dbtvault.escape_column_name(src_cdk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_name(src_payload) -%}
-{%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_name(src_source) -%}
+{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+{%- set src_cdk = dbtvault.escape_column_names(src_cdk) -%}
+{%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
+{%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
+{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
@@ -277,12 +277,12 @@ SELECT * FROM records_to_insert
                                        src_payload=src_payload, src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
-{%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
-{%- set src_cdk = dbtvault.escape_column_name(src_cdk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_name(src_payload) -%}
-{%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_name(src_source) -%}
+{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+{%- set src_cdk = dbtvault.escape_column_names(src_cdk) -%}
+{%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
+{%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
+{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
