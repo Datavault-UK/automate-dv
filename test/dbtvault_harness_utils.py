@@ -670,6 +670,15 @@ def retrieve_expected_sql(request: FixtureRequest):
         return processed_file
 
 
+def parallel_run_dbt_models(process_number, process_results, model_name=None, is_full_refresh=False):
+
+    logs = run_dbt_models(mode="run", model_names=[model_name], full_refresh=is_full_refresh)
+
+    process_results[process_number] = logs
+
+    return process_results
+
+
 def feature_sub_types():
     return {
         'hubs': {
@@ -822,3 +831,4 @@ def feature_sub_types():
             ]
         },
     }
+

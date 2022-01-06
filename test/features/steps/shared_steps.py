@@ -266,15 +266,6 @@ def load_table(context, model_name, vault_structure):
     assert "Completed successfully" in logs
 
 
-def parallel_run_dbt_models(process_number, process_results, model_name=None):
-
-    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
-
-    process_results[process_number] = logs
-
-    return process_results
-
-
 @step("I parallel load with {process_count} process the {model_name} {vault_structure}")
 @step("I parallel load with {process_count} processes the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure, process_count):
@@ -296,7 +287,7 @@ def load_table(context, model_name, vault_structure, process_count):
     processes = []
 
     for i in range(int(process_count)):
-        p = Process(target=parallel_run_dbt_models, args=(i, process_results, model_name))
+        p = Process(target=dbtvault_harness_utils.parallel_run_dbt_models, args=(i, process_results, model_name))
         processes.append(p)
         p.start()
 
