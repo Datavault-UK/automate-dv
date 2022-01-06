@@ -1,4 +1,5 @@
 import copy
+from multiprocessing import Process, Manager
 
 from behave import *
 from behave.model import Table, Row
@@ -263,6 +264,47 @@ def load_table(context, model_name, vault_structure):
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
+
+
+def parallel_run_dbt_models(process_number, process_results, model_name=None):
+
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
+
+    process_results[process_number] = logs
+
+    return process_results
+
+
+@step("I parallel load with {process_count} process the {model_name} {vault_structure}")
+@step("I parallel load with {process_count} processes the {model_name} {vault_structure}")
+def load_table(context, model_name, vault_structure, process_count):
+    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
+
+    config = dbtvault_generator.append_end_date_config(context, dict())
+
+    metadata = dbtvault_harness_utils.filter_metadata(context, metadata)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    manager = Manager()
+    process_results = manager.dict()
+    processes = []
+
+    for i in range(int(process_count)):
+        p = Process(target=parallel_run_dbt_models, args=(i, process_results, model_name))
+        processes.append(p)
+        p.start()
+
+    for p in processes:
+        p.join()
+
+    for log in process_results.values():
+        assert "Completed successfully" in log
 
 
 @step("I load the vault")
