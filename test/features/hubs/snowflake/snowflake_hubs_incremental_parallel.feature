@@ -83,7 +83,7 @@ Feature: [SF-HUB-PARALLEL] Hubs Loaded using parallel load
       | 1001        | Alice         | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 1993-01-01 | TPCH   |
     And I stage the STG_CUSTOMER data
-    And I load the HUB hub
+    And I load using 1 parallel incremental load the HUB hub
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alicia        | 1993-01-02 | TPCH   |
@@ -108,7 +108,7 @@ Feature: [SF-HUB-PARALLEL] Hubs Loaded using parallel load
       | 1001        | Alice         | 1993-01-01 | TPCH   |
       | 1002        | Bob           | 1993-01-01 | TPCH   |
     And I stage the STG_CUSTOMER data
-    And I load the HUB hub
+    And I load using 2 parallel incremental loads the HUB hub
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1001        | Alicia        | 1993-01-02 | TPCH   |
