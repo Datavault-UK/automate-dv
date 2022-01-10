@@ -180,28 +180,3 @@ Feature: [SF-SAT-PM-P] Satellites Loaded using Period Materialization for provid
       | md5('1003') | md5('1990-02-03\|\|1003\|\|CHRIS')   | Chris         | 1990-02-03   | 2019-05-05     | 2019-05-05 | *      |
       | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID')   | David         | 1992-01-30   | 2019-05-05     | 2019-05-05 | *      |
       | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY')   | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
-
-  @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-P-06] Two satellite loads, base and incremental, where second load and fourth load contains duplicates
-    Given the SATELLITE table does not exist
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
-      | 1002        | Beth          | 1995-08-07   | 2019-05-05     | 2019-05-03 | *      |
-      | 1002        | Beth          | 1995-08-07   | 2019-05-05     | 2019-05-04 | *      |
-      | 1003        | Charley       | 1995-08-03   | 2019-05-06     | 2019-05-05 | *      |
-      | 1004        | David         | 1995-08-10   | 2019-05-07     | 2019-05-06 | *      |
-      | 1004        | David         | 1995-08-10   | 2019-05-07     | 2019-05-06 | *      |
-    And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-03 to 2019-05-06 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                            | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT') | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
-      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')   | Beth          | 1995-08-07   | 2019-05-05     | 2019-05-03 | *      |
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-03 to 2019-05-06 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT')  | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
-      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')    | Beth          | 1995-08-07   | 2019-05-05     | 2019-05-03 | *      |
-      | md5('1003') | md5('1995-08-03\|\|1003\|\|CHARLEY') | Charley       | 1995-08-03   | 2019-05-06     | 2019-05-05 | *      |
-      | md5('1004') | md5('1995-08-10\|\|1004\|\|DAVID')   | David         | 1995-08-10   | 2019-05-07     | 2019-05-06 | *      |
