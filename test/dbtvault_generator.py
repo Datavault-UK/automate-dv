@@ -524,7 +524,8 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "t_link": "incremental",
         "ma_sat": "incremental",
         "pit": "pit_incremental",
-        "bridge": "bridge_incremental"
+        "bridge": "bridge_incremental",
+        "sts": "incremental"
     }
 
     if config:

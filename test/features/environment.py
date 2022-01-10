@@ -157,7 +157,9 @@ fixtures_registry = {
          "sqlserver": fixtures_cycle.cycle_sqlserver},
 
     "fixture.sts":
-        {"snowflake": fixtures_sts.sts},
+        {"snowflake": fixtures_sts.sts,
+         "bigquery": fixtures_sts.sts,
+         "sqlserver": fixtures_sts.sts},
 
 }
 
