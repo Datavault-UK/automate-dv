@@ -164,10 +164,9 @@ Feature: [SF-SAT-PM-D] Satellites Loaded using Period Materialization with daily
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT') | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')   | Beth          | 1995-08-07   | 2019-05-05     | 2019-05-04 | *      |
 
-
   @fixture.satellite_cycle
   Scenario: [SF-SAT-PM-D-07] Satellite load with daily interval and intra-batch duplicates on base load, same PK and LDTS but different payload.
-    The second and third loads insert duplicate records for CUSTOMER_ID = 1002 so the test fails
+  The second and third loads insert duplicate records for CUSTOMER_ID = 1002 so the test fails
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
