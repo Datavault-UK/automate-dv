@@ -4,6 +4,8 @@ from multiprocessing import Process, Manager
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
 
+import time
+
 
 @step("I load using {process_count} parallel incremental load the {model_name} {vault_structure}")
 @step("I load using {process_count} parallel incremental loads the {model_name} {vault_structure}")
@@ -33,6 +35,7 @@ def load_table(context, model_name, vault_structure, process_count):
         p = Process(target=dbtvault_harness_utils.parallel_run_dbt_models, args=(i, process_results, model_name, is_full_refresh))
         processes.append(p)
         p.start()
+        time.sleep(0.1)
 
     for p in processes:
         p.join()

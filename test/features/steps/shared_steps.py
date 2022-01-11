@@ -7,6 +7,8 @@ from behave.model import Table, Row
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
 
+import time
+
 
 def set_stage_metadata(context, stage_model_name) -> dict:
     """
@@ -290,6 +292,7 @@ def load_table(context, model_name, vault_structure, process_count):
         p = Process(target=dbtvault_harness_utils.parallel_run_dbt_models, args=(i, process_results, model_name))
         processes.append(p)
         p.start()
+        time.sleep(1)
 
     for p in processes:
         p.join()
