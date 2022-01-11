@@ -111,7 +111,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
       | md5('1004') | md5('1995-08-10\|\|1004\|\|DAVID')   | David         | 1995-08-10   | 2019-05-07     | 2019-06-06 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-M-06] Satellite load with monthly interval and intra-batch same day and intra-load duplicates
+  Scenario: [SF-SAT-PM-M-05] Satellite load with monthly interval and intra-batch same day and intra-load duplicates
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
