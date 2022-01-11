@@ -81,6 +81,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
       | CUSTOMER_PK | HASHDIFF                            | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT') | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
     And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                            | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT') | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
@@ -142,6 +143,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
       | 1001        | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-05     | 2019-06-03 | *      |
       | 1002        | Beth          | 1995-08-07   | 2019-05-05     | 2019-06-04 | *      |
+      | 1002        | Betty         | 1995-08-07   | 2019-05-05     | 2019-06-05 | *      |
       | 1003        | Charley       | 1995-08-03   | 2019-05-06     | 2019-06-05 | *      |
       | 1004        | David         | 1995-08-10   | 2019-05-07     | 2019-06-06 | *      |
       | 1004        | David         | 1995-08-10   | 2019-05-07     | 2019-07-06 | *      |
@@ -150,6 +152,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                            | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT') | Albert        | 1990-02-03   | 2019-05-04     | 2019-05-03 | *      |
+    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
     And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
