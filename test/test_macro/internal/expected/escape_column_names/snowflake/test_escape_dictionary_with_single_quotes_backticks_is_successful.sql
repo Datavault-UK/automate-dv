@@ -1,0 +1,1 @@
+{'source_column': '`COLUMN1`', 'alias': '`COLUMN2`'}

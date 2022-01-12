@@ -191,7 +191,7 @@ def multi_active_satellite(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -200,7 +200,7 @@ def multi_active_satellite(context):
             }
         },
         "RAW_STAGE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -209,7 +209,7 @@ def multi_active_satellite(context):
             }
         },
         "RAW_STAGE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -219,7 +219,7 @@ def multi_active_satellite(context):
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -229,7 +229,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -240,7 +240,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -251,7 +251,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -262,7 +262,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -273,7 +273,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -285,7 +285,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -297,7 +297,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -309,7 +309,7 @@ def multi_active_satellite(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -513,7 +513,7 @@ def multi_active_satellite_cycle(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -523,7 +523,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "RAW_STAGE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -533,7 +533,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "RAW_STAGE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -544,7 +544,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -555,7 +555,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -566,7 +566,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -577,7 +577,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -588,7 +588,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -599,7 +599,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -611,7 +611,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -623,7 +623,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -635,7 +635,7 @@ def multi_active_satellite_cycle(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -802,7 +802,7 @@ def multi_active_satellite_cycle(context):
 
         context.seed_config = {
             "RAW_STAGE": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -811,7 +811,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "RAW_STAGE_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -820,7 +820,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "RAW_STAGE_TWO_CDK": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -830,7 +830,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "RAW_STAGE_TWO_CDK_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -840,7 +840,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -851,7 +851,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -862,7 +862,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -873,7 +873,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -884,7 +884,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -896,7 +896,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -908,7 +908,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -920,7 +920,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1123,7 +1123,7 @@ def multi_active_satellite_cycle(context):
 
         context.seed_config = {
             "RAW_STAGE": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1133,7 +1133,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "RAW_STAGE_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1143,7 +1143,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "RAW_STAGE_TWO_CDK": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1154,7 +1154,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "RAW_STAGE_TWO_CDK_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_ID": "NUMERIC",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1165,7 +1165,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "HASHDIFF": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1176,7 +1176,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "HASHDIFF": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1187,7 +1187,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1198,7 +1198,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1209,7 +1209,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "HASHDIFF": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1221,7 +1221,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "HASHDIFF": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1233,7 +1233,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1245,7 +1245,7 @@ def multi_active_satellite_cycle(context):
                 }
             },
             "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-                "+column_types": {
+                "column_types": {
                     "CUSTOMER_PK": "STRING",
                     "CUSTOMER_NAME": "STRING",
                     "CUSTOMER_PHONE": "STRING",
@@ -1413,7 +1413,7 @@ def multi_active_satellite_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1422,7 +1422,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "RAW_STAGE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1431,7 +1431,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "RAW_STAGE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1441,7 +1441,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1451,7 +1451,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1462,7 +1462,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1473,7 +1473,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1484,7 +1484,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1495,7 +1495,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1507,7 +1507,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1519,7 +1519,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1531,7 +1531,7 @@ def multi_active_satellite_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1735,7 +1735,7 @@ def multi_active_satellite_cycle_bigquery(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1745,7 +1745,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "RAW_STAGE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1755,7 +1755,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "RAW_STAGE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1766,7 +1766,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1777,7 +1777,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1788,7 +1788,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1799,7 +1799,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1810,7 +1810,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1821,7 +1821,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1833,7 +1833,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1845,7 +1845,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -1857,7 +1857,7 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -2025,7 +2025,7 @@ def multi_active_satellite_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2034,7 +2034,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "RAW_STAGE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2043,7 +2043,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "RAW_STAGE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2053,7 +2053,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2063,7 +2063,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2074,7 +2074,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2085,7 +2085,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2096,7 +2096,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2107,7 +2107,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2119,7 +2119,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2131,7 +2131,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2143,7 +2143,7 @@ def multi_active_satellite_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2347,7 +2347,7 @@ def multi_active_satellite_cycle_sqlserver(context):
 
     context.seed_config = {
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2357,7 +2357,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "RAW_STAGE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2367,7 +2367,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "RAW_STAGE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2378,7 +2378,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2389,7 +2389,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2400,7 +2400,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2411,7 +2411,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2422,7 +2422,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2433,7 +2433,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2445,7 +2445,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2457,7 +2457,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
@@ -2469,7 +2469,7 @@ def multi_active_satellite_cycle_sqlserver(context):
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",

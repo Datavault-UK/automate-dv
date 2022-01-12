@@ -426,3 +426,59 @@ Feature: [SF-STG] Staging
       | md5('BOB')   | Bob           | 17-04-2006   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('17-04-2006\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE |
       | md5('CHAD')  | Chad          | 04-02-2013   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('04-02-2013\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | md5('DOM')   | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
+
+  @fixture.staging
+  Scenario: [SF-STG-20] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     | DERIVED_CONCAT             |
+      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,CUSTOMER_NAME] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME           | PARTITION_BY                | ORDER_BY                 |
+      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | DBTVAULT_RANK |DBTVAULT_RANK2 |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             |1              |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             |1              |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             |1              |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             |1              |
+
+  @fixture.staging_escaped
+  Scenario: [SF-STG-21] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+    The customer name column name in the RAW_STAGE table includes a SPACE character, and there is derived column called COLUMN
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     | COLUMN                     | CUSTOMER_NAME |
+      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,CUSTOMER NAME] | CUSTOMER NAME |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME           | PARTITION_BY                | ORDER_BY                 |
+      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN             | DBTVAULT_RANK |DBTVAULT_RANK2 |
+      | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('ALICE\|\|1997-04-24\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             |1              |
+      | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('BOB\|\|2006-04-17\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             |1              |
+      | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD\|\|2013-02-04\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             |1              |
+      | 1004        | Dom           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('DOM\|\|2018-04-13\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             |1              |
+
