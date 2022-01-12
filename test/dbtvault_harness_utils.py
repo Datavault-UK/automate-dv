@@ -115,15 +115,19 @@ def clean_target():
     shutil.rmtree(test.TEST_PROJECT_ROOT / 'target', ignore_errors=True)
 
 
-def clean_csv(model_name=None):
+def clean_seeds(model_name=None):
     """
     Deletes csv files in csv folder.
     """
 
     if model_name:
-        delete_files = [test.CSV_DIR / f"{model_name.lower()}.csv"]
+        delete_files = [test.TEMP_SEED_DIR / f"{model_name.lower()}.csv"]
     else:
-        delete_files = [file for file in glob.glob(str(test.CSV_DIR / '*.csv'), recursive=True)]
+        delete_files = []
+        for (dir_path, dir_names, filenames) in os.walk(test.TEMP_SEED_DIR):
+            for filename in filenames:
+                if filename != ".gitkeep":
+                    delete_files.append(Path(dir_path) / filename)
 
     for file in delete_files:
         if os.path.isfile(file):
@@ -204,8 +208,8 @@ def parse_hashdiffs(columns_as_series: Series) -> Series:
 
 def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
     """
-    Convert string representations of lists in dict values, in a list of dicts
-        :param dicts_with_lists: A list of dictionaries
+    Convert string representations of lists in dict values, in a list of dicts, or a dict containing list/dict values
+        :param dicts_with_lists: A list of dictionaries, or a dict containing list/dict values
     """
 
     if isinstance(dicts_with_lists, list):
@@ -234,6 +238,38 @@ def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
                     processed_dicts[i] = {col: dicts_with_lists[i]}
 
             return processed_dicts
+
+    elif isinstance(dicts_with_lists, dict):
+
+        processed_dicts = []
+        d = []
+
+        check_dicts = [k2 for k2, v2 in dicts_with_lists.items() if isinstance(k2, int) and isinstance(v2, dict)]
+
+        if not check_dicts:
+            return dicts_with_lists
+        else:
+
+            for k1, v1 in dicts_with_lists.items():
+                processed_dicts.append(dict())
+                d.append(dict())
+
+                if isinstance(v1, dict):
+                    for k, v in v1.items():
+
+                        if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
+                            v = v.replace("[", "")
+                            v = v.replace("]", "")
+                            v = [k.strip() for k in v.split(",")]
+
+                        d[k1][k] = v
+                else:
+                    d = dicts_with_lists[k1]
+
+                processed_dicts[k1] = {k1: d[k1]}
+
+            return processed_dicts
+
     else:
         return dicts_with_lists
 
@@ -490,7 +526,7 @@ def context_table_to_csv(table: Table, model_name: str) -> str:
 
     table_df = context_table_to_df(table)
 
-    csv_fqn = test.CSV_DIR / f'{model_name.lower()}_seed.csv'
+    csv_fqn = test.TEMP_SEED_DIR / f'{model_name.lower()}_seed.csv'
 
     table_df.to_csv(path_or_buf=csv_fqn, index=False)
 
@@ -529,7 +565,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
     """
 
     feature_data = context_table_to_dicts(table=table, orient="index", use_nan=False)
-    column_types = seed_config[model_name]["+column_types"]
+    column_types = seed_config[model_name]["column_types"]
 
     sql_command = ""
     first_row = True
@@ -717,8 +753,8 @@ def feature_sub_types():
                 'xts',
                 'xts_comppk'
             ],
-            'inc': [
-                'xts_inc'
+            'incremental': [
+                'xts_incremental'
             ]
         },
         'ma_sats': {

@@ -26,7 +26,7 @@ def single_source_link(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
@@ -35,7 +35,7 @@ def single_source_link(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -83,7 +83,7 @@ def multi_source_link(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
@@ -92,7 +92,7 @@ def multi_source_link(context):
             }
         },
         "RAW_STAGE_SAP": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -103,7 +103,7 @@ def multi_source_link(context):
             }
         },
         "RAW_STAGE_CRM": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -114,7 +114,7 @@ def multi_source_link(context):
             }
         },
         "RAW_STAGE_WEB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -153,7 +153,7 @@ def single_source_comppk_link(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "COMP_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
@@ -163,7 +163,7 @@ def single_source_comppk_link(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -201,7 +201,7 @@ def single_source_link_bigquery(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
                 "NATION_FK": "STRING",
@@ -210,7 +210,7 @@ def single_source_link_bigquery(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "NATION_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -258,7 +258,7 @@ def multi_source_link_bigquery(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
                 "NATION_FK": "STRING",
@@ -267,7 +267,7 @@ def multi_source_link_bigquery(context):
             }
         },
         "RAW_STAGE_SAP": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "NATION_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -278,7 +278,7 @@ def multi_source_link_bigquery(context):
             }
         },
         "RAW_STAGE_CRM": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "NATION_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -289,7 +289,7 @@ def multi_source_link_bigquery(context):
             }
         },
         "RAW_STAGE_WEB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "NATION_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
@@ -328,7 +328,7 @@ def single_source_comppk_link_bigquery(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "COMP_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
@@ -338,7 +338,7 @@ def single_source_comppk_link_bigquery(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -376,7 +376,7 @@ def single_source_link_sqlserver(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
@@ -385,7 +385,7 @@ def single_source_link_sqlserver(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "NATION_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
@@ -433,7 +433,7 @@ def multi_source_link_sqlserver(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
@@ -442,7 +442,7 @@ def multi_source_link_sqlserver(context):
             }
         },
         "RAW_STAGE_SAP": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "NATION_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
@@ -453,7 +453,7 @@ def multi_source_link_sqlserver(context):
             }
         },
         "RAW_STAGE_CRM": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "NATION_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
@@ -464,7 +464,7 @@ def multi_source_link_sqlserver(context):
             }
         },
         "RAW_STAGE_WEB": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "NATION_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
@@ -503,7 +503,7 @@ def single_source_comppk_link_sqlserver(context):
 
     context.seed_config = {
         "LINK": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "COMP_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
@@ -513,7 +513,7 @@ def single_source_comppk_link_sqlserver(context):
             }
         },
         "RAW_STAGE": {
-            "+column_types": {
+            "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "NATION_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
