@@ -63,10 +63,10 @@
     {%- if dbtvault.is_nothing(derived_columns)
            and dbtvault.is_nothing(hashed_columns)
            and dbtvault.is_nothing(ranked_columns) -%}
-        {%- set final_columns_to_select = final_columns_to_select + all_source_columns -%}
+        {%- set final_columns_to_select = final_columns_to_select + dbtvault.escape_column_names(all_source_columns) -%}
     {%- else -%}
         {#- Only include non-overriden columns if not just source columns -#}
-        {%- set final_columns_to_select = final_columns_to_select + source_columns_to_select -%}
+        {%- set final_columns_to_select = final_columns_to_select + dbtvault.escape_column_names(source_columns_to_select) -%}
     {%- endif -%}
 {%- endif %}
 
@@ -74,7 +74,7 @@ WITH source_data AS (
 
     SELECT
 
-    {{- "\n\n    " ~ dbtvault.print_list(all_source_columns) if all_source_columns else " *" }}
+    {{- "\n\n    " ~ dbtvault.print_list(dbtvault.escape_column_names(all_source_columns)) if all_source_columns else " *" }}
 
     FROM {{ source_relation }}
     {%- set last_cte = "source_data" %}
@@ -90,7 +90,7 @@ derived_columns AS (
 
     FROM {{ last_cte }}
     {%- set last_cte = "derived_columns" -%}
-    {%- set final_columns_to_select = final_columns_to_select + derived_column_names %}
+    {%- set final_columns_to_select = final_columns_to_select + dbtvault.escape_column_names(derived_column_names) %}
 )
 {%- endif -%}
 
@@ -100,14 +100,14 @@ hashed_columns AS (
 
     SELECT
 
-    {{ dbtvault.print_list(derived_columns_to_select) }},
+    {{ dbtvault.print_list(dbtvault.escape_column_names(derived_columns_to_select)) }},
 
     {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
     {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "hashed_columns" -%}
-    {%- set final_columns_to_select = final_columns_to_select + hashed_column_names %}
+    {%- set final_columns_to_select = final_columns_to_select + dbtvault.escape_column_names(hashed_column_names) %}
 )
 {%- endif -%}
 
@@ -121,7 +121,7 @@ ranked_columns AS (
 
     FROM {{ last_cte }}
     {%- set last_cte = "ranked_columns" -%}
-    {%- set final_columns_to_select = final_columns_to_select + ranked_column_names %}
+    {%- set final_columns_to_select = final_columns_to_select + dbtvault.escape_column_names(ranked_column_names) %}
 )
 {%- endif -%}
 
