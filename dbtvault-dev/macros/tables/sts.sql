@@ -54,7 +54,7 @@ records_to_insert AS (
     {%- if dbtvault.is_any_incremental() %}
         LEFT JOIN latest_records
             ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            WHERE {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_ldts], 'stage', alias_target='target') }}
+            WHERE {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} <= {{ dbtvault.prefix([src_ldts], 'stage', alias_target='target') }}
                 OR {{ dbtvault.prefix([src_ldts], 'latest_records', alias_target='target') }} IS NULL
     {%- endif %}
 )
