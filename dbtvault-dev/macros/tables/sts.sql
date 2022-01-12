@@ -124,21 +124,21 @@ records_to_insert AS (
         SELECT 1
         FROM latest_records
         WHERE {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_status], 'latest_records') }} = 'D'
+            AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D'
     )
 
     UNION ALL
 
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-        {{ dbtvault.prefix([src_source], 'latest_records') }},
         TO_DATE(CURRENT_TIMESTAMP()) AS {{ src_ldts }},
+        {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
     FROM latest_records
     WHERE NOT EXISTS (
         SELECT 1
         FROM source_data AS stage
         WHERE {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_source], 'latest_records') }} = 'D'
+            AND {{ dbtvault.prefix([src_source], 'latest_records') }} IS NOT NULL
     )
 
     UNION ALL
@@ -150,7 +150,7 @@ records_to_insert AS (
         SELECT 1
         FROM latest_records
         WHERE {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_status], 'latest_records') }} = 'D'
+            AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D'
     )
     {%- endif %}
 )
