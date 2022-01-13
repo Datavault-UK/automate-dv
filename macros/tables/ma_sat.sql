@@ -59,13 +59,13 @@ WITH source_data AS (
 
 {# Select latest records from satellite, restricted to PKs in source data -#}
 latest_records AS (
-    SELECT {{ dbtvault.prefix(cols_for_latest, 'mas') }}
+    SELECT {{ dbtvault.prefix(cols_for_latest, 'mas', alias_target='target') }}
         ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC) AS check_rank
+            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC) AS check_rank
     FROM
     (
-    SELECT {{ dbtvault.prefix(cols_for_latest, 'inner_mas') }}
+    SELECT {{ dbtvault.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
     FROM {{ this }} AS inner_mas
@@ -103,7 +103,7 @@ records_to_insert AS (
             SELECT 1
             FROM
             (
-                SELECT {{ dbtvault.prefix(cols_for_latest, 'lr') }}
+                SELECT {{ dbtvault.prefix(cols_for_latest, 'lr', alias_target='target') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
@@ -111,7 +111,7 @@ records_to_insert AS (
                     AND {{ dbtvault.prefix([src_ldts], 'lr') }} = {{ dbtvault.prefix([src_ldts], 'lg') }}
             ) AS active_records
             WHERE {{ dbtvault.multikey([src_pk], prefix=['stage', 'active_records'], condition='=') }}
-                AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'active_records') }}
+                AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'active_records', alias_target='target') }}
                 AND {{ dbtvault.multikey(cdk_cols, prefix=['stage', 'active_records'], condition='=') }}
                 AND stage.source_count = active_records.latest_count
         )
