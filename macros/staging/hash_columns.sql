@@ -1,4 +1,4 @@
-{%- macro hash_columns(columns=none) -%}
+                                                                                                                                                                                            {%- macro hash_columns(columns=none) -%}
 
     {{- adapter.dispatch('hash_columns', 'dbtvault')(columns=columns) -}}
 
