@@ -265,6 +265,7 @@ def multi_active_satellite(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
