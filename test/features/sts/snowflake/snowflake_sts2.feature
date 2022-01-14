@@ -97,7 +97,6 @@ Feature: [SF-STS2] Status Tracking Satellites
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-02 | *      | U      |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1002        | Bob           | 1993-01-03 | *      |
@@ -109,7 +108,6 @@ Feature: [SF-STS2] Status Tracking Satellites
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-02 | *      | U      |
       | md5('1001') | 1993-01-01 | *      | D      |
       | md5('1002') | 1993-01-03 | *      | U      |
       | md5('1003') | 1993-01-03 | *      | U      |
@@ -121,7 +119,6 @@ Feature: [SF-STS2] Status Tracking Satellites
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-02 | *      | U      |
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
       | 1002        | Bob           | 1993-01-03 | *      |
@@ -136,8 +133,7 @@ Feature: [SF-STS2] Status Tracking Satellites
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-02 | *      | U      |
-      | md5('1001') | 1993-01-03 | *      | D      |
+      | md5('1001') | 1993-01-01 | *      | D      |
       | md5('1002') | 1993-01-03 | *      | U      |
       | md5('1003') | 1993-01-03 | *      | U      |
 

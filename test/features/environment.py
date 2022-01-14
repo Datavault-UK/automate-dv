@@ -167,6 +167,11 @@ fixtures_registry = {
          "bigquery": fixtures_sts2.sts2,
          "sqlserver": fixtures_sts2.sts2},
 
+    "fixture.sts2_cycle":
+        {"snowflake": fixtures_sts2.sts2_cycle,
+         "bigquery": fixtures_sts2.sts2_cycle,
+         "sqlserver": fixtures_sts2.sts2_cycle},
+
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
