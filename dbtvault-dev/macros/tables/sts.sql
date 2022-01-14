@@ -104,11 +104,11 @@ latest_records AS (
                 ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
             ) AS rank
         FROM {{ this }} AS current_records
-            JOIN (
-                SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}
-                FROM source_data
-            ) AS source_records
-                ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
+{#            JOIN (#}
+{#                SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'source_data') }}#}
+{#                FROM source_data#}
+{#            ) AS source_records#}
+{#                ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}#}
     ) AS a
     WHERE a.rank = 1
 ),
@@ -123,14 +123,16 @@ records_to_insert AS (
     WHERE NOT EXISTS (
         SELECT 1
         FROM latest_records
-        WHERE {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D'
-    )
+        WHERE ({{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+            AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D')
+        OR ({{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+            AND {{ dbtvault.prefix([src_status], 'latest_records') }} IS NOT NULL)
+)
 
     UNION ALL
 
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-        TO_DATE(CURRENT_TIMESTAMP()) AS {{ src_ldts }},
+        {{ dbtvault.prefix([src_ldts], 'latest_records') }},
         {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
     FROM latest_records
