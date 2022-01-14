@@ -14,7 +14,7 @@
         
         {%- else -%}
         
-            {%- if ( "(" in column_str and ")" in column_str ) or "::" in column_str -%}
+            {%- if dbtvault.is_expression(column_str) -%}
 
                 {{- return(column_str) -}}
 
