@@ -125,14 +125,13 @@ records_to_insert AS (
         FROM latest_records
         WHERE ({{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
             AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D')
-        OR ({{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_status], 'latest_records') }} IS NOT NULL)
 )
 
     UNION ALL
 
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-        {{ dbtvault.prefix([src_ldts], 'latest_records') }},
+{#        {{ dbtvault.prefix([src_ldts], 'latest_records') }},#}
+        TIMESTAMPADD(millisecond, 1, {{ dbtvault.prefix([src_ldts], 'latest_records') }}) AS {{ src_ldts }},
         {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
     FROM latest_records
