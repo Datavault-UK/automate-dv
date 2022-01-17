@@ -248,6 +248,80 @@ def load_populated_table(context, model_name, vault_structure):
         assert "Completed successfully" in logs
 
 
+@step("I load the {model_name} {vault_structure} with regular incremental materialisation using {process_count} process and delay {seconds}")
+@step("I load the {model_name} {vault_structure} with regular incremental materialisation using {process_count} processes and delay {seconds}")
+def load_table(context, model_name, vault_structure, process_count, seconds):
+    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
+
+    config = dbtvault_generator.append_end_date_config(context, dict())
+
+    metadata = dbtvault_harness_utils.filter_metadata(context, metadata)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    manager = Manager()
+    process_results = manager.dict()
+    processes = []
+    delay = float(seconds)
+
+    for i in range(int(process_count)):
+        p = Process(target=dbtvault_harness_utils.parallel_run_dbt_models, args=(i, process_results, model_name))
+        processes.append(p)
+        p.start()
+        if delay:
+            time.sleep(delay)
+
+    for p in processes:
+        p.join()
+
+    for log in process_results.values():
+        assert "Completed successfully" in log
+
+
+@step("I load the {model_name} {vault_structure} with parallel incremental materialisation using {process_count} process and delay {seconds}")
+@step("I load the {model_name} {vault_structure} with parallel incremental materialisation using {process_count} processes and delay {seconds}")
+def load_table(context, model_name, vault_structure, process_count, seconds):
+    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
+
+    config = {"materialized": "vault_incremental_parallel"}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
+
+    metadata = dbtvault_harness_utils.filter_metadata(context, metadata)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
+
+    manager = Manager()
+    process_results = manager.dict()
+    processes = []
+    delay = float(seconds)
+
+    for i in range(int(process_count)):
+        p = Process(target=dbtvault_harness_utils.parallel_run_dbt_models, args=(i, process_results, model_name, is_full_refresh))
+        processes.append(p)
+        p.start()
+        if delay:
+            time.sleep(delay)
+
+    for p in processes:
+        p.join()
+
+    for log in process_results.values():
+        assert "Completed successfully" in log
+
+
 @step("I load the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure):
     metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
@@ -266,39 +340,6 @@ def load_table(context, model_name, vault_structure):
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
-
-
-@step("I parallel load with {process_count} process the {model_name} {vault_structure}")
-@step("I parallel load with {process_count} processes the {model_name} {vault_structure}")
-def load_table(context, model_name, vault_structure, process_count):
-    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
-
-    config = dbtvault_generator.append_end_date_config(context, dict())
-
-    metadata = dbtvault_harness_utils.filter_metadata(context, metadata)
-
-    context.vault_structure_metadata = metadata
-
-    dbtvault_generator.raw_vault_structure(model_name=model_name,
-                                           vault_structure=vault_structure,
-                                           config=config,
-                                           **metadata)
-
-    manager = Manager()
-    process_results = manager.dict()
-    processes = []
-
-    for i in range(int(process_count)):
-        p = Process(target=dbtvault_harness_utils.parallel_run_dbt_models, args=(i, process_results, model_name))
-        processes.append(p)
-        p.start()
-        time.sleep(1)
-
-    for p in processes:
-        p.join()
-
-    for log in process_results.values():
-        assert "Completed successfully" in log
 
 
 @step("I load the vault")
