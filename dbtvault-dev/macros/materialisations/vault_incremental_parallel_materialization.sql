@@ -1,8 +1,5 @@
 {% materialization vault_incremental_parallel, default -%}
 
-{#  {% set unique_key = config.get('unique_key') %}#}
-  {% set unique_key = None %}
-
   {% set target_relation = this.incorporate(type='table') %}
   {% set existing_relation = load_relation(this) %}
   {% set tmp_relation = make_temp_relation(target_relation) %}
@@ -37,11 +34,8 @@
   {% set trigger_full_refresh = (full_refresh_mode or existing_relation.is_view) %}
 
   {% if existing_relation is none %}
-      {% do log("@@@ existing_relation is none ", true) %}
       {% set build_sql = create_table_as(False, target_relation, sql) %}
-      {% do log("@@@ 001 build_sql " ~ build_sql, true) %}
   {% elif trigger_full_refresh %}
-      {% do log("@@@ trigger_full_refresh ", true) %}
       {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
       {% set tmp_identifier = model['name'] + '__dbt_tmp' %}
       {% set backup_identifier = model['name'] + '__dbt_backup' %}
@@ -51,26 +45,11 @@
       {% set build_sql = create_table_as(False, intermediate_relation, sql) %}
       {% set need_swap = true %}
       {% do to_drop.append(backup_relation) %}
-      {% do log("@@@ 003 build_sql " ~ build_sql, true) %}
   {% else %}
-      {% do log("@@@ else not existing_relation is none nor trigger_full_refresh ", true) %}
-      {% do log("@@@ sql " ~ sql, true) %}
-      {% do run_query(create_table_as(True, tmp_relation, sql)) %}
-      {% do adapter.expand_target_column_types(
-             from_relation=tmp_relation,
-             to_relation=target_relation) %}
-      {#-- Process schema changes. Returns dict of changes if successful. Use source columns for upserting/merging --#}
-      {% set dest_columns = process_schema_changes(on_schema_change, tmp_relation, existing_relation) %}
-      {% if not dest_columns %}
-        {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
-      {% endif %}
-{#      {% set build_sql = get_delete_insert_merge_sql(target_relation, tmp_relation, unique_key, dest_columns) %}#}
-{# test     {% set build_sql = get_delete_insert_merge_sql(target_relation, "(" ~ sql ~ ")", unique_key, dest_columns) %}#}
+      {% set unique_key = None %}
+      {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
       {% set build_sql = dbtvault.get_merge_insert_sql(target_relation, "(" ~ sql ~ ")", unique_key, dest_columns) %}
-      {% do log("@@@ 003 build_sql " ~ build_sql, true) %}
-
   {% endif %}]
-#
 
   {% call statement("main") %}
       {{ build_sql }}

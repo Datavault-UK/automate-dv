@@ -248,8 +248,8 @@ def load_populated_table(context, model_name, vault_structure):
         assert "Completed successfully" in logs
 
 
-@step("I load the {model_name} {vault_structure} with regular incremental materialisation using {process_count} process and delay {seconds}")
-@step("I load the {model_name} {vault_structure} with regular incremental materialisation using {process_count} processes and delay {seconds}")
+@step("I load the {model_name} {vault_structure} with default incremental materialisation using {process_count} process and delay {seconds}")
+@step("I load the {model_name} {vault_structure} with default incremental materialisation using {process_count} processes and delay {seconds}")
 def load_table(context, model_name, vault_structure, process_count, seconds):
     metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
 
@@ -283,8 +283,8 @@ def load_table(context, model_name, vault_structure, process_count, seconds):
         assert "Completed successfully" in log
 
 
-@step("I load the {model_name} {vault_structure} with parallel incremental materialisation using {process_count} process and delay {seconds}")
-@step("I load the {model_name} {vault_structure} with parallel incremental materialisation using {process_count} processes and delay {seconds}")
+@step("I load the {model_name} {vault_structure} with merge incremental materialisation using {process_count} process and delay {seconds}")
+@step("I load the {model_name} {vault_structure} with merge incremental materialisation using {process_count} processes and delay {seconds}")
 def load_table(context, model_name, vault_structure, process_count, seconds):
     metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
 
