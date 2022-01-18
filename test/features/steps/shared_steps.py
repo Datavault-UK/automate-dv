@@ -322,6 +322,28 @@ def load_table(context, model_name, vault_structure, process_count, seconds):
         assert "Completed successfully" in log
 
 
+@step("I load the {model_name} {vault_structure} using merge incremental materialisation")
+def load_table(context, model_name, vault_structure):
+    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
+
+    config = {"materialized": "vault_incremental_parallel"}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
+
+    metadata = dbtvault_harness_utils.filter_metadata(context, metadata)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
+
+    assert "Completed successfully" in logs
+
+
 @step("I load the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure):
     metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}

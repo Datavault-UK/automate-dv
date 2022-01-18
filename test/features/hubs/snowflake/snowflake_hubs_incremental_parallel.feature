@@ -364,3 +364,43 @@ Feature: [SF-HUB-PARALLEL] Hubs Loaded using duplicate parallel loads, and eithe
       | md5('1008') | 1008        | 1993-01-03 | TPCH   |
       | md5('1009') | 1009        | 1993-01-03 | TPCH   |
       | md5('1010') | 1010        | 1993-01-03 | TPCH   |
+
+
+  @fixture.single_source_hub
+  Scenario: [SF-HUB-PARA-15] Load of mixed stage data into an existing hub; single merge incremental loads
+    Given the HUB hub is already populated with data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alicia        | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1003        | Chad          | 1993-01-02 | TPCH   |
+      | 1004        | Dom           | 1993-01-02 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    And I load the HUB hub using merge incremental materialisation
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1003        | Chad          | 1993-01-03 | TPCH   |
+      | 1004        | Dom           | 1993-01-03 | TPCH   |
+      | 1005        | Eddie         | 1993-01-03 | TPCH   |
+      | 1006        | Flora         | 1993-01-03 | TPCH   |
+      | 1007        | Gareth        | 1993-01-03 | TPCH   |
+      | 1008        | Hannah        | 1993-01-03 | TPCH   |
+      | 1009        | Iain          | 1993-01-03 | TPCH   |
+      | 1010        | Jemima        | 1993-01-03 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    And I load the HUB hub using merge incremental materialisation
+    Then the HUB table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-02 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-02 | TPCH   |
+      | md5('1005') | 1005        | 1993-01-03 | TPCH   |
+      | md5('1006') | 1006        | 1993-01-03 | TPCH   |
+      | md5('1007') | 1007        | 1993-01-03 | TPCH   |
+      | md5('1008') | 1008        | 1993-01-03 | TPCH   |
+      | md5('1009') | 1009        | 1993-01-03 | TPCH   |
+      | md5('1010') | 1010        | 1993-01-03 | TPCH   |

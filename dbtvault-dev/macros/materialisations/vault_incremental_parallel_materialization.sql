@@ -49,7 +49,7 @@
       {% set unique_key = None %}
       {% set dest_columns = adapter.get_columns_in_relation(existing_relation) %}
       {% set build_sql = dbtvault.get_merge_insert_sql(target_relation, "(" ~ sql ~ ")", unique_key, dest_columns) %}
-  {% endif %}]
+  {% endif %}
 
   {% call statement("main") %}
       {{ build_sql }}
