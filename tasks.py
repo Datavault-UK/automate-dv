@@ -98,50 +98,37 @@ def inject_to_file(c, from_file, to_file):
 def inject_for_platform(c, platform, env='internal'):
     available_envs = ["pipeline", "internal", "external"]
 
-    files = {
-        "internal": {
-            "profile": 'env/templates/profiles.tpl.yml',
-            "db": 'env/templates/db_internal.tpl.env'
-        },
-        "pipeline": {
-            "profile": 'env/templates/profiles.tpl.yml',
-            "db": 'env/templates/db_pipeline.tpl.env'
-        },
-        "external": {
-            "profile": 'env/templates/profiles.tpl.yml',
-            "db": 'env/templates/db_external.tpl.env'
-        }
-    }
-
     if platform not in test.AVAILABLE_PLATFORMS:
         raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
     else:
         if env in available_envs:
             if env in ["internal", "pipeline"]:
-                if files.get(env, None):
-                    profile_template_path = Path(files.get(env)['profile']).absolute()
-                    new_profile_path = profile_template_path.parent / f'{platform}_profile.yml'.lower()
+                profile_template_path = Path(test.ENV_TEMPLATE_DIR / f'profiles_{env}.tpl.yml').absolute()
 
-                    yaml_handler = ruamel.yaml.YAML()
-                    yaml_handler.indent(mapping=2, offset=2)
+                db_template_path = Path(test.ENV_TEMPLATE_DIR / platform / f'db_{env}.tpl.env').absolute()
 
-                    with open(profile_template_path) as fh_r:
+                new_profile_path = profile_template_path.parent / f'{platform}_profile.yml'.lower()
 
-                        yaml_dict = yaml_handler.load(fh_r)
+                yaml_handler = ruamel.yaml.YAML()
+                yaml_handler.indent(mapping=2, offset=2)
 
-                    new_profile_dict = copy.deepcopy(yaml_dict)
+                with open(profile_template_path) as fh_r:
 
-                    for k, v in yaml_dict['dbtvault']['outputs'].items():
-                        if k != platform:
-                            del new_profile_dict['dbtvault']['outputs'][k]
+                    yaml_dict = yaml_handler.load(fh_r)
 
-                    with open(new_profile_path, 'w') as fh_w:
-                        yaml_handler.dump(new_profile_dict, fh_w)
+                new_profile_dict = copy.deepcopy(yaml_dict)
 
-                    inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
-                    inject_to_file(c, from_file=files[env]['db'], to_file='env/db.env')
-                else:
-                    raise ValueError(f"Environment '{env}' not available.")
+                for k, v in yaml_dict['dbtvault']['outputs'].items():
+                    if k != platform:
+                        del new_profile_dict['dbtvault']['outputs'][k]
+
+                with open(new_profile_path, 'w') as fh_w:
+                    yaml_handler.dump(new_profile_dict, fh_w)
+
+                inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
+                inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
+            else:
+                raise ValueError(f"Environment '{env}' not available.")
 
 
 @task
