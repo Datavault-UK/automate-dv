@@ -54,6 +54,11 @@ def setup_db_creds(plt):
             "SQLSERVER_DB_SERVER", "SQLSERVER_DB_PORT",
             "SQLSERVER_DB_DATABASE", "SQLSERVER_DB_SCHEMA",
             "SQLSERVER_DB_USER", "SQLSERVER_DB_PW"
+        ],
+        "databricks": [
+            "DATABRICKS_SCHEMA", "DATABRICKS_HOST",
+            "DATABRICKS_PORT", "DATABRICKS_TOKEN",
+            "DATABRICKS_ENDPOINT"
         ]
     }
 
@@ -367,7 +372,8 @@ def set_custom_names():
         },
         "bigquery": {
             "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
-        }
+        },
+        # "databricks": f"{os.getenv('DATABRICKS_SCHEMA')}".upper()
     }
 
     if is_pipeline():
