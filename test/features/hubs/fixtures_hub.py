@@ -408,18 +408,18 @@ def single_source_hub_databricks(context):
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_PK": "BINARY",
+                "CUSTOMER_ID": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VarcharType(50)",
-                "CUSTOMER_NAME": "VarcharType(50)",
-                "LOAD_DATE": "DateType",
-                "SOURCE": "VarcharType(50)"
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
