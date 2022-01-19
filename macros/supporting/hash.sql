@@ -266,9 +266,9 @@
     {%- endif -%}
 
     {%- if hash_alg == "MD5" %}
-        {{- "CAST(MD5({}) AS BINARY) AS {}".format(standardise | replace('[EXPRESSION]', escaped_column_str), dbtvault.escape_column_names(alias)) | indent(4) -}}
+        {{- "UPPER(MD5({})) AS {}".format(standardise | replace('[EXPRESSION]', escaped_column_str), dbtvault.escape_column_names(alias)) | indent(4) -}}
     {%- else %}
-        {{- "CAST(SHA2({}, {}) AS BINARY) AS {}".format(standardise | replace('[EXPRESSION]', escaped_column_str), bit_length, dbtvault.escape_column_names(alias)) | indent(4) -}}
+        {{- "UPPER(SHA2({}, {})) AS {}".format(standardise | replace('[EXPRESSION]', escaped_column_str), bit_length, dbtvault.escape_column_names(alias)) | indent(4) -}}
     {%- endif %}
 
 {#- Else a list of columns to hash -#}
@@ -276,9 +276,9 @@
     {%- set all_null = [] -%}
 
     {%- if is_hashdiff -%}
-        {{- "CAST(MD5(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {{- "UPPER(MD5(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
     {%- else -%}
-        {{- "CAST(MD5(NULLIF(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {{- "UPPER(MD5(NULLIF(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
     {%- endif -%}
 
     {%- for column in columns -%}
@@ -297,9 +297,9 @@
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n)) AS BINARY) AS {}".format(dbtvault.escape_column_names(alias)) -}}
+                {{- "\n))) AS {}".format(dbtvault.escape_column_names(alias)) -}}
             {%- else -%}
-                {{- "\n), '{}')) AS BINARY) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
+                {{- "\n), '{}'))) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
             {%- endif -%}
         {%- else -%}
 
