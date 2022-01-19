@@ -276,9 +276,9 @@
     {%- set all_null = [] -%}
 
     {%- if is_hashdiff -%}
-        {{- "CAST(HASHBYTES('{}', (CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {{- "CAST(MD5(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
     {%- else -%}
-        {{- "CAST(HASHBYTES('{}', (NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {{- "CAST(MD5(NULLIF(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
     {%- endif -%}
 
     {%- for column in columns -%}
@@ -291,15 +291,15 @@
         {%- else -%}
             {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
         {%- endif -%}
-        {{- "\nISNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
+        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
 
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n))) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_names(alias)) -}}
+                {{- "\n)) AS BINARY) AS {}".format(dbtvault.escape_column_names(alias)) -}}
             {%- else -%}
-                {{- "\n), '{}'))) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_names(alias)) -}}
+                {{- "\n), '{}')) AS BINARY) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
             {%- endif -%}
         {%- else -%}
 
