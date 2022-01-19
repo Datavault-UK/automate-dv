@@ -28,7 +28,7 @@ Feature: [SF-HUB-PARALLEL] Hubs Loaded using duplicate parallel loads, and eithe
 
   @fixture.single_source_hub
   Scenario: [SF-HUB-PARA-02] Load of mixed stage data into an non-existent hub; load simultaneously by two processes and
-  default incremental materialisation: duplicate records are inserted
+  default incremental materialisation: test that duplicate records are inserted (incorrect behaviour)
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -56,7 +56,7 @@ Feature: [SF-HUB-PARALLEL] Hubs Loaded using duplicate parallel loads, and eithe
 
   @fixture.single_source_hub
   Scenario: [SF-HUB-PARA-03] Load of mixed stage data into an non-existent hub; load simultaneously by three processes and
-  default incremental materialisation: duplicate records are inserted
+  default incremental materialisation: test that duplicate records are inserted (incorrect behaviour)
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |

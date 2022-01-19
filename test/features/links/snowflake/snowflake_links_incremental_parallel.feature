@@ -34,7 +34,7 @@ Feature: [SF-LNK-PARALLEL] Links loaded using using duplicate parallel loads, an
 
   @fixture.single_source_link
   Scenario: [SF-LNK-PARA-02] Load of mixed stage data into a non-existent link; load simultaneously by two processes and
-  default incremental materialisation: duplicate records are inserted
+  default incremental materialisation: test that duplicate records are inserted (incorrect behaviour)
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -71,7 +71,7 @@ Feature: [SF-LNK-PARALLEL] Links loaded using using duplicate parallel loads, an
 
   @fixture.single_source_link
   Scenario: [SF-LNK-PARA-03] Load of mixed stage data into a non-existent link; load simultaneously by three processes and
-  default incremental materialisation: duplicate records are inserted
+  default incremental materialisation: test that duplicate records are inserted (incorrect behaviour)
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
