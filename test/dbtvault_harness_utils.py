@@ -372,7 +372,8 @@ def set_custom_names():
         },
         "bigquery": {
             "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
-        }
+        },
+        # "databricks": f"{os.getenv('DATABRICKS_SCHEMA')}".upper()
     }
 
     if is_pipeline():

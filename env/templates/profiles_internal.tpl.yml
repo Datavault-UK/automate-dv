@@ -44,10 +44,12 @@ dbtvault:
       driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
       schema: "{{ op://private/databricks/schema }}"
       host: "{{ op://private/databricks/host }}"
-      port: "{{ op://private/databricks/port }}"
+      port: "{{ {{ op://private/databricks/port }} | as_number }}"
 
       token: "{{ op://private/databricks/token }}"
       endpoint: "{{ op://private/databricks/endpoint }}"
+
+      user: "{{ op://private/databricks/user }}"
 
       threads: 4
 

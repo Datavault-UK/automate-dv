@@ -122,6 +122,8 @@ def inject_for_platform(c, platform, env='internal'):
                     if k != platform:
                         del new_profile_dict['dbtvault']['outputs'][k]
 
+                new_profile_dict['dbtvault']['target'] = platform
+
                 with open(new_profile_path, 'w') as fh_w:
                     yaml_handler.dump(new_profile_dict, fh_w)
 
