@@ -689,7 +689,8 @@ def feature_sub_types():
                 'hubs_comppk'
             ],
             'incremental': [
-                'hubs_incremental'
+                'hubs_incremental',
+                'hubs_incremental_parallel'
             ],
             'pm': [
                 'hubs_period_mat'
@@ -704,7 +705,8 @@ def feature_sub_types():
                 'links_comppk'
             ],
             'incremental': [
-                'links_incremental'
+                'links_incremental',
+                'links_incremental_parallel'
             ],
             'pm': [
                 'links_period_mat'
@@ -715,7 +717,7 @@ def feature_sub_types():
         },
         'sats': {
             'main': [
-                'sats',
+                'sats'
             ],
             'cycles': [
                 'sats_cycles'
@@ -725,7 +727,7 @@ def feature_sub_types():
             ],
             'pm': [
                 'sats_period_mat_base',
-                'sats_period_mat_other'
+                'sats_period_mat_other',
                 'sats_period_mat_inferred_range',
                 'sats_period_mat_provided_range'
             ],
@@ -806,7 +808,7 @@ def feature_sub_types():
                 'pit'
             ],
             '1sat_base': [
-                'pit_one_sat_base',
+                'pit_one_sat_base'
             ],
             '1sat_inc': [
                 'pit_one_sat_inc'
