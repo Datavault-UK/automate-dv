@@ -526,3 +526,48 @@ def single_source_comppk_link_sqlserver(context):
     }
 
 
+@fixture
+def single_source_link_databricks(context):
+    """
+    Define the structures and metadata to load single-source links
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "LINK": {
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "LINK": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "VARCHAR(100)",
+                "CUSTOMER_FK": "VARCHAR(100)",
+                "NATION_FK": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "NATION_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
