@@ -71,7 +71,7 @@ fixtures_registry = {
         {"snowflake": fixtures_link.single_source_link,
          "bigquery": fixtures_link.single_source_link_bigquery,
          "sqlserver": fixtures_link.single_source_link_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_link.single_source_link_databricks},
 
     "fixture.single_source_comppk_link":
         {"snowflake": fixtures_link.single_source_comppk_link,
