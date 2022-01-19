@@ -276,7 +276,7 @@ def single_source_hub_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -284,7 +284,7 @@ def single_source_hub_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(32)",
                 "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -301,7 +301,7 @@ def single_source_hub_sqlserver(context):
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "CUSTOMER_NAME": "VARCHAR(5)",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         }
@@ -343,7 +343,7 @@ def multi_source_hub_sqlserver(context):
             "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -354,7 +354,7 @@ def multi_source_hub_sqlserver(context):
                 "PART_TYPE": "VARCHAR(10)",
                 "PART_SIZE": "VARCHAR(2)",
                 "PART_RETAILPRICE": "DECIMAL(11,2)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -364,7 +364,7 @@ def multi_source_hub_sqlserver(context):
                 "SUPPLIER_ID": "VARCHAR(2)",
                 "AVAILQTY": "INT",
                 "SUPPLYCOST": "DECIMAL(11,2)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -377,7 +377,7 @@ def multi_source_hub_sqlserver(context):
                 "QUANTITY": "INT",
                 "EXTENDED_PRICE": "DECIMAL(11,2)",
                 "DISCOUNT": "DECIMAL(11,2)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         }
@@ -728,7 +728,7 @@ def multi_source_comppk_hub_sqlserver(context):
                 "PART_PK": "BINARY(16)",
                 "PART_CK": "VARCHAR(4)",
                 "PART_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -740,7 +740,7 @@ def multi_source_comppk_hub_sqlserver(context):
                 "PART_TYPE": "VARCHAR(10)",
                 "PART_SIZE": "VARCHAR(2)",
                 "PART_RETAILPRICE": "DECIMAL(11,2)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -751,7 +751,7 @@ def multi_source_comppk_hub_sqlserver(context):
                 "SUPPLIER_ID": "VARCHAR(2)",
                 "AVAILQTY": "INT",
                 "SUPPLYCOST": "DECIMAL(11,2)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -765,7 +765,7 @@ def multi_source_comppk_hub_sqlserver(context):
                 "QUANTITY": "INT",
                 "EXTENDED_PRICE": "DECIMAL(11,2)",
                 "DISCOUNT": "DECIMAL(11,2)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
             }
         }

@@ -502,7 +502,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
     Converts a context table in a feature file into a pandas DataFrame
         :param table: The context.table from a scenario
         :param use_nan: Replace <null> placeholder with NaN
-        :return: DataFrame representation of the provide context table
+        :return: DataFrame representation of the provided context table
     """
 
     table_df = pd.DataFrame(columns=table.headings, data=table.rows)
@@ -541,7 +541,7 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> List[d
         :param use_nan:
         :param table: The context.table from a scenario
         :param orient: orient for df to_dict
-        :return: A dictionary modelled from a context table
+        :return: A list containing a dictionary modelled from a context table
     """
 
     table_df = context_table_to_df(table, use_nan=use_nan)
@@ -564,41 +564,42 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
         :return: Seed file name
     """
 
-    feature_data = context_table_to_dicts(table=table, orient="index", use_nan=False)
+    feature_data_list = context_table_to_dicts(table=table, orient="index", use_nan=False)
     column_types = seed_config[model_name]["column_types"]
 
     sql_command = ""
     first_row = True
 
-    for row_number in feature_data.keys():
-        if first_row:
-            first_row = False
-        else:
-            sql_command = sql_command + "\nUNION ALL \n"
-        first_column = True
-
-        sql_command = sql_command + "SELECT "
-
-        for column_name in feature_data[row_number].keys():
-            if first_column:
-                first_column = False
+    for feature_data in feature_data_list:
+        for row_number in feature_data.keys():
+            if first_row:
+                first_row = False
             else:
-                sql_command = sql_command + ", "
+                sql_command = sql_command + "\nUNION ALL \n"
+            first_column = True
 
-            column_data = feature_data[row_number][column_name]
-            column_type = column_types[column_name]
+            sql_command = sql_command + "SELECT "
 
-            if column_data.lower() == "<null>" or column_data == "":
-                column_data_for_sql = "NULL"
-            else:
-                column_data_for_sql = f"'{column_data}'"
+            for column_name in feature_data[row_number].keys():
+                if first_column:
+                    first_column = False
+                else:
+                    sql_command = sql_command + ", "
 
-            if platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
-                expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
-            else:
-                expression = f"CAST({column_data_for_sql} AS {column_type})"
+                column_data = feature_data[row_number][column_name]
+                column_type = column_types[column_name]
 
-            sql_command = f"{sql_command}{expression} AS {column_name} "
+                if column_data.lower() == "<null>" or column_data == "":
+                    column_data_for_sql = "NULL"
+                else:
+                    column_data_for_sql = f"'{column_data}'"
+
+                if platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                    expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+                else:
+                    expression = f"CAST({column_data_for_sql} AS {column_type})"
+
+                sql_command = f"{sql_command}{expression} AS {column_name} "
 
     with open(test.TEST_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
         f.write(sql_command)
