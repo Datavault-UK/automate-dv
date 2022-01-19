@@ -1,3 +1,4 @@
+import copy
 import glob
 import logging
 import os
@@ -5,7 +6,7 @@ from pathlib import Path
 
 import yaml
 from invoke import Collection, task
-
+import ruamel.yaml
 import test
 from test import dbtvault_harness_utils
 
@@ -14,7 +15,7 @@ logger.setLevel(logging.INFO)
 
 
 @task()
-def setup(c, platform=None, project=None, disable_op=False, env='local'):
+def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
@@ -77,8 +78,7 @@ def set_defaults(c, platform=None, project='test'):
 @task
 def inject_to_file(c, from_file, to_file):
     """
-    Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
-    profiles/profiles.yml, which is an ignored file in git.
+    Injects secrets into plain text from secrethub. BE CAREFUL!
         :param c: invoke context
         :param from_file: File which includes 1Password paths to extract into plain text
         :param to_file: File to store plain text in
@@ -95,43 +95,53 @@ def inject_to_file(c, from_file, to_file):
 
 
 @task
-def inject_for_platform(c, platform, env='local'):
-    available_envs = ["pipeline", "local"]
+def inject_for_platform(c, platform, env='internal'):
+    available_envs = ["pipeline", "internal", "external"]
 
     files = {
-        "snowflake": {
-            "local": {
-                "profile": 'env/snowflake/profiles_snowflake.tpl.yml',
-                "db": 'env/snowflake/db_snowflake.tpl.env'
-            },
-            "pipeline": {
-                "profile": 'env/snowflake/profiles_snowflake_pipeline.tpl.yml',
-                "db": 'env/snowflake/db_snowflake_pipeline.tpl.env'
-            }
+        "internal": {
+            "profile": 'env/templates/profiles.tpl.yml',
+            "db": 'env/templates/db_internal.tpl.env'
         },
-        "bigquery": {
-            "local": {
-                "profile": 'env/bigquery/profiles_bigquery.tpl.yml',
-                "db": 'env/bigquery/db_bigquery.tpl.env'
-            }
+        "pipeline": {
+            "profile": 'env/templates/profiles.tpl.yml',
+            "db": 'env/templates/db_pipeline.tpl.env'
         },
-        "sqlserver": {
-            "local": {
-                "profile": 'env/sqlserver/profiles_sqlserver.tpl.yml',
-                "db": 'env/sqlserver/db_sqlserver.tpl.env'
-            }
+        "external": {
+            "profile": 'env/templates/profiles.tpl.yml',
+            "db": 'env/templates/db_external.tpl.env'
         }
     }
 
-    if platform not in files.keys():
+    if platform not in test.AVAILABLE_PLATFORMS:
         raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
     else:
         if env in available_envs:
-            if files[platform].get(env, None):
-                inject_to_file(c, from_file=files[platform][env]['profile'], to_file='env/profiles.yml')
-                inject_to_file(c, from_file=files[platform][env]['db'], to_file='env/db.env')
-            else:
-                raise ValueError(f"Environment '{env}' not available for platform '{platform}'")
+            if env in ["internal", "pipeline"]:
+                if files.get(env, None):
+                    profile_template_path = Path(files.get(env)['profile']).absolute()
+                    new_profile_path = profile_template_path.parent / f'{platform}_profile.yml'.lower()
+
+                    yaml_handler = ruamel.yaml.YAML()
+                    yaml_handler.indent(mapping=2, offset=2)
+
+                    with open(profile_template_path) as fh_r:
+
+                        yaml_dict = yaml_handler.load(fh_r)
+
+                    new_profile_dict = copy.deepcopy(yaml_dict)
+
+                    for k, v in yaml_dict['dbtvault']['outputs'].items():
+                        if k != platform:
+                            del new_profile_dict['dbtvault']['outputs'][k]
+
+                    with open(new_profile_path, 'w') as fh_w:
+                        yaml_handler.dump(new_profile_dict, fh_w)
+
+                    inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
+                    inject_to_file(c, from_file=files[env]['db'], to_file='env/db.env')
+                else:
+                    raise ValueError(f"Environment '{env}' not available.")
 
 
 @task
@@ -161,9 +171,9 @@ def check_project(c, project='test'):
 
 
 @task
-def change_platform(c, platform, disable_op=False, env='local'):
+def change_platform(c, platform, disable_op=False, env='internal'):
     """
-    Change default platform platform
+    Change default platform
         :param c: invoke context
         :param platform: dbt profile platform (Optional if defaults already set)
         :param disable_op: Disable 1Password

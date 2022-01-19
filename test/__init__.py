@@ -22,7 +22,7 @@ SEEDS_DIR = TEST_PROJECT_ROOT / 'seeds'
 TEMP_SEED_DIR = TEST_PROJECT_ROOT / 'seeds/temp'
 
 
-AVAILABLE_PLATFORMS = ['snowflake', 'bigquery', 'sqlserver']
+AVAILABLE_PLATFORMS = ['snowflake', 'bigquery', 'sqlserver', 'databricks']
 
 # Setup logging
 logger = logging.getLogger('dbtvault')

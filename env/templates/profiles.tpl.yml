@@ -51,4 +51,4 @@ dbtvault:
 
       threads: 4
 
-  target: "{{ env_var('PLATFORM_TARGET') }}"
+  target: "snowflake"
