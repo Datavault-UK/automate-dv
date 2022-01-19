@@ -38,17 +38,19 @@ dbtvault:
       user: "{{ env_var('SQLSERVER_DB_USER') }}"
       password: "{{ env_var('SQLSERVER_DB_PW') }}"
 
-    databricks:
-      type: spark
-      method: odbc
-      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
-      schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
-      host: "{{ env_var('DATABRICKS_HOST') }}"
-      port: "{{ env_var('DATABRICKS_PORT', 443) }}"
+  databricks:
+    outputs:
+      dev:
+        type: spark
+        method: odbc
+        driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+        schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
+        host: "{{ env_var('DATABRICKS_HOST') }}"
+        port: "{{ env_var('DATABRICKS_PORT', 443) }}"
 
-      token: "{{ env_var('DATABRICKS_TOKEN') }}"
-      endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
+        token: "{{ env_var('DATABRICKS_TOKEN') }}"
+        endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
 
-      threads: 4
+        threads: 4
 
   target: "{{ env_var('PLATFORM_TARGET') }}"
