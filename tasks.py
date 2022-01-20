@@ -50,7 +50,7 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
 
 
 @task
-def set_defaults(c, platform=None, project='test'):
+def set_defaults(c, platform='snowflake', project='test'):
     """
     Update the invoke namespace with new values
         :param c: invoke context
@@ -214,6 +214,8 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         :param disable_op: Disable 1Password
     """
 
+    platform = c.platform if not platform else platform
+
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
@@ -221,10 +223,13 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
     if disable_op:
         dbtvault_harness_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
+        logger.info(f"Running dbt with command: '{command}'")
     else:
         # Set dbt profiles dir
+        dbt_command = f"dbt {dbt_args}"
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        command = f"op run -- dbt {dbt_args}"
+        command = f"op run -- {dbt_command}"
+        logger.info(f"Running dbt with command: '{dbt_command}'")
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
