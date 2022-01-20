@@ -2,7 +2,9 @@ import copy
 import glob
 import logging
 import os
+import shutil
 from pathlib import Path
+from typing import Dict, Tuple
 
 import yaml
 from invoke import Collection, task
@@ -12,6 +14,62 @@ from test import dbtvault_harness_utils
 
 logger = logging.getLogger('dbtvault')
 logger.setLevel(logging.INFO)
+
+
+def setup_files(env, platform) -> Tuple[Path, Path]:
+    profile_template_path = Path(test.ENV_TEMPLATE_DIR / f'profiles_{env}.tpl.yml').absolute()
+    db_template_path = Path(test.ENV_TEMPLATE_DIR / platform / f'db_{env}.tpl.env').absolute()
+    new_profile_path = profile_template_path.parent / f'{platform}_profile.yml'.lower()
+
+    yaml_handler = ruamel.yaml.YAML()
+    yaml_handler.indent(mapping=2, offset=2)
+
+    with open(profile_template_path) as fh_r:
+
+        yaml_dict = yaml_handler.load(fh_r)
+
+    new_profile_dict = copy.deepcopy(yaml_dict)
+
+    for k, v in yaml_dict['dbtvault']['outputs'].items():
+        if k != platform:
+            del new_profile_dict['dbtvault']['outputs'][k]
+
+    new_profile_dict['dbtvault']['target'] = platform
+
+    with open(new_profile_path, 'w') as fh_w:
+        yaml_handler.dump(new_profile_dict, fh_w)
+
+    if env in ["internal", "pipeline"]:
+        return Path(new_profile_path).absolute(), Path(db_template_path).absolute()
+    else:
+
+        # db_path = test.ENV_TEMPLATE_DIR.parent / 'db.env'
+        profile_path = test.ENV_TEMPLATE_DIR.parent / 'profiles.yml'
+
+        # shutil.copy(db_template_path, db_path)
+        shutil.copy(new_profile_path, profile_path)
+
+        return Path(profile_path).absolute(), ""
+
+
+@task()
+def init_external(c, platform=None, project=None, env='external'):
+    """
+    Initial setup task for external developers to generate the profile.yml
+    """
+    if platform:
+        c.platform = platform
+    if project:
+        c.project = project
+    if env:
+        c.env = env
+
+    profile_path, _ = setup_files(env, platform)
+    logger.info(f"profiles.yml generated at: '{str(profile_path)}'")
+
+    platform_vars = dbtvault_harness_utils.REQUIRED_ENV_VARS[platform]
+
+    logger.info(f"Please set the following environment variables:\n{', '.join(platform_vars)}")
 
 
 @task()
@@ -38,7 +96,13 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     logger.info(f"Environment set to '{c.env}'")
 
     if disable_op:
+        env = 'external'
+        c.env = env
+
+    if disable_op:
         logger.info('Checking dbt connection... (running dbt debug)')
+        os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
+        setup_files(env, platform)
         run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
     else:
         logger.info(f'Injecting credentials to files...')
@@ -50,7 +114,7 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
 
 
 @task
-def set_defaults(c, platform=None, project='test'):
+def set_defaults(c, platform='snowflake', project='test'):
     """
     Update the invoke namespace with new values
         :param c: invoke context
@@ -72,7 +136,6 @@ def set_defaults(c, platform=None, project='test'):
         yaml.dump(dict_file, file)
         logger.info(f'Defaults set.')
         logger.info(f'Project: {c.project}')
-        logger.info(f'Platform: {c.platform}')
 
 
 @task
@@ -102,35 +165,13 @@ def inject_for_platform(c, platform, env='internal'):
         raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
     else:
         if env in available_envs:
-            if env in ["internal", "pipeline"]:
-                profile_template_path = Path(test.ENV_TEMPLATE_DIR / f'profiles_{env}.tpl.yml').absolute()
 
-                db_template_path = Path(test.ENV_TEMPLATE_DIR / platform / f'db_{env}.tpl.env').absolute()
+            new_profile_path, db_template_path = setup_files(env, platform)
 
-                new_profile_path = profile_template_path.parent / f'{platform}_profile.yml'.lower()
-
-                yaml_handler = ruamel.yaml.YAML()
-                yaml_handler.indent(mapping=2, offset=2)
-
-                with open(profile_template_path) as fh_r:
-
-                    yaml_dict = yaml_handler.load(fh_r)
-
-                new_profile_dict = copy.deepcopy(yaml_dict)
-
-                for k, v in yaml_dict['dbtvault']['outputs'].items():
-                    if k != platform:
-                        del new_profile_dict['dbtvault']['outputs'][k]
-
-                new_profile_dict['dbtvault']['target'] = platform
-
-                with open(new_profile_path, 'w') as fh_w:
-                    yaml_handler.dump(new_profile_dict, fh_w)
-
-                inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
-                inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
-            else:
-                raise ValueError(f"Environment '{env}' not available.")
+            inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
+            inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
+        else:
+            raise ValueError(f"Environment '{env}' not available.")
 
 
 @task
@@ -214,6 +255,8 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         :param disable_op: Disable 1Password
     """
 
+    platform = c.platform if not platform else platform
+
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
@@ -221,10 +264,13 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
     if disable_op:
         dbtvault_harness_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
+        logger.info(f"Running dbt with command: '{command}'")
     else:
         # Set dbt profiles dir
+        dbt_command = f"dbt {dbt_args}"
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        command = f"op run -- dbt {dbt_args}"
+        command = f"op run -- {dbt_command}"
+        logger.info(f"Running dbt with command: '{dbt_command}'")
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
@@ -349,7 +395,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
             c.run(command)
 
 
-ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
+ns = Collection(setup, init_external, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
                 check_platform, run_dbt, run_macro_tests, run_harness_tests, run_integration_tests)
 
 ns.configure({'project': 'test', 'platform': 'snowflake', 'env': 'local'})
