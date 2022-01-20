@@ -43,12 +43,12 @@
 
 {% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
-    {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
-    {% set start_timestamp_mssql = start_timestamp[0:23] %}
+    {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
+    {% set start_timestamp_mssql = start_timestamp[0:27] %}
 
     {%- set period_filter -%}
-            (CAST({{ timestamp_field }} AS DATE) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME))), 0) AND
-             CAST({{ timestamp_field }} AS DATE) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME)))
+            (CAST({{ timestamp_field }} AS DATE) >= DATEADD({{ period }}, DATEDIFF({{ period }}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0) AND
+             CAST({{ timestamp_field }} AS DATE) < DATEADD({{ period }}, 1, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2)))
       AND (CAST({{ timestamp_field }} AS DATE) >= CAST('{{ start_timestamp_mssql }}' AS DATE)))
     {%- endset -%}
 
@@ -146,15 +146,15 @@
 
 {% macro sqlserver__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
-    {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
-    {% set start_date_mssql = start_date[0:23] %}
-    {% set stop_date_mssql  = stop_date[0:23] %}
+    {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
+    {% set start_date_mssql = start_date[0:27] %}
+    {% set stop_date_mssql  = stop_date[0:27] %}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
             SELECT
-                CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS DATETIME)) AS DATETIME) AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399996, "CAST(NULLIF('" ~ stop_date_mssql | lower ~ "','none') AS DATETIME)") }},
+                CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
+                COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, "CAST(NULLIF('" ~ stop_date_mssql | lower ~ "','none') AS DATETIME2)") }},
                          {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_schema }}.{{ target_table }}
         )
@@ -182,9 +182,9 @@
     {% set period_boundary_sql -%}
         with data as (
             select
-                coalesce(CAST(max({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
+                coalesce(CAST(max({{ timestamp_field }}) AS DATETIME2), CAST('{{ start_date }}' AS DATETIME2)) as START_TIMESTAMP,
                 coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')") }},
-                         CAST(CURRENT_TIMESTAMP() AS DATETIME) ) as STOP_TIMESTAMP
+                         CAST(CURRENT_TIMESTAMP() AS DATETIME2) ) as STOP_TIMESTAMP
             from {{ target_schema }}.{{ target_table }}
         )
         select
@@ -236,11 +236,11 @@
 {%- macro sqlserver__get_period_of_load(period, offset, start_timestamp) -%}
 
 
-    {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
+    {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:23] %}
 
     {% set period_of_load_sql -%}
-        SELECT DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME))), 0) AS period_of_load
+        SELECT DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0) AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
