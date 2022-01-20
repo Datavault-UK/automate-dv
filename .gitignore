@@ -24,3 +24,5 @@ test/backup_files/dbt_project.bak.yml
 
 test/dbtvault_test/seeds/vault_properties.yml
 /env/templates/*_profile.yml
+/env/templates/profile/*_profile.yml
+/env/templates/db/*_db.env
