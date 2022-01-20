@@ -1,5 +1,6 @@
 from behave.fixture import use_fixture_by_tag
 
+from env import env_utils
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
 import test
@@ -205,7 +206,7 @@ def before_all(context):
     context.config.setup_logging()
 
     # Env setup
-    dbtvault_harness_utils.setup_environment()
+    env_utils.setup_environment()
 
     # Delete temp YAML files
     dbtvault_generator.clean_test_schema_file()
@@ -234,11 +235,11 @@ def before_scenario(context, scenario):
 
 
 def before_tag(context, tag):
-    tgt = dbtvault_harness_utils.platform()
+    tgt = env_utils.platform()
 
-    if tgt in test.AVAILABLE_PLATFORMS:
+    if tgt in env_utils.AVAILABLE_PLATFORMS:
         fixtures = fixture_lookup[tgt]
         if tag.startswith("fixture."):
             return use_fixture_by_tag(tag, context, fixtures)
     else:
-        raise ValueError(f"Target must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+        raise ValueError(f"Target must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
