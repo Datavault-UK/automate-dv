@@ -564,7 +564,7 @@ def retrieve_expected_sql(request: FixtureRequest):
               macro_under_test / env_utils.platform() / f'{model_name}.sql') as f:
         file = f.readlines()
 
-        processed_file = inject_parameters("".join(file), env_utils.set_custom_names())
+        processed_file = inject_parameters("".join(file), env_utils.set_qualified_names_for_macro_tests())
 
         return processed_file
 
