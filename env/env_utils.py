@@ -32,6 +32,8 @@ REQUIRED_ENV_VARS = {
     ]
 }
 
+AVAILABLE_PLATFORMS = list(REQUIRED_ENV_VARS)
+
 
 def platform():
     """Gets the target platform as set by the user via the invoke CLI, stored in invoke.yml"""
@@ -42,8 +44,8 @@ def platform():
             config_dict = yaml.safe_load(config)
             plt = config_dict.get('platform').lower()
 
-            if plt not in test.AVAILABLE_PLATFORMS:
-                test.logger.error(f"Platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
+            if plt not in AVAILABLE_PLATFORMS:
+                test.logger.error(f"Platform must be set to one of: {', '.join(AVAILABLE_PLATFORMS)} "
                                   f"in '{test.INVOKE_YML_FILE}'")
                 sys.exit(0)
             else:
