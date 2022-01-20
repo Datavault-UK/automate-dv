@@ -132,6 +132,10 @@ def inject_for_platform(c, platform, env='internal'):
 
             inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
             inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
+
+            os.remove(new_profile_path)
+            os.remove(db_template_path)
+
         else:
             raise ValueError(f"Environment '{env}' not available.")
 
