@@ -83,6 +83,10 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
         :param project: dbt project to run with (Optional if defaults already set)
         :param env: Environment to run in. local or pipeline
     """
+
+    if disable_op:
+        env = 'external'
+
     if platform:
         c.platform = platform
     if project:
@@ -94,10 +98,6 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     logger.info(f"Platform set to '{c.platform}'")
     logger.info(f"Project set to '{c.project}'")
     logger.info(f"Environment set to '{c.env}'")
-
-    if disable_op:
-        env = 'external'
-        c.env = env
 
     if disable_op:
         logger.info('Checking dbt connection... (running dbt debug)')
