@@ -7,7 +7,6 @@ import pytest
 import yaml
 
 from env import env_utils
-from test import AVAILABLE_PLATFORMS
 
 
 def test_platform_correctly_read(tmp_path):
