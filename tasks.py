@@ -64,7 +64,6 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     if disable_op:
         logger.info('Checking dbt connection... (running dbt debug)')
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        env_utils.setup_files(env, platform)
         run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
     else:
         logger.info(f'Injecting credentials to files...')
@@ -132,9 +131,6 @@ def inject_for_platform(c, platform, env='internal'):
 
             inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
             inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
-
-            os.remove(new_profile_path)
-            os.remove(db_template_path)
 
         else:
             raise ValueError(f"Environment '{env}' not available.")
