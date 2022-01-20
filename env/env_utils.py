@@ -57,7 +57,7 @@ def is_pipeline():
     return os.getenv('PIPELINE_JOB') and os.getenv('PIPELINE_BRANCH')
 
 
-def set_custom_names():
+def set_qualified_names_for_macro_tests():
     """
     Database and schema names for generated SQL during macro tests changes based on user.
     This function generates those names.
