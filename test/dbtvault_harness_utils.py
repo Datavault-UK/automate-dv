@@ -17,28 +17,9 @@ from behave.model import Table
 from environs import Env
 from numpy import NaN
 from pandas import Series
+from env import env_utils
 
 import test
-
-REQUIRED_ENV_VARS = {
-    "snowflake": [
-        "SNOWFLAKE_DB_ACCOUNT", "SNOWFLAKE_DB_USER",
-        "SNOWFLAKE_DB_PW", "SNOWFLAKE_DB_ROLE",
-        "SNOWFLAKE_DB_DATABASE", "SNOWFLAKE_DB_WH",
-        "SNOWFLAKE_DB_SCHEMA"],
-    "bigquery": [
-        "GCP_PROJECT_ID", "GCP_DATASET"],
-    "sqlserver": [
-        "SQLSERVER_DB_SERVER", "SQLSERVER_DB_PORT",
-        "SQLSERVER_DB_DATABASE", "SQLSERVER_DB_SCHEMA",
-        "SQLSERVER_DB_USER", "SQLSERVER_DB_PW"
-    ],
-    "databricks": [
-        "DATABRICKS_SCHEMA", "DATABRICKS_HOST",
-        "DATABRICKS_PORT", "DATABRICKS_TOKEN",
-        "DATABRICKS_ENDPOINT"
-    ]
-}
 
 
 def platform():
@@ -62,19 +43,18 @@ def platform():
 
 
 def setup_db_creds(plt):
-
     env = Env()
 
     if os.path.isfile(test.OP_DB_FILE):
         env.read_env(test.OP_DB_FILE)
 
-    details = {key: env(key) for key in REQUIRED_ENV_VARS[plt]}
+    details = {key: env(key) for key in env_utils.REQUIRED_ENV_VARS[plt]}
 
     if not all([v for v in details.values()]):
         test.logger.error(f"{str(plt).title()} environment details incomplete or not found. "
                           f"Please check your 'env/db.env' file "
                           f"or ensure the required variables are added to your environment: "
-                          f"{', '.join(REQUIRED_ENV_VARS[plt])}")
+                          f"{', '.join(env_utils.REQUIRED_ENV_VARS[plt])}")
         sys.exit(0)
     else:
         return details

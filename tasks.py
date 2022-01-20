@@ -1,55 +1,17 @@
-import copy
 import glob
 import logging
 import os
-import shutil
 from pathlib import Path
-from typing import Dict, Tuple
 
 import yaml
 from invoke import Collection, task
-import ruamel.yaml
+
 import test
+from env import env_utils
 from test import dbtvault_harness_utils
 
 logger = logging.getLogger('dbtvault')
 logger.setLevel(logging.INFO)
-
-
-def setup_files(env, platform) -> Tuple[Path, Path]:
-    profile_template_path = Path(test.ENV_TEMPLATE_DIR / f'profiles_{env}.tpl.yml').absolute()
-    db_template_path = Path(test.ENV_TEMPLATE_DIR / platform / f'db_{env}.tpl.env').absolute()
-    new_profile_path = profile_template_path.parent / f'{platform}_profile.yml'.lower()
-
-    yaml_handler = ruamel.yaml.YAML()
-    yaml_handler.indent(mapping=2, offset=2)
-
-    with open(profile_template_path) as fh_r:
-
-        yaml_dict = yaml_handler.load(fh_r)
-
-    new_profile_dict = copy.deepcopy(yaml_dict)
-
-    for k, v in yaml_dict['dbtvault']['outputs'].items():
-        if k != platform:
-            del new_profile_dict['dbtvault']['outputs'][k]
-
-    new_profile_dict['dbtvault']['target'] = platform
-
-    with open(new_profile_path, 'w') as fh_w:
-        yaml_handler.dump(new_profile_dict, fh_w)
-
-    if env in ["internal", "pipeline"]:
-        return Path(new_profile_path).absolute(), Path(db_template_path).absolute()
-    else:
-
-        # db_path = test.ENV_TEMPLATE_DIR.parent / 'db.env'
-        profile_path = test.ENV_TEMPLATE_DIR.parent / 'profiles.yml'
-
-        # shutil.copy(db_template_path, db_path)
-        shutil.copy(new_profile_path, profile_path)
-
-        return Path(profile_path).absolute(), ""
 
 
 @task()
@@ -64,10 +26,10 @@ def init_external(c, platform=None, project=None, env='external'):
     if env:
         c.env = env
 
-    profile_path, _ = setup_files(env, platform)
+    profile_path, _ = env_utils.setup_files(env, platform)
     logger.info(f"profiles.yml generated at: '{str(profile_path)}'")
 
-    platform_vars = dbtvault_harness_utils.REQUIRED_ENV_VARS[platform]
+    platform_vars = env_utils.REQUIRED_ENV_VARS[platform]
 
     logger.info(f"Please set the following environment variables:\n{', '.join(platform_vars)}")
 
@@ -102,7 +64,6 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     if disable_op:
         logger.info('Checking dbt connection... (running dbt debug)')
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        setup_files(env, platform)
         run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
     else:
         logger.info(f'Injecting credentials to files...')
@@ -166,10 +127,11 @@ def inject_for_platform(c, platform, env='internal'):
     else:
         if env in available_envs:
 
-            new_profile_path, db_template_path = setup_files(env, platform)
+            new_profile_path, db_template_path = env_utils.setup_files(env, platform)
 
             inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
             inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
+
         else:
             raise ValueError(f"Environment '{env}' not available.")
 
