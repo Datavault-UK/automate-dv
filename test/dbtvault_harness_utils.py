@@ -11,63 +11,13 @@ from typing import List
 
 import pandas as pd
 import pexpect
-import yaml
 from _pytest.fixtures import FixtureRequest
 from behave.model import Table
-from environs import Env
 from numpy import NaN
 from pandas import Series
-from env import env_utils
 
 import test
-
-
-def platform():
-    """Gets the target platform as set by the user via the invoke CLI, stored in invoke.yml"""
-
-    if os.path.isfile(test.INVOKE_YML_FILE):
-
-        with open(test.INVOKE_YML_FILE) as config:
-            config_dict = yaml.safe_load(config)
-            plt = config_dict.get('platform').lower()
-
-            if plt not in test.AVAILABLE_PLATFORMS:
-                test.logger.error(f"Platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)} "
-                                  f"in '{test.INVOKE_YML_FILE}'")
-                sys.exit(0)
-            else:
-                return plt
-    else:
-        test.logger.error(f"'{test.INVOKE_YML_FILE}' not found. Please run 'inv setup'")
-        sys.exit(0)
-
-
-def setup_db_creds(plt):
-    env = Env()
-
-    if os.path.isfile(test.OP_DB_FILE):
-        env.read_env(test.OP_DB_FILE)
-
-    details = {key: env(key) for key in env_utils.REQUIRED_ENV_VARS[plt]}
-
-    if not all([v for v in details.values()]):
-        test.logger.error(f"{str(plt).title()} environment details incomplete or not found. "
-                          f"Please check your 'env/db.env' file "
-                          f"or ensure the required variables are added to your environment: "
-                          f"{', '.join(env_utils.REQUIRED_ENV_VARS[plt])}")
-        sys.exit(0)
-    else:
-        return details
-
-
-def setup_environment():
-    p = platform()
-    setup_db_creds(plt=p)
-
-    if not os.getenv('DBT_PROFILES_DIR') and os.path.isfile(test.PROFILE_DIR / 'profiles.yml'):
-        os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-
-    os.environ['PLATFORM'] = p
+from env import env_utils
 
 
 def inject_parameters(file_contents: str, parameters: dict):
@@ -150,10 +100,6 @@ def is_full_refresh(context):
 
 def is_successful_run(dbt_logs: str):
     return 'Done' in dbt_logs and 'SQL compilation error' not in dbt_logs
-
-
-def is_pipeline():
-    return os.getenv('PIPELINE_JOB') and os.getenv('PIPELINE_BRANCH')
 
 
 def parse_hashdiffs(columns_as_series: Series) -> Series:
@@ -327,40 +273,6 @@ def calc_hash(columns_as_series: Series) -> Series:
             hashed_list.append(item)
 
     return Series(hashed_list)
-
-
-def set_custom_names():
-    """
-    Database and schema names for generated SQL during macro tests changes based on user.
-    This function generates those names.
-    """
-
-    def sanitise_strings(unsanitised_str):
-        return unsanitised_str.replace("-", "_").replace(".", "_").replace("/", "_").replace(' ', '_')
-
-    pipeline_metadata = {
-        "snowflake": {
-            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
-                           f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper(),
-            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
-        }
-    }
-
-    local_metadata = {
-        "snowflake": {
-            "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}".upper(),
-            "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
-        },
-        "bigquery": {
-            "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}".upper()
-        },
-        # "databricks": f"{os.getenv('DATABRICKS_SCHEMA')}".upper()
-    }
-
-    if is_pipeline():
-        return {k: sanitise_strings(v) for k, v in pipeline_metadata[platform()].items()}
-    else:
-        return {k: sanitise_strings(v) for k, v in local_metadata[platform()].items()}
 
 
 def run_dbt_command(command) -> str:
@@ -580,7 +492,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
             else:
                 column_data_for_sql = f"'{column_data}'"
 
-            if platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+            if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
                 expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
             else:
                 expression = f"CAST({column_data_for_sql} AS {column_type})"
@@ -649,10 +561,10 @@ def retrieve_expected_sql(request: FixtureRequest):
     model_name = request.node.name
 
     with open(test.TEST_MACRO_ROOT / macro_folder / "expected" /
-              macro_under_test / platform() / f'{model_name}.sql') as f:
+              macro_under_test / env_utils.platform() / f'{model_name}.sql') as f:
         file = f.readlines()
 
-        processed_file = inject_parameters("".join(file), set_custom_names())
+        processed_file = inject_parameters("".join(file), env_utils.set_custom_names())
 
         return processed_file
 
