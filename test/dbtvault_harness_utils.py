@@ -434,7 +434,7 @@ def context_table_to_csv(table: Table, model_name: str) -> str:
     return csv_fqn.stem
 
 
-def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> List[dict]:
+def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
     """
     Converts a context table in a feature file into a list of dictionaries
         :param use_nan:
