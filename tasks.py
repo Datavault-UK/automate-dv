@@ -224,7 +224,7 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         os.environ['PLATFORM'] = platform
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
         logger.info(f"Running dbt with command: '{command}'")
     else:
@@ -260,7 +260,7 @@ def run_macro_tests(c, platform=None, disable_op=False):
     pytest_command = f"pytest {str(test.TEST_MACRO_ROOT.absolute())} -n 4 -vv"
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = pytest_command
     else:
         command = f"op run -- {pytest_command}"
@@ -287,7 +287,7 @@ def run_harness_tests(c, platform=None, disable_op=False):
     pytest_command = f"pytest {str(test.TEST_HARNESS_TESTS_ROOT.absolute())} -n 4 -vv"
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = pytest_command
     else:
         command = f"op run -- {pytest_command}"
@@ -349,7 +349,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
             pytest_command = f"behave '{file}'"
 
             if disable_op:
-                dbtvault_harness_utils.setup_db_creds(platform)
+                env_utils.setup_db_creds(platform)
                 command = pytest_command
             else:
                 command = f"op run -- {pytest_command}"
