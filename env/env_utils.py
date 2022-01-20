@@ -1,4 +1,5 @@
 import copy
+import os
 import shutil
 from pathlib import Path
 from typing import Tuple
@@ -70,13 +71,14 @@ def setup_files(env, platform) -> Tuple[Path, Path]:
     profile_template_path = Path(test.ENV_TEMPLATE_DIR / f'profile/profiles_{env}.tpl.yml').absolute()
     db_template_path = Path(test.ENV_TEMPLATE_DIR / f'db/db_{env}.tpl.env').absolute()
 
-    new_profile_path = write_profile_platform_subset(profile_template_path, platform)
-    new_db_path = write_db_platform_subset(db_template_path, platform, env)
-
     if env in ["internal", "pipeline"]:
+        new_profile_path = write_profile_platform_subset(profile_template_path, platform)
+        new_db_path = write_db_platform_subset(db_template_path, platform, env)
         return Path(new_profile_path).absolute(), Path(new_db_path).absolute()
     else:
+        new_profile_path = write_profile_platform_subset(profile_template_path, platform)
         profile_path = test.ENV_TEMPLATE_DIR.parent / 'profiles.yml'
         shutil.copy(new_profile_path, profile_path)
 
+        os.remove(new_profile_path)
         return Path(profile_path).absolute(), ""
