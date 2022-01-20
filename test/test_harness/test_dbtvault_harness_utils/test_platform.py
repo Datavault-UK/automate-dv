@@ -41,7 +41,7 @@ def test_platform_invalid_target_error(tmp_path, caplog, temporary_prop):
             with pytest.raises(SystemExit):
                 env_utils.platform()
 
-    expected_error_msg = f"Platform must be set to one of: {', '.join(AVAILABLE_PLATFORMS)} " \
+    expected_error_msg = f"Platform must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)} " \
                          f"in '{Path(file.name)}'"
     assert expected_error_msg in caplog.text
 
