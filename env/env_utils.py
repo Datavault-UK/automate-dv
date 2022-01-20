@@ -33,7 +33,7 @@ def write_profile_platform_subset(template_path, platform):
     yaml_handler = ruamel.yaml.YAML()
     yaml_handler.indent(mapping=2, offset=2)
 
-    new_profile_path = template_path.parent / f'{platform}_profile.yml'.lower()
+    new_profile_path = template_path.parent.parent.parent / f'composed/{platform}_profile.yml'.lower()
 
     with open(template_path) as fh_r:
         yaml_dict = yaml_handler.load(fh_r)
@@ -53,7 +53,7 @@ def write_profile_platform_subset(template_path, platform):
 
 
 def write_db_platform_subset(template_path, platform, env):
-    new_db_path = template_path.parent / f'{platform}_db.env'.lower()
+    new_db_path = template_path.parent.parent.parent / f'composed/{platform}_db.env'.lower()
 
     config = dotenv_values(f"env/templates/db/db_{env}.tpl.env")
 
