@@ -89,8 +89,8 @@ def set_defaults(c, platform='snowflake', project='test'):
     c.project = dict_file['project']
     c.platform = dict_file['platform']
 
-    if platform not in test.AVAILABLE_PLATFORMS:
-        logger.error(f"platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+    if platform not in env_utils.AVAILABLE_PLATFORMS:
+        logger.error(f"platform must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
         exit(0)
 
     with open(test.INVOKE_YML_FILE, 'w+') as file:
@@ -122,8 +122,8 @@ def inject_to_file(c, from_file, to_file):
 def inject_for_platform(c, platform, env='internal'):
     available_envs = ["pipeline", "internal", "external"]
 
-    if platform not in test.AVAILABLE_PLATFORMS:
-        raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+    if platform not in env_utils.AVAILABLE_PLATFORMS:
+        raise ValueError(f"Platform must be one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
     else:
         if env in available_envs:
 
@@ -197,11 +197,11 @@ def check_platform(c, platform):
         :param platform: dbt profile platform/target
     """
 
-    if platform in test.AVAILABLE_PLATFORMS:
+    if platform in env_utils.AVAILABLE_PLATFORMS:
         logger.debug(f"Platform '{platform}' is available.")
         return True
     else:
-        logger.error(f"Unexpected platform: '{platform}', available platforms: {', '.join(test.AVAILABLE_PLATFORMS)}")
+        logger.error(f"Unexpected platform: '{platform}', available platforms: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
         exit(0)
 
 
@@ -224,7 +224,7 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         os.environ['PLATFORM'] = platform
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
         logger.info(f"Running dbt with command: '{command}'")
     else:
@@ -260,7 +260,7 @@ def run_macro_tests(c, platform=None, disable_op=False):
     pytest_command = f"pytest {str(test.TEST_MACRO_ROOT.absolute())} -n 4 -vv"
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = pytest_command
     else:
         command = f"op run -- {pytest_command}"
@@ -287,7 +287,7 @@ def run_harness_tests(c, platform=None, disable_op=False):
     pytest_command = f"pytest {str(test.TEST_HARNESS_TESTS_ROOT.absolute())} -n 4 -vv"
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = pytest_command
     else:
         command = f"op run -- {pytest_command}"
@@ -349,7 +349,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
             pytest_command = f"behave '{file}'"
 
             if disable_op:
-                dbtvault_harness_utils.setup_db_creds(platform)
+                env_utils.setup_db_creds(platform)
                 command = pytest_command
             else:
                 command = f"op run -- {pytest_command}"

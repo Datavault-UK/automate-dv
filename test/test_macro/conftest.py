@@ -3,6 +3,7 @@ import os
 import pytest
 import json
 import test
+from env import env_utils
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
 from . import structure_metadata
@@ -51,7 +52,7 @@ def generate_model(request):
 def setup(tmp_path_factory, worker_id):
     def test_setup():
         os.chdir(test.TEST_PROJECT_ROOT)
-        dbtvault_harness_utils.setup_environment()
+        env_utils.setup_environment()
         dbtvault_harness_utils.clean_models()
         dbtvault_harness_utils.clean_target()
         dbtvault_harness_utils.replace_test_schema()
@@ -69,7 +70,7 @@ def setup(tmp_path_factory, worker_id):
         with FileLock(str(fn) + ".lock"):
             if fn.is_file():
                 os.chdir(test.TEST_PROJECT_ROOT)
-                dbtvault_harness_utils.setup_environment()
+                env_utils.setup_environment()
             else:
                 test_setup()
                 fn.write_text(json.dumps({'status': 'in-use'}))
