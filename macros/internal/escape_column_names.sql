@@ -95,8 +95,36 @@
 
 {%- macro escape_column_name(column) -%}
 
+    {{- adapter.dispatch('escape_column_name', 'dbtvault')(column=column) -}}
+
+{%- endmacro %}
+
+{%- macro default__escape_column_name(column) -%}
+
     {%- set escape_char_left  = var('escape_char_left',  '"') -%}
     {%- set escape_char_right = var('escape_char_right', '"') -%}
+
+    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+
+    {%- do return(escaped_column_name) -%}
+
+{%- endmacro -%}
+
+{%- macro sqlserver__escape_column_name(column) -%}
+
+    {%- set escape_char_left  = var('escape_char_left',  '[') -%}
+    {%- set escape_char_right = var('escape_char_right', ']') -%}
+
+    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+
+    {%- do return(escaped_column_name) -%}
+
+{%- endmacro -%}
+
+{%- macro bigquery__escape_column_name(column) -%}
+
+    {%- set escape_char_left  = var('escape_char_left',  '`') -%}
+    {%- set escape_char_right = var('escape_char_right', '`') -%}
 
     {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
 
