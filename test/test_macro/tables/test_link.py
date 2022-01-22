@@ -5,7 +5,7 @@ from test import dbtvault_harness_utils
 macro_name = "link"
 
 
-@pytest.mark.single_source_link_snowflake
+@pytest.mark.single_source_link
 def test_link_macro_correctly_generates_sql_for_single_source(request, generate_model):
     generate_model()
 
@@ -18,7 +18,7 @@ def test_link_macro_correctly_generates_sql_for_single_source(request, generate_
     assert actual_sql == expected_sql
 
 
-@pytest.mark.single_source_link_snowflake
+@pytest.mark.single_source_link
 def test_link_macro_correctly_generates_sql_for_incremental_single_source(request, generate_model):
     generate_model()
 
@@ -34,7 +34,7 @@ def test_link_macro_correctly_generates_sql_for_incremental_single_source(reques
     assert actual_sql == expected_sql
 
 
-@pytest.mark.multi_source_link_snowflake
+@pytest.mark.multi_source_link
 def test_link_macro_correctly_generates_sql_for_multi_source(request, generate_model):
     generate_model()
 
@@ -47,7 +47,7 @@ def test_link_macro_correctly_generates_sql_for_multi_source(request, generate_m
     assert actual_sql == expected_sql
 
 
-@pytest.mark.multi_source_link_snowflake
+@pytest.mark.multi_source_link
 def test_link_macro_correctly_generates_sql_for_incremental_multi_source(request, generate_model):
     generate_model()
 
