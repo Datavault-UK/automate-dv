@@ -27,61 +27,61 @@ fixture_registry_utils = {
 
 fixtures_registry = {
     "fixture.staging":
-        {"snowflake": fixtures_staging.staging,
+        {"snowflake": fixtures_staging.staging_snowflake,
          "bigquery": fixtures_staging.staging_bigquery,
          "sqlserver": fixtures_staging.staging_sqlserver,
          "databricks": ''},
 
     "fixture.staging_escaped":
-        {"snowflake": fixtures_staging.staging_escaped,
-         "bigquery": fixtures_staging.staging_escaped,
-         "sqlserver": fixtures_staging.staging_escaped,
+        {"snowflake": fixtures_staging.staging_escaped_snowflake,
+         "bigquery": fixtures_staging.staging_escaped_snowflake,
+         "sqlserver": fixtures_staging.staging_escaped_snowflake,
          "databricks": ''},
 
     "fixture.single_source_hub":
-        {"snowflake": fixtures_hub.single_source_hub,
+        {"snowflake": fixtures_hub.single_source_hub_snowflake,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_hub_sqlserver,
          "databricks": fixtures_hub.single_source_hub_databricks},
 
     "fixture.single_source_comppk_hub":
-        {"snowflake": fixtures_hub.single_source_comppk_hub,
+        {"snowflake": fixtures_hub.single_source_comppk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comppk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_comppknk_hub":
-        {"snowflake": fixtures_hub.single_source_comppknk_hub,
+        {"snowflake": fixtures_hub.single_source_comppknk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comppknk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.multi_source_hub":
-        {"snowflake": fixtures_hub.multi_source_hub,
+        {"snowflake": fixtures_hub.multi_source_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_hub_sqlserver,
          "databricks": fixtures_hub.multi_source_hub_databricks},
 
     "fixture.multi_source_comppk_hub":
-        {"snowflake": fixtures_hub.multi_source_comppk_hub,
+        {"snowflake": fixtures_hub.multi_source_comppk_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_comppk_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_comppk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_link":
-        {"snowflake": fixtures_link.single_source_link,
+        {"snowflake": fixtures_link.single_source_link_snowflake,
          "bigquery": fixtures_link.single_source_link_bigquery,
          "sqlserver": fixtures_link.single_source_link_sqlserver,
          "databricks": fixtures_link.single_source_link_databricks},
 
     "fixture.single_source_comppk_link":
-        {"snowflake": fixtures_link.single_source_comppk_link,
+        {"snowflake": fixtures_link.single_source_comppk_link_snowflake,
          "bigquery": fixtures_link.single_source_comppk_link_bigquery,
          "sqlserver": fixtures_link.single_source_comppk_link_sqlserver,
          "databricks": ''},
 
     "fixture.multi_source_link":
-        {"snowflake": fixtures_link.multi_source_link,
+        {"snowflake": fixtures_link.multi_source_link_snowflake,
          "bigquery": fixtures_link.multi_source_link_bigquery,
          "sqlserver": fixtures_link.multi_source_link_sqlserver,
          "databricks": ''},
@@ -99,85 +99,85 @@ fixtures_registry = {
          "databricks": ''},
 
     "fixture.satellite":
-        {"snowflake": fixtures_sat.satellite,
+        {"snowflake": fixtures_sat.satellite_snowflake,
          "bigquery": fixtures_sat.satellite_bigquery,
          "sqlserver": fixtures_sat.satellite_sqlserver,
          "databricks": ''},
 
     "fixture.satellite_cycle":
-        {"snowflake": fixtures_sat.satellite_cycle,
+        {"snowflake": fixtures_sat.satellite_cycle_snowflake,
          "bigquery": fixtures_sat.satellite_cycle_bigquery,
          "sqlserver": fixtures_sat.satellite_cycle_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite":
-        {"snowflake": fixtures_eff_sat.eff_satellite,
+        {"snowflake": fixtures_eff_sat.eff_satellite_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_datetime":
-        {"snowflake": fixtures_eff_sat.eff_satellite_datetime,
+        {"snowflake": fixtures_eff_sat.eff_satellite_datetime_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_testing_auto_end_dating":
-        {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating,
+        {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_multipart":
-        {"snowflake": fixtures_eff_sat.eff_satellite_multipart,
+        {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
          "databricks": ''},
 
     "fixture.multi_active_satellite":
-        {"snowflake": fixtures_ma_sat.multi_active_satellite,
+        {"snowflake": fixtures_ma_sat.multi_active_satellite_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_sqlserver,
          "databricks": ''},
 
     "fixture.multi_active_satellite_cycle":
-        {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle,
+        {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_cycle_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
          "databricks": ''},
 
     "fixture.xts":
-        {"snowflake": fixtures_xts.xts,
+        {"snowflake": fixtures_xts.xts_snowflake,
          "bigquery": fixtures_xts.xts_bigquery,
          "sqlserver": fixtures_xts.xts_sqlserver,
          "databricks": ''},
 
     "fixture.pit":
-        {"snowflake": fixtures_pit.pit,
+        {"snowflake": fixtures_pit.pit_snowflake,
          "bigquery": fixtures_pit.pit_bigquery,
          "sqlserver": fixtures_pit.pit_sqlserver,
          "databricks": ''},
 
     "fixture.pit_one_sat":
-        {"snowflake": fixtures_pit.pit_one_sat,
+        {"snowflake": fixtures_pit.pit_one_sat_snowflake,
          "bigquery": fixtures_pit.pit_one_sat_bigquery,
          "sqlserver": fixtures_pit.pit_one_sat_sqlserver,
          "databricks": ''},
 
     "fixture.pit_two_sats":
-        {"snowflake": fixtures_pit.pit_two_sats,
+        {"snowflake": fixtures_pit.pit_two_sats_snowflake,
          "bigquery": fixtures_pit.pit_two_sats_bigquery,
          "sqlserver": fixtures_pit.pit_two_sats_sqlserver,
          "databricks": ''},
 
     "fixture.bridge":
-        {"snowflake": fixtures_bridge.bridge,
+        {"snowflake": fixtures_bridge.bridge_snowflake,
          "bigquery": fixtures_bridge.bridge_bigquery,
          "sqlserver": fixtures_bridge.bridge_sqlserver,
          "databricks": ''},
 
     "fixture.cycle":
-        {"snowflake": fixtures_cycle.cycle,
+        {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
          "databricks": ''},
