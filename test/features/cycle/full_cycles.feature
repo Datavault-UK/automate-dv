@@ -1,7 +1,7 @@
-Feature: [SF-CYC] Full Vault Cycles
+Feature: [CYC] Full Vault Cycles
 
   @fixture.cycle
-  Scenario: [SF-CYC-01] Test several load cycles of a raw vault
+  Scenario: [CYC-01] Test several load cycles of a raw vault
     Given the raw vault contains empty tables
       | HUB          | LINK                  | SAT                       |
       | HUB_CUSTOMER | LINK_CUSTOMER_BOOKING | SAT_CUST_CUSTOMER_DETAILS |

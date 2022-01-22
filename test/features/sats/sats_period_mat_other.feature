@@ -1,9 +1,9 @@
-Feature: [SF-SAT-PM-O] Satellites Loaded using Period Materialization for other scenarios
+Feature: [SAT-PM-O] Satellites Loaded using Period Materialization for other scenarios
 
   # ABORTED LOADS
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-O-01] Simulate a restart of an aborted load
+  Scenario: [SAT-PM-O-01] Simulate a restart of an aborted load
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                             | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

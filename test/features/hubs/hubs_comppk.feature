@@ -1,7 +1,7 @@
-Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
+Feature: [HUB-COMPPK] Hubs with composite src_pk
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-001] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-001] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -22,7 +22,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-002] Simple load of distinct stage data into an empty hub
+  Scenario: [HUB-COMPPK-002] Simple load of distinct stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -44,7 +44,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
 
   @fixture.single_source_comppk_hub
   @fixture.enable_sha
-  Scenario: [SF-HUB-COMPPK-003] Simple load of distinct stage data into an empty hub using SHA hashing
+  Scenario: [HUB-COMPPK-003] Simple load of distinct stage data into an empty hub using SHA hashing
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -65,7 +65,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | sha('1004') | A           | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-004] Keys with NULL or empty values are not loaded into empty hub that does not exist
+  Scenario: [HUB-COMPPK-004] Keys with NULL or empty values are not loaded into empty hub that does not exist
     Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -88,7 +88,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-005] Load of stage data into a hub
+  Scenario: [HUB-COMPPK-005] Load of stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_CK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | A           | 1001        | 1993-01-01 | TPCH   |
@@ -109,7 +109,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-006] Load of distinct stage data into a hub
+  Scenario: [HUB-COMPPK-006] Load of distinct stage data into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_CK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | A           | 1001        | 1993-01-01 | TPCH   |
@@ -135,7 +135,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-02 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-007] Keys with NULL or empty values are not loaded into a hub
+  Scenario: [HUB-COMPPK-007] Keys with NULL or empty values are not loaded into a hub
     Given the HUB hub is already populated with data
       | CUSTOMER_PK | CUSTOMER_CK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | A           | 1001        | 1993-01-01 | TPCH   |
@@ -161,7 +161,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.multi_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-008] Union three staging tables to feed a empty hub which does not exist
+  Scenario: [HUB-COMPPK-008] Union three staging tables to feed a empty hub which does not exist
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_CK | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
@@ -203,7 +203,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1006') | A       | 1006    | 1993-01-01 | *      |
 
   @fixture.multi_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-009] Union three staging tables to feed an empty hub over two cycles
+  Scenario: [HUB-COMPPK-009] Union three staging tables to feed an empty hub over two cycles
     Given the HUB hub is already populated with data
       | PART_PK     | PART_CK | PART_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | A       | 1001    | 1993-01-01 | *      |
@@ -276,7 +276,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1009') | C       | 1009    | 1993-01-03 | *      |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-010] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-010] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -298,7 +298,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-011] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-011] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -321,7 +321,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-012] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-012] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -343,7 +343,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-01 | TPCH   |
 
   @fixture.single_source_comppknk_hub
-  Scenario: [SF-HUB-COMPPK-013] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-013] Simple load of stage data into an empty hub
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -364,7 +364,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004')  | md5('A')     | 1004        | A           | 1993-01-01 | TPCH   |
 
   @fixture.multi_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-014] Union three staging tables to feed a empty hub which does not exist, load using period materialisation
+  Scenario: [HUB-COMPPK-014] Union three staging tables to feed a empty hub which does not exist, load using period materialisation
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_CK | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
@@ -407,7 +407,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1006') | A       | 1006    | 1993-01-02 | *      |
 
   @fixture.single_source_comppknk_hub
-  Scenario: [SF-HUB-COMPPK-015] Simple load of stage data into an empty hub, composite PK and NK, load using period materialisation
+  Scenario: [HUB-COMPPK-015] Simple load of stage data into an empty hub, composite PK and NK, load using period materialisation
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -429,7 +429,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004')  | md5('A')    | A           | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-016] Simple load of stage data into an empty hub, incremental loads
+  Scenario: [HUB-COMPPK-016] Simple load of stage data into an empty hub, incremental loads
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -462,7 +462,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.multi_source_comppk_hub
-  Scenario: [SF-HUB-COMPPK-017] Union three staging tables to feed a empty hub which does not exist, incremental loads
+  Scenario: [HUB-COMPPK-017] Union three staging tables to feed a empty hub which does not exist, incremental loads
     Given the HUB table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_CK | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | LOAD_DATE  | SOURCE |
@@ -514,7 +514,7 @@ Feature: [SF-HUB-COMPPK] Hubs with composite src_pk
       | md5('1006') | A       | 1006    | 1993-01-02 | *      |
 
   @fixture.single_source_comppknk_hub
-  Scenario: [SF-HUB-COMPPK-018] Simple load of stage data into an empty hub, composite PK and NK, incremental loads
+  Scenario: [HUB-COMPPK-018] Simple load of stage data into an empty hub, composite PK and NK, incremental loads
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |

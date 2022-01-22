@@ -1,7 +1,7 @@
-Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with monthly interval
+Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly interval
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-M-01] Satellite load over several monthly cycles with insert_by_period into
+  Scenario: [SAT-PM-M-01] Satellite load over several monthly cycles with insert_by_period into
   empty satellite and an inferred date range.
 
     Given the RAW_STAGE stage is empty
@@ -49,7 +49,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN')   | Karen         | 1978-06-16   | 2019-08-07     | 2019-08-07 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-M-02] Satellite load with monthly interval and intra-batch, same day duplicates.
+  Scenario: [SAT-PM-M-02] Satellite load with monthly interval and intra-batch, same day duplicates.
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -68,7 +68,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH')   | Beth          | 1995-08-07   | 2019-05-05     | 2019-06-04 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-M-03] Satellite load with monthly interval and intra-load, different day duplicates.
+  Scenario: [SAT-PM-M-03] Satellite load with monthly interval and intra-load, different day duplicates.
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -92,7 +92,7 @@ Feature: [SF-SAT-PM-M] Satellites Loaded using Period Materialization with month
       | md5('1004') | md5('1995-08-10\|\|1004\|\|DAVID')   | David         | 1995-08-10   | 2019-05-07     | 2019-06-06 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SF-SAT-PM-M-04] Satellite load with monthly interval and intra-batch same day and intra-load duplicates
+  Scenario: [SAT-PM-M-04] Satellite load with monthly interval and intra-batch same day and intra-load duplicates
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

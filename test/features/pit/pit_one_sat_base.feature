@@ -1,9 +1,9 @@
-Feature: [SF-PIT-1SB] Point in Time
+Feature: [PIT-1SB] Point in Time
   Base PIT behaviour with one hub and one satellite - Base Loads
 
   # DATES
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-01] Base load into a pit table from one satellite with dates with AS OF dates all in the past
+  Scenario: [PIT-1SB-01] Base load into a pit table from one satellite with dates with AS OF dates all in the past
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT          |
@@ -36,7 +36,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-02] Base load into a pit table from one satellite with dates with AS OF dates in the past and in between LDTS
+  Scenario: [PIT-1SB-02] Base load into a pit table from one satellite with dates with AS OF dates in the past and in between LDTS
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT          |
@@ -73,7 +73,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-03] Base load into a pit table from one satellite with dates with AS OF dates in between LDTS and some in the future
+  Scenario: [PIT-1SB-03] Base load into a pit table from one satellite with dates with AS OF dates in between LDTS and some in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT          |
@@ -106,7 +106,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-04] Base load into a pit table from one satellite with dates with all AS OF dates in the future
+  Scenario: [PIT-1SB-04] Base load into a pit table from one satellite with dates with all AS OF dates in the future
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT          |
@@ -139,7 +139,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-08 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-05] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
+  Scenario: [PIT-1SB-05] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT          |
@@ -189,7 +189,7 @@ Feature: [SF-PIT-1SB] Point in Time
 
   # TIMESTAMPS
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-06] Base load into a pit table from one satellite with timestamps with al AS OF timestamps in the past
+  Scenario: [PIT-1SB-06] Base load into a pit table from one satellite with timestamps with al AS OF timestamps in the past
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -222,7 +222,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 23:59:59.999 | 0000000000000000           | 1900-01-01 00:00:00.000      |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-07] Base load into a pit table from one satellite with timestamps with some AS OF timestamps in the past and some in between LDTS
+  Scenario: [PIT-1SB-07] Base load into a pit table from one satellite with timestamps with some AS OF timestamps in the past and some in between LDTS
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -259,7 +259,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 23:59:59.990 | md5('1003')                | 2018-06-01 12:00:00.001      |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-08] Base load into a pit table from one satellite with timestamps with AS OF timestamps in between LDTS and some in the future
+  Scenario: [PIT-1SB-08] Base load into a pit table from one satellite with timestamps with AS OF timestamps in between LDTS and some in the future
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -300,7 +300,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-09] Base load into a pit table from one satellite with timestamps with all AS OF timestamps in the future
+  Scenario: [PIT-1SB-09] Base load into a pit table from one satellite with timestamps with all AS OF timestamps in the future
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -325,7 +325,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2019-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-010] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
+  Scenario: [PIT-1SB-010] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -375,7 +375,7 @@ Feature: [SF-PIT-1SB] Point in Time
 
   # AS OF - LOWER GRANULARITY
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-011] Base load into a pit table from one satellite with timestamps where AS OF dates are in the future
+  Scenario: [PIT-1SB-011] Base load into a pit table from one satellite with timestamps where AS OF dates are in the future
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -405,7 +405,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.002      |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-012] Base load into a pit table from one satellite with timestamps where AS OF dates are in the past
+  Scenario: [PIT-1SB-012] Base load into a pit table from one satellite with timestamps where AS OF dates are in the past
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -435,7 +435,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 00:00:00.000 | 0000000000000000           | 1900-01-01 00:00:00.000      |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-013] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
+  Scenario: [PIT-1SB-013] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK  | SAT                     | PIT             |
@@ -466,7 +466,7 @@ Feature: [SF-PIT-1SB] Point in Time
 
   # AS OF - HIGHER GRANULARITY
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-014] Base load into a pit table from one satellite with dates where AS OF timestamps are in the future
+  Scenario: [PIT-1SB-014] Base load into a pit table from one satellite with dates where AS OF timestamps are in the future
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT             |
@@ -496,7 +496,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.001 | md5('1003')             | 2018-06-01 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-015] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
+  Scenario: [PIT-1SB-015] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT             |
@@ -526,7 +526,7 @@ Feature: [SF-PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 23:59:59.999 | 0000000000000000        | 1900-01-01 00:00:00.000   |
 
   @fixture.pit_one_sat
-  Scenario: [SF-PIT-1SB-016] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
+  Scenario: [PIT-1SB-016] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK  | SAT                  | PIT             |

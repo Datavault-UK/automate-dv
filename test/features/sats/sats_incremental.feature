@@ -1,13 +1,13 @@
-Feature: [SF-SAT] Sats loaded using Incremental Materialization
-#[SF-SAT-IM-04] and [SF-SAT-IM-05] do not pass when tests are run altogether
+Feature: [SAT] Sats loaded using Incremental Materialization
+#[SAT-IM-04] and [SAT-IM-05] do not pass when tests are run altogether
 # Tests from snowflake_sats.feature that should be moved here:
-# [SF-SAT-03] Load data into an empty satellite
-# [SF-SAT-07] Load data into a populated satellite where all records load
-# [SF-SAT-08] Load data into a populated satellite where some records overlap
-# [SF-SAT-09] Load data into a populated satellite where all PKs have a changed hashdiff/payload
+# [SAT-03] Load data into an empty satellite
+# [SAT-07] Load data into a populated satellite where all records load
+# [SAT-08] Load data into a populated satellite where some records overlap
+# [SAT-09] Load data into a populated satellite where all PKs have a changed hashdiff/payload
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-01] Load data from empty 2nd stage into an non-existent satellite
+  Scenario: [SAT-IM-01] Load data from empty 2nd stage into an non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -29,7 +29,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-02] Load data into an non-existent satellite - one cycle
+  Scenario: [SAT-IM-02] Load data into an non-existent satellite - one cycle
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -58,7 +58,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1006') | Frida         | 17-214-233-1219 | 1968-09-12   | md5('1968-09-12\|\|1006\|\|FRIDA\|\|17-214-233-1219') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-03] Load data into an non-existent satellite - two cycles
+  Scenario: [SAT-IM-03] Load data into an non-existent satellite - two cycles
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -99,7 +99,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1007') | George        | 17-214-233-1220 | 1991-11-03   | md5('1991-11-03\|\|1007\|\|GEORGE\|\|17-214-233-1220') | 1993-01-03     | 1993-01-03 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-04] Load data from empty stage into an empty satellite - two cycles
+  Scenario: [SAT-IM-04] Load data from empty stage into an empty satellite - two cycles
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -121,7 +121,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-05] Load stage data into an empty satellite - one cycle
+  Scenario: [SAT-IM-05] Load stage data into an empty satellite - one cycle
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -140,7 +140,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
 
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-06] Load stage data + empty stage data into an empty satellite - two cycles
+  Scenario: [SAT-IM-06] Load stage data + empty stage data into an empty satellite - two cycles
     Given the SATELLITE sat is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
@@ -167,7 +167,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1005') | Jenny         | 17-214-233-1218 | 1991-03-25   | md5('1991-03-25\|\|1005\|\|JENNY\|\|17-214-233-1218') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-07] Load empty stage data into an existing satellite - one cycle
+  Scenario: [SAT-IM-07] Load empty stage data into an existing satellite - one cycle
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
@@ -186,7 +186,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-08] Load stage data into an existing satellite - one cycle
+  Scenario: [SAT-IM-08] Load stage data into an existing satellite - one cycle
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
@@ -210,7 +210,7 @@ Feature: [SF-SAT] Sats loaded using Incremental Materialization
       | md5('1005') | Jenny         | 17-214-233-1218 | 1991-03-25   | md5('1991-03-25\|\|1005\|\|JENNY\|\|17-214-233-1218') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
-  Scenario: [SF-SAT-IM-09] Load mixed stage data into an existing satellite - two cycles
+  Scenario: [SAT-IM-09] Load mixed stage data into an existing satellite - two cycles
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
