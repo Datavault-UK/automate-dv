@@ -3,7 +3,7 @@ from behave.fixture import use_fixture_by_tag
 from env import env_utils
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
-from test.features.behave_fixtures import *
+from test.features import behave_fixtures
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
@@ -17,11 +17,11 @@ from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
 
 fixture_registry_utils = {
-    "fixture.enable_sha": enable_sha,
-    "fixture.enable_auto_end_date": enable_auto_end_date,
-    "fixture.enable_full_refresh": enable_full_refresh,
-    "fixture.disable_union": disable_union,
-    "fixture.disable_payload": disable_payload
+    "fixture.enable_sha": behave_fixtures.enable_sha,
+    "fixture.enable_auto_end_date": behave_fixtures.enable_auto_end_date,
+    "fixture.enable_full_refresh": behave_fixtures.enable_full_refresh,
+    "fixture.disable_union": behave_fixtures.disable_union,
+    "fixture.disable_payload": behave_fixtures.disable_payload
 }
 
 fixtures_registry = {
@@ -222,7 +222,25 @@ def after_all(context):
     dbtvault_generator.restore_project_yml()
 
 
+def before_feature(context, feature):
+    platforms = set(env_utils.AVAILABLE_PLATFORMS)
+    tags = set([str(tag).lower() for tag in feature.tags])
+    platform_tag = list(platforms.intersection(tags))
+
+    if len(platform_tag) > 0:
+        feature.skip(f"Feature skipped. This Feature will only run on {str(platform_tag[0]).upper()}")
+        return
+
+
 def before_scenario(context, scenario):
+    platforms = set(env_utils.AVAILABLE_PLATFORMS)
+    tags = set([str(tag).lower() for tag in scenario.effective_tags])
+    platform_tag = list(platforms.intersection(tags))
+
+    if len(platform_tag) > 0:
+        scenario.skip(f"Scenario skipped. This Scenario will only run on {str(platform_tag[0]).upper()}")
+        return
+
     dbtvault_harness_utils.create_dummy_model()
     dbtvault_harness_utils.replace_test_schema()
 
