@@ -1,8 +1,11 @@
 from behave import fixture
 
 
+# Snowflake
+
+
 @fixture
-def staging(context):
+def staging_snowflake(context):
     """
     Define the structures and metadata to load a hashed staging layer
     """
@@ -36,7 +39,7 @@ def staging(context):
 
 
 @fixture
-def staging_escaped(context):
+def staging_escaped_snowflake(context):
     """
     Define the structures and metadata to load a hashed staging layer
     """
@@ -71,6 +74,9 @@ def staging_escaped(context):
             }
         }
     }
+
+
+# BigQuery
 
 
 @fixture
@@ -143,6 +149,9 @@ def staging_escaped_bigquery(context):
             }
         }
     }
+
+
+# SQLServer
 
 
 @fixture
@@ -234,5 +243,3 @@ def staging_escaped_sqlserver(context):
             }
         }
     }
-
-
