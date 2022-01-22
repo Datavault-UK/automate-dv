@@ -1,9 +1,9 @@
 
-Feature: [SF-MAS-2CD-INC] Multi Active Satellites
+Feature: [MAS-2CD-INC] Multi Active Satellites
 
 
  @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-01] Load empty stage into a non existent multi-active satellite with 2 CDKs - one cycle
+  Scenario: [MAS-2CD-INC-01] Load empty stage into a non existent multi-active satellite with 2 CDKs - one cycle
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS table does not exist
     And the RAW_STAGE_TWO_CDK_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATETIME           | SOURCE |
@@ -43,7 +43,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1005') | Eric          | 17-214-233-1237 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1237\|\|12331')  | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-02] Load stage into a non existent multi-active satellite with 2 CDKs - one cycle
+  Scenario: [MAS-2CD-INC-02] Load stage into a non existent multi-active satellite with 2 CDKs - one cycle
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS table does not exist
     And the RAW_STAGE_TWO_CDK_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATETIME            | SOURCE |
@@ -105,7 +105,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1006') | Dan           | 17-214-233-1240 | 12450     | md5('1006\|\|DAN\|\|17-214-233-1240\|\|12450')   | 1993-01-01 11:14:54.397     | 1993-01-01 11:14:54.397 | *      |
 
  @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-03] Load mixed stage into a non existent multi-active satellite with 2 CDKs - two cycles
+  Scenario: [MAS-2CD-INC-03] Load mixed stage into a non existent multi-active satellite with 2 CDKs - two cycles
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS table does not exist
     And the RAW_STAGE_TWO_CDK_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATETIME            | SOURCE |
@@ -189,7 +189,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1007') | Charlie       | 17-214-233-2000 | 12510     | md5('1007\|\|CHARLIE\|\|17-214-233-2000\|\|12510')   | 1993-01-01 11:14:54.398     | 1993-01-01 11:14:54.398 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-04] Load empty stage into a non existent multi-active satellite with 2 CDKs - two cycles
+  Scenario: [MAS-2CD-INC-04] Load empty stage into a non existent multi-active satellite with 2 CDKs - two cycles
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
     And the RAW_STAGE_TWO_CDK_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATETIME            | SOURCE |
@@ -229,7 +229,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1005') | Eric          | 17-214-233-1237 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1237\|\|12331')  | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-05] Load empty stage into a non existent multi-active satellite with 2 CDKs - one cycle
+  Scenario: [MAS-2CD-INC-05] Load empty stage into a non existent multi-active satellite with 2 CDKs - one cycle
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
     And the RAW_STAGE_TWO_CDK_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATETIME            | SOURCE |
@@ -267,7 +267,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1005') | Eric          | 17-214-233-1237 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1237\|\|12331')  | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-06] Load empty stage into a non existent multi-active satellite with 2 CDKs - two cycles
+  Scenario: [MAS-2CD-INC-06] Load empty stage into a non existent multi-active satellite with 2 CDKs - two cycles
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
     And the RAW_STAGE_TWO_CDK_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | LOAD_DATETIME            | SOURCE |
@@ -329,7 +329,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1006') | Dan           | 17-214-233-1240 | 12450     | md5('1006\|\|DAN\|\|17-214-233-1240\|\|12450')   | 1993-01-01 11:14:54.397     | 1993-01-01 11:14:54.397 | *      |
     
   @fixture.multi_active_satellite
-  Scenario: [SF-MAS-2CD-INC-07] Load empty stage into a populated multi-active satellite with 2 CDKs - one cycle
+  Scenario: [MAS-2CD-INC-07] Load empty stage into a populated multi-active satellite with 2 CDKs - one cycle
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATETIME            | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 12301     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12301') | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |
@@ -364,7 +364,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1005') | Eric          | 17-214-233-1237 | 12331     | md5('1005\|\|ERIC\|\|17-214-233-1237\|\|12331')  | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |
 
     @fixture.multi_active_satellite
-    Scenario: [SF-MAS-2CD-INC-08] Load stage into a populated multi-active satellite with 2 CDKs - one cycle
+    Scenario: [MAS-2CD-INC-08] Load stage into a populated multi-active satellite with 2 CDKs - one cycle
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATETIME            | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 12301     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12301') | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |
@@ -419,7 +419,7 @@ Feature: [SF-MAS-2CD-INC] Multi Active Satellites
       | md5('1006') | Dan           | 17-214-233-1240 | 12450     | md5('1006\|\|DAN\|\|17-214-233-1240\|\|12450')   | 1993-01-01 11:14:54.397     | 1993-01-01 11:14:54.397 | *      |
 
     @fixture.multi_active_satellite
-    Scenario: [SF-MAS-2CD-INC-09] Load mixed stage into a populated multi-active satellite with 2 CDKs - two cycles
+    Scenario: [MAS-2CD-INC-09] Load mixed stage into a populated multi-active satellite with 2 CDKs - two cycles
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATETIME            | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 12301     | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|12301') | 1993-01-01 11:14:54.396     | 1993-01-01 11:14:54.396 | *      |

@@ -1,12 +1,12 @@
-Feature: [SF-LNK] Links loaded using Incremental Materialization
+Feature: [LNK] Links loaded using Incremental Materialization
 
 # Tests from snowflake_links.feature that should be moved here:
-# [SF-LNK-04] Load a simple stage table into an empty link table
-# [SF-LNK-06] Load a simple stage table into a populated link.
-# (?) [SF-LNK-011] Union three staging tables to feed empty link
+# [LNK-04] Load a simple stage table into an empty link table
+# [LNK-06] Load a simple stage table into a populated link.
+# (?) [LNK-011] Union three staging tables to feed empty link
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-01] Load of empty stage data into a non-existent link - one cycle
+  Scenario: [LNK-IM-01] Load of empty stage data into a non-existent link - one cycle
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -27,7 +27,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
 
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-02] Load of mixed stage data into a non-existent link - one cycle
+  Scenario: [LNK-IM-02] Load of mixed stage data into a non-existent link - one cycle
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -58,7 +58,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1010\|\|IND') | md5('1010') | md5('IND') | 1993-01-03 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-03] Load of mixed stage data into a non-existent link - two cycles
+  Scenario: [LNK-IM-03] Load of mixed stage data into a non-existent link - two cycles
     Given the LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -104,7 +104,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1013\|\|GBR') | md5('1013') | md5('GBR') | 1993-01-04 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-04] Load of stage data + empty stage data into an empty link - two cycles
+  Scenario: [LNK-IM-04] Load of stage data + empty stage data into an empty link - two cycles
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -124,7 +124,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-05] Load of stage data into an empty link - one cycle
+  Scenario: [LNK-IM-05] Load of stage data into an empty link - one cycle
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -141,7 +141,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
 
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-06] Load of mixed stage data into an empty link - two cycles
+  Scenario: [LNK-IM-06] Load of mixed stage data into an empty link - two cycles
     Given the LINK link is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -172,7 +172,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1010\|\|IND') | md5('1010') | md5('IND') | 1993-01-03 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-07] Load of empty stage data into a populated link - one cycle
+  Scenario: [LNK-IM-07] Load of empty stage data into a populated link - one cycle
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -191,7 +191,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1005\|\|ITA') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-08] Load of mixed stage data into a populated link - one cycle
+  Scenario: [LNK-IM-08] Load of mixed stage data into a populated link - one cycle
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -219,7 +219,7 @@ Feature: [SF-LNK] Links loaded using Incremental Materialization
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
 
   @fixture.single_source_link
-  Scenario: [SF-LNK-IM-09] Load of mixed stage data into a populated link - two cycles
+  Scenario: [LNK-IM-09] Load of mixed stage data into a populated link - two cycles
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
