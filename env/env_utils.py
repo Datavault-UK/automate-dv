@@ -32,7 +32,7 @@ REQUIRED_ENV_VARS = {
     ]
 }
 
-AVAILABLE_PLATFORMS = list(REQUIRED_ENV_VARS)
+AVAILABLE_PLATFORMS = [p.lower() for p in list(REQUIRED_ENV_VARS)]
 
 
 def platform():
