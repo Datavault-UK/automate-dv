@@ -318,7 +318,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
     logger.info(f"Running specific integration tests: {', '.join(feature_directories)}")
 
     for feat_dir in feature_directories:
-        feat_files = glob.glob(f'**/{feat_dir}/{platform}/*.feature', recursive=True)
+        feat_files = glob.glob(f'**/{feat_dir}/*.feature', recursive=True)
         collected_files[feat_dir] = feat_files
 
         files = []
@@ -330,7 +330,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
 
                     for file_substring in sub_types[feat_dir][subtype]:
                         for file_str in collected_files[feat_dir]:
-                            if f'{platform}_{file_substring}.feature' == Path(file_str).name:
+                            if f'{file_substring}.feature' == Path(file_str).name:
                                 files.append(file_str)
 
                 collected_files[feat_dir] = files
@@ -341,7 +341,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                 logger.info(
                     f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
             else:
-                logger.error(f"No feature files found for for {platform}/{struct}. This is most likely unintended, "
+                logger.error(f"No feature files found for for {struct}. This is most likely unintended, "
                              f"please check available feature directories and sub-types.")
                 raise SystemExit()
 
