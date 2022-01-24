@@ -1,7 +1,7 @@
 Feature: [TLK_COMPPK] Transactional Links with composite src_pk
 
   @fixture.t_link_comppk
-  Scenario: [TLK-COMPPK_001] Load a non-existent Transactional Link
+  Scenario: [TLK-COMPPK-001] Load a non-existent Transactional Link
     Given the T_LINK_COMPPK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
