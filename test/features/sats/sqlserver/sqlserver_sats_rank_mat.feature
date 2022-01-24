@@ -126,112 +126,133 @@ Feature: [SQLS-SAT-RM] Satellites Loaded using Rank Materialization
   Scenario: [SQLS-SAT-RM-07] Base load of a satellite with one timestamp value in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.396 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.396 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.396 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.396 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.4938396 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.4938396 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.4938396 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.4938396 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.4938396 | 1993-01-01 11:14:54.4938396 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.4938396 | 1993-01-01 11:14:54.4938396 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.4938396 | 1993-01-01 11:14:54.4938396 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.4938396 | 1993-01-01 11:14:54.4938396 | *      |
 
   @fixture.satellite
   Scenario: [SQLS-SAT-RM-08] Incremental load of a satellite with multiple timestamps over different days in rank column loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.396 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 11:14:54.396 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-03 11:14:54.396 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.396 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3847396 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 11:14:54.5039396 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-03 11:14:54.4859396 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.1059396 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-02 11:14:54.396 | 1993-01-02 11:14:54.396 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-03 11:14:54.396 | 1993-01-03 11:14:54.396 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.396 | 1993-01-04 11:14:54.396 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.3847396 | 1993-01-01 11:14:54.3847396 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-02 11:14:54.5039396 | 1993-01-02 11:14:54.5039396 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-03 11:14:54.4859396 | 1993-01-03 11:14:54.4859396 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.1059396 | 1993-01-04 11:14:54.1059396 | *      |
 
   @fixture.satellite
   Scenario: [SQLS-SAT-RM-09] Base load of a satellite with multiple timestamps in the same day in rank column only loads first rank
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.380 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.381 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.382 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.383 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.385 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.397 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.398 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.398 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.399 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.391 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.393 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3948380 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3058381 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.4028382 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.7045383 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.8039385 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.2039397 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.4582398 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.0697398 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.3928399 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.0183391 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.1005393 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.380 | 1993-01-01 11:14:54.380 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.3948380 | 1993-01-01 11:14:54.3948380 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.2039397 | 1993-01-01 11:14:54.2039397 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.0697398 | 1993-01-01 11:14:54.0697398 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.0183391 | 1993-01-04 11:14:54.0183391 | *      |
 
   @fixture.satellite
   Scenario: [SQLS-SAT-RM-010] Incremental load of a satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.380 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.381 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.382 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.383 | *      |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.385 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.397 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.398 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.398 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.399 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.391 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.393 | *      |
-      | 1004        | Dominic       | 2018-04-13   | 17-214-233-1217 | 1993-01-04 12:14:54.393 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3827380 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3827381 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3827382 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3827383 | *      |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3827385 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.3827397 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.3827398 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.3827398 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.3827399 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.4938391 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.4938393 | *      |
+      | 1004        | Dominic       | 2018-04-13   | 17-214-233-1217 | 1993-01-04 12:14:54.4938393 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')   | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.380 | 1993-01-01 11:14:54.380 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')     | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')    | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 2018-04-13   | 1993-01-04 12:14:54.393 | 1993-01-04 12:14:54.393 | *      |
+      | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')   | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.3827380 | 1993-01-01 11:14:54.3827380 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')     | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.3827397 | 1993-01-01 11:14:54.3827397 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')    | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.3827398 | 1993-01-01 11:14:54.3827398 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')     | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.4938391 | 1993-01-04 11:14:54.4938391 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 2018-04-13   | 1993-01-04 12:14:54.4938393 | 1993-01-04 12:14:54.4938393 | *      |
 
   @fixture.satellite
   Scenario: [SQLS-SAT-RM-011] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.396 | *      |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.397 | *      |
-      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.398 | *      |
-      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.399 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.3847396 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.3847397 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.3847398 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.3847399 | *      |
     And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
-      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.396 | 1993-01-01 11:14:54.396 | *      |
-      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.397 | 1993-01-01 11:14:54.397 | *      |
-      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.398 | 1993-01-01 11:14:54.398 | *      |
-      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.3847396 | 1993-01-01 11:14:54.3847396 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.3847397 | 1993-01-01 11:14:54.3847397 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.3847398 | 1993-01-01 11:14:54.3847398 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.3847399 | 1993-01-01 11:14:54.3847399 | *      |
+
+  @fixture.satellite
+  Scenario: [SQLS-SAT-RM-012] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 6 decimal places
+    Given the SATELLITE_TS table does not exist
+    And the RAW_STAGE_TS table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.387396 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.387397 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.387398 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.387399 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I stage the STG_CUSTOMER_TS data
+    And I insert by rank into the SATELLITE_TS sat
+    And I insert by rank into the SATELLITE_TS sat
+    Then the SATELLITE_TS table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.387396 | 1993-01-01 11:14:54.387396 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.387397 | 1993-01-01 11:14:54.387397 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.387398 | 1993-01-01 11:14:54.387398 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.387399 | 1993-01-01 11:14:54.387399 | *      |
+
