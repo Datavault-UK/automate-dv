@@ -234,6 +234,7 @@ def decide_to_run(tags, obj, obj_type):
                 f"{obj_type} skipped. This {obj_type} will only run on {', '.join([t.upper() for t in valid_tags])}")
             return
 
+    # Find platforms which have the platform name x from each string not_x
     do_not_run_on = [s for s in platforms if any(s in tag for tag in valid_tags_with_not)]
 
     if len(do_not_run_on) > 0:
