@@ -14,7 +14,7 @@ logger = logging.getLogger('dbtvault')
 logger.setLevel(logging.INFO)
 
 
-@task()
+@task
 def init_external(c, platform=None, project=None, env='external'):
     """
     Initial setup task for external developers to generate the profile.yml
@@ -34,7 +34,7 @@ def init_external(c, platform=None, project=None, env='external'):
     logger.info(f"Please set the following environment variables:\n{', '.join(platform_vars)}")
 
 
-@task()
+@task
 def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     """
     Convenience task which runs all setup tasks in the correct sequence
