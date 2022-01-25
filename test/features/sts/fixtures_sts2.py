@@ -76,14 +76,14 @@ def sts2_cycle(context):
             "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         },
         "STS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "LOAD_DATE": "DATETIME",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
                 "STATUS": "VARCHAR"
             }

@@ -20,6 +20,9 @@ Feature: [SF-STS2-IM] Status Tracking Satellites - Incremental Materialisation
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
+      | md5('1001') | 1993-01-02 | *      | D      |
+      | md5('1002') | 1993-01-02 | *      | D      |
+      | md5('1003') | 1993-01-02 | *      | D      |
 
   @fixture.sts2
   Scenario: [SF-STS2-IM-02] Load data into an non-existent status tracking satellite - one cycle
@@ -67,6 +70,9 @@ Feature: [SF-STS2-IM] Status Tracking Satellites - Incremental Materialisation
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
+      | md5('1001') | 1993-01-02 | *      | D      |
+      | md5('1002') | 1993-01-02 | *      | D      |
+      | md5('1003') | 1993-01-02 | *      | D      |
 
   @fixture.sts2
   Scenario: [SF-STS2-IM-04] Load data into an empty status tracking satellite - one cycle
@@ -111,6 +117,9 @@ Feature: [SF-STS2-IM] Status Tracking Satellites - Incremental Materialisation
       | md5('1001') | 1993-01-01 | *      | I      |
       | md5('1002') | 1993-01-01 | *      | I      |
       | md5('1003') | 1993-01-01 | *      | I      |
+      | md5('1001') | 1993-01-02 | *      | D      |
+      | md5('1002') | 1993-01-02 | *      | D      |
+      | md5('1003') | 1993-01-02 | *      | D      |
 
   @fixture.sts2
   Scenario: [SF-STS2-IM-06] Load data into an existing status tracking satellite - one cycle
@@ -135,3 +144,4 @@ Feature: [SF-STS2-IM] Status Tracking Satellites - Incremental Materialisation
       | md5('1002') | 1993-01-02 | *      | U      |
       | md5('1003') | 1993-01-02 | *      | D      |
       | md5('1004') | 1993-01-02 | *      | I      |
+
