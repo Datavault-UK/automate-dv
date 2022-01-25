@@ -288,6 +288,9 @@ def run_dbt_command(command) -> str:
         command = ['dbt', command]
 
     joined_command = " ".join(command)
+
+    test.logger.log(msg=f"Running on platform {str(env_utils.platform()).upper()}", level=logging.INFO)
+
     test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
 
     child = pexpect.spawn(command=joined_command, cwd=test.TEST_PROJECT_ROOT, encoding="utf-8", timeout=1000)

@@ -1,8 +1,11 @@
 from behave import fixture
 
 
+# Snowflake
+
+
 @fixture
-def pit(context):
+def pit_snowflake(context):
     """
     Define the structures and metadata to perform PIT load
     """
@@ -230,7 +233,7 @@ def pit(context):
 
 
 @fixture
-def pit_one_sat(context):
+def pit_one_sat_snowflake(context):
     """
     Define the structures and metadata to perform PIT load
     """
@@ -493,7 +496,7 @@ def pit_one_sat(context):
 
 
 @fixture
-def pit_two_sats(context):
+def pit_two_sats_snowflake(context):
     """
     Define the structures and metadata to perform PIT load
     """
@@ -877,6 +880,9 @@ def pit_two_sats(context):
             }
         }
     }
+
+
+# BigQuery
 
 
 @fixture
@@ -1753,6 +1759,9 @@ def pit_two_sats_bigquery(context):
             }
         }
     }
+
+
+# SQLServer
 
 
 @fixture
