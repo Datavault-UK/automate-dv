@@ -222,28 +222,37 @@ def after_all(context):
     dbtvault_generator.restore_project_yml()
 
 
-def before_feature(context, feature):
+def decide_to_run(tags, obj, obj_type):
     platforms = set(env_utils.AVAILABLE_PLATFORMS)
-    tags = set([t.lower() for t in feature.tags])
-    valid_tags = list(platforms.intersection(tags))
+    obj_tags = set([t.lower() for t in tags])
+    valid_tags = list(platforms.intersection(obj_tags))
+    valid_tags_with_not = {f"not_{plt}" for plt in platforms}.intersection(obj_tags)
 
     if not env_utils.platform() in valid_tags:
         if len(valid_tags) > 0:
-            feature.skip(
-                f"Feature skipped. This Feature will only run on {', '.join([t.upper() for t in valid_tags])}")
+            obj.skip(
+                f"{obj_type} skipped. This {obj_type} will only run on {', '.join([t.upper() for t in valid_tags])}")
             return
+
+    # Find platforms which have the platform name x from each string not_x
+    do_not_run_on = [s for s in platforms if any(s in tag for tag in valid_tags_with_not)]
+
+    if len(do_not_run_on) > 0:
+
+        only_run_on = set(platforms).difference(set(do_not_run_on))
+
+        if env_utils.platform() in do_not_run_on:
+            obj.skip(
+                f"{obj_type} skipped. This {obj_type} will only run on {', '.join(only_run_on)}")
+            return
+
+
+def before_feature(context, feature):
+    decide_to_run(feature.tags, feature, 'Feature')
 
 
 def before_scenario(context, scenario):
-    platforms = set(env_utils.AVAILABLE_PLATFORMS)
-    tags = set([t.lower() for t in scenario.effective_tags])
-    valid_tags = list(platforms.intersection(tags))
-
-    if not env_utils.platform() in valid_tags:
-        if len(valid_tags) > 0:
-            scenario.skip(
-                f"Scenario skipped. This Scenario will only run on {', '.join([t.upper() for t in valid_tags])}")
-            return
+    decide_to_run(scenario.effective_tags, scenario, 'Scenario')
 
     dbtvault_harness_utils.create_dummy_model()
     dbtvault_harness_utils.replace_test_schema()
