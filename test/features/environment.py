@@ -3,8 +3,7 @@ from behave.fixture import use_fixture_by_tag
 from env import env_utils
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
-import test
-from test.features.behave_fixtures import *
+from test.features import behave_fixtures
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
@@ -18,70 +17,70 @@ from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
 
 fixture_registry_utils = {
-    "fixture.enable_sha": enable_sha,
-    "fixture.enable_auto_end_date": enable_auto_end_date,
-    "fixture.enable_full_refresh": enable_full_refresh,
-    "fixture.disable_union": disable_union,
-    "fixture.disable_payload": disable_payload
+    "fixture.enable_sha": behave_fixtures.enable_sha,
+    "fixture.enable_auto_end_date": behave_fixtures.enable_auto_end_date,
+    "fixture.enable_full_refresh": behave_fixtures.enable_full_refresh,
+    "fixture.disable_union": behave_fixtures.disable_union,
+    "fixture.disable_payload": behave_fixtures.disable_payload
 }
 
 fixtures_registry = {
     "fixture.staging":
-        {"snowflake": fixtures_staging.staging,
+        {"snowflake": fixtures_staging.staging_snowflake,
          "bigquery": fixtures_staging.staging_bigquery,
          "sqlserver": fixtures_staging.staging_sqlserver,
          "databricks": ''},
 
     "fixture.staging_escaped":
-        {"snowflake": fixtures_staging.staging_escaped,
-         "bigquery": fixtures_staging.staging_escaped,
-         "sqlserver": fixtures_staging.staging_escaped,
+        {"snowflake": fixtures_staging.staging_escaped_snowflake,
+         "bigquery": fixtures_staging.staging_escaped_bigquery,
+         "sqlserver": fixtures_staging.staging_escaped_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_hub":
-        {"snowflake": fixtures_hub.single_source_hub,
+        {"snowflake": fixtures_hub.single_source_hub_snowflake,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_hub_sqlserver,
          "databricks": fixtures_hub.single_source_hub_databricks},
 
     "fixture.single_source_comppk_hub":
-        {"snowflake": fixtures_hub.single_source_comppk_hub,
+        {"snowflake": fixtures_hub.single_source_comppk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comppk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_comppknk_hub":
-        {"snowflake": fixtures_hub.single_source_comppknk_hub,
+        {"snowflake": fixtures_hub.single_source_comppknk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comppknk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.multi_source_hub":
-        {"snowflake": fixtures_hub.multi_source_hub,
+        {"snowflake": fixtures_hub.multi_source_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_hub_sqlserver,
          "databricks": fixtures_hub.multi_source_hub_databricks},
 
     "fixture.multi_source_comppk_hub":
-        {"snowflake": fixtures_hub.multi_source_comppk_hub,
+        {"snowflake": fixtures_hub.multi_source_comppk_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_comppk_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_comppk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_link":
-        {"snowflake": fixtures_link.single_source_link,
+        {"snowflake": fixtures_link.single_source_link_snowflake,
          "bigquery": fixtures_link.single_source_link_bigquery,
          "sqlserver": fixtures_link.single_source_link_sqlserver,
          "databricks": fixtures_link.single_source_link_databricks},
 
     "fixture.single_source_comppk_link":
-        {"snowflake": fixtures_link.single_source_comppk_link,
+        {"snowflake": fixtures_link.single_source_comppk_link_snowflake,
          "bigquery": fixtures_link.single_source_comppk_link_bigquery,
          "sqlserver": fixtures_link.single_source_comppk_link_sqlserver,
          "databricks": ''},
 
     "fixture.multi_source_link":
-        {"snowflake": fixtures_link.multi_source_link,
+        {"snowflake": fixtures_link.multi_source_link_snowflake,
          "bigquery": fixtures_link.multi_source_link_bigquery,
          "sqlserver": fixtures_link.multi_source_link_sqlserver,
          "databricks": ''},
@@ -99,85 +98,85 @@ fixtures_registry = {
          "databricks": ''},
 
     "fixture.satellite":
-        {"snowflake": fixtures_sat.satellite,
+        {"snowflake": fixtures_sat.satellite_snowflake,
          "bigquery": fixtures_sat.satellite_bigquery,
          "sqlserver": fixtures_sat.satellite_sqlserver,
          "databricks": ''},
 
     "fixture.satellite_cycle":
-        {"snowflake": fixtures_sat.satellite_cycle,
+        {"snowflake": fixtures_sat.satellite_cycle_snowflake,
          "bigquery": fixtures_sat.satellite_cycle_bigquery,
          "sqlserver": fixtures_sat.satellite_cycle_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite":
-        {"snowflake": fixtures_eff_sat.eff_satellite,
+        {"snowflake": fixtures_eff_sat.eff_satellite_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_datetime":
-        {"snowflake": fixtures_eff_sat.eff_satellite_datetime,
+        {"snowflake": fixtures_eff_sat.eff_satellite_datetime_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_testing_auto_end_dating":
-        {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating,
+        {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_multipart":
-        {"snowflake": fixtures_eff_sat.eff_satellite_multipart,
+        {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
          "databricks": ''},
 
     "fixture.multi_active_satellite":
-        {"snowflake": fixtures_ma_sat.multi_active_satellite,
+        {"snowflake": fixtures_ma_sat.multi_active_satellite_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_sqlserver,
          "databricks": ''},
 
     "fixture.multi_active_satellite_cycle":
-        {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle,
+        {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_cycle_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
          "databricks": ''},
 
     "fixture.xts":
-        {"snowflake": fixtures_xts.xts,
+        {"snowflake": fixtures_xts.xts_snowflake,
          "bigquery": fixtures_xts.xts_bigquery,
          "sqlserver": fixtures_xts.xts_sqlserver,
          "databricks": ''},
 
     "fixture.pit":
-        {"snowflake": fixtures_pit.pit,
+        {"snowflake": fixtures_pit.pit_snowflake,
          "bigquery": fixtures_pit.pit_bigquery,
          "sqlserver": fixtures_pit.pit_sqlserver,
          "databricks": ''},
 
     "fixture.pit_one_sat":
-        {"snowflake": fixtures_pit.pit_one_sat,
+        {"snowflake": fixtures_pit.pit_one_sat_snowflake,
          "bigquery": fixtures_pit.pit_one_sat_bigquery,
          "sqlserver": fixtures_pit.pit_one_sat_sqlserver,
          "databricks": ''},
 
     "fixture.pit_two_sats":
-        {"snowflake": fixtures_pit.pit_two_sats,
+        {"snowflake": fixtures_pit.pit_two_sats_snowflake,
          "bigquery": fixtures_pit.pit_two_sats_bigquery,
          "sqlserver": fixtures_pit.pit_two_sats_sqlserver,
          "databricks": ''},
 
     "fixture.bridge":
-        {"snowflake": fixtures_bridge.bridge,
+        {"snowflake": fixtures_bridge.bridge_snowflake,
          "bigquery": fixtures_bridge.bridge_bigquery,
          "sqlserver": fixtures_bridge.bridge_sqlserver,
          "databricks": ''},
 
     "fixture.cycle":
-        {"snowflake": fixtures_cycle.cycle,
+        {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
          "databricks": ''},
@@ -223,7 +222,38 @@ def after_all(context):
     dbtvault_generator.restore_project_yml()
 
 
+def decide_to_run(tags, obj, obj_type):
+    platforms = set(env_utils.AVAILABLE_PLATFORMS)
+    obj_tags = set([t.lower() for t in tags])
+    valid_tags = list(platforms.intersection(obj_tags))
+    valid_tags_with_not = {f"not_{plt}" for plt in platforms}.intersection(obj_tags)
+
+    # Find platforms which have the platform name x from each string not_x
+    do_not_run_on = [s for s in platforms if any(s in tag for tag in valid_tags_with_not)]
+
+    if not env_utils.platform() in valid_tags:
+        if len(valid_tags) > 0:
+            obj.skip(
+                f"{obj_type} skipped. This {obj_type} will only run on {', '.join([t.upper() for t in valid_tags])}")
+            return
+
+    if len(do_not_run_on) > 0:
+
+        only_run_on = set(platforms).difference(set(do_not_run_on))
+
+        if env_utils.platform() in do_not_run_on:
+            obj.skip(
+                f"{obj_type} skipped. This {obj_type} will only run on {', '.join(only_run_on)}")
+            return
+
+
+def before_feature(context, feature):
+    decide_to_run(feature.tags, feature, 'Feature')
+
+
 def before_scenario(context, scenario):
+    decide_to_run(scenario.effective_tags, scenario, 'Scenario')
+
     dbtvault_harness_utils.create_dummy_model()
     dbtvault_harness_utils.replace_test_schema()
 
