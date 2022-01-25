@@ -1,6 +1,5 @@
 Feature: [HUB] Hubs
 
-  @not_databricks
   @fixture.single_source_hub
   Scenario: [HUB-01] Simple load of stage data into an empty hub
     Given the HUB table does not exist
