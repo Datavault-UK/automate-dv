@@ -228,14 +228,14 @@ def decide_to_run(tags, obj, obj_type):
     valid_tags = list(platforms.intersection(obj_tags))
     valid_tags_with_not = {f"not_{plt}" for plt in platforms}.intersection(obj_tags)
 
+    # Find platforms which have the platform name x from each string not_x
+    do_not_run_on = [s for s in platforms if any(s in tag for tag in valid_tags_with_not)]
+
     if not env_utils.platform() in valid_tags:
         if len(valid_tags) > 0:
             obj.skip(
                 f"{obj_type} skipped. This {obj_type} will only run on {', '.join([t.upper() for t in valid_tags])}")
             return
-
-    # Find platforms which have the platform name x from each string not_x
-    do_not_run_on = [s for s in platforms if any(s in tag for tag in valid_tags_with_not)]
 
     if len(do_not_run_on) > 0:
 
