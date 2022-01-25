@@ -1,8 +1,11 @@
 from behave import fixture
 
 
+# Snowflake
+
+
 @fixture
-def multi_active_satellite(context):
+def multi_active_satellite_snowflake(context):
     """
     Define the structures and metadata to load multi active satellites
     """
@@ -345,7 +348,7 @@ def multi_active_satellite(context):
 
 
 @fixture
-def multi_active_satellite_cycle(context):
+def multi_active_satellite_cycle_snowflake(context):
     """
     Define the structures and metadata to perform load cycles for multi active satellites
     """
@@ -1280,6 +1283,9 @@ def multi_active_satellite_cycle(context):
         }
 
 
+# BigQuery
+
+
 @fixture
 def multi_active_satellite_bigquery(context):
     """
@@ -1890,6 +1896,9 @@ def multi_active_satellite_cycle_bigquery(context):
             }
         }
     }
+
+
+# SQLServer
 
 
 @fixture
