@@ -260,8 +260,7 @@ SELECT DISTINCT * FROM pit
 
 {#- Setting ghost values to replace NULLS -#}
 {%- set ghost_pk = '0000000000000000' -%}
-
-{%- set ghost_date = '1900-01-01 00:00:00.000000' %}
+{%- set ghost_date = '1900-01-01 00:00:00.000' %}
 
 {# Stating the dependancies on the stage tables outside of the If STATEMENT #}
 {% for stg in stage_tables -%}
