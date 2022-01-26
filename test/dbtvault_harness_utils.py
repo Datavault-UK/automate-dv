@@ -496,10 +496,10 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
                 else:
                     column_data_for_sql = f"'{column_data}'"
 
-            if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
-                expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
-            else:
-                expression = f"CAST({column_data_for_sql} AS {column_type})"
+                if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                    expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+                else:
+                    expression = f"CAST({column_data_for_sql} AS {column_type})"
 
                 sql_command = f"{sql_command}{expression} AS {column_name} "
 
