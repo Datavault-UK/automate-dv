@@ -1,8 +1,10 @@
 from behave import fixture
 
 
+# Snowflake
+
 @fixture
-def satellite(context):
+def satellite_snowflake(context):
     """
     Define the structures and metadata to load satellites
     """
@@ -125,7 +127,7 @@ def satellite(context):
 
 
 @fixture
-def satellite_cycle(context):
+def satellite_cycle_snowflake(context):
     """
     Define the structures and metadata to perform load cycles for satellites
     """
@@ -187,6 +189,9 @@ def satellite_cycle(context):
             }
         }
     }
+
+
+# BigQuery
 
 
 @fixture
@@ -355,6 +360,9 @@ def satellite_cycle_bigquery(context):
             }
         }
     }
+
+
+# SQLServer
 
 
 @fixture

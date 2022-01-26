@@ -3,6 +3,7 @@ import copy
 from behave import *
 from behave.model import Table, Row
 
+from env import env_utils
 from test import dbtvault_generator
 from test import dbtvault_harness_utils
 
@@ -195,7 +196,7 @@ def load_populated_table(context, model_name, vault_structure):
     Create a table with data pre-populated from the context table.
     """
 
-    if dbtvault_harness_utils.platform() == "sqlserver":
+    if env_utils.platform() == "sqlserver":
         # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
@@ -295,7 +296,7 @@ def load_vault(context):
 def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
-    if dbtvault_harness_utils.platform() == "sqlserver":
+    if env_utils.platform() == "sqlserver":
         # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
@@ -337,7 +338,7 @@ def create_csv(context, raw_stage_model_name):
 def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
-    if dbtvault_harness_utils.platform() == "sqlserver":
+    if env_utils.platform() == "sqlserver":
         # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
@@ -402,7 +403,7 @@ def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder
     """
 
-    if dbtvault_harness_utils.platform() == "sqlserver":
+    if env_utils.platform() == "sqlserver":
         # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
@@ -465,7 +466,7 @@ def stage_processing(context, processed_stage_name):
 
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
-    if dbtvault_harness_utils.platform() == "sqlserver":
+    if env_utils.platform() == "sqlserver":
         # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
@@ -524,7 +525,7 @@ def expect_data(context, model_name):
 
 @then("the {model_name} table should be empty")
 def expect_data(context, model_name):
-    if dbtvault_harness_utils.platform() == "sqlserver":
+    if env_utils.platform() == "sqlserver":
 
         # Delete any seed CSV or model SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_seeds(model_name.lower() + "_expected_seed")

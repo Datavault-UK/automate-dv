@@ -1,8 +1,11 @@
 from behave import fixture
 
 
+# Snowflake
+
+
 @fixture
-def eff_satellite(context):
+def eff_satellite_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -56,7 +59,7 @@ def eff_satellite(context):
 
 
 @fixture
-def eff_satellite_datetime(context):
+def eff_satellite_datetime_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -110,7 +113,7 @@ def eff_satellite_datetime(context):
 
 
 @fixture
-def eff_satellite_testing_auto_end_dating(context):
+def eff_satellite_testing_auto_end_dating_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -235,7 +238,7 @@ def eff_satellite_testing_auto_end_dating(context):
 
 
 @fixture
-def eff_satellite_multipart(context):
+def eff_satellite_multipart_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
@@ -295,6 +298,9 @@ def eff_satellite_multipart(context):
             }
         }
     }
+
+
+# BigQuery
 
 
 @fixture
@@ -592,6 +598,9 @@ def eff_satellite_multipart_bigquery(context):
             }
         }
     }
+
+
+# SQLServer
 
 
 @fixture
