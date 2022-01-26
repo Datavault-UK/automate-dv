@@ -29,6 +29,7 @@ dbt-bigquery = "==1.0.0"
 pexpect = "*"
 filelock = "*"
 dbt-sqlserver = "*"
+dbt-spark = "*"
 
 [requires]
 python_version = "3.9"
