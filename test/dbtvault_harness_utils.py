@@ -472,36 +472,61 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
     sql_command = ""
     first_row = True
 
-    for feature_data in feature_data_list:
-        for row_number in feature_data.keys():
-            if first_row:
-                first_row = False
-            else:
-                sql_command = sql_command + "\nUNION ALL \n"
+    if len(feature_data_list) == 0:
+        # Empty table
+        if len(column_types) > 0:
             first_column = True
 
             sql_command = sql_command + "SELECT "
 
-            for column_name in feature_data[row_number].keys():
+            for column_name in column_types.keys():
                 if first_column:
                     first_column = False
                 else:
                     sql_command = sql_command + ", "
 
-                column_data = feature_data[row_number][column_name]
                 column_type = column_types[column_name]
 
-                if column_data.lower() == "<null>" or column_data == "":
-                    column_data_for_sql = "NULL"
-                else:
-                    column_data_for_sql = f"'{column_data}'"
-
                 if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
-                    expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+                    expression = f"CONVERT({column_type}, NULL, 2)"
                 else:
-                    expression = f"CAST({column_data_for_sql} AS {column_type})"
+                    expression = f"CAST(NULL AS {column_type})"
 
-                sql_command = f"{sql_command}{expression} AS {column_name} "
+                sql_command = f"{sql_command}{expression} AS {column_name}"
+
+            sql_command = sql_command + " WHERE 1=0"
+
+    else:
+        for feature_data in feature_data_list:
+            for row_number in feature_data.keys():
+                if first_row:
+                    first_row = False
+                else:
+                    sql_command = sql_command + "\nUNION ALL \n"
+                first_column = True
+
+                sql_command = sql_command + "SELECT "
+
+                for column_name in feature_data[row_number].keys():
+                    if first_column:
+                        first_column = False
+                    else:
+                        sql_command = sql_command + ", "
+
+                    column_data = feature_data[row_number][column_name]
+                    column_type = column_types[column_name]
+
+                    if column_data.lower() == "<null>" or column_data == "":
+                        column_data_for_sql = "NULL"
+                    else:
+                        column_data_for_sql = f"'{column_data}'"
+
+                    if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                        expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+                    else:
+                        expression = f"CAST({column_data_for_sql} AS {column_type})"
+
+                    sql_command = f"{sql_command}{expression} AS {column_name} "
 
     with open(test.TEST_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
         f.write(sql_command)
