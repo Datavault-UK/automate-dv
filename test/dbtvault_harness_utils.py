@@ -470,21 +470,13 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
     column_types = seed_config[model_name]["column_types"]
 
     sql_command = ""
-    first_row = True
 
     if len(feature_data_list) == 0:
         # Empty table
         if len(column_types) > 0:
-            first_column = True
-
-            sql_command = sql_command + "SELECT "
+            select_column_list = []
 
             for column_name in column_types.keys():
-                if first_column:
-                    first_column = False
-                else:
-                    sql_command = sql_command + ", "
-
                 column_type = column_types[column_name]
 
                 if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
@@ -492,27 +484,18 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
                 else:
                     expression = f"CAST(NULL AS {column_type})"
 
-                sql_command = f"{sql_command}{expression} AS {column_name}"
+                select_column_list.append(f"{expression} AS {column_name}")
 
-            sql_command = sql_command + " WHERE 1=0"
+            sql_command = "SELECT " + ",".join(select_column_list) + " WHERE 1=0"
 
     else:
+        sql_command_list = []
+
         for feature_data in feature_data_list:
             for row_number in feature_data.keys():
-                if first_row:
-                    first_row = False
-                else:
-                    sql_command = sql_command + "\nUNION ALL \n"
-                first_column = True
-
-                sql_command = sql_command + "SELECT "
+                select_column_list = []
 
                 for column_name in feature_data[row_number].keys():
-                    if first_column:
-                        first_column = False
-                    else:
-                        sql_command = sql_command + ", "
-
                     column_data = feature_data[row_number][column_name]
                     column_type = column_types[column_name]
 
@@ -526,7 +509,11 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
                     else:
                         expression = f"CAST({column_data_for_sql} AS {column_type})"
 
-                    sql_command = f"{sql_command}{expression} AS {column_name} "
+                    select_column_list.append(f"{expression} AS {column_name}")
+
+                sql_command_list.append("SELECT " + ",".join(select_column_list))
+
+        sql_command = "\nUNION ALL\n".join(sql_command_list)
 
     with open(test.TEST_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
         f.write(sql_command)
