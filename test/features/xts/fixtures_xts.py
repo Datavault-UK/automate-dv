@@ -4,7 +4,7 @@ from behave import fixture
 # SNOWFLAKE
 
 @fixture
-def xts(context):
+def xts_snowflake(context):
     """
     Define the structures and metadata to load xts
     """

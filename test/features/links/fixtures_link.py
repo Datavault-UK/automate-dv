@@ -1,10 +1,11 @@
 from behave import fixture
 
 
-# SNOWFLAKE
+# Snowflake
+
 
 @fixture
-def single_source_link(context):
+def single_source_link_snowflake(context):
     """
     Define the structures and metadata to load single-source links
     """
@@ -51,7 +52,56 @@ def single_source_link(context):
 
 
 @fixture
-def multi_source_link(context):
+def single_source_comppk_link_snowflake(context):
+    """
+    Define the structures and metadata to load single-source links with composite PK
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "COMP_PK": "CUSTOMER_ID",
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "LINK": {
+            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "LINK": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "COMP_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
+def multi_source_link_snowflake(context):
     """
     Define the structures and metadata to load single-source links
     """
@@ -129,56 +179,8 @@ def multi_source_link(context):
     }
 
 
-@fixture
-def single_source_comppk_link(context):
-    """
-    Define the structures and metadata to load single-source links with composite PK
-    """
+# BigQuery
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
-
-    context.seed_config = {
-        "LINK": {
-            "column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "COMP_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "RAW_STAGE": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        }
-    }
-
-
-# BIGQUERY
 
 @fixture
 def single_source_link_bigquery(context):
@@ -222,6 +224,57 @@ def single_source_link_bigquery(context):
                 "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+# BIGQUERY
+
+@fixture
+def single_source_comppk_link_bigquery(context):
+    """
+    Define the structures and metadata to load single-source links with composite PK
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "COMP_PK": "CUSTOMER_ID",
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "LINK": {
+            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "LINK": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "COMP_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
             }
         }
     }
@@ -306,56 +359,8 @@ def multi_source_link_bigquery(context):
     }
 
 
-@fixture
-def single_source_comppk_link_bigquery(context):
-    """
-    Define the structures and metadata to load single-source links with composite PK
-    """
+# SQLServer
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
-
-    context.seed_config = {
-        "LINK": {
-            "column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "COMP_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "RAW_STAGE": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        }
-    }
-
-
-# SQLSERVER
 
 @fixture
 def single_source_link_sqlserver(context):
@@ -399,6 +404,57 @@ def single_source_link_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
+
+
+# SQLSERVER
+
+@fixture
+def single_source_comppk_link_sqlserver(context):
+    """
+    Define the structures and metadata to load single-source links with composite PK
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "COMP_PK": "CUSTOMER_ID",
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "LINK": {
+            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "LINK": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "COMP_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
             }
         }
     }
@@ -483,16 +539,17 @@ def multi_source_link_sqlserver(context):
     }
 
 
+# Databricks
+
 @fixture
-def single_source_comppk_link_sqlserver(context):
+def single_source_link_databricks(context):
     """
-    Define the structures and metadata to load single-source links with composite PK
+    Define the structures and metadata to load single-source links
     """
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
             "CUSTOMER_FK": "CUSTOMER_ID",
             "NATION_FK": "NATION_ID"
         }
@@ -500,7 +557,7 @@ def single_source_comppk_link_sqlserver(context):
 
     context.vault_structure_columns = {
         "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+            "src_pk": "CUSTOMER_NATION_PK",
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -510,23 +567,22 @@ def single_source_comppk_link_sqlserver(context):
     context.seed_config = {
         "LINK": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "COMP_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_NATION_PK": "VARCHAR(100)",
+                "CUSTOMER_FK": "VARCHAR(100)",
+                "NATION_FK": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "NATION_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }

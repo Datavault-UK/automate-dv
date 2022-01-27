@@ -1,10 +1,11 @@
 from behave import fixture
 
 
-# SNOWFLAKE
+# Snowflake
+
 
 @fixture
-def multi_active_satellite(context):
+def multi_active_satellite_snowflake(context):
     """
     Define the structures and metadata to load multi active satellites
     """
@@ -122,6 +123,15 @@ def multi_active_satellite(context):
             "src_cdk": ["CUSTOMER_PHONE"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_HD_ALIAS": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": {"source_column": "HASHDIFF", "alias": "CUSTOMER_HASHDIFF"},
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -252,6 +262,18 @@ def multi_active_satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "MULTI_ACTIVE_SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -326,7 +348,7 @@ def multi_active_satellite(context):
 
 
 @fixture
-def multi_active_satellite_cycle(context):
+def multi_active_satellite_cycle_snowflake(context):
     """
     Define the structures and metadata to perform load cycles for multi active satellites
     """
@@ -1261,7 +1283,8 @@ def multi_active_satellite_cycle(context):
         }
 
 
-# BIGQUERY
+# BigQuery
+
 
 @fixture
 def multi_active_satellite_bigquery(context):
@@ -1875,7 +1898,8 @@ def multi_active_satellite_cycle_bigquery(context):
     }
 
 
-# SQLSERVER
+# SQLServer
+
 
 @fixture
 def multi_active_satellite_sqlserver(context):

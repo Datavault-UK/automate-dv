@@ -16,13 +16,11 @@ OP_DB_FILE = PROJECT_ROOT / 'env/db.env'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
 BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
 COMPILED_TESTS_DBT_ROOT = Path(f"{TEST_PROJECT_ROOT}/target/compiled/dbtvault_test/models/")
+ENV_TEMPLATE_DIR = PROJECT_ROOT / 'env/templates'
 
 FEATURES_ROOT = TESTS_ROOT / 'features'
 SEEDS_DIR = TEST_PROJECT_ROOT / 'seeds'
 TEMP_SEED_DIR = TEST_PROJECT_ROOT / 'seeds/temp'
-
-
-AVAILABLE_PLATFORMS = ['snowflake', 'bigquery', 'sqlserver', 'postgres']
 
 # Setup logging
 logger = logging.getLogger('dbtvault')

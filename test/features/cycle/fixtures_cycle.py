@@ -4,7 +4,7 @@ from behave import fixture
 # SNOWFLAKE
 
 @fixture
-def cycle(context):
+def cycle_snowflake(context):
     """
     Define the structures and metadata to perform vault load cycles
     """

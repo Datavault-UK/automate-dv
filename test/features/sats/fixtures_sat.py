@@ -1,10 +1,10 @@
 from behave import fixture
 
 
-# SNOWFLAKE
+# Snowflake
 
 @fixture
-def satellite(context):
+def satellite_snowflake(context):
     """
     Define the structures and metadata to load satellites
     """
@@ -44,6 +44,14 @@ def satellite(context):
             "src_pk": "CUSTOMER_PK",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
             "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SATELLITE_HD_ALIAS": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": {"source_column": "HASHDIFF", "alias": "CUSTOMER_HASHDIFF"},
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -91,6 +99,18 @@ def satellite(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "SATELLITE_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -107,7 +127,7 @@ def satellite(context):
 
 
 @fixture
-def satellite_cycle(context):
+def satellite_cycle_snowflake(context):
     """
     Define the structures and metadata to perform load cycles for satellites
     """
@@ -171,7 +191,8 @@ def satellite_cycle(context):
     }
 
 
-# BIGQUERY
+# BigQuery
+
 
 @fixture
 def satellite_bigquery(context):
@@ -341,7 +362,8 @@ def satellite_cycle_bigquery(context):
     }
 
 
-# SQLSERVER
+# SQLServer
+
 
 @fixture
 def satellite_sqlserver(context):
