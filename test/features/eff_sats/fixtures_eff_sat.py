@@ -457,7 +457,6 @@ def eff_satellite_testing_auto_end_dating_bigquery(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
             "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
@@ -757,7 +756,6 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
             "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
