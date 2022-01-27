@@ -692,7 +692,7 @@ def eff_satellite_datetime_sqlserver(context):
                 "START_DATE": "DATETIME2",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
-                "LOAD_DATE": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -704,7 +704,7 @@ def eff_satellite_datetime_sqlserver(context):
                 "START_DATE": "DATETIME2",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
-                "LOAD_DATE": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         }
