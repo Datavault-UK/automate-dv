@@ -633,7 +633,9 @@ def feature_sub_types():
                 'sats_period_mat_base',
                 'sats_period_mat_other'
                 'sats_period_mat_inferred_range',
-                'sats_period_mat_provided_range'
+                'sats_period_mat_provided_range',
+                'sats_daily',
+                'sats_monthly'
             ],
             'rank': [
                 'sats_rank_mat'
