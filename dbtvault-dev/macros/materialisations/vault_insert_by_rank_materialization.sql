@@ -2,9 +2,9 @@
 
     {%- set full_refresh_mode = flags.FULL_REFRESH -%}
 
-    {%- set target_relation = this -%}
+    {%- set target_relation = this.incorporate(type='table') -%}
     {%- set existing_relation = load_relation(this) -%}
-    {%- set tmp_relation = make_temp_relation(this) -%}
+    {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set rank_column = dbtvault.escape_column_names(config.require('rank_column')) -%}
     {%- set rank_source_models = config.require('rank_source_models') -%}
@@ -55,8 +55,6 @@
             {%- set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
 
             {{ dbt_utils.log_info("Running for {} {} of {} on column '{}' [{}]".format('rank', iteration_number, min_max_ranks.max_rank, rank_column, model.unique_id)) }}
-
-            {% set tmp_relation = make_temp_relation(this) %}
 
             {# This call statement drops and then creates a temporary table #}
             {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
