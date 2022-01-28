@@ -418,7 +418,7 @@ def create_csv(context, raw_stage_model_name):
                                                                         model_name=raw_stage_model_name,
                                                                         target_model_name=raw_stage_model_name)
 
-        dbtvault_generator.add_seed_config(seed_name=seed_model_name,
+        dbtvault_generator.add_model_config(seed_name=seed_model_name,
                                            seed_config=context.seed_config[raw_stage_model_name])
 
         logs = dbtvault_harness_utils.run_dbt_seed_model(seed_model_name=seed_model_name)

@@ -604,6 +604,33 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         yml.dump(seed_properties, f)
 
 
+def add_model_config(seed_name: str, seed_config: dict, include_columns=None):
+    """
+    Append a given dictionary to the end of the dbt_project.yml file
+        :param seed_name: Name of seed file to configure
+        :param seed_config: Configuration dict for seed file
+        :param include_columns: A list of columns to add to the seed config, All if not provided
+    """
+    yml = ruamel.yaml.YAML()
+    yml.preserve_quotes = True
+    yml.indent(sequence=4, offset=2)
+    properties_path = TEMP_SEED_DIR / 'vault_properties.yml'
+
+    if include_columns:
+        seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
+                                       k in include_columns}
+
+    seed_properties = {
+        'version': 2,
+        'models': [
+            {'name': seed_name, 'config': seed_config}
+        ]
+    }
+
+    with open(properties_path, 'w+') as f:
+        yml.dump(seed_properties, f)
+
+
 def create_test_model_schema_dict(*, target_model_name, expected_output_csv, unique_id, columns_to_compare,
                                   ignore_columns=None):
     if ignore_columns is None:
