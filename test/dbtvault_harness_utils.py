@@ -459,6 +459,7 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
 def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
     """
     Creates a model from a feature file data table
+    This is for dbt-sqlserver where a model is being used as a seed to avoid implicit data type conversion issues
         :param seed_config: Configuration dict for seed file
         :param table: The context.table from a scenario or a programmatically defined table
         :param model_name: Name of the model to base the feature data table on
