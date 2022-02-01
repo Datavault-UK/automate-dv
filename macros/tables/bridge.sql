@@ -36,8 +36,6 @@
 {%- endif -%}
 
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') -%}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
@@ -313,8 +311,6 @@ SELECT * FROM bridge
 {%- endif -%}
 
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.9999999') -%}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
@@ -588,8 +584,6 @@ SELECT * FROM bridge
 {%- endif -%}
 
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999') -%}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
