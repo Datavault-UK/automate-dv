@@ -2,7 +2,7 @@ from behave import fixture
 
 
 @fixture
-def bridge(context):
+def bridge_snowflake(context):
     """
     Define the structures and metadata to perform bridge load
     """

@@ -1,0 +1,53 @@
+dbtvault:
+  outputs:
+    snowflake:
+      type: snowflake
+      account: "{{ env_var('SNOWFLAKE_DB_ACCOUNT') }}"
+
+      user: "{{ env_var('SNOWFLAKE_DB_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_DB_PW') }}"
+
+      role: "{{ env_var('SNOWFLAKE_DB_ROLE') }}"
+      database: "{{ env_var('SNOWFLAKE_DB_DATABASE') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_DB_WH') }}"
+      schema: "{{ env_var('SNOWFLAKE_DB_SCHEMA') }}"
+
+      threads: 4
+      client_session_keep_alive: False
+
+    bigquery:
+      type: bigquery
+
+      method: oauth
+
+      project: "{{ env_var('BQ_GCP_PROJECT_ID') }}"
+      dataset: "{{ env_var('BQ_GCP_DATASET') }}"
+
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
+      threads: 4
+
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: "{{ env_var('SQLSERVER_DB_SERVER') }}"
+      port: "{{ env_var('SQLSERVER_DB_PORT') }}"
+      database: "{{ env_var('SQLSERVER_DB_DATABASE') }}"
+      schema: "{{ env_var('SQLSERVER_DB_SCHEMA') }}"
+      user: "{{ env_var('SQLSERVER_DB_USER') }}"
+      password: "{{ env_var('SQLSERVER_DB_PW') }}"
+
+    databricks:
+      type: spark
+      method: odbc
+      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+      schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      port: "{{ env_var('DATABRICKS_PORT', 443) | as_number }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
+
+      threads: 4
+
+  target: "snowflake"
