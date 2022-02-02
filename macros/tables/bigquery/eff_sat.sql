@@ -38,19 +38,15 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
-latest_records_unranked AS (
+latest_records AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
            ROW_NUMBER() OVER (
                 PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
                 ORDER BY b.{{ src_ldts }} DESC
            ) AS row_num
     FROM {{ this }} AS b
-),
-
-latest_records AS (
-    SELECT *
-    FROM latest_records_unranked
-    WHERE row_num = 1
+    WHERE {{ dbtvault.multikey(src_dfk, prefix='b', condition='IS NOT NULL') }}
+    QUALIFY row_num = 1
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
@@ -90,7 +86,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['g','lc'], condition='=') }}
-    WHERE CAST((g.{{ src_end_date }}) AS DATE) = CAST(('{{ max_datetime }}') AS DATE)
+    WHERE DATE(g.{{ src_end_date }}) = DATE('{{ max_datetime }}')
 ),
 
 {%- if is_auto_end_dating %}
@@ -129,7 +125,7 @@ new_closed_records AS (
     ON lo.{{ src_pk }} = h.{{ src_pk }}
     LEFT JOIN latest_closed AS lc
     ON lc.{{ src_pk }} = h.{{ src_pk }}
-    WHERE CAST((h.{{ src_end_date }}) AS DATE) != CAST(('{{ max_datetime }}') AS DATE)
+    WHERE DATE(h.{{ src_end_date }}) != DATE('{{ max_datetime }}')
     AND lo.{{ src_pk }} IS NOT NULL
     AND lc.{{ src_pk }} IS NULL
 ),
