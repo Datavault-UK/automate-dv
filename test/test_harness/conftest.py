@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 import test
-from test import dbtvault_harness_utils
+from env import env_utils
 
 
 def dict_to_directories(dir_dict: dict, root_path: Path):
@@ -50,7 +50,7 @@ def temporary_prop():
 
 @pytest.fixture(scope='session', autouse=True)
 def setup():
-    dbtvault_harness_utils.setup_environment()
+    env_utils.setup_environment()
     os.chdir(test.TEST_PROJECT_ROOT)
     yield
 
