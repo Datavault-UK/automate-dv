@@ -447,7 +447,7 @@ def single_source_comppk_link_sqlserver(context):
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "NATION_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_DOB": "DATE(50)",
+                "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(10)"
