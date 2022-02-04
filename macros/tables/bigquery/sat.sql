@@ -38,7 +38,6 @@ WITH source_data AS (
 {% if dbtvault.is_any_incremental() %}
 
 latest_records_non_ranked AS (
-
     SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
     FROM (
         SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
