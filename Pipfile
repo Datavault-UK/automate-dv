@@ -28,6 +28,7 @@ dbt-snowflake = "==1.0.0"
 dbt-bigquery = "==1.0.0"
 pexpect = "*"
 filelock = "*"
+dbt-sqlserver = "*"
 dbt-spark = {extras = ["odbc"], version = "*"}
 
 [requires]
