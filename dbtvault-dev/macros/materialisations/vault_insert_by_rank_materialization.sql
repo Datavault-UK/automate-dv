@@ -107,7 +107,7 @@
 
         {% endfor %}
         {% call noop_statement('main', "INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
-            -- no-op
+            {{ filtered_sql }}
         {%- endcall %}
 
     {% endif %}
@@ -126,7 +126,7 @@
         {% endif %}
 
         {% call noop_statement('main', "BASE LOAD {}".format(rows_inserted)) -%}
-            -- no-op
+            {{ build_sql }}
         {%- endcall %}
 
         -- `COMMIT` happens here
