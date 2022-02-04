@@ -182,7 +182,7 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY')   | Jenny         | 1991-03-25   | 2019-05-05     | 2019-05-05 | *      |
 
   @fixture.satellite
-  Scenario: [SQLS-SAT-PM-P-05] Incremental load of a satellite with multiple timestamps in the same day loads all records, datetimes with 6 decimal places
+  Scenario: [SAT-PM-P-05] Incremental load of a satellite with multiple timestamps in the same day loads all records, datetimes with 6 decimal places
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME              | SOURCE |
