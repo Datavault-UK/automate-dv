@@ -2,9 +2,9 @@
 
     {%- set full_refresh_mode = flags.FULL_REFRESH -%}
 
-    {%- set target_relation = this -%}
+    {%- set target_relation = this.incorporate(type='table') -%}
     {%- set existing_relation = load_relation(this) -%}
-    {%- set tmp_relation = make_temp_relation(this) -%}
+    {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set rank_column = dbtvault.escape_column_names(config.require('rank_column')) -%}
     {%- set rank_source_models = config.require('rank_source_models') -%}
