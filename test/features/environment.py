@@ -140,58 +140,69 @@ fixtures_registry = {
 
     "fixture.eff_satellite_2":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2,
-         "bigquery": "",
-         "sqlserver": ""},
+         "bigquery": '',
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_2_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_testing_auto_end_dating,
-         "bigquery": "",
-         "sqlserver": ""},
+         "bigquery": '',
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_2_multipart":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_multipart,
          "bigquery": '',
-         "sqlserver": ''},
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_status":
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status,
-         "bigquery": "",
-         "sqlserver": ""},
+         "bigquery": '',
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_status_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status_testing_auto_end_dating,
          "bigquery": '',
-         "sqlserver": ''},
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_status_multipart":
         {"snowflake": fixtures_eff_sat_status.eff_satellite_status_multipart,
          "bigquery": '',
-         "sqlserver": ''},
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_hashdiff":
         {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff,
          "bigquery": "",
-         "sqlserver": ""},
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_hashdiff_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_testing_auto_end_dating,
          "bigquery": '',
-         "sqlserver": ''},
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_oos":
         {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos,
-         "bigquery": "",
-         "sqlserver": ""},
+         "bigquery": '',
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_oos_in_sequence":
         {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos_in_sequence,
-         "bigquery": "",
-         "sqlserver": ""},
+         "bigquery": '',
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.eff_satellite_hashdiff_multipart":
         {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_multipart,
          "bigquery": '',
-         "sqlserver": ''},
+         "sqlserver": '',
+         "databricks": ''},
 
     "fixture.multi_active_satellite":
         {"snowflake": fixtures_ma_sat.multi_active_satellite_snowflake,
@@ -239,7 +250,7 @@ fixtures_registry = {
         {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
-         "databricks": ''},
+         "databricks": ''}
 
 }
 
@@ -252,7 +263,7 @@ fixture_lookup = {
     'snowflake': fixture_registry_utils | fixture_registry_snowflake,
     'bigquery': fixture_registry_utils | fixture_registry_bigquery,
     'sqlserver': fixture_registry_utils | fixture_registry_sqlserver,
-    'databricks': fixture_registry_utils | fixture_registry_databricks,
+    'databricks': fixture_registry_utils | fixture_registry_databricks
 }
 
 
