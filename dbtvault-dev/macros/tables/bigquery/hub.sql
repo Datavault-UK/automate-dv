@@ -74,7 +74,7 @@ stage_mat_filter AS (
 {%- endif -%}
 {%- if source_model | length > 1 %}
 
-    row_rank_union_non_ranked AS (
+    row_rank_union AS (
     SELECT ru.*,
            ROW_NUMBER() OVER(
                PARTITION BY {{ dbtvault.prefix([src_pk], 'ru') }}
@@ -82,6 +82,7 @@ stage_mat_filter AS (
            ) AS row_rank_number
     FROM {{ ns.last_cte }} AS ru
     WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
+    QUALIFY row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 
