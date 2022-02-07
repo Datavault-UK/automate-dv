@@ -187,3 +187,50 @@ def test_hash_single_value_is_successful(request, generate_model):
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_hash_single_column_expression1_is_successful_md5(request, generate_model):
+    var_dict = {'columns': "STATUS::INT", 'alias': 'CUSTOMER_PK'}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_hash_single_column_expression2_is_successful_md5(request, generate_model):
+    var_dict = {'columns': "CAST(STATUS AS INT)", 'alias': 'CUSTOMER_PK'}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_hash_single_column_expression3_is_successful_md5(request, generate_model):
+    var_dict = {'columns': "!SOMEVALUE", 'alias': 'CUSTOMER_PK'}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+

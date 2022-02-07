@@ -1,10 +1,10 @@
 {% materialization vault_insert_by_period, default -%}
 
-    {%- set full_refresh_mode = flags.FULL_REFRESH -%}
+    {%- set full_refresh_mode = should_full_refresh() -%}
 
-    {%- set target_relation = this -%}
+    {%- set target_relation = this.incorporate(type='table') -%}
     {%- set existing_relation = load_relation(this) -%}
-    {%- set tmp_relation = make_temp_relation(this) -%}
+    {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set timestamp_field = dbtvault.escape_column_names(config.require('timestamp_field')) -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
@@ -69,6 +69,7 @@
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
             {% set tmp_relation = make_temp_relation(this) %}
+
             {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
                                                                   period_boundaries.start_timestamp,
                                                                   period_boundaries.stop_timestamp, i) %}

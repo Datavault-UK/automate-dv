@@ -2,7 +2,7 @@ from behave import fixture
 
 
 @fixture
-def bridge(context):
+def bridge_snowflake(context):
     """
     Define the structures and metadata to perform bridge load
     """
@@ -1033,8 +1033,8 @@ def bridge_sqlserver(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
-                "LOAD_DATETIME": "DATETIME",
-                "END_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
+                "END_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1042,8 +1042,8 @@ def bridge_sqlserver(context):
             "column_types": {
                 "ORDER_ID": "VARCHAR(50)",
                 "PRODUCT_ID": "VARCHAR(50)",
-                "LOAD_DATETIME": "DATETIME",
-                "END_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
+                "END_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1051,8 +1051,8 @@ def bridge_sqlserver(context):
             "column_types": {
                 "PRODUCT_ID": "VARCHAR(50)",
                 "COMPONENT_ID": "VARCHAR(50)",
-                "LOAD_DATETIME": "DATETIME",
-                "END_DATE": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
+                "END_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1060,7 +1060,7 @@ def bridge_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(50)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1069,7 +1069,7 @@ def bridge_sqlserver(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1078,7 +1078,7 @@ def bridge_sqlserver(context):
                 "ORDER_PRODUCT_PK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1087,7 +1087,7 @@ def bridge_sqlserver(context):
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
                 "COMPONENT_FK": "BINARY(16)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1096,10 +1096,10 @@ def bridge_sqlserver(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1108,10 +1108,10 @@ def bridge_sqlserver(context):
                 "ORDER_PRODUCT_PK": "BINARY(16)",
                 "ORDER_FK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -1120,29 +1120,29 @@ def bridge_sqlserver(context):
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
                 "PRODUCT_FK": "BINARY(16)",
                 "COMPONENT_FK": "BINARY(16)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
         "AS_OF_DATE": {
             "column_types": {
-                "AS_OF_DATE": "DATETIME"
+                "AS_OF_DATE": "DATETIME2"
             }
         },
         "BRIDGE_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "DATETIME2",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "DATETIME2",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
             }
@@ -1150,7 +1150,7 @@ def bridge_sqlserver(context):
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "DATETIME2",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
                 "LINK_PRODUCT_COMPONENT_PK": "BINARY(16)",
