@@ -1,8 +1,8 @@
-Feature: [SF-EFF2-CLD] Effectivity Satellites without automatic end-dating
+Feature: [EFF2-CLD] Effectivity Satellites without automatic end-dating
   Tests for eff_sat (without automatic end-dating) loading closed records
 
-  @fixture.eff_satellite_2_closed
-  Scenario: [SF-EFF2-CLD-01] Load data into a non-existent effectivity satellite
+  @fixture.eff_satellite_2
+  Scenario: [EFF2-CLD-01] Load data into a non-existent effectivity satellite
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
@@ -21,8 +21,8 @@ Feature: [SF-EFF2-CLD] Effectivity Satellites without automatic end-dating
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10     | FALSE  | md5('0') | 2020-01-11 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-10     | TRUE   | md5('1') | 2020-01-11 | orders |
 
-  @fixture.eff_satellite_2_closed
-  Scenario: [SF-EFF2-CLD-02] Load data into an empty effectivity satellite
+  @fixture.eff_satellite_2
+  Scenario: [EFF2-CLD-02] Load data into an empty effectivity satellite
     Given the EFF_SAT eff_sat_2 is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
@@ -41,8 +41,8 @@ Feature: [SF-EFF2-CLD] Effectivity Satellites without automatic end-dating
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10     | FALSE  | md5('0') | 2020-01-11 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-10     | TRUE   | md5('1') | 2020-01-11 | orders |
 
-  @fixture.eff_satellite_2_closed
-  Scenario: [SF-EFF2-CLD-03] One link is changed and the active link is end dated
+  @fixture.eff_satellite_2
+  Scenario: [EFF2-CLD-03] One link is changed and the active link is end dated
     Given the EFF_SAT eff_sat_2 is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | STATUS | HASHDIFF | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | TRUE   | md5('1') | 2020-01-10 | orders |
@@ -62,8 +62,8 @@ Feature: [SF-EFF2-CLD] Effectivity Satellites without automatic end-dating
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-10     | FALSE  | md5('0') | 2020-01-11 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-10     | TRUE   | md5('1') | 2020-01-11 | orders |
 
-  @fixture.eff_satellite_2_closed
-  Scenario: [SF-EFF2-CLD-04] Two incremental loads - flip flop (CCC changes from 3000 to 4000, and then back to 3000)
+  @fixture.eff_satellite_2
+  Scenario: [EFF2-CLD-04] Two incremental loads - flip flop (CCC changes from 3000 to 4000, and then back to 3000)
     Given the EFF_SAT eff_sat_2 is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | STATUS | HASHDIFF | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | TRUE   | md5('1') | 2020-01-10 | orders |
@@ -98,8 +98,8 @@ Feature: [SF-EFF2-CLD] Effectivity Satellites without automatic end-dating
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11     | FALSE  | md5('0') | 2020-01-12 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-11     | TRUE   | md5('1') | 2020-01-12 | orders |
 
-  @fixture.eff_satellite_2_closed
-  Scenario: [SF-EFF2-CLD-05] Two incremental loads - no flip flop (CCC changes from 3000 to 4000, and then to 5000)
+  @fixture.eff_satellite_2
+  Scenario: [EFF2-CLD-05] Two incremental loads - no flip flop (CCC changes from 3000 to 4000, and then to 5000)
     Given the EFF_SAT eff_sat_2 is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | STATUS | HASHDIFF | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | TRUE   | md5('1') | 2020-01-10 | orders |
@@ -134,8 +134,8 @@ Feature: [SF-EFF2-CLD] Effectivity Satellites without automatic end-dating
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11     | FALSE  | md5('0') | 2020-01-12 | orders |
       | md5('5000\|\|CCC') | md5('5000') | md5('CCC') | 2020-01-11     | TRUE   | md5('1') | 2020-01-12 | orders |
 
-  @fixture.eff_satellite_2_closed
-  Scenario: [SF-EFF2-CLD-06] Two incremental loads - duplicate closed record
+  @fixture.eff_satellite_2
+  Scenario: [EFF2-CLD-06] Two incremental loads - duplicate closed record
     Given the EFF_SAT eff_sat_2 is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | EFFECTIVE_FROM | STATUS | HASHDIFF |  LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09     | TRUE   | md5('1') |  2020-01-10 | orders |

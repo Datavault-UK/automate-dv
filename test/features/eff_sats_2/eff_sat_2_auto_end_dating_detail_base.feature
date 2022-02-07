@@ -1,10 +1,10 @@
-Feature: [SF-EFF2-AUB] Effectivity Satellites
+Feature: [EFF2-AUB] Effectivity Satellites
   Further depth of testing for the auto-end-dating of effectivity satellite - Base loads
 
   # ORDER_FK is DRIVING KEY
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_2_testing_auto_end_dating
-  Scenario: [SF-EFF2-AUB-01] One load; going from an empty table to 1 CUSTOMER per ORDER
+  Scenario: [EFF2-AUB-01] One load; going from an empty table to 1 CUSTOMER per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
@@ -27,7 +27,7 @@ Feature: [SF-EFF2-AUB] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_2_testing_auto_end_dating
-  Scenario: [SF-EFF2-AUB-02] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
+  Scenario: [EFF2-AUB-02] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
@@ -50,7 +50,7 @@ Feature: [SF-EFF2-AUB] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_2_testing_auto_end_dating
-  Scenario: [SF-EFF2-AUB-03] One load; going from an empty table to 3 CUSTOMERS per ORDER
+  Scenario: [EFF2-AUB-03] One load; going from an empty table to 3 CUSTOMERS per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |
@@ -74,7 +74,7 @@ Feature: [SF-EFF2-AUB] Effectivity Satellites
   # CUSTOMER_FK is DRIVING KEY
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_2_testing_auto_end_dating
-  Scenario: [SF-EFF2-AUB-04] One load; going from an empty table to 3 ORDERS
+  Scenario: [EFF2-AUB-04] One load; going from an empty table to 3 ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE | STATUS |

@@ -1,8 +1,10 @@
 from behave import fixture
 
 
+# Snowflake
+
 @fixture
-def eff_satellite_2(context):
+def eff_satellite_2_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites (eff sat 2)
     """
@@ -57,7 +59,7 @@ def eff_satellite_2(context):
     }
 
 @fixture
-def eff_satellite_2_multipart(context):
+def eff_satellite_2_multipart_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
@@ -119,7 +121,7 @@ def eff_satellite_2_multipart(context):
     }
 
 @fixture
-def eff_satellite_2_testing_auto_end_dating(context):
+def eff_satellite_2_testing_auto_end_dating_snowflake(context):
         """
         Define the structures and metadata to load effectivity satellites
         """
@@ -168,7 +170,6 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 "src_source": "SOURCE"
             },
             "EFF_SAT_ORDER_CUSTOMER": {
-                "source_model": "STG_ORDER_CUSTOMER",
                 "src_pk": "ORDER_CUSTOMER_PK",
                 "src_dfk": ["ORDER_PK"],
                 "src_sfk": "CUSTOMER_PK",
@@ -244,3 +245,58 @@ def eff_satellite_2_testing_auto_end_dating(context):
                 }
             }
         }
+
+
+@fixture
+def eff_satellite_2_datetime_snowflake(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["STATUS::INT"]}
+    }
+    }
+
+    context.vault_structure_columns = {
+        "EFF_SAT": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "status": "STATUS",
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "STATUS": "BOOLEAN",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "STATUS": "BOOLEAN",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }

@@ -1,7 +1,7 @@
-Feature: [SF-EFF2-RM] Effectivity Satellites Loaded using Rank Materialization
+Feature: [EFF2-RM] Effectivity Satellites Loaded using Rank Materialization
 
   @fixture.eff_satellite_2
-  Scenario: [SF-EFF2-RM-01] Load data into a non-existent effectivity satellite
+  Scenario: [EFF2-RM-01] Load data into a non-existent effectivity satellite
     Given the EFF_SAT table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -18,7 +18,7 @@ Feature: [SF-EFF2-RM] Effectivity Satellites Loaded using Rank Materialization
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
 
   @fixture.eff_satellite_2
-  Scenario: [SF-EFF2-RM-02] Load data into an empty effectivity satellite
+  Scenario: [EFF2-RM-02] Load data into an empty effectivity satellite
     Given the EFF_SAT eff_sat_2 is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -35,7 +35,7 @@ Feature: [SF-EFF2-RM] Effectivity Satellites Loaded using Rank Materialization
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
 
   @fixture.eff_satellite_2
-  Scenario: [SF-EFF2-RM-03] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
+  Scenario: [EFF2-RM-03] No New Eff Sat Added if Driving Foreign Key is NULL and Latest EFF Sat Remain Open
     Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | STATUS | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | 1000        | AAA      | TRUE   | 2020-01-09     | 2020-01-10 | orders | TRUE   |

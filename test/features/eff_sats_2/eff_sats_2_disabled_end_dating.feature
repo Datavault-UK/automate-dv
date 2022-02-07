@@ -1,7 +1,7 @@
-Feature: [SF-EFF2-DAU] Effectivity Satellites without automatic end-dating
+Feature: [EFF2-DAU] Effectivity Satellites without automatic end-dating
 
   @fixture.eff_satellite_2
-  Scenario: [SF-EFF2-DAU-01] Link is Changed with auto end-dating off
+  Scenario: [EFF2-DAU-01] Link is Changed with auto end-dating off
     Given the EFF_SAT eff_sat_2 is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | HASHDIFF | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders |
@@ -20,7 +20,7 @@ Feature: [SF-EFF2-DAU] Effectivity Satellites without automatic end-dating
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | TRUE   | md5('1') | 2020-01-11     | 2020-01-12 | orders |
 
   @fixture.eff_satellite_2
-  Scenario: [SF-EFF2-DAU-02] 2 loads, Link is Changed Back Again with auto end-dating off
+  Scenario: [EFF2-DAU-02] 2 loads, Link is Changed Back Again with auto end-dating off
     Given the EFF_SAT eff_sat_2 is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | STATUS | HASHDIFF | EFFECTIVE_FROM | LOAD_DATE  | SOURCE | STATUS |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TRUE   | md5('1') | 2020-01-09     | 2020-01-10 | orders | TRUE   |
