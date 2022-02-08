@@ -209,7 +209,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
 
 
 def eff_sat_2(model_name, src_pk, src_dfk, src_sfk,
-                status, src_hashdiff, src_eff, src_ldts, src_source,
+                src_status, src_hashdiff, src_eff, src_ldts, src_source,
                 source_model, config, depends_on=""):
     """
     Generate an effectivity satellite model template
@@ -218,7 +218,7 @@ def eff_sat_2(model_name, src_pk, src_dfk, src_sfk,
         :param src_dfk: Source driving foreign key
         :param src_sfk: Source surrogate foreign key
         :param src_eff: Source effective from
-        :param status: Record active flag, true or false
+        :param src_status: Record active flag, true or false
         :param src_hashdiff: Source hashdiff
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -231,7 +231,7 @@ def eff_sat_2(model_name, src_pk, src_dfk, src_sfk,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.eff_sat_2(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
-                          status={status}, src_hashdiff={src_hashdiff},
+                          src_status={src_status}, src_hashdiff={src_hashdiff},
                           src_eff={src_eff}, src_ldts={src_ldts}, 
                           src_source={src_source}, source_model={source_model}) }}}}
     """

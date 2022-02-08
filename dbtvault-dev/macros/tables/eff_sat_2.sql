@@ -1,26 +1,26 @@
-{%- macro eff_sat_2(src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro eff_sat_2(src_pk, src_dfk, src_sfk, src_status, src_hashdiff, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- adapter.dispatch('eff_sat_2', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                status=status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
+                                                src_status=src_status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
                                                 src_source=src_source, source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__eff_sat_2(src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__eff_sat_2(src_pk, src_dfk, src_sfk, src_status, src_hashdiff, src_eff, src_ldts, src_source, source_model) -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                       status=status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
+                                       src_status=src_status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
                                        src_source=src_source, source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
 {%- set src_dfk = dbtvault.escape_column_names(src_dfk) -%}
 {%- set src_sfk = dbtvault.escape_column_names(src_sfk) -%}
-{%- set status = dbtvault.escape_column_names(status) -%}
+{%- set src_status = dbtvault.escape_column_names(src_status) -%}
 {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
 {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_status, src_hashdiff, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
@@ -58,14 +58,14 @@ latest_records AS (
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE c.{{ status }} = 'TRUE'::BOOLEAN
+    WHERE c.{{ src_status }} = 'TRUE'::BOOLEAN
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE d.{{ status }} = 'FALSE'::BOOLEAN
+    WHERE d.{{ src_status }} = 'FALSE'::BOOLEAN
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -83,7 +83,7 @@ new_reopened_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lc') }},
         {{ dbtvault.alias_all(fk_cols, 'lc') }},
-        g.{{ status }},
+        g.{{ src_status }},
         g.{{ src_hashdiff }},
         g.{{ src_eff }},
         g.{{ src_ldts }},
@@ -91,7 +91,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['g','lc'], condition='=') }}
-    WHERE g.{{ status }} = 'TRUE'::BOOLEAN
+    WHERE g.{{ src_status }} = 'TRUE'::BOOLEAN
 ),
 
 {%- if is_auto_end_dating %}
@@ -102,7 +102,7 @@ new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        'FALSE'::BOOLEAN AS {{ status }},
+        'FALSE'::BOOLEAN AS {{ src_status }},
         {{ HASHDIFF_F }},
         h.{{ src_eff }},
         h.{{ src_ldts }},
@@ -120,7 +120,7 @@ new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        h.{{ status }},
+        h.{{ src_status }},
         h.{{ src_hashdiff }},
         h.{{ src_eff }},
         h.{{ src_ldts }},
@@ -130,7 +130,7 @@ new_closed_records AS (
     ON {{ dbtvault.multikey(src_pk, prefix=['lo', 'h'], condition='=') }}
     LEFT JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['lc', 'h'], condition='=') }}
-    WHERE h.{{ status }} = 'FALSE'::BOOLEAN
+    WHERE h.{{ src_status }} = 'FALSE'::BOOLEAN
     AND {{ dbtvault.multikey(src_pk, prefix='lo', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_pk, prefix='lc', condition='IS NULL') }}
 ),
