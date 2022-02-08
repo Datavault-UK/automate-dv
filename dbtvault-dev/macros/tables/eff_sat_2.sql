@@ -11,6 +11,15 @@
                                        status=status, src_hashdiff=src_hashdiff, src_eff=src_eff, src_ldts=src_ldts,
                                        src_source=src_source, source_model=source_model) -}}
 
+{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+{%- set src_dfk = dbtvault.escape_column_names(src_dfk) -%}
+{%- set src_sfk = dbtvault.escape_column_names(src_sfk) -%}
+{%- set status = dbtvault.escape_column_names(status) -%}
+{%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
+{%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
+{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- set src_source = dbtvault.escape_column_names(src_source) -%}
+
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, status, src_hashdiff, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
