@@ -468,7 +468,7 @@ def macro_model(model_name, macro_name, metadata=None):
 def hash_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
-    {{{{ dbtvault.hash(columns=var('columns', none), values=var('values', none), alias=var('alias', none), 
+    {{{{ dbtvault.hash(columns=var('columns', none), alias=var('alias', none), 
     is_hashdiff=var('is_hashdiff', false)) }}}}
     {{% endif %}}
     """

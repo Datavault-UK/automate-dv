@@ -1,14 +1,14 @@
-{%- macro hash(columns=none, values=none, alias=none, is_hashdiff=false) -%}
+{%- macro hash(columns=none, alias=none, is_hashdiff=false) -%}
 
     {%- if is_hashdiff is none -%}
         {%- set is_hashdiff = false -%}
     {%- endif -%}
 
-    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, values=values, alias=alias, is_hashdiff=is_hashdiff) -}}
+    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
 
 {%- endmacro %}
 
-{%- macro default__hash(columns, values, alias, is_hashdiff) -%}
+{%- macro default__hash(columns, alias, is_hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set concat_string = var('concat_string', '||') -%}
@@ -42,11 +42,6 @@
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
     {%- endif -%}
     {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), hash_size, dbtvault.escape_column_names(alias)) | indent(4) -}}
-
-{#- If single value to hash -#}
-{%- elif values is string and dbtvault.is_something(values) -%}
-    {%- set column_str = "'{}'".format(values) -%}
-    {{- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', column_str), hash_size, alias) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
