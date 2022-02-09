@@ -15,7 +15,7 @@ def eff_satellite_2_snowflake(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                           "columns": ["STATUS::INT"]}
+                           "columns": "STATUS::INT"}
         }
     }
 
@@ -73,7 +73,7 @@ def eff_satellite_2_multipart_snowflake(context):
             "PLATFORM_PK": "PLATFORM_ID",
             "ORGANISATION_PK": "ORGANISATION_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["STATUS::INT"]}
+                         "columns": "STATUS::INT"}
         }
     }
 
@@ -132,14 +132,14 @@ def eff_satellite_2_testing_auto_end_dating_snowflake(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["STATUS::INT"]}
+                         "columns": "STATUS::INT"}
         },
         "STG_ORDER_CUSTOMER": {
             "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["STATUS::INT"]}
+                         "columns": "STATUS::INT"}
         }
     }
 
@@ -259,7 +259,7 @@ def eff_satellite_2_datetime_snowflake(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["STATUS::INT"]}
+                         "columns": "STATUS::INT"}
     }
     }
 
