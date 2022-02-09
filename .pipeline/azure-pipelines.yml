@@ -373,6 +373,20 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
+      - job: 'eff_sats_2_incremental'
+        displayName: 'Eff Sats 2 Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s eff_sats_2 --subtype incremental -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'eff_sats_2_multi_part'
         displayName: 'Eff Sats 2 Multi Part'
         steps:

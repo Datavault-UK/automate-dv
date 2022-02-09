@@ -8,9 +8,6 @@ from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
 from test.features.eff_sats import fixtures_eff_sat
 from test.features.eff_sats_2 import fixtures_eff_sat_2
-from test.features.eff_sats_status import fixtures_eff_sat_status
-from test.features.eff_sats_hashdiff import fixtures_eff_sat_hashdiff
-from test.features.eff_sats_oos import fixtures_eff_sat_oos
 from test.features.hubs import fixtures_hub
 from test.features.links import fixtures_link
 from test.features.ma_sats import fixtures_ma_sat
@@ -158,54 +155,6 @@ fixtures_registry = {
 
     "fixture.eff_satellite_2_datetime":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_datetime_snowflake,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_status":
-        {"snowflake": fixtures_eff_sat_status.eff_satellite_status,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_status_testing_auto_end_dating":
-        {"snowflake": fixtures_eff_sat_status.eff_satellite_status_testing_auto_end_dating,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_status_multipart":
-        {"snowflake": fixtures_eff_sat_status.eff_satellite_status_multipart,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_hashdiff":
-        {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff,
-         "bigquery": "",
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_hashdiff_testing_auto_end_dating":
-        {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_testing_auto_end_dating,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_hashdiff_multipart":
-        {"snowflake": fixtures_eff_sat_hashdiff.eff_satellite_hashdiff_multipart,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_oos":
-        {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos,
-         "bigquery": '',
-         "sqlserver": '',
-         "databricks": ''},
-
-    "fixture.eff_satellite_oos_in_sequence":
-        {"snowflake": fixtures_eff_sat_oos.eff_satellite_oos_in_sequence,
          "bigquery": '',
          "sqlserver": '',
          "databricks": ''},
