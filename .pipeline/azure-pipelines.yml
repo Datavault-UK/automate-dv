@@ -5,6 +5,7 @@ trigger:
       - develop
     exclude:
       - feat/*
+      - stage/*
 
 pool:
   vmImage: ubuntu-latest
