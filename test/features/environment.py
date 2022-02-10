@@ -55,6 +55,12 @@ fixtures_registry = {
          "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver,
          "databricks": ''},
 
+    "fixture.single_source_hub_with_collision_key":
+        {"snowflake": fixtures_hub.single_source_hub_with_collision_key_snowflake,
+         "bigquery": fixtures_hub.single_source_hub_with_collision_key_bigquery,
+         "sqlserver": fixtures_hub.single_source_hub_with_collision_key_sqlserver,
+         "databricks": fixtures_hub.single_source_hub_with_collision_key_databricks},
+
     "fixture.multi_source_hub":
         {"snowflake": fixtures_hub.multi_source_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_hub_bigquery,

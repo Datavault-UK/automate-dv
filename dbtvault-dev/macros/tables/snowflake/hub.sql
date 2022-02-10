@@ -1,23 +1,24 @@
-{%- macro hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
+{%- macro hub(src_pk, src_nk, src_ck, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk,
+    {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk, src_ck=src_ck,
                                             src_ldts=src_ldts, src_source=src_source,
                                             source_model=source_model) -}}
 
 {%- endmacro -%}
 
-{%- macro default__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
+{%- macro default__hub(src_pk, src_nk, src_ck, src_ldts, src_source, source_model) -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_nk=src_nk,
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_nk=src_nk, src_ck=src_ck,
                                        src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
 {%- set src_nk = dbtvault.escape_column_names(src_nk) -%}
+{%- set src_ck = dbtvault.escape_column_names(src_ck) -%}
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ck, src_ldts, src_source]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}

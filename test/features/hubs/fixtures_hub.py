@@ -134,6 +134,54 @@ def single_source_comppknk_hub_snowflake(context):
 
 
 @fixture
+def single_source_hub_with_collision_key_snowflake(context):
+    """
+    Define the structures and metadata to load single-source hubs with collision keys
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": ["COLLISION_KEY", "CUSTOMER_ID"]
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "COLLISION_KEY": "!A"
+        }
+    }
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ck": "COLLISION_KEY",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "COLLISION_KEY": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
 def multi_source_hub_snowflake(context):
     """
     Define the structures and metadata to load multi-source hubs
@@ -413,6 +461,55 @@ def single_source_comppknk_hub_bigquery(context):
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_CK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+@fixture
+def single_source_hub_with_collision_key_bigquery(context):
+    """
+    Define the structures and metadata to load single-source hubs with collision keys
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": ["COLLISION_KEY", "CUSTOMER_ID"]
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "COLLISION_KEY": "!A"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ck": "COLLISION_KEY",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "COLLISION_KEY": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -761,6 +858,93 @@ def single_source_comppknk_hub_sqlserver(context):
 
 
 @fixture
+def single_source_hub_with_collision_key_sqlserver(context):
+    """
+    Define the structures and metadata to load single-source hubs with collision keys
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": ["COLLISION_KEY", "CUSTOMER_ID"]
+        },
+        "STG_CUSTOMER_HASHLIST": {
+            "CUSTOMER_PK": ["COLLISION_KEY", "CUSTOMER_ID", "CUSTOMER_NAME"]
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "COLLISION_KEY": "!A"
+        },
+        "STG_CUSTOMER_HASHLIST": {
+            "COLLISION_KEY": "!A"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB_CUSTOMER": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ck": "COLLISION_KEY",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_CUSTOMER_SHA": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ck": "COLLISION_KEY",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ck": "COLLISION_KEY",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "COLLISION_KEY": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB_CUSTOMER_SHA": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(32)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "COLLISION_KEY": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_NAME": "VARCHAR(5)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        }
+    }
+
+
+@fixture
 def multi_source_hub_sqlserver(context):
     """
     Define the structures and metadata to load multi-source hubs
@@ -945,6 +1129,55 @@ def single_source_hub_databricks(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY",
                 "CUSTOMER_ID": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def single_source_hub_with_collision_key_databricks(context):
+    """
+    Define the structures and metadata to load single-source hubs
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": ["COLLISION_KEY", "CUSTOMER_ID"]
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "COLLISION_KEY": "!A"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ck": "COLLISION_KEY",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "COLLISION_KEY": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
