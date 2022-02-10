@@ -6,6 +6,14 @@
 
 {# This macro returns a dictionary of the form {column_name: (tuple_of_results)} #}
 
+    {{ return(dbt_utils.get_query_results_as_dict(period_boundary_sql)) }}
+
+{% endmacro %}
+
+{% macro sqlserver__get_query_results_as_dict(query) %}
+
+{# This macro returns a dictionary of the form {column_name: (tuple_of_results)} #}
+
     {%- call statement('get_query_results', fetch_result=True,auto_begin=false) -%}
 
         {{ query }}
