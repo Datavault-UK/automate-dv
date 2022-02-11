@@ -77,13 +77,13 @@ fixtures_registry = {
         {"snowflake": fixtures_link.single_source_comppk_link_snowflake,
          "bigquery": fixtures_link.single_source_comppk_link_bigquery,
          "sqlserver": fixtures_link.single_source_comppk_link_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_link.single_source_comppk_link_databricks},
 
     "fixture.multi_source_link":
         {"snowflake": fixtures_link.multi_source_link_snowflake,
          "bigquery": fixtures_link.multi_source_link_bigquery,
          "sqlserver": fixtures_link.multi_source_link_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_link.multi_source_link_databricks},
 
     "fixture.t_link":
         {"snowflake": fixtures_t_link.t_link,
@@ -101,13 +101,13 @@ fixtures_registry = {
         {"snowflake": fixtures_sat.satellite_snowflake,
          "bigquery": fixtures_sat.satellite_bigquery,
          "sqlserver": fixtures_sat.satellite_sqlserver,
-         "databricks": fixtures_sat.satellite_databricks},
+         "databricks": ''},
 
     "fixture.satellite_cycle":
         {"snowflake": fixtures_sat.satellite_cycle_snowflake,
          "bigquery": fixtures_sat.satellite_cycle_bigquery,
          "sqlserver": fixtures_sat.satellite_cycle_sqlserver,
-         "databricks": fixtures_sat.satellite_cycle_databricks},
+         "databricks": ''},
 
     "fixture.eff_satellite":
         {"snowflake": fixtures_eff_sat.eff_satellite_snowflake,
