@@ -101,13 +101,13 @@ fixtures_registry = {
         {"snowflake": fixtures_sat.satellite_snowflake,
          "bigquery": fixtures_sat.satellite_bigquery,
          "sqlserver": fixtures_sat.satellite_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_sat.satellite_databricks},
 
     "fixture.satellite_cycle":
         {"snowflake": fixtures_sat.satellite_cycle_snowflake,
          "bigquery": fixtures_sat.satellite_cycle_bigquery,
          "sqlserver": fixtures_sat.satellite_cycle_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_sat.satellite_cycle_databricks},
 
     "fixture.eff_satellite":
         {"snowflake": fixtures_eff_sat.eff_satellite_snowflake,

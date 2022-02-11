@@ -276,9 +276,18 @@
     {%- set all_null = [] -%}
 
     {%- if is_hashdiff -%}
-        {{- "UPPER(MD5(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {%- if hash_alg == "MD5" %}
+            {{- "UPPER(MD5(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {%- else %}
+            {{- "UPPER(SHA2(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {%- endif %}
+
     {%- else -%}
-        {{- "UPPER(MD5(NULLIF(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {%- if hash_alg == "MD5" %}
+            {{- "UPPER(MD5(NULLIF(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {%- else %}
+            {{- "UPPER(SHA2(NULLIF(CONCAT_WS('{}',".format(concat_string) | indent(4) -}}
+        {%- endif %}
     {%- endif -%}
 
     {%- for column in columns -%}
@@ -297,9 +306,18 @@
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n))) AS {}".format(dbtvault.escape_column_names(alias)) -}}
+                {%- if hash_alg == "MD5" %}
+                    {{- "\n))) AS {}".format(dbtvault.escape_column_names(alias)) -}}
+                {%- else %}
+                    {{- "\n), {})) AS {}".format(bit_length, dbtvault.escape_column_names(alias)) -}}
+                {%- endif %}
             {%- else -%}
-                {{- "\n), '{}'))) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
+                {%- if hash_alg == "MD5" %}
+                    {{- "\n), '{}'))) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
+                {%- else %}
+                    {{- "\n), '{}'), {})) AS {}".format(all_null | join(""), bit_length, dbtvault.escape_column_names(alias)) -}}
+                {%- endif %}
+
             {%- endif -%}
         {%- else -%}
 
