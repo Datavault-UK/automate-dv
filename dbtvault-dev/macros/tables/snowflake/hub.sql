@@ -1,14 +1,14 @@
-{%- macro hub(src_pk, src_nk, src_ck, src_ldts, src_source, source_model) -%}
+{%- macro hub(src_pk, src_nk, src_ldts, src_source, source_model, src_ck=none) -%}
 
-    {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk, src_ck=src_ck,
+    {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk,
                                             src_ldts=src_ldts, src_source=src_source,
-                                            source_model=source_model) -}}
+                                            source_model=source_model, src_ck=src_ck) -}}
 
 {%- endmacro -%}
 
-{%- macro default__hub(src_pk, src_nk, src_ck, src_ldts, src_source, source_model) -%}
+{%- macro default__hub(src_pk, src_nk, src_ldts, src_source, source_model, src_ck) -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_nk=src_nk, src_ck=src_ck,
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_nk=src_nk,
                                        src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
@@ -18,13 +18,23 @@
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ck, src_ldts, src_source]) -%}
+{%- set source_cols_with_ck = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ck, src_ldts, src_source]) -%}
+{%- set source_cols_without_ck = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
+{%- set source_cols = [] -%}
+
+{%- if dbtvault.is_nothing(src_ck) -%}
+    {%- set source_cols = source_cols + source_cols_without_ck -%}
+{%- else -%}
+    {%- set source_cols = source_cols + source_cols_with_ck -%}
+{%- endif -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
+
+
 
 {{ 'WITH ' -}}
 
@@ -49,7 +59,8 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
-    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
+    {# changed from src_pk to src_nk to avoid bringing pks with null nk but non null ck #}
+    WHERE {{ dbtvault.multikey(src_nk, prefix='rr', condition='IS NOT NULL') }}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
