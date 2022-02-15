@@ -3,6 +3,9 @@
     {%- set full_refresh_mode = flags.FULL_REFRESH -%}
 
     {%- set target_relation = this -%}
+    {% if target_relation.type == None -%}
+        {% set target_relation = target_relation.incorporate(type='table') -%}
+    {% endif -%}
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(this) -%}
 

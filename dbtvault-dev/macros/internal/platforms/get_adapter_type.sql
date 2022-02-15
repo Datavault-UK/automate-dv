@@ -23,3 +23,9 @@
     {%- do return("bigquery") -%}
 
 {%- endmacro -%}
+
+{%- macro spark__get_adapter_type() -%}
+
+    {%- do return("spark") -%}
+
+{%- endmacro -%}

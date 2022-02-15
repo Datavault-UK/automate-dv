@@ -79,6 +79,7 @@
 
             {% set result = load_result(insert_query_name) %}
             {% if 'response' in result.keys() %} {# added in v0.19.0 #}
+                {# Investigate for Databricks #}
                 {%- if result['response']['rows_affected'] == None %}
                     {% set rows_inserted = 0 %}
                 {%- else %}
@@ -105,7 +106,12 @@
                     DROP TABLE {{ tmp_relation }};
                 {%- endcall %}
             {%  endif %}
-
+            {% if adapter_type == "spark" %}
+                {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
+                {% call statement(drop_query_name, fetch_result=True) -%}
+                    DROP VIEW {{ tmp_relation }};
+                {%- endcall %}
+            {%  endif %}
             {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
 
