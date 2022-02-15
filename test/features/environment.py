@@ -138,25 +138,25 @@ fixtures_registry = {
     "fixture.eff_satellite_2":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_snowflake,
          "bigquery": '',
-         "sqlserver": '',
+         "sqlserver": fixtures_eff_sat_2.eff_satellite_2_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_2_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_testing_auto_end_dating_snowflake,
          "bigquery": '',
-         "sqlserver": '',
+         "sqlserver": fixtures_eff_sat_2.eff_satellite_2_testing_auto_end_dating_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_2_multipart":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_multipart_snowflake,
          "bigquery": '',
-         "sqlserver": '',
+         "sqlserver": fixtures_eff_sat_2.eff_satellite_2_multipart_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_2_datetime":
         {"snowflake": fixtures_eff_sat_2.eff_satellite_2_datetime_snowflake,
          "bigquery": '',
-         "sqlserver": '',
+         "sqlserver": fixtures_eff_sat_2.eff_satellite_2_datetime_sqlserver,
          "databricks": ''},
 
     "fixture.multi_active_satellite":
