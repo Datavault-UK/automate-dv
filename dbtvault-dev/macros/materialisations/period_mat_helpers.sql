@@ -5,19 +5,24 @@
     {% set stop_date_mssql  = stop_date[0:23] %}
 
     {% set period_boundary_sql -%}
+
+        {{ dbt_utils.log_info("spark Running .....................................................bbbbbbbbbbbbbbb") }}
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS TIMESTAMP)) AS TIMESTAMP) AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399996, "CAST(NULLIF('" ~ stop_date_mssql | lower ~ "','none') AS TIMESTAMP)") }},
-                         {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
-            FROM {{ target_schema }}.{{ target_table }}
-        )
-        SELECT
-            start_timestamp,
-            stop_timestamp,
-            {{ dbt_utils.datediff('start_timestamp',
-                                  'stop_timestamp',
-                                  period) }} + 1 AS num_periods
+            COALESCE( date_add(
+                        cast({{stop_date_mssql}} AS TIMESTAMP),
+                        cast(floor(86399996 / (1000 * 60 * 60 * 24)) as INT)
+                    ) ,
+                                     {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
+                        FROM {{ target_schema }}.{{ target_table }}
+                    )
+            SELECT
+                start_timestamp,
+                stop_timestamp,
+                datediff(cast('{{stop_date_mssql}}' AS TIMESTAMP),cast('{{start_date_mssql}}' AS TIMESTAMP))
+                 + 1 AS num_periods
+
         FROM period_data
     {%- endset %}
 
@@ -37,7 +42,7 @@
     {{ dbt_utils.log_info("Running for {} , {} of {}".format( period, offset, start_timestamp)) }}
 
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC('{{ period }}', {{ offset }}, TO_DATE('{{ start_timestamp }}'))) AS period_of_load
+        SELECT DATE_TRUNC('{{ period }}', '{{ start_timestamp }}') AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
