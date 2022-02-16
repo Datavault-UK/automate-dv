@@ -21,6 +21,7 @@ Feature: [HUB-CK] Hubs - Collision Keys
       | md5('A\|\|1003') | 1003        | A             | 1993-01-01 | TPCH   |
       | md5('A\|\|1004') | 1004        | A             | 1993-01-01 | TPCH   |
 
+  # todo: test fails; stage macro needs an update to deal with "null NKs + non null CKs" when creating HKs
   @fixture.single_source_hub_with_collision_key
   Scenario: [HUB-CK-02] Keys with NULL or empty values are not loaded into non existent hub with collision key that does not exist
     Given the HUB table does not exist
@@ -65,6 +66,7 @@ Feature: [HUB-CK] Hubs - Collision Keys
       | md5('A\|\|1003') | 1003        | A             | 1993-01-01 | TPCH   |
       | md5('A\|\|1004') | 1004        | A             | 1993-01-01 | TPCH   |
 
+  # todo: test fails; stage macro needs an update to deal with "null NKs + non null CKs" when creating HKs
   @fixture.single_source_hub_with_collision_key
   Scenario: [HUB-CK-04] Keys with NULL or empty values are not loaded into empty hub with collision key that does not exist
     Given the HUB hub is empty
@@ -112,6 +114,7 @@ Feature: [HUB-CK] Hubs - Collision Keys
       | md5('A\|\|1003') | 1003        | A             | 1993-01-02 | TPCH   |
       | md5('A\|\|1004') | 1004        | A             | 1993-01-02 | TPCH   |
 
+  # todo: test fails; stage macro needs an update to deal with "null NKs + non null CKs" when creating HKs
   @fixture.single_source_hub_with_collision_key
   Scenario: [HUB-CK-06] Keys with NULL or empty values are not loaded into populated hub with collision key that does not exist
     Given the HUB hub is already populated with data
@@ -187,6 +190,7 @@ Feature: [HUB-CK] Hubs - Collision Keys
       | md5('C\|\|1023') | 1023        | C             | 1993-01-01 | TPCH   |
       | md5('C\|\|1024') | 1024        | C             | 1993-01-01 | TPCH   |
 
+  # todo: test fails; stage macro needs an update to deal with "null NKs + non null CKs" when creating HKs
   @fixture.multi_source_hub_with_collision_key
   Scenario: [HUB-CK-08]  Keys with NULL or empty values are not loaded into a multi sourced non existent hub with collision keys
     Given the HUB table does not exist
@@ -273,6 +277,7 @@ Feature: [HUB-CK] Hubs - Collision Keys
       | md5('C\|\|1023') | 1023        | C             | 1993-01-01 | TPCH   |
       | md5('C\|\|1024') | 1024        | C             | 1993-01-01 | TPCH   |
 
+  # todo: test fails; stage macro needs an update to deal with "null NKs + non null CKs" when creating HKs
   @fixture.multi_source_hub_with_collision_key
   Scenario: [HUB-CK-10]  Keys with NULL or empty values are not loaded into a multi sourced empty hub with collision keys
     Given the HUB hub is empty
@@ -366,6 +371,7 @@ Feature: [HUB-CK] Hubs - Collision Keys
       | md5('C\|\|1023') | 1023        | C             | 1993-01-02 | TPCH   |
       | md5('C\|\|1024') | 1024        | C             | 1993-01-02 | TPCH   |
 
+  # todo: test fails; stage macro needs an update to deal with "null NKs + non null CKs" when creating HKs
   @fixture.multi_source_hub_with_collision_key
   Scenario: [HUB-CK-12]  Keys with NULL or empty values are not loaded into a multi sourced populated hub with collision keys
     Given the HUB hub is already populated with data

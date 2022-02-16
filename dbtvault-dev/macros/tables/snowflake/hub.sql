@@ -59,8 +59,7 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
-    {# changed from src_pk to src_nk to avoid bringing pks with null nk but non null ck #}
-    WHERE {{ dbtvault.multikey(src_nk, prefix='rr', condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     QUALIFY row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
