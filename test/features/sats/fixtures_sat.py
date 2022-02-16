@@ -273,7 +273,7 @@ def satellite_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_DOB": "DATETIME",
+                "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -307,7 +307,7 @@ def satellite_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_DOB": "DATETIME",
+                "CUSTOMER_DOB": "DATE",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
