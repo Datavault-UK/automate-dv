@@ -10,9 +10,11 @@
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS TIMESTAMP)) AS TIMESTAMP) AS start_timestamp,
+{#  todo: convert to macro and date conversion #}
             COALESCE( date_add(
                         cast({{stop_date_mssql}} AS TIMESTAMP),
                         cast(floor(86399996 / (1000 * 60 * 60 * 24)) as INT)
+
                     ) ,
                                      {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
                         FROM {{ target_schema }}.{{ target_table }}
