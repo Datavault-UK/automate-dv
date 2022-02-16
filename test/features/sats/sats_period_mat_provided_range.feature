@@ -1,5 +1,5 @@
 Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided date ranges
-
+#[SAT-PM-P-04] and [SAT-PM-P-05] do not pass when tests are run altogether for databricks
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-02] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
