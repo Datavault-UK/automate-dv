@@ -24,14 +24,14 @@
     {% elif datepart == 'microsecond' %}
        {%- set day_count = interval / (24 * 60 * 60 * 1000 * 1000) -%}
     {% else %}
-        {{ exceptions.raise_compiler_error("Unsupported datepart for macro datediff in postgres: {!r}".format(datepart)) }}
+        {{ exceptions.raise_compiler_error("Unsupported datepart for macro datediff in spark: {!r}".format(datepart)) }}
     {% endif %}
 
     {{ dbt_utils.log_info("Running {} - {} .....................................................spark_dateadd".format(day_count,datepart))}}
 
         date_add(
             cast( {{ from_date_or_timestamp }} as timestamp),
-            cast( floor(day_count) as INT)
+            cast( floor( {{ day_count }} )  as INT)
         )
 
 {% endmacro %}
