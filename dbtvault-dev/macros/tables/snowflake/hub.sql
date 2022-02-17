@@ -18,23 +18,13 @@
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-{%- set source_cols_with_ck = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ck, src_ldts, src_source]) -%}
-{%- set source_cols_without_ck = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
-{%- set source_cols = [] -%}
-
-{%- if dbtvault.is_nothing(src_ck) -%}
-    {%- set source_cols = source_cols + source_cols_without_ck -%}
-{%- else -%}
-    {%- set source_cols = source_cols + source_cols_with_ck -%}
-{%- endif -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ck, src_ldts, src_source]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
-
-
 
 {{ 'WITH ' -}}
 
