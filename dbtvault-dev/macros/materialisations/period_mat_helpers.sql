@@ -329,7 +329,6 @@
 
     {% set period_boundary_sql -%}
 
-        {{ dbt_utils.log_info("spark Running .....................................................bbbbbbbbbbbbbbb") }}
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS TIMESTAMP)) AS TIMESTAMP) AS start_timestamp,
