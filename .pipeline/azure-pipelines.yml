@@ -20,6 +20,12 @@ stages:
       - job: 'harness_tests'
         displayName: 'Harness Unit Tests'
         steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
           - script: inv run-harness-tests -p snowflake
             displayName: "Run harness tests"
 
@@ -39,17 +45,17 @@ stages:
 #            env:
 #              PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'unit_tests_bq'
-        displayName: 'Run Unit Tests - BigQuery'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p bigquery -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p bigquery
-            displayName: "Drop all custom schemas"
+#      - job: 'unit_tests_bq'
+#        displayName: 'Run Unit Tests - BigQuery'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p bigquery -e pipeline
+#            displayName: "Setup harness"
+#          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p bigquery
+#            displayName: "Drop all custom schemas"
 #          - script: inv run-macro-tests -p bigquery
 #            displayName: "Run macro tests"
 #            env:
