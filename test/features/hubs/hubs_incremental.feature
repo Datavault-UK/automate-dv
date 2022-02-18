@@ -1,10 +1,4 @@
-Feature: [HUB] Hubs Loaded using Incremental Materialization
-
-# Tests from snowflake_hubs.feature that should be moved here:
-# [HUB-08] Load of stage data into a hub
-# [HUB-09] Load of distinct stage data into a hub  (?)
-# [HUB-014] Union three staging tables to feed an empty hub over two cycles
-# [HUB-015] Union three staging tables to feed a populated hub
+Feature: [HUB-IM] Hubs Loaded using Incremental Materialization
 
   @fixture.single_source_hub
   Scenario: [HUB-IM-01] Load of empty stage into an non-existent hub - one cycle

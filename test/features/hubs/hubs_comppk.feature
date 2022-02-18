@@ -276,7 +276,7 @@ Feature: [HUB-COMPPK] Hubs with composite src_pk
       | md5('1009') | C       | 1009    | 1993-01-03 | *      |
 
   @fixture.single_source_comppk_hub
-  Scenario: [HUB-COMPPK-010] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-010] Simple load of stage data into an empty hub using insert-by-period
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -298,7 +298,7 @@ Feature: [HUB-COMPPK] Hubs with composite src_pk
       | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |
 
   @fixture.single_source_comppk_hub
-  Scenario: [HUB-COMPPK-011] Simple load of stage data into an empty hub
+  Scenario: [HUB-COMPPK-011] Simple load of stage data into an empty hub using insert-by-rank
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_CK | CUSTOMER_NAME | LOAD_DATE  | SOURCE |

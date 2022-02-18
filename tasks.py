@@ -8,6 +8,7 @@ from invoke import Collection, task
 
 import test
 from env import env_utils
+from env.env_utils import is_pipeline
 from test import dbtvault_harness_utils
 
 logger = logging.getLogger('dbtvault')
@@ -204,7 +205,8 @@ def check_platform(c, platform):
         logger.debug(f"Platform '{platform}' is available.")
         return True
     else:
-        logger.error(f"Unexpected platform: '{platform}', available platforms: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
+        logger.error(
+            f"Unexpected platform: '{platform}', available platforms: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
         exit(0)
 
 
