@@ -14,15 +14,15 @@ variables:
   PIPELINE_BRANCH: $(Build.SourceBranchName)
 
 stages:
-  - stage: 'harness_tests'
-    displayName: 'Harness Tests'
-    jobs:
-       - job: 'harness_tests'
-           - script: inv run-harness-tests -p snowflake
-             displayName: "Run harness tests"
   - stage: 'unit_tests'
     displayName: 'Unit Tests'
     jobs:
+       - job: 'harness_tests'
+         displayName: 'Harness Unit Tests'
+         steps:
+           - script: inv run-harness-tests -p snowflake
+             displayName: "Run harness tests"
+
 #      - job: 'unit_tests_sf'
 #        displayName: 'Run Unit Tests - Snowflake'
 #        steps:
