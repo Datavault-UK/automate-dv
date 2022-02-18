@@ -14,26 +14,30 @@ variables:
   PIPELINE_BRANCH: $(Build.SourceBranchName)
 
 stages:
+  - stage: 'harness_tests'
+    displayName: 'Harness Tests'
+    jobs:
+       - job: 'harness_tests'
+           - script: inv run-harness-tests -p snowflake
+             displayName: "Run harness tests"
   - stage: 'unit_tests'
     displayName: 'Unit Tests'
     jobs:
-      - job: 'unit_tests_sf'
-        displayName: 'Run Unit Tests - Snowflake'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
-            displayName: "Drop all custom schemas"
-          - script: inv run-harness-tests -p snowflake
-            displayName: "Run harness tests"
-          - script: inv run-macro-tests -p snowflake
-            displayName: "Run macro tests"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
+#      - job: 'unit_tests_sf'
+#        displayName: 'Run Unit Tests - Snowflake'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p snowflake -e pipeline
+#            displayName: "Setup harness"
+#          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
+#            displayName: "Drop all custom schemas"
+#          - script: inv run-macro-tests -p snowflake
+#            displayName: "Run macro tests"
+#            env:
+#              PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'unit_tests_bq'
         displayName: 'Run Unit Tests - BigQuery'
@@ -42,17 +46,14 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - script: op document get bq_service_account_key --vault dbtvault --output test/dbtvault_test/bigquery.json
           - script: inv setup -p bigquery -e pipeline
             displayName: "Setup harness"
           - script: inv run-dbt "run-operation drop_all_custom_schemas" -p bigquery
             displayName: "Drop all custom schemas"
-          - script: inv run-harness-tests -p bigquery
-            displayName: "Run harness tests"
-          - script: inv run-macro-tests -p bigquery
-            displayName: "Run macro tests"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
+#          - script: inv run-macro-tests -p bigquery
+#            displayName: "Run macro tests"
+#            env:
+#              PIPELINE_JOB: $(Agent.JobName)
 
   - stage: 'integration_tests_bigquery'
     displayName: 'Run Integration Tests (BigQuery)'

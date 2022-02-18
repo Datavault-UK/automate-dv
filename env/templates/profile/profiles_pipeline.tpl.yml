@@ -31,7 +31,7 @@ dbtvault:
         type: service_account
         project_id: "{{ op://dbtvault/bigquery_pipeline/project_id }}"
         private_key_id: "{{ op://dbtvault/bq_key_json/private_key_id }}"
-        private_key: "{{ op://dbtvault/bq_key_json/private_key_all }}"
+        private_key: "{{ op://dbtvault/bq_key_json/private_key }}"
         client_email: "{{ op://dbtvault/bq_key_json/client_email }}"
         client_id: "{{ op://dbtvault/bq_key_json/client_id }}"
         auth_uri: https://accounts.google.com/o/oauth2/auth

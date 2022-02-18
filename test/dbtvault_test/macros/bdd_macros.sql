@@ -53,10 +53,19 @@
         {% set schema_name = schema_prefix -%}
     {%- endif -%}
 
-    {%- set list_custom_schemas_sql -%}
-    SELECT SCHEMA_NAME FROM {{ target.database }}."INFORMATION_SCHEMA"."SCHEMATA"
-    WHERE SCHEMA_NAME LIKE '{{ schema_name }}%'
-    {%- endset -%}
+    {%- if target.type == "snowflake" -%}
+        {%- set list_custom_schemas_sql -%}
+        SELECT SCHEMA_NAME FROM {{ target.database }}."INFORMATION_SCHEMA"."SCHEMATA"
+        WHERE SCHEMA_NAME LIKE '{{ schema_name }}%'
+        {%- endset -%}
+    {%- endif -%}
+
+    {%- if target.type == "bigquery" -%}
+        {%- set list_custom_schemas_sql -%}
+        SELECT SCHEMA_NAME FROM {{ target.database }}.INFORMATION_SCHEMA.SCHEMATA
+        WHERE SCHEMA_NAME LIKE '{{ schema_name }}%'
+        {%- endset -%}
+    {%- endif -%}
 
     {%- set custom_schema_list = dbt_utils.get_query_results_as_dict(list_custom_schemas_sql) -%}
 
