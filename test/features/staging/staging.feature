@@ -580,6 +580,7 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
 
+  @not_bigquery
   @fixture.staging_escaped
   Scenario: [STG-021] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
   The customer name column name in the RAW_STAGE table includes a SPACE character, and there is derived column called COLUMN
