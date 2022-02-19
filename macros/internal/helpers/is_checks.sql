@@ -51,18 +51,3 @@
     {%- endif -%}
 
 {%- endmacro -%}
-
-
-
-{% macro is_vault_insert_by_period() %}
-    {% if not execute %}
-        {{ return(False) }}
-    {% else %}
-        {% set relation = adapter.get_relation(this.database, this.schema, this.table) %}
-
-            {{ return(relation is not none
-                      and relation.type == 'table'
-                      and model.config.materialized == 'vault_insert_by_period'
-                      and not flags.FULL_REFRESH) }}
-    {% endif %}
-{% endmacro %}
