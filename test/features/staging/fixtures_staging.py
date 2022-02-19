@@ -123,29 +123,29 @@ def staging_escaped_bigquery(context):
 
         "STG_CUSTOMER": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "SOURCE": "VARCHAR",
-                "COLUMN": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "DBTVAULT_RANK": "VARCHAR",
-                "DBTVAULT_RANK2": "VARCHAR"
+                "SOURCE": "STRING",
+                "COLUMN": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "DBTVAULT_RANK": "STRING",
+                "DBTVAULT_RANK2": "STRING"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER NAME": "VARCHAR",
-                "CUSTOMER_DOB": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER NAME": "STRING",
+                "CUSTOMER_DOB": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
