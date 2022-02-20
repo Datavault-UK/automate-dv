@@ -197,6 +197,8 @@ def load_populated_table(context, model_name, vault_structure):
     """
 
     if env_utils.platform() == "sqlserver":
+        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # into expected data table, e.g. nvarchar -- > binary
 
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=model_name,
@@ -295,6 +297,8 @@ def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
     if env_utils.platform() == "sqlserver":
+        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # into expected data table, e.g. nvarchar -- > binary
 
         # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_seeds(raw_stage_model_name.lower() + "_seed")
@@ -335,6 +339,8 @@ def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
     if env_utils.platform() == "sqlserver":
+        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # into expected data table, e.g. nvarchar -- > binary
 
         # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_seeds(table_name.lower() + "_seed")
@@ -398,6 +404,8 @@ def create_csv(context, raw_stage_model_name):
     """
 
     if env_utils.platform() == "sqlserver":
+        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # into expected data table, e.g. nvarchar -- > binary
 
         # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
         # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
@@ -410,8 +418,7 @@ def create_csv(context, raw_stage_model_name):
                                                                         model_name=raw_stage_model_name,
                                                                         target_model_name=raw_stage_model_name)
 
-        dbtvault_generator.add_seed_config(seed_name=seed_model_name,
-                                           seed_config=context.seed_config[raw_stage_model_name])
+        context.target_model_name = raw_stage_model_name
 
         logs = dbtvault_harness_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
@@ -459,23 +466,22 @@ def stage_processing(context, processed_stage_name):
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     if env_utils.platform() == "sqlserver":
+        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # into expected data table, e.g. nvarchar -- > binary
 
-        # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV or model SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_seeds(model_name.lower() + "_expected_seed")
         dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
 
-        expected_model_name = f"{model_name}_EXPECTED"
-
         seed_model_name = dbtvault_harness_utils.context_table_to_model(context.seed_config, context.table,
                                                                         model_name=model_name,
-                                                                        target_model_name=expected_model_name)
+                                                                        target_model_name=f"{model_name}_EXPECTED")
 
         context.target_model_name = seed_model_name
 
-        columns_to_compare = context.table.headings
-
         seed_logs = dbtvault_harness_utils.run_dbt_seed_model(seed_model_name=seed_model_name)
 
+        columns_to_compare = context.table.headings
         unique_id = columns_to_compare[0]
 
         test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
@@ -520,7 +526,7 @@ def expect_data(context, model_name):
 def expect_data(context, model_name):
     if env_utils.platform() == "sqlserver":
 
-        # Delete any seed CSV or SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV or model SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
         dbtvault_harness_utils.clean_seeds(model_name.lower() + "_expected_seed")
         dbtvault_harness_utils.clean_models(model_name.lower() + "_expected_seed")
 

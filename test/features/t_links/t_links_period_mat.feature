@@ -1,7 +1,7 @@
 Feature: [TLK-PM] Transactional Links using Period Materialization
 
   @fixture.t_link
-  Scenario: [TLK-PM-001] Load an a non-existent Transactional Link with the period materialisation
+  Scenario: [TLK-PM-01] Load an a non-existent Transactional Link with the period materialisation
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -26,7 +26,7 @@ Feature: [TLK-PM] Transactional Links using Period Materialization
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link
-  Scenario: [TLK-PM-002] Load an empty Transactional Link with the period materialisation
+  Scenario: [TLK-PM-02] Load an empty Transactional Link with the period materialisation
     Given the T_LINK table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -51,7 +51,7 @@ Feature: [TLK-PM] Transactional Links using Period Materialization
       | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26 | SAP    |
 
   @fixture.t_link
-  Scenario: [TLK-PM-003] Load a populated Transactional Link with the period materialisation
+  Scenario: [TLK-PM-03] Load a populated Transactional Link with the period materialisation
     Given the T_LINK t_link is already populated with data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 | SAP    |

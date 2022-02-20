@@ -12,8 +12,7 @@
 
 {%- macro sqlserver__max_datetime() %}
 
-{# TODO Change to '9999-12-31 23:59:59.9999999' during DATETIME2 redevelopment #}
-    {% do return('9999-12-31 23:59:59.996') %}
+    {% do return('9999-12-31 23:59:59.9999999') %}
 
 {% endmacro -%}
 
