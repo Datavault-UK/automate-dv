@@ -19,17 +19,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/eff_sats/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/cycle/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/bridge/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/links/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/hubs/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/ma_sats/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/pit/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/sats/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/staging/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/t_links/snowflake" />
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/xts/snowflake" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
