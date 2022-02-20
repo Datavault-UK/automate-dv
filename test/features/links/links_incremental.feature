@@ -1,10 +1,5 @@
 Feature: [LNK] Links loaded using Incremental Materialization
 
-# Tests from snowflake_links.feature that should be moved here:
-# [LNK-04] Load a simple stage table into an empty link table
-# [LNK-06] Load a simple stage table into a populated link.
-# (?) [LNK-011] Union three staging tables to feed empty link
-
   @fixture.single_source_link
   Scenario: [LNK-IM-01] Load of empty stage data into a non-existent link - one cycle
     Given the LINK table does not exist
@@ -24,7 +19,6 @@ Feature: [LNK] Links loaded using Incremental Materialization
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-
 
   @fixture.single_source_link
   Scenario: [LNK-IM-02] Load of mixed stage data into a non-existent link - one cycle
@@ -138,7 +132,6 @@ Feature: [LNK] Links loaded using Incremental Materialization
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-02 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-02 | CRM    |
-
 
   @fixture.single_source_link
   Scenario: [LNK-IM-06] Load of mixed stage data into an empty link - two cycles

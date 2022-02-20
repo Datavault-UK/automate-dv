@@ -232,7 +232,7 @@ Feature: [SAT] Satellites
       | md5('1007') | Hary          | 17-214-233-1220 | 1988-04-13   | md5('1988-04-13\|\|1007\|\|HARY\|\|17-214-233-1220')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-010] Load data into a populated satellite where payload/hashdiff data is all null and PKs are NULL
+  Scenario: [SAT-10] Load data into a populated satellite where payload/hashdiff data is all null and PKs are NULL
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
@@ -249,7 +249,7 @@ Feature: [SAT] Satellites
       | md5('1006') | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-011] Load data into a populated satellite where hashdiff/payload data is partially null - existent PKs
+  Scenario: [SAT-11] Load data into a populated satellite where hashdiff/payload data is partially null - existent PKs
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')  | 1993-01-01     | 1993-01-01 | *      |
@@ -295,7 +295,7 @@ Feature: [SAT] Satellites
       | md5('1007') | <null>        | 17-214-233-1220 | 1988-04-13   | md5('1988-04-13\|\|1007\|\|^^\|\|17-214-233-1220')     | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-012] Load data into a populated satellite where hashdiff/payload data is partially null - new PKs
+  Scenario: [SAT-12] Load data into a populated satellite where hashdiff/payload data is partially null - new PKs
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')  | 1993-01-01     | 1993-01-01 | *      |
@@ -341,7 +341,7 @@ Feature: [SAT] Satellites
       | md5('1017') | <null>        | 17-214-233-1220 | 1988-04-13   | md5('1988-04-13\|\|1017\|\|^^\|\|17-214-233-1220')     | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-013] Load data into a populated satellite where some records overlap, hashdiff DOES NOT include PK (for G)
+  Scenario: [SAT-13] Load data into a populated satellite where some records overlap, hashdiff DOES NOT include PK (for G)
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                      | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -365,9 +365,9 @@ Feature: [SAT] Satellites
       | md5('1005') | Eric          | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|ERIC\|\|17-214-233-1217')  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|FRIDA\|\|17-214-233-1217') | 1993-01-01     | 1993-01-01 | *      |
 
-  # TODO: SAT-014: Migrate test to other platforms
+  # TODO: SAT-14: Migrate test to other platforms
   @fixture.satellite
-  Scenario: [SAT-014] Load data into a non-existent satellite, using an alias for the hashdiff
+  Scenario: [SAT-14] Load data into a non-existent satellite, using an alias for the hashdiff
     Given the SATELLITE_HD_ALIAS table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |

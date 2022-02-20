@@ -220,7 +220,7 @@ Feature: [LNK] Links
       | md5('1006\|\|DEU') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
 
   @fixture.multi_source_link
-  Scenario: [LNK-010] Union three staging tables to feed a link which does not exist
+  Scenario: [LNK-10] Union three staging tables to feed a link which does not exist
     Given the LINK table does not exist
     And the RAW_STAGE_SAP table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -260,7 +260,7 @@ Feature: [LNK] Links
       | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
 
   @fixture.multi_source_link
-  Scenario: [LNK-011] Union three staging tables to feed empty link
+  Scenario: [LNK-11] Union three staging tables to feed empty link
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -300,7 +300,7 @@ Feature: [LNK] Links
       | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
 
   @fixture.multi_source_link
-  Scenario: [LNK-012] Union three staging tables to feed empty link where NULL foreign keys are not added
+  Scenario: [LNK-12] Union three staging tables to feed empty link where NULL foreign keys are not added
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -338,7 +338,7 @@ Feature: [LNK] Links
       | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-02 | WEB    |
 
   @fixture.multi_source_link
-  Scenario: [LNK-013] Union three staging tables with duplicates to feed populated link
+  Scenario: [LNK-13] Union three staging tables with duplicates to feed populated link
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |
@@ -396,7 +396,7 @@ Feature: [LNK] Links
       | md5('1010\|\|ITA') | md5('1010') | md5('ITA') | 1993-01-02 | WEB    |
 
   @fixture.multi_source_link
-  Scenario: [LNK-014] Load a stage table where a foreign key is NULL, no link is inserted
+  Scenario: [LNK-14] Load a stage table where a foreign key is NULL, no link is inserted
     Given the LINK link is already populated with data
       | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 | CRM    |

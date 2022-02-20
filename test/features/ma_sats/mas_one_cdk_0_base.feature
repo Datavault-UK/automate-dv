@@ -1,7 +1,7 @@
 Feature: [MAS-1CD-B] Multi Active Satellites
   Base loads with MAS behaviour with one CDK
 
-### Tests with one LDTS per PK
+  ### Tests with one LDTS per PK
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-B-01] Load data into a non-existent multi-active satellite

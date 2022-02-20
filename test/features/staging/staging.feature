@@ -232,7 +232,7 @@ Feature: [STG] Staging
 
   @snowflake
   @fixture.staging
-  Scenario: [STG-010-SF] Staging with no source columns and derived column as part of a hashdiff
+  Scenario: [STG-10-SF] Staging with no source columns and derived column as part of a hashdiff
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -257,7 +257,7 @@ Feature: [STG] Staging
 
   @bigquery
   @fixture.staging
-  Scenario: [STG-010-BQ] Staging with no source columns and derived column as part of a hashdiff
+  Scenario: [STG-10-BQ] Staging with no source columns and derived column as part of a hashdiff
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -281,7 +281,7 @@ Feature: [STG] Staging
       | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018      |
 
   @fixture.staging
-  Scenario: [STG-011] Staging for only derived columns
+  Scenario: [STG-11] Staging for only derived columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -302,7 +302,7 @@ Feature: [STG] Staging
       | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging
-  Scenario: [STG-012] Staging for only hashed columns
+  Scenario: [STG-12] Staging for only hashed columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -323,7 +323,7 @@ Feature: [STG] Staging
       | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   |
 
   @fixture.staging
-  Scenario: [STG-013] Staging for only ranked columns
+  Scenario: [STG-13] Staging for only ranked columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -344,7 +344,7 @@ Feature: [STG] Staging
       | 1             |
 
   @fixture.staging
-  Scenario: [STG-014] Staging with derived, source columns and hashed with exclude flag.
+  Scenario: [STG-14] Staging with derived, source columns and hashed with exclude flag.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -367,7 +367,7 @@ Feature: [STG] Staging
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging
-  Scenario: [STG-015] Staging with only source columns and hashed columns with exclude flag
+  Scenario: [STG-15] Staging with only source columns and hashed columns with exclude flag
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -388,7 +388,7 @@ Feature: [STG] Staging
 
   @snowflake
   @fixture.staging
-  Scenario: [STG-016-SF] Staging with derived, source columns and hashed when a derived column transforms a source column.
+  Scenario: [STG-16-SF] Staging with derived, source columns and hashed when a derived column transforms a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -412,7 +412,7 @@ Feature: [STG] Staging
 
   @bigquery
   @fixture.staging
-  Scenario: [STG-016-BQ] Staging with derived, source columns and hashed when a derived column transforms a source column.
+  Scenario: [STG-16-BQ] Staging with derived, source columns and hashed when a derived column transforms a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -436,7 +436,7 @@ Feature: [STG] Staging
 
   @snowflake
   @fixture.staging
-  Scenario: [STG-017-SF] Staging with derived, source columns and hashed when a derived column overrides a source column.
+  Scenario: [STG-17-SF] Staging with derived, source columns and hashed when a derived column overrides a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -460,7 +460,7 @@ Feature: [STG] Staging
 
   @bigquery
   @fixture.staging
-  Scenario: [STG-017-BQ] Staging with derived, source columns and hashed when a derived column overrides a source column.
+  Scenario: [STG-17-BQ] Staging with derived, source columns and hashed when a derived column overrides a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -483,7 +483,7 @@ Feature: [STG] Staging
       | 1004        | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging
-  Scenario: [STG-018] Staging with derived, source columns and hashed when a hashed column overrides a source column.
+  Scenario: [STG-18] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -507,7 +507,7 @@ Feature: [STG] Staging
 
   @snowflake
   @fixture.staging
-  Scenario: [STG-019-SF] Staging with derived, source columns and hashed when a derived and a hashed column overrides a source column.
+  Scenario: [STG-19-SF] Staging with derived, source columns and hashed when a derived and a hashed column overrides a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -531,7 +531,7 @@ Feature: [STG] Staging
 
   @bigquery
   @fixture.staging
-  Scenario: [STG-019-BQ] Staging with derived, source columns and hashed when a derived and a hashed column overrides a source column.
+  Scenario: [STG-19-BQ] Staging with derived, source columns and hashed when a derived and a hashed column overrides a source column.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -554,7 +554,7 @@ Feature: [STG] Staging
       | md5('DOM')   | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging
-  Scenario: [STG-020] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+  Scenario: [STG-20] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -582,7 +582,7 @@ Feature: [STG] Staging
 
   @not_bigquery
   @fixture.staging_escaped
-  Scenario: [STG-021] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+  Scenario: [STG-21] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
   The customer name column name in the RAW_STAGE table includes a SPACE character, and there is derived column called COLUMN
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
@@ -611,7 +611,7 @@ Feature: [STG] Staging
 
   @bigquery
   @fixture.staging_escaped
-  Scenario: [STG-021-BQ] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+  Scenario: [STG-21-BQ] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
   There is derived column called COLUMN
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
