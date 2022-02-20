@@ -7,5 +7,5 @@
 {%- endmacro -%}
 
 {%- macro sqlserver__type_timestamp() -%}
-    datetime
+    datetime2
 {%- endmacro -%}
