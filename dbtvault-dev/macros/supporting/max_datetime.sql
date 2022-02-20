@@ -18,7 +18,6 @@
 
 {%- macro bigquery__max_datetime() %}
 
-{# TODO Should this be '9999-12-31 23:59:59.999999' ? #}
-    {% do return('9999-12-31 23:59:59.996') %}
+    {% do return('9999-12-31 23:59:59.999') %}
 
 {% endmacro -%}

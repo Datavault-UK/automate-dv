@@ -19,7 +19,7 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </EXTENSION>
-    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/sats/snowflake" />
+    <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/sats" />
     <option name="ADDITIONAL_ARGS" value="" />
     <method v="2" />
   </configuration>
