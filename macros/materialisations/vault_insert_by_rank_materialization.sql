@@ -1,8 +1,8 @@
 {% materialization vault_insert_by_rank, default -%}
 
-    {%- set full_refresh_mode = should_full_refresh() -%}
+    {%- set full_refresh_mode = (should_full_refresh()) -%}
 
-    {%- set target_relation = this.incorporate(type='table') -%}
+    {%- set target_relation = this -%}
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
@@ -29,19 +29,24 @@
 
         {% do to_drop.append(tmp_relation) %}
 
-    {% elif existing_relation.is_view or full_refresh_mode %}
-        {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
-        {% set backup_identifier = existing_relation.identifier ~ "__dbt_backup" %}
-        {% set backup_relation = existing_relation.incorporate(path={"identifier": backup_identifier}) %}
+    {% elif existing_relation.is_view %}
 
-        {% do adapter.drop_relation(backup_relation) %}
-        {% do adapter.rename_relation(target_relation, backup_relation) %}
-
-        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
+        {{ log("Dropping relation " ~ target_relation ~ " because it is a view and this model is a table (vault_insert_by_rank).") }}
+        {% do adapter.drop_relation(existing_relation) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
-        {% do to_drop.append(tmp_relation) %}
-        {% do to_drop.append(backup_relation) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+                                                                       start_stop_dates.start_date,
+                                                                       start_stop_dates.stop_date,
+                                                                       0, period) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
+
+    {% elif full_refresh_mode %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+                                                                       start_stop_dates.start_date,
+                                                                       start_stop_dates.stop_date,
+                                                                       0, period) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
 
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
@@ -140,6 +145,8 @@
             {% do adapter.drop_relation(rel) %}
         {% endif %}
     {% endfor %}
+
+    {% set target_relation = target_relation.incorporate(type='table') %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
 
