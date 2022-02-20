@@ -67,7 +67,7 @@ Feature: [PIT-2SB] Point in Time
 
   @bigquery
   @fixture.pit_two_sats
-  Scenario: [BQ-PIT-2SB-01] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
+  Scenario: [PIT-2SB-01-BQ] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK | SAT                  | PIT          |
@@ -194,7 +194,7 @@ Feature: [PIT-2SB] Point in Time
 
   @bigquery
   @fixture.pit_two_sats
-  Scenario: [BQ-PIT-2SB-02] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF timestamps
+  Scenario: [PIT-2SB-02-BQ] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                     | PIT             |
@@ -305,7 +305,7 @@ Feature: [PIT-2SB] Point in Time
 
   @bigquery
   @fixture.pit_two_sats
-  Scenario: [BQ-PIT-2SB-03] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF dates
+  Scenario: [PIT-2SB-03-BQ] Base load into a pit table from two satellites with timestamps with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                     | PIT             |
@@ -408,7 +408,7 @@ Feature: [PIT-2SB] Point in Time
 
   @bigquery
   @fixture.pit_two_sats
-  Scenario: [BQ-PIT-2SB-04] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
+  Scenario: [PIT-2SB-04-BQ] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK | SAT                  | PIT             |
