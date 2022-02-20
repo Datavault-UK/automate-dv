@@ -29,8 +29,8 @@ stages:
           - script: inv run-harness-tests -p snowflake
             displayName: "Run harness tests"
 
-      - job: 'unit_tests_sf'
-        displayName: 'Run Unit Tests - Snowflake'
+      - job: 'macro_tests_sf'
+        displayName: 'Macro Unit Tests - Snowflake'
         steps:
           - task: UsePythonVersion@0
             inputs:
