@@ -18,7 +18,7 @@
 
 # dbtvault by [Datavault](https://www.data-vault.co.uk)
 
-Build your own Data Vault data warehouse! dbtvault is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on a Snowflake database.
+Build your own Data Vault data warehouse! dbtvault is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on your data platform.
 
 What does dbtvault offer?
 - productivity gains, fewer errors
@@ -31,7 +31,7 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 ## Worked example project
 
-Learn quickly with our worked example:
+Learn quickly with our worked example on Snowflake:
 
 - [Read the docs](https://dbtvault.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
