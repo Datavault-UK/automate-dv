@@ -14,8 +14,16 @@
         
         {%- else -%}
         
-            {{- return(column_str) -}}
-        
+            {%- if dbtvault.is_expression(column_str) -%}
+
+                {{- return(column_str) -}}
+
+            {%- else -%}
+
+                {{- return(dbtvault.escape_column_names(column_str)) -}}
+
+            {%- endif -%}
+
         {%- endif -%}
     {%- else -%}
         {%- if execute -%}
