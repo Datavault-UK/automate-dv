@@ -45,7 +45,6 @@
 
 
 
-
 {% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
