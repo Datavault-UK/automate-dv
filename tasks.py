@@ -8,7 +8,6 @@ from invoke import Collection, task
 
 import test
 from env import env_utils
-from env.env_utils import is_pipeline
 from test import dbtvault_harness_utils
 
 logger = logging.getLogger('dbtvault')
