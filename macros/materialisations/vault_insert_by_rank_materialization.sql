@@ -33,12 +33,8 @@
 
         {{ log("Dropping relation " ~ target_relation ~ " because it is a view and this model is a table (vault_insert_by_rank).") }}
         {% do adapter.drop_relation(existing_relation) %}
-        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
-                                                                       start_stop_dates.start_date,
-                                                                       start_stop_dates.stop_date,
-                                                                       0, period) %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif full_refresh_mode %}
