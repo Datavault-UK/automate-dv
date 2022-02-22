@@ -37,7 +37,7 @@ WITH source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-latest_records_non_ranked AS (
+latest_records AS (
 
     SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
     FROM (
@@ -54,11 +54,6 @@ latest_records_non_ranked AS (
                 ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
         ) AS a
     WHERE a.rank = 1
-),
-
-latest_records AS (
-    SELECT * FROM latest_records_non_ranked
-    WHERE rank = 1
 ),
 
 {%- endif %}

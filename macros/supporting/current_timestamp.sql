@@ -7,7 +7,7 @@
 {% endmacro %}
 
 {% macro sqlserver__current_timestamp() %}
-    getdate()
+    sysdatetime()
 {% endmacro %}
 
 
@@ -20,5 +20,5 @@
 {% endmacro %}
 
 {% macro sqlserver__current_timestamp_in_utc() %}
-    {{dbtvault.current_timestamp()}}
+    sysutcdatetime()
 {% endmacro %}
