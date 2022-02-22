@@ -39,6 +39,7 @@ row_rank_{{ source_number }} AS (
     {%- if source_model | length == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition ='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition ='IS NOT NULL') }}
+    QUALIFY row_number = 1
     {%- endif %}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
     ),
@@ -49,7 +50,6 @@ row_rank_{{ source_number }} AS (
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
-    WHERE row_number = 1
     {%- if not loop.last %}
     UNION ALL
     {%- endif %}
