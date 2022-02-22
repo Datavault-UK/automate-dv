@@ -22,7 +22,7 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
       | md5('1007\|\|ITA') | md5('1007') | md5('ITA') | 1993-01-04 | CRM    |
 
   @fixture.multi_source_link
-  Scenario: [LNK-PM-02]  Union three staging tables to feed empty link
+  Scenario: [LNK-PM-02] Union three staging tables to feed empty link
     Given the LINK link is empty
     And the RAW_STAGE_SAP table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |

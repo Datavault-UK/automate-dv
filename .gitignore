@@ -28,3 +28,4 @@ test/dbtvault_test/seeds/vault_properties.yml
 /env/templates/db/*_db.env
 /env/composed/*_profile.yml
 /env/composed/*_db.env
+/test/dbtvault_test/bigquery.json

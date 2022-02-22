@@ -73,6 +73,10 @@ def set_qualified_names_for_macro_tests():
             "SCHEMA_NAME": f"{os.getenv('SNOWFLAKE_DB_SCHEMA')}_{os.getenv('SNOWFLAKE_DB_USER')}"
                            f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper(),
             "DATABASE_NAME": os.getenv('SNOWFLAKE_DB_DATABASE')
+        },
+        "bigquery": {
+            "DATASET_NAME": f"{os.getenv('GCP_DATASET')}_{os.getenv('GCP_USER')}"
+                            f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper()
         }
     }
 
@@ -124,6 +128,7 @@ def setup_environment():
 def write_profile_platform_subset(template_path, platform_name):
     yaml_handler = ruamel.yaml.YAML()
     yaml_handler.indent(mapping=2, offset=2)
+    yaml_handler.preserve_quotes = True
 
     new_profile_path = template_path.parent.parent.parent / f'composed/{platform_name}_profile.yml'.lower()
 
