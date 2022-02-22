@@ -26,7 +26,7 @@ Feature: [HUB-RM] Hubs Loaded using Rank Materialization
   @fixture.enable_full_refresh
   @fixture.single_source_hub
   Scenario: [HUB-RM-02] Full refresh of loaded hub
-    Given the HUB table does not exist
+    Given the HUB hub is empty
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 1993-01-01 | TPCH   |
