@@ -189,7 +189,7 @@ Feature: [MAS-1CD] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1216 | md5('1006\|\|FRIDA\|\|17-214-233-1216') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-1CD-010] Load data into a populated multi-active satellite where some records overlap
+  Scenario: [MAS-1CD-10] Load data into a populated multi-active satellite where some records overlap
     Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |

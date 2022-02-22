@@ -216,7 +216,7 @@ Feature: [MAS-2CD] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1216 | 123       | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|123') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-010] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
+  Scenario: [MAS-2CD-10] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | 123       | md5('1004\|\|DOM\|\|17-214-233-1214\|\|123')   | 1993-01-01     | 1993-01-01 | *      |

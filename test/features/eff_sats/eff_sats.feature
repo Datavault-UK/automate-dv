@@ -197,7 +197,7 @@ Feature: [EFF] Effectivity Satellites
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite
-  Scenario: [EFF-010] No New Eff Sat Added if DFK and SFK are both NULL
+  Scenario: [EFF-10] No New Eff Sat Added if DFK and SFK are both NULL
     Given the EFF_SAT eff_sat is already populated with data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
