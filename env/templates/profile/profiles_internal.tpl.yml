@@ -20,8 +20,8 @@ dbtvault:
 
       method: oauth
 
-      project: "{{ op://private/bigquery/project_id }}"
-      dataset: "{{ op://private/bigquery/dataset }}"
+      project: "{{ op://dbtvault/bigquery/project_id }}"
+      dataset: "{{ op://dbtvault/bigquery/dataset }}"
 
       timeout_seconds: 300
       priority: interactive

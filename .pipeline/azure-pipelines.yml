@@ -3,6 +3,7 @@ trigger:
   branches:
     include:
       - develop
+      - stage/*
     exclude:
       - feat/*
 
@@ -16,8 +17,20 @@ stages:
   - stage: 'unit_tests'
     displayName: 'Unit Tests'
     jobs:
-      - job: 'unit_tests'
-        displayName: 'Run Unit Tests'
+      - job: 'harness_tests'
+        displayName: 'Harness Unit Tests'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-harness-tests -p snowflake
+            displayName: "Run harness tests"
+
+      - job: 'macro_tests_sf'
+        displayName: 'Macro Unit Tests - Snowflake'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -27,10 +40,237 @@ stages:
             displayName: "Setup harness"
           - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
             displayName: "Drop all custom schemas"
-          - script: inv run-harness-tests -p snowflake
-            displayName: "Run harness tests"
           - script: inv run-macro-tests -p snowflake
-            displayName: "Run macro tests - Snowflake"
+            displayName: "Run macro tests"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+#      - job: 'unit_tests_bq'
+#        displayName: 'Run Unit Tests - BigQuery'
+#        steps:
+#          - task: UsePythonVersion@0
+#            inputs:
+#              versionSpec: '3.9'
+#          - template: templates/install-dependencies-steps.yml
+#          - script: inv setup -p bigquery -e pipeline
+#            displayName: "Setup harness"
+#          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p bigquery
+#            displayName: "Drop all custom schemas"
+#          - script: inv run-macro-tests -p bigquery
+#            displayName: "Run macro tests"
+#            env:
+#              PIPELINE_JOB: $(Agent.JobName)
+
+  - stage: 'integration_tests_bigquery'
+    displayName: 'Run Integration Tests (BigQuery)'
+    jobs:
+      - job: 'staging'
+        displayName: 'Staging'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s staging -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_main'
+        displayName: 'Hubs Main'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype main -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_comppk'
+        displayName: 'Hubs Comp PK'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype comppk -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_incremental'
+        displayName: 'Hubs Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype incremental -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_pm'
+        displayName: 'Hubs PM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype pm -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'hubs_rm'
+        displayName: 'Hubs RM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s hubs --subtype rank -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_main'
+        displayName: 'Links Main'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype main -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_incremental'
+        displayName: 'Links Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype incremental -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_pm'
+        displayName: 'Links PM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype pm -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'links_rm'
+        displayName: 'Links RM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s links --subtype rank -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_main'
+        displayName: 'Sats Main'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats --subtype main -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_cycles'
+        displayName: 'Sats Cycles'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats --subtype cycles -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_incremental'
+        displayName: 'Sats Incremental'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats --subtype incremental -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_pm'
+        displayName: 'Sats PM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats --subtype pm -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'sats_rm'
+        displayName: 'Sats RM'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s sats --subtype rank -p bigquery
+            displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
