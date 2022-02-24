@@ -453,7 +453,7 @@ def cycle_bigquery(context):
             "column_types": {
                 "BOOKING_PK": "STRING",
                 "HASHDIFF": "STRING",
-                "PRICE": "STRINGff",
+                "PRICE": "STRING",
                 "BOOKING_DATE": "DATE",
                 "DEPARTURE_DATE": "DATE",
                 "DESTINATION": "STRING",
