@@ -505,7 +505,6 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD\|\|17-214-233-1226') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1236 | md5('1003\|\|CHAD\|\|17-214-233-1236') | 1993-01-01     | 1993-01-01 | *      |
 
-  # TODO: SAT-14: Migrate test to other platforms
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-15] Load data into a populated multi-active satellite where all records load, using an alias for the hashdiff
     Given the MULTI_ACTIVE_SATELLITE_HD_ALIAS ma_sat is already populated with data

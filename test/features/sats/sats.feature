@@ -365,7 +365,6 @@ Feature: [SAT] Satellites
       | md5('1005') | Eric          | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|ERIC\|\|17-214-233-1217')  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|FRIDA\|\|17-214-233-1217') | 1993-01-01     | 1993-01-01 | *      |
 
-  # TODO: SAT-14: Migrate test to other platforms
   @fixture.satellite
   Scenario: [SAT-14] Load data into a non-existent satellite, using an alias for the hashdiff
     Given the SATELLITE_HD_ALIAS table does not exist
