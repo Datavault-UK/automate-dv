@@ -4,7 +4,7 @@ Feature: [PIT-2SI] Point in Time
   # DATES
   @not_bigquery
   @fixture.pit_two_sats
-  Scenario: [SF-PIT-2SI-01] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
+  Scenario: [PIT-2SI-01] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK | SAT                  | PIT          |
@@ -167,7 +167,7 @@ Feature: [PIT-2SI] Point in Time
   # TIMESTAMPS
   @not_bigquery
   @fixture.pit_two_sats
-  Scenario: [SF-PIT-2SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with timestamps
+  Scenario: [PIT-2SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                     | PIT             |
@@ -346,7 +346,7 @@ Feature: [PIT-2SI] Point in Time
   # AS OF - LOWER GRANULARITY
   @not_bigquery
   @fixture.pit_two_sats
-  Scenario: [SF-PIT-2SI-03] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with timestamps
+  Scenario: [PIT-2SI-03] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                     | PIT             |
@@ -509,7 +509,7 @@ Feature: [PIT-2SI] Point in Time
   # AS OF - HIGHER GRANULARITY
   @not_bigquery
   @fixture.pit_two_sats
-  Scenario: [SF-PIT-2SI-04] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates
+  Scenario: [PIT-2SI-04] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK | SAT                  | PIT             |

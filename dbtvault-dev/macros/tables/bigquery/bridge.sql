@@ -132,7 +132,6 @@ overlap_as_of AS (
         AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
 		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
-
 overlap AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
@@ -265,6 +264,7 @@ candidate_rows AS (
     ) AS a
     WHERE a.row_num = 1
 ),
+
 
 bridge AS (
     SELECT
