@@ -188,7 +188,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-04 11:14:54.391 | 1993-01-04 11:14:54.391 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-RM-010] Incremental load of a satellite with multiple timestamps in the same day in rank column loads records without duplicates
+  Scenario: [SAT-RM-10] Incremental load of a satellite with multiple timestamps in the same day in rank column loads records without duplicates
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -217,7 +217,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOMINIC\|\|17-214-233-1217') | Dominic       | 17-214-233-1217 | 2018-04-13   | 1993-01-04 12:14:54.393 | 1993-01-04 12:14:54.393 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-RM-011] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 3 decimal places
+  Scenario: [SAT-RM-11] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 3 decimal places
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME           | SOURCE |
@@ -237,7 +237,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.399 | 1993-01-01 11:14:54.399 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-RM-012] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 6 decimal places
+  Scenario: [SAT-RM-12] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 6 decimal places
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
@@ -256,8 +256,9 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.387398 | 1993-01-01 11:14:54.387398 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.387399 | 1993-01-01 11:14:54.387399 | *      |
 
+  @not_bigquery
   @fixture.satellite
-  Scenario: [SAT-RM-013] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 7 decimal places
+  Scenario: [SAT-RM-13] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 7 decimal places
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
