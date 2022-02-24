@@ -2,7 +2,11 @@
 
   {%- set full_refresh_mode = should_full_refresh() -%}
 
-  {%- set target_relation = this.incorporate(type='table') -%}
+  {% if target.type == "sqlserver" %}
+      {%- set target_relation = this.incorporate(type='table') -%}
+  {%  else %}
+      {%- set target_relation = this -%}
+  {% endif %}
   {%- set existing_relation = load_relation(this) -%}
   {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
