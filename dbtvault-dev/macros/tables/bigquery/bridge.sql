@@ -22,6 +22,8 @@
 {%- endif -%}
 
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999') -%}
+{%- set ghost_pk = '0000000000000000' -%}
+{%- set ghost_date = '1990-01-01 00:00:00.000' -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
@@ -276,9 +278,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
             {%- if loop.first %}
-    WHERE DATE({{ 'c.' ~ bridge_end_date }}) = DATE('{{ max_datetime }}')
+    WHERE DATE({{ 'c.' ~ bridge_end_date }}) = CAST(PARSE_DATETIME('%F %H:%M:%E6S', '{{ max_datetime }}') AS DATE)
             {%- else %}
-        AND DATE({{ 'c.' ~ bridge_end_date }}) = DATE('{{ max_datetime }}')
+        AND DATE({{ 'c.' ~ bridge_end_date }}) = CAST(PARSE_DATETIME('%F %H:%M:%E6S', '{{ max_datetime }}') AS DATE)
             {%- endif -%}
         {%- endfor %}
 )
