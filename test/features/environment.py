@@ -235,7 +235,7 @@ def decide_to_run(tags, obj, obj_type):
         if len(valid_tags) > 0:
             obj.skip(
                 f"{obj_type} skipped. This {obj_type} will only run on {', '.join([t.upper() for t in valid_tags])}")
-            return
+            return False
 
     if len(do_not_run_on) > 0:
 
@@ -244,7 +244,9 @@ def decide_to_run(tags, obj, obj_type):
         if env_utils.platform() in do_not_run_on:
             obj.skip(
                 f"{obj_type} skipped. This {obj_type} will only run on {', '.join(only_run_on)}")
-            return
+            return False
+
+    return True
 
 
 def before_feature(context, feature):
@@ -252,16 +254,18 @@ def before_feature(context, feature):
 
 
 def before_scenario(context, scenario):
-    decide_to_run(scenario.effective_tags, scenario, 'Scenario')
+    do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
 
-    dbtvault_harness_utils.create_dummy_model()
-    dbtvault_harness_utils.replace_test_schema()
+    if do_run:
 
-    dbtvault_harness_utils.clean_seeds()
-    dbtvault_harness_utils.clean_models()
-    dbtvault_harness_utils.clean_target()
+        dbtvault_harness_utils.create_dummy_model()
+        dbtvault_harness_utils.replace_test_schema()
 
-    dbtvault_generator.clean_test_schema_file()
+        dbtvault_harness_utils.clean_seeds()
+        dbtvault_harness_utils.clean_models()
+        dbtvault_harness_utils.clean_target()
+
+        dbtvault_generator.clean_test_schema_file()
 
 
 def before_tag(context, tag):

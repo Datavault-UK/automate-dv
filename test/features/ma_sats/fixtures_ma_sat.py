@@ -1363,6 +1363,42 @@ def multi_active_satellite_bigquery(context):
         }
     }
 
+    context.stage_columns = {
+        "RAW_STAGE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
+             "SOURCE"]
+    }
+
     context.vault_structure_columns = {
         "MULTI_ACTIVE_SATELLITE": {
             "src_pk": "CUSTOMER_PK",
@@ -2068,7 +2104,7 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2088,7 +2124,7 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "EXTENSION": "DECIMAL(38, 0)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2109,8 +2145,8 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2155,8 +2191,8 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "EXTENSION": "DECIMAL(38, 0)",
                 "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2391,8 +2427,8 @@ def multi_active_satellite_cycle_sqlserver(context):
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2413,8 +2449,8 @@ def multi_active_satellite_cycle_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "EXTENSION": "DECIMAL(38, 0)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2435,8 +2471,8 @@ def multi_active_satellite_cycle_sqlserver(context):
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -2481,8 +2517,8 @@ def multi_active_satellite_cycle_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "EXTENSION": "DECIMAL(38, 0)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },

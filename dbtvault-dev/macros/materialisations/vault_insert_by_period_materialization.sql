@@ -1,13 +1,13 @@
 {% materialization vault_insert_by_period, default -%}
 
-    {%- set full_refresh_mode = flags.FULL_REFRESH -%}
+    {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {%- set target_relation = this -%}
     {% if target_relation.type == None -%}
         {% set target_relation = target_relation.incorporate(type='table') -%}
     {% endif -%}
     {%- set existing_relation = load_relation(this) -%}
-    {%- set tmp_relation = make_temp_relation(this) -%}
+    {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set timestamp_field = dbtvault.escape_column_names(config.require('timestamp_field')) -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
@@ -35,13 +35,11 @@
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
         {% do to_drop.append(tmp_relation) %}
 
-    {% elif existing_relation.is_view or full_refresh_mode %}
-        {#-- Make sure the backup doesn't exist so we don't encounter issues with the rename below #}
-        {% set backup_identifier = existing_relation.identifier ~ "__dbt_backup" %}
-        {% set backup_relation = existing_relation.incorporate(path={"identifier": backup_identifier}) %}
+    {% elif existing_relation.is_view %}
 
-        {% do adapter.drop_relation(backup_relation) %}
-        {% do adapter.rename_relation(target_relation, backup_relation) %}
+        {{ log("Dropping relation " ~ target_relation ~ " because it is a view and this model is a table (vault_insert_by_period).") }}
+        {% do adapter.drop_relation(existing_relation) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
@@ -49,8 +47,12 @@
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
-        {% do to_drop.append(tmp_relation) %}
-        {% do to_drop.append(backup_relation) %}
+    {% elif full_refresh_mode %}
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+                                                                       start_stop_dates.start_date,
+                                                                       start_stop_dates.stop_date,
+                                                                       0, period) %}
+        {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
 
         {% set period_boundaries = dbtvault.get_period_boundaries(schema,
@@ -71,7 +73,8 @@
 
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
-            {% set tmp_relation = make_temp_relation(this) %}
+            {% set tmp_relation = make_temp_relation(target_relation) %}
+
             {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
                                                                   period_boundaries.start_timestamp,
                                                                   period_boundaries.stop_timestamp, i) %}
@@ -171,6 +174,8 @@
             {% do adapter.drop_relation(rel) %}
         {% endif %}
     {% endfor %}
+
+    {% set target_relation = target_relation.incorporate(type='table') %}
 
     {{ run_hooks(post_hooks, inside_transaction=False) }}
 

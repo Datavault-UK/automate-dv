@@ -228,10 +228,10 @@ SELECT * FROM compare
     {%  if compare_col in compare_columns %}
         {%- do columns_processed.append(compare_col) -%}
 
-        {% if compare_col_data_type == 'binary' %}
+        {% if compare_col_data_type[0:6] == 'binary' %}
             {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(compare_col, compare_col)) -%}
-        {% elif compare_col_data_type == 'datetime' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 121) AS {}".format(compare_col, compare_col)) -%}
+        {% elif compare_col_data_type[0:8] == 'datetime' %}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(compare_col, compare_col)) -%}
         {% else %}
             {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(compare_col, compare_col)) -%}
         {% endif %}
@@ -243,10 +243,10 @@ SELECT * FROM compare
 
     {%- do source_columns_list.append(source_col.column) -%}
 
-    {% if source_col.data_type == 'binary' %}
+    {% if source_col.data_type[0:6] == 'binary' %}
         {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(source_col.column, source_col.column)) -%}
-    {% elif source_col.data_type == 'datetime' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 121) AS {}".format(source_col.column, source_col.column)) -%}
+    {% elif source_col.data_type[0:8] == 'datetime' %}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(source_col.column, source_col.column)) -%}
     {% else %}
         {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(source_col.column, source_col.column)) -%}
     {% endif %}
