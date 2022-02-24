@@ -26,9 +26,12 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
+{# TODO ghost_pk should be at least a 16byte 0 hash i.e 0x00000000000000000000000000000000 #}
+
 {#- Setting ghost values to replace NULLS -#}
-{%- set ghost_pk = '0x0000000000000000' -%}
-{%- set ghost_date = '1900-01-01 00:00:00.000' %}
+{%- set ghost_pk = '0000000000000000' -%}
+
+{%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
 {# Stating the dependancies on the stage tables outside of the If STATEMENT #}
 {% for stg in stage_tables -%}
@@ -184,7 +187,7 @@ new_rows AS (
         {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
         {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) %}
         COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}), '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
-        COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }}), PARSE_DATETIME('%F %H:%M:%E6S',  '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
+        COALESCE(MAX(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }}), PARSE_DATETIME('%F %H:%M:%E6S',  '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a

@@ -49,7 +49,7 @@ Feature: [PIT] Point in Time
 
   @not_bigquery
   @fixture.pit
-  Scenario: [SF-PIT-02] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
+  Scenario: [PIT-02] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -188,7 +188,7 @@ Feature: [PIT] Point in Time
 
   @not_bigquery
   @fixture.pit
-  Scenario: [SF-PIT-04] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
+  Scenario: [PIT-04] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
     Given the PIT table does not exist
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -331,7 +331,7 @@ Feature: [PIT] Point in Time
 
   @not_bigquery
   @fixture.pit
-  Scenario: [SF-PIT-06] Load into a pit table over several cycles where new record is introduced on the 3rd day
+  Scenario: [PIT-06] Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
