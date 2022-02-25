@@ -705,7 +705,9 @@ def feature_sub_types():
             ],
             'rm': [
                 'mas_rank_mat',
-                'mas_one_cdk_base_sats_rank_mat',
+                'mas_one_cdk_base_sats_rank_mat'
+            ],
+            'rm_dup': [
                 'mas_one_cdk_rank_duplicates',
                 'mas_two_cdk_rank_duplicates'
             ]
