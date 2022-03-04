@@ -1425,6 +1425,42 @@ def multi_active_satellite_sqlserver(context):
         }
     }
 
+    context.stage_columns = {
+        "RAW_STAGE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATETIME",
+             "SOURCE"]
+    }
+
     context.vault_structure_columns = {
         "MULTI_ACTIVE_SATELLITE": {
             "src_pk": "CUSTOMER_PK",
@@ -1515,6 +1551,7 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -1534,6 +1571,7 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
