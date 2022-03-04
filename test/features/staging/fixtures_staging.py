@@ -194,6 +194,24 @@ def staging_sqlserver(context):
                 "CUSTOMER_DOB_UK": "VARCHAR(10)"
             }
         },
+        "STG_CUSTOMER_CONCAT": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(5)",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "INT",
+                "DBTVAULT_RANK2": "INT",
+                "CUSTOMER_NK": "VARCHAR(30)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)",
+                "DERIVED_CONCAT": "VARCHAR(50)"
+            }
+        },
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(5)",
@@ -230,6 +248,25 @@ def staging_escaped_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(10)",
                 "DBTVAULT_RANK": "INT",
                 "DBTVAULT_RANK2": "INT"
+            }
+        },
+        "STG_CUSTOMER_CONCAT": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(5)",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "INT",
+                "DBTVAULT_RANK2": "INT",
+                "CUSTOMER_NK": "VARCHAR(30)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)",
+                "DERIVED_CONCAT": "VARCHAR(50)"
             }
         },
         "RAW_STAGE": {
