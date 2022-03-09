@@ -456,6 +456,7 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
 
 
 # TODO: Look into re-factoring and testing
+# TODO: replace hard coded square brackets with a function call that mimics internal macro escape_column_name()
 def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
     """
     Creates a model from a feature file data table
