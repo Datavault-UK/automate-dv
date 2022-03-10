@@ -33,7 +33,7 @@
         SELECT DATE_TRUNC(DATE_ADD( DATE('{{start_timestamp}}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
     {%- endset %}
 
-    {% set period_of_load_dict = dbt_utils.get_query_results_as_dict(period_of_load_sql) %}
+    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
 
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
