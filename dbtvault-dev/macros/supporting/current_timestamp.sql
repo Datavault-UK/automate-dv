@@ -10,7 +10,6 @@
     sysdatetime()
 {% endmacro %}
 
-
 {% macro current_timestamp_in_utc() -%}
   {{ return(adapter.dispatch('current_timestamp_in_utc', 'dbtvault')()) }}
 {%- endmacro %}
