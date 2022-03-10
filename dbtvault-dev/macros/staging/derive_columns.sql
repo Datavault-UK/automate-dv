@@ -28,8 +28,6 @@
             {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
             {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(col) -%}
 
-            {% set concat_string = "CONCAT_WS(" ~ "'||', " ~ column_list | join(", ") ~ ") AS " ~ col %}
-
             {%- do der_columns.append(concat_string) -%}
             {%- set exclude_columns = exclude_columns + columns[col] -%}
         {% else %}
