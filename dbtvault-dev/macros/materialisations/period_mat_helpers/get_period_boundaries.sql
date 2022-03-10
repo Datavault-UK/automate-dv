@@ -64,7 +64,7 @@
     {%- endset %}
 
 
-    {% set period_boundaries_dict = dbt_utils.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
