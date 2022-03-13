@@ -21,8 +21,6 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-{% set adapter_type = dbtvault.get_adapter_type() %}
-
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
     "PIT error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
@@ -146,7 +144,7 @@ backfill AS (
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper %}
-        {%- if adapter_type == "sqlserver" -%}
+        {%- if target.type == "sqlserver" -%}
         CONVERT(BINARY(16), '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names( sat_name ~ '_' ~ sat_pk_name ) }},
         {%- else -%}
         CAST('{{ ghost_pk }}' AS BINARY(16)) AS {{ dbtvault.escape_column_names( sat_name ~ '_' ~ sat_pk_name ) }},
@@ -189,7 +187,7 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
         {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) %}
-        {%- if adapter_type == "sqlserver" -%}
+        {%- if target.type == "sqlserver" -%}
         COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}), CONVERT(BINARY(16), '{{ ghost_pk }}', 2)) AS {{ dbtvault.escape_column_names( sat_name | upper ~ '_' ~ sat_pk_name | upper ) }},
         {%- else -%}
         COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}), CAST('{{ ghost_pk }}' AS BINARY(16))) AS {{ dbtvault.escape_column_names( sat_name | upper ~ '_' ~ sat_pk_name | upper ) }},
