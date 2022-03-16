@@ -57,3 +57,20 @@
 
     {% do return(period_of_load) %}
 {%- endmacro -%}
+
+{%- macro spark__get_period_of_load(period, offset, start_timestamp) -%}
+
+    {% set start_timestamp_mssql = start_timestamp[0:23] %}
+
+    {{ dbt_utils.log_info("Running for {} , {} of {}".format( period, offset, start_timestamp)) }}
+
+    {% set period_of_load_sql -%}
+        SELECT DATE_TRUNC('{{ period }}', '{{ start_timestamp }}') AS period_of_load
+    {%- endset %}
+
+    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
+
+    {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
+
+    {% do return(period_of_load) %}
+{%- endmacro -%}

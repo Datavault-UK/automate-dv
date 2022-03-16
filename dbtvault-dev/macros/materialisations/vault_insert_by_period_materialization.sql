@@ -100,7 +100,11 @@
             {% set result = load_result(insert_query_name) %}
 
             {% if 'response' in result.keys() %} {# added in v0.19.0 #}
-                {% set rows_inserted = result['response']['rows_affected'] %}
+                {%- if not result['response']['rows_affected'] %}
+                    {% set rows_inserted = 0 %}
+                {%- else %}
+                    {% set rows_inserted = result['response']['rows_affected'] %}
+                {%- endif %}
             {% else %} {# older versions #}
                 {% set rows_inserted = result['status'].split(" ")[2] | int %}
             {% endif %}
@@ -120,7 +124,16 @@
                 {% call statement(drop_query_name, fetch_result=True) -%}
                     DROP TABLE {{ tmp_relation }};
                 {%- endcall %}
-            {%  endif %}
+            {% endif %}
+
+            {% if target.type == "spark" and existing_relation.is_view %}
+                {# In spark a temporary view can only be dropped by the connection or session that created it #}
+                {# so drop it now before the commit below closes this session #}
+                {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
+                {% call statement(drop_query_name, fetch_result=True) -%}
+                    DROP VIEW {{ tmp_relation }};
+                {%- endcall %}
+            {% endif %}
 
             {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
