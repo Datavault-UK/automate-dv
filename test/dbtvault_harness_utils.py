@@ -456,10 +456,11 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
 
 
 # TODO: Look into re-factoring and testing
+# TODO: replace hard coded square brackets with a function call that mimics internal macro escape_column_name()
 def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
     """
     Creates a model from a feature file data table
-    This is for dbt-sqlserver where a model is being used as a seed to avoid implicit data type conversion issues
+    This is ONLY for dbt-sqlserver where a model is being used as a seed to avoid implicit data type conversion issues
         :param seed_config: Configuration dict for seed file
         :param table: The context.table from a scenario or a programmatically defined table
         :param model_name: Name of the model to base the feature data table on
@@ -485,7 +486,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
                 else:
                     expression = f"CAST(NULL AS {column_type})"
 
-                select_column_list.append(f"{expression} AS {column_name}")
+                select_column_list.append(f"{expression} AS [{column_name}]")
 
             sql_command = "SELECT " + ",".join(select_column_list) + " WHERE 1=0"
 
@@ -510,7 +511,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
                     else:
                         expression = f"CAST({column_data_for_sql} AS {column_type})"
 
-                    select_column_list.append(f"{expression} AS {column_name}")
+                    select_column_list.append(f"{expression} AS [{column_name}]")
 
                 sql_command_list.append("SELECT " + ",".join(select_column_list))
 
@@ -729,7 +730,9 @@ def feature_sub_types():
             ],
             'rm': [
                 'mas_rank_mat',
-                'mas_one_cdk_base_sats_rank_mat',
+                'mas_one_cdk_base_sats_rank_mat'
+            ],
+            'rm_dup': [
                 'mas_one_cdk_rank_duplicates',
                 'mas_two_cdk_rank_duplicates'
             ]

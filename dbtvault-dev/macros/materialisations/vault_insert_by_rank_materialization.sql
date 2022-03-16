@@ -17,8 +17,6 @@
 
     {%- set to_drop = [] -%}
 
-    {% set adapter_type = dbtvault.get_adapter_type() %}
-
     {%- do dbtvault.check_placeholder(sql, "__RANK_FILTER__") -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
@@ -95,7 +93,7 @@
                                                                                           rows_inserted,
                                                                                           model.unique_id)) }}
 
-            {% if adapter_type == "sqlserver" %}
+            {% if target.type == "sqlserver" %}
                 {# In MSSQL a temporary table can only be dropped by the connection or session that created it #}
                 {# so drop it now before the commit below closes this session #}
                 {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}

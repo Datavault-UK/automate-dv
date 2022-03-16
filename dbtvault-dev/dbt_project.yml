@@ -1,5 +1,5 @@
 name: dbtvault
-version: 0.7.9
+version: 0.8.2
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 config-version: 2
 
@@ -18,7 +18,3 @@ clean-targets:
 vars:
   hash: MD5
   max_datetime: '{{ dbtvault.max_datetime() }}'
-
-dispatch:
-  - macro_namespace: dbt_sqlserver
-    search_order: ['dbtvault', 'dbt_sqlserver']
