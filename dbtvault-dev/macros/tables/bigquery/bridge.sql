@@ -21,9 +21,7 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999') -%}
-{%- set ghost_pk = '0000000000000000' -%}
-{%- set ghost_date = '1990-01-01 00:00:00.000' -%}
+{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
@@ -132,6 +130,7 @@ overlap_as_of AS (
         AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
 		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
 ),
+
 overlap AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
@@ -265,7 +264,6 @@ candidate_rows AS (
     WHERE a.row_num = 1
 ),
 
-
 bridge AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'c') }},
@@ -278,9 +276,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
             {%- if loop.first %}
-    WHERE DATE({{ 'c.' ~ bridge_end_date }}) = DATE('{{ max_datetime }}')
+    WHERE DATE({{ 'c.' ~ bridge_end_date }}) = CAST(PARSE_DATETIME('%F %H:%M:%E6S', '{{ max_datetime }}') AS DATE)
             {%- else %}
-        AND DATE({{ 'c.' ~ bridge_end_date }}) = DATE('{{ max_datetime }}')
+        AND DATE({{ 'c.' ~ bridge_end_date }}) = CAST(PARSE_DATETIME('%F %H:%M:%E6S', '{{ max_datetime }}') AS DATE)
             {%- endif -%}
         {%- endfor %}
 )

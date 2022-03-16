@@ -470,6 +470,20 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
+      - job: 'ma_sats_rm_dup'
+        displayName: 'MA Sats RM Duplicates'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p bigquery -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s ma_sats --subtype rm_dup -p bigquery
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
       - job: 'xts_main'
         displayName: 'XT Sats - Main'
         steps:
@@ -1029,6 +1043,20 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype rm -p snowflake
+            displayName: "Run feature files"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+      - job: 'ma_sats_rm_dup'
+        displayName: 'MA Sats RM Duplicates'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: templates/install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-integration-tests -s ma_sats --subtype rm_dup -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)

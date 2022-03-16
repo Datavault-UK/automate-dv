@@ -107,7 +107,6 @@ SELECT * FROM compare
 {%- macro bigquery__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
-
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
@@ -115,18 +114,18 @@ SELECT * FROM compare
 
 {%- for compare_col in compare_columns -%}
 
-    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
-    {%- do columns_processed.append(compare_col) -%}
+    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
+    {%- do columns_processed.append(dbtvault.escape_column_names(compare_col)) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-    {%- do source_columns_list.append(source_col.column) -%}
+    {%- do source_columns_list.append(dbtvault.escape_column_names(source_col.column)) -%}
 
     {%- if source_col.data_type == 'BYTES' -%}
-        {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
+        {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(dbtvault.escape_column_names(source_col.name), dbtvault.escape_column_names(source_col.name))) -%}
     {%- else -%}
-        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
+        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(dbtvault.escape_column_names(source_col.name), dbtvault.escape_column_names(source_col.name))) -%}
     {%- endif -%}
 
 {%- endfor %}
@@ -134,6 +133,7 @@ SELECT * FROM compare
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
+{%  set compare_columns = dbtvault.escape_column_names(compare_columns) %}
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}
@@ -226,14 +226,14 @@ SELECT * FROM compare
     {%- set compare_col_data_type = expected_col.data_type -%}
 
     {%  if compare_col in compare_columns %}
-        {%- do columns_processed.append(compare_col) -%}
+        {%- do columns_processed.append(dbtvault.escape_column_names(compare_col)) -%}
 
         {% if compare_col_data_type[0:6] == 'binary' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(compare_col, compare_col)) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
         {% elif compare_col_data_type[0:8] == 'datetime' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(compare_col, compare_col)) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
         {% else %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(compare_col, compare_col)) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
         {% endif %}
     {% endif %}
 
@@ -241,14 +241,14 @@ SELECT * FROM compare
 
 {%- for source_col in source_columns -%}
 
-    {%- do source_columns_list.append(source_col.column) -%}
+    {%- do source_columns_list.append(dbtvault.escape_column_names(source_col.column)) -%}
 
     {% if source_col.data_type[0:6] == 'binary' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
     {% elif source_col.data_type[0:8] == 'datetime' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
     {% else %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
     {% endif %}
 
 {%- endfor %}
