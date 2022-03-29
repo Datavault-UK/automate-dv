@@ -1,5 +1,8 @@
 {%- macro process_columns_to_select(columns_list=none, exclude_columns_list=none) -%}
 
+    {% set columns_list = columns_list | map('upper') | list %}
+    {% set exclude_columns_list = exclude_columns_list | map('upper') | list %}
+
     {% set columns_to_select = [] %}
 
     {% if not dbtvault.is_list(columns_list) or not dbtvault.is_list(exclude_columns_list)  %}
