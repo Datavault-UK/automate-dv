@@ -1,4 +1,5 @@
-Feature: [EFF-AU-INC] Effectively satellites, further incremental testing
+Feature: [EFF-AU-INC] Effectively satellites
+  Further incremental testing
 
 
   @fixture.enable_auto_end_date

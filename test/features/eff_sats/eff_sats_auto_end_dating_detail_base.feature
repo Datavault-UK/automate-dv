@@ -1,4 +1,4 @@
-Feature: [EFF-AUB] Effectivity Satellites
+Feature: [EFF-AUB] Effectivity Satellites - Auto End-dating Base Loads
   Further depth of testing for the auto-end-dating of effectivity satellite - Base loads
 
   # ORDER_FK is DRIVING KEY
