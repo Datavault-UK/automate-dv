@@ -1,5 +1,5 @@
 Feature: [EFF-CLD] Effectivity Satellites without automatic end-dating
-  Tests for eff_sat (without automatic end-dating) loading closed records
+  Tests for eff_sat (without automatic end-dating) loading closed records using only dates
 
   @fixture.eff_satellite
   Scenario: [EFF-CLD-01] Load data into a non-existent effectivity satellite
@@ -96,7 +96,7 @@ Feature: [EFF-CLD] Effectivity Satellites without automatic end-dating
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
   @fixture.eff_satellite
   Scenario: [EFF-CLD-05] Two incremental loads - no flip flop (CCC changes from 3000 to 4000, and then to 5000)
