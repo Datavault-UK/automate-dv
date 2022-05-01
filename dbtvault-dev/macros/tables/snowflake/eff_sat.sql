@@ -73,7 +73,13 @@ latest_closed AS (
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ dbtvault.alias_all(source_cols, 'f') }}
+        {{ dbtvault.prefix([src_pk], 'lr') }},
+        {{ dbtvault.alias_all(fk_cols, 'lr') }},
+        f.{{ src_eff }} AS {{ src_start_date }},
+        f.{{ src_end_date }} AS {{ src_end_date }},
+        f.{{ src_eff }} AS {{ src_eff }},
+        f.{{ src_ldts }},
+        f.{{ src_source }}
     FROM source_data AS f
     LEFT JOIN latest_records AS lr
     ON {{ dbtvault.multikey(src_pk, prefix=['f','lr'], condition='=') }}
@@ -120,7 +126,7 @@ new_closed_records AS (
 
 new_closed_records AS (
     SELECT DISTINCT
-        lo.{{ src_pk }},
+        {{ dbtvault.prefix([src_pk], 'lo') }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         lo.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_eff }} AS {{ src_end_date }},
