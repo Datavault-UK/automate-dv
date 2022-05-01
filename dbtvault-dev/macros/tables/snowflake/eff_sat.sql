@@ -85,7 +85,7 @@ new_reopened_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lc') }},
         {{ dbtvault.alias_all(fk_cols, 'lc') }},
-        lc.{{ src_start_date }} AS {{ src_start_date }},
+        g.{{ src_eff }} AS {{ src_start_date }},
         g.{{ src_end_date }} AS {{ src_end_date }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
