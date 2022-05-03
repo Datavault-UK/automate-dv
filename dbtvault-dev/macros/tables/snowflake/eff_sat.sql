@@ -73,9 +73,13 @@ latest_closed AS (
 {# Identifying the completely new link relationships to be opened in eff sat -#}
 new_open_records AS (
     SELECT DISTINCT
-        {{ dbtvault.prefix([src_pk], 'lr') }},
-        {{ dbtvault.alias_all(fk_cols, 'lr') }},
+        {{ dbtvault.prefix([src_pk], 'f') }},
+        {{ dbtvault.alias_all(fk_cols, 'f') }},
+        {%- if is_auto_end_dating %}
         f.{{ src_eff }} AS {{ src_start_date }},
+        {% else %}
+        f.{{ src_start_date }} AS {{ src_start_date }},
+        {% endif %}
         f.{{ src_end_date }} AS {{ src_end_date }},
         f.{{ src_eff }} AS {{ src_eff }},
         f.{{ src_ldts }},
@@ -91,7 +95,11 @@ new_reopened_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lc') }},
         {{ dbtvault.alias_all(fk_cols, 'lc') }},
+        {%- if is_auto_end_dating %}
         g.{{ src_eff }} AS {{ src_start_date }},
+        {% else %}
+        g.{{ src_start_date }} AS {{ src_start_date }},
+        {% endif %}
         g.{{ src_end_date }} AS {{ src_end_date }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
@@ -121,20 +129,20 @@ new_closed_records AS (
     WHERE ({{ dbtvault.multikey(src_sfk, prefix=['lo', 'h'], condition='<>', operator='OR') }})
 ),
 
-{#- else if is_auto_end_dating -#}
+{#- else if (not) is_auto_end_dating -#}
 {% else %}
 
 new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
-        lo.{{ src_start_date }} AS {{ src_start_date }},
-        h.{{ src_eff }} AS {{ src_end_date }},
+        h.{{ src_start_date }} AS {{ src_start_date }},
+        h.{{ src_end_date }} AS {{ src_end_date }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
-    LEFT JOIN Latest_open AS lo
+    LEFT JOIN latest_open AS lo
     ON {{ dbtvault.multikey(src_pk, prefix=['lo', 'h'], condition='=') }}
     LEFT JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['lc', 'h'], condition='=') }}

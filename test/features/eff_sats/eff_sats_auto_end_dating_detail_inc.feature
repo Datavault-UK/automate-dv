@@ -1,5 +1,5 @@
 Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
-  Further depth of testing for the auto-end-dating of effectivity satellite - Incremental Loads
+  Intra-day load testing for auto-end-dating of effectivity satellites - Incremental Loads
 
   # ORDER_FK is DRIVING KEY
   @fixture.enable_auto_end_date

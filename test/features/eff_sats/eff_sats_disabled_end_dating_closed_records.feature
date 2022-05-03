@@ -95,8 +95,8 @@ Feature: [EFF-CLD] Effectivity Satellites without automatic end-dating
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 2020-01-10 | 2020-01-10     | 2020-01-11 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
-      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
 
   @fixture.eff_satellite
   Scenario: [EFF-CLD-05] Two incremental loads - no flip flop (CCC changes from 3000 to 4000, and then to 5000)
@@ -120,8 +120,8 @@ Feature: [EFF-CLD] Effectivity Satellites without automatic end-dating
       | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
     Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 5000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
       | 4000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-12 | orders |
+      | 5000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-11     | 2020-01-12 | orders |
     And I stage the STG_CUSTOMER data
     When I load the EFF_SAT eff_sat
     Then the EFF_SAT table should contain expected data
