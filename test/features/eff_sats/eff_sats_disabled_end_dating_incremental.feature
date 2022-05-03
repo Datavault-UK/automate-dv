@@ -97,7 +97,9 @@ Feature: [EFF-DAU-INC] Effectively satellites, further incremental testing
       | 3000        | CCC      | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-09 00:00:00.000 | 2020-01-10 00:00:00.000 | orders |
     And I stage the STG_CUSTOMER data
     And I load the EFF_SAT eff_sat
-    And the RAW_STAGE table contains data
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK | CUSTOMER_PK | ORDER_PK | START_DATE | END_DATE | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE |
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1000        | AAA      | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-10 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
       | 2000        | BBB      | 2020-01-09 00:00:00.000 | 2020-01-10 00:00:00.000 | 2020-01-10 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
@@ -106,7 +108,9 @@ Feature: [EFF-DAU-INC] Effectively satellites, further incremental testing
       | 4000        | DDD      | 2020-01-10 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-10 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
     And I stage the STG_CUSTOMER data
     And I load the EFF_SAT eff_sat
-    And the RAW_STAGE table contains data
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK | CUSTOMER_PK | ORDER_PK | START_DATE | END_DATE | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE |
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1000        | AAA      | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000 | 2020-01-12 00:00:00.000 | orders |
       | 2001        | BBB      | 2020-01-09 00:00:00.000 | 2020-01-11 00:00:00.000 | 2020-01-11 00:00:00.000 | 2020-01-12 00:00:00.000 | orders |
@@ -172,7 +176,9 @@ Feature: [EFF-DAU-INC] Effectively satellites, further incremental testing
       | 4000        | DDD      | 2020-01-10 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-10 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
     And I stage the STG_CUSTOMER data
     And I load the EFF_SAT eff_sat
-    And the RAW_STAGE table contains data
+    Then the EFF_SAT table should contain expected data
+      | CUSTOMER_ORDER_PK | CUSTOMER_PK | ORDER_PK | START_DATE | END_DATE | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE |
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1000        | AAA      | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000 | 2020-01-12 00:00:00.000 | orders |
       | 2001        | BBB      | 2020-01-09 00:00:00.000 | 2020-01-11 00:00:00.000 | 2020-01-11 00:00:00.000 | 2020-01-12 00:00:00.000 | orders |
