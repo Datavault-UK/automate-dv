@@ -479,7 +479,7 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p bigquery -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s xts --subtype inc -p bigquery
+          - script: inv run-integration-tests -s xts --subtype incremental -p bigquery
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
