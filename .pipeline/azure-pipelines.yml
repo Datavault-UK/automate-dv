@@ -894,7 +894,7 @@ stages:
               PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'eff_sats_disabled'
-        displayName: 'Eff Sats Auto'
+        displayName: 'Eff Sats Disabled Auto End-dating'
         steps:
           - task: UsePythonVersion@0
             inputs:
