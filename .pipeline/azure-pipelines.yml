@@ -1056,7 +1056,7 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s xts --subtype inc -p snowflake
+          - script: inv run-integration-tests -s xts --subtype incremental -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)

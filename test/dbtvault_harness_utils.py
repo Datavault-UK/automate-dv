@@ -663,15 +663,6 @@ def feature_sub_types():
                 'eff_sats_rank_mat'
             ]
         },
-        'xts': {
-            'main': [
-                'xts',
-                'xts_comppk'
-            ],
-            'incremental': [
-                'xts_incremental'
-            ]
-        },
         'ma_sats': {
             '1cdk': [
                 'mas_one_cdk_0_base',
@@ -707,6 +698,15 @@ def feature_sub_types():
             'rm_dup': [
                 'mas_one_cdk_rank_duplicates',
                 'mas_two_cdk_rank_duplicates'
+            ]
+        },
+        'xts': {
+            'main': [
+                'xts',
+                'xts_comppk'
+            ],
+            'incremental': [
+                'xts_incremental'
             ]
         },
         'pit': {
