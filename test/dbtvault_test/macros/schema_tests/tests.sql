@@ -200,22 +200,22 @@ duplicates_not_in_expected AS (
 ,
 compare AS (
     SELECT {{ columns_string }},
-           'E_TO_A' AS "ERROR_SOURCE",
-           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+           'E_TO_A' AS ERROR_SOURCE,
+           'EXPECTED RECORD NOT IN ACTUAL' AS MESSAGE
     FROM compare_e_to_a
     UNION ALL
     SELECT {{ columns_string }},
-           'A_TO_E' AS "ERROR_SOURCE",
-           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+           'A_TO_E' AS ERROR_SOURCE,
+           'ACTUAL RECORD NOT IN EXPECTED' AS MESSAGE
     FROM compare_a_to_e
     UNION ALL
     SELECT {{ columns_string }},
-           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPES_NOT_IN_A' AS ERROR_SOURCE,
            'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
     FROM duplicates_not_in_actual
     UNION ALL
     SELECT {{ columns_string }},
-           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPES_NOT_IN_E' AS ERROR_SOURCE,
            'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
     FROM duplicates_not_in_expected
 )
