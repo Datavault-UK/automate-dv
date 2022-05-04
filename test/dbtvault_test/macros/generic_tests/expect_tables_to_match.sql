@@ -1,12 +1,12 @@
-{%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- test expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
-    {%- set macro = adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test') -%}
+    {%- set macro = adapter.dispatch('test_expect_tables_to_match', 'dbtvault_test') -%}
 
     {{ macro(model, unique_id, compare_columns, expected_seed) }}
 
 {%- endtest -%}
 
-{%- macro default__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro default__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -116,7 +116,7 @@ compare AS (
 SELECT * FROM compare
 {%- endmacro -%}
 
-{%- macro bigquery__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro bigquery__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -211,12 +211,12 @@ compare AS (
     UNION ALL
     SELECT {{ columns_string }},
            'DUPES_NOT_IN_A' AS ERROR_SOURCE,
-           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS MESSAGE
     FROM duplicates_not_in_actual
     UNION ALL
     SELECT {{ columns_string }},
            'DUPES_NOT_IN_E' AS ERROR_SOURCE,
-           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS MESSAGE
     FROM duplicates_not_in_expected
 )
 
@@ -235,7 +235,7 @@ compare AS (
 SELECT * FROM compare
 {%- endmacro -%}
 
-{%- macro sqlserver__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro sqlserver__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
