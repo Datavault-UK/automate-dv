@@ -81,13 +81,25 @@ duplicates_not_in_expected AS (
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 ),
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM compare_e_to_a
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+    FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+    FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM duplicates_not_in_expected
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -187,13 +199,25 @@ duplicates_not_in_expected AS (
 )
 ,
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+    FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+    FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -257,7 +281,10 @@ SELECT * FROM compare
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+        FROM (
         SELECT * FROM (
             SELECT {{ compare_columns_string }}
             FROM {{ ref(expected_seed) }}
@@ -271,7 +298,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+        FROM (
         SELECT * FROM (
             SELECT {{ source_columns_string }}
             FROM {{ model }}
@@ -285,7 +315,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+        FROM (
         SELECT {{ columns_string }}
         FROM (
             SELECT {{ columns_string }}, COUNT(*) AS COUNT
@@ -309,7 +342,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM (
         SELECT {{ columns_string }}
         FROM (
         SELECT {{ columns_string }}, COUNT (*) AS COUNT
