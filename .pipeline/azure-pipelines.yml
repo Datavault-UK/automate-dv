@@ -316,8 +316,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'eff_sats_incremental'
-        displayName: 'Eff Sats Incremental'
+      - job: 'eff_sats_disabled'
+        displayName: 'Eff Sats Disabled Auto End-dating'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -325,21 +325,7 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p bigquery -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s eff_sats --subtype incremental -p bigquery
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'eff_sats_multi_part'
-        displayName: 'Eff Sats Multi Part'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p bigquery -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s eff_sats --subtype multi_part -p bigquery
+          - script: inv run-integration-tests -s eff_sats --subtype disabled -p bigquery
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -356,21 +342,7 @@ stages:
           - script: inv run-integration-tests -s eff_sats --subtype mat -p bigquery
             displayName: "Run feature files"
             env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'eff_sats_closed'
-        displayName: 'Eff Sats Closed'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p bigquery -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s eff_sats --subtype closed -p bigquery
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
+              PIPELINE_JOB: $(Agent.JobName)`
 
       - job: 'ma_sats_1cdk'
         displayName: 'MA Sats 1CDK'
