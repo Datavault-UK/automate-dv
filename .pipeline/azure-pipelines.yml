@@ -45,21 +45,21 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-#      - job: 'unit_tests_bq'
-#        displayName: 'Run Unit Tests - BigQuery'
-#        steps:
-#          - task: UsePythonVersion@0
-#            inputs:
-#              versionSpec: '3.9'
-#          - template: templates/install-dependencies-steps.yml
-#          - script: inv setup -p bigquery -e pipeline
-#            displayName: "Setup harness"
-#          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p bigquery
-#            displayName: "Drop all custom schemas"
-#          - script: inv run-macro-tests -p bigquery
-#            displayName: "Run macro tests"
-#            env:
-#              PIPELINE_JOB: $(Agent.JobName)
+  #      - job: 'unit_tests_bq'
+  #        displayName: 'Run Unit Tests - BigQuery'
+  #        steps:
+  #          - task: UsePythonVersion@0
+  #            inputs:
+  #              versionSpec: '3.9'
+  #          - template: templates/install-dependencies-steps.yml
+  #          - script: inv setup -p bigquery -e pipeline
+  #            displayName: "Setup harness"
+  #          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p bigquery
+  #            displayName: "Drop all custom schemas"
+  #          - script: inv run-macro-tests -p bigquery
+  #            displayName: "Run macro tests"
+  #            env:
+  #              PIPELINE_JOB: $(Agent.JobName)
 
   - stage: 'integration_tests_bigquery'
     displayName: 'Run Integration Tests (BigQuery)'
@@ -893,8 +893,8 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'eff_sats_incremental'
-        displayName: 'Eff Sats Incremental'
+      - job: 'eff_sats_disabled'
+        displayName: 'Eff Sats Auto'
         steps:
           - task: UsePythonVersion@0
             inputs:
@@ -902,21 +902,7 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s eff_sats --subtype incremental -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'eff_sats_multi_part'
-        displayName: 'Eff Sats Multi Part'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s eff_sats --subtype multi_part -p snowflake
+          - script: inv run-integration-tests -s eff_sats --subtype disabled -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -931,20 +917,6 @@ stages:
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s eff_sats --subtype mat -p snowflake
-            displayName: "Run feature files"
-            env:
-              PIPELINE_JOB: $(Agent.JobName)
-
-      - job: 'eff_sats_closed'
-        displayName: 'Eff Sats Closed'
-        steps:
-          - task: UsePythonVersion@0
-            inputs:
-              versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: inv setup -p snowflake -e pipeline
-            displayName: "Setup harness"
-          - script: inv run-integration-tests -s eff_sats --subtype closed -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
