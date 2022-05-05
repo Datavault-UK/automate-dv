@@ -342,7 +342,7 @@ stages:
           - script: inv run-integration-tests -s eff_sats --subtype mat -p bigquery
             displayName: "Run feature files"
             env:
-              PIPELINE_JOB: $(Agent.JobName)`
+              PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'ma_sats_1cdk'
         displayName: 'MA Sats 1CDK'

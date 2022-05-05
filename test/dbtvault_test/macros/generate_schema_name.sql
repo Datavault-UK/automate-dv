@@ -17,7 +17,7 @@
 
 {%- macro bigquery__get_schema_name() -%}
 
-    {%- set schema_name = "{}_{}".format(target.dataset, dbtvault_test.pipeline_string())  -%}
+    {%- set schema_name = "{}_{}{}".format(target.dataset, target.project, dbtvault_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
