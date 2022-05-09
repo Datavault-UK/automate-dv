@@ -10,7 +10,7 @@ def ranked_columns(context, processed_stage_name):
     ranked_column_data = dbtvault_harness_utils.context_table_to_dicts(table=context.table, orient="index")
 
     ranked_metadata = {v['NAME']: {'partition_by': v['PARTITION_BY'],
-                                      'order_by': v['ORDER_BY']}
+                                   'order_by': v['ORDER_BY']}
                        for d in ranked_column_data for v in d.values()}
 
     ranked_config = {processed_stage_name: ranked_metadata}
