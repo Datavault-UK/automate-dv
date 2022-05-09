@@ -646,34 +646,21 @@ def feature_sub_types():
         'eff_sats': {
             'main': [
                 'eff_sats',
-                'eff_sats_disabled_end_dating'
+                'eff_sats_multi_part'
             ],
             'auto': [
-                'eff_sat_auto_end_dating_detail_base',
-                'eff_sat_auto_end_dating_detail_inc'
+                'eff_sats_auto_end_dating_detail_base',
+                'eff_sats_auto_end_dating_detail_inc',
+                'eff_sats_auto_end_dating_incremental'
             ],
-            'incremental': [
-                'eff_sat_auto_end_dating_incremental',
-                'eff_sat_disabled_end_dating_incremental'
-            ],
-            'multi_part': [
-                'eff_sats_multi_part'
+            'disabled': [
+                'eff_sats_disabled_end_dating',
+                'eff_sats_disabled_end_dating_closed_records',
+                'eff_sats_disabled_end_dating_incremental'
             ],
             'mat': [
                 'eff_sats_period_mat',
                 'eff_sats_rank_mat'
-            ],
-            'closed': [
-                'eff_sat_closed_records'
-            ]
-        },
-        'xts': {
-            'main': [
-                'xts',
-                'xts_comppk'
-            ],
-            'incremental': [
-                'xts_incremental'
             ]
         },
         'ma_sats': {
@@ -711,6 +698,15 @@ def feature_sub_types():
             'rm_dup': [
                 'mas_one_cdk_rank_duplicates',
                 'mas_two_cdk_rank_duplicates'
+            ]
+        },
+        'xts': {
+            'main': [
+                'xts',
+                'xts_comppk'
+            ],
+            'incremental': [
+                'xts_incremental'
             ]
         },
         'pit': {
