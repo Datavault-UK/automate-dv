@@ -257,7 +257,6 @@ def before_scenario(context, scenario):
     do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
 
     if do_run:
-
         dbtvault_harness_utils.create_dummy_model()
         dbtvault_harness_utils.replace_test_schema()
 

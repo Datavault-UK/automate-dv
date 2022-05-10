@@ -1,12 +1,12 @@
-{%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- test expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
-    {%- set macro = adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test') -%}
+    {%- set macro = adapter.dispatch('test_expect_tables_to_match', 'dbtvault_test') -%}
 
     {{ macro(model, unique_id, compare_columns, expected_seed) }}
 
 {%- endtest -%}
 
-{%- macro default__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro default__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -81,13 +81,25 @@ duplicates_not_in_expected AS (
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 ),
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM compare_e_to_a
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+    FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+    FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM duplicates_not_in_expected
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -104,7 +116,7 @@ compare AS (
 SELECT * FROM compare
 {%- endmacro -%}
 
-{%- macro bigquery__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro bigquery__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -187,13 +199,25 @@ duplicates_not_in_expected AS (
 )
 ,
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
+    SELECT {{ columns_string }},
+           'E_TO_A' AS ERROR_SOURCE,
+           'EXPECTED RECORD NOT IN ACTUAL' AS MESSAGE
+    FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
+    SELECT {{ columns_string }},
+           'A_TO_E' AS ERROR_SOURCE,
+           'ACTUAL RECORD NOT IN EXPECTED' AS MESSAGE
+    FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS ERROR_SOURCE,
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS MESSAGE
+    FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS ERROR_SOURCE,
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS MESSAGE
+    FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -211,7 +235,7 @@ compare AS (
 SELECT * FROM compare
 {%- endmacro -%}
 
-{%- macro sqlserver__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro sqlserver__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -257,7 +281,10 @@ SELECT * FROM compare
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+        FROM (
         SELECT * FROM (
             SELECT {{ compare_columns_string }}
             FROM {{ ref(expected_seed) }}
@@ -271,7 +298,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+        FROM (
         SELECT * FROM (
             SELECT {{ source_columns_string }}
             FROM {{ model }}
@@ -285,7 +315,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+        FROM (
         SELECT {{ columns_string }}
         FROM (
             SELECT {{ columns_string }}, COUNT(*) AS COUNT
@@ -309,7 +342,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM (
         SELECT {{ columns_string }}
         FROM (
         SELECT {{ columns_string }}, COUNT (*) AS COUNT
