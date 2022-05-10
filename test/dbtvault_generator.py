@@ -1,4 +1,3 @@
-import copy
 import io
 import os
 import shutil
@@ -383,7 +382,7 @@ def macro_model(model_name, macro_name, metadata=None):
         "as_constant": as_constant_macro,
         "alias": alias_macro,
         "alias_all": alias_all_macro,
-        "escape_column_name": escape_column_name_macro
+        "escape_column_names": escape_column_names_macro
     }
 
     if generator_functions.get(macro_name):
@@ -457,8 +456,8 @@ def expand_column_list_macro(model_name, **_):
     template_to_file(template, model_name)
 
 
-def escape_column_name_macro(model_name, **_):
-    template = "{{- dbtvault.escape_column_name(columns=var('columns', none)) -}}"
+def escape_column_names_macro(model_name, **_):
+    template = "{{- dbtvault.escape_column_names(columns=var('columns', none)) -}}"
 
     template_to_file(template, model_name)
 
@@ -652,7 +651,7 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     seed_properties = {
         'version': 2,
         'seeds': [
-            {'name': seed_name, 'config': seed_config}
+            {'name': seed_name, 'config': {**seed_config, '+quote_columns': True}}
         ]
     }
 
@@ -671,7 +670,7 @@ def create_test_model_schema_dict(*, target_model_name, expected_output_csv, uni
     test_yaml = {
         "models": [{
             "name": target_model_name, "tests": [{
-                "assert_data_equal_to_expected": {
+                "expect_tables_to_match": {
                     "expected_seed": expected_output_csv,
                     "unique_id": unique_id,
                     "compare_columns": columns_to_compare}}]}]}

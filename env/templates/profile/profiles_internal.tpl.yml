@@ -1,0 +1,56 @@
+dbtvault:
+  outputs:
+    snowflake:
+      type: snowflake
+      account: "{{ op://dbtvault/snowflake/account }}"
+
+      user: "{{ op://private/snowflake/username }}"
+      password: "{{ op://private/snowflake/password }}"
+
+      role: "{{ op://dbtvault/snowflake/role }}"
+      database: "{{ op://dbtvault/snowflake/database }}"
+      warehouse: "{{ op://dbtvault/snowflake/warehouse }}"
+      schema: "{{ op://dbtvault/snowflake/schema }}"
+
+      threads: 4
+      client_session_keep_alive: False
+
+    bigquery:
+      type: bigquery
+
+      method: oauth
+
+      project: "{{ op://dbtvault/bigquery/project_id }}"
+      dataset: "{{ op://dbtvault/bigquery/dataset }}"
+
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
+      threads: 4
+
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: "{{ op://private/sqlserver/server }}"
+      port: "{{ '{{ op://private/sqlserver/port }}' | as_number }}"
+      database: "{{ op://private/sqlserver/database }}"
+      schema: "{{ op://private/sqlserver/schema }}"
+      user: "{{ op://private/sqlserver/user }}"
+      password: "{{ op://private/sqlserver/password }}"
+
+    databricks:
+      type: spark
+      method: odbc
+      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+      schema: "{{ op://private/databricks/schema }}"
+      host: "{{ op://private/databricks/host }}"
+      port: "{{ {{ op://private/databricks/port }} | as_number }}"
+
+      token: "{{ op://private/databricks/token }}"
+      endpoint: "{{ op://private/databricks/endpoint }}"
+
+      user: "{{ op://private/databricks/user }}"
+
+      threads: 4
+
+  target: "snowflake"

@@ -1,8 +1,11 @@
 from behave import fixture
 
 
+# Snowflake
+
+
 @fixture
-def eff_satellite(context):
+def eff_satellite_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -56,7 +59,7 @@ def eff_satellite(context):
 
 
 @fixture
-def eff_satellite_datetime(context):
+def eff_satellite_datetime_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -110,7 +113,7 @@ def eff_satellite_datetime(context):
 
 
 @fixture
-def eff_satellite_testing_auto_end_dating(context):
+def eff_satellite_testing_auto_end_dating_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -235,7 +238,7 @@ def eff_satellite_testing_auto_end_dating(context):
 
 
 @fixture
-def eff_satellite_multipart(context):
+def eff_satellite_multipart_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites with multipart keys
     """
@@ -295,6 +298,9 @@ def eff_satellite_multipart(context):
             }
         }
     }
+
+
+# BigQuery
 
 
 @fixture
@@ -451,7 +457,6 @@ def eff_satellite_testing_auto_end_dating_bigquery(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
             "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
@@ -594,6 +599,9 @@ def eff_satellite_multipart_bigquery(context):
     }
 
 
+# SQLServer
+
+
 @fixture
 def eff_satellite_sqlserver(context):
     """
@@ -680,10 +688,10 @@ def eff_satellite_datetime_sqlserver(context):
             "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "ORDER_ID": "VARCHAR(50)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -692,10 +700,10 @@ def eff_satellite_datetime_sqlserver(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         }
@@ -748,7 +756,6 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
             "src_source": "SOURCE"
         },
         "EFF_SAT_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
             "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
@@ -765,10 +772,10 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -776,10 +783,10 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -788,7 +795,7 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -797,7 +804,7 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
                 "ORDER_CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -806,10 +813,10 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -818,10 +825,10 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
                 "ORDER_CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         }

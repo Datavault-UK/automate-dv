@@ -2,7 +2,7 @@ from behave import fixture
 
 
 @fixture
-def cycle(context):
+def cycle_snowflake(context):
     """
     Define the structures and metadata to perform vault load cycles
     """
@@ -453,7 +453,7 @@ def cycle_bigquery(context):
             "column_types": {
                 "BOOKING_PK": "STRING",
                 "HASHDIFF": "STRING",
-                "PRICE": "STRINGff",
+                "PRICE": "STRING",
                 "BOOKING_DATE": "DATE",
                 "DEPARTURE_DATE": "DATE",
                 "DESTINATION": "STRING",

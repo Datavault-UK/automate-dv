@@ -17,7 +17,7 @@
 
 {%- macro bigquery__get_schema_name() -%}
 
-    {%- set schema_name = "{}_{}{}".format(target.dataset, target.project, dbtvault_test.pipeline_string())  -%}
+    {%- set schema_name = "{}_{}{}".format(target.dataset, target.project, dbtvault_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -31,9 +31,17 @@
 
 {%- endmacro %}
 
+{%- macro spark__get_schema_name() -%}
+
+    {%- set schema_name = "{}_{}".format(target.schema, target.name, dbtvault_test.pipeline_string()) -%}
+
+    {% do return(clean_schema_name(schema_name)) %}
+
+{%- endmacro %}
+
 {%- macro clean_schema_name(schema_name) -%}
 
-    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | upper) -%}
+    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | trim | upper) -%}
 
 {%- endmacro -%}
 

@@ -7,9 +7,8 @@
 {% endmacro %}
 
 {% macro sqlserver__current_timestamp() %}
-    getdate()
+    sysdatetime()
 {% endmacro %}
-
 
 {% macro current_timestamp_in_utc() -%}
   {{ return(adapter.dispatch('current_timestamp_in_utc', 'dbtvault')()) }}
@@ -20,5 +19,5 @@
 {% endmacro %}
 
 {% macro sqlserver__current_timestamp_in_utc() %}
-    {{dbtvault.current_timestamp()}}
+    sysutcdatetime()
 {% endmacro %}

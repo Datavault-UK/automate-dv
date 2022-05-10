@@ -7,14 +7,35 @@ import yaml
 from invoke import Collection, task
 
 import test
+from env import env_utils
 from test import dbtvault_harness_utils
 
 logger = logging.getLogger('dbtvault')
 logger.setLevel(logging.INFO)
 
 
-@task()
-def setup(c, platform=None, project=None, disable_op=False, env='local'):
+@task
+def init_external(c, platform=None, project=None, env='external'):
+    """
+    Initial setup task for external developers to generate the profile.yml
+    """
+    if platform:
+        c.platform = platform
+    if project:
+        c.project = project
+    if env:
+        c.env = env
+
+    profile_path, _ = env_utils.setup_files(env, platform)
+    logger.info(f"profiles.yml generated at: '{str(profile_path)}'")
+
+    platform_vars = env_utils.REQUIRED_ENV_VARS[platform]
+
+    logger.info(f"Please set the following environment variables:\n{', '.join(platform_vars)}")
+
+
+@task
+def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     """
     Convenience task which runs all setup tasks in the correct sequence
         :param c: invoke context
@@ -24,6 +45,10 @@ def setup(c, platform=None, project=None, disable_op=False, env='local'):
         :param project: dbt project to run with (Optional if defaults already set)
         :param env: Environment to run in. local or pipeline
     """
+
+    if disable_op:
+        env = 'external'
+
     if platform:
         c.platform = platform
     if project:
@@ -38,6 +63,7 @@ def setup(c, platform=None, project=None, disable_op=False, env='local'):
 
     if disable_op:
         logger.info('Checking dbt connection... (running dbt debug)')
+        os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
         run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
     else:
         logger.info(f'Injecting credentials to files...')
@@ -49,7 +75,7 @@ def setup(c, platform=None, project=None, disable_op=False, env='local'):
 
 
 @task
-def set_defaults(c, platform=None, project='test'):
+def set_defaults(c, platform='snowflake', project='test'):
     """
     Update the invoke namespace with new values
         :param c: invoke context
@@ -63,22 +89,20 @@ def set_defaults(c, platform=None, project='test'):
     c.project = dict_file['project']
     c.platform = dict_file['platform']
 
-    if platform not in test.AVAILABLE_PLATFORMS:
-        logger.error(f"platform must be set to one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+    if platform not in env_utils.AVAILABLE_PLATFORMS:
+        logger.error(f"platform must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
         exit(0)
 
     with open(test.INVOKE_YML_FILE, 'w+') as file:
         yaml.dump(dict_file, file)
         logger.info(f'Defaults set.')
         logger.info(f'Project: {c.project}')
-        logger.info(f'Platform: {c.platform}')
 
 
 @task
 def inject_to_file(c, from_file, to_file):
     """
-    Injects secrets into plain text from secrethub. BE CAREFUL! By default this is stored in
-    profiles/profiles.yml, which is an ignored file in git.
+    Injects secrets into plain text from secrethub. BE CAREFUL!
         :param c: invoke context
         :param from_file: File which includes 1Password paths to extract into plain text
         :param to_file: File to store plain text in
@@ -95,43 +119,24 @@ def inject_to_file(c, from_file, to_file):
 
 
 @task
-def inject_for_platform(c, platform, env='local'):
-    available_envs = ["pipeline", "local"]
+def inject_for_platform(c, platform, env='internal'):
+    available_envs = ["pipeline", "internal", "external"]
 
-    files = {
-        "snowflake": {
-            "local": {
-                "profile": 'env/snowflake/profiles_snowflake.tpl.yml',
-                "db": 'env/snowflake/db_snowflake.tpl.env'
-            },
-            "pipeline": {
-                "profile": 'env/snowflake/profiles_snowflake_pipeline.tpl.yml',
-                "db": 'env/snowflake/db_snowflake_pipeline.tpl.env'
-            }
-        },
-        "bigquery": {
-            "local": {
-                "profile": 'env/bigquery/profiles_bigquery.tpl.yml',
-                "db": 'env/bigquery/db_bigquery.tpl.env'
-            }
-        },
-        "sqlserver": {
-            "local": {
-                "profile": 'env/sqlserver/profiles_sqlserver.tpl.yml',
-                "db": 'env/sqlserver/db_sqlserver.tpl.env'
-            }
-        }
-    }
-
-    if platform not in files.keys():
-        raise ValueError(f"Platform must be one of: {', '.join(test.AVAILABLE_PLATFORMS)}")
+    if platform not in env_utils.AVAILABLE_PLATFORMS:
+        raise ValueError(f"Platform must be one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
     else:
         if env in available_envs:
-            if files[platform].get(env, None):
-                inject_to_file(c, from_file=files[platform][env]['profile'], to_file='env/profiles.yml')
-                inject_to_file(c, from_file=files[platform][env]['db'], to_file='env/db.env')
-            else:
-                raise ValueError(f"Environment '{env}' not available for platform '{platform}'")
+
+            new_profile_path, db_template_path = env_utils.setup_files(env, platform)
+
+            inject_to_file(c, from_file=new_profile_path, to_file='env/profiles.yml')
+            inject_to_file(c, from_file=db_template_path, to_file='env/db.env')
+
+            os.remove(new_profile_path)
+            os.remove(db_template_path)
+
+        else:
+            raise ValueError(f"Environment '{env}' not available.")
 
 
 @task
@@ -161,9 +166,9 @@ def check_project(c, project='test'):
 
 
 @task
-def change_platform(c, platform, disable_op=False, env='local'):
+def change_platform(c, platform, disable_op=False, env='internal'):
     """
-    Change default platform platform
+    Change default platform
         :param c: invoke context
         :param platform: dbt profile platform (Optional if defaults already set)
         :param disable_op: Disable 1Password
@@ -195,11 +200,12 @@ def check_platform(c, platform):
         :param platform: dbt profile platform/target
     """
 
-    if platform in test.AVAILABLE_PLATFORMS:
+    if platform in env_utils.AVAILABLE_PLATFORMS:
         logger.debug(f"Platform '{platform}' is available.")
         return True
     else:
-        logger.error(f"Unexpected platform: '{platform}', available platforms: {', '.join(test.AVAILABLE_PLATFORMS)}")
+        logger.error(
+            f"Unexpected platform: '{platform}', available platforms: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
         exit(0)
 
 
@@ -215,17 +221,22 @@ def run_dbt(c, dbt_args, platform=None, project=None, disable_op=False):
         :param disable_op: Disable 1Password
     """
 
+    platform = c.platform if not platform else platform
+
     # Select dbt profile
     if check_platform(c, platform):
         os.environ['PLATFORM'] = platform
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = f"dbt {dbt_args}"
+        logger.info(f"Running dbt with command: '{command}'")
     else:
         # Set dbt profiles dir
+        dbt_command = f"dbt {dbt_args}"
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        command = f"op run -- dbt {dbt_args}"
+        command = f"op run -- {dbt_command}"
+        logger.info(f"Running dbt with command: '{dbt_command}'")
 
     # Run dbt in project directory
     project_dir = check_project(c, project)
@@ -253,7 +264,7 @@ def run_macro_tests(c, platform=None, disable_op=False):
     pytest_command = f"pytest {str(test.TEST_MACRO_ROOT.absolute())} -n 4 -vv"
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = pytest_command
     else:
         command = f"op run -- {pytest_command}"
@@ -280,7 +291,7 @@ def run_harness_tests(c, platform=None, disable_op=False):
     pytest_command = f"pytest {str(test.TEST_HARNESS_TESTS_ROOT.absolute())} -n 4 -vv"
 
     if disable_op:
-        dbtvault_harness_utils.setup_db_creds(platform)
+        env_utils.setup_db_creds(platform)
         command = pytest_command
     else:
         command = f"op run -- {pytest_command}"
@@ -311,7 +322,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
     logger.info(f"Running specific integration tests: {', '.join(feature_directories)}")
 
     for feat_dir in feature_directories:
-        feat_files = glob.glob(f'**/{feat_dir}/{platform}/*.feature', recursive=True)
+        feat_files = glob.glob(f'**/{feat_dir}/*.feature', recursive=True)
         collected_files[feat_dir] = feat_files
 
         files = []
@@ -323,7 +334,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
 
                     for file_substring in sub_types[feat_dir][subtype]:
                         for file_str in collected_files[feat_dir]:
-                            if f'{platform}_{file_substring}.feature' == Path(file_str).name:
+                            if f'{file_substring}.feature' == Path(file_str).name:
                                 files.append(file_str)
 
                 collected_files[feat_dir] = files
@@ -334,15 +345,14 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
                 logger.info(
                     f"Using the following feature files from {struct} directory: {', '.join(collected_files[struct])}")
             else:
-                logger.error(f"No feature files found for for {platform}/{struct}. This is most likely unintended, "
-                             f"please check available feature directories and sub-types.")
-                raise SystemExit()
+                raise SystemExit(f"No feature files found for for {struct}. This is most likely unintended, "
+                                 f"please check available feature directories and sub-types.")
 
         for file in collected_files[feat_dir]:
             pytest_command = f"behave '{file}'"
 
             if disable_op:
-                dbtvault_harness_utils.setup_db_creds(platform)
+                env_utils.setup_db_creds(platform)
                 command = pytest_command
             else:
                 command = f"op run -- {pytest_command}"
@@ -350,7 +360,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
             c.run(command)
 
 
-ns = Collection(setup, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
+ns = Collection(setup, init_external, set_defaults, inject_to_file, inject_for_platform, check_project, change_platform,
                 check_platform, run_dbt, run_macro_tests, run_harness_tests, run_integration_tests)
 
 ns.configure({'project': 'test', 'platform': 'snowflake', 'env': 'local'})

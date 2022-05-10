@@ -1,0 +1,65 @@
+dbtvault:
+  outputs:
+    snowflake:
+      type: snowflake
+      account: "{{ op://dbtvault/snowflake_pipeline/account }}"
+
+      user: "{{ op://dbtvault/snowflake_pipeline/username }}"
+      password: "{{ op://dbtvault/snowflake_pipeline/password }}"
+
+      role: "{{ op://dbtvault/snowflake_pipeline/role }}"
+      database: "{{ op://dbtvault/snowflake_pipeline/database }}"
+      warehouse: "{{ op://dbtvault/snowflake_pipeline/warehouse }}"
+      schema: "{{ op://dbtvault/snowflake_pipeline/schema }}"
+
+      threads: 4
+      client_session_keep_alive: False
+
+    bigquery:
+      method: service-account-json
+      type: bigquery
+
+      project: "{{ op://dbtvault/bigquery_pipeline/project_id }}"
+      dataset: "{{ op://dbtvault/bigquery_pipeline/dataset }}"
+
+      timeout_seconds: 300
+      priority: interactive
+      retries: 1
+      threads: 4
+
+      keyfile_json:
+        type: service_account
+        project_id: "{{ op://dbtvault/bigquery_pipeline/project_id }}"
+        private_key_id: "{{ op://dbtvault/bq_key_json/private_key_id }}"
+        private_key: "{{ op://dbtvault/bq_key_json/private_key }}"
+        client_email: "{{ op://dbtvault/bq_key_json/client_email }}"
+        client_id: "{{ op://dbtvault/bq_key_json/client_id }}"
+        auth_uri: https://accounts.google.com/o/oauth2/auth
+        token_uri: https://oauth2.googleapis.com/token
+        auth_provider_x509_cert_url: https://www.googleapis.com/oauth2/v1/certs
+        client_x509_cert_url: "{{ op://dbtvault/bq_key_json/client_x509_cert_url }}"
+
+    sqlserver:
+      type: sqlserver
+      driver: "ODBC Driver 17 for SQL Server"
+      server: "{{ op://private/sqlserver/server }}"
+      port: "{{ '{{ op://private/sqlserver/port }}' | as_number }}"
+      database: "{{ op://private/sqlserver/database }}"
+      schema: "{{ op://private/sqlserver/schema }}"
+      user: "{{ op://private/sqlserver/user }}"
+      password: "{{ op://private/sqlserver/password }}"
+
+    databricks:
+      type: spark
+      method: odbc
+      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+      schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      port: "{{ env_var('DATABRICKS_PORT', 443) }}"
+
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
+
+      threads: 4
+
+  target: "snowflake"
