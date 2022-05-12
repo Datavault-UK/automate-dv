@@ -186,17 +186,20 @@ fixtures_registry = {
     "fixture.sts":
         {"snowflake": fixtures_sts.sts,
          "bigquery": fixtures_sts.sts,
-         "sqlserver": fixtures_sts.sts},
+         "sqlserver": fixtures_sts.sts,
+         "databricks": ''},
 
     "fixture.sts2":
         {"snowflake": fixtures_sts2.sts2,
          "bigquery": fixtures_sts2.sts2,
-         "sqlserver": fixtures_sts2.sts2},
+         "sqlserver": fixtures_sts2.sts2,
+         "databricks": ''},
 
     "fixture.sts2_cycle":
         {"snowflake": fixtures_sts2.sts2_cycle,
          "bigquery": fixtures_sts2.sts2_cycle,
-         "sqlserver": fixtures_sts2.sts2_cycle},
+         "sqlserver": fixtures_sts2.sts2_cycle,
+         "databricks": ''},
 
 }
 

@@ -22,7 +22,7 @@ def sts(context):
     context.vault_structure_columns = {
         "STS": {
             "src_pk": "CUSTOMER_PK",
-            "src_status": ["STATUS"],
+            "src_status": "STATUS",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
