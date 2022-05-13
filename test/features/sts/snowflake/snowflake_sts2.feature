@@ -1,6 +1,7 @@
 Feature: [SF-STS2] Status Tracking Satellites
+# RAW_STAGE table does not contain STATUS column
 
-  @fixture.sts2
+  @fixture.sts2 # like [SF-STS-01]
   Scenario: [SF-STS2-01] Load data into a non-existent status tracking satellite
     Given the STS table does not exist
     And the RAW_STAGE table contains data
