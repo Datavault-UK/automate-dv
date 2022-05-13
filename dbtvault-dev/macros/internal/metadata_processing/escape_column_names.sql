@@ -131,3 +131,17 @@
     {%- do return(escaped_column_name) -%}
 
 {%- endmacro -%}
+
+{# POSTGRES #}
+{# Quoting strategy for Postgres should be to always quote column references  #}
+{%- macro postgres__escape_column_name(column) -%}
+
+    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
+    {%- set escape_char_right = var('escape_char_right', '"') -%}
+
+    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+
+    {%- do return(escaped_column_name) -%}
+
+{%- endmacro -%}
+

@@ -47,7 +47,17 @@ dbtvault:
       port: "{{ env_var('DATABRICKS_PORT', 443) | as_number }}"
       token: "{{ env_var('DATABRICKS_TOKEN') }}"
       endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
-
       threads: 4
+
+    postgres:
+      type: postgres
+      host:     "{{ env_var('POSTGRES_DB_HOST') }}"
+      port:     "{{ env_var('POSTGRES_DB_PORT', 5432) | as_number }}"
+      database: "{{ env_var('POSTGRES_DB_DATABASE') }}"
+      schema:   "{{ env_var('POSTGRES_DB_SCHEMA') }}"
+      user:     "{{ env_var('POSTGRES_DB_USER') }}"
+      password: "{{ env_var('POSTGRES_DB_PW') }}"
+      # threads: 4
+
 
   target: "snowflake"
