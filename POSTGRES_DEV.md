@@ -13,13 +13,14 @@ Author: @johnoscott
 1. checkout the branch `feat/postgres` from the dbtvault GitHub repo
 2. install python packages (adds the `dbt-postgres = "==1.1.0"` package)
     
-    ```yaml
+    ```bash
     pipenv install --dev
+    
     ```
     
 3. Set environment variables by creating `/env/db.env` with this configuration:
     
-    ```yaml
+    ```dotenv
     # /env/db.env
     
     # Postgres
@@ -39,8 +40,16 @@ Author: @johnoscott
     # NOTE: will generate `env/profiles.yml` which does NOT need to be configured
     #      since it now uses environment variables
     ```
+
+5. Start a local postgresql server 
+   Easiest way is to use the included docker compose (which has same config as /env/db.env above)
+
+    ```bash
+    docker compose up
     
-5. Set the project to use postgres and run config checks
+    ```
+
+6. Set the project to use postgres and run config checks
     
     ```bash
     inv setup --platform postgres --disable-op
@@ -49,7 +58,7 @@ Author: @johnoscott
     
     ```
     
-6. Run the tests
+7. Run the tests
     
     <aside>
     💡 only Hub tests in `test/features/hubs/hubs.feature` are currently implemented
