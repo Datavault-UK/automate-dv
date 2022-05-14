@@ -21,6 +21,7 @@
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_pk_with_rank = [src_pk] + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
@@ -44,7 +45,11 @@ row_rank_{{ source_number }} AS (
     SELECT {{ dbtvault.prefix(source_cols, 'rr') }},
     {%- endif %}
            ROW_NUMBER() OVER(
+               {%- if model.config.materialized == 'vault_insert_by_rank' %}
+               PARTITION BY {{ dbtvault.prefix([source_pk_with_rank], 'rr') }}
+               {%- else %}
                PARTITION BY {{ dbtvault.prefix([src_pk], 'rr') }}
+               {%- endif %}
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
