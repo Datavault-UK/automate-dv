@@ -60,19 +60,19 @@ source_data_with_count AS (
 
 {# Select latest records from satellite, restricted to PKs in source data -#}
 latest_records AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'mas') }}
-        ,{{ dbtvault.prefix([src_hashdiff], 'mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'mas') }}
-        ,{{ dbtvault.prefix([src_ldts], 'mas') }}
+    SELECT {{ dbtvault.prefix([src_pk], 'mas', alias_target='target') }}
+        ,{{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}
+        ,{{ dbtvault.prefix([src_cdk], 'mas', alias_target='target') }}
+        ,{{ dbtvault.prefix([src_ldts], 'mas', alias_target='target') }}
         ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
+            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
     FROM
     (
-    SELECT {{ dbtvault.prefix([src_pk], 'inner_mas') }}
-        ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas') }}
-        ,{{ dbtvault.prefix([src_cdk], 'inner_mas') }}
-        ,{{ dbtvault.prefix([src_ldts], 'inner_mas') }}
+    SELECT {{ dbtvault.prefix([src_pk], 'inner_mas', alias_target='target') }}
+        ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas', alias_target='target') }}
+        ,{{ dbtvault.prefix([src_cdk], 'inner_mas', alias_target='target') }}
+        ,{{ dbtvault.prefix([src_ldts], 'inner_mas', alias_target='target') }}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
     FROM {{ this }} AS inner_mas
@@ -114,10 +114,10 @@ records_to_insert AS (
             SELECT 1
             FROM
             (
-                SELECT {{ dbtvault.prefix([src_pk], 'lr') }}
-                ,{{ dbtvault.prefix([src_hashdiff], 'lr') }}
-                ,{{ dbtvault.prefix([src_cdk], 'lr') }}
-                ,{{ dbtvault.prefix([src_ldts], 'lr') }}
+                SELECT {{ dbtvault.prefix([src_pk], 'lr', alias_target='target') }}
+                ,{{ dbtvault.prefix([src_hashdiff], 'lr', alias_target='target') }}
+                ,{{ dbtvault.prefix([src_cdk], 'lr', alias_target='target') }}
+                ,{{ dbtvault.prefix([src_ldts], 'lr', alias_target='target') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
@@ -125,7 +125,7 @@ records_to_insert AS (
                     AND {{ dbtvault.prefix([src_ldts], 'lr') }} = {{ dbtvault.prefix([src_ldts], 'lg') }}
             ) AS active_records
             WHERE {{ dbtvault.multikey([src_pk], prefix=['stage', 'active_records'], condition='=') }}
-                AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'active_records') }}
+                AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'active_records', alias_target='target') }}
 {# In order to maintain the parallel with the standard satellite, we don''t allow for groups of records to be updated if the ldts is the only difference #}
 {#        AND {{ dbtvault.prefix([src_ldts], 'stage') }} = {{ dbtvault.prefix([src_ldts], 'active_records') }} #}
                 AND {{ dbtvault.multikey(src_cdk, prefix=['stage', 'active_records'], condition='=') }}

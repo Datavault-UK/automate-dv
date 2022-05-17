@@ -477,7 +477,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites
       | md5('1002') | <null>        | 17-214-233-1212 | 12311     | md5('1002\|\|^^\|\|17-214-233-1212\|\|12311')    | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-I-010] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
+  Scenario: [MAS-2CD-I-10] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF                                         | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | 12311     | md5('1004\|\|DOM\|\|17-214-233-1214\|\|12311')   | 1993-01-01     | 1993-01-01 | *      |
@@ -501,7 +501,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1236 | 12323     | md5('1006\|\|FRIDA\|\|17-214-233-1216\|\|12323') | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-I-011] Load data into a populated multi-active satellite where hashdiff does not include CDKs
+  Scenario: [MAS-2CD-I-11] Load data into a populated multi-active satellite where hashdiff does not include CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF             | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | 12311     | md5('1003\|\|CHAD')  | 1993-01-01     | 1993-01-01 | *      |
@@ -548,7 +548,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites
       | md5('1007') | Frida         | 17-214-233-1248 | 12334     | md5('1007\|\|FRIDA') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-I-012] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
+  Scenario: [MAS-2CD-I-12] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF             | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | 12311     | md5('1003\|\|CHAD')  | 1993-01-01     | 1993-01-01 | *      |
@@ -583,7 +583,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites
       | md5('1005') | Dom           | 17-214-233-1217 | 12325     | md5('1005\|\|DOM')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-I-013] Load data into a populated multi-active satellite where hashdiff does not include PK nor CDKs
+  Scenario: [MAS-2CD-I-13] Load data into a populated multi-active satellite where hashdiff does not include PK nor CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | 12311     | md5('CHAD')  | 1993-01-01     | 1993-01-01 | *      |
@@ -630,7 +630,7 @@ Feature: [MAS-2CD-I] Multi Active Satellites
       | md5('1007') | Frida         | 17-214-233-1248 | 12334     | md5('FRIDA') | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-2CD-I-014] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PK nor CDKs
+  Scenario: [MAS-2CD-I-14] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PK nor CDKs
     Given the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | EXTENSION | HASHDIFF     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | 12311     | md5('CHAD')  | 1993-01-01     | 1993-01-01 | *      |

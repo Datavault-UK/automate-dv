@@ -760,7 +760,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | md5('1006') | md5('1006\|\|FREIA\|\|17-214-233-1212')   | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
   @fixture.multi_active_satellite_cycle
-  Scenario: [MAS-1CD-C-010] 4-day cycle
+  Scenario: [MAS-1CD-C-10] 4-day cycle
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE ma_sat is empty
 

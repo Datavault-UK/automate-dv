@@ -258,23 +258,23 @@ def single_source_comppk_link_bigquery(context):
     context.seed_config = {
         "LINK": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "COMP_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "COMP_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         }
     }
@@ -443,18 +443,18 @@ def single_source_comppk_link_sqlserver(context):
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(10)"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "NATION_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(10)"
             }
         }
     }

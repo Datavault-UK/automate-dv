@@ -7,7 +7,7 @@
 
 ## Install dependencies
 
-Run `pipenv install --dev` 
+Run `pipenv install --dev`
 
 ## Setting up your development environment
 
@@ -19,56 +19,78 @@ In general, we follow the ["fork-and-pull"](https://github.com/susam/gitpr) Git 
 
 - Fork the repository to your own GitHub account
 - Clone the project to your machine
-- Create a branch (from `develop`) locally with a succinct but descriptive name. 
+- Create a branch (from `develop`) locally with a succinct but descriptive name.
 - If it's a new feature, prefix the branch name with `feat/`
 - Commit changes to the branch
 - Push changes to your fork
 - Open a PR in our repository
 
-### 2. Create environment files from templates
-##### NOTE: If you are an internal contributor (e.g. Datavault employee) then you may skip this step
+### 2. Create environment files from templates (EXTERNAL ONLY)
 
 In the `<project_root>/env/templates` folder you will find two files: `db.tpl.env` and `profiles.tpl.yml`.
 
-#### profiles.tpl.yml
+#### profiles_external.tpl.yml
 
-This file is a template which can be used as a drop-in replacement for your dbt `profiles.yml` file, or added to an existing `profiles.yml`.
+This file is a template which can be used as a drop-in replacement for your dbt `profiles.yml` file, or added to an
+existing `profiles.yml`.
 
-- Copy and paste `profiles.tpl.yml` to your local dbt profiles directory, (by default, a `.dbt` directory in your home/user directory)
-- Rename `profiles.tpl.yml` to `profiles.yml`. This file can be used as-is.
+Inside your python environment, run: `inv init-external -p <platform>`
+
+Platform may be one of:
+
+- `snowflake`
+- `bigquery`
+- `sqlserver`
+- `databricks`
+
+This will create a file: `env/profiles.yml`, which will look something like this:
+
+```
+dbtvault:
+  outputs:
+    databricks:
+      type: spark
+      method: odbc
+      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+      schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
+      host: "{{ env_var('DATABRICKS_HOST') }}"
+      port: "{{ env_var('DATABRICKS_PORT', 443) | as_number }}"
+      token: "{{ env_var('DATABRICKS_TOKEN') }}"
+      endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
+
+      threads: 4
+
+  target: databricks
+```
+
+You may now set up your environment variables, any way you wish. Some examples are below.
+
+##### PyCharm
+
+![PyCharm Terminal Environment Variables](/assets/setup_environment.png)
+
+You may set up session-scoped (i.e. Only when PyCharm is open) environment variables in
+PyCharm, as per the above screenshot.
+
+1. Navigate to the following:
+Settings > Tools > Terminal > Environment Variables
+
+2. Paste one of the following into the text box:
+
+   - snowflake ```SNOWFLAKE_DB_ACCOUNT=;SNOWFLAKE_DB_USER=;SNOWFLAKE_DB_PW=;SNOWFLAKE_DB_ROLE=;SNOWFLAKE_DB_DATABASE=;SNOWFLAKE_DB_WH=;SNOWFLAKE_DB_SCHEMA=;```
+   - sqlserver ```SQLSERVER_DB_SERVER=;SQLSERVER_DB_PORT=;SQLSERVER_DB_DATABASE=;SQLSERVER_DB_SCHEMA=;SQLSERVER_DB_USER=;SQLSERVER_DB_PW=;```
+   - bigquery ```GCP_PROJECT_ID=;GCP_DATASET=;```
+   - databricks ```DATABRICKS_SCHEMA=;DATABRICKS_HOST=;DATABRICKS_PORT=;DATABRICKS_TOKEN=;DATABRICKS_ENDPOINT=;```
+
+3. Update the values for each variable by clicking the ![Edit Button](/assets/edit_button.PNG)
+4. Start a new PyCharm terminal and check that the environment variables have been set, e.g. on Linux: `printenv`
 
 [Read the dbt docs](https://docs.getdbt.com/dbt-cli/configure-your-profile) to learn more about `profiles.yml`
-
-#### db.tpl.env
-
-This file holds key-value pairs. Each key will be the key for an environment variable. You will 
-replace the empty quotes with your own credentials. 
-
-**WARNING: `db.env` IS IGNORED IN GIT, BUT PLEASE TAKE CARE NOT TO COMMIT THIS FILE ACCIDENTALLY. 
-IN THE EVENT THIS HAPPENS, PLEASE CHANGE YOUR DATABASE CREDENTIALS IMMEDIATELY**
-
-- Copy and paste `db.tpl.env` to your to the root of the `<project_root>/env/` directory.
-- Rename `db.tpl.env` to `db.env`. 
-- Remove the sections for the platforms you are not developing for. For example, if you are developing only for snowflake, 
-  your file should resemble the following:
-
-    ```yaml
-    # Snowflake
-    SNOWFLAKE_DB_ACCOUNT=""
-    SNOWFLAKE_DB_USER=""
-    SNOWFLAKE_DB_PW=""
-    SNOWFLAKE_DB_ROLE=""
-    SNOWFLAKE_DB_DATABASE=""
-    SNOWFLAKE_DB_WH=""
-    SNOWFLAKE_DB_SCHEMA=""
-    ```
-
-- Next, Replace the empty quotes with your own credentials.
-
 
 ### 3. Run the setup command
 
 ### Without 1Password integration
+
 ##### Recommended for External Contributors
 
 Inside the virtual environment, run `inv setup -p <platform> -d`
@@ -76,9 +98,10 @@ Inside the virtual environment, run `inv setup -p <platform> -d`
 e.g. `inv setup -p snowflake -d`
 
 ### With 1Password integration
+
 ##### Recommended for Datavault Employees
 
-- First, sign in to 1Password, following internal guides. 
+- First, sign in to 1Password, following internal guides.
 - Inside the virtual environment, run `inv setup -p <platform>`
 
 e.g. `inv setup -p snowflake`
@@ -93,7 +116,8 @@ e.g. `inv setup -p snowflake`
 - bigquery
 - sqlserver
 
-`-d, --disable-op` Disables 1Password CLI integration, which is used by Datavault Developers internally for secrets management. 
+`-d, --disable-op` Disables 1Password CLI integration, which is used by Datavault Developers internally for secrets
+management.
 
 A successful run should produce something similar to the following output:
 

@@ -596,7 +596,7 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     seed_properties = {
         'version': 2,
         'seeds': [
-            {'name': seed_name, 'config': seed_config}
+            {'name': seed_name, 'config': {**seed_config, '+quote_columns': True}}
         ]
     }
 
@@ -615,7 +615,7 @@ def create_test_model_schema_dict(*, target_model_name, expected_output_csv, uni
     test_yaml = {
         "models": [{
             "name": target_model_name, "tests": [{
-                "assert_data_equal_to_expected": {
+                "expect_tables_to_match": {
                     "expected_seed": expected_output_csv,
                     "unique_id": unique_id,
                     "compare_columns": columns_to_compare}}]}]}

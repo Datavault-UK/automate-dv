@@ -37,14 +37,14 @@ WITH source_data AS (
 
 {% if dbtvault.is_any_incremental() %}
 
-latest_records_non_ranked AS (
-
+latest_records AS (
     SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
-    FROM (
+    FROM
+    (
         SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
             RANK() OVER (
-                PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
-                ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
             ) AS rank
         FROM {{ this }} AS current_records
             JOIN (
@@ -52,13 +52,8 @@ latest_records_non_ranked AS (
                 FROM source_data
             ) AS source_records
                 ON {{ dbtvault.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
-        ) AS a
+    ) AS a
     WHERE a.rank = 1
-),
-
-latest_records AS (
-    SELECT * FROM latest_records_non_ranked
-    WHERE rank = 1
 ),
 
 {%- endif %}

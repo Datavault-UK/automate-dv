@@ -1,12 +1,12 @@
-{%- test assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- test expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
-    {%- set macro = adapter.dispatch('test_assert_data_equal_to_expected', 'dbtvault_test') -%}
+    {%- set macro = adapter.dispatch('test_expect_tables_to_match', 'dbtvault_test') -%}
 
     {{ macro(model, unique_id, compare_columns, expected_seed) }}
 
 {%- endtest -%}
 
-{%- macro default__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro default__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -81,13 +81,25 @@ duplicates_not_in_expected AS (
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 ),
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM compare_e_to_a
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+    FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM compare_a_to_e
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+    FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM duplicates_not_in_actual
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM duplicates_not_in_expected
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -104,10 +116,9 @@ compare AS (
 SELECT * FROM compare
 {%- endmacro -%}
 
-{%- macro bigquery__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro bigquery__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
-
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
@@ -115,18 +126,18 @@ SELECT * FROM compare
 
 {%- for compare_col in compare_columns -%}
 
-    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(compare_col, compare_col)) -%}
-    {%- do columns_processed.append(compare_col) -%}
+    {%- do compare_columns_processed.append("CAST({} AS STRING) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
+    {%- do columns_processed.append(dbtvault.escape_column_names(compare_col)) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
-    {%- do source_columns_list.append(source_col.column) -%}
+    {%- do source_columns_list.append(dbtvault.escape_column_names(source_col.column)) -%}
 
     {%- if source_col.data_type == 'BYTES' -%}
-        {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(source_col.name, source_col.name)) -%}
+        {%- do source_columns_processed.append("UPPER(TO_HEX({})) AS {}".format(dbtvault.escape_column_names(source_col.name), dbtvault.escape_column_names(source_col.name))) -%}
     {%- else -%}
-        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(source_col.name, source_col.name)) -%}
+        {%- do source_columns_processed.append("CAST({} AS STRING) AS {}".format(dbtvault.escape_column_names(source_col.name), dbtvault.escape_column_names(source_col.name))) -%}
     {%- endif -%}
 
 {%- endfor %}
@@ -134,6 +145,7 @@ SELECT * FROM compare
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
+{%  set compare_columns = dbtvault.escape_column_names(compare_columns) %}
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}
@@ -187,13 +199,25 @@ duplicates_not_in_expected AS (
 )
 ,
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS ERROR_SOURCE FROM compare_e_to_a AS a
+    SELECT {{ columns_string }},
+           'E_TO_A' AS ERROR_SOURCE,
+           'EXPECTED RECORD NOT IN ACTUAL' AS MESSAGE
+    FROM compare_e_to_a
     UNION ALL
-    SELECT {{ columns_string }}, 'A_TO_E' AS ERROR_SOURCE FROM compare_a_to_e AS b
+    SELECT {{ columns_string }},
+           'A_TO_E' AS ERROR_SOURCE,
+           'ACTUAL RECORD NOT IN EXPECTED' AS MESSAGE
+    FROM compare_a_to_e
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS ERROR_SOURCE FROM duplicates_not_in_actual AS c
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS ERROR_SOURCE,
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS MESSAGE
+    FROM duplicates_not_in_actual
     UNION ALL
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS ERROR_SOURCE FROM duplicates_not_in_expected AS d
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS ERROR_SOURCE,
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS MESSAGE
+    FROM duplicates_not_in_expected
 )
 
 -- For manual debugging
@@ -211,7 +235,7 @@ compare AS (
 SELECT * FROM compare
 {%- endmacro -%}
 
-{%- macro sqlserver__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro sqlserver__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -226,14 +250,14 @@ SELECT * FROM compare
     {%- set compare_col_data_type = expected_col.data_type -%}
 
     {%  if compare_col in compare_columns %}
-        {%- do columns_processed.append(compare_col) -%}
+        {%- do columns_processed.append(dbtvault.escape_column_names(compare_col)) -%}
 
-        {% if compare_col_data_type == 'binary' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(compare_col, compare_col)) -%}
-        {% elif compare_col_data_type == 'datetime' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 121) AS {}".format(compare_col, compare_col)) -%}
+        {% if compare_col_data_type[0:6] == 'binary' %}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
+        {% elif compare_col_data_type[0:8] == 'datetime' %}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
         {% else %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(compare_col, compare_col)) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
         {% endif %}
     {% endif %}
 
@@ -241,14 +265,14 @@ SELECT * FROM compare
 
 {%- for source_col in source_columns -%}
 
-    {%- do source_columns_list.append(source_col.column) -%}
+    {%- do source_columns_list.append(dbtvault.escape_column_names(source_col.column)) -%}
 
-    {% if source_col.data_type == 'binary' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(source_col.column, source_col.column)) -%}
-    {% elif source_col.data_type == 'datetime' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 121) AS {}".format(source_col.column, source_col.column)) -%}
+    {% if source_col.data_type[0:6] == 'binary' %}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
+    {% elif source_col.data_type[0:8] == 'datetime' %}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
     {% else %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
     {% endif %}
 
 {%- endfor %}
@@ -257,7 +281,10 @@ SELECT * FROM compare
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 
-    SELECT {{ columns_string }}, 'E_TO_A' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'E_TO_A' AS "ERROR_SOURCE",
+           'EXPECTED RECORD NOT IN ACTUAL' AS "MESSAGE"
+        FROM (
         SELECT * FROM (
             SELECT {{ compare_columns_string }}
             FROM {{ ref(expected_seed) }}
@@ -271,7 +298,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'A_TO_E' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'A_TO_E' AS "ERROR_SOURCE",
+           'ACTUAL RECORD NOT IN EXPECTED' AS "MESSAGE"
+        FROM (
         SELECT * FROM (
             SELECT {{ source_columns_string }}
             FROM {{ model }}
@@ -285,7 +315,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_A' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_A' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID EXPECT BUT ARE NOT PRESENT IN ACTUAL' AS "MESSAGE"
+        FROM (
         SELECT {{ columns_string }}
         FROM (
             SELECT {{ columns_string }}, COUNT(*) AS COUNT
@@ -309,7 +342,10 @@ SELECT * FROM compare
 
     UNION ALL
 
-    SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS "ERROR_SOURCE" FROM (
+    SELECT {{ columns_string }},
+           'DUPES_NOT_IN_E' AS "ERROR_SOURCE",
+           'DUPLICATE RECORDS WE DID NOT EXPECT AND ARE PRESENT IN ACTUAL' AS "MESSAGE"
+    FROM (
         SELECT {{ columns_string }}
         FROM (
         SELECT {{ columns_string }}, COUNT (*) AS COUNT

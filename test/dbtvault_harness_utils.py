@@ -404,7 +404,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
     Converts a context table in a feature file into a pandas DataFrame
         :param table: The context.table from a scenario
         :param use_nan: Replace <null> placeholder with NaN
-        :return: DataFrame representation of the provide context table
+        :return: DataFrame representation of the provided context table
     """
 
     table_df = pd.DataFrame(columns=table.headings, data=table.rows)
@@ -443,7 +443,7 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
         :param use_nan:
         :param table: The context.table from a scenario
         :param orient: orient for df to_dict
-        :return: A dictionary modelled from a context table
+        :return: A list containing a dictionary modelled from a context table
     """
 
     table_df = context_table_to_df(table, use_nan=use_nan)
@@ -456,9 +456,11 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
 
 
 # TODO: Look into re-factoring and testing
+# TODO: replace hard coded square brackets with a function call that mimics internal macro escape_column_name()
 def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
     """
     Creates a model from a feature file data table
+    This is ONLY for dbt-sqlserver where a model is being used as a seed to avoid implicit data type conversion issues
         :param seed_config: Configuration dict for seed file
         :param table: The context.table from a scenario or a programmatically defined table
         :param model_name: Name of the model to base the feature data table on
@@ -466,41 +468,54 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
         :return: Seed file name
     """
 
-    feature_data = context_table_to_dicts(table=table, orient="index", use_nan=False)
+    feature_data_list = context_table_to_dicts(table=table, orient="index", use_nan=False)
     column_types = seed_config[model_name]["column_types"]
 
     sql_command = ""
-    first_row = True
 
-    for row_number in feature_data.keys():
-        if first_row:
-            first_row = False
-        else:
-            sql_command = sql_command + "\nUNION ALL \n"
-        first_column = True
+    if len(feature_data_list) == 0:
+        # Empty table
+        if len(column_types) > 0:
+            select_column_list = []
 
-        sql_command = sql_command + "SELECT "
+            for column_name in column_types.keys():
+                column_type = column_types[column_name]
 
-        for column_name in feature_data[row_number].keys():
-            if first_column:
-                first_column = False
-            else:
-                sql_command = sql_command + ", "
+                if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                    expression = f"CONVERT({column_type}, NULL, 2)"
+                else:
+                    expression = f"CAST(NULL AS {column_type})"
 
-            column_data = feature_data[row_number][column_name]
-            column_type = column_types[column_name]
+                select_column_list.append(f"{expression} AS [{column_name}]")
 
-            if column_data.lower() == "<null>" or column_data == "":
-                column_data_for_sql = "NULL"
-            else:
-                column_data_for_sql = f"'{column_data}'"
+            sql_command = "SELECT " + ",".join(select_column_list) + " WHERE 1=0"
 
-            if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
-                expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
-            else:
-                expression = f"CAST({column_data_for_sql} AS {column_type})"
+    else:
+        sql_command_list = []
 
-            sql_command = f"{sql_command}{expression} AS {column_name} "
+        for feature_data in feature_data_list:
+            for row_number in feature_data.keys():
+                select_column_list = []
+
+                for column_name in feature_data[row_number].keys():
+                    column_data = feature_data[row_number][column_name]
+                    column_type = column_types[column_name]
+
+                    if column_data.lower() == "<null>" or column_data == "":
+                        column_data_for_sql = "NULL"
+                    else:
+                        column_data_for_sql = f"'{column_data}'"
+
+                    if env_utils.platform() == "sqlserver" and column_type[0:6].upper() == "BINARY":
+                        expression = f"CONVERT({column_type}, {column_data_for_sql}, 2)"
+                    else:
+                        expression = f"CAST({column_data_for_sql} AS {column_type})"
+
+                    select_column_list.append(f"{expression} AS [{column_name}]")
+
+                sql_command_list.append("SELECT " + ",".join(select_column_list))
+
+        sql_command = "\nUNION ALL\n".join(sql_command_list)
 
     with open(test.TEST_MODELS_ROOT / f"{target_model_name.lower()}_seed.sql", "w") as f:
         f.write(sql_command)
@@ -620,7 +635,9 @@ def feature_sub_types():
                 'sats_period_mat_base',
                 'sats_period_mat_other'
                 'sats_period_mat_inferred_range',
-                'sats_period_mat_provided_range'
+                'sats_period_mat_provided_range',
+                'sats_daily',
+                'sats_monthly'
             ],
             'rank': [
                 'sats_rank_mat'
@@ -629,34 +646,21 @@ def feature_sub_types():
         'eff_sats': {
             'main': [
                 'eff_sats',
-                'eff_sats_disabled_end_dating'
+                'eff_sats_multi_part'
             ],
             'auto': [
-                'eff_sat_auto_end_dating_detail_base',
-                'eff_sat_auto_end_dating_detail_inc'
+                'eff_sats_auto_end_dating_detail_base',
+                'eff_sats_auto_end_dating_detail_inc',
+                'eff_sats_auto_end_dating_incremental'
             ],
-            'incremental': [
-                'eff_sat_auto_end_dating_incremental',
-                'eff_sat_disabled_end_dating_incremental'
-            ],
-            'multi_part': [
-                'eff_sats_multi_part'
+            'disabled': [
+                'eff_sats_disabled_end_dating',
+                'eff_sats_disabled_end_dating_closed_records',
+                'eff_sats_disabled_end_dating_incremental'
             ],
             'mat': [
                 'eff_sats_period_mat',
                 'eff_sats_rank_mat'
-            ],
-            'closed': [
-                'eff_sat_closed_records'
-            ]
-        },
-        'xts': {
-            'main': [
-                'xts',
-                'xts_comppk'
-            ],
-            'incremental': [
-                'xts_incremental'
             ]
         },
         'ma_sats': {
@@ -689,9 +693,20 @@ def feature_sub_types():
             ],
             'rm': [
                 'mas_rank_mat',
-                'mas_one_cdk_base_sats_rank_mat',
+                'mas_one_cdk_base_sats_rank_mat'
+            ],
+            'rm_dup': [
                 'mas_one_cdk_rank_duplicates',
                 'mas_two_cdk_rank_duplicates'
+            ]
+        },
+        'xts': {
+            'main': [
+                'xts',
+                'xts_comppk'
+            ],
+            'incremental': [
+                'xts_incremental'
             ]
         },
         'pit': {
