@@ -1,0 +1,21 @@
+# A postgres server to run local tests during development of
+# postgres support for dbtvault
+
+# Usage:
+# $ docker compose up
+
+# NOTE: version not required any more
+# version: '3.7'
+
+services:
+    postgres:
+        container_name: dbtvault-postgres # Specify a custom container name, rather than a generated default name.
+        image: postgres:latest # https://hub.docker.com/_/postgres
+        restart: always
+        environment:
+          - POSTGRES_USER=dbtvault_user
+          - POSTGRES_PASSWORD=password
+          - POSTGRES_DB=dbtvault_db # otherwise default is POSTGRES_USER
+        ports:
+          - '5434:5432'
+        command: [ "postgres", "-c", "log_statement=all" ]  # log all requests (ie. see all queries)

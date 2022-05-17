@@ -280,3 +280,77 @@ def staging_escaped_sqlserver(context):
             }
         }
     }
+
+
+# Postgres
+
+@fixture
+def staging_postgres(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+                "CUSTOMER_PK": "BYTEA",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
+def staging_escaped_postgres(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER NAME": "VARCHAR",
+                "CUSTOMER_DOB": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "CUSTOMER_PK": "BYTEA",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "SOURCE": "VARCHAR",
+                "COLUMN": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "DBTVAULT_RANK": "VARCHAR",
+                "DBTVAULT_RANK2": "VARCHAR"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER NAME": "VARCHAR",
+                "CUSTOMER_DOB": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
