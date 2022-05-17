@@ -134,11 +134,13 @@ records_to_insert AS (
 {#        TIMESTAMPADD(millisecond, 1, {{ dbtvault.prefix([src_ldts], 'latest_records') }}) AS {{ src_ldts }},#}
 
     {# '1993-01-01'::DATE AS {{ src_ldts }}, #}
-    {{ dbtvault.prefix([src_ldts], 'latest_records') }},
+
+    {{ dbtvault.prefix([src_ldts], 'stage') }},
 
         {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
-    FROM latest_records
+    FROM source_data AS stage,
+    latest_records
     WHERE NOT EXISTS (
         SELECT 1
         FROM source_data AS stage
