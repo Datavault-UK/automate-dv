@@ -13,12 +13,6 @@ def sts(context):
         }
     }
 
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        }
-    }
-
     context.vault_structure_columns = {
         "STS": {
             "src_pk": "CUSTOMER_PK",
@@ -32,9 +26,9 @@ def sts(context):
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-                "STATUS": "VARCHAR"
+                "SOURCE": "VARCHAR"
             }
         },
         "STS": {

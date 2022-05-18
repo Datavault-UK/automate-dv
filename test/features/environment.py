@@ -16,7 +16,6 @@ from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
 from test.features.sts import fixtures_sts
-from test.features.sts import fixtures_sts2
 
 fixture_registry_utils = {
     "fixture.enable_sha": behave_fixtures.enable_sha,
@@ -188,19 +187,6 @@ fixtures_registry = {
          "bigquery": fixtures_sts.sts,
          "sqlserver": fixtures_sts.sts,
          "databricks": ''},
-
-    "fixture.sts2":
-        {"snowflake": fixtures_sts2.sts2,
-         "bigquery": fixtures_sts2.sts2,
-         "sqlserver": fixtures_sts2.sts2,
-         "databricks": ''},
-
-    "fixture.sts2_cycle":
-        {"snowflake": fixtures_sts2.sts2_cycle,
-         "bigquery": fixtures_sts2.sts2_cycle,
-         "sqlserver": fixtures_sts2.sts2_cycle,
-         "databricks": ''},
-
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
