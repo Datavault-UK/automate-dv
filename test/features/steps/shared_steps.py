@@ -270,7 +270,8 @@ def load_table(context, model_name, vault_structure):
 
 @step("I load the vault")
 def load_vault(context):
-    models = {k: list(filter(None, dbtvault_generator.flatten(v))) for k, v in context.vault_model_names.items()}
+    models = {k: list(filter(None, dbtvault_generator.flatten(v)))
+              for k, v in context.vault_model_names.items()}
     model_names = []
 
     for vault_structure, model_list in models.items():
