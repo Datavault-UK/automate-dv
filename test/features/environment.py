@@ -214,6 +214,35 @@ def before_all(context):
     dbtvault_generator.backup_project_yml()
 
 
+def before_feature(context, feature):
+    decide_to_run(feature.tags, feature, 'Feature')
+
+
+def before_scenario(context, scenario):
+    do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
+
+    if do_run:
+        dbtvault_harness_utils.create_dummy_model()
+        dbtvault_harness_utils.replace_test_schema()
+
+        dbtvault_harness_utils.clean_seeds()
+        dbtvault_harness_utils.clean_models()
+        dbtvault_harness_utils.clean_target()
+
+        dbtvault_generator.clean_test_schema_file()
+
+
+def before_tag(context, tag):
+    tgt = env_utils.platform()
+
+    if tgt in env_utils.AVAILABLE_PLATFORMS:
+        fixtures = fixture_lookup[tgt]
+        if tag.startswith("fixture."):
+            return use_fixture_by_tag(tag, context, fixtures)
+    else:
+        raise ValueError(f"Target must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
+
+
 def after_all(context):
     """
     Force Restore of dbt_project.yml
@@ -247,32 +276,3 @@ def decide_to_run(tags, obj, obj_type):
             return False
 
     return True
-
-
-def before_feature(context, feature):
-    decide_to_run(feature.tags, feature, 'Feature')
-
-
-def before_scenario(context, scenario):
-    do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
-
-    if do_run:
-        dbtvault_harness_utils.create_dummy_model()
-        dbtvault_harness_utils.replace_test_schema()
-
-        dbtvault_harness_utils.clean_seeds()
-        dbtvault_harness_utils.clean_models()
-        dbtvault_harness_utils.clean_target()
-
-        dbtvault_generator.clean_test_schema_file()
-
-
-def before_tag(context, tag):
-    tgt = env_utils.platform()
-
-    if tgt in env_utils.AVAILABLE_PLATFORMS:
-        fixtures = fixture_lookup[tgt]
-        if tag.startswith("fixture."):
-            return use_fixture_by_tag(tag, context, fixtures)
-    else:
-        raise ValueError(f"Target must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
