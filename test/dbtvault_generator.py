@@ -70,7 +70,8 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
     template_to_file(template, model_name)
 
 
-def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, depends_on=""):
+def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model,
+        src_additional_columns, config, depends_on=""):
     """
     Generate a hub model template
         :param model_name: Name of the model file
@@ -78,6 +79,7 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
         :param src_nk: Source nk
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
+        :param src_additional_columns: Additional columns to add to the hub
         :param source_model: Model name to select from
         :param config: Optional model config string
         :param depends_on: Optional forced dependency
@@ -88,6 +90,7 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
     {{{{ config({config}) }}}}
     {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, 
                       src_ldts={src_ldts}, src_source={src_source}, 
+                      src_additional_columns={src_additional_columns},
                       source_model={source_model})   }}}}
     """
 

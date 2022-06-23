@@ -518,3 +518,24 @@ Feature: [HUB] Hubs
       | md5('1004') | 1004    | 1993-01-02 | LINE   |
       | md5('1005') | 1005    | 1993-01-02 | LINE   |
       | md5('1006') | 1006    | 1993-01-02 | SUPP   |
+
+  @fixture.single_source_hub
+  Scenario: [HUB-17] Standard base load of a hub with additional columns added
+    Given the HUB_AC table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_CK   | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | 1003        | Chad          | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | 1004        | Dom           | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    When I load the HUB_AC hub
+    Then the HUB_AC table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | CUSTOMER_CK   | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | TPCH_CUSTOMER | 1993-01-01 | TPCH   |
+      | md5('1004') | 1004        | TPCH_CUSTOMER | 1993-01-01 | TPCH   |

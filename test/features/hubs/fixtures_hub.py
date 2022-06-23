@@ -22,6 +22,13 @@ def single_source_hub_snowflake(context):
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "HUB_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_additional_columns": "CUSTOMER_CK",
+            "src_source": "SOURCE"
         }
     }
 
@@ -30,6 +37,15 @@ def single_source_hub_snowflake(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -46,7 +62,7 @@ def single_source_hub_snowflake(context):
 
 
 @fixture
-def single_source_comppk_hub_snowflake(context):
+def single_source_comp_pk_hub_snowflake(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK
     """
@@ -89,7 +105,7 @@ def single_source_comppk_hub_snowflake(context):
 
 
 @fixture
-def single_source_comppknk_hub_snowflake(context):
+def single_source_comp_pk_nk_hub_snowflake(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK and NK
     """
@@ -334,7 +350,7 @@ def single_source_hub_bigquery(context):
 
 
 @fixture
-def single_source_comppk_hub_bigquery(context):
+def single_source_comp_pk_hub_bigquery(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK
     """
@@ -377,7 +393,7 @@ def single_source_comppk_hub_bigquery(context):
 
 
 @fixture
-def single_source_comppknk_hub_bigquery(context):
+def single_source_comp_pk_nk_hub_bigquery(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK
     """
@@ -498,7 +514,7 @@ def multi_source_hub_bigquery(context):
 
 
 @fixture
-def multi_source_comppk_hub_bigquery(context):
+def multi_source_comp_pk_hub_bigquery(context):
     """
     Define the structures and metadata to load multi-source hubs with composite PK
     """
@@ -654,7 +670,7 @@ def single_source_hub_sqlserver(context):
 
 
 @fixture
-def single_source_comppk_hub_sqlserver(context):
+def single_source_comp_pk_hub_sqlserver(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK
     """
@@ -716,7 +732,7 @@ def single_source_comppk_hub_sqlserver(context):
 
 
 @fixture
-def single_source_comppknk_hub_sqlserver(context):
+def single_source_comp_pk_nk_hub_sqlserver(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK
     """
@@ -837,7 +853,7 @@ def multi_source_hub_sqlserver(context):
 
 
 @fixture
-def multi_source_comppk_hub_sqlserver(context):
+def multi_source_comp_pk_hub_sqlserver(context):
     """
     Define the structures and metadata to load multi-source hubs with composite PK
     """
