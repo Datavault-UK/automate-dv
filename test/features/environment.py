@@ -44,15 +44,15 @@ fixtures_registry = {
          "databricks": fixtures_hub.single_source_hub_databricks},
 
     "fixture.single_source_comppk_hub":
-        {"snowflake": fixtures_hub.single_source_comppk_hub_snowflake,
-         "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
-         "sqlserver": fixtures_hub.single_source_comppk_hub_sqlserver,
+        {"snowflake": fixtures_hub.single_source_comp_pk_hub_snowflake,
+         "bigquery": fixtures_hub.single_source_comp_pk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comp_pk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_comppknk_hub":
-        {"snowflake": fixtures_hub.single_source_comppknk_hub_snowflake,
-         "bigquery": fixtures_hub.single_source_comppknk_hub_bigquery,
-         "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver,
+        {"snowflake": fixtures_hub.single_source_comp_pk_nk_hub_snowflake,
+         "bigquery": fixtures_hub.single_source_comp_pk_nk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comp_pk_nk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.multi_source_hub":
@@ -63,8 +63,8 @@ fixtures_registry = {
 
     "fixture.multi_source_comppk_hub":
         {"snowflake": fixtures_hub.multi_source_comppk_hub_snowflake,
-         "bigquery": fixtures_hub.multi_source_comppk_hub_bigquery,
-         "sqlserver": fixtures_hub.multi_source_comppk_hub_sqlserver,
+         "bigquery": fixtures_hub.multi_source_comp_pk_hub_bigquery,
+         "sqlserver": fixtures_hub.multi_source_comp_pk_hub_sqlserver,
          "databricks": ''},
 
     "fixture.single_source_link":
