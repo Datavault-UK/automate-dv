@@ -1,23 +1,25 @@
-{%- macro link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
+{%- macro link(src_pk, src_fk, src_additional_columns, src_ldts, src_source, source_model) -%}
+
+    {{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
+                                           src_ldts=src_ldts, src_source=src_source,
+                                           source_model=source_model) -}}
+
+    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+    {%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
+    {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
+    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
     {{- adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
+                                             src_additional_columns=src_additional_columns,
                                              src_ldts=src_ldts, src_source=src_source,
                                              source_model=source_model) -}}
 
 {%- endmacro -%}
 
-{%- macro default__link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
+{%- macro default__link(src_pk, src_fk, src_additional_columns, src_ldts, src_source, source_model) -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
-                                       src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
-
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_additional_columns, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
