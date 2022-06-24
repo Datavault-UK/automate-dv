@@ -24,6 +24,13 @@ def single_source_link_snowflake(context):
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "LINK_AC": {
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -33,6 +40,16 @@ def single_source_link_snowflake(context):
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "LINK_AC": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }

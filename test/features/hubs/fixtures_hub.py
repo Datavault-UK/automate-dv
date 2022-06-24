@@ -27,7 +27,7 @@ def single_source_hub_snowflake(context):
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
-            "src_additional_columns": "CUSTOMER_CK",
+            "src_additional_columns": "CUSTOMER_MT_ID",
             "src_source": "SOURCE"
         }
     }
@@ -45,7 +45,7 @@ def single_source_hub_snowflake(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_CK": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
