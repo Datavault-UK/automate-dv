@@ -83,38 +83,43 @@ def multi_active_satellite_snowflake(context):
 
     context.stage_columns = {
         "RAW_STAGE":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
-             "EFFECTIVE_FROM",
-             "LOAD_DATE",
-             "SOURCE"],
-
+            [
+                "CUSTOMER_ID",
+                "CUSTOMER_NAME",
+                "CUSTOMER_PHONE",
+                "EFFECTIVE_FROM",
+                "LOAD_DATE",
+                "SOURCE"
+            ],
         "RAW_STAGE_TS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
-             "EFFECTIVE_FROM",
-             "LOAD_DATETIME",
-             "SOURCE"],
-
+            [
+                "CUSTOMER_ID",
+                "CUSTOMER_NAME",
+                "CUSTOMER_PHONE",
+                "EFFECTIVE_FROM",
+                "LOAD_DATETIME",
+                "SOURCE"
+            ],
         "RAW_STAGE_TWO_CDK":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
-             "EXTENSION",
-             "EFFECTIVE_FROM",
-             "LOAD_DATE",
-             "SOURCE"],
-
+            [
+                "CUSTOMER_ID",
+                "CUSTOMER_NAME",
+                "CUSTOMER_PHONE",
+                "EXTENSION",
+                "EFFECTIVE_FROM",
+                "LOAD_DATE",
+                "SOURCE"
+            ],
         "RAW_STAGE_TWO_CDK_TS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_PHONE",
-             "EXTENSION",
-             "EFFECTIVE_FROM",
-             "LOAD_DATETIME",
-             "SOURCE"]
+            [
+                "CUSTOMER_ID",
+                "CUSTOMER_NAME",
+                "CUSTOMER_PHONE",
+                "EXTENSION",
+                "EFFECTIVE_FROM",
+                "LOAD_DATETIME",
+                "SOURCE"
+            ]
     }
 
     context.vault_structure_columns = {
@@ -198,7 +203,17 @@ def multi_active_satellite_snowflake(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
-        }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
     }
 
     context.seed_config = {
@@ -339,6 +354,18 @@ def multi_active_satellite_snowflake(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMBER(38, 0)",
                 "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -870,6 +897,16 @@ def multi_active_satellite_bigquery(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -1011,6 +1048,18 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_PHONE": "STRING",
                 "EXTENSION": "NUMERIC",
                 "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -1542,6 +1591,16 @@ def multi_active_satellite_sqlserver(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -1685,6 +1744,18 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "EXTENSION": "DECIMAL(38, 0)",
                 "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "VARCHAR(50)",
+                "HASHDIFF": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
