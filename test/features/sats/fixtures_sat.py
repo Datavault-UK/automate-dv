@@ -185,6 +185,15 @@ def satellite_cycle_snowflake(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -200,6 +209,17 @@ def satellite_cycle_snowflake(context):
             }
         },
         "SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_AC": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
@@ -276,6 +296,15 @@ def satellite_bigquery(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
+        },
+        "SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -333,6 +362,19 @@ def satellite_bigquery(context):
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATETIME": "DATE",
                 "SOURCE": "STRING"
             }
         }
@@ -467,6 +509,15 @@ def satellite_sqlserver(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
+        },
+        "SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -525,6 +576,19 @@ def satellite_sqlserver(context):
                 "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATETIME": "DATE",
+                "SOURCE": "STRING"
             }
         }
     }

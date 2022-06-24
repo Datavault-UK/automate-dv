@@ -91,7 +91,7 @@ def hub(model_name, src_pk, src_nk,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, 
                       src_ldts={src_ldts}, src_source={src_source}, 
-                      src_additional_columns={src_additional_columns},
+                      src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                       source_model={source_model})   }}}}
     """
 
@@ -118,7 +118,7 @@ def link(model_name, src_pk, src_fk,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, 
-                       src_additional_columns={src_additional_columns},
+                       src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                        src_ldts={src_ldts}, src_source={src_source}, 
                        source_model={source_model})   }}}}
     """
@@ -127,13 +127,14 @@ def link(model_name, src_pk, src_fk,
 
 
 def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-           src_payload=None, depends_on=""):
+           src_payload=None,  src_additional_columns=None, depends_on=""):
     """
     Generate a t-link model template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_fk: Source fk
         :param src_payload: Source payload
+        :param src_additional_columns: Additional columns to add to the t link
         :param src_eff: Source effective from
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -145,7 +146,9 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, src_payload={src_payload if src_payload else 'none'}, 
+    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, 
+                         src_payload={src_payload if src_payload else 'none'},
+                         src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                          src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                          source_model={source_model}) }}}}
     """
@@ -175,7 +178,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
-                      src_additional_columns={src_additional_columns},
+                      src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                       src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                       source_model={source_model}) }}}}
     """
