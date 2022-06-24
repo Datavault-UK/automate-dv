@@ -127,7 +127,7 @@ def link(model_name, src_pk, src_fk,
 
 
 def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-           src_payload=None,  src_additional_columns=None, depends_on=""):
+           src_payload=None, src_additional_columns=None, depends_on=""):
     """
     Generate a t-link model template
         :param model_name: Name of the model file
@@ -188,7 +188,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
 
 def eff_sat(model_name, src_pk, src_dfk, src_sfk,
             src_start_date, src_end_date, src_eff, src_ldts, src_source,
-            source_model, config, depends_on=""):
+            source_model, config, src_additional_columns=None, depends_on=""):
     """
     Generate an effectivity satellite model template
         :param model_name: Name of the model file
@@ -198,6 +198,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
         :param src_eff: Source effective from
         :param src_start_date: Source start date
         :param src_end_date: Source end date
+        :param src_additional_columns: Additional columns to add to the eff sat
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -210,6 +211,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.eff_sat(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
                           src_start_date={src_start_date}, src_end_date={src_end_date},
+                          src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                           src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source},
                           source_model={source_model}) }}}}
     """
@@ -218,7 +220,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
 
 
 def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
-           src_eff, src_ldts, src_source, source_model, config):
+           src_ldts, src_source, source_model, config, src_eff=None, src_additional_columns=None):
     """
     Generate a multi active satellite model template
         :param model_name: Name of the model file
@@ -227,6 +229,7 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
         :param src_hashdiff: Source hashdiff
         :param src_payload: Source payload
         :param src_eff: Source effective from
+        :param src_additional_columns: Additional columns to add to the ma sat
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -236,7 +239,9 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
     template = f"""
     {{{{ config({config}) }}}}
     {{{{ dbtvault.ma_sat(src_pk={src_pk}, src_cdk={src_cdk}, src_hashdiff={src_hashdiff}, 
-                         src_payload={src_payload}, src_eff={src_eff}, 
+                         src_payload={src_payload}, 
+                         src_eff={src_eff if src_eff else 'none'}, 
+                         src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                          src_ldts={src_ldts}, src_source={src_source}, 
                          source_model={source_model}) }}}}
     """

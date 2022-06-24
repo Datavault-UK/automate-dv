@@ -1,20 +1,9 @@
-{%- macro bigquery__ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
-
-
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff,
-                                       src_payload=src_payload, src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
-
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_cdk = dbtvault.escape_column_names(src_cdk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_names(src_source) -%}
+{%- macro bigquery__ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_additional_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set cdk_cols = dbtvault.expand_column_list(columns=[src_cdk]) -%}
+{%- set cols_for_latest = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_ldts]) %}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' -%}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -60,19 +49,13 @@ source_data_with_count AS (
 
 {# Select latest records from satellite, restricted to PKs in source data -#}
 latest_records AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'mas', alias_target='target') }}
-        ,{{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}
-        ,{{ dbtvault.prefix([src_cdk], 'mas', alias_target='target') }}
-        ,{{ dbtvault.prefix([src_ldts], 'mas', alias_target='target') }}
+    SELECT {{ dbtvault.prefix(cols_for_latest, 'mas', alias_target='target') }}
         ,mas.latest_rank
         ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
             ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ dbtvault.prefix([src_cdk], 'mas') }} ASC) AS check_rank
     FROM
     (
-    SELECT {{ dbtvault.prefix([src_pk], 'inner_mas', alias_target='target') }}
-        ,{{ dbtvault.prefix([src_hashdiff], 'inner_mas', alias_target='target') }}
-        ,{{ dbtvault.prefix([src_cdk], 'inner_mas', alias_target='target') }}
-        ,{{ dbtvault.prefix([src_ldts], 'inner_mas', alias_target='target') }}
+    SELECT { dbtvault.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
         ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
     FROM {{ this }} AS inner_mas
@@ -114,10 +97,7 @@ records_to_insert AS (
             SELECT 1
             FROM
             (
-                SELECT {{ dbtvault.prefix([src_pk], 'lr', alias_target='target') }}
-                ,{{ dbtvault.prefix([src_hashdiff], 'lr', alias_target='target') }}
-                ,{{ dbtvault.prefix([src_cdk], 'lr', alias_target='target') }}
-                ,{{ dbtvault.prefix([src_ldts], 'lr', alias_target='target') }}
+                SELECT {{ dbtvault.prefix(cols_for_latest, 'lr', alias_target='target') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
