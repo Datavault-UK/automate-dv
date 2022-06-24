@@ -2,7 +2,7 @@ from behave import fixture
 
 
 @fixture
-def t_link(context):
+def t_link_snowflake(context):
     """
     Define the structures and metadata to load transactional links
     """
@@ -27,6 +27,16 @@ def t_link(context):
             "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
             "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
                             "TYPE", "AMOUNT"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "T_LINK_AC": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_additional_columns": "CUSTOMER_MT_ID",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -55,6 +65,21 @@ def t_link(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMBER(38,2)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "TRANSACTION_NUMBER": "NUMBER(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMBER(38,2)",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -92,6 +117,16 @@ def t_link_bigquery(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "T_LINK_AC": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -117,6 +152,21 @@ def t_link_bigquery(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
                 "AMOUNT": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -154,6 +204,16 @@ def t_link_sqlserver(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "T_LINK_AC": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -182,6 +242,21 @@ def t_link_sqlserver(context):
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
             }
         }
     }
