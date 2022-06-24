@@ -326,6 +326,13 @@ def single_source_hub_bigquery(context):
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "HUB_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_source": "SOURCE"
         }
     }
 
@@ -334,6 +341,15 @@ def single_source_hub_bigquery(context):
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -629,6 +645,13 @@ def single_source_hub_sqlserver(context):
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "HUB_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -653,6 +676,15 @@ def single_source_hub_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(4)"
             }

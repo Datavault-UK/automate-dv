@@ -219,7 +219,14 @@ def single_source_link_bigquery(context):
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
-        }
+        },
+        "LINK_AC": {
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
     }
 
     context.seed_config = {
@@ -228,6 +235,16 @@ def single_source_link_bigquery(context):
                 "CUSTOMER_NATION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
                 "NATION_FK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "LINK_AC": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -397,6 +414,13 @@ def single_source_link_sqlserver(context):
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "LINK_AC": {
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -406,6 +430,16 @@ def single_source_link_sqlserver(context):
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "LINK_AC": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "VARCHAR(50)",
+                "CUSTOMER_FK": "VARCHAR(50)",
+                "NATION_FK": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
