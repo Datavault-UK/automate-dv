@@ -63,6 +63,15 @@ def satellite_snowflake(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
+        },
+        "SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -120,6 +129,19 @@ def satellite_snowflake(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         }

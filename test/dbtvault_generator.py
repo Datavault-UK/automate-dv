@@ -155,13 +155,14 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
 
 def sat(model_name, src_pk, src_hashdiff, src_payload,
         src_eff, src_ldts, src_source, source_model,
-        config, depends_on=""):
+        config, src_additional_columns=None, depends_on=""):
     """
     Generate a satellite model template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_hashdiff: Source hashdiff
         :param src_payload: Source payload
+        :param src_additional_columns: Additional columns to add to the satellite
         :param src_eff: Source effective from
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -174,6 +175,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
+                      src_additional_columns={src_additional_columns},
                       src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                       source_model={source_model}) }}}}
     """
