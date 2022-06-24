@@ -539,3 +539,66 @@ Feature: [HUB] Hubs
       | md5('1002') | 1002        | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
       | md5('1003') | 1003        | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
       | md5('1004') | 1004        | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
+
+  @fixture.single_source_hub
+  Scenario: [HUB-18] Standard base load of a hub with multiple additional columns added
+    Given the HUB_AC_MULTI table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_MT_ID | CUSTOMER_CK | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | 1003        | Chad          | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | 1004        | Dom           | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    When I load the HUB_AC_MULTI hub
+    Then the HUB_AC_MULTI table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | CUSTOMER_MT_ID | CUSTOMER_CK | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+      | md5('1004') | 1004        | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
+
+  @fixture.multi_source_hub
+  Scenario: [HUB-19] Union three staging tables to feed a empty hub which does not exist, with additional columns
+    Given the HUB_AC table does not exist
+    And the RAW_STAGE_PARTS table contains data
+      | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
+      | 1001    | Pedal     | internal  | M         | 60.00            | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1002    | Door      | external  | XL        | 150.00           | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1003    | Seat      | internal  | R         | 27.68            | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1004    | Aerial    | external  | S         | 10.40            | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1005    | Cover     | other     | L         | 1.50             | TPCH_CUSTOMER  | 1993-01-01 | *      |
+    And I stage the STG_PARTS data
+    And the RAW_STAGE_SUPPLIER table contains data
+      | PART_ID | SUPPLIER_ID | AVAILQTY | SUPPLYCOST | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
+      | 1001    | 9           | 6        | 68.00      | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1002    | 1           | 2        | 120.00     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1003    | 1           | 1        | 29.87      | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1004    | 6           | 3        | 101.40     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1005    | 7           | 8        | 10.50      | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1006    | 7           | 8        | 10.50      | TPCH_CUSTOMER  | 1993-01-01 | *      |
+    And I stage the STG_SUPPLIER data
+    And the RAW_STAGE_LINEITEM table contains data
+      | ORDER_ID | PART_ID | SUPPLIER_ID | LINENUMBER | QUANTITY | EXTENDED_PRICE | DISCOUNT | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
+      | 10001    | 1001    | 9           | 1          | 6        | 168.00         | 18.00    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10001    | 1002    | 9           | 2          | 7        | 169.00         | 18.00    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10001    | 1003    | 9           | 3          | 8        | 175.00         | 18.00    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10002    | 1002    | 11          | 1          | 2        | 10.00          | 1.00     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10003    | 1003    | 11          | 1          | 1        | 290.87         | 2.00     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10003    | 1004    | 1           | 2          | 1        | 290.87         | 2.00     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10004    | 1004    | 6           | 1          | 3        | 10.40          | 5.50     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10004    | 1005    | 1           | 2          | 3        | 10.40          | 5.50     | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 10005    | 1005    | 7           | 1          | 8        | 106.50         | 21.10    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+    And I stage the STG_LINEITEM data
+    When I load the HUB_AC hub
+    Then the HUB_AC table should contain expected data
+      | PART_PK     | PART_ID | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1002') | 1002    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1003') | 1003    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1004') | 1004    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1005') | 1005    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1006') | 1006    | TPCH_CUSTOMER  | 1993-01-01 | *      |

@@ -29,6 +29,16 @@ def single_source_hub_snowflake(context):
             "src_ldts": "LOAD_DATE",
             "src_additional_columns": "CUSTOMER_MT_ID",
             "src_source": "SOURCE"
+        },
+        "HUB_AC_MULTI": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_additional_columns": [
+                "CUSTOMER_MT_ID",
+                "CUSTOMER_CK"
+            ],
+            "src_source": "SOURCE"
         }
     }
 
@@ -46,6 +56,16 @@ def single_source_hub_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_MT_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -176,6 +196,13 @@ def multi_source_hub_snowflake(context):
             "src_nk": "PART_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "HUB_AC": {
+            "src_pk": "PART_PK",
+            "src_nk": "PART_ID",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -184,6 +211,15 @@ def multi_source_hub_snowflake(context):
             "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "PART_PK": "BINARY(16)",
+                "PART_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
