@@ -1,55 +1,8 @@
 from behave import fixture
 
 
-@fixture
-def xts_snowflake(context):
-    """
-    Define the structures and metadata to load xts
-    """
-
+def set_vault_structure_definition(context):
     context.vault_structure_type = "xts"
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_3SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
-            "HASHDIFF_3": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_3SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
-        }
-    }
 
     context.vault_structure_columns = {
         "XTS": {
@@ -194,6 +147,57 @@ def xts_snowflake(context):
                 }
             },
             "src_source": "SOURCE"
+        }
+    }
+
+
+@fixture
+def xts_snowflake(context):
+    """
+    Define the structures and metadata to load xts
+    """
+
+    set_vault_structure_definition(context)
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
+        },
+        "STG_CUSTOMER_2SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        },
+        "STG_CUSTOMER_3SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
+            "HASHDIFF_3": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_NAME": "!SAT_CUSTOMER"
+        },
+        "STG_CUSTOMER_2SAT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_1": "!SAT_CUSTOMER",
+            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
+        },
+        "STG_CUSTOMER_3SAT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_1": "!SAT_CUSTOMER",
+            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
+            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
         }
     }
 
@@ -373,7 +377,7 @@ def xts_bigquery(context):
     Define the structures and metadata to load xts
     """
 
-    context.vault_structure_type = "xts"
+    set_vault_structure_definition(context)
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -414,93 +418,6 @@ def xts_bigquery(context):
             "SATELLITE_1": "!SAT_CUSTOMER",
             "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
             "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
-        }
-    }
-
-    context.vault_structure_columns = {
-        "XTS": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_COMPPK": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_2SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_3SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                },
-                "SATELLITE_CUSTOMER_LOCATION": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_3"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_3"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
         }
     }
 
@@ -648,7 +565,7 @@ def xts_sqlserver(context):
     Define the structures and metadata to load xts
     """
 
-    context.vault_structure_type = "xts"
+    set_vault_structure_definition(context)
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -689,93 +606,6 @@ def xts_sqlserver(context):
             "SATELLITE_1": "!SAT_CUSTOMER",
             "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
             "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
-        }
-    }
-
-    context.vault_structure_columns = {
-        "XTS": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_COMPPK": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_2SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_3SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                },
-                "SATELLITE_CUSTOMER_LOCATION": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_3"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_3"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
         }
     }
 
