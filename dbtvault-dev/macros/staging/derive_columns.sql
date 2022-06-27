@@ -23,7 +23,7 @@
 
             {%- for concat_component in columns[col] -%}
                 {%- set column_str = dbtvault.as_constant(concat_component) -%}
-                {%- do column_list.append(column_str) -%}
+                {%- do column_list.append(dbtvault.escape_column_names(column_str)) -%}
             {%- endfor -%}
             {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
             {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(col) -%}
@@ -32,7 +32,7 @@
             {%- set exclude_columns = exclude_columns + columns[col] -%}
         {% else %}
             {%- set column_str = dbtvault.as_constant(columns[col]) -%}
-            {%- do der_columns.append(column_str ~ " AS " ~ dbtvault.escape_column_names(col)) -%}
+            {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ dbtvault.escape_column_names(col)) -%}
             {%- do exclude_columns.append(col) -%}
         {% endif %}
 
