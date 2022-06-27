@@ -249,12 +249,14 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
     template_to_file(template, model_name)
 
 
-def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, config=None, depends_on=""):
+def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model,
+        src_additional_columns=None, config=None, depends_on=""):
     """
     Generate a XTS template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_satellite: Satellite to track
+        :param src_additional_columns: Additional columns to add to the xts
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -266,6 +268,7 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, c
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.xts(src_pk={src_pk}, src_satellite={src_satellite}, 
+                      src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                       src_ldts={src_ldts}, src_source={src_source},
                       source_model={source_model}) }}}}
     """

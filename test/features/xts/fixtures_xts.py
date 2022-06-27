@@ -109,6 +109,41 @@ def xts_snowflake(context):
             },
             "src_source": "SOURCE"
         },
+        "XTS_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_satellite": {
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
+            },
+            "src_source": "SOURCE"
+        },
+        "XTS_AC_M": {
+            "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_additional_columns": [
+                "CUSTOMER_MT_ID",
+                "CUSTOMER_MT_ID_2",
+            ],
+            "src_satellite": {
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_NAME"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF"
+                    }
+                },
+            },
+            "src_source": "SOURCE"
+        },
         "XTS_COMPPK": {
             "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
             "src_ldts": "LOAD_DATE",
@@ -127,6 +162,30 @@ def xts_snowflake(context):
         "XTS_2SAT": {
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
+            "src_satellite": {
+                "SATELLITE_CUSTOMER": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_1"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_1"
+                    }
+                },
+                "SATELLITE_CUSTOMER_DETAILS": {
+                    "sat_name": {
+                        "SATELLITE_NAME": "SATELLITE_2"
+                    },
+                    "hashdiff": {
+                        "HASHDIFF": "HASHDIFF_2"
+                    }
+                }
+            },
+            "src_source": "SOURCE"
+        },
+        "XTS_2SAT_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_additional_columns": "CUSTOMER_MT_ID",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
                     "sat_name": {
@@ -216,6 +275,7 @@ def xts_snowflake(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
                 "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -229,6 +289,7 @@ def xts_snowflake(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
                 "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -242,6 +303,7 @@ def xts_snowflake(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
                 "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -255,6 +317,7 @@ def xts_snowflake(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
                 "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
@@ -304,6 +367,7 @@ def xts_snowflake(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
                 "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -338,6 +402,27 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "XTS_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "XTS_AC_M": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_MT_ID_2": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "XTS_COMPPK": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -352,6 +437,16 @@ def xts_snowflake(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "SATELLITE_NAME": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "XTS_2SAT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "HASHDIFF": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -672,6 +767,7 @@ def xts_bigquery(context):
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_COUNTY": "STRING",
                 "CUSTOMER_CITY": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -1040,6 +1136,7 @@ def xts_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_COUNTY": "VARCHAR(50)",
                 "CUSTOMER_CITY": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
