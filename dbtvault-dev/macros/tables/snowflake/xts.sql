@@ -27,6 +27,8 @@
 
 {%- set hashdiff_escaped = dbtvault.escape_column_names('HASHDIFF') -%}
 {%- set satellite_name_escaped = dbtvault.escape_column_names('SATELLITE_NAME') %}
+{%- set satellite_count = src_satellite.keys() | list | length %}
+{%- set stage_count = source_model | length %}
 
 {%- set ns = namespace(last_cte= "") %}
 
@@ -37,23 +39,24 @@
         {%- set hashdiff = (satellite[1]['hashdiff'].values() | list)[0] %}
         {%- set cte_name = "satellite_{}_from_{}".format(satellite_name, src) | lower %}
 
-        {{ cte_name }} AS (
-            SELECT {{ dbtvault.prefix([src_pk], 's') }},
-                   s.{{ dbtvault.escape_column_names(hashdiff) }} AS {{ hashdiff_escaped }},
-                   s.{{ dbtvault.escape_column_names(satellite_name) }} AS {{ satellite_name_escaped }},
-                   {%- if dbtvault.is_something(src_additional_columns) -%}
-                       {{ dbtvault.prefix([src_additional_columns], 's') }},
-                   {%- endif %}
-                   s.{{ src_ldts }},
-                   s.{{ src_source }}
-            FROM {{ ref(src) }} AS s
-            WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
-        ),
+{{ cte_name }} AS (
+    SELECT {{ dbtvault.prefix([src_pk], 's') }},
+           s.{{ dbtvault.escape_column_names(hashdiff) }} AS {{ hashdiff_escaped }},
+           s.{{ dbtvault.escape_column_names(satellite_name) }} AS {{ satellite_name_escaped }},
+           {%- if dbtvault.is_something(src_additional_columns) -%}
+               {{ dbtvault.prefix([src_additional_columns], 's') }},
+           {%- endif %}
+           s.{{ src_ldts }},
+           s.{{ src_source }}
+    FROM {{ ref(src) }} AS s
+    WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
+),
+
     {%- set ns.last_cte = cte_name %}
     {%- endfor %}
 {%- endfor %}
 
-{% if source_model | length > 1 %}
+{%- if stage_count > 1 or satellite_count > 1 %}
 
 union_satellites AS (
     {%- for src in source_model %}
@@ -70,26 +73,26 @@ union_satellites AS (
         {%- endif %}
     {%- endfor %}
 ),
-{%- set ns.last_cte = "union_satellites" %}
-{% endif %}
+{%- set ns.last_cte = "union_satellites" -%}
+{%- endif %}
 
 records_to_insert AS (
     SELECT DISTINCT
-        {{ dbtvault.prefix([src_pk], ns.last_cte) }},
-        {{ ns.last_cte }}.{{ hashdiff_escaped }},
-        {{ ns.last_cte }}.{{ satellite_name_escaped }} ,
+        {{ dbtvault.prefix([src_pk], 'a') }},
+        a.{{ hashdiff_escaped }},
+        a.{{ satellite_name_escaped }} ,
         {%- if dbtvault.is_something(src_additional_columns) -%}
-            {{ dbtvault.prefix([src_additional_columns], ns.last_cte) }},
+            {{ dbtvault.prefix([src_additional_columns], 'a') }},
         {%- endif %}
-        {{ ns.last_cte }}.{{ src_ldts }},
-        {{ ns.last_cte }}.{{ src_source }}
-    FROM {{ ns.last_cte }}
+        a.{{ src_ldts }},
+        a.{{ src_source }}
+    FROM {{ ns.last_cte }} AS a
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
         ON (
-            {{ ns.last_cte }}.{{ hashdiff_escaped }} = d.{{ hashdiff_escaped }}
-            AND {{ ns.last_cte }}.{{ src_ldts }} = d.{{ src_ldts }}
-            AND {{ ns.last_cte }}.{{ satellite_name_escaped }} = d.{{ satellite_name_escaped }}
+            a.{{ hashdiff_escaped }} = d.{{ hashdiff_escaped }}
+            AND a.{{ src_ldts }} = d.{{ src_ldts }}
+            AND a.{{ satellite_name_escaped }} = d.{{ satellite_name_escaped }}
         )
     WHERE d.{{ hashdiff_escaped }} IS NULL
     AND d.{{ src_ldts }} IS NULL
