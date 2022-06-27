@@ -41,7 +41,9 @@
             SELECT {{ dbtvault.prefix([src_pk], 's') }},
                    s.{{ dbtvault.escape_column_names(hashdiff) }} AS {{ hashdiff_escaped }},
                    s.{{ dbtvault.escape_column_names(satellite_name) }} AS {{ satellite_name_escaped }},
-                   {{ dbtvault.prefix([src_additional_columns], 's') }},
+                   {%- if dbtvault.is_something(src_additional_columns) -%}
+                       {{ dbtvault.prefix([src_additional_columns], 's') }},
+                   {%- endif %}
                    s.{{ src_ldts }},
                    s.{{ src_source }}
             FROM {{ ref(src) }} AS s
@@ -51,7 +53,7 @@
     {%- endfor %}
 {%- endfor %}
 
-{% if src_satellite.items() | list | length > 1 %}
+{% if source_model | length > 1 %}
 
 union_satellites AS (
     {%- for src in source_model %}
@@ -76,7 +78,9 @@ records_to_insert AS (
         {{ dbtvault.prefix([src_pk], ns.last_cte) }},
         {{ ns.last_cte }}.{{ hashdiff_escaped }},
         {{ ns.last_cte }}.{{ satellite_name_escaped }} ,
-        {{ dbtvault.prefix([src_additional_columns], ns.last_cte) }},
+        {%- if dbtvault.is_something(src_additional_columns) -%}
+            {{ dbtvault.prefix([src_additional_columns], ns.last_cte) }},
+        {%- endif %}
         {{ ns.last_cte }}.{{ src_ldts }},
         {{ ns.last_cte }}.{{ src_source }}
     FROM {{ ns.last_cte }}
