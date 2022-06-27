@@ -127,20 +127,20 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
       | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1992-12-31 | *      |
       | md5('1001') | md5('EDWARD\|\|1001\|\|EDEN')   | SAT_CUSTOMER   | 1992-12-31 | *      |
       | md5('1002') | md5('FRED\|\|1002\|\|FIELD')    | SAT_CUSTOMER   | 1992-12-31 | *      |
-    And the RAW_STAGE_1 table contains data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
       | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-01 | *      |
       | 1002        | Bob                | Barns             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | 1993-01-01 | *      |
       | 1003        | Chad               | Clarke            | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | 1993-01-01 | *      |
       | 1004        | Dom                | Davies            | 2018-04-13   | 17-214-233-1217 | East Sussex     | Brighton      | 1993-01-01 | *      |
-    And I stage the STG_CUSTOMER_1 data
-    And the RAW_STAGE_2 table contains data
+    And I stage the STG_CUSTOMER data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
       | 1005        | Edward             | Eden              | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-01 | *      |
       | 1006        | Fred               | Field             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | 1993-01-01 | *      |
       | 1007        | George             | Gardener          | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | 1993-01-01 | *      |
       | 1008        | Heather            | Hughes            | 2018-04-13   | 17-214-233-1217 | East Sussex     | Brighton      | 1993-01-01 | *      |
-    And I stage the STG_CUSTOMER_2 data
+    And I stage the STG_CUSTOMER data
     When I load the XTS xts
     Then the XTS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                          | SATELLITE_NAME | LOAD_DATE  | SOURCE |
@@ -167,20 +167,20 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
       | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1992-12-31 | *      |
     And I stage the STG_CUSTOMER_2SAT data
     And I load the XTS_2SAT xts
-    And the RAW_STAGE_2SAT_1 table contains data
+    And the RAW_STAGE_2SAT table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
       | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-01 | *      |
       | 1002        | Bob                | Barns             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | 1993-01-01 | *      |
       | 1003        | Chad               | Clarke            | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | 1993-01-01 | *      |
       | 1004        | Dom                | Davies            | 2018-04-13   | 17-214-233-1217 | East Sussex     | Brighton      | 1993-01-01 | *      |
-    And I stage the STG_CUSTOMER_2SAT_1 data
-    And the RAW_STAGE_2SAT_2 table contains data
+    And I stage the STG_CUSTOMER_2SAT data
+    And the RAW_STAGE_2SAT table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
       | 1005        | Edward             | Eden              | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | 1993-01-01 | *      |
       | 1006        | Fred               | Field             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | 1993-01-01 | *      |
       | 1007        | George             | Gardener          | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | 1993-01-01 | *      |
       | 1008        | Heather            | Hughes            | 2018-04-13   | 17-214-233-1217 | East Sussex     | Brighton      | 1993-01-01 | *      |
-    And I stage the STG_CUSTOMER_2SAT_2 data
+    And I stage the STG_CUSTOMER_2SAT data
     When I load the XTS_2SAT xts
     Then the XTS_2SAT table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                     | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
@@ -239,15 +239,15 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
     And I stage the STG_CUSTOMER data
     And I load the XTS xts
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER data
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                          | SATELLITE_NAME | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS')   | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')       | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')     | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
   Scenario: [XTS-INC-09] (1 SAT) Load mixed stages into non existent XTS - two cycles
@@ -305,15 +305,15 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
     And I stage the STG_CUSTOMER data
     And I load the XTS xts
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER data
     When I load the XTS xts
     Then the XTS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                          | SATELLITE_NAME | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS')   | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')       | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')     | SAT_CUSTOMER   | 1993-01-01 | *      |
-      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')      | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')     | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')   | SAT_CUSTOMER   | 1993-01-01 | *      |
+      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
   Scenario: [XTS-INC-11] (1 SAT) Load mixed stage + empty stage into a pre-populated XTS - two cycles
@@ -340,7 +340,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
     And I stage the STG_CUSTOMER data
     And I load the XTS xts
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER data
     When I load the XTS xts
     Then the XTS table should contain expected data
@@ -406,7 +406,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
     And I stage the STG_CUSTOMER_2SAT data
     And I load the XTS_2SAT xts
     And the RAW_STAGE_2SAT table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER_2SAT data
     When I load the XTS_2SAT xts
     Then the XTS_2SAT table should contain expected data
@@ -489,7 +489,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
     And I stage the STG_CUSTOMER_2SAT data
     And I load the XTS_2SAT xts
     And the RAW_STAGE_2SAT table contains data
-      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER_2SAT data
     When I load the XTS_2SAT xts
     Then the XTS_2SAT table should contain expected data
@@ -563,7 +563,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
 #      | md5('1001') | md5('1997-04-24\|\|1001\|\|17-214-233-1214') | SAT_CUSTOMER_DETAILS | 1993-12-31 | *      |
 #      | md5('1002') | md5('2006-04-17\|\|1002\|\|17-214-233-1215') | SAT_CUSTOMER_DETAILS | 1993-12-31 | *      |
 #    And the RAW_STAGE_2SAT table contains data
-#      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
+#      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE | SOURCE |
 #    And I stage the STG_CUSTOMER_2SAT data
 #    And I load the XTS_2SAT xts
 #    And the RAW_STAGE_2SAT table contains data
@@ -597,7 +597,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
 #      | md5('1007') | md5('2013-02-04\|\|1007\|\|17-214-233-1222') | SAT_CUSTOMER_DETAILS | 1993-01-02 | *      |
 #      | md5('1008') | md5('2018-04-13\|\|1008\|\|17-214-233-1223') | SAT_CUSTOMER_DETAILS | 1993-01-02 | *      |
 #      | md5('1009') | md5('2003-11-04\|\|1009\|\|17-214-233-1224') | SAT_CUSTOMER_DETAILS | 1993-01-02 | *      |
-
+#
 #  @fixture.xts
 #  Scenario: [XTS-INC-18] (2 SATs) Load mixed stage into prepopulated XTS - two cycles
 #    Given the XTS_2SAT xts is already populated with data
@@ -652,4 +652,34 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
 #      | md5('1007') | md5('2013-02-04\|\|1007\|\|17-214-233-1222') | SAT_CUSTOMER_DETAILS | 1993-01-02 | *      |
 #      | md5('1008') | md5('2018-04-13\|\|1008\|\|17-214-233-1223') | SAT_CUSTOMER_DETAILS | 1993-01-02 | *      |
 #      | md5('1009') | md5('2003-11-04\|\|1009\|\|17-214-233-1224') | SAT_CUSTOMER_DETAILS | 1993-01-02 | *      |
+
+  @fixture.xts
+  Scenario: [XTS-INC-19] (2 SATs) Load mixed stage + empty into non existent XTS with additional columns - one cycle
+    Given the XTS_2SAT_AC table does not exist
+    And the RAW_STAGE_2SAT table contains data
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
+      | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1001        | Alice              | Andrews           | 1997-04-24   | 17-214-233-1214 | Oxfordshire     | Oxford        | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1002        | Bob                | Barns             | 2006-04-17   | 17-214-233-1215 | Wiltshire       | Swindon       | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1002        | Bob                | Barns             | 2006-04-17   | 18-214-233-1215 | Wiltshire       | Swindon       | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1003        | Chad               | Clarke            | 2013-02-04   | 17-214-233-1216 | Lincolnshire    | Lincoln       | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | 1004        | Dom                | Davies            | 2018-04-13   | 17-214-233-1217 | East Sussex     | Brighton      | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | <null>      | Greg               | Stewart           | 2018-04-13   | 17-214-233-1218 | Kent            | Ashford       | TPCH_CUSTOMER  | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER_2SAT data
+    And I load the XTS_2SAT_AC xts
+    And the RAW_STAGE_2SAT table contains data
+      | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE | CUSTOMER_COUNTY | CUSTOMER_CITY | CUSTOMER_MT_ID | LOAD_DATE | SOURCE |
+    And I stage the STG_CUSTOMER_2SAT data
+    When I load the XTS_2SAT_AC xts
+    Then the XTS_2SAT_AC table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                     | SATELLITE_NAME       | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS')              | SAT_CUSTOMER         | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1002') | md5('BOB\|\|1002\|\|BARNS')                  | SAT_CUSTOMER         | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1003') | md5('CHAD\|\|1003\|\|CLARKE')                | SAT_CUSTOMER         | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1004') | md5('DOM\|\|1004\|\|DAVIES')                 | SAT_CUSTOMER         | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1001') | md5('1997-04-24\|\|1001\|\|17-214-233-1214') | SAT_CUSTOMER_DETAILS | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|17-214-233-1215') | SAT_CUSTOMER_DETAILS | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1002') | md5('2006-04-17\|\|1002\|\|18-214-233-1215') | SAT_CUSTOMER_DETAILS | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1003') | md5('2013-02-04\|\|1003\|\|17-214-233-1216') | SAT_CUSTOMER_DETAILS | TPCH_CUSTOMER  | 1993-01-01 | *      |
+      | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | TPCH_CUSTOMER  | 1993-01-01 | *      |
 
