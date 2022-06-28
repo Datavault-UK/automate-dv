@@ -165,7 +165,19 @@ def xts_snowflake(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
         },
+        "STG_CUSTOMER_CRM": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
+        },
         "STG_CUSTOMER_2SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        },
+        "STG_CUSTOMER_CRM_2SAT": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
                            "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
@@ -188,7 +200,16 @@ def xts_snowflake(context):
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_NAME": "!SAT_CUSTOMER"
         },
+        "STG_CUSTOMER_CRM": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_NAME": "!SAT_CUSTOMER"
+        },
         "STG_CUSTOMER_2SAT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_1": "!SAT_CUSTOMER",
+            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
+        },
+        "STG_CUSTOMER_CRM_2SAT": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_1": "!SAT_CUSTOMER",
             "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
@@ -202,7 +223,7 @@ def xts_snowflake(context):
     }
 
     context.seed_config = {
-        "RAW_STAGE": {
+        "RAW_STAGE_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
@@ -215,7 +236,34 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR",
             }
         },
-        "RAW_STAGE_2SAT": {
+        "RAW_STAGE_CUSTOMER_CRM": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
+        "RAW_STAGE_CUSTOMER_2SAT": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_FIRSTNAME": "VARCHAR",
+                "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_COUNTY": "VARCHAR",
+                "CUSTOMER_CITY": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR",
+            }
+        },
+        "RAW_STAGE_CUSTOMER_CRM_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
@@ -422,7 +470,7 @@ def xts_bigquery(context):
     }
 
     context.seed_config = {
-        "RAW_STAGE": {
+        "RAW_STAGE_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
@@ -435,7 +483,7 @@ def xts_bigquery(context):
                 "SOURCE": "STRING",
             }
         },
-        "RAW_STAGE_2SAT": {
+        "RAW_STAGE_CUSTOMER_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
@@ -610,7 +658,7 @@ def xts_sqlserver(context):
     }
 
     context.seed_config = {
-        "RAW_STAGE": {
+        "RAW_STAGE_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
@@ -623,7 +671,7 @@ def xts_sqlserver(context):
                 "SOURCE": "VARCHAR(50)",
             }
         },
-        "RAW_STAGE_2SAT": {
+        "RAW_STAGE_CUSTOMER_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
