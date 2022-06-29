@@ -11,6 +11,8 @@
 
 {{ 'WITH ' -}}
 
+{%- set stage_count = source_model | length -%}
+
 {%- set ns = namespace(last_cte= "") -%}
 
 {%- for src in source_model -%}
@@ -28,7 +30,7 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
         ) AS row_number
     FROM {{ ref (src) }} AS rr
-    {%- if source_model | length == 1 %}
+    {%- if stage_count == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition ='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition ='IS NOT NULL') }}
     QUALIFY row_number = 1
@@ -38,7 +40,7 @@ row_rank_{{ source_number }} AS (
 
 {% endfor -%}
 
-{% if source_model | length > 1 %}
+{% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
@@ -64,7 +66,7 @@ stage_mat_filter AS (
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
 {% endif %}
-{%- if source_model | length > 1 %}
+{%- if stage_count > 1 %}
 
 row_rank_union AS (
     SELECT ru.*,
