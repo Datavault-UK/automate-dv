@@ -10,6 +10,8 @@
 
 {{ 'WITH ' -}}
 
+{%- set stage_count = source_model | length -%}
+
 {%- set ns = namespace(last_cte= "") -%}
 
 {%- for src in source_model -%}
@@ -22,8 +24,7 @@ row_rank_{{ source_number }} AS (
     {%- else %}
     SELECT {{ source_cols | join(', ') }}
     {%- endif %}
-    FROM
-    (
+    FROM (
         {%- if model.config.materialized == 'vault_insert_by_rank' %}
         SELECT {{ dbtvault.prefix(source_cols_with_rank, 'rr') }},
         {%- else %}
@@ -40,7 +41,7 @@ row_rank_{{ source_number }} AS (
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
-{% if source_model | length > 1 %}
+{% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
@@ -51,6 +52,7 @@ stage_union AS (
     {%- set ns.last_cte = "stage_union" %}
 ),
 {%- endif -%}
+
 {%- if model.config.materialized == 'vault_insert_by_period' %}
 stage_mat_filter AS (
     SELECT *
@@ -66,12 +68,12 @@ stage_mat_filter AS (
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
 {%- endif -%}
-{%- if source_model | length > 1 %}
+
+{%- if stage_count > 1 %}
 
 row_rank_union AS (
     SELECT *
-    FROM
-    (
+    FROM (
         SELECT ru.*,
                ROW_NUMBER() OVER(
                    PARTITION BY {{ dbtvault.prefix([src_pk], 'ru') }}
