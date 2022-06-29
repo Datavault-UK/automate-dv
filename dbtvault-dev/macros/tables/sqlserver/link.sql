@@ -11,10 +11,6 @@
 
 {{ 'WITH ' -}}
 
-{%- if not (source_model is iterable and source_model is not string) -%}
-    {%- set source_model = [source_model] -%}
-{%- endif -%}
-
 {%- set ns = namespace(last_cte= "") -%}
 
 {%- for src in source_model -%}

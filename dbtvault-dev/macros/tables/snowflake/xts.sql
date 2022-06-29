@@ -9,6 +9,10 @@
     {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
+    {%- if not dbtvault.is_list(source_model) -%}
+        {%- set source_model = [source_model] -%}
+    {%- endif -%}
+
     {{- adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
                                             src_satellite=src_satellite,
                                             src_additional_columns=src_additional_columns,
@@ -21,18 +25,14 @@
 
 {{ dbtvault.prepend_generated_by() }}
 
-{%- if not (source_model is iterable and source_model is not string) -%}
-    {%- set source_model = [source_model] -%}
-{%- endif %}
-
 {%- set hashdiff_escaped = dbtvault.escape_column_names('HASHDIFF') -%}
 {%- set satellite_name_escaped = dbtvault.escape_column_names('SATELLITE_NAME') %}
 {%- set satellite_count = src_satellite.keys() | list | length %}
 {%- set stage_count = source_model | length %}
 
 {%- if execute -%}
-{%- do dbt_utils.log_info('Loading {} from {} stage(s) and {} satellite(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
-                                                                                   stage_count, satellite_count)) -%}
+    {%- do dbt_utils.log_info('Loading {} from {} source(s) and {} satellite(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
+                                                                                       stage_count, satellite_count)) -%}
 {%- endif -%}
 
 {%- set ns = namespace(last_cte= "") %}

@@ -10,6 +10,10 @@
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
+    {%- if not dbtvault.is_list(source_model) -%}
+        {%- set source_model = [source_model] -%}
+    {%- endif -%}
+
     {{- adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
                                              src_additional_columns=src_additional_columns,
                                              src_ldts=src_ldts, src_source=src_source,
@@ -29,10 +33,6 @@
 {{ dbtvault.prepend_generated_by() }}
 
 {{ 'WITH ' -}}
-
-{%- if not (source_model is iterable and source_model is not string) -%}
-    {%- set source_model = [source_model] -%}
-{%- endif -%}
 
 {%- set ns = namespace(last_cte= "") -%}
 
