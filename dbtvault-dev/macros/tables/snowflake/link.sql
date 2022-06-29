@@ -14,6 +14,11 @@
         {%- set source_model = [source_model] -%}
     {%- endif -%}
 
+    {%- if execute -%}
+        {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
+                                                                       source_model | length)) -%}
+    {%- endif -%}
+
     {{- adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
                                              src_additional_columns=src_additional_columns,
                                              src_ldts=src_ldts, src_source=src_source,
@@ -34,6 +39,8 @@
 
 {{ 'WITH ' -}}
 
+{%- set stage_count = source_model | length -%}
+
 {%- set ns = namespace(last_cte= "") -%}
 
 {%- for src in source_model -%}
@@ -51,7 +58,7 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
-    {%- if source_model | length == 1 %}
+    {%- if stage_count == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
@@ -59,7 +66,7 @@ row_rank_{{ source_number }} AS (
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
-{% if source_model | length > 1 %}
+{% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
@@ -85,7 +92,7 @@ stage_mat_filter AS (
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
 {% endif %}
-{%- if source_model | length > 1 %}
+{%- if stage_count > 1 %}
 
 row_rank_union AS (
     SELECT ru.*,

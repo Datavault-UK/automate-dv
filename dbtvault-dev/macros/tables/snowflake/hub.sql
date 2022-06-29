@@ -14,6 +14,11 @@
         {%- set source_model = [source_model] -%}
     {%- endif -%}
 
+    {%- if execute -%}
+        {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
+                                                                       source_model | length)) -%}
+    {%- endif -%}
+
     {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk,
                                             src_additional_columns=src_additional_columns,
                                             src_ldts=src_ldts, src_source=src_source,
@@ -33,11 +38,7 @@
 
 {{ 'WITH ' -}}
 
-{%- set stage_count = source_model | length %}
-{%- if execute -%}
-    {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
-                                                                   stage_count)) -%}
-{%- endif -%}
+{%- set stage_count = source_model | length -%}
 
 {%- set ns = namespace(last_cte= "") -%}
 
