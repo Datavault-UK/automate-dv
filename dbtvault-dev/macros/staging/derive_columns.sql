@@ -14,27 +14,61 @@
 {%- set source_cols = dbtvault.source_columns(source_relation=source_relation) -%}
 
 {%- if columns is mapping and columns is not none -%}
+    {%- do log('@@@ columns ' ~ columns, true) -%}
 
     {#- Add aliases of derived columns to excludes and full SQL to includes -#}
     {%- for col in columns -%}
+        {%- do log('@@@ column alias ' ~ col, true) -%}
+        {% set col_alias = col %}
+        {%- do log('@@@ column config ' ~ columns[col], true) -%}
+        {% set col_config = columns[col] %}
 
-        {%- if dbtvault.is_list(columns[col]) -%}
+        {%- if dbtvault.is_list(col_config) -%}
             {%- set column_list = [] -%}
 
-            {%- for concat_component in columns[col] -%}
-                {%- set column_str = dbtvault.as_constant(concat_component) -%}
-                {%- do column_list.append(dbtvault.escape_column_names(column_str)) -%}
+            {%- for concat_component in columns[col_alias] -%}
+                {%- if concat_component is mapping and concat_component is not none -%}
+                    {%- set column_str = dbtvault.as_constant(concat_component['source_column']) -%}
+                    {%- set column_escape = concat_component['escape'] -%}
+                    {%- if column_escape is true -%}
+                        {%- set column_str = dbtvault.escape_column_names(dbtvault.as_constant(column_str)) -%}
+                    {% else %}
+                        {%- set column_str = dbtvault.as_constant(column_str) -%}
+                    {% endif %}
+                {%- else -%}
+                    {%- set column_str = dbtvault.as_constant(concat_component) -%}
+                    {%- if column_str | first == '?' %}
+                        {%- set column_str = dbtvault.escape_column_names(column_str[1:]) -%}
+                    {% endif %}
+                {%- endif -%}
+                {%- do column_list.append(column_str) -%}
             {%- endfor -%}
             {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
-            {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(col) -%}
+            {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(col_alias) -%}
 
             {%- do der_columns.append(concat_string) -%}
-            {%- set exclude_columns = exclude_columns + columns[col] -%}
-        {% else %}
-            {%- set column_str = dbtvault.as_constant(columns[col]) -%}
-            {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ dbtvault.escape_column_names(col)) -%}
-            {%- do exclude_columns.append(col) -%}
-        {% endif %}
+            {%- do exclude_columns.append(col_alias) -%}
+            {%- do log('@@@ der_columns ' ~ der_columns, true) -%}
+            {%- do log('@@@ exclude_columns ' ~ exclude_columns, true) -%}
+        {%- else -%}
+            {%- if col_config is mapping and col_config is not none -%}
+                {%- set column_str = dbtvault.as_constant(col_config['source_column']) -%}
+                {%- set column_escape = col_config['escape'] -%}
+                {%- do log('@@@ column_escape ' ~ column_escape, true) -%}
+                {%- if column_escape is true -%}
+                    {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ dbtvault.escape_column_names(col_alias)) -%}
+                {%- else -%}
+                    {%- do der_columns.append(column_str ~ " AS " ~ dbtvault.escape_column_names(col_alias)) -%}
+                {%- endif -%}
+            {%- else -%}
+                {%- set column_str = dbtvault.as_constant(col_config) -%}
+                {%- if column_str | first == '?' %}
+                    {%- set column_str = dbtvault.escape_column_names(column_str[1:]) -%}
+                {% endif %}
+                {%- do der_columns.append(column_str ~ " AS " ~ dbtvault.escape_column_names(col_alias)) -%}
+            {%- endif -%}
+            {%- do exclude_columns.append(col_alias) -%}
+        {%- endif -%}
 
     {%- endfor -%}
 
@@ -56,6 +90,11 @@
     {%- for col in include_columns -%}
         {{- col | indent(4) -}}{{ ",\n" if not loop.last }}
     {%- endfor -%}
+    {%- do log('@@@ source_cols ' ~ source_cols, true) -%}
+    {%- do log('@@@ exclude_columns ' ~ exclude_columns, true) -%}
+    {%- do log('@@@ src_columns ' ~ src_columns, true) -%}
+    {%- do log('@@@ der_columns ' ~ der_columns, true) -%}
+    {%- do log('@@@ include_columns ' ~ include_columns, true) -%}
 
 {%- else -%}
 

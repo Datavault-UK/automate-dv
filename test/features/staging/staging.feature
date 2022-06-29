@@ -768,8 +768,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
-      | EFFECTIVE_FROM | SOURCE     | COLUMN                     | CUSTOMER_NAME |
-      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,CUSTOMER NAME] | CUSTOMER NAME |
+      | EFFECTIVE_FROM | SOURCE     | COLUMN                      | CUSTOMER_NAME  |
+      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,?CUSTOMER NAME] | ?CUSTOMER NAME |
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK | HASHDIFF                                              |
       | CUSTOMER_ID | hashdiff('CUSTOMER NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
@@ -785,34 +785,6 @@ Feature: [STG] Staging
       | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD\|\|2013-02-04\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
       | 1004        | Dom           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('DOM\|\|2018-04-13\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
 
-  @bigquery
-  @fixture.staging_escaped
-  Scenario: [STG-21-BQ] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
-  There is derived column called COLUMN
-    Given the STG_CUSTOMER table does not exist
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
-      | 1001        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
-      | 1002        | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
-      | 1003        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
-      | 1004        | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I have derived columns in the STG_CUSTOMER model
-      | EFFECTIVE_FROM | SOURCE     | COLUMN       |
-      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE] |
-    And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                |
-      | CUSTOMER_ID | hashdiff('CUSTOMER_DOB,CUSTOMER_PHONE') |
-    And I have ranked columns in the STG_CUSTOMER model
-      | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
-    When I stage the STG_CUSTOMER data
-    Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                             | EFFECTIVE_FROM | SOURCE    | COLUMN    | DBTVAULT_RANK |
-      | 1001        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE | 1             |
-      | 1002        | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|17-214-233-1215') | 1993-01-01     | RAW_STAGE | RAW_STAGE | 1             |
-      | 1003        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|17-214-233-1216') | 1993-01-01     | RAW_STAGE | RAW_STAGE | 1             |
-      | 1004        | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|17-214-233-1217') | 1993-01-01     | RAW_STAGE | RAW_STAGE | 1             |
-
   @sqlserver
   @fixture.staging_escaped
   Scenario: [STG-21-SQLS] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
@@ -825,8 +797,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER_CONCAT model
-      | EFFECTIVE_FROM | SOURCE     | DERIVED_CONCAT             | CUSTOMER_NAME |
-      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,CUSTOMER NAME] | CUSTOMER NAME |
+      | EFFECTIVE_FROM | SOURCE     | DERIVED_CONCAT              | CUSTOMER_NAME  |
+      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,?CUSTOMER NAME] | ?CUSTOMER NAME |
     And I have hashed columns in the STG_CUSTOMER_CONCAT model
       | CUSTOMER_PK | HASHDIFF                                              |
       | CUSTOMER_ID | hashdiff('CUSTOMER NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
