@@ -11,7 +11,7 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.9999999') -%}
+{%- set max_datetime = dbtvault.max_datetime() -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
@@ -38,8 +38,8 @@ last_safe_load_datetime AS (
     FROM (
     {%- filter indent(width=8) -%}
     {%- for stg in stage_tables_ldts -%}
-        {%- set stage_ldts =(stage_tables_ldts[stg])  -%}
-        {{ "SELECT MIN(" ~ stage_ldts ~ ") AS LOAD_DATETIME FROM " ~ ref(stg) }}
+        {%- set stage_ldts = stage_tables_ldts[stg] -%}
+        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
     {%- endfilter -%}
