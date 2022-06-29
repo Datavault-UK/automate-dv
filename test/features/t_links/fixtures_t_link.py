@@ -1,25 +1,8 @@
 from behave import fixture
 
 
-@fixture
-def t_link_snowflake(context):
-    """
-    Define the structures and metadata to load transactional links
-    """
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
+def set_vault_structure_definition(context):
+    context.vault_structure_type = "xts"
 
     context.vault_structure_columns = {
         "T_LINK": {
@@ -40,6 +23,29 @@ def t_link_snowflake(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        }
+    }
+
+
+@fixture
+def t_link_snowflake(context):
+    """
+    Define the structures and metadata to load transactional links
+    """
+
+    set_vault_structure_definition(context)
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "ORDER_FK": "ORDER_ID"
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "TRANSACTION_DATE"
         }
     }
 
@@ -94,6 +100,8 @@ def t_link_bigquery(context):
     Define the structures and metadata to load transactional links
     """
 
+    set_vault_structure_definition(context)
+
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
@@ -105,28 +113,6 @@ def t_link_bigquery(context):
     context.derived_columns = {
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "T_LINK_AC": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_additional_columns": "CUSTOMER_MT_ID",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
         }
     }
 
@@ -181,6 +167,8 @@ def t_link_sqlserver(context):
     Define the structures and metadata to load transactional links
     """
 
+    set_vault_structure_definition(context)
+
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
@@ -192,28 +180,6 @@ def t_link_sqlserver(context):
     context.derived_columns = {
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "T_LINK_AC": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_additional_columns": "CUSTOMER_MT_ID",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
         }
     }
 

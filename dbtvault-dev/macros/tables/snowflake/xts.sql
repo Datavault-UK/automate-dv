@@ -30,6 +30,11 @@
 {%- set satellite_count = src_satellite.keys() | list | length %}
 {%- set stage_count = source_model | length %}
 
+{%- if execute -%}
+{%- do dbt_utils.log_info('Loading {} from {} stage(s) and {} satellite(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
+                                                                                   stage_count, satellite_count)) -%}
+{%- endif -%}
+
 {%- set ns = namespace(last_cte= "") %}
 
 {{ 'WITH ' }}
