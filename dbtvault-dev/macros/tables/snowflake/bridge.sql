@@ -1,4 +1,4 @@
-{%- macro bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
+{%- macro bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
 
     {{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
                                            as_of_dates_table=as_of_dates_table,
@@ -7,16 +7,18 @@
                                            src_ldts=src_ldts) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+    {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
     {{- adapter.dispatch('bridge', 'dbtvault')(source_model=source_model, src_pk=src_pk,
                                                bridge_walk=bridge_walk,
                                                as_of_dates_table=as_of_dates_table,
                                                stage_tables_ldts=stage_tables_ldts,
+                                               src_additional_columns=src_additional_columns,
                                                src_ldts=src_ldts) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
+{%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -29,7 +31,7 @@
     {%- set source_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') -%}
+{%- set max_datetime = dbtvault.max_datetime() -%}
 
 {#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
@@ -56,8 +58,8 @@ last_safe_load_datetime AS (
     FROM (
     {%- filter indent(width=8) -%}
     {%- for stg in stage_tables_ldts -%}
-        {%- set stage_ldts =(stage_tables_ldts[stg])  -%}
-        {{ "SELECT MIN(" ~ stage_ldts ~ ") AS LOAD_DATETIME FROM " ~ ref(stg) }}
+        {%- set stage_ldts = stage_tables_ldts[stg] -%}
+        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
     {%- endfilter -%}
