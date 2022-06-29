@@ -10,6 +10,8 @@
 
 {{ 'WITH ' -}}
 
+{%- set stage_count = source_model | length -%}
+
 {%- set ns = namespace(last_cte= "") -%}
 
 {%- for src in source_model -%}
@@ -33,7 +35,7 @@
 ),
 
 {% endfor -%}
-{% if source_model | length > 1 %}
+{% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
@@ -59,7 +61,7 @@ stage_mat_filter AS (
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
 {%- endif -%}
-{%- if source_model | length > 1 %}
+{%- if stage_count > 1 %}
 
     row_rank_union AS (
     SELECT ru.*,
