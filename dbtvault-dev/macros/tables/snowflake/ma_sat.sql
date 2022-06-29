@@ -98,15 +98,12 @@ records_to_insert AS (
 
 {# if any_incremental -#}
 {% if dbtvault.is_any_incremental() %}
-    WHERE EXISTS
-    (
+    WHERE EXISTS (
         SELECT 1
         FROM source_data AS stage
-        WHERE NOT EXISTS
-        (
+        WHERE NOT EXISTS (
             SELECT 1
-            FROM
-            (
+            FROM (
                 SELECT {{ dbtvault.prefix(cols_for_latest, 'lr', alias_target='target') }}
                 ,lg.latest_count
                 FROM latest_records AS lr
