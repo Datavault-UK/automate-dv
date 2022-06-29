@@ -1,97 +1,8 @@
 from behave import fixture
 
 
-@fixture
-def xts_snowflake(context):
-    """
-    Define the structures and metadata to load xts
-    """
-
+def set_vault_structure_definition(context):
     context.vault_structure_type = "xts"
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_1": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_2SAT_1": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_2SAT_2": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_3SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
-            "HASHDIFF_3": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_1": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_2SAT_1": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_2SAT_2": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_3SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
-        }
-    }
 
     context.vault_structure_columns = {
         "XTS": {
@@ -239,8 +150,80 @@ def xts_snowflake(context):
         }
     }
 
+
+@fixture
+def xts_snowflake(context):
+    """
+    Define the structures and metadata to load xts
+    """
+
+    set_vault_structure_definition(context)
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
+        },
+        "STG_CUSTOMER_CRM": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
+        },
+        "STG_CUSTOMER_2SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        },
+        "STG_CUSTOMER_CRM_2SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
+        },
+        "STG_CUSTOMER_3SAT": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF_1": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
+            "HASHDIFF_2": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
+            "HASHDIFF_3": {"is_hashdiff": True,
+                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
+        }
+    }
+
+    context.derived_columns = {
+        "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_NAME": "!SAT_CUSTOMER"
+        },
+        "STG_CUSTOMER_CRM": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_NAME": "!SAT_CUSTOMER"
+        },
+        "STG_CUSTOMER_2SAT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_1": "!SAT_CUSTOMER",
+            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
+        },
+        "STG_CUSTOMER_CRM_2SAT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_1": "!SAT_CUSTOMER",
+            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
+        },
+        "STG_CUSTOMER_3SAT": {
+            "EFFECTIVE_FROM": "LOAD_DATE",
+            "SATELLITE_1": "!SAT_CUSTOMER",
+            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
+            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
+        }
+    }
+
     context.seed_config = {
-        "RAW_STAGE": {
+        "RAW_STAGE_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
@@ -253,7 +236,7 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR",
             }
         },
-        "RAW_STAGE_1": {
+        "RAW_STAGE_CUSTOMER_CRM": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
@@ -266,21 +249,7 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR",
             }
         },
-        "RAW_STAGE_2": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-            }
-        },
-        "RAW_STAGE_2SAT": {
+        "RAW_STAGE_CUSTOMER_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
@@ -294,21 +263,7 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR",
             }
         },
-        "RAW_STAGE_2SAT_1": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-            }
-        },
-        "RAW_STAGE_2SAT_2": {
+        "RAW_STAGE_CUSTOMER_CRM_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
@@ -470,7 +425,7 @@ def xts_bigquery(context):
     Define the structures and metadata to load xts
     """
 
-    context.vault_structure_type = "xts"
+    set_vault_structure_definition(context)
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -478,31 +433,7 @@ def xts_bigquery(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
         },
-        "STG_CUSTOMER_1": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
         "STG_CUSTOMER_2SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_2SAT_1": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_2SAT_2": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
                            "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
@@ -525,25 +456,7 @@ def xts_bigquery(context):
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_NAME": "!SAT_CUSTOMER"
         },
-        "STG_CUSTOMER_1": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
         "STG_CUSTOMER_2SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_2SAT_1": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_2SAT_2": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_1": "!SAT_CUSTOMER",
             "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
@@ -556,95 +469,8 @@ def xts_bigquery(context):
         }
     }
 
-    context.vault_structure_columns = {
-        "XTS": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_COMPPK": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_2SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_3SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                },
-                "SATELLITE_CUSTOMER_LOCATION": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_3"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_3"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
-        }
-    }
-
     context.seed_config = {
-        "RAW_STAGE": {
+        "RAW_STAGE_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
@@ -657,59 +483,7 @@ def xts_bigquery(context):
                 "SOURCE": "STRING",
             }
         },
-        "RAW_STAGE_1": {
-            "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_FIRSTNAME": "STRING",
-                "CUSTOMER_LASTNAME": "STRING",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_COUNTY": "STRING",
-                "CUSTOMER_CITY": "STRING",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "STRING",
-            }
-        },
-        "RAW_STAGE_2": {
-            "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_FIRSTNAME": "STRING",
-                "CUSTOMER_LASTNAME": "STRING",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_COUNTY": "STRING",
-                "CUSTOMER_CITY": "STRING",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "STRING",
-            }
-        },
-        "RAW_STAGE_2SAT": {
-            "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_FIRSTNAME": "STRING",
-                "CUSTOMER_LASTNAME": "STRING",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_COUNTY": "STRING",
-                "CUSTOMER_CITY": "STRING",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "STRING",
-            }
-        },
-        "RAW_STAGE_2SAT_1": {
-            "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_FIRSTNAME": "STRING",
-                "CUSTOMER_LASTNAME": "STRING",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_COUNTY": "STRING",
-                "CUSTOMER_CITY": "STRING",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "STRING",
-            }
-        },
-        "RAW_STAGE_2SAT_2": {
+        "RAW_STAGE_CUSTOMER_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
@@ -839,7 +613,7 @@ def xts_sqlserver(context):
     Define the structures and metadata to load xts
     """
 
-    context.vault_structure_type = "xts"
+    set_vault_structure_definition(context)
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
@@ -847,31 +621,7 @@ def xts_sqlserver(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
         },
-        "STG_CUSTOMER_1": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
         "STG_CUSTOMER_2SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_2SAT_1": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_2SAT_2": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF_1": {"is_hashdiff": True,
                            "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
@@ -894,25 +644,7 @@ def xts_sqlserver(context):
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_NAME": "!SAT_CUSTOMER"
         },
-        "STG_CUSTOMER_1": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
         "STG_CUSTOMER_2SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_2SAT_1": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_2SAT_2": {
             "EFFECTIVE_FROM": "LOAD_DATE",
             "SATELLITE_1": "!SAT_CUSTOMER",
             "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
@@ -925,95 +657,8 @@ def xts_sqlserver(context):
         }
     }
 
-    context.vault_structure_columns = {
-        "XTS": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_COMPPK": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_NAME"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF"
-                    }
-                },
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_2SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
-        },
-        "XTS_3SAT": {
-            "src_pk": "CUSTOMER_PK",
-            "src_ldts": "LOAD_DATE",
-            "src_satellite": {
-                "SATELLITE_CUSTOMER": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_1"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_1"
-                    }
-                },
-                "SATELLITE_CUSTOMER_DETAILS": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_2"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_2"
-                    }
-                },
-                "SATELLITE_CUSTOMER_LOCATION": {
-                    "sat_name": {
-                        "SATELLITE_NAME": "SATELLITE_3"
-                    },
-                    "hashdiff": {
-                        "HASHDIFF": "HASHDIFF_3"
-                    }
-                }
-            },
-            "src_source": "SOURCE"
-        }
-    }
-
     context.seed_config = {
-        "RAW_STAGE": {
+        "RAW_STAGE_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
@@ -1026,59 +671,7 @@ def xts_sqlserver(context):
                 "SOURCE": "VARCHAR(50)",
             }
         },
-        "RAW_STAGE_1": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
-                "CUSTOMER_LASTNAME": "VARCHAR(50)",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_COUNTY": "VARCHAR(50)",
-                "CUSTOMER_CITY": "VARCHAR(50)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)",
-            }
-        },
-        "RAW_STAGE_2": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
-                "CUSTOMER_LASTNAME": "VARCHAR(50)",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_COUNTY": "VARCHAR(50)",
-                "CUSTOMER_CITY": "VARCHAR(50)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)",
-            }
-        },
-        "RAW_STAGE_2SAT": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
-                "CUSTOMER_LASTNAME": "VARCHAR(50)",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_COUNTY": "VARCHAR(50)",
-                "CUSTOMER_CITY": "VARCHAR(50)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)",
-            }
-        },
-        "RAW_STAGE_2SAT_1": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
-                "CUSTOMER_LASTNAME": "VARCHAR(50)",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_COUNTY": "VARCHAR(50)",
-                "CUSTOMER_CITY": "VARCHAR(50)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)",
-            }
-        },
-        "RAW_STAGE_2SAT_2": {
+        "RAW_STAGE_CUSTOMER_2SAT": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
