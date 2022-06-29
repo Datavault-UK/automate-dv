@@ -1,16 +1,6 @@
 {%- macro bigquery__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-
 {{ dbtvault.prepend_generated_by() }}
-
-{%- if (as_of_dates_table is none) and execute -%}
-    {%- set error_message -%}
-    "Bridge error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
-    {%- endset -%}
-    {{- exceptions.raise_compiler_error(error_message) -}}
-{%- endif -%}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
