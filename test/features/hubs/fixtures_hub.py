@@ -295,7 +295,7 @@ def multi_source_comppk_hub_snowflake(context):
 @fixture
 def single_source_hub_bigquery(context):
     """
-    Define the structures and metadata to load single-source hubs
+    Define the structures and metadata to load single-source hubs with composite PK
     """
 
     context.hashed_columns = {
@@ -306,7 +306,7 @@ def single_source_hub_bigquery(context):
 
     context.vault_structure_columns = {
         "HUB": {
-            "src_pk": "CUSTOMER_PK",
+            "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -316,18 +316,20 @@ def single_source_hub_bigquery(context):
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_CK": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
+                "SOURCE": "VARCHAR"
             }
         }
     }
@@ -361,7 +363,7 @@ def single_source_comppk_hub_bigquery(context):
                 "CUSTOMER_CK": "STRING",
                 "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE": {
@@ -370,7 +372,7 @@ def single_source_comppk_hub_bigquery(context):
                 "CUSTOMER_CK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
+                "SOURCE": "VARCHAR"
             }
         }
     }
@@ -393,6 +395,15 @@ def single_source_comppknk_hub_bigquery(context):
         "HUB": {
             "src_pk": ["CUSTOMER_PK1", "CUSTOMER_PK2"],
             "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
@@ -653,21 +664,38 @@ def single_source_hub_sqlserver(context):
     }
 
 
+# SQLSERVER
+
 @fixture
-def single_source_comppk_hub_sqlserver(context):
+def single_source_hub_sqlserver(context):
     """
-    Define the structures and metadata to load single-source hubs with composite PK
+    Define the structures and metadata to load single-source hubs
     """
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID"
+        },
+        "STG_CUSTOMER_HASHLIST": {
+            "CUSTOMER_PK": ["CUSTOMER_ID", "CUSTOMER_NAME"]
         }
     }
 
     context.vault_structure_columns = {
+        "HUB_CUSTOMER": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_CUSTOMER_SHA": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "HUB": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
+            "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -678,25 +706,22 @@ def single_source_comppk_hub_sqlserver(context):
         "HUB_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(4)"
             }
         },
         "HUB_CUSTOMER_SHA": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(32)",
-                "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(4)"
             }
         },
         "HUB": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(4)"
@@ -705,10 +730,9 @@ def single_source_comppk_hub_sqlserver(context):
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(4)",
-                "CUSTOMER_CK": "VARCHAR(4)",
                 "CUSTOMER_NAME": "VARCHAR(5)",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE": "DATE",
+                "LOAD_DATE": "DATETIME",
                 "SOURCE": "VARCHAR(4)"
             }
         }
@@ -767,17 +791,8 @@ def multi_source_hub_sqlserver(context):
     """
 
     context.hashed_columns = {
-        "STG_PARTS": {
-            "PART_PK": "PART_ID"
-        },
-        "STG_SUPPLIER": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID"
-        },
-        "STG_LINEITEM": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID",
-            "ORDER_PK": "ORDER_ID"
+        "STG_CUSTOMER": {
+            "CUSTOMER_PK": "CUSTOMER_ID"
         }
     }
 
@@ -791,7 +806,7 @@ def multi_source_hub_sqlserver(context):
     }
 
     context.seed_config = {
-        "HUB": {
+        "HUB_CUSTOMER": {
             "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR(4)",
@@ -799,7 +814,7 @@ def multi_source_hub_sqlserver(context):
                 "SOURCE": "VARCHAR(4)"
             }
         },
-        "RAW_STAGE_PARTS": {
+        "HUB_CUSTOMER_SHA": {
             "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "PART_NAME": "VARCHAR(10)",
@@ -810,7 +825,7 @@ def multi_source_hub_sqlserver(context):
                 "SOURCE": "VARCHAR(4)"
             }
         },
-        "RAW_STAGE_SUPPLIER": {
+        "HUB": {
             "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "SUPPLIER_ID": "VARCHAR(2)",
@@ -820,7 +835,7 @@ def multi_source_hub_sqlserver(context):
                 "SOURCE": "VARCHAR(4)"
             }
         },
-        "RAW_STAGE_LINEITEM": {
+        "RAW_STAGE": {
             "column_types": {
                 "ORDER_ID": "VARCHAR(5)",
                 "PART_ID": "VARCHAR(4)",

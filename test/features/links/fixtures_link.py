@@ -229,6 +229,8 @@ def single_source_link_bigquery(context):
     }
 
 
+# BIGQUERY
+
 @fixture
 def single_source_comppk_link_bigquery(context):
     """
@@ -406,6 +408,8 @@ def single_source_link_sqlserver(context):
         }
     }
 
+
+# SQLSERVER
 
 @fixture
 def single_source_comppk_link_sqlserver(context):
