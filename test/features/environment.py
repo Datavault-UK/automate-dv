@@ -49,7 +49,7 @@ fixtures_registry = {
     "fixture.single_source_comppk_hub":
         {"snowflake": fixtures_hub.single_source_comppk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
-         "sqlserver": fixtures_hub.single_source_comppk_hub_sqlserver,
+         "sqlserver": '',
          "databricks": '',
          "postgres": ''},
 
