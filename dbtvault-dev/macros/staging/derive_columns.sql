@@ -24,6 +24,7 @@
 
             {%- for concat_component in column_config -%}
                 {%- set column_str = dbtvault.as_constant(concat_component) -%}
+                {# The '?' feature enables testing from feature files and is not intended for general use #}
                 {%- if column_str | first == '?' %}
                     {%- set column_str = dbtvault.escape_column_names(column_str[1:]) -%}
                 {% endif %}
@@ -43,6 +44,7 @@
 
                     {%- for concat_component in column_config['source_column'] -%}
                         {%- set column_str = dbtvault.as_constant(concat_component) -%}
+                        {# The '?' feature enables testing from feature files and is not intended for general use #}
                         {%- if column_str | first == '?' %}
                             {%- set column_str = dbtvault.escape_column_names(column_str[1:]) -%}
                         {% endif %}
@@ -66,6 +68,7 @@
                 {%- endif -%}
             {%- else -%}
                 {%- set column_str = dbtvault.as_constant(column_config) -%}
+                {# The '?' feature enables testing from feature files and is not intended for general use #}
                 {%- if column_str | first == '?' %}
                     {%- set column_str = dbtvault.escape_column_names(column_str[1:]) -%}
                 {% endif %}
