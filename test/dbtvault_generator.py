@@ -305,7 +305,7 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
 
 
 def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
-           config, depends_on=""):
+           config, src_additional_columns=None, depends_on=""):
     """
     Generate a bridge model template
         :param model_name: Name of the model file
@@ -314,6 +314,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
         :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
         :param stage_tables_ldts: List of stage table load date(time) stamps
         :param source_model: Model name to select from
+        :param src_additional_columns: Additional columns to add to the bridge
         :param src_ldts: Source load date timestamp
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -323,6 +324,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     {{{{ config({config}) }}}}
     {{{{ dbtvault.bridge(src_pk={src_pk}, as_of_dates_table={as_of_dates_table}, 
                          bridge_walk={bridge_walk}, stage_tables_ldts={stage_tables_ldts}, 
+                         src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                          src_ldts={src_ldts}, source_model={source_model}) }}}}
     """
 
