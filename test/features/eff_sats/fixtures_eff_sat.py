@@ -1,6 +1,19 @@
 from behave import fixture
 
 
+def set_vault_structure_definition(context):
+    pass
+
+
+def set_staging_definition(context):
+    pass
+
+
+def set_metadata(context):
+    set_vault_structure_definition(context)
+
+    set_staging_definition(context)
+
 # Snowflake
 
 

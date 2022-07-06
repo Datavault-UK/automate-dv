@@ -1,23 +1,7 @@
 from behave import fixture
 
 
-# Snowflake
-
-
-@fixture
-def single_source_link_snowflake(context):
-    """
-    Define the structures and metadata to load single-source links
-    """
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
+def set_vault_structure_definition(context):
     context.vault_structure_columns = {
         "LINK": {
             "src_pk": "CUSTOMER_NATION_PK",
@@ -33,6 +17,34 @@ def single_source_link_snowflake(context):
             "src_source": "SOURCE"
         }
     }
+
+
+def set_staging_definition(context):
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        }
+    }
+
+
+def set_metadata(context):
+    set_vault_structure_definition(context)
+
+    set_staging_definition(context)
+
+
+# Snowflake
+
+
+@fixture
+def single_source_link_snowflake(context):
+    """
+    Define the structures and metadata to load single-source links
+    """
+
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -74,23 +86,7 @@ def single_source_comppk_link_snowflake(context):
     Define the structures and metadata to load single-source links with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -123,32 +119,7 @@ def multi_source_link_snowflake(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_SAP": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_CRM": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_WEB": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -205,29 +176,7 @@ def single_source_link_bigquery(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "LINK_AC": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_additional_columns": "CUSTOMER_MT_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -269,23 +218,7 @@ def single_source_comppk_link_bigquery(context):
     Define the structures and metadata to load single-source links with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -318,32 +251,7 @@ def multi_source_link_bigquery(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_SAP": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_CRM": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_WEB": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -400,29 +308,7 @@ def single_source_link_sqlserver(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "LINK_AC": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_additional_columns": "CUSTOMER_MT_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -464,23 +350,7 @@ def single_source_comppk_link_sqlserver(context):
     Define the structures and metadata to load single-source links with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -513,32 +383,7 @@ def multi_source_link_sqlserver(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_SAP": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_CRM": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_WEB": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -594,22 +439,7 @@ def single_source_link_databricks(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
