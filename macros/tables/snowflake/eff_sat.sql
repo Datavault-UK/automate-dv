@@ -109,7 +109,9 @@ new_reopened_records AS (
         g.{{ src_start_date }} AS {{ src_start_date }},
         {% endif %}
         g.{{ src_end_date }} AS {{ src_end_date }},
+        {%- if dbtvault.is_something(src_additional_columns) -%}
         {{ dbtvault.prefix([src_additional_columns], 'g') }},
+        {%- endif -%}
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
         g.{{ src_source }}
