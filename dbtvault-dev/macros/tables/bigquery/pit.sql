@@ -8,8 +8,6 @@
 {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
-{{ dbtvault.prepend_generated_by() }}
-
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
     "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."

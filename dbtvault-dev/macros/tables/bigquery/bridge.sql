@@ -1,7 +1,5 @@
 {%- macro bigquery__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
 
-{{ dbtvault.prepend_generated_by() }}
-
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
     {%- set source_name = as_of_dates_table | first -%}

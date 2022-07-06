@@ -15,6 +15,8 @@
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
+    {{- dbtvault.prepend_generated_by() }}
+
     {{- adapter.dispatch('ma_sat', 'dbtvault')(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff,
                                                src_payload=src_payload, src_additional_columns=src_additional_columns,
                                                src_eff=src_eff, src_ldts=src_ldts,
@@ -32,8 +34,6 @@
 {%- if model.config.materialized == 'vault_insert_by_rank' -%}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 {# Select unique source records #}
 WITH source_data AS (

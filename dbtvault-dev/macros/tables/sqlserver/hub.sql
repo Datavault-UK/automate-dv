@@ -6,8 +6,6 @@
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
-{{ dbtvault.prepend_generated_by() }}
-
 {{ 'WITH ' -}}
 
 {%- set stage_count = source_model | length -%}
