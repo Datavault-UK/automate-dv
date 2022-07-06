@@ -15,9 +15,9 @@
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-    {{- dbtvault.prepend_generated_by() }}
+    {{ dbtvault.prepend_generated_by() }}
 
-    {{- adapter.dispatch('ma_sat', 'dbtvault')(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff,
+    {{ adapter.dispatch('ma_sat', 'dbtvault')(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff,
                                                src_payload=src_payload, src_additional_columns=src_additional_columns,
                                                src_eff=src_eff, src_ldts=src_ldts,
                                                src_source=src_source, source_model=source_model) -}}

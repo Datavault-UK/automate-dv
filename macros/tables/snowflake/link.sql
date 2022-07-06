@@ -20,9 +20,9 @@
                                                                        source_model | length)) -%}
     {%- endif -%}
 
-    {{- dbtvault.prepend_generated_by() }}
+    {{ dbtvault.prepend_generated_by() }}
 
-    {{- adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
+    {{ adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
                                              src_additional_columns=src_additional_columns,
                                              src_ldts=src_ldts, src_source=src_source,
                                              source_model=source_model) -}}
@@ -38,7 +38,7 @@
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
-{{ 'WITH ' -}}
+{{- 'WITH ' -}}
 
 {%- set stage_count = source_model | length -%}
 
