@@ -1,4 +1,4 @@
-{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, ranked_columns=none) -%}
+{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, ranked_columns=none, null_columns=none) -%}
 
     {%- if include_source_columns is none -%}
         {%- set include_source_columns = true -%}
@@ -8,7 +8,8 @@
                                               source_model=source_model,
                                               hashed_columns=hashed_columns,
                                               derived_columns=derived_columns,
-                                              ranked_columns=ranked_columns) -}}
+                                              ranked_columns=ranked_columns,
+                                              null_columns=null_columns) -}}
 {%- endmacro -%}
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, ranked_columns) -%}
@@ -93,6 +94,24 @@ derived_columns AS (
     {%- set final_columns_to_select = final_columns_to_select + derived_column_names %}
 )
 {%- endif -%}
+
+{% if dbtvault.is_something(null_columns) -%},
+
+null_columns AS (
+
+    SELECT
+    CUSTOMER_ID AS CUSTOMER_ID_ORIGINAL
+    CASE
+        WHEN CUSTOMER_ID IS NULL THEN "-1"
+        ELSE CUSTOMER_ID
+    END AS CUSTOMER_ID
+
+    FROM {{ last_cte }}
+    {%- set last_cte = "null_columns" -%}
+    {%- set final_columns_to_select = final_columns_to_select + null_column_names %}
+)
+{%- endif -%}
+
 
 {% if dbtvault.is_something(hashed_columns) -%},
 

@@ -867,6 +867,7 @@ Feature: [STG] Staging
 
 
   @fixture.staging
+  @wip
   Scenario: [STG-23] Staging with null columns configuration where all required keys are null
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
