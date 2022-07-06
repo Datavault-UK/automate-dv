@@ -206,6 +206,57 @@ def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
         return dicts_with_lists
 
 
+def parse_escapes(table_dicts: list) -> list:
+    """
+    Evaluate column names surrounded with escape() in the YAML metadata
+    and surround them with escape characters
+        :param table_dicts: A list of dictionaries, or a dict containing list/dict values
+        :return modified table_dicts
+    """
+
+    if isinstance(table_dicts, list):
+
+        newtabledicts = []
+
+        for colsdict in table_dicts:
+            newdict = {}
+            if isinstance(colsdict, dict):
+                for k, v in colsdict.items():
+                    if isinstance(v, list):
+                        newlist = []
+                        for item in v:
+                            standard_pattern = r"^(?:escape\(')(.*)(?:'\))"
+                            if re.search(standard_pattern, item):
+                                raw_item = re.findall(standard_pattern, item)[0]
+                                if env_utils.platform() == "bigquery":
+                                    newlist.append(f'`{raw_item}`')
+                                else:
+                                    newlist.append(f'"{raw_item}"')
+                            else:
+                                newlist.append(item)
+                        newdict[k] = newlist
+                    elif isinstance(v, dict):
+                        newdict[k] = v
+                    else:
+                        newvalue = ""
+                        standard_pattern = r"^(?:escape\(')(.*)(?:'\))"
+                        if re.search(standard_pattern, v):
+                            raw_item = re.findall(standard_pattern, v)[0]
+                            if env_utils.platform() == "bigquery":
+                                newvalue = f'`{raw_item}`'
+                            else:
+                                newvalue = f'"{raw_item}"'
+                        else:
+                            newvalue = v
+                        newdict[k] = newvalue
+                newtabledicts.append(newdict)
+            else:
+                newtabledicts.append(colsdict)
+        return newtabledicts
+    else:
+        return table_dicts
+
+
 def process_stage_names(context, processed_stage_name):
     """
     Output a list of stage names if multiple stages are being used, or a single stage name if only one.
@@ -452,11 +503,12 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
 
     table_dicts = parse_lists_in_dicts(table_dict)
 
+    table_dicts = parse_escapes(table_dicts)
+
     return table_dicts
 
 
 # TODO: Look into re-factoring and testing
-# TODO: replace hard coded square brackets with a function call that mimics internal macro escape_column_name()
 def context_table_to_model(seed_config: dict, table: Table, model_name: str, target_model_name: str):
     """
     Creates a model from a feature file data table

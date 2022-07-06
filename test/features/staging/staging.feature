@@ -768,22 +768,22 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
-      | EFFECTIVE_FROM | SOURCE     | COLUMN                      | CUSTOMER_NAME  |
-      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,?CUSTOMER NAME] | ?CUSTOMER NAME |
+      | EFFECTIVE_FROM | SOURCE     | COLUMN                               | CUSTOMER_NAME           |
+      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,escape('CUSTOMER NAME')] | escape('CUSTOMER NAME') |
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK | HASHDIFF                                              |
-      | CUSTOMER_ID | hashdiff('CUSTOMER NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
       | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN             | DBTVAULT_RANK | DBTVAULT_RANK2 |
-      | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('ALICE\|\|1997-04-24\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
-      | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('BOB\|\|2006-04-17\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
-      | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD\|\|2013-02-04\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
-      | 1004        | Dom           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('DOM\|\|2018-04-13\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
+      | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
+      | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
+      | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
+      | 1004        | Dom           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
 
   @sqlserver
   @fixture.staging_escaped
@@ -797,22 +797,22 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER_CONCAT model
-      | EFFECTIVE_FROM | SOURCE     | DERIVED_CONCAT              | CUSTOMER_NAME  |
-      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,?CUSTOMER NAME] | ?CUSTOMER NAME |
+      | EFFECTIVE_FROM | SOURCE     | DERIVED_CONCAT                       | CUSTOMER_NAME           |
+      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,escape('CUSTOMER NAME')] | escape('CUSTOMER NAME') |
     And I have hashed columns in the STG_CUSTOMER_CONCAT model
       | CUSTOMER_PK | HASHDIFF                                              |
-      | CUSTOMER_ID | hashdiff('CUSTOMER NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER_CONCAT model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
       | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER_CONCAT data
     Then the STG_CUSTOMER_CONCAT table should contain expected data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | DBTVAULT_RANK | DBTVAULT_RANK2 |
-      | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('ALICE\|\|1997-04-24\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
-      | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('BOB\|\|2006-04-17\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
-      | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD\|\|2013-02-04\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
-      | 1004        | Dom           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('DOM\|\|2018-04-13\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
+      | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
+      | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
+      | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
+      | 1004        | Dom           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
 
   @fixture.staging
   Scenario: [STG-22] Staging with derived, source columns and hashed with exclude flag, where exclude columns are lowercase.
