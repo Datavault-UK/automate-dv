@@ -18,13 +18,13 @@
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-    {{- dbtvault.prepend_generated_by() }}
+    {{ dbtvault.prepend_generated_by() }}
 
-    {{- adapter.dispatch('eff_sat', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                                src_additional_columns=src_additional_columns,
-                                                src_start_date=src_start_date, src_end_date=src_end_date,
-                                                src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                                source_model=source_model) -}}
+    {{ adapter.dispatch('eff_sat', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
+                                               src_additional_columns=src_additional_columns,
+                                               src_start_date=src_start_date, src_end_date=src_end_date,
+                                               src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                               source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_additional_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
@@ -86,7 +86,9 @@ new_open_records AS (
         f.{{ src_start_date }} AS {{ src_start_date }},
         {% endif %}
         f.{{ src_end_date }} AS {{ src_end_date }},
+        {%- if dbtvault.is_something(src_additional_columns) -%}
         {{ dbtvault.prefix([src_additional_columns], 'f') }},
+        {%- endif -%}
         f.{{ src_eff }} AS {{ src_eff }},
         f.{{ src_ldts }},
         f.{{ src_source }}
@@ -127,7 +129,9 @@ new_closed_records AS (
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         lo.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_eff }} AS {{ src_end_date }},
+        {%- if dbtvault.is_something(src_additional_columns) -%}
         {{ dbtvault.prefix([src_additional_columns], 'h') }},
+        {%- endif -%}
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -146,7 +150,9 @@ new_closed_records AS (
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         h.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_end_date }} AS {{ src_end_date }},
+        {%- if dbtvault.is_something(src_additional_columns) -%}
         {{ dbtvault.prefix([src_additional_columns], 'h') }},
+        {%- endif -%}
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}

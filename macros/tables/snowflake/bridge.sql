@@ -10,9 +10,9 @@
     {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
-    {{- dbtvault.prepend_generated_by() }}
+    {{ dbtvault.prepend_generated_by() }}
 
-    {{- adapter.dispatch('bridge', 'dbtvault')(source_model=source_model, src_pk=src_pk,
+    {{ adapter.dispatch('bridge', 'dbtvault')(source_model=source_model, src_pk=src_pk,
                                                bridge_walk=bridge_walk,
                                                as_of_dates_table=as_of_dates_table,
                                                stage_tables_ldts=stage_tables_ldts,
