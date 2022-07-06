@@ -129,7 +129,7 @@ def set_vault_structure_definition(context):
             "src_pk": ["CUSTOMER_PK", "TEST_COLUMN"],
             "src_ldts": "LOAD_DATETIME",
             "as_of_dates_table": "AS_OF_DATE",
-            "src_additional_columns": "CUSTOMER_ID",
+            "src_additional_columns": ["CUSTOMER_ID", "TEST_COLUMNS"],
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
