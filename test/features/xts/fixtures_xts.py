@@ -150,6 +150,8 @@ def set_vault_structure_definition(context):
         }
     }
 
+
+def set_staging_definition(context):
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -212,6 +214,12 @@ def set_vault_structure_definition(context):
             "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
         }
     }
+
+
+def set_metadata(context):
+    set_vault_structure_definition(context)
+
+    set_staging_definition(context)
 
 
 @fixture

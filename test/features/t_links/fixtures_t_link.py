@@ -27,14 +27,7 @@ def set_vault_structure_definition(context):
     }
 
 
-@fixture
-def t_link_snowflake(context):
-    """
-    Define the structures and metadata to load transactional links
-    """
-
-    set_vault_structure_definition(context)
-
+def set_staging_definition(context):
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
@@ -48,6 +41,21 @@ def t_link_snowflake(context):
             "EFFECTIVE_FROM": "TRANSACTION_DATE"
         }
     }
+
+
+def set_metadata(context):
+    set_vault_structure_definition(context)
+
+    set_staging_definition(context)
+
+
+@fixture
+def t_link_snowflake(context):
+    """
+    Define the structures and metadata to load transactional links
+    """
+
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -100,21 +108,7 @@ def t_link_bigquery(context):
     Define the structures and metadata to load transactional links
     """
 
-    set_vault_structure_definition(context)
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -167,21 +161,7 @@ def t_link_sqlserver(context):
     Define the structures and metadata to load transactional links
     """
 
-    set_vault_structure_definition(context)
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -234,31 +214,7 @@ def t_link_comppk(context):
     Define the structures and metadata to load transactional links with composite src_pk
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
-            "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -296,31 +252,7 @@ def t_link_comppk_bigquery(context):
     Define the structures and metadata to load transactional links with composite src_pk
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
-            "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -358,31 +290,7 @@ def t_link_comppk_sqlserver(context):
     Define the structures and metadata to load transactional links with composite src_pk
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
-            "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
