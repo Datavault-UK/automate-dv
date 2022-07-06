@@ -13,6 +13,8 @@
         {%- set source_model = [source_model] -%}
     {%- endif -%}
 
+    {{- dbtvault.prepend_generated_by() }}
+
     {{- adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
                                             src_satellite=src_satellite,
                                             src_additional_columns=src_additional_columns,
@@ -22,8 +24,6 @@
 {%- endmacro -%}
 
 {%- macro default__xts(src_pk, src_satellite, src_additional_columns, src_ldts, src_source, source_model) -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 {%- set hashdiff_escaped = dbtvault.escape_column_names('HASHDIFF') -%}
 {%- set satellite_name_escaped = dbtvault.escape_column_names('SATELLITE_NAME') %}

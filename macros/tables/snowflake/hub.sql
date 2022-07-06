@@ -19,6 +19,8 @@
                                                                        source_model | length)) -%}
     {%- endif -%}
 
+    {{- dbtvault.prepend_generated_by() }}
+
     {{- adapter.dispatch('hub', 'dbtvault')(src_pk=src_pk, src_nk=src_nk,
                                             src_additional_columns=src_additional_columns,
                                             src_ldts=src_ldts, src_source=src_source,
@@ -33,8 +35,6 @@
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 {{ 'WITH ' -}}
 
