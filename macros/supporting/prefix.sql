@@ -8,10 +8,6 @@
 
 {%- macro default__prefix(columns=none, prefix_str=none, alias_target='source') -%}
 
-    {%- do log('columns: ' ~ columns, true) -%}
-    {%- do log('prefix_str: ' ~ prefix_str, true) -%}
-    {%- do log('alias_target: ' ~ alias_target, true) -%}
-
     {%- if columns and prefix_str -%}
 
         {%- for col in columns -%}
