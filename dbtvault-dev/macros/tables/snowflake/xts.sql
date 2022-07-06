@@ -13,9 +13,9 @@
         {%- set source_model = [source_model] -%}
     {%- endif -%}
 
-    {{- dbtvault.prepend_generated_by() }}
+    {{ dbtvault.prepend_generated_by() }}
 
-    {{- adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
+    {{ adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
                                             src_satellite=src_satellite,
                                             src_additional_columns=src_additional_columns,
                                             src_ldts=src_ldts,
