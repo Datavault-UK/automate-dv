@@ -150,15 +150,6 @@ def set_vault_structure_definition(context):
         }
     }
 
-
-@fixture
-def xts_snowflake(context):
-    """
-    Define the structures and metadata to load xts
-    """
-
-    set_vault_structure_definition(context)
-
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -221,6 +212,15 @@ def xts_snowflake(context):
             "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
         }
     }
+
+
+@fixture
+def xts_snowflake(context):
+    """
+    Define the structures and metadata to load xts
+    """
+
+    set_vault_structure_definition(context)
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
@@ -427,48 +427,6 @@ def xts_bigquery(context):
 
     set_vault_structure_definition(context)
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_3SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
-            "HASHDIFF_3": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_3SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
-        }
-    }
-
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
             "column_types": {
@@ -614,48 +572,6 @@ def xts_sqlserver(context):
     """
 
     set_vault_structure_definition(context)
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]}
-        },
-        "STG_CUSTOMER_2SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]}
-        },
-        "STG_CUSTOMER_3SAT": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF_1": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_FIRSTNAME", "CUSTOMER_LASTNAME"]},
-            "HASHDIFF_2": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE"]},
-            "HASHDIFF_3": {"is_hashdiff": True,
-                           "columns": ["CUSTOMER_ID", "CUSTOMER_COUNTY", "CUSTOMER_CITY"]}
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_NAME": "!SAT_CUSTOMER"
-        },
-        "STG_CUSTOMER_2SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-        },
-        "STG_CUSTOMER_3SAT": {
-            "EFFECTIVE_FROM": "LOAD_DATE",
-            "SATELLITE_1": "!SAT_CUSTOMER",
-            "SATELLITE_2": "!SAT_CUSTOMER_DETAILS",
-            "SATELLITE_3": "!SAT_CUSTOMER_LOCATION",
-        }
-    }
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
