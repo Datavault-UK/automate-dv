@@ -7,8 +7,6 @@
 
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') %}
 
-{{- dbtvault.prepend_generated_by() }}
-
 WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
     FROM {{ ref(source_model) }} AS a

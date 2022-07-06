@@ -12,6 +12,7 @@
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
+    {{- dbtvault.prepend_generated_by() }}
 
     {{- adapter.dispatch('t_link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
                                                src_additional_columns=src_additional_columns,
@@ -24,8 +25,6 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_payload, src_additional_columns, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 WITH stage AS (
     SELECT {{ source_cols | join(', ') }}

@@ -18,6 +18,8 @@
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
+    {{- dbtvault.prepend_generated_by() }}
+
     {{- adapter.dispatch('eff_sat', 'dbtvault')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                                 src_additional_columns=src_additional_columns,
                                                 src_start_date=src_start_date, src_end_date=src_end_date,
@@ -31,8 +33,6 @@
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
-
-{{- dbtvault.prepend_generated_by() }}
 
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') %}
 
