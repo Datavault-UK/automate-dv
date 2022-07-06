@@ -141,6 +141,32 @@ def bridge_snowflake(context):
                     "STG_CUSTOMER_ORDER": "LOAD_DATETIME"
                 }
         },
+        "BRIDGE_CUSTOMER_ORDER_AC": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "src_ldts": "LOAD_DATETIME",
+            "as_of_dates_table": "AS_OF_DATE",
+            "src_additional_columns": "CUSTOMER_MT_ID",
+            "bridge_walk": {
+                "CUSTOMER_ORDER": {
+                    "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
+                    "bridge_end_date": "EFF_SAT_CUSTOMER_ORDER_ENDDATE",
+                    "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
+                    "link_table": "LINK_CUSTOMER_ORDER",
+                    "link_pk": "CUSTOMER_ORDER_PK",
+                    "link_fk1": "CUSTOMER_FK",
+                    "link_fk2": "ORDER_FK",
+                    "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
+                    "eff_sat_pk": "CUSTOMER_ORDER_PK",
+                    "eff_sat_end_date": "END_DATE",
+                    "eff_sat_load_date": "LOAD_DATETIME"
+                }
+            },
+            "stage_tables_ldts":
+                {
+                    "STG_CUSTOMER_ORDER": "LOAD_DATETIME"
+                }
+        },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
@@ -261,6 +287,7 @@ def bridge_snowflake(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
                 "SOURCE": "VARCHAR"
@@ -365,6 +392,14 @@ def bridge_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR"
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
