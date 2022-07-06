@@ -15,9 +15,12 @@
     {%- endif -%}
 
     {%- if execute -%}
-        {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
+
+    {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
                                                                        source_model | length)) -%}
     {%- endif -%}
+
+    {{- dbtvault.prepend_generated_by() }}
 
     {{- adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
                                              src_additional_columns=src_additional_columns,
@@ -34,8 +37,6 @@
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 {{ 'WITH ' -}}
 

@@ -5,8 +5,6 @@
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
-{{- dbtvault.prepend_generated_by() }}
-
 {%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.9999999') %}
 
 WITH source_data AS (

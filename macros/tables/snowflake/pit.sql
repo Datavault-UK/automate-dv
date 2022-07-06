@@ -1,6 +1,11 @@
 {%- macro pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model ) -%}
 
-{# TODO Should the length of the ghost_pk zero hash be determined by the hashing option being used, i.e. MD5 = 16, SHA = 32 ? #}
+    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+
+    {{- dbtvault.prepend_generated_by() }}
+
+    {# TODO Should the length of the ghost_pk zero hash be determined by the hashing option being used, i.e. MD5 = 16, SHA = 32 ? #}
 
     {{- adapter.dispatch('pit', 'dbtvault')(source_model=source_model, src_pk=src_pk,
                                             as_of_dates_table=as_of_dates_table,
@@ -15,11 +20,6 @@
                                        satellites=satellites,
                                        stage_tables=stage_tables,
                                        src_ldts=src_ldts) -}}
-
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 {%- if (as_of_dates_table is none) and execute -%}
     {%- set error_message -%}
