@@ -146,12 +146,12 @@ Feature: [BRG-1L] Bridge table
       | HUB               | LINK                | EFF_SAT                | BRIDGE                     |
       | HUB_CUSTOMER_M_AC | LINK_CUSTOMER_ORDER | EFF_SAT_CUSTOMER_ORDER | BRIDGE_CUSTOMER_ORDER_M_AC |
     And the RAW_CUSTOMER_ORDER table contains data
-      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
-      | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
-      | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
-      | 1002        | 201      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
-      | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
-      | 1003        | 301      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | CUSTOMER_ID | ORDER_ID | TEST_COLUMN | LOAD_DATETIME           | END_DATE                | SOURCE |
+      | 1001        | 100      | MY_VALUE    | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 200      | MY_VALUE    | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 201      | MY_VALUE    | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1003        | 300      | MY_VALUE    | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1003        | 301      | MY_VALUE    | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
     And I stage the STG_CUSTOMER_ORDER data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
