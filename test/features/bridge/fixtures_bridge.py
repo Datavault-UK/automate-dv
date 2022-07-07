@@ -14,8 +14,8 @@ def set_vault_structure_definition(context):
         },
         "HUB_CUSTOMER_M_AC": {
             "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": ["CUSTOMER_PK", "TEST_COLUMN"],
-            "src_nk": "CUSTOMER_ID",
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": ["CUSTOMER_ID", "TEST_COLUMN"],
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
@@ -126,10 +126,10 @@ def set_vault_structure_definition(context):
         },
         "BRIDGE_CUSTOMER_ORDER_M_AC": {
             "source_model": "HUB_CUSTOMER_M_AC",
-            "src_pk": ["CUSTOMER_PK", "TEST_COLUMN"],
+            "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATETIME",
             "as_of_dates_table": "AS_OF_DATE",
-            "src_additional_columns": ["CUSTOMER_ID", "TEST_COLUMNS"],
+            "src_additional_columns": ["CUSTOMER_ID", "TEST_COLUMN"],
             "bridge_walk": {
                 "CUSTOMER_ORDER": {
                     "bridge_link_pk": "LINK_CUSTOMER_ORDER_PK",
@@ -344,7 +344,6 @@ def set_staging_definition(context):
         "STG_CUSTOMER_ORDER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "CUSTOMER_FK": "CUSTOMER_ID",
-            "TEST_COLUMN": "!MY_VALUE",
             "ORDER_PK": "ORDER_ID",
             "ORDER_FK": "ORDER_ID",
             "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
