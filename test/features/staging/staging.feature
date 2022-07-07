@@ -768,8 +768,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
-      | EFFECTIVE_FROM | SOURCE     | COLUMN                               | CUSTOMER_NAME           |
-      | LOAD_DATE      | !RAW_STAGE | [!RAW_STAGE,escape('CUSTOMER NAME')] | escape('CUSTOMER NAME') |
+      | EFFECTIVE_FROM | SOURCE     | COLUMN                             | CUSTOMER_NAME           |
+      | LOAD_DATE      | !RAW_STAGE | escape('!RAW_STAGE,CUSTOMER NAME') | escape('CUSTOMER NAME') |
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK | HASHDIFF                                              |
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
@@ -836,3 +836,63 @@ Feature: [STG] Staging
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
+
+  @not_bigquery
+  @not_sqlserver
+  @fixture.staging_escaped
+  Scenario: [STG-23] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+  The customer flag column name in the RAW_STAGE table includes a SPACE character, and there are a variety of derived columns
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER FLAG | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1             | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 0             | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 1             | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 0             | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     | COLUMN              | CUSTOMER_NAME           |
+      | LOAD_DATE      | !RAW_STAGE | NOT "CUSTOMER FLAG" | escape('CUSTOMER NAME') |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME           | PARTITION_BY                | ORDER_BY                 |
+      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER FLAG | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | 1001        | Alice         | Alice         | 1             | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | false  | 1             | 1              |
+      | 1002        | Bob           | Bob           | 0             | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | true   | 1             | 1              |
+      | 1003        | Chad          | Chad          | 1             | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | false  | 1             | 1              |
+      | 1004        | Dom           | Dom           | 0             | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | true   | 1             | 1              |
+
+  @not_bigquery
+  @not_sqlserver
+  @fixture.staging_escaped
+  Scenario: [STG-24] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
+  The customer dob column name in the RAW_STAGE table includes a SPACE character, and there are a variety of derived columns
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER FLAG | CUSTOMER DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1             | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 0             | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 1             | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 0             | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     | COLUMN                                         | CUSTOMER_NAME           | CUSTOMER_DOB           |
+      | LOAD_DATE      | !RAW_STAGE | TO_VARCHAR("CUSTOMER DOB"::date, 'DD-MM-YYYY') | escape('CUSTOMER NAME') | escape('CUSTOMER DOB') |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME           | PARTITION_BY                | ORDER_BY                 |
+      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER FLAG | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN      | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | 1001        | Alice         | Alice         | 1             | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997  | 1             | 1              |
+      | 1002        | Bob           | Bob           | 0             | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006  | 1             | 1              |
+      | 1003        | Chad          | Chad          | 1             | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013  | 1             | 1              |
+      | 1004        | Dom           | Dom           | 0             | 2018-04-13   | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018  | 1             | 1              |

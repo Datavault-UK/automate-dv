@@ -138,6 +138,41 @@ def parse_hashdiffs(columns_as_series: Series) -> Series:
     return Series(columns)
 
 
+def parse_escapes(columns_as_series: Series) -> Series:
+    """
+    Evaluate strings surrounded with escape() to augment the YAML metadata
+    and configure column names to be escaped.
+        :param columns_as_series: Columns from a context.table in Series form.
+        :return: Modified series
+    """
+
+    standard_pattern = r"^(?:escape\(')(.*)(?:'\))"
+
+    columns = []
+
+    for item in columns_as_series:
+
+        if isinstance(item, str):
+            if re.search(standard_pattern, item):
+                raw_item = re.findall(standard_pattern, item)[0]
+                if "," in raw_item:
+                    processed_item = str(raw_item).split(",")
+                else:
+                    processed_item = raw_item
+                escape_dict = {"source_column": processed_item,
+                                 "escape": True}
+
+                columns.append(escape_dict)
+
+            else:
+                columns.append(item)
+
+        else:
+            columns.append(item)
+
+    return Series(columns)
+
+
 def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
     """
     Convert string representations of lists in dict values, in a list of dicts, or a dict containing list/dict values
@@ -204,57 +239,6 @@ def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
 
     else:
         return dicts_with_lists
-
-
-def parse_escapes(table_dicts: list) -> list:
-    """
-    Evaluate column names surrounded with escape() in the YAML metadata
-    and surround them with escape characters
-        :param table_dicts: A list of dictionaries, or a dict containing list/dict values
-        :return modified table_dicts
-    """
-
-    if isinstance(table_dicts, list):
-
-        newtabledicts = []
-
-        for colsdict in table_dicts:
-            newdict = {}
-            if isinstance(colsdict, dict):
-                for k, v in colsdict.items():
-                    if isinstance(v, list):
-                        newlist = []
-                        for item in v:
-                            standard_pattern = r"^(?:escape\(')(.*)(?:'\))"
-                            if re.search(standard_pattern, item):
-                                raw_item = re.findall(standard_pattern, item)[0]
-                                if env_utils.platform() == "bigquery":
-                                    newlist.append(f'`{raw_item}`')
-                                else:
-                                    newlist.append(f'"{raw_item}"')
-                            else:
-                                newlist.append(item)
-                        newdict[k] = newlist
-                    elif isinstance(v, dict):
-                        newdict[k] = v
-                    else:
-                        newvalue = ""
-                        standard_pattern = r"^(?:escape\(')(.*)(?:'\))"
-                        if re.search(standard_pattern, v):
-                            raw_item = re.findall(standard_pattern, v)[0]
-                            if env_utils.platform() == "bigquery":
-                                newvalue = f'`{raw_item}`'
-                            else:
-                                newvalue = f'"{raw_item}"'
-                        else:
-                            newvalue = v
-                        newdict[k] = newvalue
-                newtabledicts.append(newdict)
-            else:
-                newtabledicts.append(colsdict)
-        return newtabledicts
-    else:
-        return table_dicts
 
 
 def process_stage_names(context, processed_stage_name):
@@ -462,6 +446,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
 
     table_df = table_df.apply(calc_hash)
     table_df = table_df.apply(parse_hashdiffs)
+    table_df = table_df.apply(parse_escapes)
 
     if use_nan:
         table_df = table_df.replace("<null>", NaN)
@@ -502,8 +487,6 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
     table_dict = table_df.to_dict(orient=orient)
 
     table_dicts = parse_lists_in_dicts(table_dict)
-
-    table_dicts = parse_escapes(table_dicts)
 
     return table_dicts
 
