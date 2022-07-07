@@ -141,7 +141,7 @@ def parse_hashdiffs(columns_as_series: Series) -> Series:
 def parse_escapes(columns_as_series: Series) -> Series:
     """
     Evaluate strings surrounded with escape() to augment the YAML metadata
-    and configure column names to be escaped.
+    and configure derived column names to be escaped for staging.
         :param columns_as_series: Columns from a context.table in Series form.
         :return: Modified series
     """
@@ -173,72 +173,33 @@ def parse_escapes(columns_as_series: Series) -> Series:
     return Series(columns)
 
 
-def parse_lists_in_dicts(dicts_with_lists: List[dict]) -> list:
+def parse_lists(columns_as_series: Series) -> Series:
     """
-    Convert string representations of lists in dict values, in a list of dicts, or a dict containing list/dict values
-        :param dicts_with_lists: A list of dictionaries, or a dict containing list/dict values
+    Evaluate strings surrounded with [ ] representing column name lists to augment the YAML metadata
+        :param columns_as_series: Columns from a context.table in Series form.
+        :return: Modified series
     """
 
-    if isinstance(dicts_with_lists, list):
+    standard_pattern = r"^(?:\[)(.*)(?:])"
 
-        processed_dicts = []
+    columns = []
 
-        check_dicts = [k for k in dicts_with_lists if isinstance(k, dict)]
+    for item in columns_as_series:
 
-        if not check_dicts:
-            return dicts_with_lists
+        if isinstance(item, str):
+            if re.search(standard_pattern, item):
+                raw_item = re.findall(standard_pattern, item)[0]
+                processed_item = str(raw_item).split(",")
+
+                columns.append(processed_item)
+
+            else:
+                columns.append(item)
+
         else:
+            columns.append(item)
 
-            for i, col in enumerate(dicts_with_lists):
-                processed_dicts.append(dict())
-
-                if isinstance(col, dict):
-                    for k, v in col.items():
-
-                        if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
-                            v = v.replace("[", "")
-                            v = v.replace("]", "")
-                            v = [k.strip() for k in v.split(",")]
-
-                        processed_dicts[i][k] = v
-                else:
-                    processed_dicts[i] = {col: dicts_with_lists[i]}
-
-            return processed_dicts
-
-    elif isinstance(dicts_with_lists, dict):
-
-        processed_dicts = []
-        d = []
-
-        check_dicts = [k2 for k2, v2 in dicts_with_lists.items() if isinstance(k2, int) and isinstance(v2, dict)]
-
-        if not check_dicts:
-            return dicts_with_lists
-        else:
-
-            for k1, v1 in dicts_with_lists.items():
-                processed_dicts.append(dict())
-                d.append(dict())
-
-                if isinstance(v1, dict):
-                    for k, v in v1.items():
-
-                        if {"[", "]"}.issubset(set(str(v))) and isinstance(v, str):
-                            v = v.replace("[", "")
-                            v = v.replace("]", "")
-                            v = [k.strip() for k in v.split(",")]
-
-                        d[k1][k] = v
-                else:
-                    d = dicts_with_lists[k1]
-
-                processed_dicts[k1] = {k1: d[k1]}
-
-            return processed_dicts
-
-    else:
-        return dicts_with_lists
+    return Series(columns)
 
 
 def process_stage_names(context, processed_stage_name):
@@ -447,6 +408,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
     table_df = table_df.apply(calc_hash)
     table_df = table_df.apply(parse_hashdiffs)
     table_df = table_df.apply(parse_escapes)
+    table_df = table_df.apply(parse_lists)
 
     if use_nan:
         table_df = table_df.replace("<null>", NaN)
@@ -484,9 +446,7 @@ def context_table_to_dicts(table: Table, orient='index', use_nan=True) -> dict:
 
     table_df = context_table_to_df(table, use_nan=use_nan)
 
-    table_dict = table_df.to_dict(orient=orient)
-
-    table_dicts = parse_lists_in_dicts(table_dict)
+    table_dicts = table_df.to_dict(orient=orient)
 
     return table_dicts
 
@@ -507,6 +467,9 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
     column_types = seed_config[model_name]["column_types"]
 
     sql_command = ""
+
+    if isinstance(feature_data_list, dict):
+        feature_data_list = [feature_data_list]
 
     if len(feature_data_list) == 0:
         # Empty table
