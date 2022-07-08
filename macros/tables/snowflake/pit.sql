@@ -1,4 +1,4 @@
-{%- macro pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model ) -%}
+{%- macro pit(src_pk, src_additional_columns, as_of_dates_table, satellites, stage_tables, src_ldts, source_model ) -%}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
@@ -7,14 +7,16 @@
 
     {# TODO Should the length of the ghost_pk zero hash be determined by the hashing option being used, i.e. MD5 = 16, SHA = 32 ? #}
 
-    {{ adapter.dispatch('pit', 'dbtvault')(source_model=source_model, src_pk=src_pk,
-                                            as_of_dates_table=as_of_dates_table,
-                                            satellites=satellites,
-                                            stage_tables=stage_tables,
-                                            src_ldts=src_ldts) -}}
+    {{ adapter.dispatch('pit', 'dbtvault')(source_model=source_model,
+                                           src_pk=src_pk,
+                                           src_additional_columns=src_additional_columns,
+                                           as_of_dates_table=as_of_dates_table,
+                                           satellites=satellites,
+                                           stage_tables=stage_tables,
+                                           src_ldts=src_ldts) -}}
 {%- endmacro -%}
 
-{%- macro default__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}
+{%- macro default__pit(src_pk, src_additional_columns, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}
 
 {{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
                                        satellites=satellites,
@@ -101,7 +103,10 @@ backfill_as_of AS (
 ),
 
 new_rows_pks AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'a') }}
+    SELECT {{ dbtvault.prefix([src_pk], 'a') }},
+        {% if dbtvault.is_something(src_additional_columns) -%},
+        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE a.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
 ),
@@ -130,16 +135,22 @@ overlap AS (
 backfill_rows_as_of_dates AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        b.AS_OF_DATE
+        b.AS_OF_DATE,
+        {% if dbtvault.is_something(src_additional_columns) -%},
+        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% endif %}
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
-        ON (1=1 )
+        ON (1=1)
 ),
 
 backfill AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
+        {% if dbtvault.is_something(src_additional_columns) -%},
+        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% endif %}
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
@@ -172,6 +183,9 @@ backfill AS (
 new_rows_as_of_dates AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
+        {% if dbtvault.is_something(src_additional_columns) -%}
+        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% endif %}
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
@@ -182,6 +196,9 @@ new_rows AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
+        {% if dbtvault.is_something(src_additional_columns) -%}
+        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% endif %}
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
@@ -208,7 +225,11 @@ new_rows AS (
     {% endfor -%}
 
     GROUP BY
-        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
+        {{ dbtvault.prefix([src_pk], 'a') }},
+        a.AS_OF_DATE,
+        {% if dbtvault.is_something(src_additional_columns) -%}
+        {{- dbtvault.prefix([src_additional_columns], 'a') }}
+        {% endif %}
 ),
 
 pit AS (
