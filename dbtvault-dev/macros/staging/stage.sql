@@ -100,17 +100,13 @@ derived_columns AS (
 null_columns AS (
 
     SELECT
-
     CUSTOMER_ID AS CUSTOMER_ID_ORIGINAL,
     CASE
-        WHEN CUSTOMER_ID_ORIGINAL IS NULL THEN '-1'
-        ELSE CUSTOMER_ID_ORIGINAL
-    END AS CUSTOMER_ID,
-    CUSTOMER_NAME,
-    CUSTOMER_DOB,
-    CUSTOMER_PHONE,
-    LOAD_DATE,
-    SOURCE
+        WHEN CUSTOMER_ID IS NULL THEN '-1'
+        ELSE CUSTOMER_ID
+    END AS CUSTOMER_ID_NEW,
+    md5('-1') AS CUSTOMER_PK,
+    'RAW_STAGE' AS SOURCE
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
     {%- set final_columns_to_select = final_columns_to_select + null_column_names %}
