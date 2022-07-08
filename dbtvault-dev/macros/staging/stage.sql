@@ -12,7 +12,7 @@
                                               null_columns=null_columns) -}}
 {%- endmacro -%}
 
-{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, ranked_columns) -%}
+{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, ranked_columns, null_columns) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -100,12 +100,17 @@ derived_columns AS (
 null_columns AS (
 
     SELECT
-    CUSTOMER_ID AS CUSTOMER_ID_ORIGINAL
-    CASE
-        WHEN CUSTOMER_ID IS NULL THEN "-1"
-        ELSE CUSTOMER_ID
-    END AS CUSTOMER_ID
 
+    CUSTOMER_ID AS CUSTOMER_ID_ORIGINAL,
+    CASE
+        WHEN CUSTOMER_ID_ORIGINAL IS NULL THEN '-1'
+        ELSE CUSTOMER_ID_ORIGINAL
+    END AS CUSTOMER_ID,
+    CUSTOMER_NAME,
+    CUSTOMER_DOB,
+    CUSTOMER_PHONE,
+    LOAD_DATE,
+    SOURCE
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
     {%- set final_columns_to_select = final_columns_to_select + null_column_names %}
