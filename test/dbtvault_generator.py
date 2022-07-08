@@ -277,11 +277,12 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model,
 
 
 def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
-        stage_tables, src_ldts, depends_on="", config=None):
+        stage_tables, src_ldts, src_additional_columns=None, depends_on="", config=None):
     """
     Generate a PIT template
         :param model_name: Name of the model file
         :param src_pk: Source pk
+        :param src_additional_columns: Additional columns to add to the bridge
         :param as_of_dates_table: Name for the AS_OF table
         :param satellites: Dictionary of satellite reference mappings
         :param src_ldts: Source Load Date timestamp
@@ -295,6 +296,7 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.pit(src_pk={src_pk}, 
+                      src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                       as_of_dates_table={as_of_dates_table}, 
                       satellites={satellites}, 
                       stage_tables={stage_tables},
@@ -322,8 +324,10 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.bridge(src_pk={src_pk}, as_of_dates_table={as_of_dates_table}, 
-                         bridge_walk={bridge_walk}, stage_tables_ldts={stage_tables_ldts}, 
+    {{{{ dbtvault.bridge(src_pk={src_pk}, 
+                         as_of_dates_table={as_of_dates_table}, 
+                         bridge_walk={bridge_walk}, 
+                         stage_tables_ldts={stage_tables_ldts}, 
                          src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                          src_ldts={src_ldts}, source_model={source_model}) }}}}
     """
