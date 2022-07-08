@@ -14,6 +14,15 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "HUB_CUSTOMER_AC": {
+            "source_model": ["STG_CUSTOMER_DETAILS",
+                             "STG_CUSTOMER_LOGIN",
+                             "STG_CUSTOMER_PROFILE"],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": ["CUSTOMER_ID", "DASHBOARD_COLOUR"],
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "SAT_CUSTOMER_DETAILS": {
             "source_model": "STG_CUSTOMER_DETAILS",
             "src_pk": "CUSTOMER_PK",
@@ -44,6 +53,74 @@ def set_vault_structure_definition(context):
         "PIT_CUSTOMER": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_LOGIN": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_PROFILE": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                    "STG_CUSTOMER_LOGIN": "LOAD_DATE",
+                    "STG_CUSTOMER_PROFILE": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_AC": {
+            "source_model": "HUB_CUSTOMER",
+            "src_pk": "CUSTOMER_PK",
+            "src_additional_columns": "CUSTOMER_ID",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_LOGIN": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_PROFILE": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                    "STG_CUSTOMER_LOGIN": "LOAD_DATE",
+                    "STG_CUSTOMER_PROFILE": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_M_AC": {
+            "source_model": "HUB_CUSTOMER_AC",
+            "src_pk": "CUSTOMER_PK",
+            "src_additional_columns": ["CUSTOMER_ID", "DASHBOARD_COLOUR"],
             "as_of_dates_table": "AS_OF_DATE",
             "satellites":
                 {
@@ -190,6 +267,15 @@ def pit_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_CUSTOMER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "DASHBOARD_COLOUR": "VARCHAR",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "SAT_CUSTOMER_DETAILS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -233,6 +319,33 @@ def pit_snowflake(context):
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME",
+                "SAT_CUSTOMER_PROFILE_PK": "BINARY(16)",
+                "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_AC": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME",
+                "SAT_CUSTOMER_PROFILE_PK": "BINARY(16)",
+                "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_M_AC": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "DASHBOARD_COLOUR": "VARCHAR",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
                 "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
