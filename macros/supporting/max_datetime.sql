@@ -6,18 +6,18 @@
 
 {%- macro default__max_datetime() %}
 
-    {% do return('9999-12-31 23:59:59.999999') %}
+    {%- do return(var('max_datetime', '9999-12-31 23:59:59.999999')) -%}
 
-{% endmacro -%}
+{%- endmacro -%}
 
-{%- macro sqlserver__max_datetime() %}
+{%- macro sqlserver__max_datetime() -%}
 
-    {% do return('9999-12-31 23:59:59.9999999') %}
+    {%- do return(var('max_datetime', '9999-12-31 23:59:59.9999999')) -%}
 
-{% endmacro -%}
+{%- endmacro -%}
 
-{%- macro bigquery__max_datetime() %}
+{%- macro bigquery__max_datetime() -%}
 
-    {% do return('9999-12-31 23:59:59.999999') %}
+    {%- do return(var('max_datetime', '9999-12-31 23:59:59.999999')) -%}
 
-{% endmacro -%}
+{%- endmacro -%}
