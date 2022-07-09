@@ -5,7 +5,7 @@
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
 
-{%- set max_datetime = var('max_datetime', '9999-12-31 23:59:59.999999') %}
+{%- set max_datetime = dbtvault.max_datetime() %}
 
 WITH source_data AS (
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
