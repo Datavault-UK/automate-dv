@@ -33,7 +33,6 @@
 
 {%- set max_datetime = dbtvault.max_datetime() -%}
 
-{#- Stating the dependencies on the stage tables outside of the If STATEMENT -#}
 {% for stg in stage_tables_ldts -%}
     {{- "-- depends_on: " ~ ref(stg) -}}
 {%- endfor %}
@@ -56,13 +55,13 @@ WITH as_of AS (
 last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
     FROM (
-    {%- filter indent(width=8) -%}
-    {%- for stg in stage_tables_ldts -%}
+
+    {% for stg in stage_tables_ldts -%}
         {%- set stage_ldts = stage_tables_ldts[stg] -%}
         SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
-    {%- endfilter -%}
+
     ) AS l
 ),
 
@@ -108,7 +107,10 @@ new_rows_as_of AS (
 ),
 
 overlap_pks AS (
-    SELECT {{ dbtvault.prefix([src_pk, src_additional_columns], 'p') }}
+    SELECT {{ dbtvault.prefix([src_pk], 'p') }}
+    {%- if dbtvault.is_something(src_additional_column) -%},
+           {{ dbtvault.prefix([src_additional_column], 'p') }}
+    {%- endif %}
     FROM {{ this }} AS p
     INNER JOIN {{ ref(source_model) }} as h
         ON {{ dbtvault.multikey(src_pk, prefix=['p','h'], condition='=') }}
@@ -138,16 +140,17 @@ overlap AS (
             {%- set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) -%}
             {%- set eff_sat_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_end_date']) -%}
             {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
-            {%- filter indent(width=8) %}
-            {{ link_table }}.{{ link_pk }} AS {{ bridge_link_pk }},
-            {{ eff_sat_table }}.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
-            {{ eff_sat_table }}.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
-            {%- endfilter -%}
+
+            {{- '\n       ' }} cur_link.{{ link_pk }} AS {{ bridge_link_pk }},
+            {{- '\n       ' }} cur_eff_sat.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
+            {{- '\n       ' }} cur_eff_sat.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
+
         {%- endfor -%}
-        {%- if dbtvault.is_something(src_additional_columns) %}
-        ,
-        {{- dbtvault.prefix([src_additional_columns], 'a') }}
-        {% endif %}
+        {%- if dbtvault.is_something(src_additional_columns) -%}
+            ,
+            {{- '\n       ' }} {{ dbtvault.prefix([src_additional_columns], 'a') }}
+        {%- endif %}
+
     FROM overlap_pks AS a
     INNER JOIN overlap_as_of AS b
         ON (1=1)
@@ -163,10 +166,10 @@ overlap AS (
     {%- if loop.first %}
     LEFT JOIN {{ ref(current_link) }} AS cur_link
         ON {{ dbtvault.multikey(src_pk, prefix=['a', 'cur_link'], condition='=') }}
-        {%- else %}
+    {%- else %}
     LEFT JOIN {{ ref(current_link) }} AS cur_link
         ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = cur_link.{{ link_fk1 }}
-        {%- endif %}
+    {%- endif %}
     INNER JOIN {{ ref(current_eff_sat) }} AS cur_eff_sat
         ON cur_eff_sat.{{ eff_sat_pk }} = cur_link.{{ link_pk }}
         AND cur_eff_sat.{{ eff_sat_load_date }} <= b.AS_OF_DATE
@@ -286,14 +289,13 @@ bridge AS (
         {%- endif %}
 
     FROM candidate_rows AS c
-        {%- for bridge_step in bridge_walk.keys() -%}
-            {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
-            {%- if loop.first %}
-    WHERE TO_DATE({{ 'c.' ~ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
-            {%- else %}
-        AND TO_DATE({{ 'c.' ~ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
-            {%- endif -%}
-        {%- endfor %}
+
+{%- for bridge_step in bridge_walk.keys() -%}
+    {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) %}
+
+    {% if loop.first -%} WHERE{% else %}AND {% endif %} TO_DATE(c.{{ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
+
+{% endfor -%}
 )
 
 SELECT * FROM bridge
