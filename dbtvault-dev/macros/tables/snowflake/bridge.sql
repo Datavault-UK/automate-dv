@@ -13,11 +13,11 @@
     {{ dbtvault.prepend_generated_by() }}
 
     {{ adapter.dispatch('bridge', 'dbtvault')(source_model=source_model, src_pk=src_pk,
-                                               bridge_walk=bridge_walk,
-                                               as_of_dates_table=as_of_dates_table,
-                                               stage_tables_ldts=stage_tables_ldts,
-                                               src_additional_columns=src_additional_columns,
-                                               src_ldts=src_ldts) -}}
+                                              bridge_walk=bridge_walk,
+                                              as_of_dates_table=as_of_dates_table,
+                                              stage_tables_ldts=stage_tables_ldts,
+                                              src_additional_columns=src_additional_columns,
+                                              src_ldts=src_ldts) -}}
 {%- endmacro -%}
 
 {%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
@@ -40,9 +40,9 @@
 
 {#- Setting the new AS_OF dates CTE name -#}
 {%- if dbtvault.is_any_incremental() -%}
-    {%- set new_as_of_dates_cte = 'NEW_ROWS_AS_OF'  -%}
+    {%- set new_as_of_dates_cte = 'new_rows_as_of'  -%}
 {%- else -%}
-    {%- set new_as_of_dates_cte = 'AS_OF' -%}
+    {%- set new_as_of_dates_cte = 'as_of' -%}
 {%- endif %}
 
 WITH as_of AS (
@@ -128,7 +128,7 @@ overlap_as_of AS (
 overlap AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        b.AS_OF_DATE
+        b.AS_OF_DATE,
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set link_table = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_table']) -%}
             {%- set link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_pk']) -%}
@@ -139,12 +139,13 @@ overlap AS (
             {%- set eff_sat_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_end_date']) -%}
             {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
             {%- filter indent(width=8) %}
-            {{ ',' ~ link_table ~ '.' ~ link_pk ~ ' AS ' ~ bridge_link_pk }}
-            {{ ',' ~ eff_sat_table ~ '.' ~ eff_sat_end_date ~ ' AS ' ~ bridge_end_date }}
-            {{ ',' ~ eff_sat_table ~ '.' ~ eff_sat_load_date ~' AS ' ~ bridge_load_date }}
+            {{ link_table }}.{{ link_pk }} AS {{ bridge_link_pk }},
+            {{ eff_sat_table }}.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
+            {{ eff_sat_table }}.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
             {%- endfilter -%}
-        {% endfor %}
-        {% if dbtvault.is_something(src_additional_columns) -%},
+        {%- endfor -%}
+        {%- if dbtvault.is_something(src_additional_columns) %}
+        ,
         {{- dbtvault.prefix([src_additional_columns], 'a') }}
         {% endif %}
     FROM overlap_pks AS a
@@ -159,7 +160,7 @@ overlap AS (
         {%- set link_fk2 = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_fk2']) -%}
         {%- set eff_sat_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_pk']) -%}
         {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
-        {%- if loop.first %}
+    {%- if loop.first %}
     LEFT JOIN {{ ref(current_link) }} AS cur_link
         ON {{ dbtvault.multikey(src_pk, prefix=['a', 'cur_link'], condition='=') }}
         {%- else %}
@@ -178,7 +179,7 @@ overlap AS (
 new_rows AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        b.AS_OF_DATE
+        b.AS_OF_DATE,
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set link_table = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_table']) -%}
             {%- set link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_pk']) -%}
@@ -187,16 +188,19 @@ new_rows AS (
             {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
             {%- set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) -%}
             {%- set eff_sat_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_end_date']) -%}
-            {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
-            {%- filter indent(width=8) -%}
-            , cur_link.{{ link_pk }} AS {{ bridge_link_pk }}
-            , cur_eff_sat.{{ eff_sat_end_date }} AS {{ bridge_end_date }}
-            , cur_eff_sat.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
-            {%- endfilter -%}
-        {% endfor %}
-        {% if dbtvault.is_something(src_additional_columns) -%},
-        {{- dbtvault.prefix([src_additional_columns], 'a') }}
-        {% endif %}
+            {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) %}
+
+            {{- '\n       ' }} cur_link.{{ link_pk }} AS {{ bridge_link_pk }},
+            {{- '\n       ' }} cur_eff_sat.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
+            {{- '\n       ' }} cur_eff_sat.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
+
+        {%- endfor -%}
+
+        {%- if dbtvault.is_something(src_additional_columns) -%}
+            ,
+            {{- '\n       ' }} {{ dbtvault.prefix([src_additional_columns], 'a') }}
+        {%- endif %}
+
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
         ON (1=1)
@@ -212,7 +216,7 @@ new_rows AS (
         {%- set eff_sat_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_pk']) -%}
         {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
 
-        {%- if loop.first  %}
+        {%- if loop.first %}
         LEFT JOIN {{ ref(current_link) }} AS cur_link
             ON a.{{ src_pk }} = cur_link.{{ link_fk1 }}
         {%- else %}
@@ -242,25 +246,24 @@ all_rows AS (
 candidate_rows AS (
     SELECT *,
         ROW_NUMBER() OVER (
-            PARTITION BY AS_OF_DATE,
-                {%- for bridge_step in bridge_walk.keys() -%}
-                {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
-                    {%- if loop.first %}
-                {{ bridge_link_pk }}
-                    {%- else %}
-                {{ ',' ~ bridge_link_pk }}
-                    {%- endif -%}
+            PARTITION BY
+                AS_OF_DATE,
+                {% for bridge_step in bridge_walk.keys() -%}
+
+                    {%- set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
+
+                    {{ bridge_link_pk }} {%- if not loop.last %}, {% endif -%}
+
                 {%- endfor %}
             ORDER BY
-                {%- for bridge_step in bridge_walk.keys() -%}
-                {% set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) %}
-                    {%- if loop.first %}
-                {{ bridge_load_date ~' DESC' }}
-                    {%- else %}
-                {{ ',' ~ bridge_load_date ~' DESC' }}
-                    {%- endif -%}
+                {% for bridge_step in bridge_walk.keys() -%}
+
+                    {%- set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) -%}
+
+                    {{ bridge_load_date }} DESC {%- if not loop.last %}, {% endif -%}
+
                 {%- endfor %}
-            ) AS row_num
+        ) AS row_num
     FROM all_rows
     QUALIFY row_num = 1
 ),
@@ -268,14 +271,20 @@ candidate_rows AS (
 bridge AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'c') }},
-        c.AS_OF_DATE
+        c.AS_OF_DATE,
+
         {%- for bridge_step in bridge_walk.keys() -%}
-        {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
-        {{ ',c.' ~ bridge_link_pk }}
-        {% endfor %}
-        {% if dbtvault.is_something(src_additional_columns) -%},
-        {{- dbtvault.prefix([src_additional_columns], 'c') }}
-        {% endif %}
+
+        {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) %}
+        c.{{ bridge_link_pk }}
+
+        {%- endfor -%}
+
+        {%- if dbtvault.is_something(src_additional_columns) -%}
+            ,
+            {{- '\n       ' }} {{ dbtvault.prefix([src_additional_columns], 'c') }}
+        {%- endif %}
+
     FROM candidate_rows AS c
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
