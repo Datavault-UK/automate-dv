@@ -1,10 +1,11 @@
-{%- macro bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
+{%- macro bridge(src_pk, src_additional_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
-    {{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
+    {{- dbtvault.check_required_parameters(src_pk=src_pk,
+                                           src_ldts=src_ldts,
                                            as_of_dates_table=as_of_dates_table,
                                            bridge_walk=bridge_walk,
                                            stage_tables_ldts=stage_tables_ldts,
-                                           src_ldts=src_ldts) -}}
+                                           source_model=source_model) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
     {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
@@ -12,15 +13,16 @@
 
     {{ dbtvault.prepend_generated_by() }}
 
-    {{ adapter.dispatch('bridge', 'dbtvault')(source_model=source_model, src_pk=src_pk,
-                                              bridge_walk=bridge_walk,
-                                              as_of_dates_table=as_of_dates_table,
-                                              stage_tables_ldts=stage_tables_ldts,
+    {{ adapter.dispatch('bridge', 'dbtvault')(src_pk=src_pk,
                                               src_additional_columns=src_additional_columns,
-                                              src_ldts=src_ldts) -}}
+                                              src_ldts=src_ldts,
+                                              as_of_dates_table=as_of_dates_table,
+                                              bridge_walk=bridge_walk,
+                                              stage_tables_ldts=stage_tables_ldts,
+                                              source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
+{%- macro default__bridge(src_pk, src_additional_columns, src_ldts, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model) -%}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
@@ -44,80 +46,13 @@
     {%- set new_as_of_dates_cte = 'as_of' -%}
 {%- endif %}
 
-WITH as_of AS (
-     SELECT a.AS_OF_DATE
-     FROM {{ source_relation }} AS a
-     WHERE a.AS_OF_DATE <= CURRENT_DATE()
+WITH as_of_dates AS (
+    SELECT * FROM {{ as_of_table_relation }}
 ),
 
 {%- if dbtvault.is_any_incremental() %}
 
-last_safe_load_datetime AS (
-    SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
-    FROM (
-
-    {% for stg in stage_tables_ldts -%}
-        {%- set stage_ldts = stage_tables_ldts[stg] -%}
-        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
-        {{ "UNION ALL" if not loop.last }}
-    {% endfor -%}
-
-    ) AS l
-),
-
-as_of_grain_old_entries AS (
-    SELECT DISTINCT AS_OF_DATE
-    FROM {{ this }}
-),
-
-as_of_grain_lost_entries AS (
-    SELECT a.AS_OF_DATE
-    FROM as_of_grain_old_entries AS a
-    LEFT OUTER JOIN as_of AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-    WHERE b.AS_OF_DATE IS NULL
-),
-
-as_of_grain_new_entries AS (
-    SELECT a.AS_OF_DATE
-    FROM as_of AS a
-    LEFT OUTER JOIN as_of_grain_old_entries AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-    WHERE b.AS_OF_DATE IS NULL
-),
-
-min_date AS (
-    SELECT min(AS_OF_DATE) AS MIN_DATE
-    FROM as_of
-),
-
-new_rows_pks AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'h') }}
-    FROM {{ ref(source_model) }} AS h
-    WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-),
-
-new_rows_as_of AS (
-    SELECT AS_OF_DATE
-    FROM as_of
-    WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-    UNION
-    SELECT as_of_date
-    FROM as_of_grain_new_entries
-),
-
-overlap_pks AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'p') }}
-    {%- if dbtvault.is_something(src_additional_columns) -%},
-       {{ dbtvault.prefix([src_additional_columns], 'p') }}
-    {%- endif %}
-    FROM {{ this }} AS p
-    INNER JOIN {{ ref(source_model) }} as h
-        ON {{ dbtvault.multikey(src_pk, prefix=['p','h'], condition='=') }}
-    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
-),
+{{ dbtvault.as_of_date_window(stage_tables_ldts, this) }},
 
 overlap_as_of AS (
     SELECT AS_OF_DATE

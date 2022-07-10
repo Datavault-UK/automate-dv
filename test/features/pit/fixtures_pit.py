@@ -75,7 +75,7 @@ def set_vault_structure_definition(context):
                             {"LDTS": "LOAD_DATE"}
                     }
                 },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
@@ -109,7 +109,7 @@ def set_vault_structure_definition(context):
                             {"LDTS": "LOAD_DATE"}
                     }
                 },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
@@ -143,7 +143,7 @@ def set_vault_structure_definition(context):
                             {"LDTS": "LOAD_DATE"}
                     }
                 },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
