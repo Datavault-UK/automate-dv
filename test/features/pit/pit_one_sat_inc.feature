@@ -124,7 +124,7 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
-    Given the PIT_CUSTOMER_TS table does not exist
+    Given the PIT_CUSTOMER_1SI_TS table does not exist
     And the raw vault contains empty tables
       | HUB                 | LINK | SAT                     | PIT                 |
       | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1SI_TS |
