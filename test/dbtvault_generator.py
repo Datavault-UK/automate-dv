@@ -297,10 +297,11 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.pit(src_pk={src_pk}, 
                       src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
+                      src_ldts={src_ldts},
                       as_of_dates_table={as_of_dates_table}, 
                       satellites={satellites}, 
                       stage_tables_ldts={stage_tables_ldts},
-                      src_ldts={src_ldts}, source_model={source_model}) }}}}
+                      source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -325,11 +326,12 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.bridge(src_pk={src_pk}, 
+                         src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
+                         src_ldts={src_ldts}, 
                          as_of_dates_table={as_of_dates_table}, 
                          bridge_walk={bridge_walk}, 
-                         stage_tables_ldts={stage_tables_ldts}, 
-                         src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
-                         src_ldts={src_ldts}, source_model={source_model}) }}}}
+                         stage_tables_ldts={stage_tables_ldts},
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
