@@ -1,4 +1,4 @@
-{%- macro as_of_date_window(stage_tables_ldts, source_model) -%}
+{%- macro as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, source_model) -%}
 
 last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
@@ -39,16 +39,22 @@ min_date AS (
     FROM as_of_dates
 ),
 
+backfill_as_of AS (
+    SELECT AS_OF_DATE
+    FROM as_of_dates AS a
+    WHERE a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+),
+
 new_rows_pks AS (
     SELECT {{ dbtvault.prefix([src_pk], 'h') }}
-    FROM {{ ref(source_model) }} AS h
+    FROM {{ source_model }} AS h
     WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
 ),
 
 new_rows_as_of AS (
     SELECT AS_OF_DATE
-    FROM as_of
-    WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    FROM as_of_dates
+    WHERE as_of_dates.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     UNION
     SELECT as_of_date
     FROM as_of_grain_new_entries
@@ -60,7 +66,7 @@ overlap_pks AS (
        {{ dbtvault.prefix([src_additional_columns], 'a') }}
     {%- endif %}
     FROM {{ this }} AS a
-    INNER JOIN {{ ref(source_model) }} as b
+    INNER JOIN {{ source_model }} as b
         ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
     WHERE a.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
         AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)

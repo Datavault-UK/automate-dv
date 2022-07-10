@@ -11,7 +11,7 @@
     {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
-    {{ dbtvault.prepend_generated_by() }}
+    {{- dbtvault.prepend_generated_by() }}
 
     {{ adapter.dispatch('bridge', 'dbtvault')(src_pk=src_pk,
                                               src_additional_columns=src_additional_columns,
