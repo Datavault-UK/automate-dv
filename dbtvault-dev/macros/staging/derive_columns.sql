@@ -92,7 +92,7 @@
 {%- if execute -%}
 {{ exceptions.raise_compiler_error("Invalid column configuration:
 expected format, either: {'source_relation': Relation, 'columns': {column_name: column_value}}
-or: {'source_relation': Relation, 'columns': {column_name: {'source_column': column_value, 'escape': True / False}}}
+or: {'source_relation': Relation, 'columns': {column_name: {'source_column': column_value, 'escape': true / false}}}
 got: {'source_relation': " ~ source_relation ~ ", 'columns': " ~ columns ~ "}") }}
 {%- endif %}
 

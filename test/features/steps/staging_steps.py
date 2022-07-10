@@ -30,7 +30,6 @@ def derive_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
     context.derived_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
                                                                                                    orient="records")[0]}
-    print('hello')
 
 
 @step("I do not include source columns")
