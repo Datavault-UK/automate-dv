@@ -145,7 +145,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 00:00:00.000 |
       | 2018-06-02 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_TS table should contain expected data
+    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -173,7 +173,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-03 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_TS table should contain expected data
+    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
