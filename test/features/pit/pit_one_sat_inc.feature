@@ -5,10 +5,10 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-01] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER table does not exist
+    Given the PIT_CUSTOMER_1SI table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      | HUB              | LINK | SAT                  | PIT              |
+      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -24,7 +24,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 |
       | 2018-06-04 |
     When I load the vault
-    Then the PIT_CUSTOMER table should contain expected data
+    Then the PIT_CUSTOMER_1SI table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -36,9 +36,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-02 00:00:00.000   |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
     When the RAW_STAGE_DETAILS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-04 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-05 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
@@ -46,7 +46,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-03 |
       | 2018-06-05 |
     When I load the vault
-    Then the PIT_CUSTOMER table should contain expected data
+    Then the PIT_CUSTOMER_1SI table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-03 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -66,8 +66,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-01-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT          |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
+      | HUB          | LINK | SAT                  | PIT          |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -95,9 +95,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')             | 2018-06-02 00:00:00.000   |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
     When the RAW_STAGE_DETAILS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-04 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-05 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
@@ -126,8 +126,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK  | SAT                     | PIT             |
-      | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
+      | HUB             | LINK | SAT                     | PIT             |
+      | HUB_CUSTOMER_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -163,9 +163,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
       | md5('1003') | 2018-06-02 12:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
     When the RAW_STAGE_DETAILS_TS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
     And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -193,8 +193,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-02-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK  | SAT                     | PIT             |
-      | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
+      | HUB             | LINK | SAT                     | PIT             |
+      | HUB_CUSTOMER_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -230,9 +230,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
       | md5('1003') | 2018-06-02 12:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
     When the RAW_STAGE_DETAILS_TS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
     And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -261,8 +261,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-03] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK  | SAT                     | PIT             |
-      | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
+      | HUB             | LINK | SAT                     | PIT             |
+      | HUB_CUSTOMER_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -290,9 +290,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
     When the RAW_STAGE_DETAILS_TS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
     And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
@@ -320,8 +320,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-03-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_LG table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK  | SAT                     | PIT             |
-      | HUB_CUSTOMER_TS |       | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
+      | HUB             | LINK | SAT                     | PIT             |
+      | HUB_CUSTOMER_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_LG |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -349,9 +349,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.000      |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
     When the RAW_STAGE_DETAILS_TS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-02 12:00:00.001 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-02 23:59:59.999 | *      |
     And I stage the STG_CUSTOMER_DETAILS_TS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE |
@@ -380,8 +380,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-04] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT             |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+      | HUB          | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -409,9 +409,9 @@ Feature: [PIT-1SI] Point in Time
       | md5('1003') | 2018-06-02 12:00:00.000 | md5('1003')             | 2018-06-02 00:00:00.000   |
       | md5('1003') | 2018-06-04 12:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
     When the RAW_STAGE_DETAILS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-04 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-05 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -439,8 +439,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-04-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT             |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+      | HUB          | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -461,16 +461,16 @@ Feature: [PIT-1SI] Point in Time
       | md5('1001') | 2018-05-31 12:00:00.000 | 0x0000000000000000      | 1900-01-01 00:00:00.000   |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-04 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
-      | md5('1002') | 2018-05-31 12:00:00.000 | 0x0000000000000000     | 1900-01-01 00:00:00.000   |
+      | md5('1002') | 2018-05-31 12:00:00.000 | 0x0000000000000000      | 1900-01-01 00:00:00.000   |
       | md5('1002') | 2018-06-02 12:00:00.000 | md5('1002')             | 2018-06-01 00:00:00.000   |
       | md5('1002') | 2018-06-04 12:00:00.000 | md5('1002')             | 2018-06-03 00:00:00.000   |
       | md5('1003') | 2018-05-31 12:00:00.000 | 0x0000000000000000      | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-06-02 12:00:00.000 | md5('1003')             | 2018-06-02 00:00:00.000   |
       | md5('1003') | 2018-06-04 12:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   |
     When the RAW_STAGE_DETAILS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1992-04-24   | 2018-06-04 | *      |
-      | 1004        | Dom           | 4 Forrest road Hampshire  | 1950-01-01   | 2018-06-05 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1992-04-24   | 2018-06-04 | *      |
+      | 1004        | Dom           | 4 Forrest road Hampshire | 1950-01-01   | 2018-06-05 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -499,11 +499,11 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-05] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT             |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+      | HUB          | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
     And the RAW_STAGE_DETAILS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -517,8 +517,8 @@ Feature: [PIT-1SI] Point in Time
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-04 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
     When the RAW_STAGE_DETAILS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alicia        | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-03 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alicia        | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-03 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -537,11 +537,11 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-05-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK  | SAT                  | PIT             |
-      | HUB_CUSTOMER |       | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+      | HUB          | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
     And the RAW_STAGE_DETAILS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |
@@ -555,8 +555,8 @@ Feature: [PIT-1SI] Point in Time
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-04 12:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
     When the RAW_STAGE_DETAILS is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Alicia        | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-03 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | Alicia        | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-03 | *      |
     And I stage the STG_CUSTOMER_DETAILS data
     And the AS_OF_DATE table is created and populated with data
       | AS_OF_DATE              |

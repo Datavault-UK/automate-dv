@@ -14,6 +14,13 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "HUB_CUSTOMER_1SI": {
+            "source_model": "STG_CUSTOMER_DETAILS",
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "HUB_CUSTOMER_AC": {
             "source_model": ["STG_CUSTOMER_DETAILS",
                              "STG_CUSTOMER_LOGIN",
@@ -80,6 +87,25 @@ def set_vault_structure_definition(context):
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
                     "STG_CUSTOMER_PROFILE": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_1SI": {
+            "source_model": "HUB_CUSTOMER_1SI",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables_ldts":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                 },
             "src_ldts": "LOAD_DATE"
         },
@@ -403,7 +429,7 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "HUB_CUSTOMER": {
+        "HUB_CUSTOMER_1SI": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -449,6 +475,14 @@ def pit_one_sat_snowflake(context):
             }
         },
         "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_1SI": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
