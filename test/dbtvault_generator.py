@@ -277,7 +277,7 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model,
 
 
 def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
-        stage_tables, src_ldts, src_additional_columns=None, depends_on="", config=None):
+        stage_tables_ldts, src_ldts, src_additional_columns=None, depends_on="", config=None):
     """
     Generate a PIT template
         :param model_name: Name of the model file
@@ -286,7 +286,7 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
         :param as_of_dates_table: Name for the AS_OF table
         :param satellites: Dictionary of satellite reference mappings
         :param src_ldts: Source Load Date timestamp
-        :param stage_tables: List of stage tables
+        :param stage_tables_ldts: List of stage table load date(time) stamps
         :param source_model: Model name to select from
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -299,7 +299,7 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
                       src_additional_columns={src_additional_columns if src_additional_columns else 'none'}, 
                       as_of_dates_table={as_of_dates_table}, 
                       satellites={satellites}, 
-                      stage_tables={stage_tables},
+                      stage_tables_ldts={stage_tables_ldts},
                       src_ldts={src_ldts}, source_model={source_model}) }}}}
     """
 
