@@ -50,7 +50,7 @@ def test_as_constant_column_str_is_empty_string_raises_error(request, generate_m
 
 
 @pytest.mark.macro
-def test_as_comstant_column_str_is_none_raises_error(request, generate_model):
+def test_as_constant_column_str_is_none_raises_error(request, generate_model):
     var_dict = {'column_str': None}
 
     generate_model()
