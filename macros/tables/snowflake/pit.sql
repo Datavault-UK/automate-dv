@@ -11,11 +11,11 @@
     {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
-    {{ dbtvault.prepend_generated_by() }}
+    {{- dbtvault.prepend_generated_by() }}
 
-    {% for stg in stage_tables_ldts %}
-        {{ "-- depends_on: " ~ ref(stg) }}
-    {% endfor -%}
+    {%- for stg in stage_tables_ldts %}
+        {{ "-- depends_on: " ~ ref(stg) -}}
+    {%- endfor -%}
 
     {{ adapter.dispatch('pit', 'dbtvault')(src_pk=src_pk,
                                            src_additional_columns=src_additional_columns,
@@ -53,14 +53,14 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(stage_tables_ldts, this) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, this) }},
 
 backfill_rows_as_of_dates AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        b.AS_OF_DATE,
+        b.AS_OF_DATE
         {% if dbtvault.is_something(src_additional_columns) -%},
-        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {{- dbtvault.prefix([src_additional_columns], 'a') }}
         {% endif %}
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -74,6 +74,7 @@ backfill AS (
         {% if dbtvault.is_something(src_additional_columns) -%},
         {{- dbtvault.prefix([src_additional_columns], 'a') }},
         {% endif %}
+
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
@@ -82,9 +83,12 @@ backfill AS (
         {%- if target.type == "sqlserver" -%}
         CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }}
         {%- else -%}
-        CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }}
-        {%- endif -%}
-        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, at_ldts_name)) }}
+        CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+
+        {%- endif %}
+
+        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+
         {{- ',' if not loop.last -}}
 
     {%- endfor %}
@@ -171,14 +175,14 @@ new_rows AS (
         a.AS_OF_DATE
         {% if dbtvault.is_something(src_additional_columns) -%},
         {{- dbtvault.prefix([src_additional_columns], 'a') }}
-        {% endif -%}
+        {% endif %}
 ),
 
 pit AS (
     SELECT * FROM new_rows
     {%- if dbtvault.is_any_incremental() %}
     UNION ALL
-    SELECT * FROM overlap
+    SELECT * FROM overlap_pks
     UNION ALL
     SELECT * FROM backfill
     {% endif %}
