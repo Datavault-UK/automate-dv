@@ -263,9 +263,42 @@ def staging_escaped_sqlserver(context):
                 "EFFECTIVE_FROM": "DATE",
                 "DBTVAULT_RANK": "INT",
                 "DBTVAULT_RANK2": "INT",
-                "CUSTOMER_NK": "VARCHAR(30)",
-                "CUSTOMER_DOB_UK": "VARCHAR(10)",
                 "DERIVED_CONCAT": "VARCHAR(50)"
+            }
+        },
+        "STG_CUSTOMER_NAME": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(5)",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "DERIVED_CONCAT": "VARCHAR(50)",
+                "DBTVAULT_RANK": "INT",
+                "DBTVAULT_RANK2": "INT"
+            }
+        },
+        "STG_CUSTOMER_NAME_DOB": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(5)",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "COLUMN": "VARCHAR(10)",
+                "DBTVAULT_RANK": "INT",
+                "DBTVAULT_RANK2": "INT",
             }
         },
         "RAW_STAGE": {
@@ -273,6 +306,16 @@ def staging_escaped_sqlserver(context):
                 "CUSTOMER_ID": "VARCHAR(5)",
                 "CUSTOMER NAME": "VARCHAR(10)",
                 "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(10)"
+            }
+        },
+        "RAW_STAGE_NAME_DOB": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(5)",
+                "CUSTOMER NAME": "VARCHAR(10)",
+                "CUSTOMER DOB": "VARCHAR(10)",
                 "CUSTOMER_PHONE": "VARCHAR(20)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(10)"

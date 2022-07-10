@@ -11,7 +11,7 @@ def ranked_columns(context, processed_stage_name):
 
     ranked_metadata = {v['NAME']: {'partition_by': v['PARTITION_BY'],
                                    'order_by': v['ORDER_BY']}
-                       for d in ranked_column_data for v in d.values()}
+                       for d in [ranked_column_data] for v in d.values()}
 
     ranked_config = {processed_stage_name: ranked_metadata}
 
