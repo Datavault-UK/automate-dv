@@ -22,7 +22,7 @@ def set_vault_structure_definition(context):
             "src_source": "SOURCE"
         },
         "HUB_CUSTOMER_1SI_TS": {
-            "source_model": "STG_CUSTOMER_DETAILS",
+            "source_model": "STG_CUSTOMER_DETAILS_TS",
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATETIME",
