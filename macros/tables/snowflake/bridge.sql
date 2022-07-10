@@ -52,7 +52,7 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(stage_tables_ldts, this) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, source_model) }},
 
 overlap_as_of AS (
     SELECT AS_OF_DATE
