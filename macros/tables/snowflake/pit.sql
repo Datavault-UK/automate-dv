@@ -53,7 +53,7 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, this) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, source_model) }},
 
 backfill_rows_as_of_dates AS (
     SELECT
@@ -188,6 +188,6 @@ pit AS (
     {% endif %}
 )
 
-SELECT * FROM pit
+SELECT DISTINCT * FROM pit
 
 {%- endmacro -%}
