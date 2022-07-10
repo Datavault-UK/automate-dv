@@ -108,8 +108,8 @@ new_rows_as_of AS (
 
 overlap_pks AS (
     SELECT {{ dbtvault.prefix([src_pk], 'p') }}
-    {%- if dbtvault.is_something(src_additional_column) -%},
-           {{ dbtvault.prefix([src_additional_column], 'p') }}
+    {%- if dbtvault.is_something(src_additional_columns) -%},
+       {{ dbtvault.prefix([src_additional_columns], 'p') }}
     {%- endif %}
     FROM {{ this }} AS p
     INNER JOIN {{ ref(source_model) }} as h
@@ -128,12 +128,12 @@ overlap_as_of AS (
 ),
 
 overlap AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
+    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_additional_columns, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
 ),
 {%- endif %}
 
 new_rows AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
+    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_additional_columns, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
 ),
 
 {# Full data from bridge walk(s) -#}
@@ -204,7 +204,7 @@ SELECT * FROM bridge
 
 {%- endmacro -%}
 
-{%- macro bridge_overlap_and_new_rows(src_pk, bridge_walk, source_name, new_as_of_dates_cte) -%}
+{%- macro bridge_overlap_and_new_rows(src_pk, src_additional_columns, bridge_walk, source_name, new_as_of_dates_cte) -%}
 
 SELECT
     {{ dbtvault.prefix([src_pk], 'a') }},
