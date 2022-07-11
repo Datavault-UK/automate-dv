@@ -5,10 +5,10 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-01] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER_1SI table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
       | HUB              | LINK | SAT                  | PIT              |
-      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI |
+      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -24,7 +24,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 |
       | 2018-06-04 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -46,7 +46,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-03 |
       | 2018-06-05 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-03 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -64,10 +64,10 @@ Feature: [PIT-1SI] Point in Time
   @bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-01-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER_1SI table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
       | HUB              | LINK | SAT                  | PIT              |
-      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI |
+      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -83,7 +83,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 |
       | 2018-06-04 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0x0000000000000000      | 1900-01-01 00:00:00.000   |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -105,7 +105,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-03 |
       | 2018-06-05 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-03 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -124,10 +124,10 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
-    Given the PIT_CUSTOMER_1SI_TS table does not exist
+    Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
       | HUB                 | LINK | SAT                     | PIT                 |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1SI_TS |
+      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -145,7 +145,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 00:00:00.000 |
       | 2018-06-02 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -173,7 +173,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-03 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -191,10 +191,10 @@ Feature: [PIT-1SI] Point in Time
   @bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-02-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
-    Given the PIT_CUSTOMER_1SI_TS table does not exist
+    Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
       | HUB                 | LINK | SAT                     | PIT                 |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1SI_TS |
+      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -212,7 +212,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 00:00:00.000 |
       | 2018-06-02 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0x0000000000000000         | 1900-01-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -240,7 +240,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-03 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -259,10 +259,10 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-03] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
-    Given the PIT_CUSTOMER_1SI_TS table does not exist
+    Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
       | HUB                 | LINK | SAT                     | PIT                 |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1SI_TS |
+      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -278,7 +278,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-01 |
       | 2018-06-02 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000           | 1900-01-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -300,7 +300,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 |
       | 2018-06-03 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -318,10 +318,10 @@ Feature: [PIT-1SI] Point in Time
   @bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-03-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
-    Given the PIT_CUSTOMER_1SI_TS table does not exist
+    Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
       | HUB                 | LINK | SAT                     | PIT                 |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1SI_TS |
+      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -337,7 +337,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-01 |
       | 2018-06-02 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0x0000000000000000         | 1900-01-01 00:00:00.000      |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -359,7 +359,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 |
       | 2018-06-03 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')                | 2018-06-01 00:00:00.000      |
@@ -378,10 +378,10 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-04] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER_1SI table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
       | HUB              | LINK | SAT                  | PIT              |
-      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI |
+      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -397,7 +397,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-04 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0000000000000000        | 1900-01-01                |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01                |
@@ -419,7 +419,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-04 00:00:00.000 |
       | 2018-06-06 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01                |
       | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-04                |
@@ -437,10 +437,10 @@ Feature: [PIT-1SI] Point in Time
   @bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-04-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER_1SI table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
       | HUB              | LINK | SAT                  | PIT              |
-      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI |
+      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -456,7 +456,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-04 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0x0000000000000000      | 1900-01-01                |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01                |
@@ -478,7 +478,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-04 00:00:00.000 |
       | 2018-06-06 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01                |
       | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-04                |
@@ -497,10 +497,10 @@ Feature: [PIT-1SI] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-05] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER_1SI table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
       | HUB              | LINK | SAT                  | PIT              |
-      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI |
+      | HUB_CUSTOMER_1SI |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
@@ -511,7 +511,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-04 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0000000000000000        | 1900-01-01                |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')             | 2018-06-01                |
@@ -526,7 +526,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-04 00:00:00.000 |
       | 2018-06-06 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01                |
       | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-03                |
@@ -535,10 +535,10 @@ Feature: [PIT-1SI] Point in Time
   @bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-05-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
-    Given the PIT_CUSTOMER_1SI table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK | SAT                  | PIT                 |
-      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1SI_TS |
+      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
@@ -549,7 +549,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-02 12:00:00.000 |
       | 2018-06-04 12:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S_TS table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK | SAT_CUSTOMER_DETAILS_TS_LDTS |
       | md5('1001') | 2018-05-31 12:00:00.000 | 0x0000000000000000         | 1900-01-01                   |
       | md5('1001') | 2018-06-02 12:00:00.000 | md5('1001')                | 2018-06-01                   |
@@ -564,7 +564,7 @@ Feature: [PIT-1SI] Point in Time
       | 2018-06-04 00:00:00.000 |
       | 2018-06-06 00:00:00.000 |
     When I load the vault
-    Then the PIT_CUSTOMER_1SI table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')             | 2018-06-01                |
       | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-03                |

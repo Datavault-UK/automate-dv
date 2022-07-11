@@ -2,7 +2,6 @@ version: 2
 
 sources:
   - name: test_macro
-#    database: "{{ target.database if target.type == 'snowflake'}}"
     schema: "{{- target.schema -}}_{{ target.user }}{{ '_' ~ (env_var('PIPELINE_BRANCH', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') | upper) if env_var('PIPELINE_BRANCH', '') }}{{ '_' ~ (env_var('PIPELINE_JOB', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') | upper) if env_var('PIPELINE_JOB', '') }}"
     tables:
       - name: source
