@@ -90,7 +90,6 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | 1007        | Amanda        | 1993-01-07 | TPCH   |
     And I stage the STG_CUSTOMER data
     And I insert by period into the HUB hub by day
-    And I insert by period into the HUB hub by day
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
