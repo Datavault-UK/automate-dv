@@ -175,8 +175,7 @@ def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(request, 
             "CUSTOMER_PK": ["CUSTOMER_ID", '!9999-12-31'],
             "CUSTOMER_BOOKING_PK": [
                 "CUSTOMER_ID",
-                "BOOKING_REF",
-                "TO_DATE('9999-12-31')"
+                "BOOKING_REF"
             ],
             "BOOK_CUSTOMER_HASHDIFF": {
                 "is_hashdiff": True,
@@ -188,7 +187,6 @@ def test_hash_columns_correctly_generates_sql_with_constants_from_yaml(request, 
                 "is_hashdiff": True,
                 "columns": [
                     "BOOKING_REF",
-                    "TO_DATE('9999-12-31')",
                     "!STG",
                     "BOOKING_DATE",
                     "DEPARTURE_DATE",
