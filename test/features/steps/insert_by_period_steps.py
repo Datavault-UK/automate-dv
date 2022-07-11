@@ -28,7 +28,8 @@ def load_table(context, model_name, vault_structure, period, start_date, stop_da
     is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh)
+                                                 full_refresh=is_full_refresh,
+                                                 context=context)
 
     assert "Completed successfully" in logs
 
@@ -55,7 +56,8 @@ def load_table(context, model_name, vault_structure, period):
     is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh)
+                                                 full_refresh=is_full_refresh,
+                                                 context=context)
 
     assert "Completed successfully" in logs
 
@@ -82,6 +84,7 @@ def load_table(context, start_date, period, model_name, vault_structure):
     is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh)
+                                                 full_refresh=is_full_refresh,
+                                                 context=context)
 
     assert "Completed successfully" in logs

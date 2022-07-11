@@ -90,6 +90,41 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | 1007        | Amanda        | 1993-01-07 | TPCH   |
     And I stage the STG_CUSTOMER data
     And I insert by period into the HUB hub by day
+    And I insert by period into the HUB hub by day
+    Then the HUB table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-02 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-03 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-04 | TPCH   |
+      | md5('1005') | 1005        | 1993-01-05 | TPCH   |
+      | md5('1006') | 1006        | 1993-01-06 | TPCH   |
+      | md5('1007') | 1007        | 1993-01-07 | TPCH   |
+
+  @fixture.single_source_hub
+  Scenario: [HUB-PM-05] Incremental load by period, of stage data into an empty hub with custom database
+    Given I am using the DBTVAULT_TEST database
+    And the HUB table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1003        | Chad          | 1993-01-03 | TPCH   |
+      | 1004        | Dom           | 1993-01-04 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    And I insert by period into the HUB hub by day
+    And I insert by period into the HUB hub by day
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1005        | Bart          | 1993-01-05 | TPCH   |
+      | 1006        | Craig         | 1993-01-06 | TPCH   |
+      | 1007        | Amanda        | 1993-01-07 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    And I insert by period into the HUB hub by day
+    And I insert by period into the HUB hub by day
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |

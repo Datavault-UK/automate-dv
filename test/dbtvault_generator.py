@@ -577,7 +577,7 @@ def template_to_file(template, model_name):
         f.write(template.strip())
 
 
-def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
+def add_seed_config(seed_name: str, seed_config: dict, include_columns=None, context=None):
     """
     Append a given dictionary to the end of the dbt_project.yml file
         :param seed_name: Name of seed file to configure
@@ -599,6 +599,11 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
             {'name': seed_name, 'config': {**seed_config, '+quote_columns': True}}
         ]
     }
+
+    if context:
+        if hasattr(context, 'database_name'):
+            seed_properties['seeds']['config'] = {**seed_properties['seeds']['config'],
+                                                  'database': context.database_name}
 
     with open(properties_path, 'w+') as f:
         yml.dump(seed_properties, f)

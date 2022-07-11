@@ -7,7 +7,6 @@ import shutil
 import sys
 from hashlib import md5, sha256
 from pathlib import Path
-from typing import List
 
 import pandas as pd
 import pexpect
@@ -160,7 +159,7 @@ def parse_escapes(columns_as_series: Series) -> Series:
                 else:
                     processed_item = raw_item
                 escape_dict = {"source_column": processed_item,
-                                 "escape": True}
+                               "escape": True}
 
                 columns.append(escape_dict)
 
@@ -297,7 +296,7 @@ def run_dbt_command(command) -> str:
     return logs
 
 
-def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
+def run_dbt_seeds(seed_file_names=None, full_refresh=False, context=None) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -314,10 +313,14 @@ def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
     if "full-refresh" not in command and full_refresh:
         command.append('--full-refresh')
 
+    if hasattr(context, 'database_name'):
+        args = json.dumps({'custom_database': context.database_name})
+        command.extend([f"--vars '{args}'"])
+
     return run_dbt_command(command)
 
 
-def run_dbt_seed_model(seed_model_name=None) -> str:
+def run_dbt_seed_model(seed_model_name=None, context=None) -> str:
     """
     Run seed model files in dbt
         :return: dbt logs
@@ -331,13 +334,14 @@ def run_dbt_seed_model(seed_model_name=None) -> str:
     return run_dbt_command(command)
 
 
-def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
+def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False, context=None) -> str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
         :param model_names: List of model names to run
         :param args: variable dictionary to provide to dbt
         :param full_refresh: Run a full refresh
+        :param context: context variable for any additional configuration
         :return Log output of dbt run operation
     """
 
@@ -349,24 +353,34 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         command.append('--full-refresh')
 
     if args:
+
+        if hasattr(context, 'database_name'):
+            args['database_name'] = context.database_name
+
         args = json.dumps(args)
         command.extend([f"--vars '{args}'"])
 
     return run_dbt_command(command)
 
 
-def run_dbt_operation(macro_name: str, args=None) -> str:
+def run_dbt_operation(macro_name: str, args=None, context=None) -> str:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation
         :param args: Arguments to provide
+        :param context: context variable for any additional configuration
         :return: dbt logs
     """
     command = ['run-operation', f'{macro_name}']
 
     if args:
-        args = str(args).replace('\'', '')
+        args = json.dumps(args)
         command.extend([f"--args '{args}'"])
+
+    if context:
+        if hasattr(context, 'database_name'):
+            vargs = json.dumps({'database_name': context.database_name})
+            command.extend([f"--vars '{vargs}'"])
 
     return run_dbt_command(command)
 
