@@ -14,14 +14,14 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "HUB_CUSTOMER_1SI": {
+        "HUB_CUSTOMER_1S": {
             "source_model": "STG_CUSTOMER_DETAILS",
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-        "HUB_CUSTOMER_1SI_TS": {
+        "HUB_CUSTOMER_1S_TS": {
             "source_model": "STG_CUSTOMER_DETAILS_TS",
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
@@ -106,8 +106,8 @@ def set_vault_structure_definition(context):
                 },
             "src_ldts": "LOAD_DATE"
         },
-        "PIT_CUSTOMER_1SI": {
-            "source_model": "HUB_CUSTOMER_1SI",
+        "PIT_CUSTOMER_1S": {
+            "source_model": "HUB_CUSTOMER_1S",
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
             "satellites":
@@ -125,8 +125,8 @@ def set_vault_structure_definition(context):
                 },
             "src_ldts": "LOAD_DATE"
         },
-        "PIT_CUSTOMER_1SI_TS": {
-            "source_model": "HUB_CUSTOMER_1SI_TS",
+        "PIT_CUSTOMER_1S_TS": {
+            "source_model": "HUB_CUSTOMER_1S_TS",
             "src_pk": "CUSTOMER_PK",
             "as_of_dates_table": "AS_OF_DATE",
             "satellites": {
@@ -489,7 +489,7 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "HUB_CUSTOMER_1SI": {
+        "HUB_CUSTOMER_1S": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -505,7 +505,7 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "HUB_CUSTOMER_1SI_TS": {
+        "HUB_CUSTOMER_1S_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -550,7 +550,7 @@ def pit_one_sat_snowflake(context):
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         },
-        "PIT_CUSTOMER_1SI": {
+        "PIT_CUSTOMER_1S": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
@@ -558,7 +558,7 @@ def pit_one_sat_snowflake(context):
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         },
-        "PIT_CUSTOMER_1SI_TS": {
+        "PIT_CUSTOMER_1S_TS": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
@@ -572,22 +572,6 @@ def pit_one_sat_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
-            }
-        },
-        "PIT_CUSTOMER_LG": {
-            "column_types": {
-                "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
-            }
-        },
-        "PIT_CUSTOMER_HG": {
-            "column_types": {
-                "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         }
     }
