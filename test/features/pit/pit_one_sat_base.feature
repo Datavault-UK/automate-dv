@@ -783,8 +783,8 @@ Feature: [PIT-1SB] Point in Time
   Scenario: [PIT-1SB-14] Base load into a pit table from one satellite with dates where AS OF timestamps are in the future
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK | SAT                  | PIT                |
-      | HUB_CUSTOMER_1S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S_TS |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_1S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
@@ -797,7 +797,7 @@ Feature: [PIT-1SB] Point in Time
       | 2018-06-01 12:00:00.001 |
       | 2018-06-02 00:00:00.001 |
     When I load the vault
-    Then the PIT_CUSTOMER_1S_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-06-01 00:00:00.001 | md5('1001')             | 2018-06-01 00:00:00.000   |
       | md5('1001') | 2018-06-01 12:00:00.001 | md5('1001')             | 2018-06-01 00:00:00.000   |
@@ -814,8 +814,8 @@ Feature: [PIT-1SB] Point in Time
   Scenario: [PIT-1SB-15] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK | SAT                  | PIT                |
-      | HUB_CUSTOMER_1S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S_TS |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_1S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
@@ -828,7 +828,7 @@ Feature: [PIT-1SB] Point in Time
       | 2018-05-31 12:30:00.001 |
       | 2018-05-31 23:59:59.999 |
     When I load the vault
-    Then the PIT_CUSTOMER_1S_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1001') | 2018-05-31 12:30:00.001 | 0000000000000000        | 1900-01-01 00:00:00.000   |
@@ -874,10 +874,10 @@ Feature: [PIT-1SB] Point in Time
   @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-16] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
-    Given the PIT_CUSTOMER_1S_TS table does not exist
+    Given the PIT_CUSTOMER_1S table does not exist
     And the raw vault contains empty tables
-      | HUB             | LINK | SAT                  | PIT                |
-      | HUB_CUSTOMER_1S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S_TS |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_1S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_1S |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 | *      |
@@ -892,7 +892,7 @@ Feature: [PIT-1SB] Point in Time
       | 2018-06-01 23:59:59.999 |
       | 2018-06-02 00:00:00.001 |
     When I load the vault
-    Then the PIT_CUSTOMER_1S_TS table should contain expected data
+    Then the PIT_CUSTOMER_1S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS |
       | md5('1001') | 2018-05-31 23:59:59.999 | 0000000000000000        | 1900-01-01 00:00:00.000   |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   |
