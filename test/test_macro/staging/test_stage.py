@@ -38,6 +38,140 @@ def test_stage_correctly_generates_sql_from_yaml(request, generate_model):
 
 
 @pytest.mark.macro
+def test_stage_correctly_generates_sql_from_yaml_with_escape1(request, generate_model):
+    metadata = {
+        "source_model": "raw_source",
+        "hashed_columns": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "CUST_CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
+            },
+            "CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_ID", "NATIONALITY", "PHONE"]
+            }
+        },
+        "derived_columns": {
+            "SOURCE": "!STG_BOOKING",
+            "EFFECTIVE_FROM": {
+                "source_column": "BOOKING_DATE",
+                "escape": True
+            }
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_stage_correctly_generates_sql_from_yaml_with_escape2(request, generate_model):
+    metadata = {
+        "source_model": "raw_source",
+        "hashed_columns": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "CUST_CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
+            },
+            "CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_ID", "NATIONALITY", "PHONE"]
+            }
+        },
+        "derived_columns": {
+            "SOURCE": "!STG_BOOKING",
+            "BOOKING_DETAILS": {
+                "source_column": ["BOOKING_DATE", "!STG_BOOKING", "CUSTOMER_ID", "CUSTOMER_NAME"],
+                "escape": True
+            }
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_stage_correctly_generates_sql_from_yaml_with_escape3(request, generate_model):
+    metadata = {
+        "source_model": "raw_source",
+        "hashed_columns": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "CUST_CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
+            },
+            "CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_ID", "NATIONALITY", "PHONE"]
+            }
+        },
+        "derived_columns": {
+            "BOOKING_FLAG": "NOT \"TEST COLUMN\"",
+            "EFFECTIVE_FROM": "TO_VARCHAR(\"CREATED DATE\"::date, 'DD-MM-YYYY')"
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_stage_correctly_generates_sql_from_yaml_with_concat(request, generate_model):
+    metadata = {
+        "source_model": "raw_source",
+        "hashed_columns": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "CUST_CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_DOB", "CUSTOMER_ID", "CUSTOMER_NAME"]
+            },
+            "CUSTOMER_HASHDIFF": {
+                "is_hashdiff": True,
+                "columns": ["CUSTOMER_ID", "NATIONALITY", "PHONE"]
+            }
+        },
+        "derived_columns": {
+            "SOURCE": "!STG_BOOKING",
+            "BOOKING_DETAILS": ["BOOKING_DATE", "!STG_BOOKING", "CUSTOMER_ID", "CUSTOMER_NAME"]
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
 def test_stage_correctly_generates_sql_from_yaml_with_source_style(request, generate_model):
     metadata = {
         "source_model": {
