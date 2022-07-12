@@ -11,8 +11,7 @@ from pathlib import Path
 import pandas as pd
 import pexpect
 from _pytest.fixtures import FixtureRequest
-from behave.model import Table, Text
-from behave.runner import Context
+from behave.model import Table
 from numpy import NaN
 from pandas import Series
 
@@ -297,17 +296,13 @@ def _run_dbt_command(command) -> str:
     return logs
 
 
-def run_dbt_test(dbt_vars=None):
+def run_dbt_test():
     command = ["dbt", "test"]
-
-    if dbt_vars:
-        args = json.dumps(dbt_vars)
-        command.extend([f"--vars '{args}'"])
 
     return _run_dbt_command(command)
 
 
-def run_dbt_seeds(seed_file_names=None, full_refresh=False, dbt_vars=None) -> str:
+def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -323,10 +318,6 @@ def run_dbt_seeds(seed_file_names=None, full_refresh=False, dbt_vars=None) -> st
 
     if "full-refresh" not in command and full_refresh:
         command.append('--full-refresh')
-
-    if dbt_vars:
-        args = json.dumps(dbt_vars)
-        command.extend([f"--vars '{args}'"])
 
     return _run_dbt_command(command)
 
@@ -345,14 +336,13 @@ def run_dbt_seed_model(seed_model_name=None) -> str:
     return _run_dbt_command(command)
 
 
-def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False, dbt_vars=None) -> str:
+def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
         :param model_names: List of model names to run
         :param args: variable dictionary to provide to dbt
         :param full_refresh: Run a full refresh
-        :param dbt_vars: variables for any additional configuration
         :return Log output of dbt run operation
     """
 
@@ -365,9 +355,6 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
 
     if not args:
         args = dict()
-
-    if dbt_vars:
-        args = {**args, **dbt_vars}
 
     if args:
         args = json.dumps(args)
@@ -764,25 +751,3 @@ def feature_sub_types():
             ]
         },
     }
-
-
-def parse_step_text(step_text: str):
-    config_dict = dict()
-
-    if pair_list := step_text.split(","):
-        for pair in pair_list:
-            pair_dict = {str(pair.split(':')[0]).strip(): str(pair.split(':')[1]).strip()}
-            config_dict = {**config_dict, **pair_dict}
-
-    return config_dict
-
-
-def handle_step_text_dict(context: Context):
-
-    if hasattr(context, 'text'):
-
-        if context.text:
-
-            config_dict = parse_step_text(context.text)
-
-            return config_dict

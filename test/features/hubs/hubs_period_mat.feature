@@ -105,7 +105,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
   Scenario: [HUB-PM-05] Incremental load by period, of stage data into an empty hub with custom database
     Given the HUB table does not exist
       """
-      database_name: DBTVAULT_TEST
+      database: DBTVAULT_TEST
       """
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -119,11 +119,11 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
     And I stage the STG_CUSTOMER data
     And I insert by period into the HUB hub by day
       """
-      database_name: DBTVAULT_TEST
+      database: DBTVAULT_TEST
       """
     And I insert by period into the HUB hub by day
       """
-      database_name: DBTVAULT_TEST
+      database: DBTVAULT_TEST
       """
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -133,16 +133,13 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
     And I stage the STG_CUSTOMER data
     And I insert by period into the HUB hub by day
       """
-      database_name: DBTVAULT_TEST
+      database: DBTVAULT_TEST
       """
     And I insert by period into the HUB hub by day
       """
-      database_name: DBTVAULT_TEST
+      database: DBTVAULT_TEST
       """
     Then the HUB table should contain expected data
-      """
-      database_name: DBTVAULT_TEST
-      """
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | 1993-01-02 | TPCH   |

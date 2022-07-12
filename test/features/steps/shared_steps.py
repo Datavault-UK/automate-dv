@@ -55,7 +55,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 def check_exists(context, model_name):
     logs = dbtvault_harness_utils.run_dbt_operation(macro_name="check_model_exists",
                                                     args={"model_name": model_name},
-                                                    dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
+                                                    dbt_vars=dbtvault_generator.handle_step_text_dict(
                                                         context))
 
     context.target_model_name = model_name
@@ -93,9 +93,7 @@ def clear_schema(context):
 
         seed_file_names.append(seed_file_name)
 
-    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=seed_file_names,
-                                                dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
-
+    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=seed_file_names)
     assert "Completed successfully" in logs
 
 
@@ -120,11 +118,11 @@ def load_empty_table(context, model_name, vault_structure):
                                                                  model_name=model_name)
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                       seed_config=context.seed_config[model_name])
+                                       seed_config=context.seed_config[model_name],
+                                       additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                           context))
 
-    dbt_vars = dbtvault_harness_utils.handle_step_text_dict(context)
-
-    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name], dbt_vars=dbt_vars)
+    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
     if getattr(context, "create_empty_stage", False) and getattr(context, "empty_stage_name", False):
         source_model_name = context.empty_stage_name
@@ -138,9 +136,7 @@ def load_empty_table(context, model_name, vault_structure):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                     dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                         context))
+        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
 
@@ -163,8 +159,7 @@ def create_empty_stage(context, raw_stage_name):
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[raw_stage_name])
 
-    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                                dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
     context.raw_stage_name = raw_stage_name
 
@@ -192,8 +187,7 @@ def create_empty_stage(context, processed_stage_name):
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[processed_stage_name])
 
-    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                                dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
     assert "Completed successfully" in logs
 
@@ -229,9 +223,7 @@ def load_populated_table(context, model_name, vault_structure):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                     dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                         context))
+        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
         assert "Completed successfully" in seed_logs
         assert "Completed successfully" in logs
@@ -244,10 +236,11 @@ def load_populated_table(context, model_name, vault_structure):
                                                                      model_name=model_name)
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                           seed_config=context.seed_config[model_name])
+                                           seed_config=context.seed_config[model_name],
+                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                               context))
 
-        dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                             dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         metadata = {"source_model": seed_file_name, **context.vault_structure_columns[model_name]}
 
@@ -255,9 +248,7 @@ def load_populated_table(context, model_name, vault_structure):
 
         dbtvault_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                     dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                         context))
+        logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
         assert "Completed successfully" in logs
 
@@ -277,8 +268,7 @@ def load_table(context, model_name, vault_structure):
                                            config=config,
                                            **metadata)
 
-    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name])
 
     assert "Completed successfully" in logs
 
@@ -303,8 +293,7 @@ def load_vault(context):
     is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=model_names,
-                                                 full_refresh=is_full_refresh,
-                                                 dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+                                                 full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
@@ -341,11 +330,10 @@ def create_csv(context, raw_stage_model_name):
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[raw_stage_model_name],
-                                           context=context)
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
+                                               context))
 
-        logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                                    dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                        context))
+        logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         context.raw_stage_models = seed_file_name
 
@@ -383,9 +371,7 @@ def create_csv(context, table_name):
                                                config={'materialized': 'table'})
 
         run_logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[table_name],
-                                                         args=args, full_refresh=True,
-                                                         dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                             context))
+                                                         args=args, full_refresh=True)
 
         context.raw_stage_models = seed_model_name
 
@@ -398,11 +384,12 @@ def create_csv(context, table_name):
                                                                      model_name=table_name)
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                           seed_config=context.seed_config[table_name])
+                                           seed_config=context.seed_config[table_name],
+                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                               context)
+                                           )
 
-        seed_logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                                         dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                             context))
+        seed_logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
@@ -414,9 +401,7 @@ def create_csv(context, table_name):
                                                config={'materialized': 'table'})
 
         run_logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[table_name],
-                                                         args=args, full_refresh=True,
-                                                         dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                             context))
+                                                         args=args, full_refresh=True)
 
         context.raw_stage_models = seed_file_name
 
@@ -460,11 +445,12 @@ def create_csv(context, raw_stage_model_name):
                                                                      model_name=raw_stage_model_name)
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                           seed_config=context.seed_config[raw_stage_model_name])
+                                           seed_config=context.seed_config[raw_stage_model_name],
+                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                               context)
+                                           )
 
-        logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                                    dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                        context))
+        logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         context.raw_stage_models = seed_file_name
 
@@ -486,8 +472,7 @@ def stage_processing(context, processed_stage_name):
                                            include_source_columns=context.include_source_columns)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[processed_stage_name],
-                                                 args=args,
-                                                 dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+                                                 args=args)
 
     assert "Completed successfully" in logs
 
@@ -520,8 +505,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbtvault_harness_utils.run_dbt_test(
-            dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        logs = dbtvault_harness_utils.run_dbt_test()
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
@@ -543,13 +527,14 @@ def expect_data(context, model_name):
 
         dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
                                            include_columns=columns_to_compare,
-                                           seed_config=context.seed_config[model_name])
+                                           seed_config=context.seed_config[model_name],
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
+                                               context)
+                                           )
 
-        dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[expected_output_csv_name],
-                                             dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[expected_output_csv_name])
 
-        logs = dbtvault_harness_utils.run_dbt_test(
-            dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        logs = dbtvault_harness_utils.run_dbt_test()
 
         assert "1 of 1 PASS" in logs
 
@@ -575,11 +560,12 @@ def expect_data(context, model_name):
 
         # Create empty expected data table using empty seed file
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
-                                           seed_config=context.seed_config[model_name])
+                                           seed_config=context.seed_config[model_name],
+                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                               context)
+                                           )
 
-        seed_logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name],
-                                                         dbt_vars=dbtvault_harness_utils.handle_step_text_dict(
-                                                             context))
+        seed_logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
 
         # Run comparison test between target table and expected data table
         unique_id = context.vault_structure_columns[model_name]['src_pk']
@@ -591,8 +577,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbtvault_harness_utils.run_dbt_test(
-            dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        logs = dbtvault_harness_utils.run_dbt_test()
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
@@ -619,13 +604,14 @@ def expect_data(context, model_name):
 
         dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
                                            include_columns=columns_to_compare,
-                                           seed_config=context.seed_config[model_name])
+                                           seed_config=context.seed_config[model_name],
+                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                               context)
+                                           )
 
-        dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[expected_output_csv_name],
-                                             dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[expected_output_csv_name])
 
-        logs = dbtvault_harness_utils.run_dbt_test(
-            dbt_vars=dbtvault_harness_utils.handle_step_text_dict(context))
+        logs = dbtvault_harness_utils.run_dbt_test()
 
         assert "1 of 1 PASS" in logs
 

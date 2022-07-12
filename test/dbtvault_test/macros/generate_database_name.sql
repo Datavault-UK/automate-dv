@@ -1,6 +1,6 @@
 {% macro generate_database_name(custom_database_name=none, node=none) -%}
 
-    {%- set default_database = var('database_name', target.database)  -%}
+    {%- set default_database = var('database', target.database)  -%}
 
     {%- if custom_database_name is none -%}
 
