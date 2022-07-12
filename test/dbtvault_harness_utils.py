@@ -11,7 +11,8 @@ from pathlib import Path
 import pandas as pd
 import pexpect
 from _pytest.fixtures import FixtureRequest
-from behave.model import Table
+from behave.model import Table, Text
+from behave.runner import Context
 from numpy import NaN
 from pandas import Series
 
@@ -296,18 +297,17 @@ def _run_dbt_command(command) -> str:
     return logs
 
 
-def run_dbt_test(context=None):
+def run_dbt_test(dbt_vars=None):
     command = ["dbt", "test"]
 
-    if context:
-        if hasattr(context, 'database_name'):
-            args = json.dumps({'database_name': context.database_name})
-            command.extend([f"--vars '{args}'"])
+    if dbt_vars:
+        args = json.dumps(dbt_vars)
+        command.extend([f"--vars '{args}'"])
 
     return _run_dbt_command(command)
 
 
-def run_dbt_seeds(seed_file_names=None, full_refresh=False, context=None) -> str:
+def run_dbt_seeds(seed_file_names=None, full_refresh=False, dbt_vars=None) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -324,14 +324,14 @@ def run_dbt_seeds(seed_file_names=None, full_refresh=False, context=None) -> str
     if "full-refresh" not in command and full_refresh:
         command.append('--full-refresh')
 
-    if hasattr(context, 'database_name'):
-        args = json.dumps({'database_name': context.database_name})
+    if dbt_vars:
+        args = json.dumps(dbt_vars)
         command.extend([f"--vars '{args}'"])
 
     return _run_dbt_command(command)
 
 
-def run_dbt_seed_model(seed_model_name=None, context=None) -> str:
+def run_dbt_seed_model(seed_model_name=None) -> str:
     """
     Run seed model files in dbt
         :return: dbt logs
@@ -345,14 +345,14 @@ def run_dbt_seed_model(seed_model_name=None, context=None) -> str:
     return _run_dbt_command(command)
 
 
-def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False, context=None) -> str:
+def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False, dbt_vars=None) -> str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
         :param model_names: List of model names to run
         :param args: variable dictionary to provide to dbt
         :param full_refresh: Run a full refresh
-        :param context: context variable for any additional configuration
+        :param dbt_vars: variables for any additional configuration
         :return Log output of dbt run operation
     """
 
@@ -363,39 +363,34 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
     if full_refresh:
         command.append('--full-refresh')
 
-    if args or context:
+    if args:
+        args = json.dumps(args)
+        if dbt_vars:
+            args = {**args, **dbt_vars}
 
-        if not args:
-            args = dict()
-
-        if hasattr(context, 'database_name'):
-            args['database_name'] = context.database_name
-
-        if args:
-            args = json.dumps(args)
-            command.extend([f"--vars '{args}'"])
+        command.extend([f"--vars '{args}'"])
 
     return _run_dbt_command(command)
 
 
-def run_dbt_operation(macro_name: str, args=None, context=None) -> str:
+def run_dbt_operation(macro_name: str, args=None, dbt_vars=None) -> str:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation
         :param args: Arguments to provide
-        :param context: context variable for any additional configuration
+        :param dbt_vars: context variable for any additional configuration
         :return: dbt logs
     """
+
     command = ['run-operation', f'{macro_name}']
 
     if args:
         args = json.dumps(args)
         command.extend([f"--args '{args}'"])
 
-    if context:
-        if hasattr(context, 'database_name'):
-            vargs = json.dumps({'database_name': context.database_name})
-            command.extend([f"--vars '{vargs}'"])
+    if dbt_vars:
+        vargs = json.dumps(dbt_vars)
+        command.extend([f"--vars '{vargs}'"])
 
     return _run_dbt_command(command)
 
@@ -766,3 +761,27 @@ def feature_sub_types():
             ]
         },
     }
+
+
+def parse_step_text(step_text: str):
+    config_dict = dict()
+
+    if pair_list := step_text.split(","):
+        for pair in pair_list:
+            pair_dict = {pair.split(':')[0]: pair.split(':')[1]}
+            config_dict = {**config_dict, **pair_dict}
+
+    return config_dict
+
+
+def handle_step_text_dict(context: Context):
+
+    if hasattr(context, 'test'):
+
+        config_dict = parse_step_text(context.text)
+
+        delattr(context, 'text')
+
+        assert not hasattr(context, 'text')
+
+        return config_dict
