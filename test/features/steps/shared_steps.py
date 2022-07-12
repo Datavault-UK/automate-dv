@@ -501,7 +501,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbtvault_harness_utils.run_dbt_test(context=context)
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
@@ -527,7 +527,7 @@ def expect_data(context, model_name):
 
         dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[expected_output_csv_name], context=context)
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbtvault_harness_utils.run_dbt_test(context=context)
 
         assert "1 of 1 PASS" in logs
 
@@ -567,7 +567,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbtvault_harness_utils.run_dbt_test(context=context)
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
@@ -598,7 +598,7 @@ def expect_data(context, model_name):
 
         dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[expected_output_csv_name], context=context)
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbtvault_harness_utils.run_dbt_test(context=context)
 
         assert "1 of 1 PASS" in logs
 

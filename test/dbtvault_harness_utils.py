@@ -270,7 +270,7 @@ def calc_hash(columns_as_series: Series) -> Series:
     return Series(hashed_list)
 
 
-def run_dbt_command(command) -> str:
+def _run_dbt_command(command) -> str:
     """
     Run a command in dbt and capture dbt logs.
         :param command: Command to run.
@@ -296,6 +296,17 @@ def run_dbt_command(command) -> str:
     return logs
 
 
+def run_dbt_test(context=None):
+    command = ["dbt", "test"]
+
+    if context:
+        if hasattr(context, 'database_name'):
+            args = json.dumps({'database_name': context.database_name})
+            command.extend([f"--vars '{args}'"])
+
+    return _run_dbt_command(command)
+
+
 def run_dbt_seeds(seed_file_names=None, full_refresh=False, context=None) -> str:
     """
     Run seed files in dbt
@@ -314,10 +325,10 @@ def run_dbt_seeds(seed_file_names=None, full_refresh=False, context=None) -> str
         command.append('--full-refresh')
 
     if hasattr(context, 'database_name'):
-        args = json.dumps({'custom_database': context.database_name})
+        args = json.dumps({'database_name': context.database_name})
         command.extend([f"--vars '{args}'"])
 
-    return run_dbt_command(command)
+    return _run_dbt_command(command)
 
 
 def run_dbt_seed_model(seed_model_name=None, context=None) -> str:
@@ -331,7 +342,7 @@ def run_dbt_seed_model(seed_model_name=None, context=None) -> str:
     if seed_model_name:
         command.extend(['-m', seed_model_name, '--full-refresh'])
 
-    return run_dbt_command(command)
+    return _run_dbt_command(command)
 
 
 def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False, context=None) -> str:
@@ -352,15 +363,19 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
     if full_refresh:
         command.append('--full-refresh')
 
-    if args:
+    if args or context:
+
+        if not args:
+            args = dict()
 
         if hasattr(context, 'database_name'):
             args['database_name'] = context.database_name
 
-        args = json.dumps(args)
-        command.extend([f"--vars '{args}'"])
+        if args:
+            args = json.dumps(args)
+            command.extend([f"--vars '{args}'"])
 
-    return run_dbt_command(command)
+    return _run_dbt_command(command)
 
 
 def run_dbt_operation(macro_name: str, args=None, context=None) -> str:
@@ -382,7 +397,7 @@ def run_dbt_operation(macro_name: str, args=None, context=None) -> str:
             vargs = json.dumps({'database_name': context.database_name})
             command.extend([f"--vars '{vargs}'"])
 
-    return run_dbt_command(command)
+    return _run_dbt_command(command)
 
 
 def replace_test_schema():

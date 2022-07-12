@@ -593,17 +593,16 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None, con
         seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
                                        k in include_columns}
 
+    if context:
+        if hasattr(context, 'database_name'):
+            seed_config['database'] = context.database_name
+
     seed_properties = {
         'version': 2,
         'seeds': [
             {'name': seed_name, 'config': {**seed_config, '+quote_columns': True}}
         ]
     }
-
-    if context:
-        if hasattr(context, 'database_name'):
-            seed_properties['seeds']['config'] = {**seed_properties['seeds']['config'],
-                                                  'database': context.database_name}
 
     with open(properties_path, 'w+') as f:
         yml.dump(seed_properties, f)
