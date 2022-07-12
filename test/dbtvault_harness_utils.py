@@ -363,11 +363,14 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
     if full_refresh:
         command.append('--full-refresh')
 
+    if not args:
+        args = dict()
+
+    if dbt_vars:
+        args = {**args, **dbt_vars}
+
     if args:
         args = json.dumps(args)
-        if dbt_vars:
-            args = {**args, **dbt_vars}
-
         command.extend([f"--vars '{args}'"])
 
     return _run_dbt_command(command)
@@ -768,7 +771,7 @@ def parse_step_text(step_text: str):
 
     if pair_list := step_text.split(","):
         for pair in pair_list:
-            pair_dict = {pair.split(':')[0]: pair.split(':')[1]}
+            pair_dict = {str(pair.split(':')[0]).strip(): str(pair.split(':')[1]).strip()}
             config_dict = {**config_dict, **pair_dict}
 
     return config_dict
@@ -776,12 +779,10 @@ def parse_step_text(step_text: str):
 
 def handle_step_text_dict(context: Context):
 
-    if hasattr(context, 'test'):
+    if hasattr(context, 'text'):
 
-        config_dict = parse_step_text(context.text)
+        if context.text:
 
-        delattr(context, 'text')
+            config_dict = parse_step_text(context.text)
 
-        assert not hasattr(context, 'text')
-
-        return config_dict
+            return config_dict
