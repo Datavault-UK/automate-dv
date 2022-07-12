@@ -1,4 +1,5 @@
 {%- macro sts(src_pk, src_ldts, src_source, src_status, source_model) -%}
+
     {{- adapter.dispatch('sts', 'dbtvault')(src_pk=src_pk,
                                              src_ldts=src_ldts,
                                              src_source=src_source,
@@ -8,14 +9,16 @@
 
 {%- macro default__sts(src_pk, src_ldts, src_source, src_status, source_model) -%}
 
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_ldts=src_ldts,
+                                       src_source=src_source, src_status=src_status,
+                                       source_model=source_model) -}}
+
 {%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
 {%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_name(src_source) -%}
 {%- set src_status = dbtvault.escape_column_name(src_status) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_ldts, src_source]) -%}
-{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_ldts]) -%}
-{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -61,7 +64,7 @@ records_to_insert AS (
     UNION ALL
 
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-    {{ dbtvault.prefix([src_ldts], 'stage') }},
+        {{ dbtvault.prefix([src_ldts], 'stage') }},
         {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
     FROM source_data AS stage,

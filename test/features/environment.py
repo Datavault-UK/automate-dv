@@ -183,9 +183,9 @@ fixtures_registry = {
          "databricks": ''},
 
     "fixture.sts":
-        {"snowflake": fixtures_sts.sts,
-         "bigquery": fixtures_sts.sts,
-         "sqlserver": fixtures_sts.sts,
+        {"snowflake": fixtures_sts.sts_snowflake,
+         "bigquery": fixtures_sts.sts_bigquery,
+         "sqlserver": fixtures_sts.sts_sqlserver,
          "databricks": ''},
 }
 
