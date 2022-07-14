@@ -119,7 +119,7 @@ def load_empty_table(context, model_name, vault_structure):
 
     dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                        seed_config=context.seed_config[model_name],
-                                       additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                       additional_config=dbtvault_generator.handle_step_text_dict(
                                            context))
 
     logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
@@ -237,7 +237,7 @@ def load_populated_table(context, model_name, vault_structure):
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[model_name],
-                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
                                                context))
 
         dbtvault_harness_utils.run_dbt_seeds(seed_file_names=[seed_file_name])
@@ -385,7 +385,7 @@ def create_csv(context, table_name):
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[table_name],
-                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
                                                context)
                                            )
 
@@ -446,7 +446,7 @@ def create_csv(context, raw_stage_model_name):
 
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[raw_stage_model_name],
-                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
                                                context)
                                            )
 
@@ -561,7 +561,7 @@ def expect_data(context, model_name):
         # Create empty expected data table using empty seed file
         dbtvault_generator.add_seed_config(seed_name=seed_file_name,
                                            seed_config=context.seed_config[model_name],
-                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
                                                context)
                                            )
 
@@ -605,7 +605,7 @@ def expect_data(context, model_name):
         dbtvault_generator.add_seed_config(seed_name=expected_output_csv_name,
                                            include_columns=columns_to_compare,
                                            seed_config=context.seed_config[model_name],
-                                           additional_config=dbtvault_harness_utils.handle_step_text_dict(
+                                           additional_config=dbtvault_generator.handle_step_text_dict(
                                                context)
                                            )
 

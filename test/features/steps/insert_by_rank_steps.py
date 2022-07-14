@@ -23,8 +23,7 @@ def rank_insert(context, model_name, vault_structure, rank_column):
     is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh,
-                                                 context=context)
+                                                 full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
@@ -50,8 +49,7 @@ def rank_insert(context, model_name, vault_structure):
     is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh,
-                                                 context=context)
+                                                 full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
