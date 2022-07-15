@@ -19,16 +19,36 @@
 {%- set src_status = dbtvault.escape_column_name(src_status) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_ldts, src_source]) -%}
+{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 
-{{ dbtvault.prepend_generated_by() }}
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+{%- endif -%}
+
+    {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+    {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
+    {%- endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
+    {%- if model.config.materialized == 'vault_insert_by_period' %}
+    AND __PERIOD_FILTER__
+    {% elif model.config.materialized == 'vault_insert_by_rank' %}
+    AND __RANK_FILTER__
+    {% endif %}
 ),
 
 {%- if dbtvault.is_any_incremental() %}
+
+stage_datetime AS (
+    SELECT MAX({{ dbtvault.prefix([src_ldts], 'b') }}) AS LOAD_DATETIME
+    FROM source_data AS b
+),
 
 latest_records AS (
 
@@ -64,17 +84,16 @@ records_to_insert AS (
     UNION ALL
 
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-        {{ dbtvault.prefix([src_ldts], 'stage') }},
+        (SELECT LOAD_DATETIME FROM stage_datetime) AS {{ src_ldts }},
+--        CURRENT_TIMESTAMP() AS {{ src_ldts }},
         {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
-    FROM source_data AS stage,
-    latest_records
-    WHERE NOT EXISTS (
-        SELECT 1
-        FROM source_data AS stage
-        WHERE ({{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_source], 'latest_records') }} IS NOT NULL)
-    )
+    FROM latest_records
+    LEFT OUTER JOIN source_data AS stage
+    ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+    WHERE {{ dbtvault.prefix([src_pk], 'stage') }} IS NULL
+    AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D'
+    AND (SELECT COUNT(*) FROM source_data) > 0
 
     UNION ALL
 
@@ -85,7 +104,8 @@ records_to_insert AS (
         SELECT 1
         FROM latest_records
         WHERE ({{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-            AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D')
+            AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D'
+            AND {{ dbtvault.prefix([src_ldts], 'stage') }} != {{ dbtvault.prefix([src_ldts], 'latest_records') }})
     )
     {%- endif %}
 )
