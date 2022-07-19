@@ -18,7 +18,8 @@ def sts_snowflake(context):
             "src_pk": "CUSTOMER_PK",
             "src_status": "STATUS",
             "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
+            "src_source": "SOURCE",
+            "src_hashdiff": {"STATUS_HASHDIFF": "STATUS"}
         }
     }
 
@@ -36,8 +37,9 @@ def sts_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
-                "STATUS": "VARCHAR"
-            }
+                "STATUS": "VARCHAR",
+                "STATUS_HASHDIFF": "BINARY(16)"
+    }
         }
     }
 

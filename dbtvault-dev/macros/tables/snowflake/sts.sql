@@ -1,16 +1,27 @@
-{%- macro sts(src_pk, src_ldts, src_source, src_status, source_model) -%}
+{%- macro sts(src_pk, src_ldts, src_source, src_status, src_hashdiff, source_model ) -%}
 
     {{- adapter.dispatch('sts', 'dbtvault')(src_pk=src_pk,
                                              src_ldts=src_ldts,
                                              src_source=src_source,
                                              src_status=src_status,
+                                             src_hashdiff=src_hashdiff,
                                              source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__sts(src_pk, src_ldts, src_source, src_status, source_model) -%}
+{%- macro default__sts(src_pk, src_ldts, src_source, src_status, src_hashdiff, source_model) -%}
+
+{% if model.config.materialized != 'incremental' and execute %}
+
+    {%- set error_message -%}
+    STS staging error: The materialization must be incremental.
+    {%- endset -%}
+
+    {{- exceptions.raise_compiler_error(error_message) -}}
+{%- endif -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_ldts=src_ldts,
                                        src_source=src_source, src_status=src_status,
+                                       src_hashdiff=src_hashdiff,
                                        source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_name(src_pk) -%}
@@ -19,27 +30,15 @@
 {%- set src_status = dbtvault.escape_column_name(src_status) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_ldts, src_source]) -%}
-{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
-{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
-
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
-{%- endif -%}
 
     {{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
-    {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
-    {%- else %}
     SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='source') }}
-    {%- endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ dbtvault.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     AND __PERIOD_FILTER__
-    {% elif model.config.materialized == 'vault_insert_by_rank' %}
-    AND __RANK_FILTER__
     {% endif %}
 ),
 
@@ -84,16 +83,19 @@ records_to_insert AS (
     UNION ALL
 
     SELECT DISTINCT {{ dbtvault.prefix([src_pk], 'latest_records') }},
-        (SELECT LOAD_DATETIME FROM stage_datetime) AS {{ src_ldts }},
---        CURRENT_TIMESTAMP() AS {{ src_ldts }},
+        stage_datetime.LOAD_DATETIME AS {{ src_ldts }},
         {{ dbtvault.prefix([src_source], 'latest_records') }},
         'D' AS {{ src_status }}
     FROM latest_records
-    LEFT OUTER JOIN source_data AS stage
-    ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-    WHERE {{ dbtvault.prefix([src_pk], 'stage') }} IS NULL
+    INNER JOIN stage_datetime
+    ON 1 = 1
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM source_data AS stage
+        WHERE {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+    )
     AND {{ dbtvault.prefix([src_status], 'latest_records') }} != 'D'
-    AND (SELECT COUNT(*) FROM source_data) > 0
+    AND stage_datetime.LOAD_DATETIME IS NOT NULL
 
     UNION ALL
 
@@ -110,6 +112,8 @@ records_to_insert AS (
     {%- endif %}
 )
 
-SELECT * FROM records_to_insert
+SELECT *,
+    {{- dbtvault.hash_columns(columns=src_hashdiff) | indent(4) }}
+FROM records_to_insert
 
 {%- endmacro -%}

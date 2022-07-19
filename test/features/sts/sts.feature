@@ -11,10 +11,10 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
 
   @fixture.sts
   Scenario: [STS-02] Load duplicated data into a non-existent status tracking satellite
@@ -30,10 +30,10 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
 
   @fixture.sts
   Scenario: [STS-03] Load data with NULLs into a non-existent status tracking satellite
@@ -49,11 +49,11 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1004') | 1993-01-01 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1004') | 1993-01-01 | *      | I      | md5('I')        |
 
   @fixture.sts
   Scenario: [STS-04] Load data into an empty status tracking satellite
@@ -66,10 +66,10 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
 
   @fixture.sts
   Scenario: [STS-05] Load duplicated data into an empty status tracking satellite
@@ -85,10 +85,10 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
 
   @fixture.sts
   Scenario: [STS-06] Load data with NULLs into an empty status tracking satellite
@@ -104,11 +104,11 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1004') | 1993-01-01 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1004') | 1993-01-01 | *      | I      | md5('I')        |
 
   @fixture.sts
   Scenario: [STS-07] Load data into a populated status tracking satellite
@@ -124,13 +124,13 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1001') | 1993-01-03 | *      | D      |
-      | md5('1002') | 1993-01-03 | *      | U      |
-      | md5('1003') | 1993-01-03 | *      | U      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1001') | 1993-01-03 | *      | D      | md5('D')        |
+      | md5('1002') | 1993-01-03 | *      | U      | md5('U')        |
+      | md5('1003') | 1993-01-03 | *      | U      | md5('U')        |
 
   @fixture.sts
   Scenario: [STS-08] Load duplicated data into a populated status tracking satellite
@@ -149,13 +149,13 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1001') | 1993-01-03 | *      | D      |
-      | md5('1002') | 1993-01-03 | *      | U      |
-      | md5('1003') | 1993-01-03 | *      | U      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1001') | 1993-01-03 | *      | D      | md5('D')        |
+      | md5('1002') | 1993-01-03 | *      | U      | md5('U')        |
+      | md5('1003') | 1993-01-03 | *      | U      | md5('U')        |
 
   @fixture.sts
   Scenario: [STS-09] Load data with NULLs into a populated status tracking satellite
@@ -177,11 +177,11 @@ Feature: [STS] Status Tracking Satellites
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
-      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
-      | md5('1001') | 1993-01-01 | *      | I      |
-      | md5('1002') | 1993-01-01 | *      | I      |
-      | md5('1003') | 1993-01-01 | *      | I      |
-      | md5('1001') | 1993-01-03 | *      | D      |
-      | md5('1002') | 1993-01-03 | *      | U      |
-      | md5('1003') | 1993-01-03 | *      | U      |
-      | md5('1004') | 1993-01-03 | *      | I      |
+      | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS | STATUS_HASHDIFF |
+      | md5('1001') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1002') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1003') | 1993-01-01 | *      | I      | md5('I')        |
+      | md5('1001') | 1993-01-03 | *      | D      | md5('D')        |
+      | md5('1002') | 1993-01-03 | *      | U      | md5('U')        |
+      | md5('1003') | 1993-01-03 | *      | U      | md5('U')        |
+      | md5('1004') | 1993-01-03 | *      | I      | md5('I')        |

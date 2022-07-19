@@ -309,7 +309,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
 
 
 def sts(model_name, src_pk, src_ldts, src_source,
-         src_status, source_model,
+         src_status, src_hashdiff, source_model,
          config, depends_on=""):
     """
     Generate a satellite model template
@@ -318,6 +318,7 @@ def sts(model_name, src_pk, src_ldts, src_source,
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param src_status: Source record status
+        :param src_hashdiff: Column for hashdiff calculation
         :param source_model: Model name to select from
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -327,7 +328,7 @@ def sts(model_name, src_pk, src_ldts, src_source,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.sts(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source},
-                      src_status={src_status}, source_model={source_model}) }}}}
+                      src_status={src_status}, src_hashdiff={src_hashdiff}, source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
