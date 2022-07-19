@@ -50,7 +50,7 @@ Feature: [PIT] Point in Time
   @not_bigquery
   @fixture.pit
   Scenario: [PIT-02] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
-    Given the PIT table does not exist
+    Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -96,7 +96,7 @@ Feature: [PIT] Point in Time
   @bigquery
   @fixture.pit
   Scenario: [PIT-02-BQ] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
-    Given the PIT table does not exist
+    Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -141,7 +141,7 @@ Feature: [PIT] Point in Time
 
   @fixture.pit
   Scenario: [PIT-03] Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
-    Given the PIT table does not exist
+    Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -188,8 +188,8 @@ Feature: [PIT] Point in Time
 
   @not_bigquery
   @fixture.pit
-  Scenario: [PIT-04] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
-    Given the PIT table does not exist
+  Scenario: [PIT-04] Load into a pit table where the AS OF table dates are before the satellites have received any entries
+    Given the PIT_CUSTOMER table does not exist
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -236,8 +236,8 @@ Feature: [PIT] Point in Time
 
   @bigquery
   @fixture.pit
-  Scenario: [PIT-04-BQ] Load into a pit table where the AS OF table dates are before the satellites have received any entry's
-    Given the PIT table does not exist
+  Scenario: [PIT-04-BQ] Load into a pit table where the AS OF table dates are before the satellites have received any entries
+    Given the PIT_CUSTOMER table does not exist
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -283,8 +283,8 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2017-01-04 00:00:00.000000 | 0x0000000000000000      | 1900-01-01 00:00:00.000000 | 0x0000000000000000    | 1900-01-01 00:00:00.000000 | 0x0000000000000000      | 1900-01-01 00:00:00.000000 |
 
   @fixture.pit
-  Scenario: [PIT-05] Load into a pit table where the AS OF table dates are after the most recent satellite entry's
-    Given the PIT table does not exist
+  Scenario: [PIT-05] Load into a pit table where the AS OF table dates are after the most recent satellite entries
+    Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |

@@ -14,6 +14,20 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "HUB_CUSTOMER_1S": {
+            "source_model": "STG_CUSTOMER_DETAILS",
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "HUB_CUSTOMER_1S_TS": {
+            "source_model": "STG_CUSTOMER_DETAILS_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
         "HUB_CUSTOMER_AC": {
             "source_model": ["STG_CUSTOMER_DETAILS",
                              "STG_CUSTOMER_LOGIN",
@@ -30,6 +44,15 @@ def set_vault_structure_definition(context):
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "source_model": "STG_CUSTOMER_DETAILS_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "SAT_CUSTOMER_LOGIN": {
@@ -75,13 +98,49 @@ def set_vault_structure_definition(context):
                             {"LDTS": "LOAD_DATE"}
                     }
                 },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
                     "STG_CUSTOMER_PROFILE": "LOAD_DATE"
                 },
             "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_1S": {
+            "source_model": "HUB_CUSTOMER_1S",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables_ldts":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_1S_TS": {
+            "source_model": "HUB_CUSTOMER_1S_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites": {
+                "SAT_CUSTOMER_DETAILS_TS": {
+                    "pk":
+                        {"PK": "CUSTOMER_PK"},
+                    "ldts":
+                        {"LDTS": "LOAD_DATETIME"}
+                }
+            },
+            "stage_tables_ldts": {
+                "SAT_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+            },
+            "src_ldts": "LOAD_DATETIME"
         },
         "PIT_CUSTOMER_AC": {
             "source_model": "HUB_CUSTOMER",
@@ -109,7 +168,7 @@ def set_vault_structure_definition(context):
                             {"LDTS": "LOAD_DATE"}
                     }
                 },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
@@ -143,7 +202,7 @@ def set_vault_structure_definition(context):
                             {"LDTS": "LOAD_DATE"}
                     }
                 },
-            "stage_tables":
+            "stage_tables_ldts":
                 {
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
@@ -173,6 +232,24 @@ def set_staging_definition(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["DASHBOARD_COLOUR", "DISPLAY_NAME"]
                          }
+        },
+        "STG_CUSTOMER_DETAILS_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
+                         }
+        },
+        "STG_CUSTOMER_LOGIN_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["DEVICE_USED", "LAST_LOGIN_DATE"]
+                         }
+        },
+        "STG_CUSTOMER_PROFILE_TS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["DASHBOARD_COLOUR", "DISPLAY_NAME"]
+                         }
         }
     }
 
@@ -185,6 +262,15 @@ def set_staging_definition(context):
         },
         "STG_CUSTOMER_PROFILE": {
             "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_DETAILS_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
+        },
+        "STG_CUSTOMER_LOGIN_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
+        },
+        "STG_CUSTOMER_PROFILE_TS": {
+            "EFFECTIVE_FROM": "LOAD_DATETIME"
         }
     }
 
@@ -403,7 +489,7 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "HUB_CUSTOMER": {
+        "HUB_CUSTOMER_1S": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -412,6 +498,14 @@ def pit_one_sat_snowflake(context):
             }
         },
         "HUB_CUSTOMER_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_CUSTOMER_1S_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -456,28 +550,28 @@ def pit_one_sat_snowflake(context):
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         },
+        "PIT_CUSTOMER_1S": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_1S_TS": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
         "PIT_CUSTOMER_TS": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
-            }
-        },
-        "PIT_CUSTOMER_LG": {
-            "column_types": {
-                "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
-            }
-        },
-        "PIT_CUSTOMER_HG": {
-            "column_types": {
-                "AS_OF_DATE": "DATETIME",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         }
     }
