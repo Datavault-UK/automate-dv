@@ -49,14 +49,12 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
     Generate a stage model template
         :param model_name: Name of the model file
         :param source_model: Model to select from
-        :param hashed_columns: Dictionary of hashed columns, can be None
         :param derived_columns: Dictionary of derived column, can be None
         :param hashed_columns: Dictionary of hashed columns, can be None
         :param ranked_columns: Dictionary of ranked columns, can be None
         :param include_source_columns: Boolean: Whether to extract source columns from source table
-        :param depends_on: depends on string if provided
         :param config: Optional model config
-        :param depends_on: Optional forced dependency
+        :param depends_on: depends on string if provided
     """
 
     template = f"""
