@@ -250,7 +250,8 @@ def load_populated_table(context, model_name, vault_structure):
 
 @step("I load the {model_name} {vault_structure}")
 def load_table(context, model_name, vault_structure):
-    metadata = {"source_model": context.processed_stage_name, **context.vault_structure_columns[model_name]}
+    metadata = {"source_model": context.processed_stage_name,
+                **context.vault_structure_columns[model_name]}
 
     config = dbtvault_generator.append_end_date_config(context, dict())
 
