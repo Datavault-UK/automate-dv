@@ -52,6 +52,8 @@ def single_source_hub_snowflake(context):
     Define the structures and metadata to load single-source hubs
     """
 
+    set_metadata(context)
+
     context.seed_config = {
         "HUB": {
             "column_types": {
@@ -97,20 +99,7 @@ def single_source_comp_pk_hub_snowflake(context):
     Define the structures and metadata to load single-source hubs with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
-            "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "HUB": {

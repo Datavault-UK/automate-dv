@@ -22,29 +22,29 @@ def set_vault_structure_definition(context):
         "LINK_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "LINK_ORDER_PRODUCT": {
             "source_model": "STG_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
-            "src_fk": ["ORDER_FK", "PRODUCT_FK"],
+            "src_fk": ["ORDER_PK", "PRODUCT_PK"],
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "LINK_PRODUCT_COMPONENT": {
             "source_model": "STG_PRODUCT_COMPONENT",
             "src_pk": "PRODUCT_COMPONENT_PK",
-            "src_fk": ["PRODUCT_FK", "COMPONENT_FK"],
+            "src_fk": ["PRODUCT_PK", "COMPONENT_PK"],
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
         },
         "EFF_SAT_CUSTOMER_ORDER": {
             "source_model": "STG_CUSTOMER_ORDER",
             "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": ["ORDER_FK"],
-            "src_sfk": ["CUSTOMER_FK"],
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": ["CUSTOMER_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -54,8 +54,8 @@ def set_vault_structure_definition(context):
         "EFF_SAT_ORDER_PRODUCT": {
             "source_model": "STG_ORDER_PRODUCT",
             "src_pk": "ORDER_PRODUCT_PK",
-            "src_dfk": ["ORDER_FK"],
-            "src_sfk": ["PRODUCT_FK"],
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": ["PRODUCT_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -65,8 +65,8 @@ def set_vault_structure_definition(context):
         "EFF_SAT_PRODUCT_COMPONENT": {
             "source_model": "STG_PRODUCT_COMPONENT",
             "src_pk": "PRODUCT_COMPONENT_PK",
-            "src_dfk": ["COMPONENT_FK"],
-            "src_sfk": ["PRODUCT_FK"],
+            "src_dfk": ["COMPONENT_PK"],
+            "src_sfk": ["PRODUCT_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -85,8 +85,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -111,8 +111,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -137,8 +137,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -162,8 +162,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -175,8 +175,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
-                    "link_fk1": "ORDER_FK",
-                    "link_fk2": "PRODUCT_FK",
+                    "link_fk1": "ORDER_PK",
+                    "link_fk2": "PRODUCT_PK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -202,8 +202,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -215,8 +215,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
-                    "link_fk1": "ORDER_FK",
-                    "link_fk2": "PRODUCT_FK",
+                    "link_fk1": "ORDER_PK",
+                    "link_fk2": "PRODUCT_PK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -241,8 +241,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -254,8 +254,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
-                    "link_fk1": "ORDER_FK",
-                    "link_fk2": "PRODUCT_FK",
+                    "link_fk1": "ORDER_PK",
+                    "link_fk2": "PRODUCT_PK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -267,8 +267,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
                     "link_table": "LINK_PRODUCT_COMPONENT",
                     "link_pk": "PRODUCT_COMPONENT_PK",
-                    "link_fk1": "PRODUCT_FK",
-                    "link_fk2": "COMPONENT_FK",
+                    "link_fk1": "PRODUCT_PK",
+                    "link_fk2": "COMPONENT_PK",
                     "eff_sat_table": "EFF_SAT_PRODUCT_COMPONENT",
                     "eff_sat_pk": "PRODUCT_COMPONENT_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -295,8 +295,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_CUSTOMER_ORDER_LOADDATE",
                     "link_table": "LINK_CUSTOMER_ORDER",
                     "link_pk": "CUSTOMER_ORDER_PK",
-                    "link_fk1": "CUSTOMER_FK",
-                    "link_fk2": "ORDER_FK",
+                    "link_fk1": "CUSTOMER_PK",
+                    "link_fk2": "ORDER_PK",
                     "eff_sat_table": "EFF_SAT_CUSTOMER_ORDER",
                     "eff_sat_pk": "CUSTOMER_ORDER_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -308,8 +308,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_ORDER_PRODUCT_LOADDATE",
                     "link_table": "LINK_ORDER_PRODUCT",
                     "link_pk": "ORDER_PRODUCT_PK",
-                    "link_fk1": "ORDER_FK",
-                    "link_fk2": "PRODUCT_FK",
+                    "link_fk1": "ORDER_PK",
+                    "link_fk2": "PRODUCT_PK",
                     "eff_sat_table": "EFF_SAT_ORDER_PRODUCT",
                     "eff_sat_pk": "ORDER_PRODUCT_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -321,8 +321,8 @@ def set_vault_structure_definition(context):
                     "bridge_load_date": "EFF_SAT_PRODUCT_COMPONENT_LOADDATE",
                     "link_table": "LINK_PRODUCT_COMPONENT",
                     "link_pk": "PRODUCT_COMPONENT_PK",
-                    "link_fk1": "PRODUCT_FK",
-                    "link_fk2": "COMPONENT_FK",
+                    "link_fk1": "PRODUCT_PK",
+                    "link_fk2": "COMPONENT_PK",
                     "eff_sat_table": "EFF_SAT_PRODUCT_COMPONENT",
                     "eff_sat_pk": "PRODUCT_COMPONENT_PK",
                     "eff_sat_end_date": "END_DATE",
@@ -343,30 +343,21 @@ def set_staging_definition(context):
     context.hashed_columns = {
         "STG_CUSTOMER_ORDER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID",
-            "ORDER_FK": "ORDER_ID",
             "CUSTOMER_ORDER_PK": {"is_hashdiff": True,
-                                  "columns": ["CUSTOMER_ID", "ORDER_ID"]
-                                  },
+                                  "columns": ["CUSTOMER_ID", "ORDER_ID"]},
         },
         "STG_ORDER_PRODUCT": {
             "ORDER_PK": "ORDER_ID",
-            "ORDER_FK": "ORDER_ID",
             "PRODUCT_PK": "PRODUCT_ID",
-            "PRODUCT_FK": "PRODUCT_ID",
             "ORDER_PRODUCT_PK": {"is_hashdiff": True,
-                                 "columns": ["ORDER_ID", "PRODUCT_ID"]
-                                 }
+                                 "columns": ["ORDER_ID", "PRODUCT_ID"]}
         },
         "STG_PRODUCT_COMPONENT": {
             "PRODUCT_PK": "PRODUCT_ID",
-            "PRODUCT_FK": "PRODUCT_ID",
             "COMPONENT_PK": "COMPONENT_ID",
-            "COMPONENT_FK": "COMPONENT_ID",
             "PRODUCT_COMPONENT_PK": {"is_hashdiff": True,
-                                     "columns": ["COMPONENT_ID", "PRODUCT_ID"]
-                                     }
+                                     "columns": ["COMPONENT_ID", "PRODUCT_ID"]}
         }
     }
 
@@ -470,8 +461,8 @@ def bridge_snowflake(context):
         "LINK_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_K": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -479,8 +470,8 @@ def bridge_snowflake(context):
         "LINK_ORDER_PRODUCT": {
             "column_types": {
                 "ORDER_PRODUCT_PK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -488,8 +479,8 @@ def bridge_snowflake(context):
         "LINK_PRODUCT_COMPONENT": {
             "column_types": {
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
-                "COMPONENT_FK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
+                "COMPONENT_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
@@ -497,8 +488,8 @@ def bridge_snowflake(context):
         "EFF_SAT_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -509,8 +500,8 @@ def bridge_snowflake(context):
         "EFF_SAT_ORDER_PRODUCT": {
             "column_types": {
                 "ORDER_PRODUCT_PK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -521,8 +512,8 @@ def bridge_snowflake(context):
         "EFF_SAT_PRODUCT_COMPONENT": {
             "column_types": {
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
-                "COMPONENT_FK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
+                "COMPONENT_PK": "BINARY(16)",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -645,8 +636,8 @@ def bridge_bigquery(context):
         "LINK_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "STRING",
-                "CUSTOMER_FK": "STRING",
-                "ORDER_FK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -654,8 +645,8 @@ def bridge_bigquery(context):
         "LINK_ORDER_PRODUCT": {
             "column_types": {
                 "ORDER_PRODUCT_PK": "STRING",
-                "ORDER_FK": "STRING",
-                "PRODUCT_FK": "STRING",
+                "ORDER_PK": "STRING",
+                "PRODUCT_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -663,8 +654,8 @@ def bridge_bigquery(context):
         "LINK_PRODUCT_COMPONENT": {
             "column_types": {
                 "PRODUCT_COMPONENT_PK": "STRING",
-                "PRODUCT_FK": "STRING",
-                "COMPONENT_FK": "STRING",
+                "PRODUCT_PK": "STRING",
+                "COMPONENT_PK": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -672,8 +663,8 @@ def bridge_bigquery(context):
         "EFF_SAT_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "STRING",
-                "CUSTOMER_FK": "STRING",
-                "ORDER_FK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -684,8 +675,8 @@ def bridge_bigquery(context):
         "EFF_SAT_ORDER_PRODUCT": {
             "column_types": {
                 "ORDER_PRODUCT_PK": "STRING",
-                "ORDER_FK": "STRING",
-                "PRODUCT_FK": "STRING",
+                "ORDER_PK": "STRING",
+                "PRODUCT_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -696,8 +687,8 @@ def bridge_bigquery(context):
         "EFF_SAT_PRODUCT_COMPONENT": {
             "column_types": {
                 "PRODUCT_COMPONENT_PK": "STRING",
-                "PRODUCT_FK": "STRING",
-                "COMPONENT_FK": "STRING",
+                "PRODUCT_PK": "STRING",
+                "COMPONENT_PK": "STRING",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -784,8 +775,8 @@ def bridge_sqlserver(context):
         "LINK_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -793,8 +784,8 @@ def bridge_sqlserver(context):
         "LINK_ORDER_PRODUCT": {
             "column_types": {
                 "ORDER_PRODUCT_PK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -802,8 +793,8 @@ def bridge_sqlserver(context):
         "LINK_PRODUCT_COMPONENT": {
             "column_types": {
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
-                "COMPONENT_FK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
+                "COMPONENT_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -811,8 +802,8 @@ def bridge_sqlserver(context):
         "EFF_SAT_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
                 "START_DATE": "DATETIME2",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
@@ -823,8 +814,8 @@ def bridge_sqlserver(context):
         "EFF_SAT_ORDER_PRODUCT": {
             "column_types": {
                 "ORDER_PRODUCT_PK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
                 "START_DATE": "DATETIME2",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
@@ -835,8 +826,8 @@ def bridge_sqlserver(context):
         "EFF_SAT_PRODUCT_COMPONENT": {
             "column_types": {
                 "PRODUCT_COMPONENT_PK": "BINARY(16)",
-                "PRODUCT_FK": "BINARY(16)",
-                "COMPONENT_FK": "BINARY(16)",
+                "PRODUCT_PK": "BINARY(16)",
+                "COMPONENT_PK": "BINARY(16)",
                 "START_DATE": "DATETIME2",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
