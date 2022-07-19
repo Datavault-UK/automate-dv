@@ -1,6 +1,8 @@
 {%- macro escape_column_names(columns=none) -%}
 
-{# Different platforms use different escape characters, the default below is for Snowflake which uses double quotes #}
+    {%- if dbtvault.is_list(columns) -%}
+        {%- set columns = dbtvault.expand_column_list(columns) -%}
+    {%- endif -%}
 
     {%- if dbtvault.is_something(columns) -%}
 
