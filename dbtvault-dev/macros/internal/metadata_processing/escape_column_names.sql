@@ -146,3 +146,12 @@
     {%- do return(escaped_column_name) -%}
 
 {%- endmacro -%}
+
+{%- macro greenplum__escape_column_name(column) -%}
+
+    {# Don't escape as it may break case-insensitivity #}
+    {%- set escaped_column_name = column | trim -%}
+
+    {%- do return(escaped_column_name) -%}
+
+{%- endmacro -%}
