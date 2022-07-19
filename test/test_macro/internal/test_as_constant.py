@@ -62,7 +62,7 @@ def test_as_constant_column_str_is_none_raises_error(request, generate_model):
 
 
 @pytest.mark.macro
-def test_as_constant_expression1_is_successful(request, generate_model):
+def test_as_constant_expression_direct_cast_is_successful(request, generate_model):
     var_dict = {'column_str': 'STATUS::INT'}
 
     generate_model()
@@ -78,7 +78,7 @@ def test_as_constant_expression1_is_successful(request, generate_model):
 
 
 @pytest.mark.macro
-def test_as_constant_expression2_is_successful(request, generate_model):
+def test_as_constant_expression_func_cast_is_successful(request, generate_model):
     var_dict = {'column_str': 'CAST(STATUS AS INT)'}
 
     generate_model()
@@ -91,5 +91,3 @@ def test_as_constant_expression2_is_successful(request, generate_model):
 
     assert dbtvault_harness_utils.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
-
-
