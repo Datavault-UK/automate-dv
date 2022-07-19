@@ -1,4 +1,4 @@
-{%- macro bigquery__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) -%}
+{%- macro bigquery__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_additional_columns, src_ldts, source_model) %}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
