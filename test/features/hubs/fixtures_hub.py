@@ -33,7 +33,16 @@ def set_staging_definition(context):
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID"
-        }
+        },
+        "STG_PARTS": {
+            "PART_PK": "PART_ID"
+        },
+        "STG_SUPPLIER": {
+            "PART_PK": "PART_ID"
+        },
+        "STG_LINEITEM": {
+            "PART_PK": "PART_ID"
+        },
     }
 
 
