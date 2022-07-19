@@ -1,4 +1,4 @@
-{%- macro bigquery__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}
+{%- macro bigquery__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) %}
 
 {{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
                                        satellites=satellites,
@@ -7,13 +7,6 @@
 
 {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-
-{%- if (as_of_dates_table is none) and execute -%}
-    {%- set error_message -%}
-    "pit error: Missing as_of_dates table configuration. A as_of_dates_table must be provided."
-    {%- endset -%}
-    {{- exceptions.raise_compiler_error(error_message) -}}
-{%- endif -%}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
