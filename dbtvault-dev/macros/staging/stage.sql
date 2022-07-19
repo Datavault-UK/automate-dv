@@ -137,5 +137,6 @@ columns_to_select AS (
     FROM {{ last_cte }}
 )
 
-SELECT *
-FROM columns_to_select {%- endmacro -%}
+SELECT * FROM columns_to_select
+
+{%- endmacro -%}

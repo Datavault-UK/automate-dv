@@ -167,7 +167,8 @@ def test_escape_string_not_a_string_raises_error(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
+    assert "Invalid column name(s) provided. Must be a string," \
+           " a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
 
 
 @pytest.mark.macro
@@ -179,8 +180,7 @@ def test_escape_column_list_not_strings_raises_error(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-
-    assert "Invalid column name(s) provided. Must be a string." in dbt_logs
+    assert "Invalid columns object provided. Must be a list of lists, dictionaries or strings." in dbt_logs
 
 
 @pytest.mark.macro
@@ -245,7 +245,8 @@ def test_escape_single_item_list_with_double_quotes_backticks_is_successful(requ
 
 @pytest.mark.macro
 def test_escape_multiple_item_list_with_single_quotes_backticks_is_successful(request, generate_model):
-    var_dict = {'columns': ['COLUMN1', 'COLUMN_2', 'COLUMN-3', '_COLUMN4', 'COLUMN 5'], 'escape_char_left': '`', 'escape_char_right': '`'}
+    var_dict = {'columns': ['COLUMN1', 'COLUMN_2', 'COLUMN-3', '_COLUMN4', 'COLUMN 5'], 'escape_char_left': '`',
+                'escape_char_right': '`'}
 
     generate_model()
 
@@ -260,7 +261,8 @@ def test_escape_multiple_item_list_with_single_quotes_backticks_is_successful(re
 
 @pytest.mark.macro
 def test_escape_multiple_item_list_with_double_quotes_backticks_is_successful(request, generate_model):
-    var_dict = {'columns': ["COLUMN1", "COLUMN_2", "COLUMN-3", "_COLUMN4", "COLUMN 5"], 'escape_char_left': "`", 'escape_char_right': "`"}
+    var_dict = {'columns': ["COLUMN1", "COLUMN_2", "COLUMN-3", "_COLUMN4", "COLUMN 5"], 'escape_char_left': "`",
+                'escape_char_right': "`"}
 
     generate_model()
 
@@ -275,7 +277,8 @@ def test_escape_multiple_item_list_with_double_quotes_backticks_is_successful(re
 
 @pytest.mark.macro
 def test_escape_multiple_item_list_with_single_and_double_quotes_backticks_is_successful(request, generate_model):
-    var_dict = {'columns': ["COLUMN1", 'COLUMN_2', 'COLUMN-3', "_COLUMN4", "COLUMN 5"], 'escape_char_left': "`", 'escape_char_right': '`'}
+    var_dict = {'columns': ["COLUMN1", 'COLUMN_2', 'COLUMN-3', "_COLUMN4", "COLUMN 5"], 'escape_char_left': "`",
+                'escape_char_right': '`'}
 
     generate_model()
 
@@ -350,7 +353,8 @@ def test_escape_single_item_list_with_double_quotes_sbrackets_is_successful(requ
 
 @pytest.mark.macro
 def test_escape_multiple_item_list_with_single_quotes_sbrackets_is_successful(request, generate_model):
-    var_dict = {'columns': ['COLUMN1', 'COLUMN_2', 'COLUMN-3', '_COLUMN4', 'COLUMN 5'], 'escape_char_left': '[', 'escape_char_right': ']'}
+    var_dict = {'columns': ['COLUMN1', 'COLUMN_2', 'COLUMN-3', '_COLUMN4', 'COLUMN 5'], 'escape_char_left': '[',
+                'escape_char_right': ']'}
 
     generate_model()
 
@@ -365,7 +369,8 @@ def test_escape_multiple_item_list_with_single_quotes_sbrackets_is_successful(re
 
 @pytest.mark.macro
 def test_escape_multiple_item_list_with_double_quotes_sbrackets_is_successful(request, generate_model):
-    var_dict = {'columns': ["COLUMN1", "COLUMN_2", "COLUMN-3", "_COLUMN4", "COLUMN 5"], 'escape_char_left': "[", 'escape_char_right': "]"}
+    var_dict = {'columns': ["COLUMN1", "COLUMN_2", "COLUMN-3", "_COLUMN4", "COLUMN 5"], 'escape_char_left': "[",
+                'escape_char_right': "]"}
 
     generate_model()
 
@@ -380,7 +385,8 @@ def test_escape_multiple_item_list_with_double_quotes_sbrackets_is_successful(re
 
 @pytest.mark.macro
 def test_escape_multiple_item_list_with_single_and_double_quotes_sbrackets_is_successful(request, generate_model):
-    var_dict = {'columns': ["COLUMN1", 'COLUMN_2', 'COLUMN-3', "_COLUMN4", "COLUMN 5"], 'escape_char_left': '[', 'escape_char_right': "]"}
+    var_dict = {'columns': ["COLUMN1", 'COLUMN_2', 'COLUMN-3', "_COLUMN4", "COLUMN 5"], 'escape_char_left': '[',
+                'escape_char_right': "]"}
 
     generate_model()
 
@@ -425,7 +431,8 @@ def test_escape_dictionary_with_single_quotes_is_successful(request, generate_mo
 
 @pytest.mark.macro
 def test_escape_dictionary_with_single_quotes_backticks_is_successful(request, generate_model):
-    var_dict = {'columns': {"source_column": 'COLUMN1', "alias": 'COLUMN2'}, 'escape_char_left': '`', 'escape_char_right': '`'}
+    var_dict = {'columns': {"source_column": 'COLUMN1', "alias": 'COLUMN2'}, 'escape_char_left': '`',
+                'escape_char_right': '`'}
 
     generate_model()
 
@@ -440,7 +447,8 @@ def test_escape_dictionary_with_single_quotes_backticks_is_successful(request, g
 
 @pytest.mark.macro
 def test_escape_dictionary_with_single_quotes_sbrackets_is_successful(request, generate_model):
-    var_dict = {'columns': {"source_column": 'COLUMN1', "alias": 'COLUMN2'}, 'escape_char_left': '[', 'escape_char_right': ']'}
+    var_dict = {'columns': {"source_column": 'COLUMN1', "alias": 'COLUMN2'}, 'escape_char_left': '[',
+                'escape_char_right': ']'}
 
     generate_model()
 
@@ -470,7 +478,8 @@ def test_escape_dictionary_with_double_quotes_is_successful(request, generate_mo
 
 @pytest.mark.macro
 def test_escape_dictionary_with_double_quotes_backticks_is_successful(request, generate_model):
-    var_dict = {'columns': {"source_column": "COLUMN1", "alias": "COLUMN2"}, 'escape_char_left': '`', 'escape_char_right': '`'}
+    var_dict = {'columns': {"source_column": "COLUMN1", "alias": "COLUMN2"}, 'escape_char_left': '`',
+                'escape_char_right': '`'}
 
     generate_model()
 
@@ -485,7 +494,8 @@ def test_escape_dictionary_with_double_quotes_backticks_is_successful(request, g
 
 @pytest.mark.macro
 def test_escape_dictionary_with_double_quotes_sbrackets_is_successful(request, generate_model):
-    var_dict = {'columns': {"source_column": "COLUMN1", "alias": "COLUMN2"}, 'escape_char_left': '[', 'escape_char_right': ']'}
+    var_dict = {'columns': {"source_column": "COLUMN1", "alias": "COLUMN2"}, 'escape_char_left': '[',
+                'escape_char_right': ']'}
 
     generate_model()
 
@@ -507,7 +517,8 @@ def test_escape_partial_dictionary_raises_error_1(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
+    assert "Invalid column name(s) provided. " \
+           "Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
 
 
 @pytest.mark.macro
@@ -519,7 +530,8 @@ def test_escape_partial_dictionary_raises_error_2(request, generate_model):
     dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
                                                      args=var_dict)
 
-    assert "Invalid column name(s) provided. Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
+    assert "Invalid column name(s) provided. " \
+           "Must be a string, a list of strings, or a dictionary of hashdiff metadata." in dbt_logs
 
 
 @pytest.mark.macro

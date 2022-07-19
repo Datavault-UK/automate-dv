@@ -1,9 +1,7 @@
 {%- macro expand_column_list(columns=none) -%}
 
 {%- if not columns -%}
-    {%- if execute -%}
-         {{- exceptions.raise_compiler_error("Expected a list of columns, got: " ~ columns) -}}
-    {%- endif -%}
+    {%- do return([]) -%}
 {%- endif -%}
 
 {%- set col_list = [] -%}
