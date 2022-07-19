@@ -41,10 +41,18 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         if not context.derived_columns.get(stage_model_name, None):
             context.derived_columns[stage_model_name] = dict()
 
+    if not getattr(context, "null_columns", None):
+        context.null_columns = dict()
+        context.null_columns[stage_model_name] = dict()
+    else:
+        if not context.null_columns.get(stage_model_name, None):
+            context.null_columns[stage_model_name] = dict()
+
     dbt_vars = {
         "include_source_columns": context.include_source_columns,
         "hashed_columns": context.hashed_columns,
         "derived_columns": context.derived_columns,
+        "null_columns": context.null_columns,
         "hash": context.hashing
     }
 

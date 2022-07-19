@@ -1,4 +1,4 @@
-{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, ranked_columns=none, null_columns=none) -%}
+{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, null_columns=none, ranked_columns=none) -%}
 
     {%- if include_source_columns is none -%}
         {%- set include_source_columns = true -%}
@@ -8,11 +8,12 @@
                                               source_model=source_model,
                                               hashed_columns=hashed_columns,
                                               derived_columns=derived_columns,
-                                              ranked_columns=ranked_columns,
-                                              null_columns=null_columns) -}}
+                                              null_columns=null_columns,
+                                              ranked_columns=ranked_columns
+                                              ) -}}
 {%- endmacro -%}
 
-{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, ranked_columns, null_columns) -%}
+{%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, null_columns, ranked_columns) -%}
 
 {{ dbtvault.prepend_generated_by() }}
 
@@ -50,6 +51,7 @@
 {%- endif -%}
 
 {%- set derived_column_names = dbtvault.extract_column_names(derived_columns) | map('upper') | list -%}
+{%- set null_column_names = dbtvault.extract_column_names(null_columns) | map('upper') | list -%}
 {%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) | map('upper') | list -%}
 {%- set ranked_column_names = dbtvault.extract_column_names(ranked_columns) | map('upper') | list -%}
 {%- set exclude_column_names = derived_column_names + hashed_column_names | map('upper') | list -%}
@@ -105,8 +107,14 @@ null_columns AS (
         WHEN CUSTOMER_ID IS NULL THEN '-1'
         ELSE CUSTOMER_ID
     END AS CUSTOMER_ID_NEW,
+    CUSTOMER_NAME,
+    CUSTOMER_DOB,
+    CUSTOMER_PHONE,
+    LOAD_DATE,
     md5('-1') AS CUSTOMER_PK,
-    'RAW_STAGE' AS SOURCE
+    '1993-01-01' AS EFFECTIVE_FROM,
+    'RAW_STAGE' AS SOURCE,
+    '1' AS DBTVAULT_RANK
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
     {%- set final_columns_to_select = final_columns_to_select + null_column_names %}
