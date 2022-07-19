@@ -30,6 +30,7 @@ pexpect = "*"
 filelock = "*"
 dbt-sqlserver = "*"
 dbt-spark = {extras = ["odbc"], version = "*"}
+dbt-greenplum = "*"
 
 [requires]
 python_version = "3.9"

@@ -62,4 +62,15 @@ dbtvault:
 
       threads: 4
 
+    greenplum:
+      type: greenplum
+      schema: "{{ env_var('GREENPLUM_SCHEMA') }}"
+      host: "{{ env_var('GREENPLUM_HOST') }}"
+      port: "{{ env_var('GREENPLUM_PORT', 5432) | as_number }}"
+      user: "{{ env_var('GREENPLUM_USER') }}"
+      password: "{{ env_var('GREENPLUM_PW') }}"
+      dbname: "{{ env_var('GREENPLUM_DATABASE') }}"
+
+      threads: 4
+
   target: "snowflake"
