@@ -121,6 +121,13 @@ def multi_source_link_snowflake(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['LINK'] = {
+        "src_pk": "CUSTOMER_NATION_PK",
+        "src_nk": ["CUSTOMER_FK", "NATION_FK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
         "LINK": {
             "column_types": {
