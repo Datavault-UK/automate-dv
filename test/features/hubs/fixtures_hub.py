@@ -33,7 +33,16 @@ def set_staging_definition(context):
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID"
-        }
+        },
+        "STG_PARTS": {
+            "PART_PK": "PART_ID"
+        },
+        "STG_SUPPLIER": {
+            "PART_PK": "PART_ID"
+        },
+        "STG_LINEITEM": {
+            "PART_PK": "PART_ID"
+        },
     }
 
 
@@ -162,8 +171,23 @@ def multi_source_hub_snowflake(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
         "HUB": {
+            "column_types": {
+                "PART_PK": "BINARY(16)",
+                "PART_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_PM": {
             "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR",
@@ -383,6 +407,13 @@ def multi_source_hub_bigquery(context):
     """
 
     set_metadata(context)
+
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
 
     context.seed_config = {
         "HUB": {
@@ -632,6 +663,13 @@ def multi_source_hub_sqlserver(context):
     """
 
     set_metadata(context)
+
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
 
     context.seed_config = {
         "HUB": {
