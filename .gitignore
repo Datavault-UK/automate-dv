@@ -2,6 +2,7 @@ logs/
 .idea/
 *__pycache__*
 *.pyc
+.env
 
 *target/
 
