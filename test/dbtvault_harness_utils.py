@@ -736,4 +736,12 @@ def feature_sub_types():
                 'bridge_one_hub_three_links'
             ]
         },
+        'sts': {
+            'main': [
+                'sts'
+            ],
+            'incremental': [
+                'sts_incremental'
+            ]
+        }
     }
