@@ -25,7 +25,22 @@ def set_staging_definition(context):
             "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
             "CUSTOMER_FK": "CUSTOMER_ID",
             "NATION_FK": "NATION_ID"
-        }
+        },
+        "STG_SAP": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        },
+        "STG_CRM": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        },
+        "STG_WEB": {
+            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+            "CUSTOMER_FK": "CUSTOMER_ID",
+            "NATION_FK": "NATION_ID"
+        },
     }
 
 
@@ -121,12 +136,16 @@ def multi_source_link_snowflake(context):
 
     set_metadata(context)
 
-    context.vault_structure_columns['LINK'] = {
-        "src_pk": "CUSTOMER_NATION_PK",
-        "src_nk": ["CUSTOMER_FK", "NATION_FK"],
-        "src_ldts": "LOAD_DATE",
-        "src_source": "SOURCE"
-    }
+    context.vault_structure_columns = {
+        **context.vault_structure_columns,
+        **{
+            'LINK': {
+                "src_pk": "CUSTOMER_NATION_PK",
+                "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "LINK": {
@@ -212,6 +231,7 @@ def single_source_link_bigquery(context):
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -259,6 +279,17 @@ def multi_source_link_bigquery(context):
     """
 
     set_metadata(context)
+
+    context.vault_structure_columns = {
+        **context.vault_structure_columns,
+        **{
+            'LINK': {
+                "src_pk": "CUSTOMER_NATION_PK",
+                "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "LINK": {
