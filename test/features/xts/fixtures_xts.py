@@ -55,7 +55,7 @@ def set_vault_structure_definition(context):
             },
             "src_source": "SOURCE"
         },
-        "XTS_COMPPK": {
+        "XTS_COMP_PK": {
             "src_pk": ["CUSTOMER_PK", "CUSTOMER_PHONE"],
             "src_ldts": "LOAD_DATE",
             "src_satellite": {
@@ -386,7 +386,7 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "XTS_COMPPK": {
+        "XTS_COMP_PK": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR",
@@ -542,7 +542,7 @@ def xts_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
-        "XTS_COMPPK": {
+        "XTS_COMP_PK": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_PHONE": "STRING",
@@ -688,7 +688,7 @@ def xts_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
-        "XTS_COMPPK": {
+        "XTS_COMP_PK": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",

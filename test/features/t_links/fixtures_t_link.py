@@ -209,7 +209,7 @@ def t_link_sqlserver(context):
 
 
 @fixture
-def t_link_comppk(context):
+def t_link_comp_pk(context):
     """
     Define the structures and metadata to load transactional links with composite src_pk
     """
@@ -229,7 +229,7 @@ def t_link_comppk(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "TRANSACTION_NUMBER": "NUMBER(38,0)",
@@ -247,7 +247,7 @@ def t_link_comppk(context):
 
 
 @fixture
-def t_link_comppk_bigquery(context):
+def t_link_comp_pk_bigquery(context):
     """
     Define the structures and metadata to load transactional links with composite src_pk
     """
@@ -267,7 +267,7 @@ def t_link_comppk_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "STRING",
                 "TRANSACTION_NUMBER": "STRING",
@@ -285,7 +285,7 @@ def t_link_comppk_bigquery(context):
 
 
 @fixture
-def t_link_comppk_sqlserver(context):
+def t_link_comp_pk_sqlserver(context):
     """
     Define the structures and metadata to load transactional links with composite src_pk
     """
@@ -305,7 +305,7 @@ def t_link_comppk_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",
