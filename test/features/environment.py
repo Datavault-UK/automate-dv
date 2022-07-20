@@ -43,13 +43,13 @@ fixtures_registry = {
          "sqlserver": fixtures_hub.single_source_hub_sqlserver,
          "databricks": fixtures_hub.single_source_hub_databricks},
 
-    "fixture.single_source_comppk_hub":
+    "fixture.single_source_comp_pk_hub":
         {"snowflake": fixtures_hub.single_source_comp_pk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comp_pk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comp_pk_hub_sqlserver,
          "databricks": ''},
 
-    "fixture.single_source_comppknk_hub":
+    "fixture.single_source_comp_pknk_hub":
         {"snowflake": fixtures_hub.single_source_comp_pk_nk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comp_pk_nk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comp_pk_nk_hub_sqlserver,
@@ -61,8 +61,8 @@ fixtures_registry = {
          "sqlserver": fixtures_hub.multi_source_hub_sqlserver,
          "databricks": fixtures_hub.multi_source_hub_databricks},
 
-    "fixture.multi_source_comppk_hub":
-        {"snowflake": fixtures_hub.multi_source_comppk_hub_snowflake,
+    "fixture.multi_source_comp_pk_hub":
+        {"snowflake": fixtures_hub.multi_source_comp_pk_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_comp_pk_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_comp_pk_hub_sqlserver,
          "databricks": ''},
@@ -73,10 +73,10 @@ fixtures_registry = {
          "sqlserver": fixtures_link.single_source_link_sqlserver,
          "databricks": fixtures_link.single_source_link_databricks},
 
-    "fixture.single_source_comppk_link":
-        {"snowflake": fixtures_link.single_source_comppk_link_snowflake,
-         "bigquery": fixtures_link.single_source_comppk_link_bigquery,
-         "sqlserver": fixtures_link.single_source_comppk_link_sqlserver,
+    "fixture.single_source_comp_pk_link":
+        {"snowflake": fixtures_link.single_source_comp_pk_link_snowflake,
+         "bigquery": fixtures_link.single_source_comp_pk_link_bigquery,
+         "sqlserver": fixtures_link.single_source_comp_pk_link_sqlserver,
          "databricks": ''},
 
     "fixture.multi_source_link":
@@ -91,10 +91,10 @@ fixtures_registry = {
          "sqlserver": fixtures_t_link.t_link_sqlserver,
          "databricks": ''},
 
-    "fixture.t_link_comppk":
-        {"snowflake": fixtures_t_link.t_link_comppk,
-         "bigquery": fixtures_t_link.t_link_comppk_bigquery,
-         "sqlserver": fixtures_t_link.t_link_comppk_sqlserver,
+    "fixture.t_link_comp_pk":
+        {"snowflake": fixtures_t_link.t_link_comp_pk,
+         "bigquery": fixtures_t_link.t_link_comp_pk_bigquery,
+         "sqlserver": fixtures_t_link.t_link_comp_pk_sqlserver,
          "databricks": ''},
 
     "fixture.satellite":

@@ -92,7 +92,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'hubs_comppk'
+      - job: 'hubs_comp_pk'
         displayName: 'Hubs Comp PK'
         steps:
           - task: UsePythonVersion@0
@@ -101,7 +101,7 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p bigquery -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s hubs --subtype comppk -p bigquery
+          - script: inv run-integration-tests -s hubs --subtype comp_pk -p bigquery
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)
@@ -641,7 +641,7 @@ stages:
             env:
               PIPELINE_JOB: $(Agent.JobName)
 
-      - job: 'hubs_comppk'
+      - job: 'hubs_comp_pk'
         displayName: 'Hubs Comp PK'
         steps:
           - task: UsePythonVersion@0
@@ -650,7 +650,7 @@ stages:
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
-          - script: inv run-integration-tests -s hubs --subtype comppk -p snowflake
+          - script: inv run-integration-tests -s hubs --subtype comp_pk -p snowflake
             displayName: "Run feature files"
             env:
               PIPELINE_JOB: $(Agent.JobName)

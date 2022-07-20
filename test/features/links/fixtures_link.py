@@ -81,7 +81,7 @@ def single_source_link_snowflake(context):
 
 
 @fixture
-def single_source_comppk_link_snowflake(context):
+def single_source_comp_pk_link_snowflake(context):
     """
     Define the structures and metadata to load single-source links with composite PK
     """
@@ -220,7 +220,7 @@ def single_source_link_bigquery(context):
 
 
 @fixture
-def single_source_comppk_link_bigquery(context):
+def single_source_comp_pk_link_bigquery(context):
     """
     Define the structures and metadata to load single-source links with composite PK
     """
@@ -352,7 +352,7 @@ def single_source_link_sqlserver(context):
 
 
 @fixture
-def single_source_comppk_link_sqlserver(context):
+def single_source_comp_pk_link_sqlserver(context):
     """
     Define the structures and metadata to load single-source links with composite PK
     """

@@ -242,7 +242,7 @@ def multi_source_hub_snowflake(context):
 
 
 @fixture
-def multi_source_comppk_hub_snowflake(context):
+def multi_source_comp_pk_hub_snowflake(context):
     """
     Define the structures and metadata to load multi-source hubs with composite PK
     """
@@ -418,12 +418,22 @@ def multi_source_hub_bigquery(context):
 
     set_metadata(context)
 
-    context.vault_structure_columns['HUB'] = {
-        "src_pk": "PART_PK",
-        "src_nk": "PART_ID",
-        "src_ldts": "LOAD_DATE",
-        "src_source": "SOURCE"
-    }
+    context.vault_structure_columns = {**context.vault_structure_columns,
+                                       **{
+                                           'HUB': {
+                                               "src_pk": "PART_PK",
+                                               "src_nk": "PART_ID",
+                                               "src_ldts": "LOAD_DATE",
+                                               "src_source": "SOURCE"
+                                           },
+                                           'HUB_AC': {
+                                               "src_pk": "PART_PK",
+                                               "src_nk": "PART_ID",
+                                               "src_ldts": "LOAD_DATE",
+                                               "src_additional_columns": "CUSTOMER_MT_ID",
+                                               "src_source": "SOURCE"
+                                           }
+                                       }}
 
     context.seed_config = {
         "HUB": {
@@ -436,11 +446,11 @@ def multi_source_hub_bigquery(context):
         },
         "HUB_AC": {
             "column_types": {
-                "PART_PK": "BINARY(16)",
-                "PART_ID": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
+                "PART_PK": "STRING",
+                "PART_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_PARTS": {
