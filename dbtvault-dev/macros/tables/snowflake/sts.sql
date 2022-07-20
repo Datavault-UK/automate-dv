@@ -53,7 +53,7 @@ stage_datetime AS (
 ),
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(final_source_cols, 'a', alias_target='target') }}
+    SELECT {{ dbtvault.prefix(final_source_cols, 'c', alias_target='target') }}
     FROM (
         SELECT {{ dbtvault.prefix(final_source_cols, 'current_records', alias_target='target') }},
             RANK() OVER (
@@ -61,8 +61,8 @@ latest_records AS (
                 ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
             ) AS rank
         FROM {{ this }} AS current_records
-    ) AS a
-    WHERE a.rank = 1
+    ) AS c
+    WHERE c.rank = 1
 ),
 
 {%- endif %}
@@ -113,9 +113,9 @@ records_with_status AS (
 ),
 
 records_with_status_and_hashdiff AS (
-    SELECT *,
+    SELECT {{ dbtvault.alias_all(source_cols, 'd') }}, {{ dbtvault.alias_all(src_status, 'd') }},
         {{ dbtvault.hash_columns(columns=hash_columns) | indent(4) }}
-    FROM records_with_status
+    FROM records_with_status AS d
 ),
 
 records_to_insert AS (
