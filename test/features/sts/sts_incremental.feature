@@ -136,7 +136,7 @@ Feature: [STS-IM] Status Tracking Satellites - Incremental Materialisation
       | md5('1004') | 1993-01-02 | *      | I      | md5('I')        |
 
   @fixture.sts
-  Scenario: [STS-IM-07] Load data into an existing status tracking satellite - two cycles
+  Scenario: [STS-IM-07] Load data into an existing status tracking satellite - three cycles
     Given the STS sts is already populated with data
       | CUSTOMER_PK | LOAD_DATE  | SOURCE | STATUS |
       | md5('1001') | 1993-01-01 | *      | I      |
@@ -154,6 +154,16 @@ Feature: [STS-IM] Status Tracking Satellites - Incremental Materialisation
       | 1001        | Alison        | 1993-01-03 | *      |
       | 1002        | Bobby         | 1993-01-03 | *      |
       | 1004        | Dom           | 1993-01-03 | *      |
+      | 1005        | Edith         | 1993-01-03 | *      |
+    And I stage the STG_CUSTOMER data
+    And I load the STS sts
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alison        | 1993-01-04 | *      |
+      | 1002        | Bobby         | 1993-01-04 | *      |
+      | 1004        | Dom           | 1993-01-04 | *      |
+      | 1005        | Edith         | 1993-01-04 | *      |
+      | 1006        | Frida         | 1993-01-04 | *      |
     And I stage the STG_CUSTOMER data
     When I load the STS sts
     Then the STS table should contain expected data
@@ -165,6 +175,7 @@ Feature: [STS-IM] Status Tracking Satellites - Incremental Materialisation
       | md5('1002') | 1993-01-02 | *      | U      | md5('U')        |
       | md5('1003') | 1993-01-02 | *      | D      | md5('D')        |
       | md5('1004') | 1993-01-02 | *      | I      | md5('I')        |
-      | md5('1001') | 1993-01-03 | *      | U      | md5('U')        |
-      | md5('1002') | 1993-01-03 | *      | U      | md5('U')        |
       | md5('1004') | 1993-01-03 | *      | U      | md5('U')        |
+      | md5('1005') | 1993-01-03 | *      | I      | md5('I')        |
+      | md5('1005') | 1993-01-04 | *      | U      | md5('U')        |
+      | md5('1006') | 1993-01-04 | *      | I      | md5('I')        |

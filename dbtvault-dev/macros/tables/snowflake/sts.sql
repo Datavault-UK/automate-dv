@@ -13,7 +13,7 @@
 {% if model.config.materialized != 'incremental' and execute %}
 
     {%- set error_message -%}
-    STS staging error: The materialization must be incremental.
+    STS loading error: The materialization must be incremental.
     {%- endset -%}
 
     {{- exceptions.raise_compiler_error(error_message) -}}
@@ -28,8 +28,11 @@
 {%- set src_ldts = dbtvault.escape_column_name(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_name(src_source) -%}
 {%- set src_status = dbtvault.escape_column_name(src_status) -%}
+{%- set src_hashdiff = dbtvault.escape_column_name(src_hashdiff) -%}
+{%- set hash_columns = {src_hashdiff: src_status} -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_ldts, src_source]) -%}
+{%- set final_source_cols = dbtvault.expand_column_list(columns=[src_pk, src_ldts, src_source, src_status, src_hashdiff]) -%}
 
     {{ dbtvault.prepend_generated_by() }}
 
@@ -50,12 +53,9 @@ stage_datetime AS (
 ),
 
 latest_records AS (
-
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }},
-        {{ dbtvault.prefix([src_status], 'a') }}
+    SELECT {{ dbtvault.prefix(final_source_cols, 'a', alias_target='target') }}
     FROM (
-        SELECT {{ dbtvault.prefix(source_cols, 'current_records', alias_target='target') }},
-            {{ dbtvault.prefix([src_status], 'current_records') }},
+        SELECT {{ dbtvault.prefix(final_source_cols, 'current_records', alias_target='target') }},
             RANK() OVER (
                 PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
                 ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
@@ -67,7 +67,7 @@ latest_records AS (
 
 {%- endif %}
 
-records_to_insert AS (
+records_with_status AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }},
         'I' AS {{ src_status }}
     FROM source_data AS stage
@@ -110,10 +110,25 @@ records_to_insert AS (
             AND {{ dbtvault.prefix([src_ldts], 'stage') }} != {{ dbtvault.prefix([src_ldts], 'latest_records') }})
     )
     {%- endif %}
+),
+
+records_with_status_and_hashdiff AS (
+    SELECT *,
+        {{ dbtvault.hash_columns(columns=hash_columns) | indent(4) }}
+    FROM records_with_status
+),
+
+records_to_insert AS (
+    SELECT DISTINCT {{ dbtvault.alias_all(final_source_cols, 'stage') }}
+    FROM records_with_status_and_hashdiff AS stage
+    {%- if dbtvault.is_any_incremental() %}
+    LEFT JOIN latest_records
+        ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
+        OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {%- endif %}
 )
 
-SELECT *,
-    {{- dbtvault.hash_columns(columns=src_hashdiff) | indent(4) }}
-FROM records_to_insert
+SELECT * FROM records_to_insert
 
 {%- endmacro -%}

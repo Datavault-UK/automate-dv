@@ -19,7 +19,7 @@ def sts_snowflake(context):
             "src_status": "STATUS",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE",
-            "src_hashdiff": {"STATUS_HASHDIFF": "STATUS"}
+            "src_hashdiff": "STATUS_HASHDIFF"
         }
     }
 
