@@ -591,8 +591,8 @@ def feature_sub_types():
             'main': [
                 'hubs'
             ],
-            'comppk': [
-                'hubs_comppk'
+            'comp_pk': [
+                'hubs_comp_pk'
             ],
             'incremental': [
                 'hubs_incremental'
@@ -607,7 +607,7 @@ def feature_sub_types():
         'links': {
             'main': [
                 'links',
-                'links_comppk'
+                'links_comp_pk'
             ],
             'incremental': [
                 'links_incremental'
@@ -701,7 +701,7 @@ def feature_sub_types():
         'xts': {
             'main': [
                 'xts',
-                'xts_comppk'
+                'xts_comp_pk'
             ],
             'incremental': [
                 'xts_incremental'
