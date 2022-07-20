@@ -1,7 +1,7 @@
-Feature: [XTS-COMP_PK] Extended Record Tracking Satellites with composite PK
+Feature: [XTS-COMP-PK] Extended Record Tracking Satellites with composite PK
 
   @fixture.xts
-  Scenario: [XTS-COMP_PK-01] Load one stage of records into an empty single satellite XTS
+  Scenario: [XTS-COMP-PK-01] Load one stage of records into an empty single satellite XTS
     Given the XTS xts is empty
     And the RAW_STAGE_CUSTOMER table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -19,7 +19,7 @@ Feature: [XTS-COMP_PK] Extended Record Tracking Satellites with composite PK
       | md5('1004') | 17-214-233-1217 | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [XTS-COMP_PK-02] Load record into a pre-populated XTS
+  Scenario: [XTS-COMP-PK-02] Load record into a pre-populated XTS
     Given the XTS_COMP_PK xts is already populated with data
       | CUSTOMER_PK | CUSTOMER_PHONE  | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | 17-214-233-1214 | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1992-12-31 | *      |
@@ -42,7 +42,7 @@ Feature: [XTS-COMP_PK] Extended Record Tracking Satellites with composite PK
       | md5('1004') | 17-214-233-1217 | md5('DOM\|\|1004\|\|DAVIES')    | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [XTS-COMP_PK-03] Load record into a pre-populated XTS
+  Scenario: [XTS-COMP-PK-03] Load record into a pre-populated XTS
     Given the XTS_COMP_PK xts is already populated with data
       | CUSTOMER_PK | CUSTOMER_PHONE  | HASHDIFF                        | SATELLITE_NAME | LOAD_DATE  | SOURCE |
       | md5('1001') | 17-214-233-1214 | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1992-12-31 | *      |
