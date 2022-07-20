@@ -143,8 +143,8 @@ def single_source_comp_pk_nk_hub_snowflake(context):
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK1": "BINARY(16)",
-                "CUSTOMER_PK2": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_EMP_DEP_HK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -242,7 +242,7 @@ def multi_source_hub_snowflake(context):
 
 
 @fixture
-def multi_source_comppk_hub_snowflake(context):
+def multi_source_comp_pk_hub_snowflake(context):
     """
     Define the structures and metadata to load multi-source hubs with composite PK
     """
@@ -328,9 +328,20 @@ def single_source_hub_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "HUB_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -346,6 +357,17 @@ def single_source_comp_pk_hub_bigquery(context):
     """
 
     set_metadata(context)
+
+    context.vault_structure_columns = {
+        **context.vault_structure_columns,
+        **{
+            'HUB': {
+                "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
+                "src_nk": "CUSTOMER_ID",
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "HUB": {
@@ -377,11 +399,28 @@ def single_source_comp_pk_nk_hub_bigquery(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns = {
+        **context.vault_structure_columns,
+        **{
+            'HUB': {
+                "src_pk": ["CUSTOMER_PK", "CUSTOMER_EMP_DEP_HK"],
+                "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
+
+    context.hashed_columns['STG_CUSTOMER'] = {
+        **context.hashed_columns['STG_CUSTOMER'],
+        **{
+            'CUSTOMER_EMP_DEP_HK': 'CUSTOMER_CK'
+        }}
+
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK1": "STRING",
-                "CUSTOMER_PK2": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_EMP_DEP_HK": "STRING",
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_CK": "STRING",
                 "LOAD_DATE": "DATE",
@@ -408,18 +447,38 @@ def multi_source_hub_bigquery(context):
 
     set_metadata(context)
 
-    context.vault_structure_columns['HUB'] = {
-        "src_pk": "PART_PK",
-        "src_nk": "PART_ID",
-        "src_ldts": "LOAD_DATE",
-        "src_source": "SOURCE"
-    }
+    context.vault_structure_columns = {
+        **context.vault_structure_columns,
+        **{
+            'HUB': {
+                "src_pk": "PART_PK",
+                "src_nk": "PART_ID",
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            },
+            'HUB_AC': {
+                "src_pk": "PART_PK",
+                "src_nk": "PART_ID",
+                "src_ldts": "LOAD_DATE",
+                "src_additional_columns": "CUSTOMER_MT_ID",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "HUB": {
             "column_types": {
                 "PART_PK": "STRING",
                 "PART_ID": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "PART_PK": "STRING",
+                "PART_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -468,6 +527,17 @@ def multi_source_comp_pk_hub_bigquery(context):
     """
 
     set_metadata(context)
+
+    context.vault_structure_columns = {
+        **context.vault_structure_columns,
+        **{
+            'HUB': {
+                "src_pk": ["PART_PK", "PART_CK"],
+                "src_nk": "PART_ID",
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "HUB": {
@@ -636,8 +706,8 @@ def single_source_comp_pk_nk_hub_sqlserver(context):
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK1": "BINARY(16)",
-                "CUSTOMER_PK2": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_EMP_DEP_HK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
                 "CUSTOMER_CK": "VARCHAR(4)",
                 "LOAD_DATE": "DATE",

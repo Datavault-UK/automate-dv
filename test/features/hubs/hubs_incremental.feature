@@ -201,18 +201,18 @@ Feature: [HUB-IM] Hubs Loaded using Incremental Materialization
 
   @fixture.single_source_hub
   Scenario: [HUB-IM-10] Load of empty stage into an non-existent hub with additional columns - one cycle
-    Given the HUB table does not exist
+    Given the HUB_AC table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
       | 1002        | Bob           | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
     And I stage the STG_CUSTOMER data
-    And I load the HUB hub
+    And I load the HUB_AC hub
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_MT_ID | LOAD_DATE | SOURCE |
     And I stage the STG_CUSTOMER data
-    When I load the HUB hub
-    Then the HUB table should contain expected data
+    When I load the HUB_AC hub
+    Then the HUB_AC table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
       | md5('1001') | 1001        | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
       | md5('1002') | 1002        | TPCH_CUSTOMER  | 1993-01-01 | TPCH   |
