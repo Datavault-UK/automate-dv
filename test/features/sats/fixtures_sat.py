@@ -281,7 +281,7 @@ def satellite_bigquery(context):
                 "HASHDIFF": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATETIME": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         }
