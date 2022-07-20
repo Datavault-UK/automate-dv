@@ -328,6 +328,16 @@ def single_source_hub_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "HUB_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
@@ -422,6 +432,15 @@ def multi_source_hub_bigquery(context):
                 "PART_ID": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "PART_PK": "BINARY(16)",
+                "PART_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_PARTS": {
