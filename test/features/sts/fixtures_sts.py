@@ -62,7 +62,8 @@ def sts_sqlserver(context):
             "src_pk": "CUSTOMER_PK",
             "src_status": "STATUS",
             "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
+            "src_source": "SOURCE",
+            "src_hashdiff": "STATUS_HASHDIFF"
         }
     }
 
@@ -104,7 +105,8 @@ def sts_bigquery(context):
             "src_pk": "CUSTOMER_PK",
             "src_status": "STATUS",
             "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
+            "src_source": "SOURCE",
+            "src_hashdiff": "STATUS_HASHDIFF"
         }
     }
 
