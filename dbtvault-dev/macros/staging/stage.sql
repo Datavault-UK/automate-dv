@@ -1,4 +1,4 @@
-{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, null_columns=none, ranked_columns=none) -%}
+{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, null_columns=true, ranked_columns=none) -%}
 
     {%- if include_source_columns is none -%}
         {%- set include_source_columns = true -%}
@@ -103,18 +103,16 @@ null_columns AS (
 
     SELECT
     CUSTOMER_ID AS CUSTOMER_ID_ORIGINAL,
-    CASE
-        WHEN CUSTOMER_ID IS NULL THEN '-1'
-        ELSE CUSTOMER_ID
-    END AS CUSTOMER_ID_NEW,
+    IFNULL(CUSTOMER_ID, '-1') AS CUSTOMER_ID_NEW,
     CUSTOMER_NAME,
     CUSTOMER_DOB,
     CUSTOMER_PHONE,
     LOAD_DATE,
-    md5('-1') AS CUSTOMER_PK,
+    md5(CUSTOMER_ID_NEW) AS CUSTOMER_PK,
     '1993-01-01' AS EFFECTIVE_FROM,
     'RAW_STAGE' AS SOURCE,
     '1' AS DBTVAULT_RANK
+    FROM "DBTVAULT_DEV"."TEST_SIOBHAN_STRANGE"."RAW_STAGE_SEED"
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
     {%- set final_columns_to_select = final_columns_to_select + null_column_names %}

@@ -31,7 +31,7 @@ def derive_columns(context, processed_stage_name):
     context.derived_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
                                                                                                    orient="records")[0]}
 @step("I have null columns in the {processed_stage_name} model")
-def derive_columns(context, processed_stage_name):
+def null_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
     context.null_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
                                                                                                    orient="records")[0]}
