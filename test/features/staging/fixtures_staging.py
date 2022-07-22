@@ -22,7 +22,9 @@ def staging_snowflake(context):
                 "SOURCE": "VARCHAR",
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE"
+                "EFFECTIVE_FROM": "DATE",
+                "CUSTOMER_ID_ORIGINAL": "VARCHAR",
+                "CUSTOMER_ID_NEW": "VARCHAR"
             }
         },
         "RAW_STAGE": {

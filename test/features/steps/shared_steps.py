@@ -176,7 +176,10 @@ def create_empty_stage(context, processed_stage_name):
     stage_source_column_headings = list(context.seed_config[context.raw_stage_name]["column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
-    stage_headings = stage_source_column_headings + stage_hashed_column_headings + stage_derived_column_headings
+    stage_null_column_headings = list(context.null_columns[processed_stage_name].keys())
+
+    stage_headings = stage_source_column_headings + stage_hashed_column_headings \
+                     + stage_derived_column_headings + stage_null_column_headings
 
     row = Row(cells=[], headings=stage_headings)
 
@@ -464,6 +467,7 @@ def stage_processing(context, processed_stage_name):
                                            hashed_columns=context.hashed_columns[processed_stage_name],
                                            derived_columns=context.derived_columns[processed_stage_name],
                                            ranked_columns=context.ranked_columns[processed_stage_name],
+                                           null_columns=context.null_columns[processed_stage_name],
                                            include_source_columns=context.include_source_columns)
 
     logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[processed_stage_name],

@@ -880,11 +880,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID |          |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID_NEW | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK                      | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
-      | <null>               | -1              | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 6bb61e3b7bce0931da574d19d1d82c88 | 1993-01-01     | RAW_STAGE | 1             |
-      | <null>               | -1              | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 6bb61e3b7bce0931da574d19d1d82c88 | 1993-01-01     | RAW_STAGE | 1             |
-      | <null>               | -1              | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 6bb61e3b7bce0931da574d19d1d82c88 | 1993-01-01     | RAW_STAGE | 1             |
-      | <null>               | -1              | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 6bb61e3b7bce0931da574d19d1d82c88 | 1993-01-01     | RAW_STAGE | 1             |
+      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID_NEW | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | <null>               | -1              | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
+      | <null>               | -1              | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
+      | <null>               | -1              | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
+      | <null>               | -1              | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
 # Should be as below:
 #      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
 #      | <null>               | -1          | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
