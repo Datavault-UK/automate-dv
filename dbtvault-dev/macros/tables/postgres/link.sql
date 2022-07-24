@@ -1,15 +1,16 @@
-{%- macro postgres__hub(src_pk, src_nk, src_ldts, src_source, source_model) -%}
+{%- macro postgres__link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_nk=src_nk,
+{{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
                                        src_ldts=src_ldts, src_source=src_source,
                                        source_model=source_model) -}}
 
 {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_nk = dbtvault.escape_column_names(src_nk) -%}
+{%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
 {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_nk, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_ldts, src_source]) -%}
+{%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
@@ -30,17 +31,23 @@
 {%- set source_number = loop.index | string -%}
 
 row_rank_{{ source_number }} AS (
-{#- PostgreSQL has DISTINCT ON which should be more performant than the
-    strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...
--#}
+  SELECT * FROM (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'rr') }}) {{ dbtvault.prefix(source_cols_with_rank, 'rr') }}
+    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'rr') }},
     {%- else %}
-    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'rr') }}) {{ dbtvault.prefix(source_cols, 'rr') }}
+    SELECT {{ dbtvault.prefix(source_cols, 'rr') }},
     {%- endif %}
+           ROW_NUMBER() OVER(
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'rr') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
+           ) AS row_number
     FROM {{ ref(src) }} AS rr
+    {%- if source_model | length == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
-    ORDER BY {{ dbtvault.prefix([src_pk], 'rr') }}, {{ dbtvault.prefix([src_ldts], 'rr') }}
+    AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
+    {%- endif %}
+  ) as l
+  WHERE row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
@@ -69,18 +76,21 @@ stage_mat_filter AS (
     WHERE __RANK_FILTER__
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
-{%- endif -%}
+{% endif %}
 {%- if source_model | length > 1 %}
 
 row_rank_union AS (
-{#- PostgreSQL has DISTINCT ON which should be more performant than the
-    strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...
--#}
+  SELECT * FROM (
     SELECT ru.*,
-           DISTINCT ON ({{ dbtvault.prefix([src_pk], 'ru') }})
+           ROW_NUMBER() OVER(
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'ru') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'ru') }}, {{ dbtvault.prefix([src_source], 'ru') }} ASC
+           ) AS row_rank_number
     FROM {{ ns.last_cte }} AS ru
     WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
-    ORDER BY {{ dbtvault.prefix([src_pk], 'ru') }}, {{ dbtvault.prefix([src_ldts], 'ru') }}, {{ dbtvault.prefix([src_source], 'ru') }} ASC
+    AND {{ dbtvault.multikey(fk_cols, prefix='ru', condition='IS NOT NULL') }}
+  ) AS a
+  WHERE row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}
