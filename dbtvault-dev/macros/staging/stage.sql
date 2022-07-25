@@ -102,17 +102,9 @@ derived_columns AS (
 null_columns AS (
 
     SELECT
-            {{ null_columns['REQUIRED'] }}
-    CUSTOMER_ID AS CUSTOMER_ID_ORIGINAL,
-    IFNULL(CUSTOMER_ID, '-1') AS CUSTOMER_ID_NEW,
-    CUSTOMER_NAME,
-    CUSTOMER_DOB,
-    CUSTOMER_PHONE,
-    LOAD_DATE,
-    {{ dbtvault.hash('CUSTOMER_ID_NEW', 'CUSTOMER_PK') }},
-    '1993-01-01' AS EFFECTIVE_FROM,
-    'RAW_STAGE' AS SOURCE,
-    '1' AS DBTVAULT_RANK
+
+    {{ dbtvault.null_columns(source_relation=source_relation, columns=null_columns) | indent(4) }}
+
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
     {%- set final_columns_to_select = final_columns_to_select + ['CUSTOMER_ID_ORIGINAL', 'CUSTOMER_ID_NEW', 'CUSTOMER_PK', 'EFFECTIVE_FROM', 'DBTVAULT_RANK'] %}
