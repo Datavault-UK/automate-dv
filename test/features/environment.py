@@ -128,84 +128,84 @@ fixtures_registry = {
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_eff_sat.eff_satellite_postgres},
 
     "fixture.eff_satellite_datetime":
         {"snowflake": fixtures_eff_sat.eff_satellite_datetime_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_eff_sat.eff_satellite_datetime_postgres},
 
     "fixture.eff_satellite_testing_auto_end_dating":
         {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres},
 
     "fixture.eff_satellite_multipart":
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_eff_sat.eff_satellite_multipart_postgres},
 
     "fixture.multi_active_satellite":
         {"snowflake": fixtures_ma_sat.multi_active_satellite_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_ma_sat.multi_active_satellite_postgres},
 
     "fixture.multi_active_satellite_cycle":
         {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_cycle_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_ma_sat.multi_active_satellite_cycle_postgres},
 
     "fixture.xts":
         {"snowflake": fixtures_xts.xts_snowflake,
          "bigquery": fixtures_xts.xts_bigquery,
          "sqlserver": fixtures_xts.xts_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_xts.xts_postgres},
 
     "fixture.pit":
         {"snowflake": fixtures_pit.pit_snowflake,
          "bigquery": fixtures_pit.pit_bigquery,
          "sqlserver": fixtures_pit.pit_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_pit.pit_postgres},
 
     "fixture.pit_one_sat":
         {"snowflake": fixtures_pit.pit_one_sat_snowflake,
          "bigquery": fixtures_pit.pit_one_sat_bigquery,
          "sqlserver": fixtures_pit.pit_one_sat_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_pit.pit_one_sat_postgres},
 
     "fixture.pit_two_sats":
         {"snowflake": fixtures_pit.pit_two_sats_snowflake,
          "bigquery": fixtures_pit.pit_two_sats_bigquery,
          "sqlserver": fixtures_pit.pit_two_sats_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_pit.pit_two_sats_postgres},
 
     "fixture.bridge":
         {"snowflake": fixtures_bridge.bridge_snowflake,
          "bigquery": fixtures_bridge.bridge_bigquery,
          "sqlserver": fixtures_bridge.bridge_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_bridge.bridge_postgres},
 
     "fixture.cycle":
         {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_cycle.cycle_postgres},
 
 }
 
