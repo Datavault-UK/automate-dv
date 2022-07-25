@@ -13,8 +13,8 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY initialisation.sh /usr/src/app/
 COPY entrypoint.sh /usr/src/app/
+COPY initialisation.sh /usr/src/app/
 COPY setup.sql /usr/src/app/
 
 # Grant permissions for the initialisation script to be executable
