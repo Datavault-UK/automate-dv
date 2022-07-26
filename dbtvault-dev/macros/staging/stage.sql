@@ -103,11 +103,11 @@ null_columns AS (
 
     SELECT
 
-    {{ dbtvault.null_columns(source_relation=source_relation, columns=null_columns) | indent(4) }}
+    {{ dbtvault.null_columns(columns=null_columns) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
-    {%- set final_columns_to_select = final_columns_to_select + ['CUSTOMER_ID_ORIGINAL', 'CUSTOMER_ID_NEW', 'CUSTOMER_PK', 'EFFECTIVE_FROM', 'DBTVAULT_RANK'] %}
+    {%- set final_columns_to_select = final_columns_to_select + null_column_names %}
     {% set final_columns_to_select = final_columns_to_select | reject("equalto", 'CUSTOMER_ID') %}
 )
 {%- endif -%}

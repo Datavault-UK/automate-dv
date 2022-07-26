@@ -1,25 +1,20 @@
-{%- macro null_columns(source_relation=none, columns=none) -%}
+{%- macro null_columns(columns=none) -%}
 
-    {{- adapter.dispatch('null_columns', 'dbtvault')(source_relation=source_relation, columns=columns) -}}
-
-{%- endmacro -%}
-
-
-{%- macro default__null_columns(source_relation=none, columns=none) -%}
-
-{%- if columns is mapping and columns is not none -%}
-
-    {%- for col in columns -%}
-
-        {%- set required = "{{ null_columns['REQUIRED'] }}" -%}
+    {% if columns %}
+        {%- set new_column_list = [] -%}
+        {%- set required = "{},\n".format(columns['REQUIRED']) | indent(4) -%}
+        {%- set optional = columns['OPTIONAL'] | indent(4) -%}
         {%- set original_name = "CUSTOMER_ID_ORIGINAL" -%}
+        {%- set original = "{} AS {},\n".format(required, original_name) | indent(4) -%}
         {%- set new_name = "CUSTOMER_ID_NEW" -%}
+        {%- set new = "IFNULL({}, '-1') AS {}".format(required, new_name) | indent(4) -%}
 
-        {{- "{} AS {}".format(required, original_name | indent(4)) -}}
-        {{- "IFNULL({}, '-1') AS {}".format(required, new_name | indent(4)) -}}
+        {%- do new_column_list.append(required) -%}
+        {%- do new_column_list.append(original) -%}
+        {%- do new_column_list.append(new) -%}
 
-    {%- endfor -%}
-
-{%- endif %}
+        {%- do return(new_column_list) -%}
+    {%- else -%}
+    {%- endif %}
 
 {%- endmacro -%}
