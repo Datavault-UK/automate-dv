@@ -580,6 +580,7 @@ Feature: [STG] Staging
       | 1004        | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
   @not_sqlserver
+  @not_postgres
   @fixture.staging
   Scenario: [STG-18] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER table does not exist
@@ -606,6 +607,30 @@ Feature: [STG] Staging
   @sqlserver
   @fixture.staging
   Scenario: [STG-18-SQLS] Staging with derived, source columns and hashed when a hashed column overrides a source column.
+    Given the STG_CUSTOMER_HASH table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER_HASH model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER_HASH model
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_ID   |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') | CUSTOMER_NAME |
+    When I stage the STG_CUSTOMER_HASH data
+    Then the STG_CUSTOMER_HASH table should contain expected data
+      | CUSTOMER_ID  | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    |
+      | md5('ALICE') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE |
+      | md5('BOB')   | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE |
+      | md5('CHAD')  | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
+      | md5('DOM')   | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
+
+  @postgres
+  @fixture.staging
+  Scenario: [STG-18-POSTGRES] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER_HASH table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
