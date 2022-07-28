@@ -46,7 +46,7 @@ def eff_satellite_snowflake(context):
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -57,7 +57,7 @@ def eff_satellite_snowflake(context):
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
-            "src_additional_columns": [
+            "src_extra_columns": [
                 "CUSTOMER_MT_ID",
                 "CUSTOMER_CK"
             ],
@@ -236,7 +236,7 @@ def eff_satellite_testing_auto_end_dating_snowflake(context):
             "src_pk": "ORDER_CUSTOMER_PK",
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",

@@ -12,7 +12,7 @@ def set_vault_structure_definition(context):
         "LINK_AC": {
             "src_pk": "CUSTOMER_NATION_PK",
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }

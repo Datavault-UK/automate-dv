@@ -91,7 +91,7 @@ def set_vault_structure_definition(context):
             "src_cdk": ["CUSTOMER_PHONE"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"

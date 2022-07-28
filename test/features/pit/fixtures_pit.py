@@ -145,7 +145,7 @@ def set_vault_structure_definition(context):
         "PIT_CUSTOMER_AC": {
             "source_model": "HUB_CUSTOMER",
             "src_pk": "CUSTOMER_PK",
-            "src_additional_columns": "CUSTOMER_ID",
+            "src_extra_columns": "CUSTOMER_ID",
             "as_of_dates_table": "AS_OF_DATE",
             "satellites":
                 {
@@ -179,7 +179,7 @@ def set_vault_structure_definition(context):
         "PIT_CUSTOMER_M_AC": {
             "source_model": "HUB_CUSTOMER_AC",
             "src_pk": "CUSTOMER_PK",
-            "src_additional_columns": ["CUSTOMER_ID", "DASHBOARD_COLOUR"],
+            "src_extra_columns": ["CUSTOMER_ID", "DASHBOARD_COLOUR"],
             "as_of_dates_table": "AS_OF_DATE",
             "satellites":
                 {
