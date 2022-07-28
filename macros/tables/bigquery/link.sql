@@ -1,6 +1,6 @@
-{%- macro bigquery__link(src_pk, src_fk, src_additional_columns, src_ldts, src_source, source_model) -%}
+{%- macro bigquery__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_additional_columns, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_extra_columns, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}

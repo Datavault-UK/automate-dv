@@ -1,6 +1,6 @@
-{%- macro bigquery__eff_sat(src_pk, src_dfk, src_sfk, src_additional_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro bigquery__eff_sat(src_pk, src_dfk, src_sfk, src_extra_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_additional_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_dfk, src_sfk, src_extra_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list(columns=[src_dfk, src_sfk]) -%}
 {%- set dfk_cols = dbtvault.expand_column_list(columns=[src_dfk]) -%}
 {%- set is_auto_end_dating = config.get('is_auto_end_dating', default=false) %}
@@ -62,7 +62,7 @@ new_open_records AS (
         f.{{ src_start_date }} AS {{ src_start_date }},
         {% endif %}
         f.{{ src_end_date }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_additional_columns], 'f') }},
+        {{ dbtvault.prefix([src_extra_columns], 'f') }},
         f.{{ src_eff }} AS {{ src_eff }},
         f.{{ src_ldts }},
         f.{{ src_source }}
@@ -83,7 +83,7 @@ new_reopened_records AS (
         g.{{ src_start_date }} AS {{ src_start_date }},
         {% endif %}
         g.{{ src_end_date }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_additional_columns], 'g') }},
+        {{ dbtvault.prefix([src_extra_columns], 'g') }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
         g.{{ src_source }}
@@ -103,7 +103,7 @@ new_closed_records AS (
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         lo.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_eff }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_additional_columns], 'h') }},
+        {{ dbtvault.prefix([src_extra_columns], 'h') }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -122,7 +122,7 @@ new_closed_records AS (
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
         h.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_end_date }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_additional_columns], 'h') }},
+        {{ dbtvault.prefix([src_extra_columns], 'h') }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}

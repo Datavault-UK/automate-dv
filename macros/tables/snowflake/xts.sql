@@ -1,4 +1,4 @@
-{%- macro xts(src_pk, src_satellite, src_additional_columns, src_ldts, src_source, source_model) -%}
+{%- macro xts(src_pk, src_satellite, src_extra_columns, src_ldts, src_source, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk, src_satellite=src_satellite,
                                            src_ldts=src_ldts, src_source=src_source,
@@ -6,7 +6,7 @@
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
+    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
     {%- if not dbtvault.is_list(source_model) -%}
@@ -17,13 +17,13 @@
 
     {{ adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
                                             src_satellite=src_satellite,
-                                            src_additional_columns=src_additional_columns,
+                                            src_extra_columns=src_extra_columns,
                                             src_ldts=src_ldts,
                                             src_source=src_source,
                                             source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__xts(src_pk, src_satellite, src_additional_columns, src_ldts, src_source, source_model) -%}
+{%- macro default__xts(src_pk, src_satellite, src_extra_columns, src_ldts, src_source, source_model) -%}
 
 {%- set hashdiff_escaped = dbtvault.escape_column_names('HASHDIFF') -%}
 {%- set satellite_name_escaped = dbtvault.escape_column_names('SATELLITE_NAME') %}
@@ -48,8 +48,8 @@
     SELECT {{ dbtvault.prefix([src_pk], 's') }},
            s.{{ dbtvault.escape_column_names(hashdiff) }} AS {{ hashdiff_escaped }},
            s.{{ dbtvault.escape_column_names(satellite_name) }} AS {{ satellite_name_escaped }},
-           {%- if dbtvault.is_something(src_additional_columns) -%}
-               {{ dbtvault.prefix([src_additional_columns], 's') }},
+           {%- if dbtvault.is_something(src_extra_columns) -%}
+               {{ dbtvault.prefix([src_extra_columns], 's') }},
            {%- endif %}
            s.{{ src_ldts }},
            s.{{ src_source }}
@@ -86,8 +86,8 @@ records_to_insert AS (
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.{{ hashdiff_escaped }},
         a.{{ satellite_name_escaped }} ,
-        {%- if dbtvault.is_something(src_additional_columns) -%}
-            {{ dbtvault.prefix([src_additional_columns], 'a') }},
+        {%- if dbtvault.is_something(src_extra_columns) -%}
+            {{ dbtvault.prefix([src_extra_columns], 'a') }},
         {%- endif %}
         a.{{ src_ldts }},
         a.{{ src_source }}
