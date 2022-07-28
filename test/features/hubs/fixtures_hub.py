@@ -13,14 +13,14 @@ def set_vault_structure_definition(context):
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_source": "SOURCE"
         },
         "HUB_AC_MULTI": {
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
             "src_ldts": "LOAD_DATE",
-            "src_additional_columns": [
+            "src_extra_columns": [
                 "CUSTOMER_MT_ID",
                 "CUSTOMER_CK"
             ],
@@ -460,7 +460,7 @@ def multi_source_hub_bigquery(context):
                 "src_pk": "PART_PK",
                 "src_nk": "PART_ID",
                 "src_ldts": "LOAD_DATE",
-                "src_additional_columns": "CUSTOMER_MT_ID",
+                "src_extra_columns": "CUSTOMER_MT_ID",
                 "src_source": "SOURCE"
             }
         }}

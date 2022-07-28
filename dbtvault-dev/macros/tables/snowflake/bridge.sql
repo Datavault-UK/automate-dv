@@ -1,4 +1,4 @@
-{%- macro bridge(src_pk, src_additional_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
+{%- macro bridge(src_pk, src_extra_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk,
                                            src_ldts=src_ldts,
@@ -8,13 +8,13 @@
                                            source_model=source_model) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
+    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
     {{- dbtvault.prepend_generated_by() }}
 
     {{ adapter.dispatch('bridge', 'dbtvault')(src_pk=src_pk,
-                                              src_additional_columns=src_additional_columns,
+                                              src_extra_columns=src_extra_columns,
                                               src_ldts=src_ldts,
                                               as_of_dates_table=as_of_dates_table,
                                               bridge_walk=bridge_walk,
@@ -22,7 +22,7 @@
                                               source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__bridge(src_pk, src_additional_columns, src_ldts, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model) -%}
+{%- macro default__bridge(src_pk, src_extra_columns, src_ldts, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model) -%}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
@@ -52,7 +52,7 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, source_model) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_extra_columns, stage_tables_ldts, source_model) }},
 
 overlap_as_of AS (
     SELECT AS_OF_DATE
@@ -63,12 +63,12 @@ overlap_as_of AS (
 ),
 
 overlap AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_additional_columns, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
+    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_extra_columns, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
 ),
 {%- endif %}
 
 new_rows AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_additional_columns, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
+    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_extra_columns, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
 ),
 
 {# Full data from bridge walk(s) -#}
@@ -120,9 +120,9 @@ bridge AS (
 
         {%- endfor -%}
 
-        {%- if dbtvault.is_something(src_additional_columns) -%}
+        {%- if dbtvault.is_something(src_extra_columns) -%}
             ,
-            {{- '\n       ' }} {{ dbtvault.prefix([src_additional_columns], 'c') }}
+            {{- '\n       ' }} {{ dbtvault.prefix([src_extra_columns], 'c') }}
         {%- endif %}
 
     FROM candidate_rows AS c
@@ -139,7 +139,7 @@ SELECT * FROM bridge
 
 {%- endmacro -%}
 
-{%- macro bridge_overlap_and_new_rows(src_pk, src_additional_columns, bridge_walk, source_name, new_as_of_dates_cte) -%}
+{%- macro bridge_overlap_and_new_rows(src_pk, src_extra_columns, bridge_walk, source_name, new_as_of_dates_cte) -%}
 
 SELECT
     {{ dbtvault.prefix([src_pk], 'a') }},
@@ -165,9 +165,9 @@ SELECT
 
     {% endfor -%}
 
-    {%- if dbtvault.is_something(src_additional_columns) -%}
+    {%- if dbtvault.is_something(src_extra_columns) -%}
         ,
-        {{- '\n       ' }} {{ dbtvault.prefix([src_additional_columns], 'a') }}
+        {{- '\n       ' }} {{ dbtvault.prefix([src_extra_columns], 'a') }}
     {%- endif %}
 
     FROM {{ source_name }} AS a

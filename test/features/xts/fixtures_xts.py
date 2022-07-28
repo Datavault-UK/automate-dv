@@ -23,7 +23,7 @@ def set_vault_structure_definition(context):
         "XTS_AC": {
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
                     "sat_name": {
@@ -39,7 +39,7 @@ def set_vault_structure_definition(context):
         "XTS_AC_M": {
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
-            "src_additional_columns": [
+            "src_extra_columns": [
                 "CUSTOMER_MT_ID",
                 "CUSTOMER_MT_ID_2",
             ],
@@ -96,7 +96,7 @@ def set_vault_structure_definition(context):
         "XTS_2SAT_AC": {
             "src_pk": "CUSTOMER_PK",
             "src_ldts": "LOAD_DATE",
-            "src_additional_columns": "CUSTOMER_MT_ID",
+            "src_extra_columns": "CUSTOMER_MT_ID",
             "src_satellite": {
                 "SATELLITE_CUSTOMER": {
                     "sat_name": {
