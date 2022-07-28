@@ -2,8 +2,6 @@ from behave import fixture
 
 
 def set_vault_structure_definition(context):
-    context.vault_structure_type = "xts"
-
     context.vault_structure_columns = {
         "T_LINK": {
             "src_pk": "TRANSACTION_PK",
@@ -20,6 +18,15 @@ def set_vault_structure_definition(context):
             "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
                             "TYPE", "AMOUNT"],
             "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "T_LINK_COMP_PK": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -147,6 +154,20 @@ def t_link_bigquery(context):
                 "TYPE": "STRING",
                 "AMOUNT": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "T_LINK_COMP_PK": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
