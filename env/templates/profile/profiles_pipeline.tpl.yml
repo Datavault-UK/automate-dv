@@ -43,7 +43,7 @@ dbtvault:
       type: sqlserver
       driver: "ODBC Driver 17 for SQL Server"
       server: "{{ op://dbtvault/sqlserver/server }}"
-      port: "{{ '{{ op://dbtvault/sqlserver/port }}' | as_number }}"
+      port: 1433
       database: "{{ op://dbtvault/sqlserver/database }}"
       schema: "{{ op://dbtvault/sqlserver/schema }}"
       user: "{{ op://dbtvault/sqlserver/user }}"
