@@ -2,6 +2,17 @@ from behave import fixture
 
 
 def set_vault_structure_definition(context):
+    context.stage_columns = {
+        "RAW_STAGE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_DOB",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"]
+    }
+
     context.vault_structure_columns = {
         "SATELLITE": {
             "src_pk": "CUSTOMER_PK",
@@ -302,6 +313,7 @@ def satellite_cycle_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
@@ -312,6 +324,7 @@ def satellite_cycle_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
