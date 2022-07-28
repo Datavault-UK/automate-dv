@@ -24,14 +24,12 @@ resources:
         SA_PASSWORD: SlA7Qs3w!O
         MSSQL_PID: Developer
 
-services:
-  mssql: mssql
-
 stages:
   - stage: 'integration_tests_sqlserver'
     displayName: 'Run Integration Tests (MS SQL Server)'
     jobs:
       - job: 'staging'
+        container: mssql
         displayName: 'Staging'
         steps:
           - task: UsePythonVersion@0
