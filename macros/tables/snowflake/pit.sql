@@ -1,4 +1,4 @@
-{%- macro pit(src_pk, src_additional_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model ) -%}
+{%- macro pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model ) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk,
                                            src_ldts=src_ldts,
@@ -8,7 +8,7 @@
                                            source_model=source_model) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
+    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
     {{- dbtvault.prepend_generated_by() }}
@@ -18,7 +18,7 @@
     {%- endfor -%}
 
     {{ adapter.dispatch('pit', 'dbtvault')(src_pk=src_pk,
-                                           src_additional_columns=src_additional_columns,
+                                           src_extra_columns=src_extra_columns,
                                            src_ldts=src_ldts,
                                            as_of_dates_table=as_of_dates_table,
                                            satellites=satellites,
@@ -26,7 +26,7 @@
                                            source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__pit(src_pk, src_additional_columns, src_ldts, as_of_dates_table, satellites, stage_tables_ldts, source_model) -%}
+{%- macro default__pit(src_pk, src_extra_columns, src_ldts, as_of_dates_table, satellites, stage_tables_ldts, source_model) -%}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
@@ -53,14 +53,14 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, source_model) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_extra_columns, stage_tables_ldts, source_model) }},
 
 backfill_rows_as_of_dates AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
-        {% if dbtvault.is_something(src_additional_columns) -%},
-        {{- dbtvault.prefix([src_additional_columns], 'a') }}
+        {% if dbtvault.is_something(src_extra_columns) -%},
+        {{- dbtvault.prefix([src_extra_columns], 'a') }}
         {% endif %}
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -71,8 +71,8 @@ backfill AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
-        {% if dbtvault.is_something(src_additional_columns) -%},
-        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% if dbtvault.is_something(src_extra_columns) -%},
+        {{- dbtvault.prefix([src_extra_columns], 'a') }},
         {% endif %}
 
     {%- for sat_name in satellites -%}
@@ -113,8 +113,8 @@ backfill AS (
 new_rows_as_of_dates AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        {% if dbtvault.is_something(src_additional_columns) -%}
-        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% if dbtvault.is_something(src_extra_columns) -%}
+        {{- dbtvault.prefix([src_extra_columns], 'a') }},
         {%- endif %}
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
@@ -126,8 +126,8 @@ new_rows AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
-        {% if dbtvault.is_something(src_additional_columns) -%}
-        {{- dbtvault.prefix([src_additional_columns], 'a') }},
+        {% if dbtvault.is_something(src_extra_columns) -%}
+        {{- dbtvault.prefix([src_extra_columns], 'a') }},
         {% endif %}
     {%- for sat_name in satellites %}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
@@ -173,8 +173,8 @@ new_rows AS (
     GROUP BY
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE
-        {% if dbtvault.is_something(src_additional_columns) -%},
-        {{- dbtvault.prefix([src_additional_columns], 'a') }}
+        {% if dbtvault.is_something(src_extra_columns) -%},
+        {{- dbtvault.prefix([src_extra_columns], 'a') }}
         {% endif %}
 ),
 

@@ -1,4 +1,4 @@
-{%- macro sat(src_pk, src_hashdiff, src_payload, src_additional_columns, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                                            src_ldts=src_ldts, src_source=src_source,
@@ -7,22 +7,22 @@
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
     {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
     {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-    {%- set src_additional_columns = dbtvault.escape_column_names(src_additional_columns) -%}
+    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
     {{ dbtvault.prepend_generated_by() }}
 
     {{ adapter.dispatch('sat', 'dbtvault')(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                                            src_payload=src_payload, src_additional_columns=src_additional_columns,
+                                            src_payload=src_payload, src_extra_columns=src_extra_columns,
                                             src_eff=src_eff, src_ldts=src_ldts,
                                             src_source=src_source, source_model=source_model) -}}
 
 {%- endmacro %}
 
-{%- macro default__sat(src_pk, src_hashdiff, src_payload, src_additional_columns, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_additional_columns, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 

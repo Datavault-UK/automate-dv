@@ -1,4 +1,4 @@
-{%- macro as_of_date_window(src_pk, src_ldts, src_additional_columns, stage_tables_ldts, source_model) -%}
+{%- macro as_of_date_window(src_pk, src_ldts, src_extra_columns, stage_tables_ldts, source_model) -%}
 
 last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
@@ -62,8 +62,8 @@ new_rows_as_of AS (
 
 overlap_pks AS (
     SELECT a.*
-    {%- if dbtvault.is_something(src_additional_columns) -%},
-       {{ dbtvault.prefix([src_additional_columns], 'a') }}
+    {%- if dbtvault.is_something(src_extra_columns) -%},
+       {{ dbtvault.prefix([src_extra_columns], 'a') }}
     {%- endif %}
     FROM {{ this }} AS a
     INNER JOIN {{ ref(source_model) }} as b
