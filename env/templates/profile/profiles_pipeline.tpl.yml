@@ -42,12 +42,12 @@ dbtvault:
     sqlserver:
       type: sqlserver
       driver: "ODBC Driver 17 for SQL Server"
-      server: "{{ op://private/sqlserver/server }}"
-      port: "{{ '{{ op://private/sqlserver/port }}' | as_number }}"
-      database: "{{ op://private/sqlserver/database }}"
-      schema: "{{ op://private/sqlserver/schema }}"
-      user: "{{ op://private/sqlserver/user }}"
-      password: "{{ op://private/sqlserver/password }}"
+      server: "{{ op://dbtvault/sqlserver/server }}"
+      port: "{{ '{{ op://dbtvault/sqlserver/port }}' | as_number }}"
+      database: "{{ op://dbtvault/sqlserver/database }}"
+      schema: "{{ op://dbtvault/sqlserver/schema }}"
+      user: "{{ op://dbtvault/sqlserver/user }}"
+      password: "{{ op://dbtvault/sqlserver/password }}"
 
     databricks:
       type: spark
@@ -56,7 +56,6 @@ dbtvault:
       schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
       host: "{{ env_var('DATABRICKS_HOST') }}"
       port: "{{ env_var('DATABRICKS_PORT', 443) }}"
-
       token: "{{ env_var('DATABRICKS_TOKEN') }}"
       endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
 
