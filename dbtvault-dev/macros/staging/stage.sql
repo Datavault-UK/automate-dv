@@ -101,7 +101,7 @@ derived_columns AS (
 
 null_columns AS (
 
-    SELECT
+    SELECT *,
 
     {{ dbtvault.null_columns(source_relation=none, columns=null_columns) | indent(4) }}
 
