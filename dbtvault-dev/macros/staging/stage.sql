@@ -103,7 +103,7 @@ null_columns AS (
 
     SELECT
 
-    {{ dbtvault.null_columns(columns=null_columns) | indent(4) }}
+    {{ dbtvault.null_columns(source_relation=none, columns=null_columns) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "null_columns" -%}
