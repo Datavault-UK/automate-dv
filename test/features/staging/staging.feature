@@ -875,18 +875,9 @@ Feature: [STG] Staging
       | <null>      | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | <null>      | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I have derived columns in the STG_CUSTOMER model
-      | EFFECTIVE_FROM | SOURCE     |
-      | LOAD_DATE      | !RAW_STAGE |
     And I have null columns in the STG_CUSTOMER model
       | REQUIRED    | OPTIONAL |
       | CUSTOMER_ID |          |
-    And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                                        |
-      | CUSTOMER_ID | exclude_hashdiff('customer_id,source,load_date,effective_from') |
-    And I have ranked columns in the STG_CUSTOMER model
-      | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
       | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID_NEW | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
