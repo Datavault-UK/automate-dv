@@ -1,4 +1,4 @@
-{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, null_columns=true, ranked_columns=none) -%}
+{%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, null_columns=none, ranked_columns=none) -%}
 
     {%- if include_source_columns is none -%}
         {%- set include_source_columns = true -%}
