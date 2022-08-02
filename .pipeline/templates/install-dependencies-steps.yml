@@ -1,7 +1,7 @@
 steps:
-  - script: pip install pipenv
+  - script: pip install --upgrade pipenv
     displayName: 'Install pipenv'
-  - script: python -m pipenv lock --dev -r > requirements.txt
+  - script: python -m pipenv requirements --dev > requirements.txt
     displayName: 'Generate requirements file'
   - script: pip install -r requirements.txt
     displayName: 'Install Python dependencies'
