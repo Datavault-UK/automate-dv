@@ -68,6 +68,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -84,6 +85,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -100,6 +102,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -116,6 +119,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -132,6 +136,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -148,6 +153,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -164,6 +170,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -180,6 +187,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -196,6 +204,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -212,6 +221,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -228,6 +238,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -244,6 +255,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -260,6 +272,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -276,6 +289,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -292,6 +306,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -308,6 +323,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -324,6 +340,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -340,6 +357,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -356,6 +374,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -372,6 +391,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -388,6 +408,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -404,6 +425,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -414,10 +436,13 @@ stages:
 
       - job: 'ma_sats_2cdk'
         displayName: 'MA Sats 2CDK'
+        services:
+          mssql: mssql
         steps:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -434,6 +459,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -450,6 +476,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -466,6 +493,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -482,6 +510,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -498,6 +527,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -514,6 +544,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -530,6 +561,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -546,6 +578,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -562,6 +595,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -578,6 +612,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -594,6 +629,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -610,6 +646,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -626,6 +663,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -642,6 +680,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -658,6 +697,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -674,6 +714,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -692,7 +733,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s staging -p snowflake
@@ -707,7 +747,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s hubs --subtype main -p snowflake
@@ -722,7 +761,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s hubs --subtype comppk -p snowflake
@@ -737,7 +775,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s hubs --subtype incremental -p snowflake
@@ -752,7 +789,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s hubs --subtype pm -p snowflake
@@ -767,7 +803,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s hubs --subtype rank -p snowflake
@@ -782,7 +817,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s links --subtype main -p snowflake
@@ -797,7 +831,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s links --subtype incremental -p snowflake
@@ -812,7 +845,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s links --subtype pm -p snowflake
@@ -827,7 +859,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s links --subtype rank -p snowflake
@@ -842,7 +873,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s t_links -p snowflake
@@ -857,7 +887,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s sats --subtype main -p snowflake
@@ -872,7 +901,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s sats --subtype cycles -p snowflake
@@ -887,7 +915,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s sats --subtype incremental -p snowflake
@@ -902,7 +929,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s sats --subtype pm -p snowflake
@@ -917,7 +943,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s sats --subtype rank -p snowflake
@@ -932,7 +957,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s eff_sats --subtype main -p snowflake
@@ -947,7 +971,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s eff_sats --subtype auto -p snowflake
@@ -962,7 +985,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s eff_sats --subtype disabled -p snowflake
@@ -977,7 +999,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s eff_sats --subtype mat -p snowflake
@@ -992,7 +1013,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype 1cdk -p snowflake
@@ -1007,7 +1027,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype 1cdk_cycles -p snowflake
@@ -1022,7 +1041,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype 2cdk -p snowflake
@@ -1037,7 +1055,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype 2cdk_cycles -p snowflake
@@ -1052,7 +1069,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype incremental -p snowflake
@@ -1067,7 +1083,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype pm -p snowflake
@@ -1082,7 +1097,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype rm -p snowflake
@@ -1097,7 +1111,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s ma_sats --subtype rm_dup -p snowflake
@@ -1112,7 +1125,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s xts --subtype main -p snowflake
@@ -1127,7 +1139,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s xts --subtype incremental -p snowflake
@@ -1142,7 +1153,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s pit --subtype main -p snowflake
@@ -1157,7 +1167,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s pit --subtype 1sat_base -p snowflake
@@ -1172,7 +1181,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s pit --subtype 1sat_inc -p snowflake
@@ -1187,7 +1195,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s pit --subtype 2sat -p snowflake
@@ -1202,7 +1209,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s bridge --subtype inc -p snowflake
@@ -1217,7 +1223,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s bridge --subtype 1link -p snowflake
@@ -1232,7 +1237,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s bridge --subtype 2link -p snowflake
@@ -1247,7 +1251,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s bridge --subtype 3link -p snowflake
@@ -1262,7 +1265,6 @@ stages:
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s cycle -p snowflake
