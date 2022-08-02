@@ -22,7 +22,7 @@ resources:
       options: --user 0
       env:
         ACCEPT_EULA: Y
-        SA_PASSWORD: SlA7Qs3w!O
+        MSSQL_SA_PASSWORD: SlA7Qs3w!O
         MSSQL_PID: Developer
 
 stages:
@@ -31,16 +31,15 @@ stages:
     jobs:
       - job: 'staging'
         displayName: 'Staging'
+        services:
+          mssql: mssql
         steps:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
-          - task: DockerInstaller@0
-            displayName: Docker Installer
-            inputs:
-              dockerVersion: 17.09.0-ce
-              releaseType: stable
+          - script: sqlcmd -S localhost -U sa -P SlA7Qs3w!O -d master -i docker_scripts/sqlserver/setup.sql
+            displayName: "Setup SQLServer"
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s staging -p sqlserver
