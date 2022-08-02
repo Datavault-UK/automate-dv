@@ -90,3 +90,23 @@
     {%- endfor -%}
 
 {%- endmacro -%}
+
+
+{%- macro extract_null_column_names(columns_dict=none) -%}
+
+    {%- set extracted_column_names = [] -%}
+
+    {%- if columns_dict is mapping -%}
+        {%- for key, value in columns_dict.items() -%}
+            {%- if dbtvault.is_something(value) -%}
+                {%- do extracted_column_names.append(value) -%}
+                {%- do extracted_column_names.append(value ~ "_ORIGINAL") -%}
+            {%- endif -%}
+        {%- endfor -%}
+
+        {%- do return(extracted_column_names) -%}
+    {%- else -%}
+        {%- do return([]) -%}
+    {%- endif -%}
+
+{%- endmacro -%}

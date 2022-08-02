@@ -870,21 +870,24 @@ Feature: [STG] Staging
   Scenario: [STG-23] Staging with null columns configuration where all required keys are null
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
-      | <null>      | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
-      | <null>      | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
-      | <null>      | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
-      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
     And I have null columns in the STG_CUSTOMER model
       | REQUIRED    | OPTIONAL |
       | CUSTOMER_ID |          |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID_NEW | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
-      | <null>               | -1              | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
-      | <null>               | -1              | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
-      | <null>               | -1              | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
-      | <null>               | -1              | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('-1')   | 1993-01-01     | RAW_STAGE | 1             |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-1')   | <null>               | -1          | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
 
 #  @fixture.staging
 #  Scenario: [STG-24] Staging with null columns configuration where some required keys are null
