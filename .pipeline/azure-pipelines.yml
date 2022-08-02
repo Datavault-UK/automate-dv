@@ -19,7 +19,7 @@ resources:
       image: mcr.microsoft.com/mssql/server:2019-latest
       ports:
         - 1433:1433
-      options: --user 0:0
+      options: --user 0
       env:
         ACCEPT_EULA: Y
         SA_PASSWORD: SlA7Qs3w!O
@@ -30,7 +30,6 @@ stages:
     displayName: 'Run Integration Tests (MS SQL Server)'
     jobs:
       - job: 'staging'
-        container: mssql
         displayName: 'Staging'
         steps:
           - task: UsePythonVersion@0
