@@ -19,6 +19,7 @@ resources:
       image: mcr.microsoft.com/mssql/server:2019-latest
       ports:
         - 1433:1433
+      options: --user 0:0
       env:
         ACCEPT_EULA: Y
         SA_PASSWORD: SlA7Qs3w!O
