@@ -138,7 +138,7 @@ stages:
           - script: inv run-integration-tests -s hubs --subtype pm -p sqlserver
             displayName: "Run feature files"
             env:
-            PIPELINE_JOB: $(Agent.JobName)
+              PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'hubs_rm'
         displayName: 'Hubs RM'
@@ -417,7 +417,7 @@ stages:
         steps:
           - task: UsePythonVersion@0
             inputs:
-            versionSpec: '3.9'
+              versionSpec: '3.9'
           - template: templates/install-dependencies-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
@@ -753,7 +753,7 @@ stages:
           - script: inv run-integration-tests -s hubs --subtype pm -p snowflake
             displayName: "Run feature files"
             env:
-            PIPELINE_JOB: $(Agent.JobName)
+              PIPELINE_JOB: $(Agent.JobName)
 
       - job: 'hubs_rm'
         displayName: 'Hubs RM'
@@ -998,7 +998,7 @@ stages:
         steps:
           - task: UsePythonVersion@0
             inputs:
-            versionSpec: '3.9'
+              versionSpec: '3.9'
           - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
