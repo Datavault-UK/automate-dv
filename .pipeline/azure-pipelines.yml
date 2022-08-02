@@ -37,9 +37,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
-          - script: sqlcmd -S localhost -U sa -P SlA7Qs3w!O -d master -i docker_scripts/sqlserver/setup.sql
-            displayName: "Setup SQLServer"
+          - template: templates/install-deps-setup-sqlserver-steps.yml
           - script: inv setup -p sqlserver -e pipeline
             displayName: "Setup harness"
           - script: inv run-integration-tests -s staging -p sqlserver
