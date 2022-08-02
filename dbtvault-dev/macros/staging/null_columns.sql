@@ -12,25 +12,45 @@
 
     {%- for col in columns -%}
         {%- if col.lower() == 'required' -%}
-            {%- set ns.required = columns[col] -%}
+            {% if dbtvault.is_something(columns[col]) %}
+                {%- if columns[col] is string -%}
+                    {%- set ns.required = [columns[col]] -%}
+                {%- elif dbtvault.is_list(columns[col]) -%}
+                    {%- set ns.required = columns[col] -%}
+                {%- endif -%}
+            {%- endif -%}
         {%- endif -%}
         {%- if col.lower() == 'optional' -%}
-            {%- set ns.optional = columns[col] -%}
+            {% if dbtvault.is_something(columns[col]) %}
+                {%- if columns[col] is string -%}
+                    {%- set ns.optional = [columns[col]] -%}
+                {%- elif dbtvault.is_list(columns[col]) -%}
+                    {%- set ns.optional = columns[col] -%}
+                {%- endif -%}
+            {%- endif -%}
         {%- endif -%}
     {%- endfor -%}
 
     {%- set required_value = var('null_key_required', '-1') -%}
-    {%- set optional_value = var('null_key_required', '-2') -%}
+    {%- set optional_value = var('null_key_optional', '-2') -%}
 
-    {% if dbtvault.is_something(ns.required) %}
-        {{ dbtvault.escape_column_names(ns.required) }} AS {{ dbtvault.escape_column_names(ns.required ~ "_ORIGINAL") }},
-        IFNULL({{ dbtvault.escape_column_names(ns.required) }}, '{{ required_value }}') AS {{ dbtvault.escape_column_names(ns.required) }}{{ "," if dbtvault.is_something(ns.optional) else "" }}
-    {% endif %}
+    {%- if dbtvault.is_something(ns.required) -%}
+        {%- filter indent(width=0, first=true) -%}
+        {%- for col_name in ns.required -%}
+            {{ dbtvault.escape_column_names(col_name) }} AS {{ dbtvault.escape_column_names(col_name ~ "_ORIGINAL") }},
+            IFNULL({{ dbtvault.escape_column_names(col_name) }}, '{{ required_value }}') AS {{ dbtvault.escape_column_names(col_name) }}{{ ",\n" if not loop.last }}{{ ",\n" if loop.last and dbtvault.is_something(ns.optional) else "" }}
+        {%- endfor -%}
+        {%- endfilter -%}
+    {%- endif -%}
 
-    {% if dbtvault.is_something(ns.optional) %}
-        {{ dbtvault.escape_column_names(ns.optional) }} AS {{ dbtvault.escape_column_names(ns.optional ~ "_ORIGINAL") }},
-        IFNULL({{ dbtvault.escape_column_names(ns.optional) }}, '{{ optional_value }}') AS {{ dbtvault.escape_column_names(ns.optional) }}
-    {% endif %}
+    {%- if dbtvault.is_something(ns.optional) -%}
+        {%- filter indent(width=0, first=true) -%}
+        {%- for col_name in ns.optional -%}
+            {{ dbtvault.escape_column_names(col_name) }} AS {{ dbtvault.escape_column_names(col_name ~ "_ORIGINAL") }},
+            IFNULL({{ dbtvault.escape_column_names(col_name) }}, '{{ optional_value }}') AS {{ dbtvault.escape_column_names(col_name) }}{{ ",\n" if not loop.last else "\n" }}
+        {%- endfor -%}
+        {%- endfilter -%}
+    {%- endif -%}
 
 {%- endif -%}
 
