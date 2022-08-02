@@ -22,15 +22,15 @@
     {%- set required_value = var('null_key_required', '-1') -%}
     {%- set optional_value = var('null_key_required', '-2') -%}
 
-    {%- if dbtvault.is_something(ns.required) %}
-    {{ dbtvault.escape_column_names(ns.required) }} AS {{ dbtvault.escape_column_names(ns.required ~ "_ORIGINAL") }},
-    IFNULL({{ dbtvault.escape_column_names(ns.required) }}, '{{ required_value }}') AS {{ dbtvault.escape_column_names(ns.required) }}{{ "," if dbtvault.is_something(ns.optional) else "" }}
-    {%- endif -%}
+    {% if dbtvault.is_something(ns.required) %}
+        {{ dbtvault.escape_column_names(ns.required) }} AS {{ dbtvault.escape_column_names(ns.required ~ "_ORIGINAL") }},
+        IFNULL({{ dbtvault.escape_column_names(ns.required) }}, '{{ required_value }}') AS {{ dbtvault.escape_column_names(ns.required) }}{{ "," if dbtvault.is_something(ns.optional) else "" }}
+    {% endif %}
 
-    {%- if dbtvault.is_something(ns.optional) %}
-    {{ dbtvault.escape_column_names(ns.optional) }} AS {{ dbtvault.escape_column_names(ns.optional ~ "_ORIGINAL") }},
-    IFNULL({{ dbtvault.escape_column_names(ns.optional) }}, '{{ optional_value }}') AS {{ dbtvault.escape_column_names(ns.optional) }}
-    {%- endif -%}
+    {% if dbtvault.is_something(ns.optional) %}
+        {{ dbtvault.escape_column_names(ns.optional) }} AS {{ dbtvault.escape_column_names(ns.optional ~ "_ORIGINAL") }},
+        IFNULL({{ dbtvault.escape_column_names(ns.optional) }}, '{{ optional_value }}') AS {{ dbtvault.escape_column_names(ns.optional) }}
+    {% endif %}
 
 {%- endif -%}
 

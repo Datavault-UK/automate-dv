@@ -331,7 +331,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "as_constant": as_constant_macro,
         "alias": alias_macro,
         "alias_all": alias_all_macro,
-        "escape_column_names": escape_column_names_macro
+        "escape_column_names": escape_column_names_macro,
+        "null_columns": null_columns_macro
     }
 
     if generator_functions.get(macro_name):
@@ -360,6 +361,16 @@ def derive_columns_macro(model_name, **_):
     {{% endif %}}
     
     {{{{ dbtvault.derive_columns(source_relation=source_relation, columns=var('columns', [])) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def null_columns_macro(model_name, **_):
+    template = f"""
+    {{%- if execute -%}}
+    {{{{ dbtvault.null_columns(columns=var('columns', [])) }}}}
+    {{% endif %}}
     """
 
     template_to_file(template, model_name)
