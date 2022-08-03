@@ -4,6 +4,18 @@ parameters:
   - name: runConfig
     type: object
 
+
+#jobs:
+#  - job: A
+#    steps:
+#      - ${{ each platform in parameters.platforms }}:
+#          - ${{ each featureGroup in parameters.runConfig }}:
+#              - ${{ if featureGroup.subGroups }}:
+#                  - ${{ each subGroup in featureGroup.subGroups }}:
+#                      - script: echo ${{ featureGroup.groupName }} ${{ platform }} ${{ subGroup }}
+#              - ${{ else }}:
+#                  - script: echo ${{ featureGroup.groupName }} ${{ platform }}
+
 stages:
   - stage: 'unit_tests'
     displayName: 'Unit Tests'
@@ -41,7 +53,7 @@ stages:
         displayName: 'Run Integration Tests (${{ platform }})'
         jobs:
           - ${{ each featureGroup in parameters.runConfig }}:
-              - ${{ if featureGroup.subGroups.value }}:
+              - ${{ if featureGroup.subGroups }}:
                   - ${{ each subGroup in featureGroup.subGroups }}:
                       - job: '${{ featureGroup.groupName }}_${{ subGroup }}'
                         displayName: '${{ featureGroup.displayName }} (${{ subGroup }})'
@@ -57,7 +69,6 @@ stages:
                           - template: install-dependencies-steps.yml
                           - script: inv setup -p ${{ platform }} -e pipeline
                             displayName: "Setup harness"
-
                           - script: inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
                             displayName: "Run feature files"
                             env:
