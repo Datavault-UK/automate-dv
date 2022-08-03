@@ -471,7 +471,7 @@ def context_table_to_model(seed_config: dict, table: Table, model_name: str, tar
     if isinstance(feature_data_list, dict):
         feature_data_list = [feature_data_list]
 
-    if len(feature_data_list) == 0:
+    if len(feature_data_list) == 0 or feature_data_list == [{}]:
         # Empty table
         if len(column_types) > 0:
             select_column_list = []

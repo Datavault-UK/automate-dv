@@ -1913,7 +1913,7 @@ def pit_sqlserver(context):
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(5)",
-                "LAST_LOGIN_DATE": "DATETIME",
+                "LAST_LOGIN_DATE": "DATETIME2",
                 "DEVICE_USED": "VARCHAR(10)",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(10)"
