@@ -3,10 +3,14 @@ parameters:
     type: object
   - name: runConfig
     type: object
+    default:
+      - groupName: 'hubs'
+        subGroups: [ 'main', 'comppk', 'incremental', 'pm', 'rank' ]
+
 
 jobs:
   - job: 'Test'
     steps:
       - ${{ each featureGroup in parameters.runConfig }}:
-        - ${{ each subGroup in runConfig.subGroups }}:
-            - script: echo '${{ subGroup }}'
+          - ${{ each subGroup in runConfig.subGroups }}:
+              - script: echo '${{ subGroup }}'
