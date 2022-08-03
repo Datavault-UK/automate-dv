@@ -39,7 +39,7 @@ derived_columns AS (
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
     'STG_BOOKING' AS "SOURCE",
-    "LOAD_DATE" AS "EFFECTIVE_FROM"
+    LOAD_DATE AS "EFFECTIVE_FROM"
 
     FROM source_data
 ),
