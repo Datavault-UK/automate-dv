@@ -1,0 +1,18 @@
+parameters:
+  - name: platforms
+    type: object
+  - name: run_config
+    type: object
+    default:
+      - hubs:
+          - main
+          - comppk
+          - incremental
+          - pm
+          - rank
+
+steps:
+  - ${{ each platform in parameters.platforms }}:
+      - ${{ each feature_group in parameters.run_config }}:
+          - ${{ each subtype in feature_group.value }}:
+              - script: echo ${{ feature_group.key }} ${{ subtype }}
