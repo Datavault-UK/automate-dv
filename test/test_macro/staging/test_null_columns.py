@@ -215,3 +215,18 @@ def test_null_columns_correctly_generates_sql_with_required_columns_and_optional
     assert actual_sql == expected_sql
 
 
+@pytest.mark.macro
+def test_null_columns_correctly_generates_sql_with_required_and_optional_columns_lc(request, generate_model):
+    var_dict = {'columns': {"required": ["CUSTOMER_ID", "ORDER_REF"], "optional": ["CUSTOMER_REF", "ORDER_LINE"]}}
+
+    generate_model()
+
+    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
+                                                     args=var_dict)
+    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
+    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+
+    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
