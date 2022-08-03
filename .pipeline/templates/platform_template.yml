@@ -1,11 +1,11 @@
 parameters:
   - name: platforms
     type: object
-  - name: run_config
+  - name: runConfig
     type: object
 
 jobs:
   - job: 'Test'
     steps:
-      - ${{ each feature_group in parameters.run_config }}:
-          - script: echo '${{ feature_group.key }}'
+      - ${{ each featureGroup in parameters.runConfig }}:
+          - script: echo '${{ featureGroup.key }}'
