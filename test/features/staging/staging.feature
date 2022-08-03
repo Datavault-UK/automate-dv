@@ -970,7 +970,7 @@ Feature: [STG] Staging
 #      | -1          | <null>               | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('-1')   | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 1             |
 #
 #  @fixture.staging
-#  Scenario: [STG-25] Staging with null columns configuration where none of the required keys are null
+#  Scenario: [STG-27] Staging with null columns configuration where none of the required keys are null
 #    Given the STG_CUSTOMER table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -990,7 +990,7 @@ Feature: [STG] Staging
 #      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 1             |
 #
 #  @fixture.staging
-#  Scenario: [STG-26] Staging with null columns configuration where all of the optional keys are null
+#  Scenario: [STG-28] Staging with null columns configuration where all of the optional keys are null
 #    Given the STG_CUSTOMER table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | SUBSCRIPTION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -1010,7 +1010,7 @@ Feature: [STG] Staging
 #      | 1004        | <null>                   | -2              | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 1             |
 #
 #  @fixture.staging
-#  Scenario: [STG-27] Staging with null columns configuration where all of the optional keys are null
+#  Scenario: [STG-29] Staging with null columns configuration where all of the optional keys are null
 #    Given the STG_CUSTOMER table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | SUBSCRIPTION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
