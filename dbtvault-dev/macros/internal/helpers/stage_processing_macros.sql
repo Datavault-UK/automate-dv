@@ -99,8 +99,15 @@
     {%- if columns_dict is mapping -%}
         {%- for key, value in columns_dict.items() -%}
             {%- if dbtvault.is_something(value) -%}
-                {%- do extracted_column_names.append(value) -%}
-                {%- do extracted_column_names.append(value ~ "_ORIGINAL") -%}
+                {% if dbtvault.is_list(value) %}
+                    {% for col_name in value %}
+                        {%- do extracted_column_names.append(col_name) -%}
+                        {%- do extracted_column_names.append(col_name ~ "_ORIGINAL") -%}
+                    {% endfor %}
+                {%  else %}
+                    {%- do extracted_column_names.append(value) -%}
+                    {%- do extracted_column_names.append(value ~ "_ORIGINAL") -%}
+                {% endif %}
             {%- endif -%}
         {%- endfor -%}
 
