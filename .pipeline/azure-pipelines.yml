@@ -60,3 +60,6 @@ extends:
       - groupName: 'bridge'
         displayName: 'Bridge Tables'
         subGroups: ['inc', '1link', '2link', '3link']
+      - groupName: 'cycle'
+        displayName: 'Load Cycles'
+        subGroups: []
