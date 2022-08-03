@@ -9,4 +9,4 @@ jobs:
     steps:
       - ${{ each featureGroup in parameters.runConfig }}:
           - ${{ each subGroup in featureGroup.subGroups }}:
-              - script: echo '${{ subGroup }}'
+              - script: echo '${{ featureGroup.groupName }}' '${{ subGroup }}'
