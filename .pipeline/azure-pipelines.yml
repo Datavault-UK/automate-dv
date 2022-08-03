@@ -35,7 +35,6 @@ extends:
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
-        subGroups: [ ]
       - groupName: 'hubs'
         displayName: 'Hubs'
         subGroups: [ 'main', 'comppk', 'incremental', 'pm', 'rank' ]
@@ -44,7 +43,6 @@ extends:
         subGroups: [ 'main', 'incremental', 'pm', 'rank' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
-        subGroups: [ ]
       - groupName: 'sats'
         displayName: 'Satellites'
         subGroups: [ 'main', 'cycles', 'incremental', 'pm', 'rank' ]
@@ -65,4 +63,3 @@ extends:
         subGroups: [ 'inc', '1link', '2link', '3link' ]
       - groupName: 'cycle'
         displayName: 'Load Cycles'
-        subGroups: [ ]
