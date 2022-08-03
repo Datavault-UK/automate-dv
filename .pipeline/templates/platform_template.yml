@@ -10,11 +10,11 @@ stages:
           - ${{ each subGroup in featureGroup.subGroups }}:
               - stage: 'integration_tests_${{ platform }}'
                 displayName: 'Run Integration Tests (${{ platform }})'
-                ${{ if eq(platform, 'sqlserver') }}:
-                  services:
-                    mssql: mssql
                 jobs:
                   - job: '${{ featureGroup.groupName }}'
+                    ${{ if eq(platform, 'sqlserver') }}:
+                      services:
+                        mssql: mssql
                     steps:
                       - task: UsePythonVersion@0
                         inputs:
