@@ -30,3 +30,6 @@ extends:
   parameters:
     platforms:
       - 'sqlserver'
+    runConfig:
+      - groupName: 'hubs'
+        subGroups: ['main', 'comppk', 'incremental', 'pm', 'rank']
