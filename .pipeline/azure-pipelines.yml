@@ -29,7 +29,9 @@ extends:
   template: templates/platform_template.yml
   parameters:
     platforms:
+      - 'snowflake'
       - 'sqlserver'
+      - 'bigquery'
     runConfig:
       - groupName: 'hubs'
         displayName: 'Hubs'
