@@ -61,7 +61,7 @@ stages:
                           - script: inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
                             displayName: "Run feature files"
                             env:
-                              PIPELINE_JOB: $(Agent.JobName)
+                              PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}_${{ upper(subGroup) }}'
               - ${{ else }}:
                   - job: '${{ featureGroup.groupName }}'
                     displayName: '${{ featureGroup.displayName }}'
@@ -81,4 +81,4 @@ stages:
                       - script: inv run-integration-tests -s ${{ featureGroup.groupName }} -p ${{ platform }}
                         displayName: "Run feature files"
                         env:
-                          PIPELINE_JOB: $(Agent.JobName)
+                          PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}'
