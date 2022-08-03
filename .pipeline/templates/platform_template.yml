@@ -6,25 +6,25 @@ parameters:
 
 stages:
   - ${{ each platform in parameters.platforms }}:
-    - ${{ each featureGroup in parameters.runConfig }}:
-        - ${{ each subGroup in featureGroup.subGroups }}:
-    - stage: 'integration_tests_${{ platform }}'
-      displayName: 'Run Integration Tests (${{ platform }})'
-      ${{ if eq(platform, 'sqlserver') }}:
-        services:
-          mssql: mssql
-      jobs:
-        - job: '${{ featureGroup.groupName }}'
-          steps:
-            - task: UsePythonVersion@0
-              inputs:
-                versionSpec: '3.9'
-            - ${{ if eq(platform, 'sqlserver') }}:
-              - template: templates/install-deps-setup-sqlserver-steps.yml
-            - template: templates/install-dependencies-steps.yml
-            - script: inv setup -p ${{ platform }} -e pipeline
-              displayName: "Setup harness"
-            - script: inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
-              displayName: "Run feature files"
-              env:
-                PIPELINE_JOB: $(Agent.JobName)
+      - ${{ each featureGroup in parameters.runConfig }}:
+          - ${{ each subGroup in featureGroup.subGroups }}:
+              - stage: 'integration_tests_${{ platform }}'
+                displayName: 'Run Integration Tests (${{ platform }})'
+                ${{ if eq(platform, 'sqlserver') }}:
+                  services:
+                    mssql: mssql
+                jobs:
+                  - job: '${{ featureGroup.groupName }}'
+                    steps:
+                      - task: UsePythonVersion@0
+                        inputs:
+                          versionSpec: '3.9'
+                      - ${{ if eq(platform, 'sqlserver') }}:
+                          - template: templates/install-deps-setup-sqlserver-steps.yml
+                      - template: templates/install-dependencies-steps.yml
+                      - script: inv setup -p ${{ platform }} -e pipeline
+                        displayName: "Setup harness"
+                      - script: inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
+                        displayName: "Run feature files"
+                        env:
+                          PIPELINE_JOB: $(Agent.JobName)
