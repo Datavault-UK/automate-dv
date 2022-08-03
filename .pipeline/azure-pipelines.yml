@@ -35,31 +35,34 @@ extends:
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
-        subGroups: []
+        subGroups: [ ]
       - groupName: 'hubs'
         displayName: 'Hubs'
-        subGroups: ['main', 'comppk', 'incremental', 'pm', 'rank']
+        subGroups: [ 'main', 'comppk', 'incremental', 'pm', 'rank' ]
       - groupName: 'links'
         displayName: 'Links'
-        subGroups: ['main', 'incremental', 'pm', 'rank']
+        subGroups: [ 'main', 'incremental', 'pm', 'rank' ]
+      - groupName: 't_links'
+        displayName: 'Transactional Links'
+        subGroups: [ ]
       - groupName: 'sats'
         displayName: 'Satellites'
-        subGroups: ['main', 'cycles', 'incremental', 'pm', 'rank']
+        subGroups: [ 'main', 'cycles', 'incremental', 'pm', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
-        subGroups: ['main', 'auto', 'disabled', 'mat']
+        subGroups: [ 'main', 'auto', 'disabled', 'mat' ]
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
-        subGroups: ['1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup']
+        subGroups: [ '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
       - groupName: 'xts'
         displayName: 'Extended Tracking Satellites'
-        subGroups: ['main', 'incremental']
+        subGroups: [ 'main', 'incremental' ]
       - groupName: 'pit'
         displayName: 'Point-In-Time Tables'
-        subGroups: ['main', '1sat_base', '1sat_inc', '2sat']
+        subGroups: [ 'main', '1sat_base', '1sat_inc', '2sat' ]
       - groupName: 'bridge'
         displayName: 'Bridge Tables'
-        subGroups: ['inc', '1link', '2link', '3link']
+        subGroups: [ 'inc', '1link', '2link', '3link' ]
       - groupName: 'cycle'
         displayName: 'Load Cycles'
-        subGroups: []
+        subGroups: [ ]
