@@ -32,7 +32,7 @@ dbtvault:
       type: sqlserver
       driver: "ODBC Driver 17 for SQL Server"
       server: "{{ env_var('SQLSERVER_DB_SERVER') }}"
-      port: "{{ env_var('SQLSERVER_DB_PORT') }}"
+      port: 1433
       database: "{{ env_var('SQLSERVER_DB_DATABASE') }}"
       schema: "{{ env_var('SQLSERVER_DB_SCHEMA') }}"
       user: "{{ env_var('SQLSERVER_DB_USER') }}"

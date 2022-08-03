@@ -62,12 +62,13 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     logger.info(f"Environment set to '{c.env}'")
 
     if disable_op:
-        logger.info('Checking dbt connection... (running dbt debug)')
         os.environ['DBT_PROFILES_DIR'] = str(test.PROFILE_DIR)
-        run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
     else:
         logger.info(f'Injecting credentials to files...')
         inject_for_platform(c, platform, env=env)
+
+    logger.info('Checking dbt connection... (running dbt debug)')
+    run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
 
     logger.info(f'Installing dbtvault-dev in test project...')
     run_dbt(c, 'deps', platform=platform, project='test', disable_op=disable_op)
