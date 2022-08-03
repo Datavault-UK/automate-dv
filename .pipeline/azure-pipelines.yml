@@ -30,7 +30,7 @@ extends:
   parameters:
     platforms:
       - 'sqlserver'
-    run_config:
+    runConfig:
       - hubs:
           - main
           - comppk
