@@ -41,7 +41,7 @@ stages:
         displayName: 'Run Integration Tests (${{ platform }})'
         jobs:
           - ${{ each featureGroup in parameters.runConfig }}:
-              - ${{ if featureGroup.subGroups }}:
+              - ${{ if not(eq(length(featureGroup.subGroups), 0)) }}:
                   - ${{ each subGroup in featureGroup.subGroups }}:
                       - job: '${{ featureGroup.groupName }}_${{ subGroup }}'
                         displayName: '${{ featureGroup.displayName }} (${{ subGroup }})'
