@@ -6,11 +6,11 @@ parameters:
 
 stages:
   - ${{ each platform in parameters.platforms }}:
-      - ${{ each featureGroup in parameters.runConfig }}:
-          - ${{ each subGroup in featureGroup.subGroups }}:
-              - stage: 'integration_tests_${{ platform }}'
-                displayName: 'Run Integration Tests (${{ platform }})'
-                jobs:
+      - stage: 'integration_tests_${{ platform }}'
+        displayName: 'Run Integration Tests (${{ platform }})'
+        jobs:
+          - ${{ each featureGroup in parameters.runConfig }}:
+              - ${{ each subGroup in featureGroup.subGroups }}:
                   - job: '${{ featureGroup.groupName }}'
                     ${{ if eq(platform, 'sqlserver') }}:
                       services:
@@ -20,7 +20,7 @@ stages:
                         inputs:
                           versionSpec: '3.9'
                       - ${{ if eq(platform, 'sqlserver') }}:
-                        - template: install-deps-setup-sqlserver-steps.yml
+                          - template: install-deps-setup-sqlserver-steps.yml
                       - template: install-dependencies-steps.yml
                       - script: inv setup -p ${{ platform }} -e pipeline
                         displayName: "Setup harness"
