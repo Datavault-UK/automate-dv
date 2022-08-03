@@ -14,7 +14,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
+          - template: install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-harness-tests -p snowflake
@@ -26,7 +26,7 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '3.9'
-          - template: templates/install-dependencies-steps.yml
+          - template: install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
           - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
