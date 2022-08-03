@@ -926,9 +926,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013  | 1             | 1              |
       | 1004        | Dom           | Dom           | 2018-04-13   | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018  | 1             | 1              |
 
-
   @fixture.staging
-  Scenario: [STG-23] Staging with null columns configuration where all required keys are null
+  Scenario: [STG-25] Staging with null columns configuration where all required keys are null
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
@@ -951,7 +950,7 @@ Feature: [STG] Staging
       | md5('-1')   | <null>               | -1          | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
 
 #  @fixture.staging
-#  Scenario: [STG-24] Staging with null columns configuration where some required keys are null
+#  Scenario: [STG-26] Staging with null columns configuration where some required keys are null
 #    Given the STG_CUSTOMER table does not exist
 #    And the RAW_STAGE table contains data
 #      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
