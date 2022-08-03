@@ -236,11 +236,11 @@
         },
         "dbt-core": {
             "hashes": [
-                "sha256:16a0b538eec8f45465756a9264e8cf1655f4ffc8b03fea4aa8005b2351d6dae4",
-                "sha256:d38940f038abb7e983b638df0c3c3584186d691aabc7d1d7cb83d04f795a9369"
+                "sha256:3e33ce5be74e0d4f9f28ad76b4b1de55cb343d4c53c3a8f98c24551881aedf3e",
+                "sha256:4af9124e6ec188db2ce9a32d6b26757fd42c2e14238770ca0661d8963f1ba7ea"
             ],
             "index": "pypi",
-            "version": "==1.1.1"
+            "version": "==1.1.0"
         },
         "dbt-extractor": {
             "hashes": [
@@ -489,10 +489,10 @@
         },
         "hologram": {
             "hashes": [
-                "sha256:48ca81ed47da1c604b2d3b951424b600eb8a5785b00513e3b8e3ae8101f90145",
-                "sha256:79b3d04df84d5a9d09c2e669ec5bcc50b1713ec79f4683cfdea85583b41e46f0"
+                "sha256:2911b59115bebd0504eb089532e494fa22ac704989afe41371c5361780433bfe",
+                "sha256:fd67bd069e4681e1d2a447df976c65060d7a90fee7f6b84d133fd9958db074ec"
             ],
-            "version": "==0.0.15"
+            "version": "==0.0.14"
         },
         "htmlmin": {
             "hashes": [
@@ -562,10 +562,10 @@
         },
         "jsonschema": {
             "hashes": [
-                "sha256:4e5b3cf8216f577bee9ce139cbe72eca3ea4f292ec60928ff24758ce626cd163",
-                "sha256:c8a85b28d377cc7737e46e2d9f2b4f44ee3c0e1deac6bf46ddefc7187d30797a"
+                "sha256:2fa0684276b6333ff3c0b1b27081f4b2305f0a36cf702a23db50edb141893c3f",
+                "sha256:94c0a13b4a0616458b42529091624e66700a17f847453e52279e35509a5b7631"
             ],
-            "version": "==3.2.0"
+            "version": "==3.1.1"
         },
         "keyring": {
             "hashes": [
