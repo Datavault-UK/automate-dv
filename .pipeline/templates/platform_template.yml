@@ -11,8 +11,8 @@ stages:
               - stage: 'integration_tests_${{ platform }}'
                 displayName: 'Run Integration Tests (${{ platform }})'
                 ${{ if eq(platform, 'sqlserver') }}:
-                  services:
-                    mssql: mssql
+                services:
+                  mssql: mssql
                 jobs:
                   - job: '${{ featureGroup.groupName }}'
                     steps:
