@@ -35,23 +35,46 @@
     {%- set optional_value = var('null_key_optional', '-2') -%}
 
     {%- if dbtvault.is_something(ns.required) -%}
-        {%- filter indent(width=0, first=true) -%}
+        {%- filter indent(width=0) -%}
         {%- for col_name in ns.required -%}
-            {{ dbtvault.escape_column_names(col_name) }} AS {{ dbtvault.escape_column_names(col_name ~ "_ORIGINAL") }},
-            IFNULL({{ dbtvault.escape_column_names(col_name) }}, '{{ required_value }}') AS {{ dbtvault.escape_column_names(col_name) }}{{ ",\n" if not loop.last }}{{ ",\n" if loop.last and dbtvault.is_something(ns.optional) else "" }}
+            {{ dbtvault.null_column_sql(col_name, required_value) }}{{ ",\n" if not loop.last }}{{ ",\n" if loop.last and dbtvault.is_something(ns.optional) else "" }}
         {%- endfor -%}
         {%- endfilter -%}
     {%- endif -%}
 
     {%- if dbtvault.is_something(ns.optional) -%}
-        {%- filter indent(width=0, first=true) -%}
+        {%- filter indent(width=0) -%}
         {%- for col_name in ns.optional -%}
-            {{ dbtvault.escape_column_names(col_name) }} AS {{ dbtvault.escape_column_names(col_name ~ "_ORIGINAL") }},
-            IFNULL({{ dbtvault.escape_column_names(col_name) }}, '{{ optional_value }}') AS {{ dbtvault.escape_column_names(col_name) }}{{ ",\n" if not loop.last else "\n" }}
+            {{ dbtvault.null_column_sql(col_name, optional_value) }}{{ ",\n" if not loop.last else "\n" }}
         {%- endfor -%}
         {%- endfilter -%}
     {%- endif -%}
 
 {%- endif -%}
+
+{%- endmacro -%}
+
+
+{%- macro null_column_sql(col_name, default_value) -%}
+
+    {{- adapter.dispatch('null_column_sql', 'dbtvault')(col_name=col_name, default_value=default_value) -}}
+
+{%- endmacro -%}
+
+{%- macro default__null_column_sql(col_name, default_value) -%}
+
+    {%- set col_name_esc = dbtvault.escape_column_names(col_name) -%}
+    {%- set col_name_orig_esc = dbtvault.escape_column_names(col_name ~ "_ORIGINAL") -%}
+    {{ col_name_esc }} AS {{ col_name_orig_esc }},
+    IFNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name_esc }}
+
+{%- endmacro -%}
+
+{%- macro sqlserver__null_column_sql(col_name, default_value) -%}
+
+    {%- set col_name_esc = dbtvault.escape_column_names(col_name) -%}
+    {%- set col_name_orig_esc = dbtvault.escape_column_names(col_name ~ "_ORIGINAL") -%}
+    {{ col_name_esc }} AS {{ col_name_orig_esc }},
+    ISNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name_esc }}
 
 {%- endmacro -%}
