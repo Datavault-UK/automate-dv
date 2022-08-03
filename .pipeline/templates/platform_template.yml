@@ -8,4 +8,5 @@ jobs:
   - job: 'Test'
     steps:
       - ${{ each featureGroup in parameters.runConfig }}:
-          - script: echo '${{ featureGroup.key }}'
+        - ${{ each subGroup in runConfig.subGroups }}:
+            - script: echo '${{ subGroup }}'

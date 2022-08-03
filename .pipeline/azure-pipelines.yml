@@ -31,9 +31,5 @@ extends:
     platforms:
       - 'sqlserver'
     runConfig:
-      - hubs:
-          - main
-          - comppk
-          - incremental
-          - pm
-          - rank
+      - groupName: 'hubs'
+        subGroups: ['main', 'comppk', 'incremental', 'pm', 'rank']
