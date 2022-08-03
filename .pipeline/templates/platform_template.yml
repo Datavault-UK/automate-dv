@@ -12,6 +12,7 @@ stages:
           - ${{ each featureGroup in parameters.runConfig }}:
               - ${{ each subGroup in featureGroup.subGroups }}:
                   - job: '${{ featureGroup.groupName }}_${{ subGroup }}'
+                    displayName: '${{ featureGroup.displayName }}'
                     ${{ if eq(platform, 'sqlserver') }}:
                       services:
                         mssql: mssql
