@@ -1,13 +1,13 @@
 from behave import *
 
-from test import dbtvault_harness_utils
+from test import context_utils
 
 
 @step("I have ranked columns in the {processed_stage_name} model")
 def ranked_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
 
-    ranked_column_data = dbtvault_harness_utils.context_table_to_dicts(table=context.table, orient="index")
+    ranked_column_data = context_utils.context_table_to_dicts(table=context.table, orient="index")
 
     ranked_metadata = {v['NAME']: {'partition_by': v['PARTITION_BY'],
                                    'order_by': v['ORDER_BY']}
@@ -21,15 +21,15 @@ def ranked_columns(context, processed_stage_name):
 @step("I have hashed columns in the {processed_stage_name} model")
 def hashed_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
-    context.hashed_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
-                                                                                                  orient="records")[0]}
+    context.hashed_columns = {processed_stage_name: context_utils.context_table_to_dicts(table=context.table,
+                                                                                         orient="records")[0]}
 
 
 @step("I have derived columns in the {processed_stage_name} model")
 def derive_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
-    context.derived_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
-                                                                                                   orient="records")[0]}
+    context.derived_columns = {processed_stage_name: context_utils.context_table_to_dicts(table=context.table,
+                                                                                          orient="records")[0]}
 
 
 @step("I do not include source columns")

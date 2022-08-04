@@ -1,8 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from env import env_utils
-from test import dbtvault_generator
-from test import dbtvault_harness_utils
+from test import dbtvault_generator, behave_helpers
 from test.features import behave_fixtures
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
@@ -222,12 +221,11 @@ def before_scenario(context, scenario):
     do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
 
     if do_run:
-        dbtvault_harness_utils.create_dummy_model()
-        dbtvault_harness_utils.replace_test_schema()
+        behave_helpers.replace_test_schema()
 
-        dbtvault_harness_utils.clean_seeds()
-        dbtvault_harness_utils.clean_models()
-        dbtvault_harness_utils.clean_target()
+        behave_helpers.clean_seeds()
+        behave_helpers.clean_models()
+        behave_helpers.clean_target()
 
         dbtvault_generator.clean_test_schema_file()
 
