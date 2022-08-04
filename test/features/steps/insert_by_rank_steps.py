@@ -1,7 +1,6 @@
 from behave import *
 
-from test import dbtvault_generator
-from test import dbtvault_harness_utils
+from test import dbtvault_generator, step_helpers, dbt_runner
 
 
 @step("I insert by rank into the {model_name} {vault_structure} with a {rank_column} rank column")
@@ -20,10 +19,10 @@ def rank_insert(context, model_name, vault_structure, rank_column):
                                            config=config,
                                            **metadata)
 
-    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
+    is_full_refresh = step_helpers.is_full_refresh(context)
 
-    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh)
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+                                     full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
@@ -46,10 +45,10 @@ def rank_insert(context, model_name, vault_structure):
                                            config=config,
                                            **metadata)
 
-    is_full_refresh = dbtvault_harness_utils.is_full_refresh(context)
+    is_full_refresh = step_helpers.is_full_refresh(context)
 
-    logs = dbtvault_harness_utils.run_dbt_models(mode="run", model_names=[model_name],
-                                                 full_refresh=is_full_refresh)
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+                                     full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
 
