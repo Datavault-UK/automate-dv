@@ -637,6 +637,7 @@ def single_source_hub_sqlserver(context):
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "CUSTOMER_NAME": "VARCHAR(5)",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATETIME2",
@@ -741,11 +742,28 @@ def multi_source_hub_sqlserver(context):
         "src_source": "SOURCE"
     }
 
+    context.vault_structure_columns['HUB_AC'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_extra_columns": "CUSTOMER_MT_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
         "HUB": {
             "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "PART_PK": "BINARY(16)",
+                "PART_ID": "VARCHAR(4)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(4)"
             }
@@ -757,6 +775,7 @@ def multi_source_hub_sqlserver(context):
                 "PART_TYPE": "VARCHAR(10)",
                 "PART_SIZE": "VARCHAR(2)",
                 "PART_RETAILPRICE": "DECIMAL(11,2)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(4)"
             }
@@ -765,6 +784,7 @@ def multi_source_hub_sqlserver(context):
             "column_types": {
                 "PART_ID": "VARCHAR(4)",
                 "SUPPLIER_ID": "VARCHAR(2)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "AVAILQTY": "INT",
                 "SUPPLYCOST": "DECIMAL(11,2)",
                 "LOAD_DATE": "DATETIME2",
@@ -775,6 +795,7 @@ def multi_source_hub_sqlserver(context):
             "column_types": {
                 "ORDER_ID": "VARCHAR(5)",
                 "PART_ID": "VARCHAR(4)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "SUPPLIER_ID": "VARCHAR(2)",
                 "LINENUMBER": "INT",
                 "QUANTITY": "INT",

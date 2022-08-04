@@ -37,7 +37,7 @@ extends:
         displayName: 'Staging'
       - groupName: 'hubs'
         displayName: 'Hubs'
-        subGroups: [ 'main', 'comppk', 'incremental', 'pm', 'rank' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental', 'pm', 'rank' ]
       - groupName: 'links'
         displayName: 'Links'
         subGroups: [ 'main', 'incremental', 'pm', 'rank' ]
