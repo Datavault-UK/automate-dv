@@ -1026,3 +1026,295 @@ Feature: [STG] Staging
       | md5('1002') | 1002        | <null>                 | -2            | 2006-04-17            | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
       | md5('-1')   | <null>      | Chad                   | Chad          | 2013-02-04            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
       | md5('-1')   | <null>      | <null>                 | -2            | <null>                | -2           | 17-214-233-1217 | 1993-01-01 | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1             |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-29] Staging with null columns configuration where single required key is null
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL |
+      | CUSTOMER_ID |          |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-1')   | <null>               | -1          | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-30] Staging with null columns configuration where two required keys are null
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED                   | OPTIONAL |
+      | [CUSTOMER_ID,CUSTOMER_REF] |          |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-1')   | <null>               | -1          | <null>                | -1           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                | -1           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                | -1           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                | -1           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-31] Staging with null columns configuration where single optional key is null
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL            |
+      |             | CUSTOMER_ID         |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-2')   | <null>               | -2          | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-2')   | <null>               | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-2')   | <null>               | -2          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-2')   | <null>               | -2          | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-32] Staging with null columns configuration where two optional keys are null
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED | OPTIONAL                   |
+      |          | [CUSTOMER_ID,CUSTOMER_REF] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-2')   | <null>               | -2          | <null>                | -2           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-2')   | <null>               | -2          | <null>                | -2           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-2')   | <null>               | -2          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-2')   | <null>               | -2          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-33] Staging with null columns configuration with null required and optional keys
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL     |
+      | CUSTOMER_ID | CUSTOMER_REF |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-1')   | <null>               | -1          | <null>                | -2           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                | -2           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-34] Staging with null columns configuration with null multiple required and optional keys
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED               | OPTIONAL                  |
+      | [CUSTOMER_ID,ORDER_ID] | [CUSTOMER_REF,ORDER_LINE] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-35] Staging with null columns configuration with null multiple required and optional keys, and derived column
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED               | OPTIONAL                  |
+      | [CUSTOMER_ID,ORDER_ID] | [CUSTOMER_REF,ORDER_LINE] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-36] Staging with null columns configuration with null multiple required and optional keys, and derived and ranked columns
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED               | OPTIONAL                  |
+      | [CUSTOMER_ID,ORDER_ID] | [CUSTOMER_REF,ORDER_LINE] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | DBTVAULT_RANK |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-37] Staging with null columns configuration with null multiple required and optional keys, and ranked columns
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED               | OPTIONAL                  |
+      | [CUSTOMER_ID,ORDER_ID] | [CUSTOMER_REF,ORDER_LINE] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK |
+      | CUSTOMER_ID |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    | DBTVAULT_RANK |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         | 1             |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-38] Staging with null columns configuration with null multiple required and optional keys, and derived, hashdiff and ranked columns
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED               | OPTIONAL                  |
+      | [CUSTOMER_ID,ORDER_ID] | [CUSTOMER_REF,ORDER_LINE] |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                      | DBTVAULT_RANK |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1             |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-39] Staging with null columns configuration where single required key is null, no hashed column
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL     |
+      | CUSTOMER_ID | CUSTOMER_REF |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>               | -1          | <null>                | -2           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-40] Staging with null columns configuration where single required key is null, no hashed column and a derived column
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL     |
+      | CUSTOMER_ID | CUSTOMER_REF |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
+      | <null>               | -1          | <null>                | -2           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+

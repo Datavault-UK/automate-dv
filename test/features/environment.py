@@ -37,6 +37,12 @@ fixtures_registry = {
          "sqlserver": fixtures_staging.staging_escaped_sqlserver,
          "databricks": ''},
 
+    "fixture.staging_null_columns":
+        {"snowflake": fixtures_staging.staging_null_columns_snowflake,
+         "bigquery": fixtures_staging.staging_null_columns_bigquery,
+         "sqlserver": fixtures_staging.staging_null_columns_sqlserver,
+         "databricks": ''},
+
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
