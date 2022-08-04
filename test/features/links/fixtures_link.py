@@ -377,9 +377,9 @@ def single_source_link_sqlserver(context):
         },
         "LINK_AC": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "VARCHAR(50)",
-                "CUSTOMER_FK": "VARCHAR(50)",
-                "NATION_FK": "VARCHAR(50)",
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
                 "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
@@ -407,6 +407,20 @@ def single_source_comp_pk_link_sqlserver(context):
     """
 
     set_metadata(context)
+
+    context.vault_structure_columns['LINK'] = {
+        "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+        "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+        "COMP_PK": "CUSTOMER_ID",
+        "CUSTOMER_FK": "CUSTOMER_ID",
+        "NATION_FK": "NATION_ID",
+    }
 
     context.seed_config = {
         "LINK": {

@@ -40,11 +40,11 @@
         },
         "azure-core": {
             "hashes": [
-                "sha256:0f3a20d245659bf81fb3670070a5410c8d4a43298d5a981e62dce393000a9084",
-                "sha256:a76856fa83efe1925a4fd917dc179c7daa15917dd71da2774833fa82a96f3dfa"
+                "sha256:c26ad5f3612b8a2207cf2be0ef67e478a74acfa450b8d25d778c939921f650dc",
+                "sha256:c4a7d0d9e63a70dbde502b5d0cbe58b52244db4fbf247cca6768899e45fa3336"
             ],
-            "markers": "python_version >= '3.6'",
-            "version": "==1.24.2"
+            "markers": "python_version >= '3.7'",
+            "version": "==1.25.0"
         },
         "azure-identity": {
             "hashes": [
