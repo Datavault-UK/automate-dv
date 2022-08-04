@@ -1,5 +1,5 @@
 name: dbtvault
-version: 0.8.4
+version: 0.9.0
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 config-version: 2
 
@@ -17,3 +17,4 @@ clean-targets:
 
 vars:
   hash: MD5
+  max_datetime: '{{ dbtvault.max_datetime() }}'
