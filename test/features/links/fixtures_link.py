@@ -390,6 +390,7 @@ def single_source_link_sqlserver(context):
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "NATION_ID": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(20)",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
