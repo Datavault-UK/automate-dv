@@ -33,7 +33,7 @@
 {%- if execute -%}
     {%- do dbt_utils.log_info('Loading {} from {} source(s) and {} satellite(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
                                                                                        stage_count, satellite_count)) -%}
-{%- endif -%}
+{%- endif %}
 
 {%- set ns = namespace(last_cte= "") %}
 
