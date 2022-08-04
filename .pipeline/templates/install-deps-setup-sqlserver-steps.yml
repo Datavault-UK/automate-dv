@@ -1,0 +1,6 @@
+steps:
+  - script: sleep 10
+    displayName: "Wait for SQLServer"
+  - script: sqlcmd -S localhost -U sa -P SlA7Qs3w!O -d master -i docker_scripts/sqlserver/setup.sql
+    displayName: "Setup SQLServer"
+
