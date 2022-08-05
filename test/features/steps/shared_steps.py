@@ -173,7 +173,13 @@ def create_empty_stage(context, raw_stage_name):
 
 @given("I have an empty {processed_stage_name} primed stage")
 def create_empty_stage(context, processed_stage_name):
-    stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
+
+    if not getattr(context, "null_columns", None):
+        context.null_columns = dict()
+        context.null_columns[processed_stage_name] = dict()
+    else:
+        if not context.null_columns.get(processed_stage_name, None):
+            context.null_columns[processed_stage_name] = dict()
 
     stage_source_column_headings = list(context.seed_config[context.raw_stage_name]["column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
