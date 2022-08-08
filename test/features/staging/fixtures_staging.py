@@ -103,9 +103,9 @@ def staging_null_columns_snowflake(context):
                 "ORDER_ID": "VARCHAR",
                 "ORDER_ID_ORIGINAL": "VARCHAR",
                 "ORDER_LINE": "VARCHAR",
-                "ORDER_LINE_ORIGINAL": "VARCHAR(10)",
-                "CUSTOMER_NAME_ORIGINAL": "VARCHAR(10)",
-                "CUSTOMER_DOB_ORIGINAL": "VARCHAR(10)"
+                "ORDER_LINE_ORIGINAL": "VARCHAR",
+                "CUSTOMER_NAME_ORIGINAL": "VARCHAR",
+                "CUSTOMER_DOB_ORIGINAL": "VARCHAR"
             }
         },
         "RAW_STAGE": {
@@ -224,9 +224,9 @@ def staging_null_columns_bigquery(context):
                 "CUSTOMER_REF_ORIGINAL": "STRING",
                 "ORDER_ID": "STRING",
                 "ORDER_ID_ORIGINAL": "STRING",
-                "ORDER_LINE_ORIGINAL": "VARCHAR(10)",
-                "CUSTOMER_NAME_ORIGINAL": "VARCHAR(10)",
-                "CUSTOMER_DOB_ORIGINAL": "VARCHAR(10)"
+                "ORDER_LINE_ORIGINAL": "STRING",
+                "CUSTOMER_NAME_ORIGINAL": "STRING",
+                "CUSTOMER_DOB_ORIGINAL": "STRING"
             }
         },
         "RAW_STAGE": {
