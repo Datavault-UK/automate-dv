@@ -24,9 +24,6 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.null_key_optional = getattr(context, "null_key_optional", "-2")
 
-    testr = context.null_key_required
-    testo = context.null_key_optional
-
     if not getattr(context, "ranked_columns", None):
         context.ranked_columns = dict()
         context.ranked_columns[stage_model_name] = dict()
