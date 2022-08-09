@@ -1318,3 +1318,83 @@ Feature: [STG] Staging
       | <null>               | -1          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
       | <null>               | -1          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
 
+  @fixture.staging_null_columns
+  @fixture.enable_sha
+  Scenario: [STG-41] Staging with null columns configuration where there is a required and optional key, using SHA256 hash algorithm
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | 1001        | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have null columns in the STG_CUSTOMER model
+      | REQUIRED    | OPTIONAL      |
+      | CUSTOMER_ID | CUSTOMER_NAME |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                    |
+      | sha('1001') | 1001                 | 1001        | <null>                 | -2            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('1997-04-24\|\|-2\|\|17-214-233-1214')  |
+      | sha('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | sha('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2013-02-04\|\|-2\|\|17-214-233-1216')  |
+      | sha('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+
+  @fixture.staging_null_columns
+  Scenario: [STG-42] Staging with null columns configuration where there is a required and optional key using custom null key values
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have null columns in the STG_CUSTOMER model and null_key_required is -6 and null_key_optional is -9
+      | REQUIRED    | OPTIONAL      |
+      | CUSTOMER_ID | CUSTOMER_NAME |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                    |
+      | md5('-1')   | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('1997-04-24\|\|-9\|\|17-214-233-1214')  |
+      | md5('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | md5('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2013-02-04\|\|-9\|\|17-214-233-1216')  |
+      | md5('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+
+  @fixture.staging_null_columns
+  @fixture.enable_sha
+  Scenario: [STG-43] Staging with null columns configuration where there is a required and optional key, using SHA256 hash algorithm and custom null key values
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
+      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
+      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+    And I have null columns in the STG_CUSTOMER model and null_key_required is -6 and null_key_optional is -9
+      | REQUIRED    | OPTIONAL      |
+      | CUSTOMER_ID | CUSTOMER_NAME |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                    |
+      | sha('-1')   | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('1997-04-24\|\|-9\|\|17-214-233-1214')  |
+      | sha('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | sha('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2013-02-04\|\|-9\|\|17-214-233-1216')  |
+      | sha('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+

@@ -20,6 +20,13 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.hashing = getattr(context, "hashing", "MD5")
 
+    context.null_key_required = getattr(context, "null_key_required", "-1")
+
+    context.null_key_optional = getattr(context, "null_key_optional", "-2")
+
+    testr = context.null_key_required
+    testo = context.null_key_optional
+
     if not getattr(context, "ranked_columns", None):
         context.ranked_columns = dict()
         context.ranked_columns[stage_model_name] = dict()
@@ -53,7 +60,9 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "hashed_columns": context.hashed_columns,
         "derived_columns": context.derived_columns,
         "null_columns": context.null_columns,
-        "hash": context.hashing
+        "hash": context.hashing,
+        "null_key_required": context.null_key_required,
+        "null_key_optional": context.null_key_optional
     }
 
     return dbt_vars
@@ -375,7 +384,7 @@ def create_csv(context, table_name):
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
-        args = {k: v for k, v in stage_metadata.items() if k == "hash"}
+        args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -402,7 +411,7 @@ def create_csv(context, table_name):
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
-        args = {k: v for k, v in stage_metadata.items() if k == "hash"}
+        args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -467,7 +476,7 @@ def create_csv(context, raw_stage_model_name):
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
-    args = {k: v for k, v in stage_metadata.items() if k == "hash"}
+    args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
                                            vault_structure="stage",
