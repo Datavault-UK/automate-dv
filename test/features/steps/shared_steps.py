@@ -193,7 +193,13 @@ def create_empty_stage(context, processed_stage_name):
     stage_source_column_headings = list(context.seed_config[context.raw_stage_name]["column_types"].keys())
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
-    stage_null_column_headings = list(context.null_columns[processed_stage_name].keys())
+    stage_null_column_headings_list = []
+    for v in list(context.null_columns[processed_stage_name].values()):
+        if isinstance(v, list):
+            stage_null_column_headings_list.extend(v)
+        else:
+            stage_null_column_headings_list.append(v)
+    stage_null_column_headings = list(v + "_ORIGINAL" for v in stage_null_column_headings_list)
 
     stage_headings = stage_source_column_headings + stage_hashed_column_headings \
                      + stage_derived_column_headings + stage_null_column_headings
