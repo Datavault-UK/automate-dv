@@ -5,7 +5,7 @@ def set_vault_structure_definition(context):
     context.vault_structure_columns = {
         "SATELLITE": {
             "src_pk": "CUSTOMER_PK",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
