@@ -187,6 +187,12 @@ fixtures_registry = {
          "sqlserver": fixtures_cycle.cycle_sqlserver,
          "databricks": ''},
 
+    "fixture.cycle_custom_null_key":
+        {"snowflake": fixtures_cycle.cycle_custom_null_key_snowflake,
+         "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
+         "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
+         "databricks": ''},
+
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
