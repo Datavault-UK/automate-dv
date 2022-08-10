@@ -352,6 +352,7 @@ def satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -404,15 +405,15 @@ def satellite_sqlserver(context):
         },
         "SATELLITE_AC": {
             "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "STRING",
-                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "STRING",
+                "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATETIME": "DATE",
-                "SOURCE": "STRING"
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
             }
         }
     }
