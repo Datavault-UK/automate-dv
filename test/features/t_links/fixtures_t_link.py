@@ -191,6 +191,7 @@ def t_link_sqlserver(context):
                 "ORDER_ID": "VARCHAR(50)",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",
                 "TRANSACTION_DATE": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "TYPE": "VARCHAR(50)",
                 "AMOUNT": "DECIMAL(38,2)",
                 "LOAD_DATE": "DATE",
@@ -213,17 +214,17 @@ def t_link_sqlserver(context):
         },
         "T_LINK_AC": {
             "column_types": {
-                "TRANSACTION_PK": "STRING",
-                "CUSTOMER_FK": "STRING",
-                "ORDER_FK": "STRING",
-                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "TRANSACTION_NUMBER": "VARCHAR(50)",
                 "TRANSACTION_DATE": "DATE",
-                "TYPE": "STRING",
-                "AMOUNT": "STRING",
+                "TYPE": "VARCHAR(50)",
+                "AMOUNT": "VARCHAR(50)",
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
+                "SOURCE": "VARCHAR(50)"
             }
         }
     }
