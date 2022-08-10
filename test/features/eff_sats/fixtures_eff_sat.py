@@ -813,56 +813,7 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
     Define the structures and metadata to load effectivity satellites
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER_ORDER": {
-            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        },
-        "STG_ORDER_CUSTOMER": {
-            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "LINK_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": ["CUSTOMER_PK"],
-            "src_sfk": "ORDER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_ORDER_CUSTOMER": {
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_dfk": ["ORDER_PK"],
-            "src_sfk": "CUSTOMER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER_ORDER": {
@@ -870,6 +821,7 @@ def eff_satellite_testing_auto_end_dating_sqlserver(context):
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
                 "START_DATE": "DATETIME2",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATETIME": "DATETIME2",
