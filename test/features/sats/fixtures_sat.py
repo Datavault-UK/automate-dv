@@ -2,17 +2,6 @@ from behave import fixture
 
 
 def set_vault_structure_definition(context):
-    context.stage_columns = {
-        "RAW_STAGE":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_DOB",
-             "CUSTOMER_PHONE",
-             "EFFECTIVE_FROM",
-             "LOAD_DATE",
-             "SOURCE"]
-    }
-
     context.vault_structure_columns = {
         "SATELLITE": {
             "src_pk": "CUSTOMER_PK",
@@ -51,6 +40,17 @@ def set_vault_structure_definition(context):
 
 
 def set_staging_definition(context):
+    context.stage_columns = {
+        "RAW_STAGE":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_DOB",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"]
+    }
+
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
