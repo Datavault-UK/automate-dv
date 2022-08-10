@@ -23,7 +23,7 @@
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
-{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set window_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
@@ -48,9 +48,9 @@ WITH source_data AS (
 {% if dbtvault.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
+    SELECT {{ dbtvault.prefix(window_cols, 'a', alias_target='target') }}
     FROM (
-        SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
+        SELECT {{ dbtvault.prefix(window_cols, 'current_records', alias_target='target') }},
             RANK() OVER (
                PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
                ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
