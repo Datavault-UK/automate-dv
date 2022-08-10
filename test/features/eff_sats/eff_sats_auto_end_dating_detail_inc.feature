@@ -194,7 +194,7 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
   # CUSTOMER_FK is DRIVING KEY
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [EFF-AUI-05] Two loads; going from 1 ORDER to another (new) ORDER
+  Scenario: [EFF-AUI-06] Two loads; going from 1 ORDER to another (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -217,7 +217,7 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [EFF-AUI-06] Two loads; changing the ORDER to another ORDER
+  Scenario: [EFF-AUI-07] Two loads; changing the ORDER to another ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -240,7 +240,7 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [EFF-AUI-07] Two loads; going from 1 ORDER to 3 (new) ORDERS
+  Scenario: [EFF-AUI-08] Two loads; going from 1 ORDER to 3 (new) ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -267,7 +267,7 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [EFF-AUI-08] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to 1 (new) ORDER
+  Scenario: [EFF-AUI-09] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to 1 (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -310,7 +310,7 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
 
   @fixture.enable_auto_end_date
   @fixture.eff_satellite_testing_auto_end_dating
-  Scenario: [EFF-AUI-09] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to the initial ORDER
+  Scenario: [EFF-AUI-10] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to the initial ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |

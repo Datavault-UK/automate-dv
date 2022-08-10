@@ -2,35 +2,6 @@ from behave import fixture
 
 
 def set_vault_structure_definition(context):
-    pass
-
-
-def set_staging_definition(context):
-    pass
-
-
-def set_metadata(context):
-    set_vault_structure_definition(context)
-
-    set_staging_definition(context)
-
-# Snowflake
-
-
-@fixture
-def eff_satellite_snowflake(context):
-    """
-    Define the structures and metadata to load effectivity satellites
-    """
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
-
     context.vault_structure_columns = {
         "EFF_SAT": {
             "src_pk": "CUSTOMER_ORDER_PK",
@@ -69,11 +40,38 @@ def eff_satellite_snowflake(context):
         }
     }
 
+
+def set_staging_definition(context):
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID"
+        }
+    }
+
+
+def set_metadata(context):
+    set_vault_structure_definition(context)
+
+    set_staging_definition(context)
+
+
+# Snowflake
+
+
+@fixture
+def eff_satellite_snowflake(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -697,32 +695,15 @@ def eff_satellite_sqlserver(context):
     Define the structures and metadata to load effectivity satellites
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "EFF_SAT": {
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": ["ORDER_PK"],
-            "src_sfk": "CUSTOMER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "ORDER_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "CUSTOMER_CK": "VARCHAR(11)",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -735,6 +716,33 @@ def eff_satellite_sqlserver(context):
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_AC": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "CUSTOMER_CK": "VARCHAR(11)",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
