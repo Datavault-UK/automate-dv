@@ -57,6 +57,17 @@ def set_vault_structure_definition(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
+        },
+        "EFF_SAT_ORDER_CUSTOMER_AC": {
+            "src_pk": "ORDER_CUSTOMER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
         }
     }
 
@@ -280,6 +291,7 @@ def eff_satellite_auto_end_dating_snowflake(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
@@ -837,6 +849,18 @@ def eff_satellite_auto_end_dating_sqlserver(context):
     set_metadata(context)
 
     context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "DATETIME2",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "RAW_STAGE_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
@@ -854,6 +878,7 @@ def eff_satellite_auto_end_dating_sqlserver(context):
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
                 "START_DATE": "DATETIME2",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "END_DATE": "DATETIME2",
                 "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATETIME": "DATETIME2",
@@ -897,6 +922,19 @@ def eff_satellite_auto_end_dating_sqlserver(context):
                 "ORDER_PK": "BINARY(16)",
                 "START_DATE": "DATETIME2",
                 "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_ORDER_CUSTOMER_AC": {
+            "column_types": {
+                "ORDER_CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "START_DATE": "DATETIME2",
+                "END_DATE": "DATETIME2",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
