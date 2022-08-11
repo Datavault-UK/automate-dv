@@ -37,6 +37,26 @@ def set_vault_structure_definition(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "EFF_SAT_ORDER_CUSTOMER": {
+            "src_pk": "ORDER_CUSTOMER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_CUSTOMER_ORDER": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["CUSTOMER_PK"],
+            "src_sfk": "ORDER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
         }
     }
 
@@ -44,6 +64,7 @@ def set_vault_structure_definition(context):
 def set_staging_definition(context):
     context.hashed_columns = {
         "STG_CUSTOMER": {
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID"
