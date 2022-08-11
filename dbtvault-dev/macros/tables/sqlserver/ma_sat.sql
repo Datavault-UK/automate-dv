@@ -1,6 +1,6 @@
 {%- macro sqlserver__ma_sat(src_pk, src_cdk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_eff, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set cdk_cols = dbtvault.expand_column_list(columns=[src_cdk]) -%}
 {%- set cols_for_latest = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_cdk, src_ldts]) %}
