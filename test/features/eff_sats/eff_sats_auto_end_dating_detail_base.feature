@@ -3,7 +3,7 @@ Feature: [EFF-AUB] Effectivity Satellites - Auto End-dating Base Loads
 
   # ORDER_PK is DRIVING KEY
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating
+  @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUB-01] One load; going from an empty table to 1 CUSTOMER per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -20,7 +20,7 @@ Feature: [EFF-AUB] Effectivity Satellites - Auto End-dating Base Loads
       | md5('1003\|\|300') | md5('1003') | md5('300') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating
+  @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUB-02] One load; going from an empty table to the same CUSTOMER for 3 different ORDERS
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -37,7 +37,7 @@ Feature: [EFF-AUB] Effectivity Satellites - Auto End-dating Base Loads
       | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
 
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating
+  @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUB-03] One load; going from an empty table to 3 CUSTOMERS per ORDER
     Given the EFF_SAT_ORDER_CUSTOMER table does not exist
     And the RAW_STAGE_ORDER_CUSTOMER table contains data
@@ -55,7 +55,7 @@ Feature: [EFF-AUB] Effectivity Satellites - Auto End-dating Base Loads
 
   # CUSTOMER_PK is DRIVING KEY
   @fixture.enable_auto_end_date
-  @fixture.eff_satellite_testing_auto_end_dating
+  @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUB-04] One load; going from an empty table to 3 ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
     And the RAW_STAGE_CUSTOMER_ORDER table contains data
