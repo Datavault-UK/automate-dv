@@ -197,7 +197,7 @@ def eff_satellite_datetime_snowflake(context):
 
 
 @fixture
-def eff_satellite_testing_auto_end_dating_snowflake(context):
+def eff_satellite_auto_end_dating_snowflake(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -520,7 +520,7 @@ def eff_satellite_datetime_bigquery(context):
 
 
 @fixture
-def eff_satellite_testing_auto_end_dating_bigquery(context):
+def eff_satellite_auto_end_dating_bigquery(context):
     """
     Define the structures and metadata to load effectivity satellites
     """
@@ -829,7 +829,7 @@ def eff_satellite_datetime_sqlserver(context):
 
 
 @fixture
-def eff_satellite_testing_auto_end_dating_sqlserver(context):
+def eff_satellite_auto_end_dating_sqlserver(context):
     """
     Define the structures and metadata to load effectivity satellites
     """

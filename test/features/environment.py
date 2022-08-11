@@ -120,10 +120,10 @@ fixtures_registry = {
          "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver,
          "databricks": ''},
 
-    "fixture.eff_satellite_testing_auto_end_dating":
-        {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_snowflake,
-         "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
-         "sqlserver": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
+    "fixture.eff_satellite_auto_end_dating":
+        {"snowflake": fixtures_eff_sat.eff_satellite_auto_end_dating_snowflake,
+         "bigquery": fixtures_eff_sat.eff_satellite_auto_end_dating_bigquery,
+         "sqlserver": fixtures_eff_sat.eff_satellite_auto_end_dating_sqlserver,
          "databricks": ''},
 
     "fixture.eff_satellite_multipart":
