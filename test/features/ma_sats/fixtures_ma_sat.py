@@ -865,6 +865,7 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_ID": "DECIMAL(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
@@ -1006,8 +1007,8 @@ def multi_active_satellite_sqlserver(context):
         },
         "MULTI_ACTIVE_SATELLITE_AC": {
             "column_types": {
-                "CUSTOMER_PK": "VARCHAR(50)",
-                "HASHDIFF": "VARCHAR(50)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_MT_ID": "VARCHAR(50)",

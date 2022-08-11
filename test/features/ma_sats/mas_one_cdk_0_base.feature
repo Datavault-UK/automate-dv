@@ -246,19 +246,19 @@ Feature: [MAS-1CD-B] Multi Active Satellites
     And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE_AC ma_sat
     Then the MULTI_ACTIVE_SATELLITE_AC table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_MT_ID | HASHDIFF                                  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | Alice         | 17-214-233-1214 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Alice         | 17-214-233-1224 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1224')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Alice         | 17-214-233-1234 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1234')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1215 | TPCH_CUSTOMER  | md5('1002\|\|BOB\|\|17-214-233-1215')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1225 | TPCH_CUSTOMER  | md5('1002\|\|BOB\|\|17-214-233-1225')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bobby         | 17-214-233-1235 | TPCH_CUSTOMER  | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chad          | 17-214-233-1216 | TPCH_CUSTOMER  | md5('1003\|\|CHAD\|\|17-214-233-1216')    | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chaz          | 17-214-233-1226 | TPCH_CUSTOMER  | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chaz          | 17-214-233-1236 | TPCH_CUSTOMER  | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dom           | 17-214-233-1217 | TPCH_CUSTOMER  | md5('1004\|\|DOM\|\|17-214-233-1217')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Don           | 17-214-233-1227 | TPCH_CUSTOMER  | md5('1004\|\|DON\|\|17-214-233-1227')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dominik       | 17-214-233-1237 | TPCH_CUSTOMER  | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | 1993-01-01     | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_PHONE  | CUSTOMER_NAME | CUSTOMER_MT_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')   | 17-214-233-1214 | Alice         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')   | 17-214-233-1224 | Alice         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234')   | 17-214-233-1234 | Alice         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')     | 17-214-233-1215 | Bob           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')     | 17-214-233-1225 | Bob           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | 17-214-233-1235 | Bobby         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')    | 17-214-233-1216 | Chad          | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | 17-214-233-1226 | Chaz          | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | 17-214-233-1236 | Chaz          | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | 17-214-233-1217 | Dom           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | 17-214-233-1227 | Don           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | 17-214-233-1237 | Dominik       | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-B-10] Load data into an empty multi-active satellite with additional columns
@@ -280,16 +280,16 @@ Feature: [MAS-1CD-B] Multi Active Satellites
     And I stage the STG_CUSTOMER data
     When I load the MULTI_ACTIVE_SATELLITE_AC ma_sat
     Then the MULTI_ACTIVE_SATELLITE_AC table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_MT_ID | HASHDIFF                                  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | Alice         | 17-214-233-1214 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Alice         | 17-214-233-1224 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1224')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Alice         | 17-214-233-1234 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1234')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1215 | TPCH_CUSTOMER  | md5('1002\|\|BOB\|\|17-214-233-1215')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bob           | 17-214-233-1225 | TPCH_CUSTOMER  | md5('1002\|\|BOB\|\|17-214-233-1225')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1002') | Bobby         | 17-214-233-1235 | TPCH_CUSTOMER  | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chad          | 17-214-233-1216 | TPCH_CUSTOMER  | md5('1003\|\|CHAD\|\|17-214-233-1216')    | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chaz          | 17-214-233-1226 | TPCH_CUSTOMER  | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1003') | Chaz          | 17-214-233-1236 | TPCH_CUSTOMER  | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dom           | 17-214-233-1217 | TPCH_CUSTOMER  | md5('1004\|\|DOM\|\|17-214-233-1217')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Don           | 17-214-233-1227 | TPCH_CUSTOMER  | md5('1004\|\|DON\|\|17-214-233-1227')     | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1004') | Dominik       | 17-214-233-1237 | TPCH_CUSTOMER  | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | 1993-01-01     | 1993-01-01 | *      |
+      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_PHONE  | CUSTOMER_NAME | CUSTOMER_MT_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1214')   | 17-214-233-1214 | Alice         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1224')   | 17-214-233-1224 | Alice         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1001') | md5('1001\|\|ALICE\|\|17-214-233-1234')   | 17-214-233-1234 | Alice         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1215')     | 17-214-233-1215 | Bob           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOB\|\|17-214-233-1225')     | 17-214-233-1225 | Bob           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('1002\|\|BOBBY\|\|17-214-233-1235')   | 17-214-233-1235 | Bobby         | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAD\|\|17-214-233-1216')    | 17-214-233-1216 | Chad          | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1226')    | 17-214-233-1226 | Chaz          | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | md5('1003\|\|CHAZ\|\|17-214-233-1236')    | 17-214-233-1236 | Chaz          | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOM\|\|17-214-233-1217')     | 17-214-233-1217 | Dom           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DON\|\|17-214-233-1227')     | 17-214-233-1227 | Don           | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | md5('1004\|\|DOMINIK\|\|17-214-233-1237') | 17-214-233-1237 | Dominik       | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
