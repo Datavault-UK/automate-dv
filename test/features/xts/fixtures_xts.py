@@ -599,6 +599,7 @@ def xts_sqlserver(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID_2": "VARCHAR(50)",
                 "CUSTOMER_COUNTY": "VARCHAR(50)",
                 "CUSTOMER_CITY": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
@@ -609,12 +610,15 @@ def xts_sqlserver(context):
             "aliases": [
                 "XTS_2SAT",
                 "XTS_2SAT_AC",
-                "XTS_3SAT"
+                "XTS_3SAT",
+                "XTS_AC",
+                "XTS_AC_M"
             ],
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "SATELLITE_NAME": "VARCHAR(50)",
                 "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID_2": "VARCHAR(50)",
                 "HASHDIFF": "BINARY(16)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
