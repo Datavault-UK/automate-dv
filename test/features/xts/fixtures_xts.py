@@ -433,7 +433,7 @@ def xts_bigquery(context):
     Define the structures and metadata to load xts
     """
 
-    set_vault_structure_definition(context)
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
@@ -579,7 +579,7 @@ def xts_sqlserver(context):
     Define the structures and metadata to load xts
     """
 
-    set_vault_structure_definition(context)
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
