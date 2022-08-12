@@ -196,18 +196,18 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
   @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUI-06] Two loads; going from 1 ORDER to another (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
-    And the RAW_STAGE_CUSTOMER_ORDER table contains data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 101      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -219,18 +219,18 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
   @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUI-07] Two loads; changing the ORDER to another ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
-    And the RAW_STAGE_CUSTOMER_ORDER table contains data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 101      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -242,20 +242,20 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
   @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUI-08] Two loads; going from 1 ORDER to 3 (new) ORDERS
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
-    And the RAW_STAGE_CUSTOMER_ORDER table contains data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 101      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | 1001        | 102      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | 1001        | 103      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -269,20 +269,20 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
   @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUI-09] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to 1 (new) ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
-    And the RAW_STAGE_CUSTOMER_ORDER table contains data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 101      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | 1001        | 102      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | 1001        | 103      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -291,10 +291,10 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | md5('1001\|\|103') | md5('1001') | md5('103') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 104      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -312,20 +312,20 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
   @fixture.eff_satellite_auto_end_dating
   Scenario: [EFF-AUI-10] Three loads; going from 1 ORDER to 3 (new) ORDERS and then back to the initial ORDER
     Given the EFF_SAT_CUSTOMER_ORDER table does not exist
-    And the RAW_STAGE_CUSTOMER_ORDER table contains data
+    And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001\|\|100') | md5('1001') | md5('100') | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 00:00:00.000 | 2018-06-01 00:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 101      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | 1001        | 102      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | 1001        | 103      | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
@@ -334,10 +334,10 @@ Feature: [EFF-AUI] Effectivity Satellites - Auto End-dating Incremental Loads
       | md5('1001\|\|101') | md5('1001') | md5('101') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | md5('1001\|\|102') | md5('1001') | md5('102') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
       | md5('1001\|\|103') | md5('1001') | md5('103') | 2018-06-01 09:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 09:00:00.000 | 2018-06-01 09:00:00.000 | *      |
-    Given the RAW_STAGE_CUSTOMER_ORDER table contains data
+    Given the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | 1001        | 100      | 2018-06-01 18:00:00.000 | 9999-12-31 23:59:59.999 | 2018-06-01 18:00:00.000 | 2018-06-01 18:00:00.000 | *      |
-    And I stage the STG_CUSTOMER_ORDER data
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_CUSTOMER_ORDER eff_sat
     Then the EFF_SAT_CUSTOMER_ORDER table should contain expected data
       | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
