@@ -37,10 +37,10 @@ extends:
         displayName: 'Staging'
       - groupName: 'hubs'
         displayName: 'Hubs'
-        subGroups: [ 'main', 'comp_pk', 'incremental', 'pm', 'rank' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'links'
         displayName: 'Links'
-        subGroups: [ 'main', 'incremental', 'pm', 'rank' ]
+        subGroups: [ 'main', 'incremental', 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
       - groupName: 'sats'

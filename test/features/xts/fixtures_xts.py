@@ -1,5 +1,7 @@
 from behave import fixture
 
+from test.fixture_helpers import compile_aliased_metadata
+
 
 def set_vault_structure_definition(context):
     context.vault_structure_type = "xts"
@@ -581,38 +583,52 @@ def xts_sqlserver(context):
 
     set_metadata(context)
 
-    context.seed_config = {
-        "RAW_STAGE_CUSTOMER": {
+    seed_aliases = [
+        {
+            "aliases": [
+                "RAW_STAGE_CUSTOMER",
+                "RAW_STAGE_CUSTOMER_CRM",
+                "RAW_STAGE_CUSTOMER_CRM_2SAT",
+                "RAW_STAGE_CUSTOMER_2SAT",
+                "RAW_STAGE_3SAT"
+            ],
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "CUSTOMER_COUNTY": "VARCHAR(50)",
                 "CUSTOMER_CITY": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)",
             }
         },
-        "RAW_STAGE_CUSTOMER_2SAT": {
+        {
+            "aliases": [
+                "XTS_2SAT",
+                "XTS_2SAT_AC",
+                "XTS_3SAT"
+            ],
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
-                "CUSTOMER_LASTNAME": "VARCHAR(50)",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_COUNTY": "VARCHAR(50)",
-                "CUSTOMER_CITY": "VARCHAR(50)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "HASHDIFF": "BINARY(16)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)",
+                "SOURCE": "VARCHAR(50)"
             }
-        },
-        "RAW_STAGE_3SAT": {
+        }
+    ]
+
+    seed_metadata = {
+        "RAW_STAGE_CUSTOMER_2SAT_AC": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
                 "CUSTOMER_LASTNAME": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_COUNTY": "VARCHAR(50)",
@@ -697,23 +713,7 @@ def xts_sqlserver(context):
                 "HASHDIFF": "BINARY(16)",
                 "SOURCE": "VARCHAR(50)"
             }
-        },
-        "XTS_2SAT": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR(50)",
-                "HASHDIFF": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
-            }
-        },
-        "XTS_3SAT": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR(50)",
-                "HASHDIFF": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
-            }
         }
     }
+
+    context.seed_config = compile_aliased_metadata(seed_aliases, seed_metadata)
