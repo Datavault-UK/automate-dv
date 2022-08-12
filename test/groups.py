@@ -10,10 +10,8 @@ def feature_sub_types():
             'incremental': [
                 'hubs_incremental'
             ],
-            'pm': [
-                'hubs_period_mat'
-            ],
-            'rank': [
+            'mat': [
+                'hubs_period_mat',
                 'hubs_rank_mat'
             ]
         },
@@ -25,10 +23,8 @@ def feature_sub_types():
             'incremental': [
                 'links_incremental'
             ],
-            'pm': [
-                'links_period_mat'
-            ],
-            'rank': [
+            'mat': [
+                'links_period_mat',
                 'links_rank_mat'
             ]
         },

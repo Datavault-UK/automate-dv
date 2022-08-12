@@ -180,8 +180,8 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
     When the RAW_STAGE is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
       | 1002        | Beth          | 17-214-233-1222 | 2019-01-01     | 2019-01-01 | *      |
