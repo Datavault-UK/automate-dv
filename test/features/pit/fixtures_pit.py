@@ -214,6 +214,23 @@ def set_vault_structure_definition(context):
 
 
 def set_staging_definition(context):
+    context.stage_columns = {
+        "RAW_STAGE_DETAILS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_DETAILS_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATETIME",
+             "SOURCE"]
+    }
+
     context.hashed_columns = {
         "STG_CUSTOMER_DETAILS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -1331,23 +1348,6 @@ def pit_one_sat_sqlserver(context):
 
     set_metadata(context)
 
-    context.stage_columns = {
-        "RAW_STAGE_DETAILS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_ADDRESS",
-             "CUSTOMER_DOB",
-             "LOAD_DATE",
-             "SOURCE"],
-        "RAW_STAGE_DETAILS_TS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_ADDRESS",
-             "CUSTOMER_DOB",
-             "LOAD_DATETIME",
-             "SOURCE"]
-    }
-
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
             "column_types": {
@@ -1385,6 +1385,14 @@ def pit_one_sat_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "HUB_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "SAT_CUSTOMER_DETAILS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -1418,6 +1426,14 @@ def pit_one_sat_sqlserver(context):
             "column_types": {
                 "AS_OF_DATE": "DATETIME2",
                 "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME2"
+            }
+        },
+        "PIT_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME2",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME2"
             }

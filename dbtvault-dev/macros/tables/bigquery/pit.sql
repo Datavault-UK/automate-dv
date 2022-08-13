@@ -1,12 +1,4 @@
-{%- macro bigquery__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) %}
-
-{{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
-                                       satellites=satellites,
-                                       stage_tables=stage_tables,
-                                       src_ldts=src_ldts) -}}
-
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+{%- macro bigquery__pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) %}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
@@ -20,11 +12,6 @@
 {#- Setting ghost values to replace NULLS -#}
 {%- set ghost_pk = '0x0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
-
-{# Stating the dependancies on the stage tables outside of the If STATEMENT #}
-{% for stg in stage_tables -%}
-    {{ "-- depends_on: " ~ ref(stg) }}
-{% endfor %}
 
 {#- Setting the new AS_OF dates CTE name -#}
 {%- if dbtvault.is_any_incremental() -%}

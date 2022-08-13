@@ -4,11 +4,11 @@ last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
     FROM (
 
-    {% for stg in stage_tables_ldts -%}
-        {%- set stage_ldts = stage_tables_ldts[stg] -%}
-        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
-        {{ "UNION ALL" if not loop.last }}
-    {% endfor -%}
+        {% for stg in stage_tables_ldts -%}
+            {%- set stage_ldts = stage_tables_ldts[stg] -%}
+            SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
+            {{ "UNION ALL" if not loop.last }}
+        {% endfor -%}
 
     ) AS l
 ),
