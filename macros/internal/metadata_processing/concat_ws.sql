@@ -6,7 +6,7 @@
 
 {%- macro default__concat_ws(string_list, separator="||") -%}
 
-    CONCAT_WS('{{ separator }}', {{ string_list.join(", ") }})
+    CONCAT_WS('{{ separator }}', {{ string_list | join(", ") }})
 
 {%- endmacro -%}
 
