@@ -296,11 +296,11 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.pit(src_pk={src_pk}, 
-                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                      src_ldts={src_ldts},
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'},
                       as_of_dates_table={as_of_dates_table}, 
                       satellites={satellites}, 
                       stage_tables_ldts={stage_tables_ldts},
+                      src_ldts={src_ldts},
                       source_model={source_model}) }}}}
     """
 

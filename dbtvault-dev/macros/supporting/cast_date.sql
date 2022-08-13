@@ -1,8 +1,8 @@
-{%- macro cast_date(column_str, as_string=false, datetime=false) -%}
-    {{ return(adapter.dispatch('cast_date', 'dbtvault')(column_str, as_string)) }}
+{%- macro cast_date(column_str, as_string=false, datetime=false, datetime=false, alias=none) -%}
+    {{ return(adapter.dispatch('cast_date', 'dbtvault')(column_str, as_string, datetime, alias)) }}
 {%- endmacro -%}
 
-{%- macro sqlserver__cast_date(column_str, as_string=false, datetime=false) -%}
+{%- macro sqlserver__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
 
     {%- if datetime -%}
         {%- if not as_string -%}
@@ -18,9 +18,12 @@
         {%- endif -%}
     {%- endif -%}
 
+    {%- if alias %} AS {{ alias }} {%- endif %}
+
+
 {%- endmacro -%}
 
-{%- macro snowflake__cast_date(column_str, as_string=false, datetime=false) -%}
+{%- macro snowflake__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
 
     {%- if datetime -%}
         {%- if not as_string -%}
@@ -36,9 +39,11 @@
         {%- endif -%}
     {%- endif -%}
 
+    {%- if alias %} AS {{ alias }} {%- endif %}
+
 {%- endmacro -%}
 
-{%- macro bigquery__cast_date(column_str, as_string=false, datetime=false) -%}
+{%- macro bigquery__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
 
     {%- if datetime -%}
         {%- if not as_string -%}
@@ -53,5 +58,7 @@
             DATE('{{ column_str }}')
         {%- endif -%}
     {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif %}
 
 {%- endmacro -%}
