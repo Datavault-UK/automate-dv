@@ -50,7 +50,7 @@ Feature: [XTS] Extended Record Tracking Satellites
       | md5('1001') | md5('ALICE\|\|1001\|\|ANDREWS') | SAT_CUSTOMER   | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [XTS-04] Load duplicated data in one stage into a non-existent single satellite XTS
+  Scenario: [XTS-04] Load duplicated data and unique data in one stage into a non-existent single satellite XTS
     Given the XTS table does not exist
     And the RAW_STAGE_CUSTOMER table contains data
       | CUSTOMER_ID | CUSTOMER_FIRSTNAME | CUSTOMER_LASTNAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_COUNTY | CUSTOMER_CITY | LOAD_DATE  | SOURCE |
@@ -140,7 +140,7 @@ Feature: [XTS] Extended Record Tracking Satellites
       | md5('1004') | md5('2018-04-13\|\|1004\|\|17-214-233-1217') | SAT_CUSTOMER_DETAILS | 1993-01-01 | *      |
 
   @fixture.xts
-  Scenario: [XTS-08] Loads from a single stage to an XTS linked to two satellites with repeating records in the both satellites
+  Scenario: [XTS-08] Loads from a single stage to an XTS linked to two satellites with repeating records in both satellites
     Given I have an empty RAW_STAGE_CUSTOMER_2SAT raw stage
     And I have an empty STG_CUSTOMER_2SAT primed stage
     And the XTS_2SAT xts is empty

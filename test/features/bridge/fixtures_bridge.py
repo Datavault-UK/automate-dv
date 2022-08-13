@@ -724,6 +724,14 @@ def bridge_bigquery(context):
                 "LINK_ORDER_PRODUCT_PK": "STRING",
                 "LINK_PRODUCT_COMPONENT_PK": "STRING",
             }
+        },
+        "BRIDGE_CUSTOMER_ORDER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_ID": "STRING",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+            }
         }
     }
 
@@ -862,6 +870,14 @@ def bridge_sqlserver(context):
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
                 "LINK_PRODUCT_COMPONENT_PK": "BINARY(16)",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME2",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
             }
         }
     }
