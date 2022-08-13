@@ -1377,6 +1377,14 @@ def pit_one_sat_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "HUB_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "HUB_CUSTOMER_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",

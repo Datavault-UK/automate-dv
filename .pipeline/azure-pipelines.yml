@@ -40,9 +40,10 @@ extends:
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'links'
         displayName: 'Links'
-        subGroups: [ 'main', 'incremental', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
+        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'sats'
         displayName: 'Satellites'
         subGroups: [ 'main', 'cycles', 'incremental', 'pm', 'rank' ]
