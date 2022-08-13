@@ -47,7 +47,7 @@ backfill_as_of AS (
 
 new_rows_pks AS (
     SELECT {{ dbtvault.prefix([src_pk], 'h') }}
-    FROM {{ ref(source_model) }} AS h
+    FROM {{ source_model }} AS h
     WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
 ),
 
@@ -66,7 +66,7 @@ overlap_pks AS (
        {{ dbtvault.prefix([src_extra_columns], 'a') }}
     {%- endif %}
     FROM {{ this }} AS a
-    INNER JOIN {{ ref(source_model) }} as b
+    INNER JOIN {{ source_model }} as b
         ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
     WHERE a.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
         AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
