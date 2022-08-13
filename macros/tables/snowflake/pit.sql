@@ -1,10 +1,10 @@
-{%- macro pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model ) -%}
+{%- macro pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk,
-                                           src_ldts=src_ldts,
                                            as_of_dates_table=as_of_dates_table,
                                            satellites=satellites,
                                            stage_tables_ldts=stage_tables_ldts,
+                                           src_ldts=src_ldts,
                                            source_model=source_model) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
@@ -19,14 +19,14 @@
 
     {{ adapter.dispatch('pit', 'dbtvault')(src_pk=src_pk,
                                            src_extra_columns=src_extra_columns,
-                                           src_ldts=src_ldts,
                                            as_of_dates_table=as_of_dates_table,
                                            satellites=satellites,
                                            stage_tables_ldts=stage_tables_ldts,
+                                           src_ldts=src_ldts,
                                            source_model=source_model) -}}
 {%- endmacro -%}
 
-{%- macro default__pit(src_pk, src_extra_columns, src_ldts, as_of_dates_table, satellites, stage_tables_ldts, source_model) -%}
+{%- macro default__pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) -%}
 
 {#- Acquiring the source relation for the AS_OF table -#}
 {%- if as_of_dates_table is mapping and as_of_dates_table is not none -%}
@@ -81,13 +81,13 @@ backfill AS (
         {%- set sat_name = sat_name %}
 
         {%- if target.type == "sqlserver" -%}
-        CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }}
+        CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
         {%- else -%}
         CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-
+        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
         {%- endif %}
 
-        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
 
         {{- ',' if not loop.last -}}
 
