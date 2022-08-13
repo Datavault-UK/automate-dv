@@ -18,6 +18,8 @@ def feature_sub_types():
         'links': {
             'main': [
                 'links',
+            ],
+            'comp_pk': [
                 'links_comp_pk'
             ],
             'incremental': [
@@ -26,6 +28,21 @@ def feature_sub_types():
             'mat': [
                 'links_period_mat',
                 'links_rank_mat'
+            ]
+        },
+        't_links': {
+            'main': [
+                't_links',
+            ],
+            'comp_pk': [
+                't_links_comp_pk'
+            ],
+            'incremental': [
+                't_links_incremental'
+            ],
+            'mat': [
+                't_links_period_mat',
+                't_links_rank_mat'
             ]
         },
         'sats': {
