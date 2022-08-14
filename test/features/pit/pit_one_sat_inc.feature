@@ -126,8 +126,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
-      | HUB                 | LINK | SAT                     | PIT                |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
+      | HUB                | LINK | SAT                     | PIT                |
+      | HUB_CUSTOMER_1S_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -193,8 +193,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-02-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
-      | HUB                 | LINK | SAT                     | PIT                |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
+      | HUB                | LINK | SAT                     | PIT                |
+      | HUB_CUSTOMER_1S_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -261,8 +261,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-03] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
-      | HUB                 | LINK | SAT                     | PIT                |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
+      | HUB                | LINK | SAT                     | PIT                |
+      | HUB_CUSTOMER_1S_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |
@@ -320,8 +320,8 @@ Feature: [PIT-1SI] Point in Time
   Scenario: [PIT-1SI-03-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
-      | HUB                 | LINK | SAT                     | PIT                |
-      | HUB_CUSTOMER_1SI_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
+      | HUB                | LINK | SAT                     | PIT                |
+      | HUB_CUSTOMER_1S_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *      |

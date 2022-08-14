@@ -749,6 +749,7 @@ def bridge_sqlserver(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
+                "TEST_COLUMN": "VARCHAR(50)",
                 "LOAD_DATETIME": "DATETIME2",
                 "END_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
@@ -776,6 +777,15 @@ def bridge_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_M_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "TEST_COLUMN": "VARCHAR(50)",
                 "LOAD_DATETIME": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -863,9 +873,28 @@ def bridge_sqlserver(context):
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
             }
         },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME2",
+                "TEST_COLUMN": "VARCHAR(50)",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
+            }
+        },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME2",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+                "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
+                "LINK_PRODUCT_COMPONENT_PK": "BINARY(16)",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
                 "AS_OF_DATE": "DATETIME2",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
@@ -877,6 +906,15 @@ def bridge_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME2",
                 "CUSTOMER_ID": "VARCHAR(4)",
+                "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_M_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME2",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "TEST_COLUMN": "VARCHAR(50)",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
             }
         }

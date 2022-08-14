@@ -415,7 +415,7 @@ Feature: [BRG-3L] Bridge table
   Scenario: [BRG-3L-07] Base load into a bridge table with additional columns
   From one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, and encompassing range of AS_OF dates
 
-    Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT table does not exist
+    Given the BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT_AC table does not exist
     And the raw vault contains empty tables
       | HUB          | LINK                   | EFF_SAT                   | BRIDGE                                     |
       | HUB_CUSTOMER | LINK_PRODUCT_COMPONENT | EFF_SAT_PRODUCT_COMPONENT | BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT_AC |
