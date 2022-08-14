@@ -1336,7 +1336,20 @@ def pit_sqlserver(context):
                 "SAT_CUSTOMER_PROFILE_PK": "BINARY(16)",
                 "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME2"
             }
-        }
+        },
+        "PIT_CUSTOMER_AC": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME2",
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME2",
+                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME2",
+                "SAT_CUSTOMER_PROFILE_PK": "BINARY(16)",
+                "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME2"
+            }
+        },
     }
 
 
