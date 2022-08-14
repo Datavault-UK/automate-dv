@@ -1,20 +1,20 @@
-{%- macro cast_date(column_str, as_string=false, datetime=false, datetime=false, alias=none) -%}
-    {{ return(adapter.dispatch('cast_date', 'dbtvault')(column_str, as_string, datetime, alias)) }}
+{%- macro cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
+    {{ return(adapter.dispatch('cast_date', 'dbtvault')(column_str=column_str, as_string=as_string, datetime=datetime, alias=alias)) }}
 {%- endmacro -%}
 
 {%- macro sqlserver__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
 
     {%- if datetime -%}
         {%- if not as_string -%}
-            CONVERT(DATE, {{ column_str }})
-        {%- else -%}
-            CONVERT(DATE, '{{ column_str }}')
-        {%- endif -%}
-    {%- else -%}
-        {%- if not as_string -%}
             CONVERT(DATETIME2, {{ column_str }})
         {%- else -%}
             CONVERT(DATETIME2, '{{ column_str }}')
+        {%- endif -%}
+    {%- else -%}
+        {%- if not as_string -%}
+            CONVERT(DATE, {{ column_str }})
+        {%- else -%}
+            CONVERT(DATE, '{{ column_str }}')
         {%- endif -%}
     {%- endif -%}
 

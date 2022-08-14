@@ -1,10 +1,10 @@
 {%- macro bridge(src_pk, src_extra_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk,
-                                           src_ldts=src_ldts,
                                            as_of_dates_table=as_of_dates_table,
                                            bridge_walk=bridge_walk,
                                            stage_tables_ldts=stage_tables_ldts,
+                                           src_ldts=src_ldts,
                                            source_model=source_model) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
@@ -132,7 +132,7 @@ bridge AS (
 {%- for bridge_step in bridge_walk.keys() -%}
     {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) %}
 
-    {% if loop.first -%} WHERE {%- else -%} AND {%- endif %} {{ dbtvault.cast_date(dbtvault.prefix([bridge_end_date], 'c')) }} = {{ dbtvault.cast_date(max_datetime, true, true) }}
+    {% if loop.first -%} WHERE {%- else -%} AND {%- endif %} {{ dbtvault.cast_date(dbtvault.prefix([bridge_end_date], 'c')) }} = {{ dbtvault.cast_date(max_datetime, true, false) }}
 
 {% endfor -%}
 )
