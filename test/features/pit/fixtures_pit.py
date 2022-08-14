@@ -80,6 +80,15 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "SAT_CUSTOMER_LOGIN_TS": {
+            "source_model": "STG_CUSTOMER_LOGIN_TS",
+            "src_pk": "CUSTOMER_PK",
+            "src_hashdiff": "HASHDIFF",
+            "src_payload": ["LAST_LOGIN_DATE", "DEVICE_USED"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
         "SAT_CUSTOMER_PROFILE": {
             "source_model": "STG_CUSTOMER_PROFILE",
             "src_pk": "CUSTOMER_PK",
@@ -199,6 +208,16 @@ def set_vault_structure_definition(context):
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                 },
             "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_TS": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME2",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME2",
+                "SAT_CUSTOMER_LOGIN_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_TS_LDTS": "DATETIME2"
+            }
         },
         "PIT_CUSTOMER_1S_TS": {
             "source_model": "HUB_CUSTOMER_1S_TS",
@@ -1554,9 +1573,9 @@ def pit_one_sat_sqlserver(context):
         "PIT_CUSTOMER_1S": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
-                "AS_OF_DATE": "DATE",
+                "AS_OF_DATE": "DATETIME2",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATE"
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME2"
             }
         },
         "PIT_CUSTOMER_1S_TS": {
