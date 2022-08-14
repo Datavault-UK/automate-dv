@@ -14,6 +14,22 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "HUB_CUSTOMER_TS": {
+            "source_model": ["STG_CUSTOMER_DETAILS_TS",
+                             "SAT_CUSTOMER_LOGIN_TS"],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATETIME",
+            "src_source": "SOURCE"
+        },
+        "HUB_CUSTOMER_2S": {
+            "source_model": ["STG_CUSTOMER_DETAILS",
+                             "STG_CUSTOMER_LOGIN"],
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "HUB_CUSTOMER_1S": {
             "source_model": "STG_CUSTOMER_DETAILS",
             "src_pk": "CUSTOMER_PK",
@@ -103,6 +119,65 @@ def set_vault_structure_definition(context):
                     "STG_CUSTOMER_DETAILS": "LOAD_DATE",
                     "STG_CUSTOMER_LOGIN": "LOAD_DATE",
                     "STG_CUSTOMER_PROFILE": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_HG": {
+            "source_model": "HUB_CUSTOMER_2S",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_LOGIN": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_PROFILE": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    }
+                },
+            "stage_tables_ldts":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                    "STG_CUSTOMER_LOGIN": "LOAD_DATE",
+                    "STG_CUSTOMER_PROFILE": "LOAD_DATE"
+                },
+            "src_ldts": "LOAD_DATE"
+        },
+        "PIT_CUSTOMER_2S": {
+            "source_model": "HUB_CUSTOMER_2S",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                    "SAT_CUSTOMER_LOGIN": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATE"}
+                    },
+                },
+            "stage_tables_ldts":
+                {
+                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
+                    "STG_CUSTOMER_LOGIN": "LOAD_DATE",
                 },
             "src_ldts": "LOAD_DATE"
         },
@@ -1603,6 +1678,14 @@ def pit_two_sats_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "HUB_CUSTOMER_2S": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "HUB_CUSTOMER_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -1663,6 +1746,16 @@ def pit_two_sats_sqlserver(context):
             }
         },
         "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME2",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME2",
+                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME2"
+            }
+        },
+        "PIT_CUSTOMER_2S": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME2",
                 "CUSTOMER_PK": "BINARY(16)",

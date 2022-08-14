@@ -877,7 +877,7 @@ def bridge_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "AS_OF_DATE": "DATETIME2",
-                "TEST_COLUMN": "VARCHAR(50)",
+                "CUSTOMER_ID": "VARCHAR(4)",
                 "LINK_CUSTOMER_ORDER_PK": "BINARY(16)",
                 "LINK_ORDER_PRODUCT_PK": "BINARY(16)",
             }
