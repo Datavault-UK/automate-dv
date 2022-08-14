@@ -62,9 +62,6 @@ new_rows_as_of AS (
 
 overlap_pks AS (
     SELECT a.*
-    {%- if dbtvault.is_something(src_extra_columns) -%},
-       {{ dbtvault.prefix([src_extra_columns], 'a') }}
-    {%- endif %}
     FROM {{ this }} AS a
     INNER JOIN {{ source_model }} as b
         ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
