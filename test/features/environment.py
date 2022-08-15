@@ -264,6 +264,10 @@ def after_all(context):
 def decide_to_run(tags, obj, obj_type):
     platforms = set(env_utils.AVAILABLE_PLATFORMS)
     obj_tags = set([t.lower() for t in tags])
+
+    if 'skip' in obj_tags:
+        obj.skip(f"{obj_type} skipped due to @skip tag.")
+
     valid_tags = list(platforms.intersection(obj_tags))
     valid_tags_with_not = {f"not_{plt}" for plt in platforms}.intersection(obj_tags)
 

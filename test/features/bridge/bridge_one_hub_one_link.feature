@@ -105,6 +105,7 @@ Feature: [BRG-1L] Bridge table
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|301')     |
 
+  @skip
   @fixture.bridge
   Scenario: [BRG-1L-05] Base load into a bridge table from one hub and one link with multiple loads and
   an encompassing range of AS OF dates, using additional columns
@@ -138,6 +139,7 @@ Feature: [BRG-1L] Bridge table
       | md5('1003') | 2018-06-02 00:00:00.000 | 1003        | md5('1003\|\|300')     |
       | md5('1003') | 2018-06-02 00:00:00.000 | 1003        | md5('1003\|\|301')     |
 
+  @skip
   @fixture.bridge
   Scenario: [BRG-1L-06] Base load into a bridge table from one hub and one link with multiple loads and
   an encompassing range of AS OF dates, using multiple additional columns

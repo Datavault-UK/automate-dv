@@ -605,6 +605,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-03 00:00:00.000000 | md5('1002')             | 2019-01-01 00:00:00.000000 | md5('1002')           | 2019-01-03 00:00:00.000000 | md5('1002')             | 2019-01-03 00:00:00.000000 |
       | md5('1002') | 2019-01-05 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 | md5('1002')           | 2019-01-05 00:00:00.000000 | md5('1002')             | 2019-01-05 00:00:00.000000 |
 
+  @skip
   @fixture.pit
   Scenario: [PIT-08] Load into a pit table where the AS OF table is already established with increments of
   a day with additional columns
@@ -653,6 +654,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-03 00:00:00.000000 | md5('1002')             | 1002        | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-03 00:00:00.000000 | md5('1002')             | 2019-01-03 00:00:00.000000 |
       | md5('1002') | 2019-01-04 00:00:00.000000 | md5('1002')             | 1002        | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
 
+  @skip
   @fixture.pit
   Scenario: [PIT-09] Load into a pit table where the AS OF table is already established with increments of
   a day with multiple additional columns
