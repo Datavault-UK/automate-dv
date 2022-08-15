@@ -41,7 +41,7 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         raise ValueError(f"Invalid vault structure name '{vault_structure}'")
 
 
-def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=None,
+def stage(model_name, source_model: dict, derived_columns=None, null_columns=None, hashed_columns=None,
           ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
     """
     Generate a stage model template
@@ -51,6 +51,7 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
         :param derived_columns: Dictionary of derived column, can be None
         :param hashed_columns: Dictionary of hashed columns, can be None
         :param ranked_columns: Dictionary of ranked columns, can be None
+        :param null_columns: Dictionary of null columns, can be None
         :param include_source_columns: Boolean: Whether to extract source columns from source table
         :param depends_on: depends on string if provided
         :param config: Optional model config
@@ -63,6 +64,7 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
     {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
                         source_model={source_model},
                         derived_columns={derived_columns},
+                        null_columns={null_columns},
                         hashed_columns={hashed_columns},
                         ranked_columns={ranked_columns}) }}}}
     """
@@ -358,7 +360,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "as_constant": as_constant_macro,
         "alias": alias_macro,
         "alias_all": alias_all_macro,
-        "escape_column_names": escape_column_names_macro
+        "escape_column_names": escape_column_names_macro,
+        "null_columns": null_columns_macro
     }
 
     if generator_functions.get(macro_name):
@@ -387,6 +390,16 @@ def derive_columns_macro(model_name, **_):
     {{% endif %}}
     
     {{{{ dbtvault.derive_columns(source_relation=source_relation, columns=var('columns', [])) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def null_columns_macro(model_name, **_):
+    template = f"""
+    {{%- if execute -%}}
+    {{{{ dbtvault.null_columns(columns=var('columns', [])) }}}}
+    {{% endif %}}
     """
 
     template_to_file(template, model_name)

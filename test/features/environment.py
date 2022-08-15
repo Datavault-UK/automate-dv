@@ -36,6 +36,12 @@ fixtures_registry = {
          "sqlserver": fixtures_staging.staging_escaped_sqlserver,
          "databricks": ''},
 
+    "fixture.staging_null_columns":
+        {"snowflake": fixtures_staging.staging_null_columns_snowflake,
+         "bigquery": fixtures_staging.staging_null_columns_bigquery,
+         "sqlserver": fixtures_staging.staging_null_columns_sqlserver,
+         "databricks": ''},
+
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
@@ -178,6 +184,12 @@ fixtures_registry = {
         {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
+         "databricks": ''},
+
+    "fixture.cycle_custom_null_key":
+        {"snowflake": fixtures_cycle.cycle_custom_null_key_snowflake,
+         "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
+         "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
          "databricks": ''},
 
 }
