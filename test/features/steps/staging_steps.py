@@ -35,15 +35,16 @@ def derive_columns(context, processed_stage_name):
 @step("I have null columns in the {processed_stage_name} model")
 def null_columns(context, processed_stage_name):
     context.processed_stage_name = processed_stage_name
-    context.null_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
-                                                                                                orient="records")[0]}
+    context.null_columns = {processed_stage_name: context_utils.context_table_to_dicts(table=context.table,
+                                                                                       orient="records")[0]}
 
 
-@step("I have null columns in the {processed_stage_name} model and null_key_required is {null_key_required} and null_key_optional is {null_key_optional}")
+@step("I have null columns in the {processed_stage_name} model and null_key_required is "
+      "{null_key_required} and null_key_optional is {null_key_optional}")
 def null_columns(context, processed_stage_name, null_key_required, null_key_optional):
     context.processed_stage_name = processed_stage_name
-    context.null_columns = {processed_stage_name: dbtvault_harness_utils.context_table_to_dicts(table=context.table,
-                                                                                                orient="records")[0]}
+    context.null_columns = {processed_stage_name: context_utils.context_table_to_dicts(table=context.table,
+                                                                                       orient="records")[0]}
     context.null_key_required = null_key_required
     context.null_key_optional = null_key_optional
 
