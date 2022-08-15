@@ -155,7 +155,7 @@ def set_vault_structure_definition(context):
                     "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
                     "STG_CUSTOMER_LOGIN_TS": "LOAD_DATETIME"
                 },
-            "src_ldts": "LOAD_DATE"
+            "src_ldts": "LOAD_DATETIME"
         },
         "PIT_CUSTOMER_HG": {
             "source_model": "HUB_CUSTOMER_2S",
