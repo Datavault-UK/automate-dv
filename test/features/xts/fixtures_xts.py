@@ -230,68 +230,58 @@ def xts_snowflake(context):
     Define the structures and metadata to load xts
     """
 
-    set_vault_structure_definition(context)
+    set_metadata(context)
 
-    context.seed_config = {
-        "RAW_STAGE_CUSTOMER": {
+    seed_aliases = [
+        {
+            "aliases": [
+                "RAW_STAGE_CUSTOMER",
+                "RAW_STAGE_CUSTOMER_CRM",
+                "RAW_STAGE_CUSTOMER_CRM_2SAT",
+                "RAW_STAGE_CUSTOMER_2SAT",
+                "RAW_STAGE_3SAT"
+            ],
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-            }
-        },
-        "RAW_STAGE_CUSTOMER_CRM": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-            }
-        },
-        "RAW_STAGE_CUSTOMER_2SAT": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_COUNTY": "VARCHAR",
-                "CUSTOMER_CITY": "VARCHAR",
                 "CUSTOMER_MT_ID": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR",
-            }
-        },
-        "RAW_STAGE_CUSTOMER_CRM_2SAT": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "CUSTOMER_FIRSTNAME": "VARCHAR",
-                "CUSTOMER_LASTNAME": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_MT_ID_2": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
                 "CUSTOMER_CITY": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR",
             }
         },
-        "RAW_STAGE_3SAT": {
+        {
+            "aliases": [
+                "XTS_2SAT",
+                "XTS_2SAT_AC",
+                "XTS_3SAT",
+                "XTS_AC",
+                "XTS_AC_M"
+            ],
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_MT_ID_2": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    ]
+
+    seed_metadata = {
+        "RAW_STAGE_CUSTOMER_2SAT_AC": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_FIRSTNAME": "VARCHAR",
                 "CUSTOMER_LASTNAME": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_COUNTY": "VARCHAR",
@@ -367,27 +357,6 @@ def xts_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "XTS_AC": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "HASHDIFF": "BINARY(16)",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "XTS_AC_M": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
-                "CUSTOMER_MT_ID_2": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "HASHDIFF": "BINARY(16)",
-                "SOURCE": "VARCHAR"
-            }
-        },
         "XTS_COMP_PK": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -397,36 +366,10 @@ def xts_snowflake(context):
                 "HASHDIFF": "BINARY(16)",
                 "SOURCE": "VARCHAR"
             }
-        },
-        "XTS_2SAT": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "XTS_2SAT_AC": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "XTS_3SAT": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "SATELLITE_NAME": "VARCHAR",
-                "HASHDIFF": "BINARY(16)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
         }
     }
+
+    context.seed_config = compile_aliased_metadata(seed_aliases, seed_metadata)
 
 
 @fixture
@@ -437,38 +380,56 @@ def xts_bigquery(context):
 
     set_metadata(context)
 
-    context.seed_config = {
-        "RAW_STAGE_CUSTOMER": {
+    seed_aliases = [
+        {
+            "aliases": [
+                "RAW_STAGE_CUSTOMER",
+                "RAW_STAGE_CUSTOMER_CRM",
+                "RAW_STAGE_CUSTOMER_CRM_2SAT",
+                "RAW_STAGE_CUSTOMER_2SAT",
+                "RAW_STAGE_3SAT"
+            ],
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_MT_ID_2": "STRING",
                 "CUSTOMER_COUNTY": "STRING",
                 "CUSTOMER_CITY": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING",
             }
         },
-        "RAW_STAGE_CUSTOMER_2SAT": {
+        {
+            "aliases": [
+                "XTS_2SAT",
+                "XTS_2SAT_AC",
+                "XTS_3SAT",
+                "XTS_AC",
+                "XTS_AC_M"
+            ],
             "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_FIRSTNAME": "STRING",
-                "CUSTOMER_LASTNAME": "STRING",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_COUNTY": "STRING",
-                "CUSTOMER_CITY": "STRING",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SATELLITE_NAME": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_MT_ID_2": "STRING",
+                "HASHDIFF": "BINARY(16)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "STRING",
+                "SOURCE": "STRING"
             }
-        },
-        "RAW_STAGE_3SAT": {
+        }
+    ]
+
+    seed_metadata = {
+        "RAW_STAGE_CUSTOMER_2SAT_AC": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_FIRSTNAME": "STRING",
                 "CUSTOMER_LASTNAME": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_COUNTY": "STRING",
@@ -553,26 +514,10 @@ def xts_bigquery(context):
                 "HASHDIFF": "STRING",
                 "SOURCE": "STRING"
             }
-        },
-        "XTS_2SAT": {
-            "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "SATELLITE_NAME": "STRING",
-                "HASHDIFF": "STRING",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
-            }
-        },
-        "XTS_3SAT": {
-            "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "SATELLITE_NAME": "STRING",
-                "HASHDIFF": "STRING",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "STRING"
-            }
         }
     }
+
+    context.seed_config = compile_aliased_metadata(seed_aliases, seed_metadata)
 
 
 @fixture

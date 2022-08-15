@@ -103,6 +103,20 @@ def single_source_comp_pk_link_snowflake(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['LINK'] = {
+        "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+        "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+        "COMP_PK": "CUSTOMER_ID",
+        "CUSTOMER_FK": "CUSTOMER_ID",
+        "NATION_FK": "NATION_ID",
+    }
+
     context.seed_config = {
         "LINK": {
             "column_types": {

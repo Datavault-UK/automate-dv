@@ -445,15 +445,13 @@ def pit_snowflake(context):
              "CUSTOMER_ADDRESS",
              "CUSTOMER_DOB",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
         "RAW_STAGE_LOGIN":
             ["CUSTOMER_ID",
              "LAST_LOGIN_DATE",
              "DEVICE_USED",
              "LOAD_DATE",
-             "SOURCE"]
-        ,
+             "SOURCE"],
         "RAW_STAGE_PROFILE":
             ["CUSTOMER_ID",
              "DASHBOARD_COLOUR",
@@ -466,6 +464,7 @@ def pit_snowflake(context):
         "RAW_STAGE_DETAILS": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
+                "DASHBOARD_COLOUR": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
@@ -476,6 +475,7 @@ def pit_snowflake(context):
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
+                "DASHBOARD_COLOUR": "VARCHAR",
                 "LAST_LOGIN_DATE": "DATETIME",
                 "DEVICE_USED": "VARCHAR",
                 "LOAD_DATE": "DATETIME",
@@ -597,23 +597,6 @@ def pit_one_sat_snowflake(context):
 
     set_metadata(context)
 
-    context.stage_columns = {
-        "RAW_STAGE_DETAILS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_ADDRESS",
-             "CUSTOMER_DOB",
-             "LOAD_DATE",
-             "SOURCE"],
-        "RAW_STAGE_DETAILS_TS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_ADDRESS",
-             "CUSTOMER_DOB",
-             "LOAD_DATETIME",
-             "SOURCE"]
-    }
-
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
             "column_types": {
@@ -635,6 +618,14 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "HUB_CUSTOMER_1S": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -643,7 +634,7 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "HUB_CUSTOMER_TS": {
+        "HUB_CUSTOMER_1S_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -651,7 +642,7 @@ def pit_one_sat_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "HUB_CUSTOMER_1S_TS": {
+        "HUB_CUSTOMER_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
@@ -698,18 +689,18 @@ def pit_one_sat_snowflake(context):
         },
         "PIT_CUSTOMER_1S": {
             "column_types": {
-                "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
+                "AS_OF_DATE": "DATETIME",
                 "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_1S_TS": {
             "column_types": {
-                "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+                "AS_OF_DATE": "DATETIME",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_TS": {
@@ -718,6 +709,22 @@ def pit_one_sat_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
                 "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_LG": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_HG": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
             }
         }
     }
@@ -807,6 +814,14 @@ def pit_two_sats_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_CUSTOMER_2S": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "HUB_CUSTOMER_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -867,6 +882,16 @@ def pit_two_sats_snowflake(context):
             }
         },
         "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_PK": "BINARY(16)",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "BINARY(16)",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_2S": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "BINARY(16)",
