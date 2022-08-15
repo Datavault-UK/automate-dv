@@ -411,6 +411,7 @@ Feature: [BRG-3L] Bridge table
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCB')     | md5('CCC-0\|\|CCB')       |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     | md5('DDD-0\|\|DDD')       |
 
+  @skip
   @fixture.bridge
   Scenario: [BRG-3L-07] Base load into a bridge table with additional columns
   From one hub and three links with history in EFF_SAT_ORDER_PRODUCT and EFF_SAT_PRODUCT_COMPONENT, and encompassing range of AS_OF dates

@@ -8,6 +8,7 @@
     {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
     {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
     {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
+    {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
     {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 

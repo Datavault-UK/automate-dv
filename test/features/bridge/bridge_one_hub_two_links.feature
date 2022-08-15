@@ -196,6 +196,7 @@ Feature: [BRG-2L] Bridge table
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
 
+  @skip
   @fixture.bridge
   Scenario: [BRG-2L-06] Base load into a bridge table with additional columns
   From one hub and two links with history and encompassing range of AS_OF dates
