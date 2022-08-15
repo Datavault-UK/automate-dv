@@ -98,12 +98,15 @@ def eff_satellite_snowflake(context):
     Define the structures and metadata to load effectivity satellites
     """
 
+    set_metadata(context)
+
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -213,74 +216,27 @@ def eff_satellite_auto_end_dating_snowflake(context):
     Define the structures and metadata to load effectivity satellites
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER_ORDER": {
-            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        },
-        "STG_ORDER_CUSTOMER": {
-            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "LINK_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": ["CUSTOMER_PK"],
-            "src_sfk": "ORDER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_ORDER_CUSTOMER": {
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_dfk": ["ORDER_PK"],
-            "src_sfk": "CUSTOMER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_ORDER_CUSTOMER_AC": {
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_dfk": ["ORDER_PK"],
-            "src_sfk": "CUSTOMER_PK",
-            "src_extra_columns": "CUSTOMER_MT_ID",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "DATETIME2",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
+                "LOAD_DATETIME": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "RAW_STAGE_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "START_DATE": "DATETIME",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
@@ -291,8 +247,8 @@ def eff_satellite_auto_end_dating_snowflake(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "CUSTOMER_MT_ID": "VARCHAR",
                 "START_DATE": "DATETIME",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "END_DATE": "DATETIME",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
@@ -346,9 +302,9 @@ def eff_satellite_auto_end_dating_snowflake(context):
                 "ORDER_CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
-                "CUSTOMER_MT_ID": "VARCHAR",
                 "START_DATE": "DATETIME",
                 "END_DATE": "DATETIME",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"

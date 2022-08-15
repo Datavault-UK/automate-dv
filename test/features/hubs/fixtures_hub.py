@@ -110,7 +110,32 @@ def single_source_comp_pk_hub_snowflake(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
+        "src_nk": "CUSTOMER_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_CK": "VARCHAR(4)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB_CUSTOMER_SHA": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(32)",
+                "CUSTOMER_CK": "VARCHAR(4)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
         "HUB": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -125,6 +150,7 @@ def single_source_comp_pk_hub_snowflake(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -178,16 +204,16 @@ def multi_source_hub_snowflake(context):
         "src_source": "SOURCE"
     }
 
+    context.vault_structure_columns['HUB_AC'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_extra_columns": "CUSTOMER_MT_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
         "HUB": {
-            "column_types": {
-                "PART_PK": "BINARY(16)",
-                "PART_ID": "VARCHAR",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "HUB_PM": {
             "column_types": {
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR",
@@ -200,6 +226,7 @@ def multi_source_hub_snowflake(context):
                 "PART_PK": "BINARY(16)",
                 "PART_ID": "VARCHAR",
                 "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -211,6 +238,7 @@ def multi_source_hub_snowflake(context):
                 "PART_TYPE": "VARCHAR",
                 "PART_SIZE": "VARCHAR",
                 "PART_RETAILPRICE": "NUMBER(38,2)",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -219,6 +247,7 @@ def multi_source_hub_snowflake(context):
             "column_types": {
                 "PART_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
                 "SUPPLYCOST": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
@@ -229,6 +258,7 @@ def multi_source_hub_snowflake(context):
             "column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PART_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
