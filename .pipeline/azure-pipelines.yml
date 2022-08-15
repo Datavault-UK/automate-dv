@@ -30,8 +30,8 @@ extends:
   parameters:
     platforms:
       - 'snowflake'
-      - 'sqlserver'
       - 'bigquery'
+      - 'sqlserver'
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
