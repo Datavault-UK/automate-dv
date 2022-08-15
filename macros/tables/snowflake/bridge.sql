@@ -1,5 +1,9 @@
 {%- macro bridge(src_pk, src_extra_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
+    {%- if dbtvault.is_something(src_extra_columns) and execute -%}
+      {%- do exceptions.warn("WARNING: src_extra_columns not yet available for PITs or Bridges. This parameter will be ignored.") -%}
+    {%- endif -%}
+
     {{- dbtvault.check_required_parameters(src_pk=src_pk,
                                            as_of_dates_table=as_of_dates_table,
                                            bridge_walk=bridge_walk,
@@ -8,7 +12,6 @@
                                            source_model=source_model) -}}
 
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
     {{- dbtvault.prepend_generated_by() }}
@@ -53,7 +56,7 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, src_extra_columns, stage_tables_ldts, ref(source_model)) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
 
 overlap_as_of AS (
     SELECT AS_OF_DATE
@@ -64,12 +67,12 @@ overlap_as_of AS (
 ),
 
 overlap AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_extra_columns, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
+    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
 ),
 {%- endif %}
 
 new_rows AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, src_extra_columns, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
+    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
 ),
 
 {# Full data from bridge walk(s) -#}
@@ -121,11 +124,6 @@ bridge AS (
         c.{{ bridge_link_pk }}
         {%- if not loop.last %}, {%- endif -%}
         {%- endfor -%}
-
-        {%- if dbtvault.is_something(src_extra_columns) -%}
-            ,
-            {{- '\n       ' }} {{ dbtvault.prefix([src_extra_columns], 'c') }}
-        {%- endif %}
 
     FROM candidate_rows AS c
 

@@ -1,4 +1,4 @@
-{%- macro bridge_overlap_and_new_rows(src_pk, src_extra_columns, bridge_walk, source_model, new_as_of_dates_cte) -%}
+{%- macro bridge_overlap_and_new_rows(src_pk, bridge_walk, source_model, new_as_of_dates_cte) -%}
 
 SELECT
     {{ dbtvault.prefix([src_pk], 'a') }},
@@ -23,11 +23,6 @@ SELECT
         {%- if not loop.last %}, {%- endif -%}
 
     {% endfor -%}
-
-    {%- if dbtvault.is_something(src_extra_columns) -%}
-        ,
-        {{- '\n   ' }} {{ dbtvault.prefix([src_extra_columns], 'a') }}
-    {%- endif %}
 
     FROM {{ source_model }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b

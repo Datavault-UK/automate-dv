@@ -1,4 +1,4 @@
-{%- macro as_of_date_window(src_pk, src_ldts, src_extra_columns, stage_tables_ldts, source_model) -%}
+{%- macro as_of_date_window(src_pk, src_ldts, stage_tables_ldts, source_model) -%}
 
 last_safe_load_datetime AS (
     SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
