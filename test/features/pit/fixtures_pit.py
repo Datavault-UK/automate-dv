@@ -229,14 +229,30 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE"
         },
         "PIT_CUSTOMER_TS": {
-            "column_types": {
-                "AS_OF_DATE": "DATETIME2",
-                "CUSTOMER_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME2",
-                "SAT_CUSTOMER_LOGIN_TS_PK": "BINARY(16)",
-                "SAT_CUSTOMER_LOGIN_TS_LDTS": "DATETIME2"
-            }
+            "source_model": "HUB_CUSTOMER_TS",
+            "src_pk": "CUSTOMER_PK",
+            "as_of_dates_table": "AS_OF_DATE",
+            "satellites":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    },
+                    "SAT_CUSTOMER_LOGIN_TS": {
+                        "pk":
+                            {"PK": "CUSTOMER_PK"},
+                        "ldts":
+                            {"LDTS": "LOAD_DATETIME"}
+                    }
+                },
+            "stage_tables_ldts":
+                {
+                    "SAT_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
+                    "STG_CUSTOMER_LOGIN_TS": "LOAD_DATETIME",
+                },
+            "src_ldts": "LOAD_DATETIME"
         },
         "PIT_CUSTOMER_1S_TS": {
             "source_model": "HUB_CUSTOMER_1S_TS",
