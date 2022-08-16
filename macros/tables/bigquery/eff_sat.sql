@@ -56,13 +56,15 @@ new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'f') }},
         {{ dbtvault.alias_all(fk_cols, 'f') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'f') }},
+        {% endif -%}
         {%- if is_auto_end_dating %}
         f.{{ src_eff }} AS {{ src_start_date }},
         {% else %}
         f.{{ src_start_date }} AS {{ src_start_date }},
         {% endif %}
         f.{{ src_end_date }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_extra_columns], 'f') }},
         f.{{ src_eff }} AS {{ src_eff }},
         f.{{ src_ldts }},
         f.{{ src_source }}
@@ -77,13 +79,15 @@ new_reopened_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lc') }},
         {{ dbtvault.alias_all(fk_cols, 'lc') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'g') }},
+        {% endif -%}
         {%- if is_auto_end_dating %}
         g.{{ src_eff }} AS {{ src_start_date }},
         {% else %}
         g.{{ src_start_date }} AS {{ src_start_date }},
         {% endif %}
         g.{{ src_end_date }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_extra_columns], 'g') }},
         g.{{ src_eff }} AS {{ src_eff }},
         g.{{ src_ldts }},
         g.{{ src_source }}
@@ -101,9 +105,11 @@ new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'h') }},
+        {% endif -%}
         lo.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_eff }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_extra_columns], 'h') }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}
@@ -120,9 +126,11 @@ new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
         {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'h') }},
+        {% endif -%}
         h.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_end_date }} AS {{ src_end_date }},
-        {{ dbtvault.prefix([src_extra_columns], 'h') }},
         h.{{ src_eff }} AS {{ src_eff }},
         h.{{ src_ldts }},
         lo.{{ src_source }}

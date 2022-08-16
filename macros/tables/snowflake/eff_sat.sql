@@ -52,13 +52,15 @@ WITH source_data AS (
 
 {# Selecting the most recent records for each link hashkey -#}
 latest_records AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
-           ROW_NUMBER() OVER (
-                PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
-                ORDER BY b.{{ src_ldts }} DESC
-           ) AS row_num
-    FROM {{ this }} AS b
-    QUALIFY row_num = 1
+    SELECT * FROM (
+        SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
+               ROW_NUMBER() OVER (
+                    PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
+                    ORDER BY b.{{ src_ldts }} DESC
+               ) AS row_num
+        FROM {{ this }} AS b
+    ) AS inner
+    WHERE row_num = 1
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
@@ -79,7 +81,10 @@ latest_closed AS (
 new_open_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'f') }},
-        {{ dbtvault.alias_all([fk_cols, src_extra_columns], 'f') }},
+        {{ dbtvault.alias_all(fk_cols, 'f') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'f') }},
+        {% endif -%}
         {%- if is_auto_end_dating %}
         f.{{ src_eff }} AS {{ src_start_date }},
         {% else %}
@@ -99,7 +104,10 @@ new_open_records AS (
 new_reopened_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lc') }},
-        {{ dbtvault.alias_all([fk_cols, src_extra_columns], 'lc') }},
+        {{ dbtvault.alias_all(fk_cols, 'lc') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'g') }},
+        {% endif -%}
         {%- if is_auto_end_dating %}
         g.{{ src_eff }} AS {{ src_start_date }},
         {% else %}
@@ -122,7 +130,10 @@ new_reopened_records AS (
 new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
-        {{ dbtvault.alias_all([fk_cols, src_extra_columns], 'lo') }},
+        {{ dbtvault.alias_all(fk_cols, 'lo') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'h') }},
+        {% endif -%}
         lo.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_eff }} AS {{ src_end_date }},
         h.{{ src_eff }} AS {{ src_eff }},
@@ -140,7 +151,10 @@ new_closed_records AS (
 new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
-        {{ dbtvault.alias_all([fk_cols, src_extra_columns], 'lo') }},
+        {{ dbtvault.alias_all(fk_cols, 'f') }},
+        {% if dbtvault.is_something(src_extra_columns) %}
+            {{ dbtvault.prefix([src_extra_columns], 'h') }},
+        {% endif -%}
         h.{{ src_start_date }} AS {{ src_start_date }},
         h.{{ src_end_date }} AS {{ src_end_date }},
         h.{{ src_eff }} AS {{ src_eff }},
