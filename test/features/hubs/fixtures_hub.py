@@ -166,6 +166,18 @@ def single_source_comp_pk_nk_hub_snowflake(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["CUSTOMER_PK", "CUSTOMER_EMP_DEP_HK"],
+        "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_EMP_DEP_HK": "CUSTOMER_CK",
+        "CUSTOMER_PK": "CUSTOMER_ID"
+    }
+
     context.seed_config = {
         "HUB": {
             "column_types": {
