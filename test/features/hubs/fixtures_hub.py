@@ -279,6 +279,13 @@ def multi_source_comp_pk_hub_snowflake(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["PART_PK", "PART_CK"],
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
         "HUB": {
             "column_types": {
