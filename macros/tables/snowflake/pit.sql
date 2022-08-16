@@ -56,7 +56,7 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, source_model) }},
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
 
 backfill_rows_as_of_dates AS (
     SELECT
@@ -70,20 +70,20 @@ backfill_rows_as_of_dates AS (
 backfill AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        a.AS_OF_DATE
+        a.AS_OF_DATE,
 
-    {%- for sat_name in satellites -%}
+    {% for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_name = sat_name %}
 
-        {%- if target.type == "sqlserver" -%}
+        {% if target.type == "sqlserver" %}
         CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
-        {%- else -%}
+        {% else %}
         CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
-        {%- endif %}
+        {% endif -%}
 
 
         {{- ',' if not loop.last -}}
