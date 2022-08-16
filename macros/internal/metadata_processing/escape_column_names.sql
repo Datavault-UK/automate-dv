@@ -66,31 +66,31 @@
 
     {%- endif -%}
 
-{%- if columns is none -%}
+    {%- if columns is none -%}
 
-    {%- do return(none) -%}
+        {%- do return(none) -%}
 
-{%- elif columns == [] -%}
+    {%- elif columns == [] -%}
 
-    {%- do return([]) -%}
+        {%- do return([]) -%}
 
-{%- elif columns == {} -%}
+    {%- elif columns == {} -%}
 
-    {%- do return({}) -%}
+        {%- do return({}) -%}
 
-{%- elif columns is string -%}
+    {%- elif columns is string -%}
 
-    {%- do return(col_string) -%}
+        {%- do return(col_string) -%}
 
-{%- elif dbtvault.is_list(columns) -%}
+    {%- elif dbtvault.is_list(columns) -%}
 
-    {%- do return(col_list) -%}
+        {%- do return(col_list) -%}
 
-{%- elif columns is mapping -%}
+    {%- elif columns is mapping -%}
 
-    {%- do return(col_mapping) -%}
+        {%- do return(col_mapping) -%}
 
-{%- endif -%}
+    {%- endif -%}
 
 {%- endmacro -%}
 
