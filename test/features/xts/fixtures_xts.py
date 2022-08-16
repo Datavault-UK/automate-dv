@@ -412,11 +412,11 @@ def xts_bigquery(context):
                 "XTS_AC_M"
             ],
             "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "STRING",
                 "SATELLITE_NAME": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
                 "CUSTOMER_MT_ID_2": "STRING",
-                "HASHDIFF": "BINARY(16)",
+                "HASHDIFF": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -510,7 +510,7 @@ def xts_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "LOAD_DATE": "DATE",
-                "SATELLITE_NAME": "STRING",
+                "SATELLITE_NAME": "VARCHAR",
                 "HASHDIFF": "STRING",
                 "SOURCE": "STRING"
             }
