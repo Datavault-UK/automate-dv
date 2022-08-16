@@ -221,14 +221,14 @@ def eff_satellite_auto_end_dating_snowflake(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "ORDER_ID": "VARCHAR(50)",
-                "START_DATE": "DATETIME2",
-                "CUSTOMER_MT_ID": "VARCHAR(50)",
-                "END_DATE": "DATETIME2",
-                "EFFECTIVE_FROM": "DATETIME2",
-                "LOAD_DATETIME": "DATETIME2",
-                "SOURCE": "VARCHAR(50)"
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "START_DATE": "DATETIME",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "END_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_CUSTOMER_ORDER": {
