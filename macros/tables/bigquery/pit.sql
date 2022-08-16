@@ -13,13 +13,11 @@
 {%- set ghost_pk = '0x0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 
-{#- Setting the new AS_OF dates CTE name -#}
 {%- if dbtvault.is_any_incremental() -%}
-{%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
+    {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
 {%- else -%}
-{%- set new_as_of_dates_cte = 'as_of_dates' -%}
+    {%- set new_as_of_dates_cte = 'as_of_dates' -%}
 {%- endif %}
-
 
 WITH as_of_dates AS (
     SELECT * FROM {{ as_of_table_relation }}
@@ -27,82 +25,7 @@ WITH as_of_dates AS (
 
 {%- if dbtvault.is_any_incremental() %}
 
-last_safe_load_datetime AS (
-    SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME FROM (
-    {%- for stg in stage_tables -%}
-        {%- set stage_ldts = stage_tables[stg] %}
-        SELECT MIN({{ stage_ldts }}) AS LOAD_DATETIME FROM {{ ref(stg) }}
-        {{ "UNION ALL" if not loop.last }}
-    {%- endfor %}
-    )
-),
-
-as_of_grain_old_entries AS (
-    SELECT DISTINCT AS_OF_DATE FROM {{ this }}
-),
-
-as_of_grain_lost_entries AS (
-    SELECT a.AS_OF_DATE
-    FROM as_of_grain_old_entries AS a
-    LEFT OUTER JOIN as_of_dates AS b
-    ON a.AS_OF_DATE = b.AS_OF_DATE
-    WHERE b.AS_OF_DATE IS NULL
-),
-
-as_of_grain_new_entries AS (
-    SELECT a.AS_OF_DATE
-    FROM as_of_dates AS a
-    LEFT OUTER JOIN as_of_grain_old_entries AS b
-    ON a.AS_OF_DATE = b.AS_OF_DATE
-    WHERE b.AS_OF_DATE IS NULL
-),
-
-min_date AS (
-    SELECT min(AS_OF_DATE) AS MIN_DATE
-    FROM as_of_dates
-),
-
-backfill_as_of AS (
-    SELECT AS_OF_DATE
-    FROM as_of_dates AS a
-    INNER JOIN last_safe_load_datetime as l
-    ON a.AS_OF_DATE < l.LAST_SAFE_LOAD_DATETIME
-),
-
-new_rows_pks AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'a') }}
-    FROM {{ ref(source_model) }} AS a
-    INNER JOIN last_safe_load_datetime as l
-    ON a.{{ src_ldts }} >= l.LAST_SAFE_LOAD_DATETIME
-),
-
-new_rows_as_of AS (
-    SELECT AS_OF_DATE
-    FROM as_of_dates AS a
-    INNER JOIN last_safe_load_datetime as l
-    ON a.AS_OF_DATE >= l.LAST_SAFE_LOAD_DATETIME
-    UNION DISTINCT
-    SELECT AS_OF_DATE
-    FROM as_of_grain_new_entries
-),
-
-overlap AS (
-    SELECT a.*
-    FROM {{ this }} AS a
-    INNER JOIN {{ ref(source_model) }} as b
-    ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
-    INNER JOIN min_date
-    ON 1 = 1
-    INNER JOIN last_safe_load_datetime
-    ON 1 = 1
-	LEFT OUTER JOIN as_of_grain_lost_entries
-	ON a.AS_OF_DATE = as_of_grain_lost_entries.AS_OF_DATE
-    WHERE a.AS_OF_DATE >= min_date.MIN_DATE
-        AND a.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
-		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
-),
-
-{#- Back-fill any newly arrived hubs, set all historical pit dates to ghost records -#}
+{{ dbtvault.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
 
 backfill_rows_as_of_dates AS (
     SELECT
