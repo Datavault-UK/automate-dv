@@ -602,6 +602,7 @@ def bridge_bigquery(context):
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "ORDER_ID": "STRING",
+                "TEST_COLUMN": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "END_DATE": "DATETIME",
                 "SOURCE": "STRING"
@@ -629,6 +630,15 @@ def bridge_bigquery(context):
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "HUB_CUSTOMER_M_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "TEST_COLUMN": "STRING",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -716,9 +726,28 @@ def bridge_bigquery(context):
                 "LINK_ORDER_PRODUCT_PK": "STRING",
             }
         },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_ID": "STRING",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "LINK_ORDER_PRODUCT_PK": "STRING",
+            }
+        },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "DATETIME",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "LINK_ORDER_PRODUCT_PK": "STRING",
+                "LINK_PRODUCT_COMPONENT_PK": "STRING",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
                 "AS_OF_DATE": "DATETIME",
                 "LINK_CUSTOMER_ORDER_PK": "STRING",
                 "LINK_ORDER_PRODUCT_PK": "STRING",
@@ -730,6 +759,15 @@ def bridge_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_ID": "STRING",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_M_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_ID": "STRING",
+                "TEST_COLUMN": "STRING",
                 "LINK_CUSTOMER_ORDER_PK": "STRING",
             }
         }

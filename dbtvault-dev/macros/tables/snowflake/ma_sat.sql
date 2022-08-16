@@ -63,27 +63,31 @@ WITH source_data AS (
 
 {# Select latest records from satellite, restricted to PKs in source data -#}
 latest_records AS (
-    SELECT {{ dbtvault.prefix(cols_for_latest, 'mas', alias_target='target') }}
-        ,mas.latest_rank
-        ,DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
-            ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC) AS check_rank
-    FROM
-    (
-    SELECT {{ dbtvault.prefix(cols_for_latest, 'inner_mas', alias_target='target') }}
-        ,RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
-            ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
+    SELECT {{ dbtvault.prefix(cols_for_latest, 'mas', alias_target='target') }},
+           mas.latest_rank,
+           DENSE_RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'mas') }}
+                              ORDER BY {{ dbtvault.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ dbtvault.prefix(cdk_cols, 'mas') }} ASC
+           ) AS check_rank
+    FROM (
+    SELECT {{ dbtvault.prefix(cols_for_latest, 'inner_mas', alias_target='target') }},
+           RANK() OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 'inner_mas') }}
+                        ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC
+           ) AS latest_rank
     FROM {{ this }} AS inner_mas
-    INNER JOIN (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
-        ON {{ dbtvault.multikey([src_pk], prefix=['inner_mas', 'spk'], condition='=') }}
-    QUALIFY latest_rank = 1
+        INNER JOIN (
+            SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}
+            FROM source_data as s
+        ) AS spk
+            ON {{ dbtvault.multikey([src_pk], prefix=['inner_mas', 'spk'], condition='=') }}
+            QUALIFY latest_rank = 1
     ) AS mas
 ),
 
 {# Select summary details for each group of latest records -#}
 latest_group_details AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'lr') }}
-        ,{{ dbtvault.prefix([src_ldts], 'lr') }}
-        ,MAX(lr.check_rank) AS latest_count
+    SELECT {{ dbtvault.prefix([src_pk], 'lr') }},
+           {{ dbtvault.prefix([src_ldts], 'lr') }},
+           MAX(lr.check_rank) AS latest_count
     FROM latest_records AS lr
     GROUP BY {{ dbtvault.prefix([src_pk], 'lr') }}, {{ dbtvault.prefix([src_ldts], 'lr') }}
 ),
@@ -104,8 +108,8 @@ records_to_insert AS (
         WHERE NOT EXISTS (
             SELECT 1
             FROM (
-                SELECT {{ dbtvault.prefix(cols_for_latest, 'lr', alias_target='target') }}
-                ,lg.latest_count
+                SELECT {{ dbtvault.prefix(cols_for_latest, 'lr', alias_target='target') }},
+                lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
                     ON {{ dbtvault.multikey([src_pk], prefix=['lr', 'lg'], condition='=') }}

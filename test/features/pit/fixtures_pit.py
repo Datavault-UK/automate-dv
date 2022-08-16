@@ -971,6 +971,7 @@ def pit_bigquery(context):
         "RAW_STAGE_DETAILS": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
+                "DASHBOARD_COLOUR": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_ADDRESS": "STRING",
                 "CUSTOMER_DOB": "DATE",
@@ -981,6 +982,7 @@ def pit_bigquery(context):
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
+                "DASHBOARD_COLOUR": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
                 "DEVICE_USED": "STRING",
                 "LOAD_DATE": "DATETIME",
@@ -1000,6 +1002,15 @@ def pit_bigquery(context):
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "HUB_CUSTOMER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "DASHBOARD_COLOUR": "STRING",
                 "LOAD_DATE": "DATETIME",
                 "SOURCE": "STRING"
             }
@@ -1047,6 +1058,33 @@ def pit_bigquery(context):
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME",
+                "SAT_CUSTOMER_PROFILE_PK": "STRING",
+                "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_AC": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME",
+                "SAT_CUSTOMER_PROFILE_PK": "STRING",
+                "SAT_CUSTOMER_PROFILE_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_M_AC": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "DASHBOARD_COLOUR": "STRING",
                 "SAT_CUSTOMER_DETAILS_PK": "STRING",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
                 "SAT_CUSTOMER_LOGIN_PK": "STRING",
