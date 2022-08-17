@@ -1104,23 +1104,6 @@ def pit_one_sat_bigquery(context):
 
     set_metadata(context)
 
-    context.stage_columns = {
-        "RAW_STAGE_DETAILS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_ADDRESS",
-             "CUSTOMER_DOB",
-             "LOAD_DATE",
-             "SOURCE"],
-        "RAW_STAGE_DETAILS_TS":
-            ["CUSTOMER_ID",
-             "CUSTOMER_NAME",
-             "CUSTOMER_ADDRESS",
-             "CUSTOMER_DOB",
-             "LOAD_DATETIME",
-             "SOURCE"]
-    }
-
     context.seed_config = {
         "RAW_STAGE_DETAILS": {
             "column_types": {
@@ -1147,6 +1130,22 @@ def pit_one_sat_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "HUB_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "HUB_CUSTOMER_1S_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "STRING"
             }
         },
@@ -1193,6 +1192,22 @@ def pit_one_sat_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "SAT_CUSTOMER_DETAILS_PK": "STRING",
                 "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "DATETIME",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_1S_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "DATETIME",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "DATETIME"
             }
         },
         "PIT_CUSTOMER_TS": {
