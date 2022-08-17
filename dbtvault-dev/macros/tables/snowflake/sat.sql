@@ -1,13 +1,11 @@
 {%- macro sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
 
     {%- set source_model_cols = adapter.get_columns_in_relation(ref(source_model)) -%}
-    {%- set payload_cols = [] -%}
 
+    {%- set payload_cols = [] -%}
     {%- for col in source_model_cols -%}
-        {%- do log('source_model_col: '~col.column,true) -%}
         {%- if col.column not in [src_pk, src_hashdiff, src_eff, src_ldts, src_source] -%}
             {%- do payload_cols.append(col.column) -%}
-            {%- do log('payload_cols: '~payload_cols,true) -%}
         {%- endif -%}
     {%- endfor -%}
 
