@@ -1321,6 +1321,14 @@ def pit_two_sats_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "HUB_CUSTOMER_2S": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "HUB_CUSTOMER_TS": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -1381,6 +1389,16 @@ def pit_two_sats_bigquery(context):
             }
         },
         "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "DATETIME",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "DATETIME",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "DATETIME"
+            }
+        },
+        "PIT_CUSTOMER_2S": {
             "column_types": {
                 "AS_OF_DATE": "DATETIME",
                 "CUSTOMER_PK": "STRING",
