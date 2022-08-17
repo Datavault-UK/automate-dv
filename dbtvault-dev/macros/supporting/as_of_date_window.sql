@@ -98,6 +98,26 @@ overlap_pks AS (
         AND a.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
         AND a.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
     {%- endif %}
+),
+
+overlap_as_of AS (
+    SELECT p.AS_OF_DATE
+    FROM as_of_dates AS p
+    {% if target.type == "bigquery" -%}
+    INNER JOIN min_date
+    ON 1 = 1
+    INNER JOIN last_safe_load_datetime
+    ON 1 = 1
+	LEFT OUTER JOIN as_of_grain_lost_entries
+	ON p.AS_OF_DATE = as_of_grain_lost_entries.AS_OF_DATE
+    WHERE p.AS_OF_DATE >= min_date.MIN_DATE
+        AND p.AS_OF_DATE < last_safe_load_datetime.LAST_SAFE_LOAD_DATETIME
+		AND as_of_grain_lost_entries.AS_OF_DATE IS NULL
+    {% else %}
+    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
+        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+    {% endif %}
 )
 
 {%- endmacro -%}
