@@ -28,8 +28,13 @@
 
 {%- macro is_something(obj) -%}
 
-    {%- if obj is not none and obj is defined and obj and obj | length > 0 -%}
-        {%- do return(true) -%}
+    {%- if obj is not none and obj is defined and obj -%}
+        {%- if an empty list, do not consider the object something -%}
+        {% if dbtvault.is_list(empty_is_false=true) %}
+            {%- do return(true) -%}
+        {%- else -%}
+            {%- do return(false) -%}
+        {%- endif -%}
     {%- else -%}
         {%- do return(false) -%}
     {%- endif -%}
