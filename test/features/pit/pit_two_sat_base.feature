@@ -5,11 +5,11 @@ Feature: [PIT-2SB] Point in Time
   @not_bigquery
   @fixture.pit_two_sats
   Scenario: [PIT-2SB-01] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
-    Given the PIT_CUSTOMER table does not exist
+    Given the PIT_CUSTOMER_2S table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK | SAT                  | PIT          |
-      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |      | SAT_CUSTOMER_LOGIN   |              |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_2S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_2S |
+      |                 |      | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -41,7 +41,7 @@ Feature: [PIT-2SB] Point in Time
       | 2018-06-05 |
       | 2018-06-06 |
     When I load the vault
-    Then the PIT_CUSTOMER table should contain expected data
+    Then the PIT_CUSTOMER_2S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0000000000000000        | 1900-01-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | 0000000000000000      | 1900-01-01 00:00:00.000 |
@@ -68,11 +68,11 @@ Feature: [PIT-2SB] Point in Time
   @bigquery
   @fixture.pit_two_sats
   Scenario: [PIT-2SB-01-BQ] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
-    Given the PIT_CUSTOMER table does not exist
+    Given the PIT_CUSTOMER_2S table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK | SAT                  | PIT          |
-      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
-      |              |      | SAT_CUSTOMER_LOGIN   |              |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_2S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_2S |
+      |                 |      | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -104,7 +104,7 @@ Feature: [PIT-2SB] Point in Time
       | 2018-06-05 |
       | 2018-06-06 |
     When I load the vault
-    Then the PIT_CUSTOMER table should contain expected data
+    Then the PIT_CUSTOMER_2S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK | SAT_CUSTOMER_LOGIN_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 0x0000000000000000      | 1900-01-01 00:00:00.000   | 0x0000000000000000    | 1900-01-01 00:00:00.000 |
       | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')             | 2018-06-01 00:00:00.000   | 0x0000000000000000    | 1900-01-01 00:00:00.000 |
@@ -356,9 +356,9 @@ Feature: [PIT-2SB] Point in Time
   Scenario: [PIT-2SB-04] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK | SAT                  | PIT             |
-      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
-      |              |      | SAT_CUSTOMER_LOGIN   |                 |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_2S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+      |                 |      | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |
@@ -411,9 +411,9 @@ Feature: [PIT-2SB] Point in Time
   Scenario: [PIT-2SB-04-BQ] Base load into a pit table from two satellites with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_HG table does not exist
     And the raw vault contains empty tables
-      | HUB          | LINK | SAT                  | PIT             |
-      | HUB_CUSTOMER |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
-      |              |      | SAT_CUSTOMER_LOGIN   |                 |
+      | HUB             | LINK | SAT                  | PIT             |
+      | HUB_CUSTOMER_2S |      | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER_HG |
+      |                 |      | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *      |

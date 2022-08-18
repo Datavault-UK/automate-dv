@@ -40,11 +40,11 @@
         },
         "azure-core": {
             "hashes": [
-                "sha256:0f3a20d245659bf81fb3670070a5410c8d4a43298d5a981e62dce393000a9084",
-                "sha256:a76856fa83efe1925a4fd917dc179c7daa15917dd71da2774833fa82a96f3dfa"
+                "sha256:c26ad5f3612b8a2207cf2be0ef67e478a74acfa450b8d25d778c939921f650dc",
+                "sha256:c4a7d0d9e63a70dbde502b5d0cbe58b52244db4fbf247cca6768899e45fa3336"
             ],
-            "markers": "python_version >= '3.6'",
-            "version": "==1.24.2"
+            "markers": "python_version >= '3.7'",
+            "version": "==1.25.0"
         },
         "azure-identity": {
             "hashes": [
@@ -1378,11 +1378,11 @@
         },
         "setuptools": {
             "hashes": [
-                "sha256:d36f579e989a90e8106b9061599c707d912e9cd296b30d62cb6b4dd3567a5ddc",
-                "sha256:db49784825568c9340e45e3322b8b8aed4ca598ce9bbf5277dcae95cc04dc469"
+                "sha256:7c7854ee1429a240090297628dc9f75b35318d193537968e2dc14010ee2f5bca",
+                "sha256:dc2662692f47d99cb8ae15a784529adeed535bcd7c277fee0beccf961522baf6"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==63.4.0"
+            "version": "==63.4.1"
         },
         "six": {
             "hashes": [

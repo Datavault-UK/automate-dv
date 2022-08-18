@@ -2,7 +2,7 @@ import os
 from pathlib import Path
 from unittest.mock import patch
 
-from test import dbtvault_harness_utils
+from test import behave_helpers
 
 directory_dict = {
     'csv': {
@@ -30,7 +30,7 @@ def test_clean_seeds_success(sample_directory_tree):
     assert set(os.listdir(tmp_csv_dir)) == {path.name for path in paths['csv']}
 
     with patch('test.TEMP_SEED_DIR', tmp_csv_dir):
-        dbtvault_harness_utils.clean_seeds()
+        behave_helpers.clean_seeds()
 
     assert not os.listdir(tmp_csv_dir)
 
@@ -43,7 +43,7 @@ def test_clean_target_success(sample_directory_tree):
     assert set(os.listdir(tmp_target_dir)) == {path.name for path in paths['target']}
 
     with patch('test.TEST_PROJECT_ROOT', tmp_dir):
-        dbtvault_harness_utils.clean_target()
+        behave_helpers.clean_target()
 
     assert 'target' not in os.listdir(tmp_dir)
 
@@ -56,6 +56,6 @@ def test_clean_models_success(sample_directory_tree):
     assert set(os.listdir(tmp_models_dir)) == {path.name for path in paths['models']}
 
     with patch('test.TEST_MODELS_ROOT', tmp_models_dir):
-        dbtvault_harness_utils.clean_models()
+        behave_helpers.clean_models()
 
     assert not os.listdir(tmp_models_dir)

@@ -3,7 +3,6 @@ from behave import fixture
 
 # Snowflake
 
-
 @fixture
 def staging_snowflake(context):
     """

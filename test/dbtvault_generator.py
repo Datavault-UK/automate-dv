@@ -72,7 +72,9 @@ def stage(model_name, source_model: dict, derived_columns=None, null_columns=Non
     template_to_file(template, model_name)
 
 
-def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, depends_on=""):
+def hub(model_name, src_pk, src_nk,
+        src_ldts, src_source, source_model, config,
+        src_extra_columns=None, depends_on=""):
     """
     Generate a hub model template
         :param model_name: Name of the model file
@@ -82,6 +84,7 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
         :param src_source: Source record source column
         :param source_model: Model name to select from
         :param config: Optional model config string
+        :param src_extra_columns: Additional columns to add to the hub
         :param depends_on: Optional forced dependency
     """
 
@@ -90,13 +93,16 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
     {{{{ config({config}) }}}}
     {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, 
                       src_ldts={src_ldts}, src_source={src_source}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                       source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
 
 
-def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config, depends_on=""):
+def link(model_name, src_pk, src_fk,
+         src_ldts, src_source, source_model, config,
+         src_extra_columns=None, depends_on=""):
     """
     Generate a link model template
         :param model_name: Name of the model file
@@ -106,14 +112,16 @@ def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config,
         :param src_source: Source record source column
         :param source_model: Model name to select from
         :param config: Optional model config
+        :param src_extra_columns: Additional columns to add to the link
         :param depends_on: Optional forced dependency
     """
 
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, src_ldts={src_ldts},
-                       src_source={src_source}, 
+    {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, 
+                       src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                       src_ldts={src_ldts}, src_source={src_source}, 
                        source_model={source_model})   }}}}
     """
 
@@ -121,13 +129,14 @@ def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config,
 
 
 def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-           src_payload=None, depends_on=""):
+           src_payload=None, src_extra_columns=None, depends_on=""):
     """
     Generate a t-link model template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_fk: Source fk
         :param src_payload: Source payload
+        :param src_extra_columns: Additional columns to add to the t link
         :param src_eff: Source effective from
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -139,7 +148,9 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, src_payload={src_payload if src_payload else 'none'}, 
+    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, 
+                         src_payload={src_payload if src_payload else 'none'},
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                          src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                          source_model={source_model}) }}}}
     """
@@ -149,13 +160,14 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
 
 def sat(model_name, src_pk, src_hashdiff, src_payload,
         src_eff, src_ldts, src_source, source_model,
-        config, depends_on=""):
+        config, src_extra_columns=None, depends_on=""):
     """
     Generate a satellite model template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_hashdiff: Source hashdiff
         :param src_payload: Source payload
+        :param src_extra_columns: Additional columns to add to the satellite
         :param src_eff: Source effective from
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -168,6 +180,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                       src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                       source_model={source_model}) }}}}
     """
@@ -177,7 +190,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
 
 def eff_sat(model_name, src_pk, src_dfk, src_sfk,
             src_start_date, src_end_date, src_eff, src_ldts, src_source,
-            source_model, config, depends_on=""):
+            source_model, config, src_extra_columns=None, depends_on=""):
     """
     Generate an effectivity satellite model template
         :param model_name: Name of the model file
@@ -187,6 +200,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
         :param src_eff: Source effective from
         :param src_start_date: Source start date
         :param src_end_date: Source end date
+        :param src_extra_columns: Additional columns to add to the eff sat
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -199,6 +213,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.eff_sat(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
                           src_start_date={src_start_date}, src_end_date={src_end_date},
+                          src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                           src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source},
                           source_model={source_model}) }}}}
     """
@@ -207,7 +222,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
 
 
 def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
-           src_eff, src_ldts, src_source, source_model, config):
+           src_ldts, src_source, source_model, config, src_eff=None, src_extra_columns=None):
     """
     Generate a multi active satellite model template
         :param model_name: Name of the model file
@@ -216,6 +231,7 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
         :param src_hashdiff: Source hashdiff
         :param src_payload: Source payload
         :param src_eff: Source effective from
+        :param src_extra_columns: Additional columns to add to the ma sat
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -225,7 +241,9 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
     template = f"""
     {{{{ config({config}) }}}}
     {{{{ dbtvault.ma_sat(src_pk={src_pk}, src_cdk={src_cdk}, src_hashdiff={src_hashdiff}, 
-                         src_payload={src_payload}, src_eff={src_eff}, 
+                         src_payload={src_payload}, 
+                         src_eff={src_eff if src_eff else 'none'}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                          src_ldts={src_ldts}, src_source={src_source}, 
                          source_model={source_model}) }}}}
     """
@@ -233,12 +251,14 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
     template_to_file(template, model_name)
 
 
-def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, config=None, depends_on=""):
+def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model,
+        src_extra_columns=None, config=None, depends_on=""):
     """
     Generate a XTS template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_satellite: Satellite to track
+        :param src_extra_columns: Additional columns to add to the xts
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -250,6 +270,7 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, c
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.xts(src_pk={src_pk}, src_satellite={src_satellite}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                       src_ldts={src_ldts}, src_source={src_source},
                       source_model={source_model}) }}}}
     """
@@ -258,15 +279,16 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, c
 
 
 def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
-        stage_tables, src_ldts, depends_on="", config=None):
+        stage_tables_ldts, src_ldts, src_extra_columns=None, depends_on="", config=None):
     """
     Generate a PIT template
         :param model_name: Name of the model file
         :param src_pk: Source pk
+        :param src_extra_columns: Additional columns to add to the bridge
         :param as_of_dates_table: Name for the AS_OF table
         :param satellites: Dictionary of satellite reference mappings
         :param src_ldts: Source Load Date timestamp
-        :param stage_tables: List of stage tables
+        :param stage_tables_ldts: List of stage table load date(time) stamps
         :param source_model: Model name to select from
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -276,17 +298,19 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.pit(src_pk={src_pk}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'},
                       as_of_dates_table={as_of_dates_table}, 
                       satellites={satellites}, 
-                      stage_tables={stage_tables},
-                      src_ldts={src_ldts}, source_model={source_model}) }}}}
+                      stage_tables_ldts={stage_tables_ldts},
+                      src_ldts={src_ldts},
+                      source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
 
 
 def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
-           config, depends_on=""):
+           config, src_extra_columns=None, depends_on=""):
     """
     Generate a bridge model template
         :param model_name: Name of the model file
@@ -295,6 +319,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
         :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
         :param stage_tables_ldts: List of stage table load date(time) stamps
         :param source_model: Model name to select from
+        :param src_extra_columns: Additional columns to add to the bridge
         :param src_ldts: Source load date timestamp
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -302,9 +327,13 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.bridge(src_pk={src_pk}, as_of_dates_table={as_of_dates_table}, 
-                         bridge_walk={bridge_walk}, stage_tables_ldts={stage_tables_ldts}, 
-                         src_ldts={src_ldts}, source_model={source_model}) }}}}
+    {{{{ dbtvault.bridge(src_pk={src_pk}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                         src_ldts={src_ldts}, 
+                         as_of_dates_table={as_of_dates_table}, 
+                         bridge_walk={bridge_walk}, 
+                         stage_tables_ldts={stage_tables_ldts},
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
