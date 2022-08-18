@@ -29,7 +29,7 @@
 {%- macro is_something(obj) -%}
 
     {%- if obj is not none and obj is defined and obj -%}
-        {%- if an empty list, do not consider the object something -%}
+        {#- if an empty list, do not consider the object something -#}
         {% if dbtvault.is_list(empty_is_false=true) %}
             {%- do return(true) -%}
         {%- else -%}
