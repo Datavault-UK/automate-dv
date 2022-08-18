@@ -677,7 +677,7 @@ def eff_satellite_sqlserver(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "VARCHAR(4)",
                 "ORDER_ID": "VARCHAR(50)",
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "CUSTOMER_CK": "VARCHAR(11)",
