@@ -151,7 +151,7 @@ new_closed_records AS (
 new_closed_records AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'lo') }},
-        {{ dbtvault.alias_all(fk_cols, 'f') }},
+        {{ dbtvault.alias_all(fk_cols, 'h') }},
         {% if dbtvault.is_something(src_extra_columns) %}
             {{ dbtvault.prefix([src_extra_columns], 'h') }},
         {% endif -%}
