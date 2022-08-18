@@ -217,3 +217,54 @@ Feature: [EFF] Effectivity Satellites
       | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
       | md5('4000\|\|DDD') | md5('4000') | md5('DDD') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
       | md5('5000\|\|EEE') | md5('5000') | md5('EEE') | 2020-01-10 | 9999-12-31 | 2020-01-10     | 2020-01-11 | orders |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [EFF-11] Load data into a non-existent effectivity satellite, with additional columns
+    Given the EFF_SAT_AC table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | CUSTOMER_MT_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+    And I stage the STG_CUSTOMER data
+    When I load the EFF_SAT_AC eff_sat
+    Then the EFF_SAT_AC table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | CUSTOMER_MT_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [EFF-12] Load data into an empty effectivity satellite, with additional columns
+    Given the EFF_SAT_AC eff_sat is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | CUSTOMER_MT_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+    And I stage the STG_CUSTOMER data
+    When I load the EFF_SAT_AC eff_sat
+    Then the EFF_SAT_AC table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | CUSTOMER_MT_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TPCH_CUSTOMER  | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [EFF-13] Load data into an empty effectivity satellite, with multiple additional columns
+    Given the EFF_SAT_AC_MULTI eff_sat is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | ORDER_ID | CUSTOMER_MT_ID | CUSTOMER_CK | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1000        | AAA      | TPCH_CUSTOMER  | CUSTOMER_CK | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 2000        | BBB      | TPCH_CUSTOMER  | CUSTOMER_CK | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | 3000        | CCC      | TPCH_CUSTOMER  | CUSTOMER_CK | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+    And I stage the STG_CUSTOMER data
+    When I load the EFF_SAT_AC_MULTI eff_sat
+    Then the EFF_SAT_AC_MULTI table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | CUSTOMER_MT_ID | CUSTOMER_CK | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | TPCH_CUSTOMER  | CUSTOMER_CK | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | TPCH_CUSTOMER  | CUSTOMER_CK | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | TPCH_CUSTOMER  | CUSTOMER_CK | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 | orders |

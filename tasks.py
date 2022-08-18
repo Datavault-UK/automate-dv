@@ -8,7 +8,7 @@ from invoke import Collection, task
 
 import test
 from env import env_utils
-from test import dbtvault_harness_utils
+from test import groups
 
 logger = logging.getLogger('dbtvault')
 logger.setLevel(logging.INFO)
@@ -305,7 +305,7 @@ def run_integration_tests(c, structures=None, subtype=None, platform=None, disab
     feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats',
                            'ma_sats', 'xts', 'bridge', 'pit', 'cycle'}
 
-    sub_types = dbtvault_harness_utils.feature_sub_types()
+    sub_types = groups.feature_sub_types()
 
     structures = set(str(structures).split(","))
 

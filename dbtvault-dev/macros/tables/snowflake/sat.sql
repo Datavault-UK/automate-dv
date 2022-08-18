@@ -1,32 +1,35 @@
-{%- macro sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-    {{- adapter.dispatch('sat', 'dbtvault')(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                                            src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
+    {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
+                                           src_ldts=src_ldts, src_source=src_source,
+                                           source_model=source_model) -}}
+
+    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
+    {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
+    {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
+    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
+    {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
+    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
+    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
+
+    {{ dbtvault.prepend_generated_by() }}
+
+    {{ adapter.dispatch('sat', 'dbtvault')(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                            src_payload=src_payload, src_extra_columns=src_extra_columns,
+                                            src_eff=src_eff, src_ldts=src_ldts,
                                             src_source=src_source, source_model=source_model) -}}
 
 {%- endmacro %}
 
-{%- macro default__sat(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
-                                       src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
-
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
-{%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source]) -%}
-{%- set rank_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
+{%- set window_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
-{%- endif -%}
-
-{{ dbtvault.prepend_generated_by() }}
+{%- endif %}
 
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
@@ -43,15 +46,15 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{%- if dbtvault.is_any_incremental() %}
+{% if dbtvault.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ dbtvault.prefix(rank_cols, 'a', alias_target='target') }}
+    SELECT {{ dbtvault.prefix(window_cols, 'a', alias_target='target') }}
     FROM (
-        SELECT {{ dbtvault.prefix(rank_cols, 'current_records', alias_target='target') }},
+        SELECT {{ dbtvault.prefix(window_cols, 'current_records', alias_target='target') }},
             RANK() OVER (
-                PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
-                ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
+               PARTITION BY {{ dbtvault.prefix([src_pk], 'current_records') }}
+               ORDER BY {{ dbtvault.prefix([src_ldts], 'current_records') }} DESC
             ) AS rank
         FROM {{ this }} AS current_records
             JOIN (
