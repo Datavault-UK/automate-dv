@@ -4,7 +4,9 @@
         {%- set include_source_columns = true -%}
     {%- endif -%}
 
-    {{- adapter.dispatch('stage', 'dbtvault')(include_source_columns=include_source_columns,
+    {{- dbtvault.prepend_generated_by() }}
+
+    {{ adapter.dispatch('stage', 'dbtvault')(include_source_columns=include_source_columns,
                                               source_model=source_model,
                                               hashed_columns=hashed_columns,
                                               derived_columns=derived_columns,
@@ -14,8 +16,6 @@
 {%- endmacro -%}
 
 {%- macro default__stage(include_source_columns, source_model, hashed_columns, derived_columns, null_columns, ranked_columns) -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 {% if (source_model is none) and execute %}
 
@@ -33,7 +33,8 @@
     {{- exceptions.raise_compiler_error(error_message) -}}
 {%- endif -%}
 
-{#- Check for source format or ref format and create relation object from source_model -#}
+{#- Check for source format or ref format and create
+relation object from source_model -#}
 {% if source_model is mapping and source_model is not none -%}
 
     {%- set source_name = source_model | first -%}
@@ -159,4 +160,5 @@ columns_to_select AS (
 )
 
 SELECT * FROM columns_to_select
+
 {%- endmacro -%}

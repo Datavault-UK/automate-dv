@@ -146,6 +146,11 @@
 {%- set concat_string = var('concat_string', '||') -%}
 {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
+{% if dbtvault.is_list(columns) and columns | length == 1 %}
+    {%- set columns = columns[0] -%}
+{% endif %}
+
+
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
     {%- set hash_alg = 'MD5' -%}

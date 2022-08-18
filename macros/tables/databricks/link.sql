@@ -11,8 +11,6 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
 
-{{ dbtvault.prepend_generated_by() }}
-
 SELECT '1'
 
 {%- endmacro -%}
