@@ -6,12 +6,6 @@
 
 {%- macro default__concat_ws(string_list, separator="||") -%}
 
-    CONCAT_WS('{{ separator }}', {{ string_list | join(", ") }})
-
-{%- endmacro -%}
-
-{%- macro bigquery__concat_ws(string_list, separator="||") -%}
-
     {{- 'CONCAT(' -}}
     {%- for str in string_list -%}
         {{- "{}".format(str) -}}
@@ -21,8 +15,14 @@
 
 {%- endmacro -%}
 
+{%- macro bigquery__concat_ws(string_list, separator="||") -%}
+
+    {{ dbtvault.default__concat_ws(string_list=string_list, separator=separator) }}
+
+{%- endmacro -%}
+
 {%- macro sqlserver__concat_ws(string_list, separator="||") -%}
 
-{{ dbtvault.default__concat_ws(string_list=string_list, separator=separator) }}
+    {{ dbtvault.default__concat_ws(string_list=string_list, separator=separator) }}
 
 {%- endmacro -%}
