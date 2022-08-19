@@ -7,11 +7,11 @@
 {%- macro default__concat_ws(string_list, separator="||") -%}
 
     CONCAT(
-        {%- for str in string_list %}
-            {{ str }}
-            {%- if not loop.last %}, '{{ separator }}', {%- endif -%}
-        {% endfor %}
-        )
+    {%- for str in string_list %}
+        {{ str }}
+        {%- if not loop.last %}, '{{ separator }}', {%- endif -%}
+    {% endfor %}
+     )
 
 {%- endmacro -%}
 
