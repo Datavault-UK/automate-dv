@@ -38,16 +38,20 @@
     {% for column in columns %}
         {%- set column_str = dbtvault.as_constant(column) -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
+
         {%- set column_expression -%}
             IFNULL({{ standardise | replace('[EXPRESSION]', escaped_column_str) }}, '{{ null_placeholder_string}}')
         {%- endset -%}
 
-        {% do log('col: ' ~ column_expression, true) %}
+        {%- do all_null.append(null_placeholder_string) -%}
         {%- do processed_columns.append(column_expression) -%}
 
     {% endfor %}
 
-
+    CAST({{ hash_alg }}(NULLIF(
+         {{ dbtvault.concat_ws(processed_columns) -}}
+        , '{{ all_null | join(concat_string) }}')) AS {{ dbtvault.type_binary() }}
+    ) AS {{ dbtvault.escape_column_names(alias) }}
 
 {%- endif -%}
 
