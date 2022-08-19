@@ -35,7 +35,7 @@
     {%- set all_null = [] -%}
     {%- set processed_columns = [] -%}
 
-    {% for column in columns %}
+    {%- for column in columns -%}
         {%- set column_str = dbtvault.as_constant(column) -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
 
@@ -49,9 +49,9 @@
     {% endfor %}
 
     CAST({{ hash_alg }}(NULLIF(
-         {{ dbtvault.concat_ws(processed_columns) -}}
-        , '{{ all_null | join(concat_string) }}')) AS {{ dbtvault.type_binary() }}
-    ) AS {{ dbtvault.escape_column_names(alias) }}
+     {{ dbtvault.concat_ws(processed_columns) -}} {{ ', ' -}}
+    '{{ all_null | join(concat_string) }}')) AS {{ dbtvault.type_binary() }}
+) AS {{ dbtvault.escape_column_names(alias) }}
 
 {%- endif -%}
 
