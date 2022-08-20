@@ -32,7 +32,7 @@
 
         {%- endif -%}
 
-        {{- ",\n" if not loop.last -}}
+        {{- ",\n\n" if not loop.last -}}
     {%- endfor -%}
 
 {%- endif %}

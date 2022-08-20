@@ -48,6 +48,7 @@ hashed_columns AS (
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
     "BOOKING_DATE",
+
     CAST(MD5_BINARY(
          CONCAT(
              IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_DOB" AS VARCHAR))), ''), '^^'), '||',

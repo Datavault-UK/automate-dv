@@ -72,7 +72,7 @@
 
     {%- endif -%}
 
-    {{ '\n' ~ hashed_column }}
+    {{ hashed_column }}
 
 {%- endif -%}
 
