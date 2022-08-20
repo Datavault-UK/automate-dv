@@ -23,6 +23,12 @@
 
 {% endmacro %}
 
+{% macro bigquery__hash_alg_md5() -%}
+
+    {% do return("TO_HEX(MD5") %}
+
+{% endmacro %}
+
 {%- macro hash_alg_sha256() -%}
 
     {{- adapter.dispatch('hash_alg_sha256', 'dbtvault')() -}}

@@ -8,8 +8,8 @@
 
     CONCAT(
     {%- for str in string_list %}
-        {{ str }}
-        {%- if not loop.last %}, '{{ separator }}', {%- endif -%}
+         {{ str }}
+         {%- if not loop.last %}, '{{ separator }}', {%- endif -%}
     {% endfor %}
      )
 
