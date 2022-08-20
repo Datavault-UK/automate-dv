@@ -46,12 +46,33 @@
         {%- do all_null.append(null_placeholder_string) -%}
         {%- do processed_columns.append(column_expression) -%}
 
-    {% endfor %}
+    {% endfor -%}
+
+    {% if not is_hashdiff -%}
+
+    {%- set hashed_column -%}
 
     CAST({{ hash_alg }}(NULLIF(
-     {{ dbtvault.concat_ws(processed_columns) -}} {{ ', ' -}}
-    '{{ all_null | join(concat_string) }}')) AS {{ dbtvault.type_binary() }}
-) AS {{ dbtvault.escape_column_names(alias) }}
+     {{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}} {{ ', ' -}}
+       '{{ all_null | join(concat_string) }}')) AS {{ dbtvault.type_binary() }}{{ '\n' }}
+     {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
+
+    {%- endset -%}
+
+    {%- else -%}
+
+    {%- set hashed_column -%}
+
+    CAST({{ hash_alg }}(
+     {{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}}
+       ) AS {{ dbtvault.type_binary() }}{{ '\n' }}
+     {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
+
+    {%- endset -%}
+
+    {%- endif -%}
+
+    {{ '\n' ~ hashed_column }}
 
 {%- endif -%}
 
@@ -59,12 +80,12 @@
 
 {%- macro bigquery__hash(columns, alias, is_hashdiff) -%}
 
-    {{ dbtvault.defualt__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
+    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
 
 {%- endmacro -%}
 
 {%- macro sqlserver__hash(columns, alias, is_hashdiff) -%}
 
-    {{ dbtvault.defualt__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
+    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
 
 {%- endmacro -%}
