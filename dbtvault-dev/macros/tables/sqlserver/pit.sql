@@ -1,9 +1,11 @@
-{%- macro sqlserver__pit(src_pk, as_of_dates_table, satellites, stage_tables, src_ldts, source_model) -%}
+{%- macro sqlserver__pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) -%}
 
-{{ dbtvault.default__pit(source_model=source_model, src_pk=src_pk,
+{{ dbtvault.default__pit(src_pk=src_pk,
+                         src_extra_columns=src_extra_columns,
                          as_of_dates_table=as_of_dates_table,
                          satellites=satellites,
-                         stage_tables=stage_tables,
-                         src_ldts=src_ldts)  }}
+                         stage_tables_ldts=stage_tables_ldts,
+                         src_ldts=src_ldts,
+                         source_model=source_model) }}
 
 {%- endmacro -%}
