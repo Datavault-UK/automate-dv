@@ -105,7 +105,7 @@ def clear_schema(context):
 
         seed_file_names.append(seed_file_name)
 
-    logs = dbtvault_harness_utils.run_dbt_seeds(seed_file_names=seed_file_names)
+    logs = dbt_runner.run_dbt_seeds(seed_file_names=seed_file_names)
 
     assert "Completed successfully" in logs
 
@@ -181,7 +181,6 @@ def create_empty_stage(context, raw_stage_name):
 
 @given("I have an empty {processed_stage_name} primed stage")
 def create_empty_stage(context, processed_stage_name):
-
     if not getattr(context, "null_columns", None):
         context.null_columns = dict()
         context.null_columns[processed_stage_name] = dict()
@@ -200,8 +199,8 @@ def create_empty_stage(context, processed_stage_name):
             stage_null_column_headings_list.append(v)
     stage_null_column_headings = list(v + "_ORIGINAL" for v in stage_null_column_headings_list)
 
-    stage_headings = stage_source_column_headings + stage_hashed_column_headings \
-                     + stage_derived_column_headings + stage_null_column_headings
+    stage_headings = stage_source_column_headings + stage_hashed_column_headings + \
+                     stage_derived_column_headings + stage_null_column_headings
 
     row = Row(cells=[], headings=stage_headings)
 
@@ -230,7 +229,8 @@ def load_populated_table(context, model_name, vault_structure):
     """
 
     if env_utils.platform() == "sqlserver":
-        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # Workaround for MSSQL not permitting certain implicit data type conversions
+        # while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
         seed_model_name = context_utils.context_table_to_model(context.seed_config, context.table,
@@ -334,10 +334,12 @@ def create_csv(context, raw_stage_model_name):
     """Creates a CSV file in the data folder"""
 
     if env_utils.platform() == "sqlserver":
-        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # Workaround for MSSQL not permitting certain implicit data type conversions
+        # while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
-        # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV file created by an earlier step to avoid
+        # dbt conflict with the seed table about to be created
         behave_helpers.clean_seeds(raw_stage_model_name.lower() + "_seed")
 
         seed_model_name = context_utils.context_table_to_model(context.seed_config, context.table,
@@ -378,10 +380,12 @@ def create_csv(context, table_name):
     """Creates a CSV file in the data folder, creates a seed table, and then loads a table using the seed table"""
 
     if env_utils.platform() == "sqlserver":
-        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # Workaround for MSSQL not permitting certain implicit data type conversions
+        # while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
-        # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV file created by an earlier step to avoid
+        # dbt conflict with the seed table about to be created
         behave_helpers.clean_seeds(table_name.lower() + "_seed")
 
         seed_model_name = context_utils.context_table_to_model(context.seed_config, context.table,
@@ -394,7 +398,8 @@ def create_csv(context, table_name):
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
-        args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+        args = {k: v for k, v in stage_metadata.items() if
+                k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -424,7 +429,8 @@ def create_csv(context, table_name):
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
-        args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+        args = {k: v for k, v in stage_metadata.items() if
+                k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -446,10 +452,12 @@ def create_csv(context, raw_stage_model_name):
     """
 
     if env_utils.platform() == "sqlserver":
-        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # Workaround for MSSQL not permitting certain implicit data type conversions
+        # while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
-        # Delete any seed CSV file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV file created by an earlier step to avoid
+        # dbt conflict with the seed table about to be created
         # For MSSQL must delete any existing copy of the seed file if present, e.g. multiple loads
         # For Snowflake deletion of seed file is not required but does not cause a problem if performed
         behave_helpers.clean_seeds(raw_stage_model_name.lower() + "_seed")
@@ -492,7 +500,8 @@ def create_csv(context, raw_stage_model_name):
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
-    args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+    args = {k: v for k, v in stage_metadata.items() if
+            k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
                                            vault_structure="stage",
@@ -512,10 +521,12 @@ def stage_processing(context, processed_stage_name):
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     if env_utils.platform() == "sqlserver":
-        # Workaround for MSSQL not permitting certain implicit data type conversions while loading nvarchar csv file data
+        # Workaround for MSSQL not permitting certain implicit data type conversions
+        # while loading nvarchar csv file data
         # into expected data table, e.g. nvarchar -- > binary
 
-        # Delete any seed CSV or model SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV or model SQL file created by an earlier step to avoid
+        # dbt conflict with the seed table about to be created
         behave_helpers.clean_seeds(model_name.lower() + "_expected_seed")
         behave_helpers.clean_models(model_name.lower() + "_expected_seed")
 
@@ -537,7 +548,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
@@ -566,7 +577,7 @@ def expect_data(context, model_name):
 
         dbt_runner.run_dbt_seeds(seed_file_names=[expected_output_csv_name])
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
         assert "1 of 1 PASS" in logs
 
@@ -575,7 +586,8 @@ def expect_data(context, model_name):
 def expect_data(context, model_name):
     if env_utils.platform() == "sqlserver":
 
-        # Delete any seed CSV or model SQL file created by an earlier step to avoid dbt conflict with the seed table about to be created
+        # Delete any seed CSV or model SQL file created by an earlier step to
+        # avoid dbt conflict with the seed table about to be created
         behave_helpers.clean_seeds(model_name.lower() + "_expected_seed")
         behave_helpers.clean_models(model_name.lower() + "_expected_seed")
 
@@ -609,7 +621,7 @@ def expect_data(context, model_name):
 
         dbtvault_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
@@ -643,7 +655,7 @@ def expect_data(context, model_name):
 
         dbt_runner.run_dbt_seeds(seed_file_names=[expected_output_csv_name])
 
-        logs = dbtvault_harness_utils.run_dbt_command(["dbt", "test"])
+        logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
         assert "1 of 1 PASS" in logs
 
