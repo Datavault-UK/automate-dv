@@ -356,6 +356,7 @@ def macro_model(model_name, macro_name, metadata=None):
         "hash_columns": hash_columns_macro,
         "rank_columns": rank_columns_macro,
         "stage": stage_macro,
+        "concat_ws": concat_ws_macro,
         "expand_column_list": expand_column_list_macro,
         "as_constant": as_constant_macro,
         "alias": alias_macro,
@@ -375,6 +376,16 @@ def hash_macro(model_name, **_):
     {{% if execute %}}
     {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
     {{% endif %}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def concat_ws_macro(model_name, **_):
+    template = f"""
+    {{%- if execute -%}}
+    {{{{ dbtvault.concat_ws(string_list=var('string_list')) }}}}
+    {{%- endif -%}}
     """
 
     template_to_file(template, model_name)
