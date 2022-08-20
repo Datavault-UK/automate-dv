@@ -18,11 +18,16 @@
 
 {%- macro default__type_binary() -%}
     {%- if var('hash') | lower == 'md5' -%}
-    BINARY(16)
+        BINARY(16)
     {%- elif var('hash') | lower == 'sha' -%}
-    BINARY(32)
+        BINARY(32)
     {%- endif -%}
 {%- endmacro -%}
+
+{%- macro bigquery__type_binary() -%}
+    STRING
+{%- endmacro -%}
+
 
 {%- macro type_string() -%}
   {{- return(adapter.dispatch('type_string', 'dbtvault')()) -}}
