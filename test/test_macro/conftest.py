@@ -1,13 +1,13 @@
+import json
 import os
 
 import pytest
-import json
+from filelock import FileLock
+
 import test
 from env import env_utils
-from test import dbtvault_generator
-from test import dbtvault_harness_utils
+from test import dbtvault_generator, behave_helpers, dbt_runner
 from . import structure_metadata
-from filelock import FileLock
 
 mark_metadata_mapping = {
     "single_source_hub": structure_metadata.single_source_hub,
@@ -53,10 +53,10 @@ def setup(tmp_path_factory, worker_id):
     def test_setup():
         os.chdir(test.TEST_PROJECT_ROOT)
         env_utils.setup_environment()
-        dbtvault_harness_utils.clean_models()
-        dbtvault_harness_utils.clean_target()
-        dbtvault_harness_utils.replace_test_schema()
-        dbtvault_harness_utils.run_dbt_seeds()
+        behave_helpers.clean_models()
+        behave_helpers.clean_target()
+        behave_helpers.replace_test_schema()
+        dbt_runner.run_dbt_seeds()
 
     # If not parallel
     if worker_id == "master":
@@ -74,4 +74,3 @@ def setup(tmp_path_factory, worker_id):
             else:
                 test_setup()
                 fn.write_text(json.dumps({'status': 'in-use'}))
-

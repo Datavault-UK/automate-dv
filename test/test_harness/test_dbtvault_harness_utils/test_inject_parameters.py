@@ -1,4 +1,4 @@
-from test import dbtvault_harness_utils
+from test import macro_test_helpers
 
 
 def test_inject_parameters_success():
@@ -12,8 +12,8 @@ def test_inject_parameters_success():
         "TABLE": "test_table"
     }
 
-    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
-                                                                    params)
+    actual_file_contents = macro_test_helpers.inject_parameters(sample_file_contents,
+                                                                params)
 
     assert actual_file_contents == expected_file_contents
 
@@ -29,8 +29,8 @@ def test_inject_parameters_case_insensitive_success():
         "TABLE": "test_table"
     }
 
-    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
-                                                                    params)
+    actual_file_contents = macro_test_helpers.inject_parameters(sample_file_contents,
+                                                                params)
 
     assert actual_file_contents == expected_file_contents
 
@@ -46,8 +46,8 @@ def test_inject_parameters_missing_placeholders_success():
         "TABLE": "test_table"
     }
 
-    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
-                                                                    params)
+    actual_file_contents = macro_test_helpers.inject_parameters(sample_file_contents,
+                                                                params)
 
     assert actual_file_contents == expected_file_contents
 
@@ -62,7 +62,7 @@ def test_inject_parameters_missing_params_success():
         "SCHEMA": "test_schema"
     }
 
-    actual_file_contents = dbtvault_harness_utils.inject_parameters(sample_file_contents,
-                                                                    params)
+    actual_file_contents = macro_test_helpers.inject_parameters(sample_file_contents,
+                                                                params)
 
     assert actual_file_contents == expected_file_contents
