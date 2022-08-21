@@ -619,12 +619,14 @@ def template_to_file(template, model_name):
         f.write(template.strip())
 
 
-def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
+def add_seed_config(seed_name: str, seed_config: dict, include_columns=None,
+                    additional_config=None):
     """
     Append a given dictionary to the end of the dbt_project.yml file
         :param seed_name: Name of seed file to configure
         :param seed_config: Configuration dict for seed file
         :param include_columns: A list of columns to add to the seed config, All if not provided
+        :param additional_config: Additional configuration defined by external metadata (fixtures etc.)
     """
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
@@ -634,6 +636,9 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     if include_columns:
         seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
                                        k in include_columns}
+
+    if additional_config:
+        seed_config = {**seed_config, **additional_config}
 
     seed_properties = {
         'version': 2,
@@ -712,6 +717,20 @@ def append_end_date_config(context, config: dict) -> dict:
     return config
 
 
+def append_model_text_config(context, config) -> dict:
+    """
+    Append custom database config if attribute is present.
+    """
+
+    if hasattr(context, 'text'):
+        if context.text:
+            config_text_dict = parse_step_text(context.text)
+            config = {**config,
+                      **config_text_dict}
+
+    return config
+
+
 def append_dict_to_schema_yml(yaml_dict):
     """
     Append a given dictionary to the end of the schema_test.yml file
@@ -767,3 +786,23 @@ def dict_to_yaml_string(yaml_dict: dict, sequence=4, offset=2):
     yaml_str = buf.getvalue().decode('utf-8')
 
     return yaml_str
+
+
+def parse_step_text(step_text: str):
+    config_dict = dict()
+
+    if pair_list := step_text.split(","):
+        for pair in pair_list:
+            pair_dict = {str(pair.split(':')[0]).strip(): str(pair.split(':')[1]).strip()}
+            config_dict = {**config_dict, **pair_dict}
+
+    return config_dict
+
+
+def handle_step_text_dict(context):
+    if hasattr(context, 'text'):
+
+        if context.text:
+            config_dict = parse_step_text(context.text)
+
+            return config_dict
