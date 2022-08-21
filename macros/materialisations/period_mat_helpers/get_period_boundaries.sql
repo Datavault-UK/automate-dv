@@ -1,8 +1,7 @@
-{%- macro get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    'dbtvault')(target_schema=target_schema,
-                                                target_table=target_table,
+                                    'dbtvault')(target_relation=target_relation,
                                                 timestamp_field=timestamp_field,
                                                 start_date=start_date,
                                                 stop_date=stop_date,
@@ -13,7 +12,7 @@
 
 
 
-{% macro default__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
@@ -21,7 +20,7 @@
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
                 COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                          {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
-            FROM {{ target_schema }}.{{ target_table }}
+            FROM {{ target_relation }}
         )
         SELECT
             start_timestamp,
@@ -44,7 +43,7 @@
 
 
 
-{% macro bigquery__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         with data as (
@@ -52,7 +51,7 @@
                 coalesce(CAST(max({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
                 coalesce({{ dbt_utils.dateadd('millisecond', 86399999, "nullif('" ~ stop_date | lower ~ "','none')") }},
                          CAST(CURRENT_TIMESTAMP() AS DATETIME) ) as STOP_TIMESTAMP
-            from {{ target_schema }}.{{ target_table }}
+            from {{ target_relation }}
         )
         select
             START_TIMESTAMP,
@@ -76,7 +75,7 @@
 
 
 
-{% macro sqlserver__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date_mssql = start_date[0:27] %}
@@ -88,7 +87,7 @@
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
                 COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, "CAST(NULLIF('" ~ stop_date_mssql | lower ~ "','none') AS DATETIME2)") }},
                          {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
-            FROM {{ target_schema }}.{{ target_table }}
+            FROM {{ target_relation }}
         )
         SELECT
             start_timestamp,
