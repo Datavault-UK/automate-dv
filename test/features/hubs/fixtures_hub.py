@@ -973,9 +973,127 @@ def single_source_hub_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "HUB_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "HUB_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
         "RAW_STAGE": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def single_source_comp_pk_hub_databricks(context):
+    """
+    Define the structures and metadata to load single-source hubs with composite PK
+    """
+
+    set_metadata(context)
+
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
+        "src_nk": "CUSTOMER_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
+    context.seed_config = {
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "HUB_CUSTOMER_SHA": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(32)",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def single_source_comp_pk_nk_hub_databricks(context):
+    """
+    Define the structures and metadata to load single-source hubs with composite PK and NK
+    """
+
+    set_metadata(context)
+
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["CUSTOMER_PK", "CUSTOMER_EMP_DEP_HK"],
+        "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_EMP_DEP_HK": "CUSTOMER_CK",
+        "CUSTOMER_PK": "CUSTOMER_ID"
+    }
+
+    context.seed_config = {
+        "HUB": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_EMP_DEP_HK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_CK": "VARCHAR(100)",
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
@@ -992,232 +1110,140 @@ def multi_source_hub_databricks(context):
 
     set_metadata(context)
 
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
+    context.vault_structure_columns['HUB_AC'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_extra_columns": "CUSTOMER_MT_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
+    }
+
     context.seed_config = {
         "HUB": {
             "column_types": {
                 "PART_PK": "STRING",
-                "PART_ID": "VARCHAR(4)",
+                "PART_ID": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "PART_PK": "STRING",
+                "PART_ID": "VARCHAR(100)",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
+                "CUSTOMER_CK": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE_PARTS": {
             "column_types": {
-                "PART_ID": "VARCHAR(4)",
-                "PART_NAME": "VARCHAR(10)",
-                "PART_TYPE": "VARCHAR(10)",
-                "PART_SIZE": "VARCHAR(2)",
-                "PART_RETAILPRICE": "DECIMAL(38,2)",
+                "PART_ID": "VARCHAR(100)",
+                "PART_NAME": "VARCHAR(100)",
+                "PART_TYPE": "VARCHAR(100)",
+                "PART_SIZE": "VARCHAR(100)",
+                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE_SUPPLIER": {
             "column_types": {
-                "PART_ID": "VARCHAR(4)",
-                "SUPPLIER_ID": "VARCHAR(2)",
+                "PART_ID": "VARCHAR(100)",
+                "SUPPLIER_ID": "VARCHAR(100)",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "DECIMAL(38,2)",
+                "SUPPLYCOST": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE_LINEITEM": {
             "column_types": {
-                "ORDER_ID": "VARCHAR(5)",
-                "PART_ID": "VARCHAR(4)",
-                "SUPPLIER_ID": "VARCHAR(2)",
+                "ORDER_ID": "VARCHAR(100)",
+                "PART_ID": "VARCHAR(100)",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
+                "SUPPLIER_ID": "VARCHAR(100)",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "DECIMAL(38,2)",
-                "DISCOUNT": "DECIMAL(38,2)",
+                "EXTENDED_PRICE": "NUMBER(38,2)",
+                "DISCOUNT": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
+
 
 @fixture
-def single_source_comppk_hub_databricks(context):
-    """
-    Define the structures and metadata to load single-source hubs with composite PK
-    """
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
-            "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
-
-    context.seed_config = {
-        "HUB_CUSTOMER": {
-            "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "CUSTOMER_CK": "VARCHAR(4)",
-                "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
-            }
-        },
-        "HUB_CUSTOMER_SHA": {
-            "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "CUSTOMER_CK": "VARCHAR(4)",
-                "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
-            }
-        },
-        "HUB": {
-            "column_types": {
-                "CUSTOMER_PK": "STRING",
-                "CUSTOMER_CK": "VARCHAR(4)",
-                "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
-            }
-        },
-        "RAW_STAGE": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(4)",
-                "CUSTOMER_CK": "VARCHAR(4)",
-                "CUSTOMER_NAME": "VARCHAR(5)",
-                "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
-            }
-        }
-    }
-
-@fixture
-def multi_source_comppk_hub_databricks(context):
+def multi_source_comp_pk_hub_databricks(context):
     """
     Define the structures and metadata to load multi-source hubs with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_PARTS": {
-            "PART_PK": "PART_ID"
-        },
-        "STG_SUPPLIER": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID"
-        },
-        "STG_LINEITEM": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
+    set_metadata(context)
 
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["PART_PK", "PART_CK"],
-            "src_nk": "PART_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["PART_PK", "PART_CK"],
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
     context.seed_config = {
         "HUB": {
             "column_types": {
                 "PART_PK": "STRING",
-                "PART_CK": "VARCHAR(4)",
-                "PART_ID": "VARCHAR(4)",
+                "PART_CK": "VARCHAR(100)",
+                "PART_ID": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE_PARTS": {
             "column_types": {
-                "PART_ID": "VARCHAR(4)",
-                "PART_CK": "VARCHAR(4)",
-                "PART_NAME": "VARCHAR(10)",
-                "PART_TYPE": "VARCHAR(10)",
-                "PART_SIZE": "VARCHAR(2)",
-                "PART_RETAILPRICE": "DECIMAL(11,2)",
+                "PART_ID": "VARCHAR(100)",
+                "PART_CK": "VARCHAR(100)",
+                "PART_NAME": "VARCHAR(100)",
+                "PART_TYPE": "VARCHAR(100)",
+                "PART_SIZE": "VARCHAR(100)",
+                "PART_RETAILPRICE": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE_SUPPLIER": {
             "column_types": {
-                "PART_ID": "VARCHAR(4)",
-                "PART_CK": "VARCHAR(4)",
-                "SUPPLIER_ID": "VARCHAR(2)",
-                "AVAILQTY": "INT",
-                "SUPPLYCOST": "DECIMAL(11,2)",
+                "PART_ID": "VARCHAR(100)",
+                "PART_CK": "VARCHAR(100)",
+                "SUPPLIER_ID": "VARCHAR(100)",
+                "AVAILQTY": "FLOAT",
+                "SUPPLYCOST": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "RAW_STAGE_LINEITEM": {
             "column_types": {
-                "ORDER_ID": "VARCHAR(5)",
-                "PART_ID": "VARCHAR(4)",
-                "PART_CK": "VARCHAR(4)",
-                "SUPPLIER_ID": "VARCHAR(2)",
-                "LINENUMBER": "INT",
-                "QUANTITY": "INT",
-                "EXTENDED_PRICE": "DECIMAL(11,2)",
-                "DISCOUNT": "DECIMAL(11,2)",
+                "ORDER_ID": "VARCHAR(100)",
+                "PART_ID": "VARCHAR(100)",
+                "PART_CK": "VARCHAR(100)",
+                "SUPPLIER_ID": "VARCHAR(100)",
+                "LINENUMBER": "FLOAT",
+                "QUANTITY": "FLOAT",
+                "EXTENDED_PRICE": "NUMBER(38,2)",
+                "DISCOUNT": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
-
-@fixture
-def single_source_comppknk_hub_databricks(context):
-    """
-    Define the structures and metadata to load single-source hubs with composite PK
-    """
-
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK1": "CUSTOMER_ID",
-            "CUSTOMER_PK2": "CUSTOMER_CK"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["CUSTOMER_PK1", "CUSTOMER_PK2"],
-            "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
-
-    context.seed_config = {
-        "HUB": {
-            "column_types": {
-                "CUSTOMER_PK1": "STRING",
-                "CUSTOMER_PK2": "STRING",
-                "CUSTOMER_ID": "VARCHAR(4)",
-                "CUSTOMER_CK": "VARCHAR(4)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
-            }
-        },
-        "RAW_STAGE": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(4)",
-                "CUSTOMER_CK": "VARCHAR(4)",
-                "CUSTOMER_NAME": "VARCHAR(5)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(4)"
-            }
-        }
-    }
-

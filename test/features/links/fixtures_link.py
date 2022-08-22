@@ -528,9 +528,19 @@ def single_source_link_databricks(context):
     context.seed_config = {
         "LINK": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "VARCHAR(100)",
-                "CUSTOMER_FK": "VARCHAR(100)",
-                "NATION_FK": "VARCHAR(100)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "LINK_AC": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -548,38 +558,36 @@ def single_source_link_databricks(context):
         }
     }
 
+
 @fixture
-def single_source_comppk_link_databricks(context):
+def single_source_comp_pk_link_databricks(context):
     """
     Define the structures and metadata to load single-source links with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
+    set_metadata(context)
+
+    context.vault_structure_columns['LINK'] = {
+        "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+        "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+        "COMP_PK": "CUSTOMER_ID",
+        "CUSTOMER_FK": "CUSTOMER_ID",
+        "NATION_FK": "NATION_ID",
     }
 
     context.seed_config = {
         "LINK": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "VARCHAR(100)",
-                "COMP_PK": "VARCHAR(100)",
-                "CUSTOMER_FK": "VARCHAR(100)",
-                "NATION_FK": "VARCHAR(100)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "COMP_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -596,6 +604,7 @@ def single_source_comppk_link_databricks(context):
             }
         }
     }
+
 
 @fixture
 def multi_source_link_databricks(context):
@@ -603,39 +612,25 @@ def multi_source_link_databricks(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_SAP": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_CRM": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_WEB": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-    }
+    set_metadata(context)
 
     context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+        **context.vault_structure_columns,
+        **{
+            'LINK': {
+                "src_pk": "CUSTOMER_NATION_PK",
+                "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "LINK": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "VARCHAR(100)",
-                "CUSTOMER_FK": "VARCHAR(100)",
-                "NATION_FK": "VARCHAR(100)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }

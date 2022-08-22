@@ -52,13 +52,13 @@ fixtures_registry = {
         {"snowflake": fixtures_hub.single_source_comp_pk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comp_pk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comp_pk_hub_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_hub.single_source_comp_pk_hub_databricks},
 
     "fixture.single_source_comp_pk_nk_hub":
         {"snowflake": fixtures_hub.single_source_comp_pk_nk_hub_snowflake,
          "bigquery": fixtures_hub.single_source_comp_pk_nk_hub_bigquery,
          "sqlserver": fixtures_hub.single_source_comp_pk_nk_hub_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_hub.single_source_comp_pk_nk_hub_databricks},
 
     "fixture.multi_source_hub":
         {"snowflake": fixtures_hub.multi_source_hub_snowflake,
@@ -70,7 +70,7 @@ fixtures_registry = {
         {"snowflake": fixtures_hub.multi_source_comp_pk_hub_snowflake,
          "bigquery": fixtures_hub.multi_source_comp_pk_hub_bigquery,
          "sqlserver": fixtures_hub.multi_source_comp_pk_hub_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_hub.multi_source_comp_pk_hub_databricks},
 
     "fixture.single_source_link":
         {"snowflake": fixtures_link.single_source_link_snowflake,
@@ -82,7 +82,7 @@ fixtures_registry = {
         {"snowflake": fixtures_link.single_source_comp_pk_link_snowflake,
          "bigquery": fixtures_link.single_source_comp_pk_link_bigquery,
          "sqlserver": fixtures_link.single_source_comp_pk_link_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_link.single_source_comp_pk_link_databricks},
 
     "fixture.multi_source_link":
         {"snowflake": fixtures_link.multi_source_link_snowflake,
@@ -94,7 +94,7 @@ fixtures_registry = {
         {"snowflake": fixtures_t_link.t_link_snowflake,
          "bigquery": fixtures_t_link.t_link_bigquery,
          "sqlserver": fixtures_t_link.t_link_sqlserver,
-         "databricks": fixtures_t_link.t_link_databricks},
+         "databricks": ''},
 
     "fixture.t_link_comp_pk":
         {"snowflake": fixtures_t_link.t_link_comp_pk,
