@@ -1,5 +1,5 @@
 name: dbtvault_test
-version: 0.7.9
+version: 0.8.4
 require-dbt-version: [">=1.0.0", "<2.0.0"]
 config-version: 2
 profile: dbtvault
@@ -18,7 +18,8 @@ clean-targets:
 
 vars:
   hash: MD5
-  max_datetime: '{{ dbtvault.max_datetime() }}'
+  null_key_required: '-1' # Default -1, allows user to configure
+  null_key_optional: '-2' # Default -2, allows user to configure
 
 seeds:
   +quote_columns: true

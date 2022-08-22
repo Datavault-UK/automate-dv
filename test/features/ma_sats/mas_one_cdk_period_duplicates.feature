@@ -180,8 +180,8 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
     Given the RAW_STAGE stage is empty
     And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
     When the RAW_STAGE is loaded
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1001        | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | 1002        | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
       | 1002        | Beth          | 17-214-233-1222 | 2019-01-01     | 2019-01-01 | *      |
@@ -240,23 +240,23 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
     And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     When I insert by period into the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
     Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
-      | CUSTOMER_PK | HASHDIFF       | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('ALBERT')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1002') | md5('BETH')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1002') | md5('BETH')    | Beth          | 17-214-233-1222 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1003') | md5('CHARLEY') | Charley       | 17-214-233-1213 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1003') | md5('CHARLEY') | Charley       | 17-214-233-1223 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1003') | md5('CHARLEY') | Charley       | 17-214-233-1233 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1010') | md5('JENNY')   | Jenny         | 17-214-233-1214 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1010') | md5('JENNY')   | Jenny         | 17-214-233-1224 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1010') | md5('JENNY')   | Jenny         | 17-214-233-1234 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1010') | md5('JENNY')   | Jenny         | 17-214-233-1244 | 2019-01-01     | 2019-01-01 | *      |
-      | md5('1001') | md5('ALBERT')  | Albert        | 17-214-233-1311 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1002') | md5('BETH')    | Beth          | 17-214-233-1312 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1002') | md5('BETH')    | Beth          | 17-214-233-1322 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1003') | md5('CHARLEY') | Charley       | 17-214-233-1313 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1003') | md5('CHARLEY') | Charley       | 17-214-233-1323 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1214 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1224 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1234 | 2019-01-03     | 2019-01-03 | *      |
-      | md5('1010') | md5('JENNA')   | Jenna         | 17-214-233-1244 | 2019-01-03     | 2019-01-03 | *      |
+      | CUSTOMER_PK | HASHDIFF       | CUSTOMER_PHONE  | CUSTOMER_NAME | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('ALBERT')  | 17-214-233-1211 | Albert        | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1002') | md5('BETH')    | 17-214-233-1212 | Beth          | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1002') | md5('BETH')    | 17-214-233-1222 | Beth          | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1003') | md5('CHARLEY') | 17-214-233-1213 | Charley       | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1003') | md5('CHARLEY') | 17-214-233-1223 | Charley       | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1003') | md5('CHARLEY') | 17-214-233-1233 | Charley       | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1010') | md5('JENNY')   | 17-214-233-1214 | Jenny         | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1010') | md5('JENNY')   | 17-214-233-1224 | Jenny         | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1010') | md5('JENNY')   | 17-214-233-1234 | Jenny         | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1010') | md5('JENNY')   | 17-214-233-1244 | Jenny         | 2019-01-01     | 2019-01-01 | *      |
+      | md5('1001') | md5('ALBERT')  | 17-214-233-1311 | Albert        | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1002') | md5('BETH')    | 17-214-233-1312 | Beth          | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1002') | md5('BETH')    | 17-214-233-1322 | Beth          | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1003') | md5('CHARLEY') | 17-214-233-1313 | Charley       | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1003') | md5('CHARLEY') | 17-214-233-1323 | Charley       | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1010') | md5('JENNA')   | 17-214-233-1214 | Jenna         | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1010') | md5('JENNA')   | 17-214-233-1224 | Jenna         | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1010') | md5('JENNA')   | 17-214-233-1234 | Jenna         | 2019-01-03     | 2019-01-03 | *      |
+      | md5('1010') | md5('JENNA')   | 17-214-233-1244 | Jenna         | 2019-01-03     | 2019-01-03 | *      |

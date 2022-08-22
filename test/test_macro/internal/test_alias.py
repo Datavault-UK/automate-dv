@@ -1,6 +1,6 @@
 import pytest
 
-from test import dbtvault_harness_utils
+from test import dbt_runner, macro_test_helpers
 
 macro_name = "alias"
 
@@ -11,13 +11,13 @@ def test_alias_single_correctly_generates_sql(request, generate_model):
 
     generate_model()
 
-    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
 
-    actual_sql = dbtvault_harness_utils.retrieve_compiled_model(request.node.name)
-    expected_sql = dbtvault_harness_utils.retrieve_expected_sql(request)
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert dbtvault_harness_utils.is_successful_run(dbt_logs)
+    assert macro_test_helpers.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
 
 
@@ -27,8 +27,8 @@ def test_alias_single_with_incorrect_column_format_in_metadata_raises_error(requ
 
     generate_model()
 
-    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
 
     assert 'Invalid alias configuration:' in dbt_logs
 
@@ -39,8 +39,8 @@ def test_alias_single_with_missing_column_metadata_raises_error(request, generat
 
     generate_model()
 
-    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
 
     assert 'Invalid alias configuration:' in dbt_logs
 
@@ -51,7 +51,7 @@ def test_alias_single_with_undefined_column_metadata_raises_error(request, gener
 
     generate_model()
 
-    dbt_logs = dbtvault_harness_utils.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
+                                         args=var_dict)
 
     assert 'Invalid alias configuration:' in dbt_logs

@@ -43,7 +43,7 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         raise ValueError(f"Invalid vault structure name '{vault_structure}'")
 
 
-def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=None,
+def stage(model_name, source_model: dict, derived_columns=None, null_columns=None, hashed_columns=None,
           ranked_columns=None, include_source_columns=True, config=None, depends_on=""):
     """
     Generate a stage model template
@@ -52,6 +52,7 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
         :param derived_columns: Dictionary of derived column, can be None
         :param hashed_columns: Dictionary of hashed columns, can be None
         :param ranked_columns: Dictionary of ranked columns, can be None
+        :param null_columns: Dictionary of null columns, can be None
         :param include_source_columns: Boolean: Whether to extract source columns from source table
         :param config: Optional model config
         :param depends_on: depends on string if provided
@@ -63,6 +64,7 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
     {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
                         source_model={source_model},
                         derived_columns={derived_columns},
+                        null_columns={null_columns},
                         hashed_columns={hashed_columns},
                         ranked_columns={ranked_columns}) }}}}
     """
@@ -70,7 +72,9 @@ def stage(model_name, source_model: dict, derived_columns=None, hashed_columns=N
     template_to_file(template, model_name)
 
 
-def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, depends_on=""):
+def hub(model_name, src_pk, src_nk,
+        src_ldts, src_source, source_model, config,
+        src_extra_columns=None, depends_on=""):
     """
     Generate a hub model template
         :param model_name: Name of the model file
@@ -80,6 +84,7 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
         :param src_source: Source record source column
         :param source_model: Model name to select from
         :param config: Optional model config string
+        :param src_extra_columns: Additional columns to add to the hub
         :param depends_on: Optional forced dependency
     """
 
@@ -88,13 +93,16 @@ def hub(model_name, src_pk, src_nk, src_ldts, src_source, source_model, config, 
     {{{{ config({config}) }}}}
     {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, 
                       src_ldts={src_ldts}, src_source={src_source}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                       source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
 
 
-def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config, depends_on=""):
+def link(model_name, src_pk, src_fk,
+         src_ldts, src_source, source_model, config,
+         src_extra_columns=None, depends_on=""):
     """
     Generate a link model template
         :param model_name: Name of the model file
@@ -104,14 +112,16 @@ def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config,
         :param src_source: Source record source column
         :param source_model: Model name to select from
         :param config: Optional model config
+        :param src_extra_columns: Additional columns to add to the link
         :param depends_on: Optional forced dependency
     """
 
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, src_ldts={src_ldts},
-                       src_source={src_source}, 
+    {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, 
+                       src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                       src_ldts={src_ldts}, src_source={src_source}, 
                        source_model={source_model})   }}}}
     """
 
@@ -119,13 +129,14 @@ def link(model_name, src_pk, src_fk, src_ldts, src_source, source_model, config,
 
 
 def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_model, config,
-           src_payload=None, depends_on=""):
+           src_payload=None, src_extra_columns=None, depends_on=""):
     """
     Generate a t-link model template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_fk: Source fk
         :param src_payload: Source payload
+        :param src_extra_columns: Additional columns to add to the t link
         :param src_eff: Source effective from
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -137,7 +148,9 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, src_payload={src_payload if src_payload else 'none'}, 
+    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, 
+                         src_payload={src_payload if src_payload else 'none'},
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                          src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                          source_model={source_model}) }}}}
     """
@@ -147,13 +160,14 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
 
 def sat(model_name, src_pk, src_hashdiff, src_payload,
         src_eff, src_ldts, src_source, source_model,
-        config, depends_on=""):
+        config, src_extra_columns=None, depends_on=""):
     """
     Generate a satellite model template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_hashdiff: Source hashdiff
         :param src_payload: Source payload
+        :param src_extra_columns: Additional columns to add to the satellite
         :param src_eff: Source effective from
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
@@ -166,6 +180,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                       src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
                       source_model={source_model}) }}}}
     """
@@ -175,7 +190,7 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
 
 def eff_sat(model_name, src_pk, src_dfk, src_sfk,
             src_start_date, src_end_date, src_eff, src_ldts, src_source,
-            source_model, config, depends_on=""):
+            source_model, config, src_extra_columns=None, depends_on=""):
     """
     Generate an effectivity satellite model template
         :param model_name: Name of the model file
@@ -185,6 +200,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
         :param src_eff: Source effective from
         :param src_start_date: Source start date
         :param src_end_date: Source end date
+        :param src_extra_columns: Additional columns to add to the eff sat
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -197,6 +213,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     {{{{ config({config}) }}}}
     {{{{ dbtvault.eff_sat(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
                           src_start_date={src_start_date}, src_end_date={src_end_date},
+                          src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                           src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source},
                           source_model={source_model}) }}}}
     """
@@ -205,7 +222,7 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
 
 
 def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
-           src_eff, src_ldts, src_source, source_model, config):
+           src_ldts, src_source, source_model, config, src_eff=None, src_extra_columns=None):
     """
     Generate a multi active satellite model template
         :param model_name: Name of the model file
@@ -214,6 +231,7 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
         :param src_hashdiff: Source hashdiff
         :param src_payload: Source payload
         :param src_eff: Source effective from
+        :param src_extra_columns: Additional columns to add to the ma sat
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -223,7 +241,9 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
     template = f"""
     {{{{ config({config}) }}}}
     {{{{ dbtvault.ma_sat(src_pk={src_pk}, src_cdk={src_cdk}, src_hashdiff={src_hashdiff}, 
-                         src_payload={src_payload}, src_eff={src_eff}, 
+                         src_payload={src_payload}, 
+                         src_eff={src_eff if src_eff else 'none'}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                          src_ldts={src_ldts}, src_source={src_source}, 
                          source_model={source_model}) }}}}
     """
@@ -231,12 +251,14 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
     template_to_file(template, model_name)
 
 
-def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, config=None, depends_on=""):
+def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model,
+        src_extra_columns=None, config=None, depends_on=""):
     """
     Generate a XTS template
         :param model_name: Name of the model file
         :param src_pk: Source pk
         :param src_satellite: Satellite to track
+        :param src_extra_columns: Additional columns to add to the xts
         :param src_ldts: Source load date timestamp
         :param src_source: Source record source column
         :param source_model: Model name to select from
@@ -248,6 +270,7 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, c
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.xts(src_pk={src_pk}, src_satellite={src_satellite}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                       src_ldts={src_ldts}, src_source={src_source},
                       source_model={source_model}) }}}}
     """
@@ -256,15 +279,16 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model, c
 
 
 def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
-        stage_tables, src_ldts, depends_on="", config=None):
+        stage_tables_ldts, src_ldts, src_extra_columns=None, depends_on="", config=None):
     """
     Generate a PIT template
         :param model_name: Name of the model file
         :param src_pk: Source pk
+        :param src_extra_columns: Additional columns to add to the bridge
         :param as_of_dates_table: Name for the AS_OF table
         :param satellites: Dictionary of satellite reference mappings
         :param src_ldts: Source Load Date timestamp
-        :param stage_tables: List of stage tables
+        :param stage_tables_ldts: List of stage table load date(time) stamps
         :param source_model: Model name to select from
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -274,17 +298,19 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     {depends_on}
     {{{{ config({config}) }}}}
     {{{{ dbtvault.pit(src_pk={src_pk}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'},
                       as_of_dates_table={as_of_dates_table}, 
                       satellites={satellites}, 
-                      stage_tables={stage_tables},
-                      src_ldts={src_ldts}, source_model={source_model}) }}}}
+                      stage_tables_ldts={stage_tables_ldts},
+                      src_ldts={src_ldts},
+                      source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
 
 
 def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model, src_ldts,
-           config, depends_on=""):
+           config, src_extra_columns=None, depends_on=""):
     """
     Generate a bridge model template
         :param model_name: Name of the model file
@@ -293,6 +319,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
         :param bridge_walk: Dictionary of links and effectivity satellite reference mappings
         :param stage_tables_ldts: List of stage table load date(time) stamps
         :param source_model: Model name to select from
+        :param src_extra_columns: Additional columns to add to the bridge
         :param src_ldts: Source load date timestamp
         :param config: Optional model config
         :param depends_on: Optional forced dependency
@@ -300,9 +327,13 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.bridge(src_pk={src_pk}, as_of_dates_table={as_of_dates_table}, 
-                         bridge_walk={bridge_walk}, stage_tables_ldts={stage_tables_ldts}, 
-                         src_ldts={src_ldts}, source_model={source_model}) }}}}
+    {{{{ dbtvault.bridge(src_pk={src_pk}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                         src_ldts={src_ldts}, 
+                         as_of_dates_table={as_of_dates_table}, 
+                         bridge_walk={bridge_walk}, 
+                         stage_tables_ldts={stage_tables_ldts},
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -355,7 +386,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "as_constant": as_constant_macro,
         "alias": alias_macro,
         "alias_all": alias_all_macro,
-        "escape_column_names": escape_column_names_macro
+        "escape_column_names": escape_column_names_macro,
+        "null_columns": null_columns_macro
     }
 
     if generator_functions.get(macro_name):
@@ -384,6 +416,16 @@ def derive_columns_macro(model_name, **_):
     {{% endif %}}
     
     {{{{ dbtvault.derive_columns(source_relation=source_relation, columns=var('columns', [])) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def null_columns_macro(model_name, **_):
+    template = f"""
+    {{%- if execute -%}}
+    {{{{ dbtvault.null_columns(columns=var('columns', [])) }}}}
+    {{% endif %}}
     """
 
     template_to_file(template, model_name)
@@ -604,12 +646,14 @@ def template_to_file(template, model_name):
         f.write(template.strip())
 
 
-def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
+def add_seed_config(seed_name: str, seed_config: dict, include_columns=None,
+                    additional_config=None):
     """
     Append a given dictionary to the end of the dbt_project.yml file
         :param seed_name: Name of seed file to configure
         :param seed_config: Configuration dict for seed file
         :param include_columns: A list of columns to add to the seed config, All if not provided
+        :param additional_config: Additional configuration defined by external metadata (fixtures etc.)
     """
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
@@ -619,6 +663,9 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
     if include_columns:
         seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
                                        k in include_columns}
+
+    if additional_config:
+        seed_config = {**seed_config, **additional_config}
 
     seed_properties = {
         'version': 2,
@@ -697,6 +744,20 @@ def append_end_date_config(context, config: dict) -> dict:
     return config
 
 
+def append_model_text_config(context, config) -> dict:
+    """
+    Append custom database config if attribute is present.
+    """
+
+    if hasattr(context, 'text'):
+        if context.text:
+            config_text_dict = parse_step_text(context.text)
+            config = {**config,
+                      **config_text_dict}
+
+    return config
+
+
 def append_dict_to_schema_yml(yaml_dict):
     """
     Append a given dictionary to the end of the schema_test.yml file
@@ -752,3 +813,23 @@ def dict_to_yaml_string(yaml_dict: dict, sequence=4, offset=2):
     yaml_str = buf.getvalue().decode('utf-8')
 
     return yaml_str
+
+
+def parse_step_text(step_text: str):
+    config_dict = dict()
+
+    if pair_list := step_text.split(","):
+        for pair in pair_list:
+            pair_dict = {str(pair.split(':')[0]).strip(): str(pair.split(':')[1]).strip()}
+            config_dict = {**config_dict, **pair_dict}
+
+    return config_dict
+
+
+def handle_step_text_dict(context):
+    if hasattr(context, 'text'):
+
+        if context.text:
+            config_dict = parse_step_text(context.text)
+
+            return config_dict
