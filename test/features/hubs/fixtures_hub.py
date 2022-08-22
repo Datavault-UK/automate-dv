@@ -1150,7 +1150,7 @@ def multi_source_hub_databricks(context):
                 "PART_NAME": "VARCHAR(100)",
                 "PART_TYPE": "VARCHAR(100)",
                 "PART_SIZE": "VARCHAR(100)",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "PART_RETAILPRICE": "DECIMAL(38,2)",
                 "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
@@ -1162,7 +1162,7 @@ def multi_source_hub_databricks(context):
                 "SUPPLIER_ID": "VARCHAR(100)",
                 "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "DECIMAL(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -1175,8 +1175,8 @@ def multi_source_hub_databricks(context):
                 "SUPPLIER_ID": "VARCHAR(100)",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "DECIMAL(38,2)",
+                "DISCOUNT": "DECIMAL(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -1216,7 +1216,7 @@ def multi_source_comp_pk_hub_databricks(context):
                 "PART_NAME": "VARCHAR(100)",
                 "PART_TYPE": "VARCHAR(100)",
                 "PART_SIZE": "VARCHAR(100)",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "PART_RETAILPRICE": "DECIMAL(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -1227,7 +1227,7 @@ def multi_source_comp_pk_hub_databricks(context):
                 "PART_CK": "VARCHAR(100)",
                 "SUPPLIER_ID": "VARCHAR(100)",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "DECIMAL(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -1240,8 +1240,8 @@ def multi_source_comp_pk_hub_databricks(context):
                 "SUPPLIER_ID": "VARCHAR(100)",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "DECIMAL(38,2)",
+                "DISCOUNT": "DECIMAL(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }

@@ -53,8 +53,6 @@
         {{- '_' ~ env_var('PIPELINE_JOB', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') if env_var('PIPELINE_JOB', '') -}}
     {%- endset -%}
 
-    {% do log('pipline_str: ' ~ pipeline_str, true) %}
-
     {% do return(pipeline_str | upper) %}
 
 {%- endmacro -%}
