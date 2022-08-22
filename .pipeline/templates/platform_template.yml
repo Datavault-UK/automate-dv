@@ -44,7 +44,7 @@ stages:
           - ${{ each featureGroup in parameters.runConfig }}:
                 - ${{ if featureGroup.subGroups }}:
                     - ${{ each subGroup in featureGroup.subGroups }}:
-                        - ${{ if and(featureGroup.disabledForPlatform, containsValue(featureGroup.disabledForPlatform, platform)) }}:
+                        - ${{ if and(featureGroup.disabledForPlatform, not(containsValue(featureGroup.disabledForPlatform, platform))) }}:
                           - job: '${{ featureGroup.groupName }}_${{ subGroup }}'
                             displayName: '${{ featureGroup.displayName }} (${{ subGroup }})'
                             ${{ if eq(platform, 'sqlserver') }}:
@@ -64,22 +64,23 @@ stages:
                                 env:
                                   PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}_${{ upper(subGroup) }}'
                 - ${{ else }}:
-                    - job: '${{ featureGroup.groupName }}'
-                      displayName: '${{ featureGroup.displayName }}'
-                      ${{ if eq(platform, 'sqlserver') }}:
-                        services:
-                          mssql: mssql
-                      steps:
-                        - task: UsePythonVersion@0
-                          inputs:
-                            versionSpec: '3.9'
-                        - ${{ if eq(platform, 'sqlserver') }}:
-                            - template: install-deps-setup-sqlserver-steps.yml
-                        - template: install-dependencies-steps.yml
-                        - script: inv setup -p ${{ platform }} -e pipeline
-                          displayName: "Setup harness"
+                    - ${{ if and(featureGroup.disabledForPlatform, not(containsValue(featureGroup.disabledForPlatform, platform))) }}:
+                      - job: '${{ featureGroup.groupName }}'
+                        displayName: '${{ featureGroup.displayName }}'
+                        ${{ if eq(platform, 'sqlserver') }}:
+                          services:
+                            mssql: mssql
+                        steps:
+                          - task: UsePythonVersion@0
+                            inputs:
+                              versionSpec: '3.9'
+                          - ${{ if eq(platform, 'sqlserver') }}:
+                              - template: install-deps-setup-sqlserver-steps.yml
+                          - template: install-dependencies-steps.yml
+                          - script: inv setup -p ${{ platform }} -e pipeline
+                            displayName: "Setup harness"
 
-                        - script: inv run-integration-tests -s ${{ featureGroup.groupName }} -p ${{ platform }}
-                          displayName: "Run feature files"
-                          env:
-                            PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}'
+                          - script: inv run-integration-tests -s ${{ featureGroup.groupName }} -p ${{ platform }}
+                            displayName: "Run feature files"
+                            env:
+                              PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}'
