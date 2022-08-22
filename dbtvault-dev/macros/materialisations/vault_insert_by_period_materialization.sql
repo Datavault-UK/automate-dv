@@ -124,12 +124,16 @@
                 {%- endcall %}
             {% endif %}
 
-            {% if target.type == "databricks" and existing_relation.is_view %}
+            {% if target.type == "databricks" %}
                 {# In databricks a temporary view can only be dropped by the connection or session that created it #}
                 {# so drop it now before the commit below closes this session #}
                 {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
                 {% call statement(drop_query_name, fetch_result=True) -%}
-                    DROP VIEW {{ tmp_relation }};
+                    {% if existing_relation.is_view %}
+                        DROP VIEW {{ tmp_relation }};
+                    {% elif existing_relation.is_table %}
+                        DROP TABLE {{ tmp_relation }};
+                    {% endif %}
                 {%- endcall %}
             {% endif %}
 

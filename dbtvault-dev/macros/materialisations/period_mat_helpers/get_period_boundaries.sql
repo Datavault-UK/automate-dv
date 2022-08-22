@@ -127,9 +127,9 @@
             SELECT
                 start_timestamp,
                 stop_timestamp,
-                {{  dbtvault.databricks__datediff('start_timestamp',
-                                  'stop_timestamp',
-                                  period) }}
+                {{ dbtvault.databricks__datediff('start_timestamp',
+                                                 'stop_timestamp',
+                                                 period) }}
                  + 1 AS num_periods
 
         FROM period_data
