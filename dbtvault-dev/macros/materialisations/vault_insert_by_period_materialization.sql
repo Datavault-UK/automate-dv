@@ -118,7 +118,7 @@
             {# In databricks and sqlserver a temporary view/table can only be dropped by #}
             {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
             {% if target.type in ['databricks', 'sqlserver'] %}
-                {{ dbtvault.drop_temporary_special() }}
+                {{ dbtvault.drop_temporary_special(tmp_relation) }}
             {% else %}
                 {% do to_drop.append(tmp_relation) %}
             {% endif %}
