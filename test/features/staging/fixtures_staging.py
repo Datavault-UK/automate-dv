@@ -417,6 +417,7 @@ def staging_escaped_sqlserver(context):
         }
     }
 
+
 @fixture
 def staging_null_columns_sqlserver(context):
     """
@@ -446,7 +447,7 @@ def staging_null_columns_sqlserver(context):
                 "ORDER_LINE_ORIGINAL": "VARCHAR(10)",
                 "CUSTOMER_NAME_ORIGINAL": "VARCHAR(10)",
                 "CUSTOMER_DOB_ORIGINAL": "VARCHAR(10)"
-    }
+            }
         },
         "RAW_STAGE": {
             "column_types": {
@@ -464,8 +465,7 @@ def staging_null_columns_sqlserver(context):
     }
 
 
-
-# DATABRICKS
+# Databricks
 
 @fixture
 def staging_databricks(context):
@@ -477,44 +477,26 @@ def staging_databricks(context):
 
         "STG_CUSTOMER": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR(5)",
-                "CUSTOMER_NAME": "VARCHAR(10)",
-                "CUSTOMER_DOB": "VARCHAR(10)",
-                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(10)",
+                "SOURCE": "VARCHAR(100)",
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
-                "CUSTOMER_NK": "VARCHAR(30)",
-                "CUSTOMER_DOB_UK": "VARCHAR(10)"
-            }
-        },
-        "STG_CUSTOMER_HASH": {
-            "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(10)",
-                "CUSTOMER_DOB": "VARCHAR(10)",
-                "CUSTOMER_PHONE": "VARCHAR(20)",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(10)",
-                "CUSTOMER_PK": "STRING",
-                "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
-                "CUSTOMER_NK": "VARCHAR(30)",
-                "CUSTOMER_DOB_UK": "VARCHAR(10)"
+                "DBTVAULT_RANK": "VARCHAR(100)"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR(5)",
-                "CUSTOMER_NAME": "VARCHAR(10)",
-                "CUSTOMER_DOB": "VARCHAR(10)",
-                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(10)"
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
@@ -530,29 +512,76 @@ def staging_escaped_databricks(context):
 
         "STG_CUSTOMER": {
             "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER NAME": "VARCHAR(10)",
-                "CUSTOMER_DOB": "VARCHAR(10)",
-                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "SOURCE": "VARCHAR(10)",
-                "COLUMN": "VARCHAR(50)",
-                "CUSTOMER_NAME": "VARCHAR(10)",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT"
+                "SOURCE": "VARCHAR(100)",
+                "COLUMN": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "DBTVAULT_RANK": "VARCHAR(100)",
+                "DBTVAULT_RANK2": "VARCHAR(100)"
             }
         },
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR(5)",
-                "CUSTOMER NAME": "VARCHAR(10)",
-                "CUSTOMER_DOB": "VARCHAR(10)",
-                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(10)"
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def staging_null_columns_databricks(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "VARCHAR(100)",
+                "CUSTOMER_ID_ORIGINAL": "VARCHAR(100)",
+                "CUSTOMER_REF": "VARCHAR(100)",
+                "CUSTOMER_REF_ORIGINAL": "VARCHAR(100)",
+                "ORDER_ID": "VARCHAR(100)",
+                "ORDER_ID_ORIGINAL": "VARCHAR(100)",
+                "ORDER_LINE": "VARCHAR(100)",
+                "ORDER_LINE_ORIGINAL": "VARCHAR(100)",
+                "CUSTOMER_NAME_ORIGINAL": "VARCHAR(100)",
+                "CUSTOMER_DOB_ORIGINAL": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)",
+                "CUSTOMER_REF": "VARCHAR(100)",
+                "ORDER_ID": "VARCHAR(100)",
+                "ORDER_LINE": "VARCHAR(100)"
             }
         }
     }
