@@ -40,7 +40,7 @@ fixtures_registry = {
         {"snowflake": fixtures_staging.staging_null_columns_snowflake,
          "bigquery": fixtures_staging.staging_null_columns_bigquery,
          "sqlserver": fixtures_staging.staging_null_columns_sqlserver,
-         "databricks": ''},
+         "databricks": fixtures_staging.staging_null_columns_databricks},
 
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
