@@ -108,7 +108,7 @@
 {%- endmacro %}
 
 
-{% macro databricks__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
     {% set start_date_mssql = start_date[0:23] %}
@@ -122,7 +122,7 @@
 
             COALESCE( {{ dbtvault.databricks__dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                                      {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
-                        FROM {{ target_schema }}.{{ target_table }}
+                        FROM {{ target_relation }}
                     )
             SELECT
                 start_timestamp,
