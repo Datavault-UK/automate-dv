@@ -339,7 +339,7 @@ def satellite_sqlserver(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
@@ -350,7 +350,7 @@ def satellite_sqlserver(context):
         },
         "RAW_STAGE_TS": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
@@ -458,7 +458,7 @@ def satellite_databricks(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
@@ -468,7 +468,7 @@ def satellite_databricks(context):
         },
         "RAW_STAGE_TS": {
             "column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",

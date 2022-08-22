@@ -920,7 +920,7 @@ def eff_satellite_multipart_sqlserver(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "NATION_ID": "VARCHAR(50)",
                 "ORDER_ID": "VARCHAR(50)",
                 "PLATFORM_ID": "VARCHAR(50)",
