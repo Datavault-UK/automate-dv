@@ -102,6 +102,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | md5('1007') | 1007        | 1993-01-07 | TPCH   |
 
   @not_bigquery
+  @not_databricks
   @fixture.single_source_hub
   Scenario: [HUB-PM-05] Incremental load by period, of stage data into an empty hub with custom database for target
     Given the HUB table does not exist
@@ -200,6 +201,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | md5('1007') | 1007        | 1993-01-07 | TPCH   |
 
   @not_bigquery
+  @not_databricks
   @fixture.single_source_hub
   Scenario: [HUB-PM-06] Incremental load by period, of stage data into an empty hub with custom database for source
     Given the HUB table does not exist
