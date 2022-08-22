@@ -472,7 +472,7 @@ def satellite_databricks(context):
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         },
@@ -507,8 +507,8 @@ def satellite_databricks(context):
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         },
