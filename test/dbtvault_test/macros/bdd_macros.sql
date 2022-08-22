@@ -1,6 +1,6 @@
 {%- macro drop_model(model_name) -%}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {%- set source_relation = adapter.get_relation(
               schema=target.schema,
               identifier=model_name) -%}
@@ -25,7 +25,7 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {%- set source_relation = adapter.get_relation(
               database=schema_name,
               schema=schema_name,
@@ -80,7 +80,7 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {% do adapter.drop_schema(api.Relation.create(schema=schema_name)) %}
     {%- else -%}
         {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
@@ -94,7 +94,7 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {% do adapter.create_schema(api.Relation.create(schema=schema_name)) %}
     {%- else -%}
         {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name)) %}

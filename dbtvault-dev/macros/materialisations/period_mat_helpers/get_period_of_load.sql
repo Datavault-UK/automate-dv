@@ -58,7 +58,7 @@
     {% do return(period_of_load) %}
 {%- endmacro -%}
 
-{%- macro spark__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro databricks__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set start_timestamp_mssql = start_timestamp[0:23] %}
 

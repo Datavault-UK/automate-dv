@@ -214,7 +214,7 @@
 
 {%- endmacro -%}
 
-{%- macro spark__hash(columns, alias, is_hashdiff) -%}
+{%- macro databricks__hash(columns, alias, is_hashdiff) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set concat_string = var('concat_string', '||') -%}

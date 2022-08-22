@@ -31,7 +31,7 @@
 
 {%- endmacro %}
 
-{%- macro spark__get_schema_name() -%}
+{%- macro databricks__get_schema_name() -%}
 
     {%- set schema_name = "{}_{}".format(target.schema, target.name, dbtvault_test.pipeline_string()) -%}
 

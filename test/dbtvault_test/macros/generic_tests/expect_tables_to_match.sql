@@ -369,7 +369,7 @@ SELECT * FROM compare
 
 {%- endmacro -%}
 
-{%- macro spark__test_assert_data_equal_to_expected(model, unique_id, compare_columns, expected_seed) -%}
+{%- macro databricks__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
 {%- set source_columns_list = [] -%}
@@ -394,8 +394,6 @@ SELECT * FROM compare
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
 {%  set compare_columns = dbtvault.escape_column_names(compare_columns) %}
-
-
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}
@@ -446,7 +444,7 @@ duplicates_not_in_expected AS (
     WHERE {{ unique_id }} NOT IN (SELECT {{ unique_id }} FROM duplicates_expected)
 ),
 compare AS (
-    SELECT {{ columns_string }}, 'E_TO_A' AS `ERROR_SOURC` FROM compare_e_to_a
+    SELECT {{ columns_string }}, 'E_TO_A' AS `ERROR_SOURCE` FROM compare_e_to_a
     UNION ALL
     SELECT {{ columns_string }}, 'A_TO_E' AS `ERROR_SOURCE` FROM compare_a_to_e
     UNION ALL
@@ -454,8 +452,6 @@ compare AS (
     UNION ALL
     SELECT {{ columns_string }}, 'DUPES_NOT_IN_E' AS `ERROR_SOURCE` FROM duplicates_not_in_expected
 )
-
-
 
 SELECT * FROM compare
 {%- endmacro -%}

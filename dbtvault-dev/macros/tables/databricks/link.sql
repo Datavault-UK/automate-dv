@@ -1,4 +1,4 @@
-{%- macro spark__link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
+{%- macro databricks__link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
                                        src_ldts=src_ldts, src_source=src_source,

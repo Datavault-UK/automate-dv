@@ -124,8 +124,8 @@
                 {%- endcall %}
             {% endif %}
 
-            {% if target.type == "spark" and existing_relation.is_view %}
-                {# In spark a temporary view can only be dropped by the connection or session that created it #}
+            {% if target.type == "databricks" and existing_relation.is_view %}
+                {# In databricks a temporary view can only be dropped by the connection or session that created it #}
                 {# so drop it now before the commit below closes this session #}
                 {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
                 {% call statement(drop_query_name, fetch_result=True) -%}

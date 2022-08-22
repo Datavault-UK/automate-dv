@@ -106,7 +106,7 @@
                     DROP TABLE {{ tmp_relation }};
                 {%- endcall %}
             {%  endif %}
-            {% if adapter_type == "spark" %}
+            {% if adapter_type == "databricks" %}
                 {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
                 {% call statement(drop_query_name, fetch_result=True) -%}
                     DROP VIEW {{ tmp_relation }};

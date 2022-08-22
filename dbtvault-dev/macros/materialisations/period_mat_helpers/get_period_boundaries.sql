@@ -108,7 +108,7 @@
 {%- endmacro %}
 
 
-{% macro spark__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro databricks__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
 
     {#  MSSQL cannot CAST datetime strings with more than 3 decimal places #}
     {% set start_date_mssql = start_date[0:23] %}
@@ -120,14 +120,14 @@
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date_mssql }}' AS TIMESTAMP)) AS TIMESTAMP) AS start_timestamp,
 
-            COALESCE( {{ dbtvault.spark__dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
+            COALESCE( {{ dbtvault.databricks__dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                                      {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
                         FROM {{ target_schema }}.{{ target_table }}
                     )
             SELECT
                 start_timestamp,
                 stop_timestamp,
-                {{  dbtvault.spark__datediff('start_timestamp',
+                {{  dbtvault.databricks__datediff('start_timestamp',
                                   'stop_timestamp',
                                   period) }}
                  + 1 AS num_periods
