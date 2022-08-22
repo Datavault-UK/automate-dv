@@ -115,29 +115,21 @@
                                                                                               period_of_load, rows_inserted,
                                                                                               model.unique_id)) }}
 
-            {% if target.type == "sqlserver" %}
-                {# In MSSQL a temporary table can only be dropped by the connection or session that created it #}
-                {# so drop it now before the commit below closes this session #}
+            {# In databricks and sqlserver a temporary view/table can only be dropped by #}
+            {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
+            {% if target.type in ['databricks', 'sqlserver'] %}
                 {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
                 {% call statement(drop_query_name, fetch_result=True) -%}
-                    DROP TABLE {{ tmp_relation }};
-                {%- endcall %}
-            {% endif %}
-
-            {% if target.type == "databricks" %}
-                {# In databricks a temporary view can only be dropped by the connection or session that created it #}
-                {# so drop it now before the commit below closes this session #}
-                {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
-                {% call statement(drop_query_name, fetch_result=True) -%}
-                    {% if existing_relation.is_view %}
+                    {% if target.type == 'databricks' %}
                         DROP VIEW {{ tmp_relation }};
-                    {% elif existing_relation.is_table %}
+                    {% elif target.type == 'sqlserver' %}
                         DROP TABLE {{ tmp_relation }};
                     {% endif %}
                 {%- endcall %}
+            {% else %}
+                 {% do to_drop.append(tmp_relation) %}
             {% endif %}
 
-            {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
 
         {% endfor %}
