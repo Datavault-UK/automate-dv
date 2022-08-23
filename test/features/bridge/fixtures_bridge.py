@@ -1427,8 +1427,8 @@ def bridge_postgres(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
-                "END_DATE": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1436,8 +1436,8 @@ def bridge_postgres(context):
             "column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PRODUCT_ID": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
-                "END_DATE": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1445,8 +1445,8 @@ def bridge_postgres(context):
             "column_types": {
                 "PRODUCT_ID": "VARCHAR",
                 "COMPONENT_ID": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
-                "END_DATE": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1454,7 +1454,7 @@ def bridge_postgres(context):
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1463,7 +1463,7 @@ def bridge_postgres(context):
                 "CUSTOMER_ORDER_PK": "BYTEA",
                 "CUSTOMER_FK": "BYTEA",
                 "ORDER_FK": "BYTEA",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1472,7 +1472,7 @@ def bridge_postgres(context):
                 "ORDER_PRODUCT_PK": "BYTEA",
                 "ORDER_FK": "BYTEA",
                 "PRODUCT_FK": "BYTEA",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1481,7 +1481,7 @@ def bridge_postgres(context):
                 "PRODUCT_COMPONENT_PK": "BYTEA",
                 "PRODUCT_FK": "BYTEA",
                 "COMPONENT_FK": "BYTEA",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1490,10 +1490,10 @@ def bridge_postgres(context):
                 "CUSTOMER_ORDER_PK": "BYTEA",
                 "CUSTOMER_FK": "BYTEA",
                 "ORDER_FK": "BYTEA",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1502,10 +1502,10 @@ def bridge_postgres(context):
                 "ORDER_PRODUCT_PK": "BYTEA",
                 "ORDER_FK": "BYTEA",
                 "PRODUCT_FK": "BYTEA",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1514,29 +1514,29 @@ def bridge_postgres(context):
                 "PRODUCT_COMPONENT_PK": "BYTEA",
                 "PRODUCT_FK": "BYTEA",
                 "COMPONENT_FK": "BYTEA",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
         "AS_OF_DATE": {
             "column_types": {
-                "AS_OF_DATE": "DATETIME"
+                "AS_OF_DATE": "TIMESTAMP"
             }
         },
         "BRIDGE_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "TIMESTAMP",
                 "LINK_CUSTOMER_ORDER_PK": "BYTEA",
             }
         },
         "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "TIMESTAMP",
                 "LINK_CUSTOMER_ORDER_PK": "BYTEA",
                 "LINK_ORDER_PRODUCT_PK": "BYTEA",
             }
@@ -1544,7 +1544,7 @@ def bridge_postgres(context):
         "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
-                "AS_OF_DATE": "DATETIME",
+                "AS_OF_DATE": "TIMESTAMP",
                 "LINK_CUSTOMER_ORDER_PK": "BYTEA",
                 "LINK_ORDER_PRODUCT_PK": "BYTEA",
                 "LINK_PRODUCT_COMPONENT_PK": "BYTEA",
