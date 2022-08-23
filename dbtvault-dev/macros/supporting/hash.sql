@@ -304,16 +304,22 @@
     {%- endif -%}
 
     {%- for column in columns -%}
+
         {%- do all_null.append(null_placeholder_string) -%}
+
         {%- set column_str = dbtvault.as_constant(column) -%}
         {%- if dbtvault.is_expression(column_str) -%}
             {%- set escaped_column_str = column_str -%}
         {%- else -%}
             {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
         {%- endif -%}
-        {{- "\nNULLIF({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
+
+        {#- IFNULL is not supported by Postgres, however COALESCE is equivalent when used in this case  -#}
+        {{- "\nCOALESCE({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
+
         {%- if loop.last -%}
+
             {% if is_hashdiff %}
                 {#- BEFORE: Snowflake version -#}
                 {#- "\n)) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_names(alias)) -#}
@@ -326,7 +332,9 @@
                 {{- "\n), '{}'{})) AS BYTEA) AS {}".format(all_null | join(""), hash_expr_right, dbtvault.escape_column_names(alias)) -}}
             {%- endif -%}
         {%- else -%}
+
             {%- do all_null.append(concat_string) -%}
+
         {%- endif -%}
     {%- endfor -%}
 

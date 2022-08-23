@@ -76,8 +76,7 @@ row_rank_union AS (
 {#- PostgreSQL has DISTINCT ON which should be more performant than the
     strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...
 -#}
-    SELECT ru.*,
-           DISTINCT ON ({{ dbtvault.prefix([src_pk], 'ru') }})
+    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'ru') }}) ru.*
     FROM {{ ns.last_cte }} AS ru
     WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
     ORDER BY {{ dbtvault.prefix([src_pk], 'ru') }}, {{ dbtvault.prefix([src_ldts], 'ru') }}, {{ dbtvault.prefix([src_source], 'ru') }} ASC

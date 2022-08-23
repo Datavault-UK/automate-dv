@@ -1,5 +1,4 @@
 {%- macro postgres__eff_sat(src_pk, src_dfk, src_sfk, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
-{#- TODO : BUG: QUALIFY is not a Postgres statement -#}
 
 {{- dbtvault.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
                                        src_start_date=src_start_date, src_end_date=src_end_date,
@@ -39,28 +38,26 @@ WITH source_data AS (
 {%- if dbtvault.is_any_incremental() %}
 
 {# Selecting the most recent records for each link hashkey -#}
+{# Postgres has DISTINCT ON which should be more performant than  -#}
+{#   the strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...-#}
 latest_records AS (
-    SELECT {{ dbtvault.alias_all(source_cols, 'b') }},
-           ROW_NUMBER() OVER (
-                PARTITION BY {{ dbtvault.prefix([src_pk], 'b') }}
-                ORDER BY b.{{ src_ldts }} DESC
-           ) AS row_num
+    SELECT DISTINCT ON ({{ dbtvault.prefix([src_pk], 'b') }}) {{ dbtvault.alias_all(source_cols, 'b') }}
     FROM {{ this }} AS b
-    QUALIFY row_num = 1
+    ORDER BY {{ dbtvault.prefix([src_pk], 'b') }}, b.{{ src_ldts }} DESC
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('{{ max_datetime }}')
+    WHERE c.{{ src_end_date }}::DATE = TO_DATE('{{ max_datetime }}', 'YYYY-MM-DD')
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ dbtvault.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
+    WHERE d.{{ src_end_date }}::DATE != TO_DATE('{{ max_datetime }}', 'YYYY-MM-DD')
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -100,7 +97,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['g','lc'], condition='=') }}
-    WHERE TO_DATE(g.{{ src_end_date }}) = TO_DATE('{{ max_datetime }}')
+    WHERE g.{{ src_end_date }}::DATE = TO_DATE('{{ max_datetime }}', 'YYYY-MM-DD')
 ),
 
 {%- if is_auto_end_dating %}
@@ -139,7 +136,7 @@ new_closed_records AS (
     ON {{ dbtvault.multikey(src_pk, prefix=['lo', 'h'], condition='=') }}
     LEFT JOIN latest_closed AS lc
     ON {{ dbtvault.multikey(src_pk, prefix=['lc', 'h'], condition='=') }}
-    WHERE TO_DATE(h.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
+    WHERE h.{{ src_end_date }}::DATE != TO_DATE('{{ max_datetime }}', 'YYYY-MM-DD')
     AND {{ dbtvault.multikey(src_pk, prefix='lo', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(src_pk, prefix='lc', condition='IS NULL') }}
 ),

@@ -1,5 +1,4 @@
 {%- macro postgres__bridge(src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
-{#- TODO : Convert to PostgreSQL dialect (e.g. BINARY(16) -> BYTEA ) -#}
 
 {{- dbtvault.check_required_parameters(source_model=source_model, src_pk=src_pk,
                                        bridge_walk=bridge_walk,
@@ -42,20 +41,20 @@
 {%- endif %}
 
 WITH as_of AS (
-     SELECT a.AS_OF_DATE
+     SELECT a."AS_OF_DATE"
      FROM {{ source_relation }} AS a
-     WHERE a.AS_OF_DATE <= CURRENT_DATE()
+     WHERE a."AS_OF_DATE" <= CURRENT_DATE
 ),
 
 {%- if dbtvault.is_any_incremental() %}
 
 last_safe_load_datetime AS (
-    SELECT MIN(LOAD_DATETIME) AS LAST_SAFE_LOAD_DATETIME
+    SELECT MIN("LOAD_DATETIME") AS "LAST_SAFE_LOAD_DATETIME"
     FROM (
     {%- filter indent(width=8) -%}
     {%- for stg in stage_tables_ldts -%}
-        {%- set stage_ldts =(stage_tables_ldts[stg])  -%}
-        {{ "SELECT MIN(" ~ stage_ldts ~ ") AS LOAD_DATETIME FROM " ~ ref(stg) }}
+        {%- set stage_ldts =dbtvault.escape_column_names(stage_tables_ldts[stg])  -%}
+        {{ "SELECT MIN(" ~ stage_ldts ~ ') AS "LOAD_DATETIME" FROM ' ~ ref(stg) }}
         {{ "UNION ALL" if not loop.last }}
     {% endfor -%}
     {%- endfilter -%}
@@ -63,43 +62,43 @@ last_safe_load_datetime AS (
 ),
 
 as_of_grain_old_entries AS (
-    SELECT DISTINCT AS_OF_DATE
+    SELECT DISTINCT "AS_OF_DATE"
     FROM {{ this }}
 ),
 
 as_of_grain_lost_entries AS (
-    SELECT a.AS_OF_DATE
+    SELECT a."AS_OF_DATE"
     FROM as_of_grain_old_entries AS a
     LEFT OUTER JOIN as_of AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-    WHERE b.AS_OF_DATE IS NULL
+        ON a."AS_OF_DATE" = b."AS_OF_DATE"
+    WHERE b."AS_OF_DATE" IS NULL
 ),
 
 as_of_grain_new_entries AS (
-    SELECT a.AS_OF_DATE
+    SELECT a."AS_OF_DATE"
     FROM as_of AS a
     LEFT OUTER JOIN as_of_grain_old_entries AS b
-        ON a.AS_OF_DATE = b.AS_OF_DATE
-    WHERE b.AS_OF_DATE IS NULL
+        ON a."AS_OF_DATE" = b."AS_OF_DATE"
+    WHERE b."AS_OF_DATE" IS NULL
 ),
 
 min_date AS (
-    SELECT min(AS_OF_DATE) AS MIN_DATE
+    SELECT min("AS_OF_DATE") AS "MIN_DATE"
     FROM as_of
 ),
 
 new_rows_pks AS (
     SELECT {{ dbtvault.prefix([src_pk], 'h') }}
     FROM {{ ref(source_model) }} AS h
-    WHERE h.{{ src_ldts }} >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    WHERE h.{{ src_ldts }} >= (SELECT "LAST_SAFE_LOAD_DATETIME" FROM last_safe_load_datetime)
 ),
 
 new_rows_as_of AS (
-    SELECT AS_OF_DATE
+    SELECT "AS_OF_DATE"
     FROM as_of
-    WHERE as_of.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
+    WHERE as_of."AS_OF_DATE" >= (SELECT "LAST_SAFE_LOAD_DATETIME" FROM last_safe_load_datetime)
     UNION
-    SELECT as_of_date
+    SELECT "AS_OF_DATE"
     FROM as_of_grain_new_entries
 ),
 
@@ -108,23 +107,23 @@ overlap_pks AS (
     FROM {{ this }} AS p
     INNER JOIN {{ ref(source_model) }} as h
         ON {{ dbtvault.multikey(src_pk, prefix=['p','h'], condition='=') }}
-    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+    WHERE p."AS_OF_DATE" >= (SELECT "MIN_DATE" FROM min_date)
+        AND p."AS_OF_DATE" < (SELECT "LAST_SAFE_LOAD_DATETIME" FROM last_safe_load_datetime)
+        AND p."AS_OF_DATE" NOT IN (SELECT "AS_OF_DATE" FROM as_of_grain_lost_entries)
 ),
 
 overlap_as_of AS (
-    SELECT AS_OF_DATE
+    SELECT "AS_OF_DATE"
     FROM as_of AS p
-    WHERE p.AS_OF_DATE >= (SELECT MIN_DATE FROM min_date)
-        AND p.AS_OF_DATE < (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
-        AND p.AS_OF_DATE NOT IN (SELECT AS_OF_DATE FROM as_of_grain_lost_entries)
+    WHERE p."AS_OF_DATE" >= (SELECT "MIN_DATE" FROM min_date)
+        AND p."AS_OF_DATE" < (SELECT "LAST_SAFE_LOAD_DATETIME" FROM last_safe_load_datetime)
+        AND p."AS_OF_DATE" NOT IN (SELECT "AS_OF_DATE" FROM as_of_grain_lost_entries)
 ),
 
 overlap AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        b.AS_OF_DATE
+        b."AS_OF_DATE"
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set link_table = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_table']) -%}
             {%- set link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_pk']) -%}
@@ -161,7 +160,7 @@ overlap AS (
         {%- endif %}
     INNER JOIN {{ ref(current_eff_sat) }} AS {{ dbtvault.escape_column_names(current_eff_sat) }}
         ON {{ dbtvault.escape_column_names(current_eff_sat) }}.{{ eff_sat_pk }} = {{ dbtvault.escape_column_names(current_link) }}.{{ link_pk }}
-        AND {{ dbtvault.escape_column_names(current_eff_sat) }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
+        AND {{ dbtvault.escape_column_names(current_eff_sat) }}.{{ eff_sat_load_date }} <= b."AS_OF_DATE"
         {%- set loop_vars.last_link = current_link -%}
         {%- set loop_vars.last_link_fk2 = link_fk2 -%}
     {% endfor %}
@@ -171,7 +170,7 @@ overlap AS (
 new_rows AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        b.AS_OF_DATE
+        b."AS_OF_DATE"
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set link_table = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_table']) -%}
             {%- set link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_pk']) -%}
@@ -208,7 +207,7 @@ new_rows AS (
         {%- endif %}
     INNER JOIN {{ ref(current_eff_sat) }} AS {{ dbtvault.escape_column_names(current_eff_sat) }}
         ON {{ dbtvault.escape_column_names(current_eff_sat) }}.{{ eff_sat_pk }} = {{ dbtvault.escape_column_names(current_link) }}.{{ link_pk }}
-        AND {{ dbtvault.escape_column_names(current_eff_sat) }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
+        AND {{ dbtvault.escape_column_names(current_eff_sat) }}.{{ eff_sat_load_date }} <= b."AS_OF_DATE"
         {%- set loop_vars.last_link = dbtvault.escape_column_names(current_link) -%}
         {%- set loop_vars.last_link_fk2 = link_fk2 -%}
     {% endfor %}
@@ -224,36 +223,32 @@ all_rows AS (
 ),
 
 {# Select most recent set of relationship key(s) for each as of date -#}
+{# Postgres has DISTINCT ON which should be more performant than  -#}
+{#   the strategy used by Snowflake ROW_NUMBER() OVER( PARTITION BY ...-#}
 candidate_rows AS (
-    SELECT *,
-        ROW_NUMBER() OVER (
-            PARTITION BY AS_OF_DATE,
-                {%- for bridge_step in bridge_walk.keys() -%}
-                {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
-                    {%- if loop.first %}
-                {{ bridge_link_pk }}
-                    {%- else %}
-                {{ ','~ bridge_link_pk }}
-                    {%- endif -%}
-                {%- endfor %}
-            ORDER BY
-                {%- for bridge_step in bridge_walk.keys() -%}
-                {% set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) %}
-                    {%- if loop.first %}
-                {{ bridge_load_date ~' DESC' }}
-                    {%- else %}
-                {{ ','~ bridge_load_date ~' DESC' }}
-                    {%- endif -%}
-                {%- endfor %}
-            ) AS row_num
+    SELECT DISTINCT ON (
+        "AS_OF_DATE"
+        {%- for bridge_step in bridge_walk.keys() -%}
+            {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
+            {{ ','~ bridge_link_pk }}
+        {%- endfor %}
+    ) *
     FROM all_rows
-    QUALIFY row_num = 1
+    ORDER BY "AS_OF_DATE"
+        {%- for bridge_step in bridge_walk.keys() -%}
+            {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
+            {{ ','~ bridge_link_pk }}
+        {%- endfor %}
+        {%- for bridge_step in bridge_walk.keys() -%}
+            {% set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) %}
+            {{ ','~ bridge_load_date ~' DESC' }}
+        {%- endfor %}
 ),
 
 bridge AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'c') }},
-        c.AS_OF_DATE
+        c."AS_OF_DATE"
         {%- for bridge_step in bridge_walk.keys() -%}
         {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
         {{ ',c.' ~ bridge_link_pk }}
@@ -262,9 +257,9 @@ bridge AS (
         {%- for bridge_step in bridge_walk.keys() -%}
             {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
             {%- if loop.first %}
-    WHERE TO_DATE({{ 'c.' ~ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
+    WHERE {{ 'c.' ~ bridge_end_date }}::DATE = TO_DATE('{{ max_datetime }}', 'YYYY-MM-DD')
             {%- else %}
-        AND TO_DATE({{ 'c.' ~ bridge_end_date }}) = TO_DATE('{{ max_datetime }}')
+        AND {{ 'c.' ~ bridge_end_date }}::DATE = TO_DATE('{{ max_datetime }}', 'YYYY-MM-DD')
             {%- endif -%}
         {%- endfor %}
 )
