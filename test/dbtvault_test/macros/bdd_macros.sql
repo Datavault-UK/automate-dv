@@ -105,6 +105,20 @@
 
 {% endmacro %}
 
+{%- macro drop_current_schema() -%}
+
+    {% set schema_to_drop = dbtvault_test.get_schema_name() %}
+
+    {%- if target.type == 'databricks' -%}
+        {% do adapter.drop_schema(api.Relation.create(schema=schema_to_drop)) %}
+    {%- else -%}
+        {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_to_drop)) %}
+    {%- endif -%}
+
+    {% do log("Schema '{}' dropped.".format(schema_to_drop), true) %}
+
+{% endmacro %}
+
 
 {%- macro create_test_schemas() -%}
 
