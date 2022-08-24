@@ -99,7 +99,11 @@
 
             {% if 'response' in result.keys() %} {# added in v0.19.0 #}
                 {%- if not result['response']['rows_affected'] %}
-                    {% set rows_inserted = 0 %}
+                    {% if target.type == "databricks" and result['data'] | length > 0 %}
+                        {% set rows_inserted = result['data'][0][1] | int %}
+                    {% else %}
+                        {% set rows_inserted = 0 %}
+                    {% endif %}
                 {%- else %}
                     {% set rows_inserted = result['response']['rows_affected'] %}
                 {%- endif %}
@@ -141,7 +145,15 @@
         {% set result = load_result('main') %}
 
         {% if 'response' in result.keys() %} {# added in v0.19.0 #}
-            {% set rows_inserted = result['response']['rows_affected'] %}
+            {%- if not result['response']['rows_affected'] %}
+                {% if target.type == "databricks" and result['data'] | length > 0 %}
+                    {% set rows_inserted = result['data'][0][1] | int %}
+                {% else %}
+                    {% set rows_inserted = 0 %}
+                {% endif %}
+            {%- else %}
+                {% set rows_inserted = result['response']['rows_affected'] %}
+            {%- endif %}
         {% else %} {# older versions #}
             {% set rows_inserted = result['status'].split(" ")[2] | int %}
         {% endif %}

@@ -75,6 +75,15 @@ def check_exists(context, model_name):
     assert f"Model {model_name} does not exist." in logs
 
 
+@given("the {schema_name} schema does not exist")
+def check_exists(context, schema_name):
+    logs = dbt_runner.run_dbt_operation(macro_name="drop_selected_schema",
+                                        args={"schema_to_drop": schema_name},
+                                        dbt_vars=dbtvault_generator.handle_step_text_dict(context))
+
+    assert f"Schema '{schema_name}' dropped." in logs
+
+
 @given("the raw vault contains empty tables")
 def clear_schema(context):
     behave_helpers.replace_test_schema()

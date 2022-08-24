@@ -1,39 +1,71 @@
 {% macro generate_schema_name(custom_schema_name, node) -%}
-    {{ dbtvault_test.get_schema_name() }}
+    {{ dbtvault_test.get_schema_name(custom_schema_name=custom_schema_name) }}
 {%- endmacro %}
 
 
-{% macro get_schema_name() -%}
-    {{- adapter.dispatch('get_schema_name', 'dbtvault_test')() -}}
+{% macro get_schema_name(custom_schema_name) -%}
+    {{- adapter.dispatch('get_schema_name', 'dbtvault_test')(custom_schema_name=custom_schema_name) -}}
 {%- endmacro -%}
 
-{% macro default__get_schema_name() -%}
+{% macro default__get_schema_name(custom_schema_name=none) -%}
 
-    {%- set schema_name = "{}_{}{}".format(target.schema, target.user, dbtvault_test.pipeline_string()) -%}
+    {%- if custom_schema_name -%}
+        {%- set custom_schema_name = custom_schema_name -%}
+    {%- else -%}
+        {%- set custom_schema_name = target.schema -%}
+    {%- endif -%}
+
+    {%- set schema_name = var('schema', custom_schema_name) -%}
+
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, dbtvault_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
 {%- endmacro -%}
 
-{%- macro bigquery__get_schema_name() -%}
+{%- macro bigquery__get_schema_name(custom_schema_name=none) -%}
 
-    {%- set schema_name = "{}_{}{}".format(target.dataset, target.project, dbtvault_test.pipeline_string()) -%}
+    {%- if custom_schema_name -%}
+        {%- set custom_schema_name = custom_schema_name -%}
+    {%- else -%}
+        {%- set custom_schema_name = target.dataset -%}
+    {%- endif -%}
+
+    {%- set schema_name = var('schema', custom_schema_name) -%}
+
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.project, dbtvault_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
 {%- endmacro %}
 
-{%- macro sqlserver__get_schema_name() -%}
+{%- macro sqlserver__get_schema_name(custom_schema_name=none) -%}
 
-    {%- set schema_name = "{}_{}{}".format(target.schema, target.user, dbtvault_test.pipeline_string()) -%}
+    {%- if custom_schema_name -%}
+        {%- set custom_schema_name = custom_schema_name -%}
+    {%- else -%}
+        {%- set custom_schema_name = target.schema -%}
+    {%- endif -%}
+
+    {%- set schema_name = var('schema', custom_schema_name) -%}
+
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, dbtvault_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
 {%- endmacro %}
 
-{%- macro databricks__get_schema_name() -%}
+{%- macro databricks__get_schema_name(custom_schema_name=none) -%}
 
-    {%- set schema_name = "{}_{}{}".format(target.schema, target.name, dbtvault_test.pipeline_string()) -%}
+    {%- if custom_schema_name -%}
+        {%- set custom_schema_name = custom_schema_name -%}
+    {%- else -%}
+        {%- set custom_schema_name = target.schema -%}
+    {%- endif -%}
+
+    {%- set schema_name = var('schema', custom_schema_name) -%}
+
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, dbtvault_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
