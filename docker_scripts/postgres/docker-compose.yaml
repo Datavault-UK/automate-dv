@@ -4,8 +4,6 @@
 # Usage:
 # $ docker compose up
 
-# NOTE: version not required any more
-# version: '3.7'
 
 services:
   postgres:
