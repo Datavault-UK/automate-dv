@@ -9,8 +9,6 @@
 {%- endmacro %}
 
 
-
-
 {%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
@@ -23,8 +21,6 @@
 
     {% do return(period_of_load) %}
 {%- endmacro -%}
-
-
 
 
 {%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
@@ -41,8 +37,6 @@
 {%- endmacro -%}
 
 
-
-
 {%- macro sqlserver__get_period_of_load(period, offset, start_timestamp) -%}
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:23] %}
@@ -57,6 +51,7 @@
 
     {% do return(period_of_load) %}
 {%- endmacro -%}
+
 
 {%- macro databricks__get_period_of_load(period, offset, start_timestamp) -%}
     {% do return(dbtvault.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}

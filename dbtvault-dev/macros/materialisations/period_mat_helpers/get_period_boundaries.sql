@@ -116,13 +116,13 @@
 
         WITH period_data AS (
             SELECT
-                CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS TIMESTAMP) AS start_timestamp,
+                COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
                 COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ dbtvault.current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT
-            start_timestamp,
+            IF(stop_timestamp < start_timestamp, stop_timestamp, start_timestamp) AS start_timestamp,
             stop_timestamp,
             {{ dbt_utils.datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
 
