@@ -4,8 +4,8 @@ Feature: [BRG] Bridge table
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [BRG-01] Bridge on one hub and one link
-    Incremental load with auto end-dating with more recent AS OF dates and new orders
-    New order or changed order are assigned only to existing customers
+  Incremental load with auto end-dating with more recent AS OF dates and new orders
+  New order or changed order are assigned only to existing customers
 
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
@@ -59,8 +59,8 @@ Feature: [BRG] Bridge table
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [BRG-02] Bridge on one hub and one link
-    Incremental load with auto end-dating with new AS OF dates in the past
-    Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
+  Incremental load with auto end-dating with new AS OF dates in the past
+  Should return an empty BRIDGE table after the 2nd load; then should build a proper bridge again after 3rd load
 
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
@@ -130,8 +130,8 @@ Feature: [BRG] Bridge table
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [BRG-03] Bridge on one hub and one link
-    Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
-    New orders or changed orders are assigned to existing customers, as well as to new ones
+  Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
+  New orders or changed orders are assigned to existing customers, as well as to new ones
 
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
@@ -202,8 +202,8 @@ Feature: [BRG] Bridge table
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [BRG-04] Bridge on one hub and one link
-    Incremental load with auto end-dating with more recent AS OF dates and changed orders
-    The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
+  Incremental load with auto end-dating with more recent AS OF dates and changed orders
+  The changed orders are assigned to either an existing customer or to a new one; then they get reassigned back to the initial customer
 
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
@@ -295,9 +295,9 @@ Feature: [BRG] Bridge table
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [BRG-05] Bridge on one hub and two links
-    Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
-    New orders or changed orders are assigned to existing customers, as well as to new ones
-    New orders or changed orders get assigned existing or new products
+  Incremental load with auto end-dating with more recent AS OF dates and new/changed orders
+  New orders or changed orders are assigned to existing customers, as well as to new ones
+  New orders or changed orders get assigned existing or new products
 
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
@@ -387,9 +387,9 @@ Feature: [BRG] Bridge table
   @fixture.enable_auto_end_date
   @fixture.bridge
   Scenario: [BRG-06] Bridge on one hub and two links
-    Incremental load with auto end-dating and more recent AS OF dates.
-    An existing order gets assigned either to another existing customer or to a new customer,
-    it gets reassigned to the initial customer
+  Incremental load with auto end-dating and more recent AS OF dates.
+  An existing order gets assigned either to another existing customer or to a new customer,
+  it gets reassigned to the initial customer
 
     Given the BRIDGE_CUSTOMER_ORDER table does not exist
     And the raw vault contains empty tables
@@ -504,3 +504,53 @@ Feature: [BRG] Bridge table
       | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002\|\|200')     | md5('200\|\|BBB')     |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003\|\|300')     | md5('300\|\|CCC')     |
       | md5('1004') | 2018-06-02 00:00:00.000 | md5('1004\|\|400')     | md5('400\|\|DDD')     |
+
+  @skip
+  @fixture.enable_auto_end_date
+  @fixture.bridge
+  Scenario: [BRG-07] Bridge on one hub and one link and additional columns
+  Incremental load with auto end-dating with more recent AS OF dates and new orders
+  New order or changed order are assigned only to existing customers
+
+    Given the BRIDGE_CUSTOMER_ORDER_AC table does not exist
+    And the raw vault contains empty tables
+      | HUB          | LINK                | EFF_SAT                | BRIDGE                   |
+      | HUB_CUSTOMER | LINK_CUSTOMER_ORDER | EFF_SAT_CUSTOMER_ORDER | BRIDGE_CUSTOMER_ORDER_AC |
+    And the RAW_CUSTOMER_ORDER table contains data
+      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+      | 1001        | 100      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 200      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1003        | 300      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1004        | 400      | 2018-06-01 00:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+    And I stage the STG_CUSTOMER_ORDER data
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE              |
+      | 2018-06-01 00:00:00.000 |
+    And I load the vault
+    And the RAW_CUSTOMER_ORDER table contains data
+      | CUSTOMER_ID | ORDER_ID | LOAD_DATETIME           | END_DATE                | SOURCE |
+      | 1001        | 101      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+      | 1002        | 100      | 2018-06-01 12:00:00.000 | 9999-12-31 23:59:59.999 | *      |
+    And I stage the STG_CUSTOMER_ORDER data
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE              |
+      | 2018-06-01 00:00:00.000 |
+      | 2018-06-01 12:00:00.000 |
+      | 2018-06-02 00:00:00.000 |
+    When I load the vault
+    Then the BRIDGE_CUSTOMER_ORDER_AC table should contain expected data
+      | CUSTOMER_PK | AS_OF_DATE              | CUSTOMER_ID | LINK_CUSTOMER_ORDER_PK |
+      | md5('1001') | 2018-06-01 00:00:00.000 | 1001        | md5('1001\|\|100')     |
+      | md5('1002') | 2018-06-01 00:00:00.000 | 1002        | md5('1002\|\|200')     |
+      | md5('1003') | 2018-06-01 00:00:00.000 | 1003        | md5('1003\|\|300')     |
+      | md5('1004') | 2018-06-01 00:00:00.000 | 1004        | md5('1004\|\|400')     |
+      | md5('1001') | 2018-06-01 12:00:00.000 | 1001        | md5('1001\|\|101')     |
+      | md5('1002') | 2018-06-01 12:00:00.000 | 1002        | md5('1002\|\|100')     |
+      | md5('1002') | 2018-06-01 12:00:00.000 | 1002        | md5('1002\|\|200')     |
+      | md5('1003') | 2018-06-01 12:00:00.000 | 1003        | md5('1003\|\|300')     |
+      | md5('1004') | 2018-06-01 12:00:00.000 | 1004        | md5('1004\|\|400')     |
+      | md5('1001') | 2018-06-02 00:00:00.000 | 1001        | md5('1001\|\|101')     |
+      | md5('1002') | 2018-06-02 00:00:00.000 | 1002        | md5('1002\|\|100')     |
+      | md5('1002') | 2018-06-02 00:00:00.000 | 1002        | md5('1002\|\|200')     |
+      | md5('1003') | 2018-06-02 00:00:00.000 | 1003        | md5('1003\|\|300')     |
+      | md5('1004') | 2018-06-02 00:00:00.000 | 1004        | md5('1004\|\|400')     |

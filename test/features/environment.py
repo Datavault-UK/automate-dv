@@ -1,8 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from env import env_utils
-from test import dbtvault_generator
-from test import dbtvault_harness_utils
+from test import dbtvault_generator, behave_helpers
 from test.features import behave_fixtures
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
@@ -39,6 +38,12 @@ fixtures_registry = {
          "databricks": '',
          "postgres": fixtures_staging.staging_escaped_postgres},
 
+    "fixture.staging_null_columns":
+        {"snowflake": fixtures_staging.staging_null_columns_snowflake,
+         "bigquery": fixtures_staging.staging_null_columns_bigquery,
+         "sqlserver": fixtures_staging.staging_null_columns_sqlserver,
+         "databricks": ''},
+
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
          "bigquery": fixtures_hub.single_source_hub_bigquery,
@@ -46,19 +51,19 @@ fixtures_registry = {
          "databricks": fixtures_hub.single_source_hub_databricks,
          "postgres": fixtures_hub.single_source_hub_postgres},
 
-    "fixture.single_source_comppk_hub":
-        {"snowflake": fixtures_hub.single_source_comppk_hub_snowflake,
-         "bigquery": fixtures_hub.single_source_comppk_hub_bigquery,
-         "sqlserver": '',
-         "databricks": '',
-         "postgres": fixtures_hub.single_source_comppk_hub_postgres},
+    "fixture.single_source_comp_pk_hub":
+        {"snowflake": fixtures_hub.single_source_comp_pk_hub_snowflake,
+         "bigquery": fixtures_hub.single_source_comp_pk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comp_pk_hub_sqlserver,
+         "postgres": fixtures_hub.single_source_comp_pk_hub_postgres,
+         "databricks": ''},
 
-    "fixture.single_source_comppknk_hub":
-        {"snowflake": fixtures_hub.single_source_comppknk_hub_snowflake,
-         "bigquery": fixtures_hub.single_source_comppknk_hub_bigquery,
-         "sqlserver": fixtures_hub.single_source_comppknk_hub_sqlserver,
-         "databricks": '',
-         "postgres": fixtures_hub.single_source_comppknk_hub_postgres},
+    "fixture.single_source_comp_pk_nk_hub":
+        {"snowflake": fixtures_hub.single_source_comp_pk_nk_hub_snowflake,
+         "bigquery": fixtures_hub.single_source_comp_pk_nk_hub_bigquery,
+         "sqlserver": fixtures_hub.single_source_comp_pk_nk_hub_sqlserver,
+         "postgres": fixtures_hub.single_source_comp_pk_nk_hub_postgres,
+         "databricks": ''},
 
     "fixture.multi_source_hub":
         {"snowflake": fixtures_hub.multi_source_hub_snowflake,
@@ -67,12 +72,12 @@ fixtures_registry = {
          "databricks": fixtures_hub.multi_source_hub_databricks,
          "postgres": fixtures_hub.multi_source_hub_postgres},
 
-    "fixture.multi_source_comppk_hub":
-        {"snowflake": fixtures_hub.multi_source_comppk_hub_snowflake,
-         "bigquery": fixtures_hub.multi_source_comppk_hub_bigquery,
-         "sqlserver": fixtures_hub.multi_source_comppk_hub_sqlserver,
+    "fixture.multi_source_comp_pk_hub":
+        {"snowflake": fixtures_hub.multi_source_comp_pk_hub_snowflake,
+         "bigquery": fixtures_hub.multi_source_comp_pk_hub_bigquery,
+         "sqlserver": fixtures_hub.multi_source_comp_pk_hub_sqlserver,
          "databricks": '',
-         "postgres": fixtures_hub.multi_source_comppk_hub_postgres},
+         "postgres": fixtures_hub.multi_source_comp_pk_hub_postgres},
 
     "fixture.single_source_link":
         {"snowflake": fixtures_link.single_source_link_snowflake,
@@ -81,12 +86,12 @@ fixtures_registry = {
          "databricks": fixtures_link.single_source_link_databricks,
          "postgres": fixtures_link.single_source_link_postgres},
 
-    "fixture.single_source_comppk_link":
-        {"snowflake": fixtures_link.single_source_comppk_link_snowflake,
-         "bigquery": fixtures_link.single_source_comppk_link_bigquery,
-         "sqlserver": fixtures_link.single_source_comppk_link_sqlserver,
-         "databricks": '',
-         "postgres": fixtures_link.single_source_comppk_link_postgres},
+    "fixture.single_source_comp_pk_link":
+        {"snowflake": fixtures_link.single_source_comp_pk_link_snowflake,
+         "bigquery": fixtures_link.single_source_comp_pk_link_bigquery,
+         "sqlserver": fixtures_link.single_source_comp_pk_link_sqlserver,
+         "postgres": fixtures_link.single_source_comp_pk_link_postgres,
+         "databricks": ''},
 
     "fixture.multi_source_link":
         {"snowflake": fixtures_link.multi_source_link_snowflake,
@@ -96,18 +101,18 @@ fixtures_registry = {
          "postgres": fixtures_link.multi_source_link_postgres},
 
     "fixture.t_link":
-        {"snowflake": fixtures_t_link.t_link,
+        {"snowflake": fixtures_t_link.t_link_snowflake,
          "bigquery": fixtures_t_link.t_link_bigquery,
          "sqlserver": fixtures_t_link.t_link_sqlserver,
          "databricks": '',
          "postgres": fixtures_t_link.t_link_postgres},
 
-    "fixture.t_link_comppk":
-        {"snowflake": fixtures_t_link.t_link_comppk,
-         "bigquery": fixtures_t_link.t_link_comppk_bigquery,
-         "sqlserver": fixtures_t_link.t_link_comppk_sqlserver,
+    "fixture.t_link_comp_pk":
+        {"snowflake": fixtures_t_link.t_link_comp_pk,
+         "bigquery": fixtures_t_link.t_link_comp_pk_bigquery,
+         "sqlserver": fixtures_t_link.t_link_comp_pk_sqlserver,
          "databricks": '',
-         "postgres": fixtures_t_link.t_link_comppk_postgres},
+         "postgres": fixtures_t_link.t_link_comp_pk_postgres},
 
     "fixture.satellite":
         {"snowflake": fixtures_sat.satellite_snowflake,
@@ -137,12 +142,12 @@ fixtures_registry = {
          "databricks": '',
          "postgres": fixtures_eff_sat.eff_satellite_datetime_postgres},
 
-    "fixture.eff_satellite_testing_auto_end_dating":
-        {"snowflake": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_snowflake,
-         "bigquery": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_bigquery,
-         "sqlserver": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_sqlserver,
-         "databricks": '',
-         "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres},
+    "fixture.eff_satellite_auto_end_dating":
+        {"snowflake": fixtures_eff_sat.eff_satellite_auto_end_dating_snowflake,
+         "bigquery": fixtures_eff_sat.eff_satellite_auto_end_dating_bigquery,
+         "sqlserver": fixtures_eff_sat.eff_satellite_auto_end_dating_sqlserver,
+         "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres,
+         "databricks": ''},
 
     "fixture.eff_satellite_multipart":
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
@@ -207,6 +212,12 @@ fixtures_registry = {
          "databricks": '',
          "postgres": fixtures_cycle.cycle_postgres},
 
+    "fixture.cycle_custom_null_key":
+        {"snowflake": fixtures_cycle.cycle_custom_null_key_snowflake,
+         "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
+         "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
+         "databricks": ''},
+
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
@@ -242,6 +253,34 @@ def before_all(context):
     dbtvault_generator.backup_project_yml()
 
 
+def before_feature(context, feature):
+    decide_to_run(feature.tags, feature, 'Feature')
+
+
+def before_scenario(context, scenario):
+    do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
+
+    if do_run:
+        behave_helpers.replace_test_schema()
+
+        behave_helpers.clean_seeds()
+        behave_helpers.clean_models()
+        behave_helpers.clean_target()
+
+        dbtvault_generator.clean_test_schema_file()
+
+
+def before_tag(context, tag):
+    tgt = env_utils.platform()
+
+    if tgt in env_utils.AVAILABLE_PLATFORMS:
+        fixtures = fixture_lookup[tgt]
+        if tag.startswith("fixture."):
+            return use_fixture_by_tag(tag, context, fixtures)
+    else:
+        raise ValueError(f"Target must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")
+
+
 def after_all(context):
     """
     Force Restore of dbt_project.yml
@@ -253,6 +292,10 @@ def after_all(context):
 def decide_to_run(tags, obj, obj_type):
     platforms = set(env_utils.AVAILABLE_PLATFORMS)
     obj_tags = set([t.lower() for t in tags])
+
+    if 'skip' in obj_tags:
+        obj.skip(f"{obj_type} skipped due to @skip tag.")
+
     valid_tags = list(platforms.intersection(obj_tags))
     valid_tags_with_not = {f"not_{plt}" for plt in platforms}.intersection(obj_tags)
 
@@ -275,32 +318,3 @@ def decide_to_run(tags, obj, obj_type):
             return False
 
     return True
-
-
-def before_feature(context, feature):
-    decide_to_run(feature.tags, feature, 'Feature')
-
-
-def before_scenario(context, scenario):
-    do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
-
-    if do_run:
-        dbtvault_harness_utils.create_dummy_model()
-        dbtvault_harness_utils.replace_test_schema()
-
-        dbtvault_harness_utils.clean_seeds()
-        dbtvault_harness_utils.clean_models()
-        dbtvault_harness_utils.clean_target()
-
-        dbtvault_generator.clean_test_schema_file()
-
-
-def before_tag(context, tag):
-    tgt = env_utils.platform()
-
-    if tgt in env_utils.AVAILABLE_PLATFORMS:
-        fixtures = fixture_lookup[tgt]
-        if tag.startswith("fixture."):
-            return use_fixture_by_tag(tag, context, fixtures)
-    else:
-        raise ValueError(f"Target must be set to one of: {', '.join(env_utils.AVAILABLE_PLATFORMS)}")

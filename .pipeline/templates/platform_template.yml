@@ -1,0 +1,84 @@
+parameters:
+  - name: platforms
+    type: object
+  - name: runConfig
+    type: object
+
+
+stages:
+  - stage: 'unit_tests'
+    displayName: 'Unit Tests'
+    jobs:
+      - job: 'harness_tests'
+        displayName: 'Harness Unit Tests'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-harness-tests -p snowflake
+            displayName: "Run harness tests"
+
+      - job: 'macro_tests_sf'
+        displayName: 'Macro Unit Tests - Snowflake'
+        steps:
+          - task: UsePythonVersion@0
+            inputs:
+              versionSpec: '3.9'
+          - template: install-dependencies-steps.yml
+          - script: inv setup -p snowflake -e pipeline
+            displayName: "Setup harness"
+          - script: inv run-dbt "run-operation drop_all_custom_schemas" -p snowflake
+            displayName: "Drop all custom schemas"
+          - script: inv run-macro-tests -p snowflake
+            displayName: "Run macro tests"
+            env:
+              PIPELINE_JOB: $(Agent.JobName)
+
+  - ${{ each platform in parameters.platforms }}:
+      - stage: 'integration_tests_${{ platform }}'
+        displayName: '${{ platform }} - Run Integration Tests'
+        jobs:
+          - ${{ each featureGroup in parameters.runConfig }}:
+              - ${{ if featureGroup.subGroups }}:
+                  - ${{ each subGroup in featureGroup.subGroups }}:
+                      - job: '${{ featureGroup.groupName }}_${{ subGroup }}'
+                        displayName: '${{ featureGroup.displayName }} (${{ subGroup }})'
+                        ${{ if eq(platform, 'sqlserver') }}:
+                          services:
+                            mssql: mssql
+                        steps:
+                          - task: UsePythonVersion@0
+                            inputs:
+                              versionSpec: '3.9'
+                          - ${{ if eq(platform, 'sqlserver') }}:
+                              - template: install-deps-setup-sqlserver-steps.yml
+                          - template: install-dependencies-steps.yml
+                          - script: inv setup -p ${{ platform }} -e pipeline
+                            displayName: "Setup harness"
+                          - script: inv run-integration-tests -s ${{ featureGroup.groupName }} --subtype ${{ subGroup }} -p ${{ platform }}
+                            displayName: "Run feature files"
+                            env:
+                              PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}_${{ upper(subGroup) }}'
+              - ${{ else }}:
+                  - job: '${{ featureGroup.groupName }}'
+                    displayName: '${{ featureGroup.displayName }}'
+                    ${{ if eq(platform, 'sqlserver') }}:
+                      services:
+                        mssql: mssql
+                    steps:
+                      - task: UsePythonVersion@0
+                        inputs:
+                          versionSpec: '3.9'
+                      - ${{ if eq(platform, 'sqlserver') }}:
+                          - template: install-deps-setup-sqlserver-steps.yml
+                      - template: install-dependencies-steps.yml
+                      - script: inv setup -p ${{ platform }} -e pipeline
+                        displayName: "Setup harness"
+
+                      - script: inv run-integration-tests -s ${{ featureGroup.groupName }} -p ${{ platform }}
+                        displayName: "Run feature files"
+                        env:
+                          PIPELINE_JOB: '${{ upper(featureGroup.groupName) }}'
