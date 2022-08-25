@@ -57,7 +57,6 @@ dbtvault:
       schema:   "{{ env_var('POSTGRES_DB_SCHEMA') }}"
       user:     "{{ env_var('POSTGRES_DB_USER') }}"
       password: "{{ env_var('POSTGRES_DB_PW') }}"
-      # threads: 4
-
+      threads: 4
 
   target: "snowflake"
