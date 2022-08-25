@@ -81,6 +81,9 @@
             {# This call statement drops and then creates a temporary table #}
             {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
             {# See MSSQL note and drop code below #}
+
+            {# [ ] TODO check dbt postgres implementation for a possible fix #}
+            {% do log('🐘🐘🐘calling create_table_as (which might fail with postgres error "subquery in FROM must have an alias" \n tmp_table_sql =>' ~ tmp_table_sql, true) %}
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}

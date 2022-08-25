@@ -246,7 +246,7 @@
 {#- Select hashing algorithm -#}
 {%- if hash == 'MD5' -%}
     {%- set hash_alg = 'MD5' -%}
-    {%- set hash_size = 16 -%}
+    {%- set hash_size = 16 -%}{#- TODO hash_size is unused (should remove) -#}
 {%- elif hash == 'SHA' -%}
     {%- set hash_alg = 'SHA256' -%}
     {%- set hash_size = 32 -%}
@@ -255,7 +255,20 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" %}
+{#- Select hashing expression (left and right sides) -#}
+{#- * MD5 is simple function call to md5(val) -#}
+{#- * SHA256 needs input cast to BYTEA and then its BYTEA result encoded as hex text output -#}
+{#-   e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
+{#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
+{%- if hash_alg == 'MD5' -%}
+    {%- set hash_expr_left = 'MD5(' -%}
+    {%- set hash_expr_right = ')' -%}
+{%- elif hash_alg == 'SHA256' -%}
+    {%- set hash_expr_left = 'ENCODE(SHA256(CAST(' -%}
+    {%- set hash_expr_right = " AS BYTEA)), 'hex')" -%}
+{%- endif -%}
+
+{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" -%}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
 {%- if is_hashdiff and dbtvault.is_list(columns) -%}
@@ -270,20 +283,24 @@
     {%- else -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
     {%- endif -%}
-    {# BEFORE: Snowflake version #}
+    {#- BEFORE: Snowflake version #}
     {#- "CAST(({}({})) AS BINARY({})) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), hash_size, dbtvault.escape_column_names(alias)) | indent(4) -#}
-    {# AFTER#: Postgres implementation: Cast to BYTEA doesnt not require hash_size. Also added outer UPPER()  #}
-    {{- "CAST((UPPER({}({}))) AS BYTEA) AS {}".format(hash_alg, standardise | replace('[EXPRESSION]', escaped_column_str), dbtvault.escape_column_names(alias)) | indent(4) -}}
+    {#- AFTER#: Postgres implementation: Cast to BYTEA doesnt not require hash_size. Also added outer UPPER()  #}
+    {#- MD5 example: #}
+    {#-   -#}
+    {#- SHA example: #}
+    {#-  CAST(UPPER(ENCODE(SHA256(CAST(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), '')AS BYTEA)), 'hex')) AS BYTEA) AS "CUSTOMER_PK" -#}
+    {{- "CAST(UPPER({}{}{}) AS BYTEA) AS {}".format(hash_expr_left, standardise | replace('[EXPRESSION]', escaped_column_str), hash_expr_right, dbtvault.escape_column_names(alias)) | indent(4) -}}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
     {%- set all_null = [] -%}
 
     {%- if is_hashdiff -%}
-        {# CHANGE: implementation: I added outer UPPER() to uppercase the md5 result which is lower case in Postgres  #}
-        {{- "CAST(UPPER({}(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {#- CHANGE: implementation: I added outer UPPER() to uppercase the md5 result which is lower case in Postgres  -#}
+        {{- "CAST(UPPER({}CONCAT_WS('{}',".format(hash_expr_left, concat_string) | indent(4) -}}
     {%- else -%}
-        {{- "CAST(UPPER({}(NULLIF(CONCAT_WS('{}',".format(hash_alg, concat_string) | indent(4) -}}
+        {{- "CAST(UPPER({}NULLIF(CONCAT_WS('{}',".format(hash_expr_left, concat_string) | indent(4) -}}
     {%- endif -%}
 
     {%- for column in columns -%}
@@ -296,28 +313,29 @@
         {%- else -%}
             {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
         {%- endif -%}
-        {{- "\nIFNULL({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
+
+        {#- IFNULL is not supported by Postgres, however COALESCE is equivalent when used in this case  -#}
+        {{- "\nCOALESCE({}, '{}')".format(standardise | replace('[EXPRESSION]', escaped_column_str), null_placeholder_string) | indent(4) -}}
         {{- "," if not loop.last -}}
 
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {# BEFORE: Snowflake version #}
-                {#- "\n)) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_names(alias)) #}}
-                {# AFTER#: Postgres implementation: Cast to BYTEA doesnt not require hash_size  #}
-                {{- "\n))) AS BYTEA) AS {}".format(dbtvault.escape_column_names(alias)) -}}
+                {#- BEFORE: Snowflake version -#}
+                {#- "\n)) AS BINARY({})) AS {}".format(hash_size, dbtvault.escape_column_names(alias)) -#}
+                {#- AFTER#: Postgres implementation: Cast to BYTEA doesnt not require hash_size  -#}
+                {{- "\n{})) AS BYTEA) AS {}".format(hash_expr_right, dbtvault.escape_column_names(alias)) -}}
             {%- else -%}
-                {# BEFORE: Snowflake version #}
+                {#- BEFORE: Snowflake version -#}
                 {#- "\n), '{}')) AS BINARY({})) AS {}".format(all_null | join(""), hash_size, dbtvault.escape_column_names(alias)) -#}
-                {# AFTER#: Postgres implementation: Cast to BYTEA doesnt not require hash_size  #}
-                {{- "\n), '{}'))) AS BYTEA) AS {}".format(all_null | join(""), dbtvault.escape_column_names(alias)) -}}
+                {#- AFTER#: Postgres implementation: Cast to BYTEA doesnt not require hash_size  -#}
+                {{- "\n), '{}'{})) AS BYTEA) AS {}".format(all_null | join(""), hash_expr_right, dbtvault.escape_column_names(alias)) -}}
             {%- endif -%}
         {%- else -%}
 
             {%- do all_null.append(concat_string) -%}
 
         {%- endif -%}
-
     {%- endfor -%}
 
 {%- endif -%}
