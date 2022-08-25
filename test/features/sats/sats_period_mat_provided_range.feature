@@ -133,6 +133,7 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | md5('1003') | md5('1990-02-03\|\|1003\|\|CHARLEY\|\|17-214-233-1216') | Charley       | 1990-02-03   | 17-214-233-1216 | 2019-05-07     | 2019-05-07 | *      |
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF\|\|17-214-233-1222')   | Geoff         | 1990-02-03   | 17-214-233-1222 | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1223')   | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-05-07     | 2019-05-07 | *      |
+      | md5('1013') | md5('1995-06-16\|\|1013\|\|ZACH\|\|17-214-233-1224')    | Zach          | 1995-06-16   | 17-214-233-1224 | 2019-05-07     | 2019-05-07 | *      |
 
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-05] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
