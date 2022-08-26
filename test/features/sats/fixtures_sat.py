@@ -339,7 +339,7 @@ def satellite_sqlserver(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
@@ -350,7 +350,7 @@ def satellite_sqlserver(context):
         },
         "RAW_STAGE_TS": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "DECIMAL(38,0)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
@@ -440,6 +440,124 @@ def satellite_cycle_sqlserver(context):
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
+
+
+# Databricks
+
+@fixture
+def satellite_databricks(context):
+    """
+    Define the structures and metadata to load satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38,0)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38,0)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def satellite_cycle_databricks(context):
+    """
+    Define the structures and metadata to perform load cycles for satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
