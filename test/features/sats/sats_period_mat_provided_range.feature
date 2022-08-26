@@ -82,6 +82,7 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-04] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
     Given the RAW_STAGE stage is empty
+    And the SATELLITE table does not exist
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
@@ -136,6 +137,7 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-05] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
     Given the RAW_STAGE stage is empty
+    And the SATELLITE table does not exist
     And the SATELLITE sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |

@@ -643,7 +643,7 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None,
     seed_properties = {
         'version': 2,
         'seeds': [
-            {'name': seed_name, 'config': {**seed_config, '+quote_columns': True}}
+            {'name': seed_name, 'config': {**seed_config, 'quote_columns': True}}
         ]
     }
 

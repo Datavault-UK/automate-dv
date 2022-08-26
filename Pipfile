@@ -21,10 +21,10 @@ Pygments = "==2.7.4"
 dbt-core = "==1.1.0"
 dbt-snowflake = "==1.1.0"
 dbt-bigquery = "==1.1.0"
+dbt-sqlserver = "==1.1.0"
+dbt-databricks = "==1.1.0"
 pexpect = "*"
 filelock = "*"
-dbt-sqlserver = "==1.1.0"
-dbt-spark = {extras = ["odbc"], version = "*"}
 
 [requires]
 python_version = "3.9"

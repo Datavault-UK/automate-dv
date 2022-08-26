@@ -417,6 +417,7 @@ def staging_escaped_sqlserver(context):
         }
     }
 
+
 @fixture
 def staging_null_columns_sqlserver(context):
     """
@@ -446,7 +447,7 @@ def staging_null_columns_sqlserver(context):
                 "ORDER_LINE_ORIGINAL": "VARCHAR(10)",
                 "CUSTOMER_NAME_ORIGINAL": "VARCHAR(10)",
                 "CUSTOMER_DOB_ORIGINAL": "VARCHAR(10)"
-    }
+            }
         },
         "RAW_STAGE": {
             "column_types": {
@@ -464,3 +465,123 @@ def staging_null_columns_sqlserver(context):
     }
 
 
+# Databricks
+
+@fixture
+def staging_databricks(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def staging_escaped_databricks(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "SOURCE": "VARCHAR(100)",
+                "COLUMN": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "DBTVAULT_RANK": "VARCHAR(100)",
+                "DBTVAULT_RANK2": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        }
+    }
+
+
+@fixture
+def staging_null_columns_databricks(context):
+    """
+    Define the structures and metadata to load a hashed staging layer
+    """
+
+    context.seed_config = {
+
+        "STG_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)",
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "VARCHAR(100)",
+                "CUSTOMER_ID_ORIGINAL": "VARCHAR(100)",
+                "CUSTOMER_REF": "VARCHAR(100)",
+                "CUSTOMER_REF_ORIGINAL": "VARCHAR(100)",
+                "ORDER_ID": "VARCHAR(100)",
+                "ORDER_ID_ORIGINAL": "VARCHAR(100)",
+                "ORDER_LINE": "VARCHAR(100)",
+                "ORDER_LINE_ORIGINAL": "VARCHAR(100)",
+                "CUSTOMER_NAME_ORIGINAL": "VARCHAR(100)",
+                "CUSTOMER_DOB_ORIGINAL": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)",
+                "CUSTOMER_REF": "VARCHAR(100)",
+                "ORDER_ID": "VARCHAR(100)",
+                "ORDER_LINE": "VARCHAR(100)"
+            }
+        }
+    }
