@@ -78,9 +78,14 @@
             {%- endcall %}
 
             {% set result = load_result(insert_query_name) %}
-
             {% if 'response' in result.keys() %} {# added in v0.19.0 #}
-                {% set rows_inserted = result['response']['rows_affected'] %}
+                {# Investigate for Databricks #}
+                {%- if result['response']['rows_affected'] == None %}
+                    {% set rows_inserted = 0 %}
+                {%- else %}
+                    {% set rows_inserted = result['response']['rows_affected'] %}
+                {%- endif %}
+
             {% else %} {# older versions #}
                 {% set rows_inserted = result['status'].split(" ")[2] | int %}
             {% endif %}
@@ -93,16 +98,14 @@
                                                                                           rows_inserted,
                                                                                           model.unique_id)) }}
 
-            {% if target.type == "sqlserver" %}
-                {# In MSSQL a temporary table can only be dropped by the connection or session that created it #}
-                {# so drop it now before the commit below closes this session #}
-                {%- set drop_query_name = 'DROP_QUERY-' ~ i -%}
-                {% call statement(drop_query_name, fetch_result=True) -%}
-                    DROP TABLE {{ tmp_relation }};
-                {%- endcall %}
-            {%  endif %}
+            {# In databricks and sqlserver a temporary view/table can only be dropped by #}
+            {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
+            {% if target.type in ['databricks', 'sqlserver'] %}
+                {{ dbtvault.drop_temporary_special(tmp_relation) }}
+            {% else %}
+                {% do to_drop.append(tmp_relation) %}
+            {% endif %}
 
-            {% do to_drop.append(tmp_relation) %}
             {% do adapter.commit() %}
 
         {% endfor %}
