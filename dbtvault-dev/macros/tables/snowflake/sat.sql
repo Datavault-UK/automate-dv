@@ -9,6 +9,9 @@
         {%- endif -%}
     {%- endfor -%}
 
+    {%- set src_payload = dbtvault.process_payload_column_excludes(payload_columns=payload_cols,
+                                                                   exclude_columns=src_payload) -%}
+
     {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                                            src_ldts=src_ldts, src_source=src_source,
                                            source_model=source_model) -}}
@@ -16,8 +19,6 @@
     {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
     {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
     {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-    {%- set src_payload = dbtvault.process_payload_column_excludes(payload_columns=payload_cols,    
-                                                                   exclude_columns=src_payload) -%}
     {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
     {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
     {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
@@ -30,7 +31,7 @@
                                             src_eff=src_eff, src_ldts=src_ldts,
                                             src_source=src_source, source_model=source_model) -}}
 
-{%- endmacro %}
+{%- endmacro -%}
 
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
@@ -77,7 +78,7 @@ latest_records AS (
     WHERE a.rank = 1
 ),
 
-{%- endif %}
+{%- endif -%}
 
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
