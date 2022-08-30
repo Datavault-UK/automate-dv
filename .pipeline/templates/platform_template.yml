@@ -39,7 +39,7 @@ stages:
 
   - ${{ each platform in parameters.platforms }}:
       - stage: 'integration_tests_${{ platform }}'
-        dependsOn: []
+        dependsOn: ['unit_tests']
         displayName: '${{ platform }} - Run Integration Tests'
         jobs:
           - ${{ each featureGroup in parameters.runConfig }}:
