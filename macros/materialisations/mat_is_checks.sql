@@ -17,7 +17,7 @@
             {{ return(relation is not none
                       and relation.type == 'table'
                       and model.config.materialized == 'vault_insert_by_period'
-                      and not flags.FULL_REFRESH) }}
+                      and not should_full_refresh()) }}
     {% endif %}
 {% endmacro %}
 
@@ -33,7 +33,7 @@
             {{ return(relation is not none
                       and relation.type == 'table'
                       and model.config.materialized == 'vault_insert_by_rank'
-                      and not flags.FULL_REFRESH) }}
+                      and not should_full_refresh()) }}
     {% endif %}
 {% endmacro %}
 
@@ -49,7 +49,7 @@
             {{ return(relation is not none
                       and relation.type == 'table'
                       and model.config.materialized == 'bridge_incremental'
-                      and not flags.FULL_REFRESH) }}
+                      and not should_full_refresh()) }}
     {% endif %}
 {% endmacro %}
 
@@ -65,6 +65,6 @@
             {{ return(relation is not none
                       and relation.type == 'table'
                       and model.config.materialized == 'pit_incremental'
-                      and not flags.FULL_REFRESH) }}
+                      and not should_full_refresh()) }}
     {% endif %}
 {% endmacro %}
