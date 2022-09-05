@@ -1263,26 +1263,32 @@ def single_source_hub_postgres(context):
     Define the structures and metadata to load single-source hubs
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": "CUSTOMER_PK",
-            "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK": "BYTEA",  # in SNOWFLAKE was -> "BINARY(16)",
+                "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "HUB_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1304,22 +1310,34 @@ def single_source_comp_pk_hub_postgres(context):
     Define the structures and metadata to load single-source hubs with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK": "CUSTOMER_ID"
-        }
-    }
+    set_metadata(context)
 
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
-            "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["CUSTOMER_PK", "CUSTOMER_CK"],
+        "src_nk": "CUSTOMER_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
     context.seed_config = {
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_CK": "VARCHAR(4)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "HUB_CUSTOMER_SHA": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(32)",
+                "CUSTOMER_CK": "VARCHAR(4)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
         "HUB": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
@@ -1334,6 +1352,7 @@ def single_source_comp_pk_hub_postgres(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1347,27 +1366,25 @@ def single_source_comp_pk_nk_hub_postgres(context):
     Define the structures and metadata to load single-source hubs with composite PK and NK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_PK1": "CUSTOMER_ID",
-            "CUSTOMER_PK2": "CUSTOMER_CK"
-        }
+    set_metadata(context)
+
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["CUSTOMER_PK", "CUSTOMER_EMP_DEP_HK"],
+        "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["CUSTOMER_PK1", "CUSTOMER_PK2"],
-            "src_nk": ["CUSTOMER_ID", "CUSTOMER_CK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_EMP_DEP_HK": "CUSTOMER_CK",
+        "CUSTOMER_PK": "CUSTOMER_ID"
     }
 
     context.seed_config = {
         "HUB": {
             "column_types": {
-                "CUSTOMER_PK1": "BYTEA",
-                "CUSTOMER_PK2": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_EMP_DEP_HK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "LOAD_DATE": "DATE",
@@ -1392,28 +1409,21 @@ def multi_source_hub_postgres(context):
     Define the structures and metadata to load multi-source hubs
     """
 
-    context.hashed_columns = {
-        "STG_PARTS": {
-            "PART_PK": "PART_ID"
-        },
-        "STG_SUPPLIER": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID"
-        },
-        "STG_LINEITEM": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
+    set_metadata(context)
+
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": "PART_PK",
-            "src_nk": "PART_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.vault_structure_columns['HUB_AC'] = {
+        "src_pk": "PART_PK",
+        "src_nk": "PART_ID",
+        "src_extra_columns": "CUSTOMER_MT_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
     context.seed_config = {
@@ -1425,13 +1435,24 @@ def multi_source_hub_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_AC": {
+            "column_types": {
+                "PART_PK": "BYTEA",
+                "PART_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "RAW_STAGE_PARTS": {
             "column_types": {
                 "PART_ID": "VARCHAR",
                 "PART_NAME": "VARCHAR",
                 "PART_TYPE": "VARCHAR",
                 "PART_SIZE": "VARCHAR",
-                "PART_RETAILPRICE": "NUMERIC(38,2)",
+                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1440,8 +1461,9 @@ def multi_source_hub_postgres(context):
             "column_types": {
                 "PART_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMERIC(38,2)",
+                "SUPPLYCOST": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1450,11 +1472,12 @@ def multi_source_hub_postgres(context):
             "column_types": {
                 "ORDER_ID": "VARCHAR",
                 "PART_ID": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMERIC(38,2)",
-                "DISCOUNT": "NUMERIC(38,2)",
+                "EXTENDED_PRICE": "NUMBER(38,2)",
+                "DISCOUNT": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1468,28 +1491,13 @@ def multi_source_comp_pk_hub_postgres(context):
     Define the structures and metadata to load multi-source hubs with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_PARTS": {
-            "PART_PK": "PART_ID"
-        },
-        "STG_SUPPLIER": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID"
-        },
-        "STG_LINEITEM": {
-            "PART_PK": "PART_ID",
-            "SUPPLIER_PK": "SUPPLIER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
+    set_metadata(context)
 
-    context.vault_structure_columns = {
-        "HUB": {
-            "src_pk": ["PART_PK", "PART_CK"],
-            "src_nk": "PART_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.vault_structure_columns['HUB'] = {
+        "src_pk": ["PART_PK", "PART_CK"],
+        "src_nk": "PART_ID",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
     context.seed_config = {
@@ -1509,7 +1517,7 @@ def multi_source_comp_pk_hub_postgres(context):
                 "PART_NAME": "VARCHAR",
                 "PART_TYPE": "VARCHAR",
                 "PART_SIZE": "VARCHAR",
-                "PART_RETAILPRICE": "NUMERIC(38,2)",
+                "PART_RETAILPRICE": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1520,7 +1528,7 @@ def multi_source_comp_pk_hub_postgres(context):
                 "PART_CK": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMERIC(38,2)",
+                "SUPPLYCOST": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1533,8 +1541,8 @@ def multi_source_comp_pk_hub_postgres(context):
                 "SUPPLIER_ID": "VARCHAR",
                 "LINENUMBER": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMERIC(38,2)",
-                "DISCOUNT": "NUMERIC(38,2)",
+                "EXTENDED_PRICE": "NUMBER(38,2)",
+                "DISCOUNT": "NUMBER(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }

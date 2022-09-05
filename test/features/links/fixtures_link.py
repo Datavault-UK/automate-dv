@@ -681,22 +681,7 @@ def single_source_link_postgres(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "LINK": {
@@ -704,6 +689,16 @@ def single_source_link_postgres(context):
                 "CUSTOMER_NATION_PK": "BYTEA",
                 "CUSTOMER_FK": "BYTEA",
                 "NATION_FK": "BYTEA",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "LINK_AC": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BYTEA",
+                "CUSTOMER_FK": "BYTEA",
+                "NATION_FK": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -728,22 +723,20 @@ def single_source_comp_pk_link_postgres(context):
     Define the structures and metadata to load single-source links with composite PK
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "COMP_PK": "CUSTOMER_ID",
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        }
+    set_metadata(context)
+
+    context.vault_structure_columns['LINK'] = {
+        "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
+        "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+        "src_ldts": "LOAD_DATE",
+        "src_source": "SOURCE"
     }
 
-    context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": ["CUSTOMER_NATION_PK", "COMP_PK"],
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
+    context.hashed_columns['STG_CUSTOMER'] = {
+        "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
+        "COMP_PK": "CUSTOMER_ID",
+        "CUSTOMER_FK": "CUSTOMER_ID",
+        "NATION_FK": "NATION_ID",
     }
 
     context.seed_config = {
@@ -777,32 +770,18 @@ def multi_source_link_postgres(context):
     Define the structures and metadata to load single-source links
     """
 
-    context.hashed_columns = {
-        "STG_SAP": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_CRM": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-        "STG_WEB": {
-            "CUSTOMER_NATION_PK": ["CUSTOMER_ID", "NATION_ID"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "NATION_FK": "NATION_ID"
-        },
-    }
+    set_metadata(context)
 
     context.vault_structure_columns = {
-        "LINK": {
-            "src_pk": "CUSTOMER_NATION_PK",
-            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+        **context.vault_structure_columns,
+        **{
+            'LINK': {
+                "src_pk": "CUSTOMER_NATION_PK",
+                "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+                "src_ldts": "LOAD_DATE",
+                "src_source": "SOURCE"
+            }
+        }}
 
     context.seed_config = {
         "LINK": {

@@ -12,9 +12,3 @@
 
     {{ return(query_results_processed) }}
 {% endmacro %}
-
-{#- [ ] TODO TEMPORARY solution is to call the SQLSERVER implementation which will UPPERCASE the column names -#}
-{% macro postgres__get_query_results_as_dict(query) %}
-{% do log('🐘🐘🐘calling get_query_results_as_dict: TEMPORARY fix is to call the SQLServer implementation.') %}
-    {{ return(dbtvault.sqlserver__get_query_results_as_dict(query)) }}
-{% endmacro %}
