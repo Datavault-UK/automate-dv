@@ -24,15 +24,23 @@ resources:
         ACCEPT_EULA: Y
         MSSQL_SA_PASSWORD: SlA7Qs3w!O
         MSSQL_PID: Developer
-
+    - container: postgres
+      image: postgres:latest
+      ports:
+        - 5432:5432
+      env:
+        POSTGRES_USER: dbtvault_user
+        POSTGRES_PASSWORD: password
+        POSTGRES_DB: dbtvault_db
 extends:
   template: templates/platform_template.yml
   parameters:
     platforms:
-      - 'databricks'
-      - 'sqlserver'
-      - 'snowflake'
-      - 'bigquery'
+      - 'postgres'
+#      - 'databricks'
+#      - 'sqlserver'
+#      - 'snowflake'
+#      - 'bigquery'
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
@@ -47,7 +55,7 @@ extends:
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'sats'
         displayName: 'Satellites'
@@ -55,24 +63,24 @@ extends:
         subGroups: [ 'main', 'cycles', 'incremental', 'pm', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
         subGroups: [ 'main', 'auto', 'disabled', 'mat' ]
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
         subGroups: [ '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
       - groupName: 'xts'
         displayName: 'Extended Tracking Satellites'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
         subGroups: [ 'main', 'incremental' ]
       - groupName: 'pit'
         displayName: 'Point-In-Time Tables'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
         subGroups: [ 'main', '1sat_base', '1sat_inc', '2sat' ]
       - groupName: 'bridge'
         displayName: 'Bridge Tables'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
         subGroups: [ 'inc', '1link', '2link', '3link' ]
       - groupName: 'cycle'
         displayName: 'Load Cycles'
-        disabledForPlatform: ['databricks']
+        disabledForPlatform: ['databricks', 'postgres']
