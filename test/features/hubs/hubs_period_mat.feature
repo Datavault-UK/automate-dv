@@ -1,3 +1,4 @@
+@not_postgres
 Feature: [HUB-PM] Hubs Loaded using Period Materialization
 
   @fixture.single_source_hub

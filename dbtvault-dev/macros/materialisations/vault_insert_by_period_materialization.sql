@@ -1,5 +1,9 @@
 {% materialization vault_insert_by_period, default -%}
 
+    {% if target.type == "postgres" and execute %}
+        {{ exceptions.raise_compiler_error("The vault_insert_by_period materialisation is currently unavailable on Postgres.") }}
+    {% endif %}
+
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}
@@ -84,7 +88,6 @@
             {# See MSSQL note and drop code below #}
 
             {# [ ] TODO check dbt postgres implementation for a possible fix #}
-            {% do log('🐘🐘🐘calling create_table_as (which might fail with postgres error "subquery in FROM must have an alias" \n tmp_table_sql =>' ~ tmp_table_sql, true) %}
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}
