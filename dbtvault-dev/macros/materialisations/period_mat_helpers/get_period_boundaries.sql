@@ -140,7 +140,7 @@
 
 
 
-{% macro postgres__get_period_boundaries(target_schema, target_table, timestamp_field, start_date, stop_date, period) -%}
+{% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
@@ -148,7 +148,7 @@
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
                 COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                          {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
-            FROM "{{ target_schema }}"."{{ target_table }}"
+            FROM {{ target_relation }}
         )
         SELECT
             start_timestamp,
