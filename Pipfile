@@ -24,7 +24,6 @@ dbt-bigquery = "==1.2.0"
 dbt-databricks = "==1.2.1"
 pexpect = "*"
 filelock = "*"
-dbt-sqlserver = "==1.1.0"
 
 [requires]
 python_version = "3.9"

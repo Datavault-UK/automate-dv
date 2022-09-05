@@ -63,6 +63,11 @@
         {%- set custom_schema_name = target.schema -%}
     {%- endif -%}
 
+    {% if execute -%}
+        {% do log('custom_schema_name: ' ~ custom_schema_name, true) -%}
+        {% do log('schema: ' ~ schema, true) -%}
+    {% endif -%}
+
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
     {%- set schema_name = "{}_{}{}".format(schema_name, target.name, dbtvault_test.pipeline_string()) -%}
