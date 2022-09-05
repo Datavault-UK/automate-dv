@@ -28,21 +28,22 @@ fixtures_registry = {
         {"snowflake": fixtures_staging.staging_snowflake,
          "bigquery": fixtures_staging.staging_bigquery,
          "sqlserver": fixtures_staging.staging_sqlserver,
-         "databricks": fixtures_staging.staging_databricks},
+         "databricks": fixtures_staging.staging_databricks,
          "postgres": fixtures_staging.staging_postgres},
 
     "fixture.staging_escaped":
         {"snowflake": fixtures_staging.staging_escaped_snowflake,
          "bigquery": fixtures_staging.staging_escaped_bigquery,
          "sqlserver": fixtures_staging.staging_escaped_sqlserver,
-         "databricks": fixtures_staging.staging_escaped_databricks},
+         "databricks": fixtures_staging.staging_escaped_databricks,
          "postgres": fixtures_staging.staging_escaped_postgres},
 
     "fixture.staging_null_columns":
         {"snowflake": fixtures_staging.staging_null_columns_snowflake,
          "bigquery": fixtures_staging.staging_null_columns_bigquery,
          "sqlserver": fixtures_staging.staging_null_columns_sqlserver,
-         "databricks": fixtures_staging.staging_null_columns_databricks},
+         "databricks": fixtures_staging.staging_null_columns_databricks,
+         "postgres": ''},
 
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
@@ -146,8 +147,8 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat.eff_satellite_auto_end_dating_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_auto_end_dating_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_auto_end_dating_sqlserver,
-         "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres,
-         "databricks": ''},
+         "databricks": '',
+         "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres},
 
     "fixture.eff_satellite_multipart":
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
@@ -216,7 +217,8 @@ fixtures_registry = {
         {"snowflake": fixtures_cycle.cycle_custom_null_key_snowflake,
          "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
-         "databricks": ''},
+         "databricks": '',
+         "postgres": ''},
 
 }
 

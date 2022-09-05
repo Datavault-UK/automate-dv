@@ -139,3 +139,7 @@
 {%- macro databricks__get_escape_characters() %}
     {%- do return (('`', '`')) -%}
 {%- endmacro %}
+
+{%- macro postgres__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}

@@ -32,7 +32,6 @@ REQUIRED_ENV_VARS = {
     ],
     "postgres": [
         "POSTGRES_DB_HOST",
-        "POSTGRES_DB_PORT",
         "POSTGRES_DB_DATABASE",
         "POSTGRES_DB_SCHEMA",
         "POSTGRES_DB_USER",
