@@ -32,6 +32,7 @@ resources:
         POSTGRES_USER: dbtvault_user
         POSTGRES_PASSWORD: password
         POSTGRES_DB: dbtvault_db
+
 extends:
   template: templates/platform_template.yml
   parameters:
