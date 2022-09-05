@@ -253,8 +253,6 @@ def single_source_link_bigquery(context):
     }
 
 
-# BIGQUERY
-
 @fixture
 def single_source_comp_pk_link_bigquery(context):
     """
@@ -416,8 +414,6 @@ def single_source_link_sqlserver(context):
     }
 
 
-# SQLSERVER
-
 @fixture
 def single_source_comp_pk_link_sqlserver(context):
     """
@@ -521,6 +517,7 @@ def multi_source_link_sqlserver(context):
 
 # Databricks
 
+
 @fixture
 def single_source_link_databricks(context):
     """
@@ -604,7 +601,7 @@ def single_source_link_postgres(context):
 
 
 @fixture
-def single_source_comppk_link_postgres(context):
+def single_source_comp_pk_link_postgres(context):
     """
     Define the structures and metadata to load single-source links with composite PK
     """
@@ -729,4 +726,3 @@ def multi_source_link_postgres(context):
             }
         }
     }
-

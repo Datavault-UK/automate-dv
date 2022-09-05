@@ -108,7 +108,7 @@ fixtures_registry = {
          "postgres": fixtures_t_link.t_link_postgres},
 
     "fixture.t_link_comp_pk":
-        {"snowflake": fixtures_t_link.t_link_comp_pk,
+        {"snowflake": fixtures_t_link.t_link_comp_pk_snowflake,
          "bigquery": fixtures_t_link.t_link_comp_pk_bigquery,
          "sqlserver": fixtures_t_link.t_link_comp_pk_sqlserver,
          "databricks": '',

@@ -717,8 +717,6 @@ def single_source_hub_sqlserver(context):
     }
 
 
-# SQLSERVER
-
 @fixture
 def single_source_comp_pk_hub_sqlserver(context):
     """
@@ -1045,6 +1043,7 @@ def multi_source_hub_databricks(context):
         }
     }
 
+
 # Postgres
 
 @fixture
@@ -1087,8 +1086,9 @@ def single_source_hub_postgres(context):
         }
     }
 
+
 @fixture
-def single_source_comppk_hub_postgres(context):
+def single_source_comp_pk_hub_postgres(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK
     """
@@ -1129,8 +1129,9 @@ def single_source_comppk_hub_postgres(context):
         }
     }
 
+
 @fixture
-def single_source_comppknk_hub_postgres(context):
+def single_source_comp_pk_nk_hub_postgres(context):
     """
     Define the structures and metadata to load single-source hubs with composite PK and NK
     """
@@ -1172,6 +1173,7 @@ def single_source_comppknk_hub_postgres(context):
             }
         }
     }
+
 
 @fixture
 def multi_source_hub_postgres(context):
@@ -1248,8 +1250,9 @@ def multi_source_hub_postgres(context):
         }
     }
 
+
 @fixture
-def multi_source_comppk_hub_postgres(context):
+def multi_source_comp_pk_hub_postgres(context):
     """
     Define the structures and metadata to load multi-source hubs with composite PK
     """

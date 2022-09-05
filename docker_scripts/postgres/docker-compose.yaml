@@ -15,5 +15,5 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_DB=dbtvault_db # otherwise default is POSTGRES_USER
     ports:
-      - '5434:5432'
-    command: [ "postgres", "-c", "log_statement=all" ]  # log all requests (ie. see all queries)
+      - '8100:5432'
+    command: [ "postgres", "-c", "log_statement=all"]  # log all requests (ie. see all queries)
