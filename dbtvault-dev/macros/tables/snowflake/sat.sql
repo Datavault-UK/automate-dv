@@ -1,16 +1,8 @@
 {%- macro sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-    {%- set source_model_cols = adapter.get_columns_in_relation(ref(source_model)) -%}
-
-    {%- set payload_cols = [] -%}
-    {%- for col in source_model_cols -%}
-        {%- if col.column not in [src_pk, src_hashdiff, src_eff, src_ldts, src_source] -%}
-            {%- do payload_cols.append(col.column) -%}
-        {%- endif -%}
-    {%- endfor -%}
-
-    {%- set src_payload = dbtvault.process_payload_column_excludes(payload_columns=payload_cols,
-                                                                   exclude_columns=src_payload) -%}
+    {%- set src_payload = dbtvault.process_payload_column_excludes(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                           src_payload=src_payload, src_eff=src_eff, src_ldts=src_ldts,
+                                           src_source=src_source, source_model=source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
                                            src_ldts=src_ldts, src_source=src_source,
