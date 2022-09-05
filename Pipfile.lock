@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "4d24be3170d895971c2f7555cef7eac195278a8571a1243379f3adbf0bfa7d79"
+            "sha256": "f8e7d9302d73f80bf6c187425af349743142523ce9e7e6cfe76c19e5d4bf1969"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -228,11 +228,11 @@
         },
         "databricks-sql-connector": {
             "hashes": [
-                "sha256:a0db589ac35446989e129aef51b22f615dc1f65b143e90717aa85320d7f82284",
-                "sha256:f744fe26010d7798e4bb7a9c6106a2bf2cb6da63381b8e2e7b0a4beae374c0cd"
+                "sha256:6ee81dd09c01138b9c2214ce507b72ccde609ecf9b36e708816a515b1db731af",
+                "sha256:a3662374c65e7fea2ab20d1b33379078f7bf014e286a1b34d00706f4d1624e43"
             ],
             "markers": "python_full_version >= '3.7.1' and python_full_version < '4.0.0'",
-            "version": "==2.0.5"
+            "version": "==2.0.4"
         },
         "dbt-bigquery": {
             "hashes": [
@@ -1308,11 +1308,11 @@
         },
         "setuptools": {
             "hashes": [
-                "sha256:2e24e0bec025f035a2e72cdd1961119f557d78ad331bb00ff82efb2ab8da8e82",
-                "sha256:7732871f4f7fa58fb6bdcaeadb0161b2bd046c85905dbaa066bdcbcc81953b57"
+                "sha256:7f4bc85450898a09f76ebf28b72fa25bc7111f6c7d665d514a60bba9c75ef2a9",
+                "sha256:a3ca5857c89f82f5c9410e8508cb32f4872a3bafd4aa7ae122a24ca33bccc750"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==65.3.0"
+            "version": "==65.2.0"
         },
         "six": {
             "hashes": [

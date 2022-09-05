@@ -107,8 +107,9 @@
     {%- if column | first == "'" and column | last == "'" -%}
         {%- set escaped_column_name = column -%}
     {%- else -%}
-        {%- set escape_char_left  = var('escape_char_left',  '"') -%}
-        {%- set escape_char_right = var('escape_char_right', '"') -%}
+        {%- set escape_char_default_left, escape_char_default_right = dbtvault.get_escape_characters() -%}
+        {%- set escape_char_left  = var('escape_char_left',  escape_char_default_left) -%}
+        {%- set escape_char_right = var('escape_char_right', escape_char_default_right) -%}
 
         {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
     {%- endif -%}
@@ -117,47 +118,24 @@
 
 {%- endmacro -%}
 
-{%- macro sqlserver__escape_column_name(column) -%}
+{% macro get_escape_characters() -%}
 
-    {# Do not escape a constant (single quoted) value #}
-    {%- if column | first == "'" and column | last == "'" -%}
-        {%- set escaped_column_name = column -%}
-    {%- else -%}
-        {%- set escape_char_left  = var('escape_char_left',  '"') -%}
-        {%- set escape_char_right = var('escape_char_right', '"') -%}
+    {% do return(adapter.dispatch('get_escape_characters', 'dbtvault')()) -%}
 
-        {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
-    {%- endif -%}
+{%- endmacro %}
 
-    {%- do return(escaped_column_name) -%}
+{%- macro snowflake__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}
 
-{%- endmacro -%}
+{%- macro bigquery__get_escape_characters() %}
+    {%- do return (('`', '`')) -%}
+{%- endmacro %}
 
-{%- macro bigquery__escape_column_name(column) -%}
+{%- macro sqlserver__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}
 
-    {# Do not escape a constant (single quoted) value #}
-    {%- if column | first == "'" and column | last == "'" -%}
-        {%- set escaped_column_name = column -%}
-    {%- else -%}
-        {%- set escape_char_left  = var('escape_char_left',  '`') -%}
-        {%- set escape_char_right = var('escape_char_right', '`') -%}
-
-        {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
-    {%- endif -%}
-
-    {%- do return(escaped_column_name) -%}
-
-{%- endmacro -%}
-
-{# Quoting strategy for Postgres should be to always quote column references  #}
-{%- macro postgres__escape_column_name(column) -%}
-
-    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
-    {%- set escape_char_right = var('escape_char_right', '"') -%}
-
-    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
-
-    {%- do return(escaped_column_name) -%}
-
-{%- endmacro -%}
-
+{%- macro databricks__get_escape_characters() %}
+    {%- do return (('`', '`')) -%}
+{%- endmacro %}

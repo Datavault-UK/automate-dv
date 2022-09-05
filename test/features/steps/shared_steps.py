@@ -66,13 +66,34 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
 @given("the {model_name} table does not exist")
 def check_exists(context, model_name):
+    text_args = dbtvault_generator.handle_step_text_dict(context)
+
     logs = dbt_runner.run_dbt_operation(macro_name="check_model_exists",
                                         args={"model_name": model_name},
-                                        dbt_vars=dbtvault_generator.handle_step_text_dict(context))
+                                        dbt_vars=text_args)
 
     context.target_model_name = model_name
 
+    if f"Model {model_name} exists." in logs:
+
+        if 'schema' in list(text_args):
+            dbt_runner.run_dbt_operation(macro_name="drop_current_schema",
+                                         dbt_vars=text_args)
+
+        logs = dbt_runner.run_dbt_operation(macro_name="check_model_exists",
+                                            args={"model_name": model_name},
+                                            dbt_vars=text_args)
+
     assert f"Model {model_name} does not exist." in logs
+
+
+@given("the {schema_name} schema does not exist")
+def check_exists(context, schema_name):
+    logs = dbt_runner.run_dbt_operation(macro_name="drop_selected_schema",
+                                        args={"schema_to_drop": schema_name},
+                                        dbt_vars=dbtvault_generator.handle_step_text_dict(context))
+
+    assert f"Schema '{schema_name}' dropped." in logs
 
 
 @given("the raw vault contains empty tables")
@@ -500,10 +521,13 @@ def create_csv(context, raw_stage_model_name):
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
+    text_args = dbtvault_generator.handle_step_text_dict(context)
+
     args = {k: v for k, v in stage_metadata.items() if
             k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
+                                           config=text_args,
                                            vault_structure="stage",
                                            source_model=context.raw_stage_models,
                                            hashed_columns=context.hashed_columns[processed_stage_name],

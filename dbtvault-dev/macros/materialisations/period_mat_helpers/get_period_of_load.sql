@@ -9,8 +9,6 @@
 {%- endmacro %}
 
 
-
-
 {%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
@@ -25,12 +23,10 @@
 {%- endmacro -%}
 
 
-
-
 {%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC(DATE_ADD( DATE('{{start_timestamp}}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
+        SELECT DATE_TRUNC(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
@@ -39,8 +35,6 @@
 
     {% do return(period_of_load) %}
 {%- endmacro -%}
-
-
 
 
 {%- macro sqlserver__get_period_of_load(period, offset, start_timestamp) -%}
@@ -56,6 +50,11 @@
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
     {% do return(period_of_load) %}
+{%- endmacro -%}
+
+
+{%- macro databricks__get_period_of_load(period, offset, start_timestamp) -%}
+    {% do return(dbtvault.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}
 {%- endmacro -%}
 
 

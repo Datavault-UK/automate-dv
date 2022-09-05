@@ -3,29 +3,14 @@
 {% endmacro %}
 
 {% macro default__get_query_results_as_dict(query) %}
-    {{ return(dbt_utils.get_query_results_as_dict(query)) }}
-{% endmacro %}
+    {%- set query_results = dbt_utils.get_query_results_as_dict(query) -%}
+    {%- set query_results_processed = {} -%}
 
-{% macro sqlserver__get_query_results_as_dict(query) %}
+    {% for k, v in query_results.items() %}
+        {% do query_results_processed.update({k.upper(): v}) %}
+    {% endfor %}
 
-    {%- call statement('get_query_results', fetch_result=True,auto_begin=false) -%}
-
-        {{ query }}
-
-    {%- endcall -%}
-
-    {% set sql_results={} %}
-
-    {%- if execute -%}
-        {% set sql_results_table = load_result('get_query_results').table.columns %}
-        {% for column_name, column in sql_results_table.items() %}
-            {# Column names in upper case for consistency #}
-            {% do sql_results.update({column_name.upper(): column.values()}) %}
-        {% endfor %}
-    {%- endif -%}
-
-    {{ return(sql_results) }}
-
+    {{ return(query_results_processed) }}
 {% endmacro %}
 
 {#- [ ] TODO TEMPORARY solution is to call the SQLSERVER implementation which will UPPERCASE the column names -#}

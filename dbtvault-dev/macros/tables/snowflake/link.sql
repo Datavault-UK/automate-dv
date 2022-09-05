@@ -14,11 +14,7 @@
         {%- set source_model = [source_model] -%}
     {%- endif -%}
 
-    {%- if execute -%}
-
-    {%- do dbt_utils.log_info('Loading {} from {} source(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
-                                                                       source_model | length)) -%}
-    {%- endif -%}
+    {{ dbtvault.log_relation_sources(this, source_model | length) }}
 
     {{ dbtvault.prepend_generated_by() }}
 

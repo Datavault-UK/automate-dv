@@ -1,14 +1,16 @@
 {%- macro drop_model(model_name) -%}
 
-    {%- if target.type == 'spark' -%}
+    {% set schema_name = dbtvault_test.get_schema_name() %}
+
+    {%- if target.type == 'databricks' -%}
         {%- set source_relation = adapter.get_relation(
-              schema=target.schema,
+              schema=schema_name,
               identifier=model_name) -%}
 
     {%- else -%}
         {%- set source_relation = adapter.get_relation(
               database=target.database,
-              schema=target.schema,
+              schema=schema_name,
               identifier=model_name) -%}
     {%- endif -%}
 
@@ -25,7 +27,7 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {%- set source_relation = adapter.get_relation(
               database=schema_name,
               schema=schema_name,
@@ -80,7 +82,7 @@
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {% do adapter.drop_schema(api.Relation.create(schema=schema_name)) %}
     {%- else -%}
         {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
@@ -90,11 +92,39 @@
 
 {% endmacro %}
 
+
+{%- macro drop_selected_schema(schema_to_drop) -%}
+
+    {%- if target.type == 'databricks' -%}
+        {% do adapter.drop_schema(api.Relation.create(schema=schema_to_drop)) %}
+    {%- else -%}
+        {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_to_drop)) %}
+    {%- endif -%}
+
+    {% do log("Schema '{}' dropped.".format(schema_to_drop), true) %}
+
+{% endmacro %}
+
+{%- macro drop_current_schema() -%}
+
+    {% set schema_to_drop = dbtvault_test.get_schema_name() %}
+
+    {%- if target.type == 'databricks' -%}
+        {% do adapter.drop_schema(api.Relation.create(schema=schema_to_drop)) %}
+    {%- else -%}
+        {% do adapter.drop_schema(api.Relation.create(database=target.database, schema=schema_to_drop)) %}
+    {%- endif -%}
+
+    {% do log("Schema '{}' dropped.".format(schema_to_drop), true) %}
+
+{% endmacro %}
+
+
 {%- macro create_test_schemas() -%}
 
     {% set schema_name = dbtvault_test.get_schema_name() %}
 
-    {%- if target.type == 'spark' -%}
+    {%- if target.type == 'databricks' -%}
         {% do adapter.create_schema(api.Relation.create(schema=schema_name)) %}
     {%- else -%}
         {% do adapter.create_schema(api.Relation.create(database=target.database, schema=schema_name)) %}
