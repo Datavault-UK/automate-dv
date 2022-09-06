@@ -288,9 +288,9 @@
         {%- if loop.last -%}
 
             {% if is_hashdiff %}
-                {{- "\n{})) AS BYTEA) AS {}".format(hash_expr_right, dbtvault.escape_column_names(alias)) -}}
+                {{- "\n){}) AS BYTEA) AS {}".format(hash_expr_right, dbtvault.escape_column_names(alias)) -}}
             {%- else -%}
-                {{- "\n), '{}'{})) AS BYTEA) AS {}".format(all_null | join(""), hash_expr_right, dbtvault.escape_column_names(alias)) -}}
+                {{- "\n), '{}'){}) AS BYTEA) AS {}".format(all_null | join(""), hash_expr_right, dbtvault.escape_column_names(alias)) -}}
             {%- endif -%}
         {%- else -%}
 
