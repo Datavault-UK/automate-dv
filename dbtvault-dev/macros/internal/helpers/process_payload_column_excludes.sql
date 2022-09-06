@@ -1,4 +1,5 @@
-{%- macro process_payload_column_excludes(src_pk, src_hashdiff, src_payload, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro process_payload_column_excludes(src_pk, src_hashdiff, src_payload, src_extra_columns,
+                                          src_eff, src_ldts, src_source, source_model) -%}
 
     {%- if src_payload is not mapping -%}
         {%- do return(src_payload) -%}
@@ -8,7 +9,7 @@
 
     {%- set payload_cols = [] -%}
     {%- for col in source_model_cols -%}
-        {%- if col.column not in [src_pk, src_hashdiff, src_eff, src_ldts, src_source] -%}
+        {%- if col.column not in [src_pk, src_hashdiff, src_extra_columns, src_eff, src_ldts, src_source] -%}
             {%- do payload_cols.append(col.column) -%}
         {%- endif -%}
     {%- endfor -%}

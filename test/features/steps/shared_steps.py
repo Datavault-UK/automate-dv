@@ -624,3 +624,12 @@ def expect_data(context, model_name):
         logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
         assert "1 of 1 PASS" in logs
+
+
+@step("I exclude the following columns")
+def step_impl(context):
+    context.payload_exclusions = [row.cells[0] for row in context.table]
+    context.vault_structure_columns['src_payload'] = {
+        "exclude_columns": "true",
+        "columns": exclusions
+    }

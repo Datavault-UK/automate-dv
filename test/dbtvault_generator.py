@@ -497,7 +497,8 @@ def extract_column_names(context, model_name: str, model_params: dict, ignored_p
     processing_functions = {
         "pit": process_pit_columns,
         "bridge": process_bridge_columns,
-        "xts": process_xts_columns
+        "xts": process_xts_columns,
+        "sat": process_sat_columns,
     }
 
     processed_headings = []
@@ -569,6 +570,14 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
 
 
 def process_xts_columns(column_def: dict):
+    column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
+
+    if not column_def:
+        return dict()
+    else:
+        return [f"{list(col.keys())[0]}" for col in list(column_def.values())[0].values()]
+
+def process_sat_columns(column_def: dict):
     column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
 
     if not column_def:
