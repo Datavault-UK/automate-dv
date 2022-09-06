@@ -1451,7 +1451,7 @@ def multi_source_hub_postgres(context):
                 "PART_NAME": "VARCHAR",
                 "PART_TYPE": "VARCHAR",
                 "PART_SIZE": "VARCHAR",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "PART_RETAILPRICE": "NUMERIC(38,2)",
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -1463,7 +1463,7 @@ def multi_source_hub_postgres(context):
                 "SUPPLIER_ID": "VARCHAR",
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "NUMERIC(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1474,10 +1474,10 @@ def multi_source_hub_postgres(context):
                 "PART_ID": "VARCHAR",
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
-                "LINENUMBER": "FLOAT",
+                "LINENUMERIC": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "NUMERIC(38,2)",
+                "DISCOUNT": "NUMERIC(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1517,7 +1517,7 @@ def multi_source_comp_pk_hub_postgres(context):
                 "PART_NAME": "VARCHAR",
                 "PART_TYPE": "VARCHAR",
                 "PART_SIZE": "VARCHAR",
-                "PART_RETAILPRICE": "NUMBER(38,2)",
+                "PART_RETAILPRICE": "NUMERIC(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1528,7 +1528,7 @@ def multi_source_comp_pk_hub_postgres(context):
                 "PART_CK": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
                 "AVAILQTY": "FLOAT",
-                "SUPPLYCOST": "NUMBER(38,2)",
+                "SUPPLYCOST": "NUMERIC(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -1539,10 +1539,10 @@ def multi_source_comp_pk_hub_postgres(context):
                 "PART_ID": "VARCHAR",
                 "PART_CK": "VARCHAR",
                 "SUPPLIER_ID": "VARCHAR",
-                "LINENUMBER": "FLOAT",
+                "LINENUMERIC": "FLOAT",
                 "QUANTITY": "FLOAT",
-                "EXTENDED_PRICE": "NUMBER(38,2)",
-                "DISCOUNT": "NUMBER(38,2)",
+                "EXTENDED_PRICE": "NUMERIC(38,2)",
+                "DISCOUNT": "NUMERIC(38,2)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
