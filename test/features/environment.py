@@ -43,7 +43,7 @@ fixtures_registry = {
          "bigquery": fixtures_staging.staging_null_columns_bigquery,
          "sqlserver": fixtures_staging.staging_null_columns_sqlserver,
          "databricks": fixtures_staging.staging_null_columns_databricks,
-         "postgres": ''},
+         "postgres": fixtures_staging.staging_null_columns_postgres},
 
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
@@ -218,7 +218,7 @@ fixtures_registry = {
          "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
          "databricks": '',
-         "postgres": ''},
+         "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
 
 }
 

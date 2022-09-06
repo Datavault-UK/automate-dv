@@ -254,7 +254,6 @@ def staging_sqlserver(context):
     """
 
     context.seed_config = {
-
         "STG_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(5)",
@@ -596,7 +595,6 @@ def staging_postgres(context):
     """
 
     context.seed_config = {
-
         "STG_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
@@ -609,6 +607,40 @@ def staging_postgres(context):
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
                 "DBTVAULT_RANK": "VARCHAR"
+            }
+        },
+        "STG_CUSTOMER_HASH": {
+            "column_types": {
+                "CUSTOMER_ID": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "CUSTOMER_PK": "BYTEA",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "INT",
+                "CUSTOMER_NK": "VARCHAR(30)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)"
+            }
+        },
+        "STG_CUSTOMER_CONCAT": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(5)",
+                "CUSTOMER_NAME": "VARCHAR(10)",
+                "CUSTOMER_DOB": "VARCHAR(10)",
+                "CUSTOMER_PHONE": "VARCHAR(20)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(10)",
+                "CUSTOMER_PK": "BYTEA",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "DBTVAULT_RANK": "INT",
+                "DBTVAULT_RANK2": "INT",
+                "CUSTOMER_NK": "VARCHAR(30)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)",
+                "DERIVED_CONCAT": "VARCHAR(50)"
             }
         },
         "RAW_STAGE": {
