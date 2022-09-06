@@ -178,7 +178,6 @@ def create_empty_stage(context, raw_stage_name):
 
 @given("I have an empty {processed_stage_name} primed stage")
 def create_empty_stage(context, processed_stage_name):
-
     if not getattr(context, "null_columns", None):
         context.null_columns = dict()
         context.null_columns[processed_stage_name] = dict()
@@ -387,7 +386,8 @@ def create_csv(context, table_name):
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
-        args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+        args = {k: v for k, v in stage_metadata.items() if
+                k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -414,7 +414,8 @@ def create_csv(context, table_name):
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
-        args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+        args = {k: v for k, v in stage_metadata.items() if
+                k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -479,7 +480,8 @@ def create_csv(context, raw_stage_model_name):
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
-    args = {k: v for k, v in stage_metadata.items() if k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+    args = {k: v for k, v in stage_metadata.items() if
+            k == "hash" or k == "null_key_required" or k == "null_key_optional"}
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
                                            vault_structure="stage",
@@ -626,10 +628,13 @@ def expect_data(context, model_name):
         assert "1 of 1 PASS" in logs
 
 
-@step("I exclude the following columns")
-def step_impl(context):
-    context.payload_exclusions = [row.cells[0] for row in context.table]
-    context.vault_structure_columns['src_payload'] = {
+@step("I exclude the following columns for the {model_name} table")
+def step_impl(context, model_name):
+    context.payload_exclusions = exclusions = [row.cells[0] for row in context.table]
+
+    context.vault_structure_columns_original = copy.deepcopy(context.vault_structure_columns)
+
+    context.vault_structure_columns[model_name]['src_payload'] = {
         "exclude_columns": "true",
         "columns": exclusions
     }

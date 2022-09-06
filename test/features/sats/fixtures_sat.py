@@ -2,6 +2,8 @@ from behave import fixture
 
 
 def set_vault_structure_definition(context):
+    context.vault_structure_type = 'sat'
+
     context.vault_structure_columns = {
         "SATELLITE": {
             "src_pk": "CUSTOMER_PK",
