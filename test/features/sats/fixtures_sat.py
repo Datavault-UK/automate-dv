@@ -101,7 +101,7 @@ def satellite_snowflake(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
@@ -111,7 +111,7 @@ def satellite_snowflake(context):
         },
         "RAW_STAGE_TS": {
             "column_types": {
-                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_ID": "NUMBER(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
