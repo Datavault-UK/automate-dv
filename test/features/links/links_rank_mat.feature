@@ -1,3 +1,4 @@
+@not_postgres
 Feature: [LNK-RM] Links Loaded using Rank Materialization
 
   @fixture.single_source_link

@@ -29,6 +29,13 @@ REQUIRED_ENV_VARS = {
         "DATABRICKS_SCHEMA", "DATABRICKS_HOST",
         "DATABRICKS_PORT", "DATABRICKS_TOKEN",
         "DATABRICKS_ENDPOINT"
+    ],
+    "postgres": [
+        "POSTGRES_DB_HOST",
+        "POSTGRES_DB_DATABASE",
+        "POSTGRES_DB_SCHEMA",
+        "POSTGRES_DB_USER",
+        "POSTGRES_DB_PW"
     ]
 }
 
