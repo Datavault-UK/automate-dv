@@ -6,10 +6,13 @@
     {%- endif -%}
 
     {%- set source_model_cols = adapter.get_columns_in_relation(ref(source_model)) -%}
+    {%- set columns_in_metadata = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff,
+                                                                       src_payload, src_extra_columns,
+                                                                       src_eff, src_ldts, src_source]) | map('lower') | list -%}
 
     {%- set payload_cols = [] -%}
     {%- for col in source_model_cols -%}
-        {%- if col.column not in [src_pk, src_hashdiff, src_extra_columns, src_eff, src_ldts, src_source] -%}
+        {%- if col.column | lower not in columns_in_metadata -%}
             {%- do payload_cols.append(col.column) -%}
         {%- endif -%}
     {%- endfor -%}
@@ -20,10 +23,10 @@
         {%- if table_excludes_columns -%}
 
             {%- set excluded_payload = [] -%}
-            {%- set exclude_columns_list = src_payload.columns -%}
+            {%- set exclude_columns_list = src_payload.columns | map('lower') | list -%}
 
             {%- for col in payload_cols -%}
-               {%- if col not in exclude_columns_list -%}
+               {%- if col | lower not in exclude_columns_list -%}
                    {%- do excluded_payload.append(col) -%}
                {%- endif -%}
             {%- endfor -%}
