@@ -5,6 +5,7 @@ import textwrap
 
 import ruamel.yaml
 
+from env import env_utils
 from test import *
 
 
@@ -640,10 +641,15 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None,
     if additional_config:
         seed_config = {**seed_config, **additional_config}
 
+    if env_utils.platform() == 'postgres':
+        quoted_columns = False
+    else:
+        quoted_columns = True
+
     seed_properties = {
         'version': 2,
         'seeds': [
-            {'name': seed_name, 'config': {**seed_config, 'quote_columns': True}}
+            {'name': seed_name, 'config': {**seed_config, 'quote_columns': quoted_columns}}
         ]
     }
 

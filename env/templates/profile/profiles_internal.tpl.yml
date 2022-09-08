@@ -47,4 +47,14 @@ dbtvault:
 
       threads: 4
 
+    postgres:
+      type: postgres
+      host: "{{ op://private/postgres/host }}"
+      port: 8100
+      database: "{{ op://private/postgres/database }}"
+      schema: "{{ op://private/postgres/schema }}"
+      user: "{{ op://private/postgres/user }}"
+      password: "{{ op://private/postgres/password }}"
+      threads: 4
+
   target: "snowflake"
