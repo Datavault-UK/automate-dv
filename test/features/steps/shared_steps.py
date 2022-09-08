@@ -367,8 +367,6 @@ def create_csv(context, raw_stage_model_name):
                                                                model_name=raw_stage_model_name,
                                                                target_model_name=raw_stage_model_name)
 
-        context.target_model_name = raw_stage_model_name
-
         logs = dbt_runner.run_dbt_seed_model(seed_model_name=seed_model_name)
 
         context.raw_stage_models = seed_model_name
