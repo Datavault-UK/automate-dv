@@ -1,42 +1,19 @@
-{%- macro link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
-
-    {{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
-                                           src_ldts=src_ldts, src_source=src_source,
-                                           source_model=source_model) -}}
-
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
-    {%- if not dbtvault.is_list(source_model) -%}
-        {%- set source_model = [source_model] -%}
-    {%- endif -%}
-
-    {{ dbtvault.log_relation_sources(this, source_model | length) }}
-
-    {{ dbtvault.prepend_generated_by() }}
-
-    {{ adapter.dispatch('link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk,
-                                             src_extra_columns=src_extra_columns,
-                                             src_ldts=src_ldts, src_source=src_source,
-                                             source_model=source_model) -}}
-
-{%- endmacro -%}
-
-{%- macro default__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
+{%- macro postgres__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_extra_columns, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
-{%- endif %}
+{%- endif -%}
+
+{{ dbtvault.prepend_generated_by() }}
 
 {{ 'WITH ' -}}
 
-{%- set stage_count = source_model | length -%}
+{%- if not (source_model is iterable and source_model is not string) -%}
+    {%- set source_model = [source_model] -%}
+{%- endif -%}
 
 {%- set ns = namespace(last_cte= "") -%}
 
@@ -45,6 +22,7 @@
 {%- set source_number = loop.index | string -%}
 
 row_rank_{{ source_number }} AS (
+  SELECT * FROM (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'rr') }},
     {%- else %}
@@ -55,15 +33,16 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
-    {%- if stage_count == 1 %}
+    {%- if source_model | length == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
-    QUALIFY row_number = 1
+  ) as l
+  WHERE row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
-{% if stage_count > 1 %}
+{% if source_model | length > 1 %}
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
@@ -89,9 +68,10 @@ stage_mat_filter AS (
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
 {% endif %}
-{%- if stage_count > 1 %}
+{%- if source_model | length > 1 %}
 
 row_rank_union AS (
+  SELECT * FROM (
     SELECT ru.*,
            ROW_NUMBER() OVER(
                PARTITION BY {{ dbtvault.prefix([src_pk], 'ru') }}
@@ -100,7 +80,8 @@ row_rank_union AS (
     FROM {{ ns.last_cte }} AS ru
     WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='ru', condition='IS NOT NULL') }}
-    QUALIFY row_rank_number = 1
+  ) AS a
+  WHERE row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}

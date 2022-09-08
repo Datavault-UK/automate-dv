@@ -1,3 +1,4 @@
+@not_postgres
 Feature: [SAT-PM-B] Satellites Loaded using Period Materialization for base loads
 
   @fixture.satellite

@@ -50,15 +50,22 @@ dbtvault:
       password: "{{ op://dbtvault/sqlserver_pipeline/password }}"
 
     databricks:
-      type: spark
-      method: odbc
-      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
-      schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
-      host: "{{ env_var('DATABRICKS_HOST') }}"
-      port: "{{ env_var('DATABRICKS_PORT', 443) }}"
-      token: "{{ env_var('DATABRICKS_TOKEN') }}"
-      endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
+      type: databricks
+      schema: "{{ op://dbtvault/databricks_pipeline/schema }}"
+      host: "{{ op://dbtvault/databricks_pipeline/host }}"
+      http_path: "{{ op://dbtvault/databricks_pipeline/http_path }}"
+      token: "{{ op://dbtvault/databricks_pipeline/token }}"
 
+      threads: 4
+
+    postgres:
+      type: postgres
+      host: "{{ op://dbtvault/postgres_pipeline/host }}"
+      port: 5432
+      database: "{{ op://dbtvault/postgres_pipeline/database }}"
+      schema: "{{ op://dbtvault/postgres_pipeline/schema }}"
+      user: "{{ op://dbtvault/postgres_pipeline/user }}"
+      password: "{{ op://dbtvault/postgres_pipeline/password }}"
       threads: 4
 
   target: "snowflake"

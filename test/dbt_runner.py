@@ -92,11 +92,12 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
     return run_dbt_command(command)
 
 
-def run_dbt_operation(macro_name: str, args=None) -> str:
+def run_dbt_operation(macro_name: str, args=None, dbt_vars=None) -> str:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation
         :param args: Arguments to provide
+        :param dbt_vars: context variable for any additional configuration
         :return: dbt logs
     """
     command = ['run-operation', f'{macro_name}']
@@ -104,5 +105,9 @@ def run_dbt_operation(macro_name: str, args=None) -> str:
     if args:
         args = str(args).replace('\'', '')
         command.extend([f"--args '{args}'"])
+
+    if dbt_vars:
+        vargs = json.dumps(dbt_vars)
+        command.extend([f"--vars '{vargs}'"])
 
     return run_dbt_command(command)

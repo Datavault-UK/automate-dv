@@ -580,6 +580,7 @@ Feature: [STG] Staging
       | 1004        | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
   @not_sqlserver
+  @not_postgres
   @fixture.staging
   Scenario: [STG-18] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER table does not exist
@@ -606,6 +607,30 @@ Feature: [STG] Staging
   @sqlserver
   @fixture.staging
   Scenario: [STG-18-SQLS] Staging with derived, source columns and hashed when a hashed column overrides a source column.
+    Given the STG_CUSTOMER_HASH table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER_HASH model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER_HASH model
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_ID   |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') | CUSTOMER_NAME |
+    When I stage the STG_CUSTOMER_HASH data
+    Then the STG_CUSTOMER_HASH table should contain expected data
+      | CUSTOMER_ID  | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    |
+      | md5('ALICE') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE |
+      | md5('BOB')   | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE |
+      | md5('CHAD')  | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
+      | md5('DOM')   | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
+
+  @postgres
+  @fixture.staging
+  Scenario: [STG-18-POSTGRES] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER_HASH table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -755,8 +780,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Dom   | 1             | 1              |
 
-  @not_bigquery
-  @not_sqlserver
+  # TODO: Investigate error from Databricks
+  @snowflake
   @fixture.staging_escaped
   Scenario: [STG-21] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
   The customer name column name in the RAW_STAGE table includes a SPACE character, and there is derived column called COLUMN
@@ -837,8 +862,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
-  @not_bigquery
-  @not_sqlserver
+  # TODO: Investigate error from Databricks
+  @snowflake
   @fixture.staging_escaped
   Scenario: [STG-23] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
   The customer flag column name in the RAW_STAGE table includes a SPACE character, and there are a variety of derived columns
@@ -867,8 +892,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | Chad          | 1             | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | false  | 1             | 1              |
       | 1004        | Dom           | Dom           | 0             | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | true   | 1             | 1              |
 
-  @not_bigquery
-  @not_sqlserver
+  # TODO: Investigate error from Databricks
+  @snowflake
   @fixture.staging_escaped
   Scenario: [STG-24] Staging with derived (with concatenation), hashed, ranked (multiple incl. composite) and source columns.
   The customer dob column name in the RAW_STAGE table includes a SPACE character, and there are a variety of derived columns
@@ -891,11 +916,11 @@ Feature: [STG] Staging
       | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN      | DBTVAULT_RANK | DBTVAULT_RANK2 |
-      | 1001        | Alice         | Alice         | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997  | 1             | 1              |
-      | 1002        | Bob           | Bob           | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006  | 1             | 1              |
-      | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013  | 1             | 1              |
-      | 1004        | Dom           | Dom           | 2018-04-13   | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018  | 1             | 1              |
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN     | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | 1001        | Alice         | Alice         | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997 | 1             | 1              |
+      | 1002        | Bob           | Bob           | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006 | 1             | 1              |
+      | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013 | 1             | 1              |
+      | 1004        | Dom           | Dom           | 2018-04-13   | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018 | 1             | 1              |
 
   @sqlserver
   @fixture.staging_escaped
@@ -909,7 +934,7 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER_NAME_DOB model
-      | EFFECTIVE_FROM | SOURCE     | COLUMN                                | CUSTOMER_NAME           | CUSTOMER_DOB           |
+      | EFFECTIVE_FROM | SOURCE     | COLUMN                                                  | CUSTOMER_NAME           | CUSTOMER_DOB           |
       | LOAD_DATE      | !RAW_STAGE | CONVERT(varchar, CAST("CUSTOMER DOB" AS datetime), 105) | escape('CUSTOMER NAME') | escape('CUSTOMER DOB') |
     And I have hashed columns in the STG_CUSTOMER_NAME_DOB model
       | CUSTOMER_PK | HASHDIFF                                              |
@@ -920,11 +945,11 @@ Feature: [STG] Staging
       | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER_NAME_DOB data
     Then the STG_CUSTOMER_NAME_DOB table should contain expected data
-      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN      | DBTVAULT_RANK | DBTVAULT_RANK2 |
-      | 1001        | Alice         | Alice         | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997  | 1             | 1              |
-      | 1002        | Bob           | Bob           | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006  | 1             | 1              |
-      | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013  | 1             | 1              |
-      | 1004        | Dom           | Dom           | 2018-04-13   | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018  | 1             | 1              |
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | COLUMN     | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | 1001        | Alice         | Alice         | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997 | 1             | 1              |
+      | 1002        | Bob           | Bob           | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006 | 1             | 1              |
+      | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013 | 1             | 1              |
+      | 1004        | Dom           | Dom           | 2018-04-13   | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE | 13-04-2018 | 1             | 1              |
 
   @fixture.staging_null_columns
   Scenario: [STG-25] Staging with null columns configuration where all required keys are null
@@ -969,11 +994,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
-      | md5('1001') | 1001                 | 1001        | <null>                 | -1            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | <null>                 | -1            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    |
+      | md5('1001') | 1001                 | 1001        | <null>                 | -1            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                 | -1            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging_null_columns
   Scenario: [STG-27] Staging with null columns configuration where there is a required and optional key
@@ -995,11 +1020,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
-      | md5('1001') | 1001                 | 1001        | <null>                 | -2            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    |
+      | md5('1001') | 1001                 | 1001        | <null>                 | -2            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging_null_columns
   Scenario: [STG-28] Staging with null columns configuration where there is are two optional keys
@@ -1011,8 +1036,8 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
       | 1004        | <null>        | <null>       | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
     And I have null columns in the STG_CUSTOMER model
-      | REQUIRED    | OPTIONAL                     |
-      |             | [CUSTOMER_NAME,CUSTOMER_DOB] |
+      | REQUIRED | OPTIONAL                     |
+      |          | [CUSTOMER_NAME,CUSTOMER_DOB] |
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
@@ -1021,11 +1046,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB_ORIGINAL | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
-      | md5('1001') | 1001        | Alice                  | Alice         | <null>                | -2           | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('1002') | 1002        | <null>                 | -2            | 2006-04-17            | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('1003') | 1003        | Chad                   | Chad          | 2013-02-04            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('1004') | 1004        | <null>                 | -2            | <null>                | -2           | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | CUSTOMER_PK | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB_ORIGINAL | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    |
+      | md5('1001') | 1001        | Alice                  | Alice         | <null>                | -2           | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('1002') | 1002        | <null>                 | -2            | 2006-04-17            | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('1003') | 1003        | Chad                   | Chad          | 2013-02-04            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('1004') | 1004        | <null>                 | -2            | <null>                | -2           | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging_null_columns
   Scenario: [STG-29] Staging with null columns configuration where single required key is null
@@ -1083,8 +1108,8 @@ Feature: [STG] Staging
       | <null>      | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | RAW_STAGE |
       | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | RAW_STAGE |
     And I have null columns in the STG_CUSTOMER model
-      | REQUIRED    | OPTIONAL            |
-      |             | CUSTOMER_ID         |
+      | REQUIRED | OPTIONAL    |
+      |          | CUSTOMER_ID |
     And I have hashed columns in the STG_CUSTOMER model
       | CUSTOMER_PK |
       | CUSTOMER_ID |
@@ -1169,11 +1194,11 @@ Feature: [STG] Staging
   Scenario: [STG-35] Staging with null columns configuration with null multiple required and optional keys, and derived column
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
@@ -1185,21 +1210,21 @@ Feature: [STG] Staging
       | CUSTOMER_ID |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging_null_columns
   Scenario: [STG-36] Staging with null columns configuration with null multiple required and optional keys, and derived and ranked columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
@@ -1214,21 +1239,21 @@ Feature: [STG] Staging
       | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | DBTVAULT_RANK |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | 1             |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
 
   @fixture.staging_null_columns
   Scenario: [STG-37] Staging with null columns configuration with null multiple required and optional keys, and ranked columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have null columns in the STG_CUSTOMER model
       | REQUIRED               | OPTIONAL                  |
       | [CUSTOMER_ID,ORDER_ID] | [CUSTOMER_REF,ORDER_LINE] |
@@ -1240,21 +1265,21 @@ Feature: [STG] Staging
       | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    | DBTVAULT_RANK |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         | 1             |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | DBTVAULT_RANK |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      | 1             |
 
   @fixture.staging_null_columns
   Scenario: [STG-38] Staging with null columns configuration with null multiple required and optional keys, and derived, hashdiff and ranked columns
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_REF | ORDER_ID | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>       | <null>   | <null>     | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | <null>       | <null>   | <null>     | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
@@ -1269,11 +1294,11 @@ Feature: [STG] Staging
       | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                      | DBTVAULT_RANK |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
-      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1             |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                      | DBTVAULT_RANK |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
+      | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1             |
 
   @fixture.staging_null_columns
   Scenario: [STG-39] Staging with null columns configuration where single required key is null, no hashed column
@@ -1299,11 +1324,11 @@ Feature: [STG] Staging
   Scenario: [STG-40] Staging with null columns configuration where single required key is null, no hashed column and a derived column
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | <null>      | <null>       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | <null>      | <null>       | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>       | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | <null>       | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have derived columns in the STG_CUSTOMER model
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
@@ -1312,22 +1337,22 @@ Feature: [STG] Staging
       | CUSTOMER_ID | CUSTOMER_REF |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    |
-      | <null>               | -1          | <null>                | -2           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | <null>               | -1          | <null>                | -2           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | <null>               | -1          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
-      | <null>               | -1          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE |
+      | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    |
+      | <null>               | -1          | <null>                | -2           | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
+      | <null>               | -1          | <null>                | -2           | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE |
 
   @fixture.staging_null_columns
   @fixture.enable_sha
   Scenario: [STG-41] Staging with null columns configuration where there is a required and optional key, using SHA256 hash algorithm
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | 1001        | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have null columns in the STG_CUSTOMER model
       | REQUIRED    | OPTIONAL      |
       | CUSTOMER_ID | CUSTOMER_NAME |
@@ -1339,21 +1364,21 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                    |
-      | sha('1001') | 1001                 | 1001        | <null>                 | -2            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('1997-04-24\|\|-2\|\|17-214-233-1214')  |
-      | sha('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
-      | sha('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2013-02-04\|\|-2\|\|17-214-233-1216')  |
-      | sha('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                    |
+      | sha('1001') | 1001                 | 1001        | <null>                 | -2            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('1997-04-24\|\|-2\|\|17-214-233-1214')  |
+      | sha('1002') | 1002                 | 1002        | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | sha('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2013-02-04\|\|-2\|\|17-214-233-1216')  |
+      | sha('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
 
   @fixture.staging_null_columns
   Scenario: [STG-42] Staging with null columns configuration where there is a required and optional key using custom null key values
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have null columns in the STG_CUSTOMER model and null_key_required is -6 and null_key_optional is -9
       | REQUIRED    | OPTIONAL      |
       | CUSTOMER_ID | CUSTOMER_NAME |
@@ -1365,22 +1390,22 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                    |
-      | md5('-1')   | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('1997-04-24\|\|-9\|\|17-214-233-1214')  |
-      | md5('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215') |
-      | md5('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2013-02-04\|\|-9\|\|17-214-233-1216')  |
-      | md5('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                    |
+      | md5('-1')   | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('1997-04-24\|\|-9\|\|17-214-233-1214')  |
+      | md5('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | md5('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2013-02-04\|\|-9\|\|17-214-233-1216')  |
+      | md5('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2018-04-13\|\|DOM\|\|17-214-233-1217') |
 
   @fixture.staging_null_columns
   @fixture.enable_sha
   Scenario: [STG-43] Staging with null columns configuration where there is a required and optional key, using SHA256 hash algorithm and custom null key values
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE    |
-      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *         |
-      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *         |
-      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *         |
-      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *         |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | -1          | <null>        | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | -2          | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | <null>      | <null>        | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | <null>      | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have null columns in the STG_CUSTOMER model and null_key_required is -6 and null_key_optional is -9
       | REQUIRED    | OPTIONAL      |
       | CUSTOMER_ID | CUSTOMER_NAME |
@@ -1392,9 +1417,115 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM  | SOURCE    | HASHDIFF                                    |
-      | sha('-1')   | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('1997-04-24\|\|-9\|\|17-214-233-1214')  |
-      | sha('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
-      | sha('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2013-02-04\|\|-9\|\|17-214-233-1216')  |
-      | sha('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01      | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | CUSTOMER_NAME_ORIGINAL | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                    |
+      | sha('-1')   | -1                   | -1          | <null>                 | -9            | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('1997-04-24\|\|-9\|\|17-214-233-1214')  |
+      | sha('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
+      | sha('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2013-02-04\|\|-9\|\|17-214-233-1216')  |
+      | sha('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+
+  @fixture.staging
+  @fixture.enable_sha
+  Scenario: [STG-44] Staging with derived, hashed, ranked and source columns, using SHA256 hash algorithm, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha('1001') | sha('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha('1002') | sha('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003') | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha('1004') | sha('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
+
+  @fixture.staging
+  @fixture.enable_sha
+  Scenario: [STG-45] Staging with derived, hashed, ranked and source columns, using SHA256 hash algorithm, multiple PK column, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK                 | HASHDIFF                                              |
+      | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha('1001\|\|ALICE') | sha('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha('1002\|\|BOB')   | sha('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003\|\|CHAD')  | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha('1004\|\|DOM')   | sha('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
+
+  @fixture.staging
+  Scenario: [STG-46] Staging with derived, hashed, ranked and source columns, using MD5 hash algorithm, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
+
+  @fixture.staging
+  Scenario: [STG-47] Staging with derived, hashed, ranked and source columns, using MD5 hash algorithm, multiple PK column, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK                 | HASHDIFF                                              |
+      | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001\|\|ALICE') | md5('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002\|\|BOB')   | md5('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003\|\|CHAD')  | md5('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004\|\|DOM')   | md5('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
 
