@@ -242,10 +242,10 @@ def t_link_comp_pk_bigquery(context):
         },
         "T_LINK_COMP_PK": {
             "column_types": {
-                "TRANSACTION_PK": "BINARY(16)",
+                "TRANSACTION_PK": "STRING",
                 "TRANSACTION_NUMBER": "STRING",
-                "CUSTOMER_FK": "BINARY(16)",
-                "ORDER_FK": "BINARY(16)",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
                 "AMOUNT": "STRING",
