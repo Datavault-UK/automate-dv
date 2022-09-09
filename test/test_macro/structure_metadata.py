@@ -51,3 +51,13 @@ def multi_source_link() -> dict:
                         "BOOKING_FK"],
                 src_ldts="LOAD_DATE",
                 src_source="RECORD_SOURCE")
+
+
+def single_source_sat() -> dict:
+    return dict(source_model="raw_source",
+                src_pk="CUSTOMER_PK",
+                src_eff="EFFECTIVE_FROM",
+                src_payload=["TEST_COLUMN_4", "TEST_COLUMN_5", "TEST_COLUMN_6"],
+                src_hashdiff="HASHDIFF",
+                src_ldts="LOAD_DATE",
+                src_source="RECORD_SOURCE")
