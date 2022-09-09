@@ -367,8 +367,6 @@ def create_csv(context, raw_stage_model_name):
                                                                model_name=raw_stage_model_name,
                                                                target_model_name=raw_stage_model_name)
 
-        context.target_model_name = raw_stage_model_name
-
         logs = dbt_runner.run_dbt_seed_model(seed_model_name=seed_model_name)
 
         context.raw_stage_models = seed_model_name
@@ -521,10 +519,9 @@ def create_csv(context, raw_stage_model_name):
 def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
-    text_args = dbtvault_generator.handle_step_text_dict(context)
-
     args = {k: v for k, v in stage_metadata.items() if
             k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+    text_args = dbtvault_generator.handle_step_text_dict(context)
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
                                            config=text_args,
@@ -682,6 +679,18 @@ def expect_data(context, model_name):
         logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
         assert "1 of 1 PASS" in logs
+
+
+@step("I exclude the following columns for the {model_name} table")
+def step_impl(context, model_name):
+    context.payload_exclusions = exclusions = [row.cells[0] for row in context.table]
+
+    context.vault_structure_columns_original = copy.deepcopy(context.vault_structure_columns)
+
+    context.vault_structure_columns[model_name]['src_payload'] = {
+        "exclude_columns": "true",
+        "columns": exclusions
+    }
 
 
 @given("I am using the {database_name} database")
