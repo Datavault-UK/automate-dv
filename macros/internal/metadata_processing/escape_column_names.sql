@@ -1,6 +1,8 @@
 {%- macro escape_column_names(columns=none) -%}
 
-{# Different platforms use different escape characters, the default below is for Snowflake which uses double quotes #}
+    {%- if dbtvault.is_list(columns) -%}
+        {%- set columns = dbtvault.expand_column_list(columns) -%}
+    {%- endif -%}
 
     {%- if dbtvault.is_something(columns) -%}
 
@@ -64,31 +66,31 @@
 
     {%- endif -%}
 
-{%- if columns is none -%}
+    {%- if columns is none -%}
 
-    {%- do return(none) -%}
+        {%- do return(none) -%}
 
-{%- elif columns == [] -%}
+    {%- elif columns == [] -%}
 
-    {%- do return([]) -%}
+        {%- do return([]) -%}
 
-{%- elif columns == {} -%}
+    {%- elif columns == {} -%}
 
-    {%- do return({}) -%}
+        {%- do return({}) -%}
 
-{%- elif columns is string -%}
+    {%- elif columns is string -%}
 
-    {%- do return(col_string) -%}
+        {%- do return(col_string) -%}
 
-{%- elif dbtvault.is_list(columns) -%}
+    {%- elif dbtvault.is_list(columns) -%}
 
-    {%- do return(col_list) -%}
+        {%- do return(col_list) -%}
 
-{%- elif columns is mapping -%}
+    {%- elif columns is mapping -%}
 
-    {%- do return(col_mapping) -%}
+        {%- do return(col_mapping) -%}
 
-{%- endif -%}
+    {%- endif -%}
 
 {%- endmacro -%}
 
@@ -101,33 +103,44 @@
 
 {%- macro default__escape_column_name(column) -%}
 
-    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
-    {%- set escape_char_right = var('escape_char_right', '"') -%}
+    {# Do not escape a constant (single quoted) value #}
+    {%- if column | first == "'" and column | last == "'" -%}
+        {%- set escaped_column_name = column -%}
+    {%- else -%}
+        {%- set escape_char_default_left, escape_char_default_right = dbtvault.get_escape_characters() -%}
+        {%- set escape_char_left  = var('escape_char_left',  escape_char_default_left) -%}
+        {%- set escape_char_right = var('escape_char_right', escape_char_default_right) -%}
 
-    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
-
-    {%- do return(escaped_column_name) -%}
-
-{%- endmacro -%}
-
-{%- macro sqlserver__escape_column_name(column) -%}
-
-    {%- set escape_char_left  = var('escape_char_left',  '"') -%}
-    {%- set escape_char_right = var('escape_char_right', '"') -%}
-
-    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+        {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+    {%- endif -%}
 
     {%- do return(escaped_column_name) -%}
 
 {%- endmacro -%}
 
-{%- macro bigquery__escape_column_name(column) -%}
+{% macro get_escape_characters() -%}
 
-    {%- set escape_char_left  = var('escape_char_left',  '`') -%}
-    {%- set escape_char_right = var('escape_char_right', '`') -%}
+    {% do return(adapter.dispatch('get_escape_characters', 'dbtvault')()) -%}
 
-    {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
+{%- endmacro %}
 
-    {%- do return(escaped_column_name) -%}
+{%- macro snowflake__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}
 
-{%- endmacro -%}
+{%- macro bigquery__get_escape_characters() %}
+    {%- do return (('`', '`')) -%}
+{%- endmacro %}
+
+{%- macro sqlserver__get_escape_characters() %}
+    {%- do return (('"', '"')) -%}
+{%- endmacro %}
+
+{%- macro databricks__get_escape_characters() %}
+    {%- do return (('`', '`')) -%}
+{%- endmacro %}
+
+{%- macro postgres__get_escape_characters() %}
+    {#- DO NOT QUOTE FOR NOW. Postgres has a "feature" which froces explicit casing and breaks the SQL-92 standard -#}
+    {%- do return (('', '')) -%}
+{%- endmacro %}

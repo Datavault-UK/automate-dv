@@ -15,7 +15,7 @@
 {%- endmacro %}
 
 {% macro default__current_timestamp_in_utc() %}
-    {{dbt_utils.current_timestamp_in_utc()}}
+    {{ dbt_utils.current_timestamp_in_utc() }}
 {% endmacro %}
 
 {% macro sqlserver__current_timestamp_in_utc() %}
