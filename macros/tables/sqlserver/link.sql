@@ -1,28 +1,15 @@
-{%- macro sqlserver__link(src_pk, src_fk, src_ldts, src_source, source_model) -%}
+{%- macro sqlserver__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{{- dbtvault.check_required_parameters(src_pk=src_pk, src_fk=src_fk,
-                                       src_ldts=src_ldts, src_source=src_source,
-                                       source_model=source_model) -}}
-
-{%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-{%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
-{%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-{%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_extra_columns, src_ldts, src_source]) -%}
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif -%}
 
-{{ dbtvault.prepend_generated_by() }}
-
 {{ 'WITH ' -}}
 
-{%- if not (source_model is iterable and source_model is not string) -%}
-    {%- set source_model = [source_model] -%}
-{%- endif -%}
+{%- set stage_count = source_model | length -%}
 
 {%- set ns = namespace(last_cte= "") -%}
 
@@ -44,7 +31,7 @@ row_rank_{{ source_number }} AS (
                ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
-    {%- if source_model | length == 1 %}
+    {%- if stage_count == 1 %}
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
@@ -53,7 +40,7 @@ row_rank_{{ source_number }} AS (
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
-{% if source_model | length > 1 %}
+{% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}
     SELECT * FROM row_rank_{{ loop.index | string }}
@@ -79,7 +66,7 @@ stage_mat_filter AS (
     {%- set ns.last_cte = "stage_mat_filter" %}
 ),
 {% endif %}
-{%- if source_model | length > 1 %}
+{%- if stage_count > 1 %}
 
 row_rank_union AS (
     SELECT *
