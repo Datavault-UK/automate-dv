@@ -26,7 +26,7 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{%- set standarise = dbtvault.standard() -%}
+{%- set standardise = dbtvault.standard() -%}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
 {%- if is_hashdiff and dbtvault.is_list(columns) -%}
