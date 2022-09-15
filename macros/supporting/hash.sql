@@ -26,7 +26,7 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')" %}
+{%- set standarise = dbtvault.standard() -%}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
 {%- if is_hashdiff and dbtvault.is_list(columns) -%}
