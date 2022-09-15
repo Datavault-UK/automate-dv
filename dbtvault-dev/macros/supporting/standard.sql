@@ -3,8 +3,9 @@
 {% endmacro %}
 
 {%- macro default__standard(change_case='UPPER') -%}
-    {% if {{ change_case }} is 'UPPER' %}
+    {% if change_case == 'UPPER' %}
         {{ return("NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS VARCHAR))), '')") }}
     {% else %}
         {{ return("NULLIF(TRIM(CAST([EXPRESSION] AS VARCHAR)), '')") }}
+    {% endif %}
 {%- endmacro -%}
