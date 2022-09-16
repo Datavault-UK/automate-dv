@@ -21,5 +21,7 @@
     BINARY(16)
     {%- elif var('hash') == 'SHA' -%}
     BINARY(32)
+    {%- else -%}
+    BINARY(16)
     {%- endif -%}
 {%- endmacro -%}
