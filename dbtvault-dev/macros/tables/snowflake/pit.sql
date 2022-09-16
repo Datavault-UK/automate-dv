@@ -73,9 +73,9 @@ backfill AS (
         a.AS_OF_DATE,
 
     {% for sat_name in satellites -%}
-        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
-        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-        {%- set sat_name = sat_name %}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
+        {%- set sat_name = sat_name | upper %}
 
         {% if target.type == "sqlserver" %}
         CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
@@ -130,19 +130,19 @@ new_rows AS (
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
                  CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2))
-        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) | upper }},
 
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
                  CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}))
-        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) | upper }},
 
         {%- endif %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
                  CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}))
-        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) | upper }}
 
         {{- "," if not loop.last }}
     {%- endfor %}
