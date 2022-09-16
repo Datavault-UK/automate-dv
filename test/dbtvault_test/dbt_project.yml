@@ -18,6 +18,7 @@ clean-targets:
 
 vars:
   hash: MD5
+  hash_case: 'UNCHANGED' # Default UPPER, alternatively UNCHANGED
   null_key_required: '-1' # Default -1, allows user to configure
   null_key_optional: '-2' # Default -2, allows user to configure
 

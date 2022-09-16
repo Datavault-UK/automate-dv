@@ -54,3 +54,11 @@ def disable_payload(context):
     Indicate that a src_payload key should be removed from the provided metadata
     """
     context.disable_payload = True
+
+@behave.fixture
+def disable_hashing_upper_case(context):
+    """
+    Stop hashing in upper case
+    """
+    context.hash_case = 'UNCHANGED'
+

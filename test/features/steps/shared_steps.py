@@ -23,6 +23,8 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.null_key_optional = getattr(context, "null_key_optional", "-2")
 
+    context.hash_case = getattr(context, "hash_case", 'UPPER')
+
     if not getattr(context, "ranked_columns", None):
         context.ranked_columns = dict()
         context.ranked_columns[stage_model_name] = dict()
@@ -57,6 +59,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "derived_columns": context.derived_columns,
         "null_columns": context.null_columns,
         "hash": context.hashing,
+        "hash_case": context.hash_case,
         "null_key_required": context.null_key_required,
         "null_key_optional": context.null_key_optional
     }
@@ -418,7 +421,7 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
-                k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "hash_case"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -449,7 +452,7 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
-                k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "hash_case"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -520,7 +523,7 @@ def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
     args = {k: v for k, v in stage_metadata.items() if
-            k == "hash" or k == "null_key_required" or k == "null_key_optional"}
+            k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "hash_case"}
     text_args = dbtvault_generator.handle_step_text_dict(context)
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
