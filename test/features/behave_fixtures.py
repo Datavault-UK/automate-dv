@@ -60,5 +60,5 @@ def disable_hashing_upper_case(context):
     """
     Stop hashing in upper case
     """
-    context.hash_case = 'UNCHANGED'
+    context.disable_upper_in_hash = 'DISABLED'
 
