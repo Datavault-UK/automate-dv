@@ -7,6 +7,6 @@
                             'FLOAT':'0.0',
                             'BOOLEAN':'FALSE',
                             'DATETIME':'1900-01-01 00:00:00',
-    }}
+    } %}
 
 {% do return(string_lookup) %}
