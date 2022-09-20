@@ -1,4 +1,4 @@
-Feature: [SAT-GR]
+Feature: [SAT-GR] Implementing ghost records
 
   Scenario: [SAT-GR-01]
 

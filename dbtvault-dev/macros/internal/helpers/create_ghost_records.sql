@@ -1,7 +1,6 @@
 {%- macro ghost_pk_cte(source_model, source_columns) -%}
 
   {{ columns = adapter.get_columns_in_relation(ref(source_model)) }}
-  ## {%- set source_relation = ref(source_model) -%}
 
   {%- set col_defintions = [] -%}
 
@@ -17,7 +16,7 @@
 
         {%- if col.is_string() == True -%}
 
-          {%- set ... }
+          {%- set ... -%}
 
         {%- endif -%}
 
