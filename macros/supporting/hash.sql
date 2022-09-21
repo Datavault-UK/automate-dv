@@ -26,7 +26,7 @@
     {%- set hash_size = 16 -%}
 {%- endif -%}
 
-{%- set disable_upper_in_hash = var('disable_upper_in_hash', 'DISABLED') -%}
+{%- set disable_upper_in_hash = var('disable_upper_in_hash', 'UPPER') -%}
 {%- set standardise = dbtvault.standard(disable_upper_in_hash) -%}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
