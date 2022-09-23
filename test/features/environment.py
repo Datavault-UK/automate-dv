@@ -192,6 +192,8 @@ fixtures_registry = {
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
          "databricks": ''},
 
+    "fixture.satellite_ghost_record": fixtures_sat.satellite_ghost_record
+
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
