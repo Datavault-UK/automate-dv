@@ -1,5 +1,9 @@
 {% materialization vault_insert_by_period, default -%}
 
+    {% if target.type == "postgres" and execute %}
+        {{ exceptions.raise_compiler_error("The vault_insert_by_period materialisation is currently unavailable on Postgres.") }}
+    {% endif %}
+
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}
@@ -82,6 +86,8 @@
             {# This call statement drops and then creates a temporary table #}
             {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
             {# See MSSQL note and drop code below #}
+
+            {# [ ] TODO check dbt postgres implementation for a possible fix #}
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}

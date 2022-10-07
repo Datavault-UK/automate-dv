@@ -51,6 +51,9 @@ stages:
                             ${{ if eq(platform, 'sqlserver') }}:
                               services:
                                 mssql: mssql
+                            ${{ if eq(platform, 'postgres') }}:
+                              services:
+                                postgres: postgres
                             steps:
                               - task: UsePythonVersion@0
                                 inputs:
@@ -71,6 +74,9 @@ stages:
                         ${{ if eq(platform, 'sqlserver') }}:
                           services:
                             mssql: mssql
+                        ${{ if eq(platform, 'postgres') }}:
+                          services:
+                            postgres: postgres
                         steps:
                           - task: UsePythonVersion@0
                             inputs:

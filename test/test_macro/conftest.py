@@ -16,6 +16,7 @@ mark_metadata_mapping = {
     "multi_source_multi_nk_hub": structure_metadata.multi_source_multi_nk_hub,
     "single_source_link": structure_metadata.single_source_link,
     "multi_source_link": structure_metadata.multi_source_link,
+    "single_source_sat": structure_metadata.single_source_sat
 }
 
 
@@ -29,7 +30,12 @@ def generate_model(request):
         selected_mark = list(applied_marks & available_marks)
 
         if selected_mark:
-            if selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] != "macro":
+            if metadata:
+                dbtvault_generator.raw_vault_structure(model_name=request.node.name,
+                                                       vault_structure=macro_name,
+                                                       **metadata)
+
+            elif selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] != "macro":
                 dbtvault_generator.raw_vault_structure(model_name=request.node.name,
                                                        vault_structure=macro_name,
                                                        **mark_metadata_mapping[selected_mark[0]]())
