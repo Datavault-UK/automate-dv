@@ -41,3 +41,17 @@
     {# MSSQL does not allow CTEs in a subquery #}
     {{ filtered_sql.sql }}
 {%- endmacro %}
+
+
+
+{% macro postgres__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+
+    {%- set filtered_sql = {'sql': base_sql} -%}
+
+    {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_period_filter(filtered_sql.sql,
+                                                                                       timestamp_field,
+                                                                                       start_timestamp,
+                                                                                       stop_timestamp,
+                                                                                       offset, period)}) -%}
+    select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
+{%- endmacro %}

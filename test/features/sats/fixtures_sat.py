@@ -2,6 +2,8 @@ from behave import fixture
 
 
 def set_vault_structure_definition(context):
+    context.vault_structure_type = 'sat'
+
     context.vault_structure_columns = {
         "SATELLITE": {
             "src_pk": "CUSTOMER_PK",
@@ -561,3 +563,122 @@ def satellite_cycle_databricks(context):
             }
         }
     }
+
+
+# Postgres
+
+@fixture
+def satellite_postgres(context):
+    """
+    Define the structures and metadata to load satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
+
+@fixture
+def satellite_cycle_postgres(context):
+    """
+    Define the structures and metadata to perform load cycles for satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    }
+
