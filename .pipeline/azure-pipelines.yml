@@ -37,15 +37,11 @@ extends:
   template: templates/platform_template.yml
   parameters:
     platforms:
-<<<<<<< HEAD
-=======
       - 'postgres'
       - 'databricks'
       - 'sqlserver'
->>>>>>> develop
       - 'snowflake'
       - 'bigquery'
-      - 'databricks'
 
     runConfig:
       - groupName: 'staging'
