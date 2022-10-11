@@ -2,7 +2,7 @@
 
     {% set string_lookup = {'STRING':'',
                             'VARCHAR':'',
-                            'CHAR':'00000000000000000000000000000000',
+                            'CHAR(32)':'00000000000000000000000000000000',
                             'INT':'0',
                             'FLOAT':'0.0',
                             'BOOLEAN':'FALSE',
@@ -10,3 +10,5 @@
     } %}
 
 {% do return(string_lookup) %}
+
+{% endmacro %}

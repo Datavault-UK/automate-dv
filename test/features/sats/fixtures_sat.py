@@ -563,20 +563,3 @@ def satellite_cycle_databricks(context):
     }
 
 
-@fixture
-def satellite_ghost_record(context):
-
-    context.seed_config = {
-        "SATELLITE_GR": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        }
-    }
