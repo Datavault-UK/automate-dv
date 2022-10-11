@@ -31,7 +31,12 @@
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif %}
 
-WITH source_data AS (
+WITH ghost AS (
+{{ dbtvault.create_ghost_records(source_model, source_cols) }}
+),
+
+
+source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
     {%- else %}
@@ -76,9 +81,12 @@ records_to_insert AS (
     ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
         AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {%- else %}
+    UNION
+    SELECT * FROM ghost
     {%- endif %}
 )
 
-SELECT * FROM records_to_insert
+SELECT * FROM ghost
 
 {%- endmacro -%}
