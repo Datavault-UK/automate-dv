@@ -51,6 +51,7 @@ dbtvault:
 
     databricks:
       type: databricks
+      catalog: hive_metastore
       schema: "{{ op://dbtvault/databricks_pipeline/schema }}"
       host: "{{ op://dbtvault/databricks_pipeline/host }}"
       http_path: "{{ op://dbtvault/databricks_pipeline/http_path }}"

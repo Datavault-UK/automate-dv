@@ -40,6 +40,7 @@ dbtvault:
 
     databricks:
       type: databricks
+      catalog: hive_metastore
       schema: "{{ op://private/databricks/schema }}"
       host: "{{ op://private/databricks/host }}"
       http_path: "{{ op://private/databricks/http_path }}"

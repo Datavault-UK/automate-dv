@@ -39,14 +39,12 @@ dbtvault:
       password: "{{ env_var('SQLSERVER_DB_PW') }}"
 
     databricks:
-      type: spark
-      method: odbc
-      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+      type: databricks
+      catalog: hive_metastore
       schema: "{{ env_var('DATABRICKS_SCHEMA') }}"
       host: "{{ env_var('DATABRICKS_HOST') }}"
-      port: "{{ env_var('DATABRICKS_PORT', 443) | as_number }}"
       token: "{{ env_var('DATABRICKS_TOKEN') }}"
-      endpoint: "{{ env_var('DATABRICKS_ENDPOINT') }}"
+
       threads: 4
 
     postgres:
