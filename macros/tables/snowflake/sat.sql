@@ -87,6 +87,6 @@ records_to_insert AS (
     {%- endif %}
 )
 
-SELECT * FROM ghost
+SELECT * FROM records_to_insert
 
 {%- endmacro -%}
