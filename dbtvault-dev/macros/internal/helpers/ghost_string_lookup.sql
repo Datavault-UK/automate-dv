@@ -1,12 +1,12 @@
 {% macro ghost_string_lookup() %}
 
-    {% set string_lookup = {'STRING':'',
-                            'VARCHAR':'',
-                            'CHAR(32)':'00000000000000000000000000000000',
-                            'INT':'0',
-                            'FLOAT':'0.0',
-                            'BOOLEAN':'FALSE',
-                            'DATETIME':'1900-01-01 00:00:00',
+    {% set string_lookup = {'TYPE_STRING':'NULL',
+                            'TYPE_VARCHAR':'NULL',
+                            'TYPE_CHAR(32)':'00000000000000000000000000000000',
+                            'TYPE_INT':'0',
+                            'TYPE_FLOAT':'0.0',
+                            'TYPE_BOOLEAN':'FALSE',
+                            'TYPE_DATETIME':'1900-01-01 00:00:00',
     } %}
 
 {% do return(string_lookup) %}
