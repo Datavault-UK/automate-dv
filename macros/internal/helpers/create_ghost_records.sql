@@ -23,7 +23,13 @@
         {%- set type_string = 'TYPE_{}'.format(fetched_type|string()) -%}
         {%- set fetched_string = ghost_string[type_string] -%}
         {%- do log("string: " ~ fetched_string, true) %}
-        {%- set col_sql = "CAST({} AS {}) AS {}".format(fetched_string, fetched_type, fetched_name) -%}
+        {%- if fetched_string == 'NULL' -%}
+            {%- set col_sql = "NULL AS {}".format(fetched_name) -%}
+        {%- elif fetched_type == 'TYPE_DATE' -%}
+            {%- set col_sql = "TO_DATE({}) AS {}".format(fetched_string, fetched_name) -%}
+        {%- else -%}
+            {%- set col_sql = "CAST({} AS {}) AS {}".format(fetched_string, fetched_type, fetched_name) -%}
+        {%- endif -%}
         {%- do log("col_sql: " ~ col_sql, true) %}
         {%- do col_definitions.append(col_sql) -%}
 
