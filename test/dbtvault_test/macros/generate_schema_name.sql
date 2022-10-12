@@ -78,7 +78,7 @@
 
 {%- macro clean_schema_name(schema_name) -%}
 
-    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | trim | upper) -%}
+    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_')  | trim | upper) -%}
 
 {%- endmacro -%}
 
@@ -86,8 +86,8 @@
 {%- macro pipeline_string() -%}
 
     {%- set pipeline_str -%}
-        {{- '_' ~ env_var('PIPELINE_BRANCH', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') if env_var('PIPELINE_BRANCH', '') -}}
-        {{- '_' ~ env_var('PIPELINE_JOB', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') if env_var('PIPELINE_JOB', '') -}}
+        {{- '_' ~ env_var('PIPELINE_BRANCH', '') if env_var('PIPELINE_BRANCH', '') -}}
+        {{- '_' ~ env_var('PIPELINE_JOB', '') if env_var('PIPELINE_JOB', '') -}}
     {%- endset -%}
 
     {% do return(pipeline_str | upper) %}
