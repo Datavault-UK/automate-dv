@@ -83,7 +83,16 @@ records_to_insert AS (
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
     {%- else %}
     UNION
-    SELECT * FROM ghost
+    SELECT
+        g.CUSTOMER_PK,
+        g.HASHDIFF,
+        g.CUSTOMER_NAME,
+        g.CUSTOMER_DOB,
+        g.CUSTOMER_PHONE,
+        g.EFFECTIVE_FROM,
+        g.LOAD_DATE,
+        g.SOURCE
+    FROM ghost AS g
     {%- endif %}
 )
 
