@@ -74,25 +74,20 @@ latest_records AS (
 {%- endif %}
 
 records_to_insert AS (
+    {%- if dbtvault.is_any_incremental() %}
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
-    {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN latest_records
     ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
         AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
     {%- else %}
-    UNION
     SELECT
-        g.CUSTOMER_PK,
-        g.HASHDIFF,
-        g.CUSTOMER_NAME,
-        g.CUSTOMER_DOB,
-        g.CUSTOMER_PHONE,
-        g.EFFECTIVE_FROM,
-        g.LOAD_DATE,
-        g.SOURCE
+        {{ dbtvault.alias_all(source_cols, 'g') }}
     FROM ghost AS g
+    UNION
+    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
+    FROM source_data AS stage
     {%- endif %}
 )
 
