@@ -1,10 +1,10 @@
 {%- macro create_ghost_records(source_model, source_columns, record_source='SOURCE') -%}
 
-    {{- adapter.dispatch('create_ghost_records', 'dbtvault')(source_model=source_model, source_columns=source_columns) -}}
+    {{- adapter.dispatch('create_ghost_records', 'dbtvault')(source_model=source_model, source_columns=source_columns, record_source='SOURCE') -}}
 
 {%- endmacro -%}
 
-{%- macro default__create_ghost_records(source_model, source_columns) -%}
+{%- macro default__create_ghost_records(source_model, source_columns, record_source='SOURCE') -%}
 
 {# Retrieve information about columns in the source data #}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
@@ -34,7 +34,7 @@
         {%- set fetched_string = ghost_string[type_string] -%}
         {%- do log("string: " ~ fetched_string, true) -%}
     {# Return the corresponding ghost record #}
-        {%- if fetched_name == 'SOURCE' -%}
+        {%- if fetched_name == record_source -%}
             {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS STRING) AS {}".format(fetched_name) -%}
             {%- do log("system col: " ~ col_sql, true) -%}
         {%- elif fetched_string == 'NULL' -%}
