@@ -27,7 +27,7 @@
         {%- do log("name: " ~ fetched_name, true) -%}
     -- Return the column name from the source model
         {%- set type_string = 'TYPE_{}'.format(fetched_type|string()) -%}
-    -- Convert the data type to a string in the format 'TYPE_VARCHAR
+    -- Convert the data type to a string in the format TYPE_VARCHAR
         {%- set fetched_string = ghost_string[type_string] -%}
         {%- do log("string: " ~ fetched_string, true) -%}
     -- Return the corresponding ghost record
