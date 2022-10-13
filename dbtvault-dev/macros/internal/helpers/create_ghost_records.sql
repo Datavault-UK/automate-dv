@@ -1,4 +1,4 @@
-{%- macro create_ghost_records(source_model, source_columns) -%}
+{%- macro create_ghost_records(source_model, source_columns, record_source='SOURCE') -%}
 
     {{- adapter.dispatch('create_ghost_records', 'dbtvault')(source_model=source_model, source_columns=source_columns) -}}
 
@@ -31,7 +31,10 @@
         {%- set fetched_string = ghost_string[type_string] -%}
         {%- do log("string: " ~ fetched_string, true) -%}
     -- Return the corresponding ghost record
-        {%- if fetched_string == 'NULL' -%}
+        {%- if fetched_name == 'SOURCE' -%}
+            {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS STRING) AS {}".format(fetched_name) -%}
+            {%- do log("system col: " ~ col_sql, true) -%}
+        {%- elif fetched_string == 'NULL' -%}
             {%- set col_sql = "CAST(NULL AS VARCHAR) AS {}".format(fetched_name) -%}
     -- If ghost record is NULL then don't cast
         {%- elif fetched_type == 'BINARY' -%}

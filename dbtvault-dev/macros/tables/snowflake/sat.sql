@@ -32,7 +32,7 @@
 {%- endif %}
 
 WITH ghost AS (
-{{ dbtvault.create_ghost_records(source_model, source_cols) }}
+{{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
 ),
 
 
