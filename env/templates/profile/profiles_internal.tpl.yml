@@ -37,6 +37,8 @@ dbtvault:
       schema: "{{ op://private/sqlserver/schema }}"
       user: "{{ op://private/sqlserver/user }}"
       password: "{{ op://private/sqlserver/password }}"
+      encrypt: true
+      trust_cert: true
 
     databricks:
       type: databricks
