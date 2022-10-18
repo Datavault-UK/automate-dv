@@ -37,6 +37,8 @@ dbtvault:
       schema: "{{ env_var('SQLSERVER_DB_SCHEMA') }}"
       user: "{{ env_var('SQLSERVER_DB_USER') }}"
       password: "{{ env_var('SQLSERVER_DB_PW') }}"
+      encrypt: true
+      trust_cert: true
 
     databricks:
       type: databricks

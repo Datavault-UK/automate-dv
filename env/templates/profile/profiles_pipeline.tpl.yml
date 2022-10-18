@@ -48,6 +48,8 @@ dbtvault:
       schema: "{{ op://dbtvault/sqlserver_pipeline/schema }}"
       user: "{{ op://dbtvault/sqlserver_pipeline/user }}"
       password: "{{ op://dbtvault/sqlserver_pipeline/password }}"
+      encrypt: true
+      trust_cert: true
 
     databricks:
       type: databricks
