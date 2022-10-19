@@ -46,8 +46,8 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{%- set disable_ghost_record = var('disable_ghost_records', false) -%}
-{% do log('Current value is:' ~ disable_ghost_record, info=True) %}
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+{% do log('Current value is:' ~ enable_ghost_record, info=True) %}
 ghost AS (
 {{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
 ),
@@ -82,7 +82,7 @@ records_to_insert AS (
         AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
     {%- else %}
-    {%- if disable_ghost_record == False %}
+    {%- if enable_ghost_record == True %}
     SELECT
         {{ dbtvault.alias_all(source_cols, 'g') }}
     FROM ghost AS g
