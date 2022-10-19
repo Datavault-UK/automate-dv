@@ -46,12 +46,6 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
-{% do log('Current value is:' ~ enable_ghost_record, info=True) %}
-ghost AS (
-{{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
-),
-
 {% if dbtvault.is_any_incremental() %}
 
 latest_records AS (
@@ -73,6 +67,13 @@ latest_records AS (
 ),
 
 {%- endif %}
+
+
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+
+ghost AS (
+{{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
+),
 
 records_to_insert AS (
     {%- if dbtvault.is_any_incremental() %}
