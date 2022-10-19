@@ -62,3 +62,4 @@ def disable_ghost_records(context):
     Indicate ghost records should not be implemented in any tables
     """
     context.disable_ghost_records = True
+
