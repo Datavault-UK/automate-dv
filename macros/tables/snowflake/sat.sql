@@ -31,12 +31,7 @@
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif %}
 
-WITH ghost AS (
-{{ dbtvault.create_ghost_records(source_model, source_cols) }}
-),
-
-
-source_data AS (
+WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
     {%- else %}
@@ -51,6 +46,12 @@ source_data AS (
     {% endif %}
 ),
 
+{%- set disable_ghost_records = var(disable_ghost_records, False) -%}
+{% do log('Current value is:' ~ var(disable_ghost_records), info=True) %}
+ghost AS (
+{{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
+),
+{% do log('Current value is:' ~ disable_ghost_records, info=True) %}
 {% if dbtvault.is_any_incremental() %}
 
 latest_records AS (
@@ -82,10 +83,13 @@ records_to_insert AS (
         AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
     WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
     {%- else %}
+    {% do log('Current value is:' ~ disable_ghost_records, info=True) %}
+    {%- if disable_ghost_records == False %}
     SELECT
         {{ dbtvault.alias_all(source_cols, 'g') }}
     FROM ghost AS g
     UNION
+    {%- endif %}
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
     {%- endif %}
