@@ -20,7 +20,7 @@ vars:
   hash: MD5
   null_key_required: '-1' # Default -1, allows user to configure
   null_key_optional: '-2' # Default -2, allows user to configure
-  disable_ghost_records: False # default false so ghost records are enabled
+  disable_ghost_records: false # default false so ghost records are enabled
 
 seeds:
   +quote_columns: true
