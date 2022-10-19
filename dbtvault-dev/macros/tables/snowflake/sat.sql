@@ -51,6 +51,7 @@ WITH source_data AS (
 ghost AS (
 {{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
 ),
+
 {% if dbtvault.is_any_incremental() %}
 
 latest_records AS (
@@ -75,22 +76,22 @@ latest_records AS (
 
 records_to_insert AS (
     {%- if dbtvault.is_any_incremental() %}
-    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    FROM source_data AS stage
-    LEFT JOIN latest_records
-    ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-        AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
-    WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
-    {%- else %}
-    {%- if enable_ghost_record == True %}
-    SELECT
+        SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
+        FROM source_data AS stage
+        LEFT JOIN latest_records
+        ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+            AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
+        WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {%- elif enable_ghost_record == True %}
+        SELECT
         {{ dbtvault.alias_all(source_cols, 'g') }}
-    FROM ghost AS g
-    UNION
+        FROM ghost AS g
+        UNION
+        SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
+    {%- else %}
+        SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     {%- endif %}
-    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
-    {%- endif %}
 )
 
 SELECT * FROM records_to_insert
