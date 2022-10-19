@@ -21,7 +21,7 @@ fixture_registry_utils = {
     "fixture.enable_full_refresh": behave_fixtures.enable_full_refresh,
     "fixture.disable_union": behave_fixtures.disable_union,
     "fixture.disable_payload": behave_fixtures.disable_payload,
-    "fixture.disable_ghost_records": behave_fixtures.disable_ghost_records
+    "fixture.enable_ghost_records": behave_fixtures.enable_ghost_records
 }
 
 fixtures_registry = {

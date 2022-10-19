@@ -1,6 +1,7 @@
 Feature: [SAT-GR] Implementing ghost records
 
   @fixture.satellite
+  @fixture.enable_ghost_records
   Scenario: [SAT-GR-01] Create a ghost record from seed demo
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
@@ -20,6 +21,7 @@ Feature: [SAT-GR] Implementing ghost records
       | md5('1004')                      | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *               |
 
   @fixture.satellite
+  @fixture.enable_ghost_records
   Scenario: [SAT-GR-02] Ghost record not inserted if satellite already exists
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
@@ -45,7 +47,6 @@ Feature: [SAT-GR] Implementing ghost records
       | md5('1006')                      | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
 
   @fixture.satellite
-  @fixture.disable_ghost_records
   Scenario: [SAT-GR-03] Load data into a non-existent satellite
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
