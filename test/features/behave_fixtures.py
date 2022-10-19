@@ -57,9 +57,9 @@ def disable_payload(context):
 
 
 @behave.fixture
-def disable_ghost_records(context):
+def enable_ghost_records(context):
     """
-    Indicate ghost records should not be implemented in any tables
+    Indicate ghost records should be implemented in any tables
     """
-    context.disable_ghost_records = True
+    context.enable_ghost_records = True
 
