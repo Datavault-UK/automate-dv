@@ -54,3 +54,11 @@ def disable_payload(context):
     Indicate that a src_payload key should be removed from the provided metadata
     """
     context.disable_payload = True
+
+
+@behave.fixture
+def disable_ghost_records(context):
+    """
+    Indicate ghost records should not be implemented in any tables
+    """
+    context.disable_ghost_records = True
