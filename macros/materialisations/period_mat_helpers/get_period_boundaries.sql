@@ -19,14 +19,14 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
+                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                         {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT
             start_timestamp,
             stop_timestamp,
-            {{ dbt_utils.datediff('start_timestamp',
+            {{ datediff('start_timestamp',
                                   'stop_timestamp',
                                   period) }} + 1 AS num_periods
         FROM period_data
@@ -52,14 +52,14 @@
         with data as (
             select
                 COALESCE(CAST(MAX({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         CAST(CURRENT_TIMESTAMP() AS DATETIME)) as STOP_TIMESTAMP
+                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                         CAST({{ current_timestamp() }} AS DATETIME)) as STOP_TIMESTAMP
             from {{ target_relation }}
         )
         select
             START_TIMESTAMP,
             STOP_TIMESTAMP,
-            {{ dbt_utils.datediff('start_timestamp', 'stop_timestamp', period) }} + 1 as NUM_PERIODS
+            {{ datediff('start_timestamp', 'stop_timestamp', period) }} + 1 as NUM_PERIODS
         from data
     {%- endset %}
 
@@ -87,14 +87,14 @@
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
+                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                         {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT
             start_timestamp,
             stop_timestamp,
-            {{ dbt_utils.datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
+            {{ datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
         FROM period_data
     {%- endset %}
 
@@ -117,14 +117,14 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         {{ dbtvault.current_timestamp() }}) AS stop_timestamp
+                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                         {{ current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT
             IF(stop_timestamp < start_timestamp, stop_timestamp, start_timestamp) AS start_timestamp,
             stop_timestamp,
-            {{ dbt_utils.datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
+            {{ datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
 
         FROM period_data
     {%- endset %}
@@ -146,16 +146,14 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbt_utils.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
-                         {{ dbtvault.current_timestamp() }} ) AS stop_timestamp
+                COALESCE({{ dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
+                         {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT
             start_timestamp,
             stop_timestamp,
-            {{ dbt_utils.datediff('start_timestamp',
-                                  'stop_timestamp',
-                                  period) }} + 1 AS num_periods
+            {{ datediff('start_timestamp', 'stop_timestamp', period) }} + 1 AS num_periods
         FROM period_data
     {%- endset %}
 
