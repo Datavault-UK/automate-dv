@@ -83,18 +83,16 @@ records_to_insert AS (
         ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
             AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
         WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
-    {%- elif enable_ghost_record == True %}
+    {%- else%}
+        {%- if enable_ghost_record == True %}
         SELECT
         {{ dbtvault.alias_all(source_cols, 'g') }}
         FROM ghost AS g
         UNION
+        {% endif -%}
         SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
-    {%- else %}
-        SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
+        FROM source_data AS stage
     {%- endif %}
-    FROM source_data AS stage
-)
-
+    )
 SELECT * FROM records_to_insert
-
 {%- endmacro -%}
