@@ -25,19 +25,12 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set window_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
-{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%
+{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif %}
-
-{% do log('source model:' ~ source_model, info=True) %}
-{% if dbtvault.is_any_incremental() %}
-    {% do log('Incremental:' ~ 'Yes', info=True) %}
-{% else %}
-    {% do log('Incremental:' ~ 'No', info=True) %}
-{% endif %}
 
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
@@ -76,14 +69,12 @@ latest_records AS (
 
 {%- endif %}
 
-
-
-
 ghost AS (
 {{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}
 ),
 
 records_to_insert AS (
+
     {%- if dbtvault.is_any_incremental() %}
         SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
         FROM source_data AS stage
@@ -91,8 +82,9 @@ records_to_insert AS (
         ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
             AND {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'stage') }}
         WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
-    {%- else%}
-        {%- if enable_ghost_record == True %}
+    {%- else %}
+        {% do log('Enable ghost record:' ~ enable_ghost_record, info=True) %}
+        {%- if enable_ghost_record %}
         SELECT
         {{ dbtvault.alias_all(source_cols, 'g') }}
         FROM ghost AS g
