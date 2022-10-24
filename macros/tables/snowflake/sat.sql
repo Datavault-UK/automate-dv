@@ -31,6 +31,13 @@
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
 {%- endif %}
 
+{% do log('source model:' ~ source_model, info=True) %}
+{% if dbtvault.is_any_incremental() %}
+    {% do log('Incremental:' ~ 'Yes', info=True) %}
+{% else %}
+    {% do log('Incremental:' ~ 'No', info=True) %}
+{% endif %}
+
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}
