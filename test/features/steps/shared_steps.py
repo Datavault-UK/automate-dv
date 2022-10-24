@@ -322,14 +322,13 @@ def load_table(context, model_name, vault_structure):
 
     args = {k: v for k, v in stage_metadata.items() if
            k == "enable_ghost_records"}
-    jossy = context
-    print('hello')
+
     dbtvault_generator.raw_vault_structure(model_name=model_name,
                                            vault_structure=vault_structure,
                                            config=config,
                                            **metadata)
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args, full_refresh=False)
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
 
     assert "Completed successfully" in logs
 
