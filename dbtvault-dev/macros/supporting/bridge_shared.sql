@@ -16,9 +16,9 @@ SELECT
         {%- set eff_sat_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_end_date']) -%}
         {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) %}
 
-        {{- '\n   ' }} {{ link_table | lower }}.{{ link_pk }} AS {{ bridge_link_pk }},
-        {{- '\n   ' }} {{ eff_sat_table | lower }}.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
-        {{- '\n   ' }} {{ eff_sat_table | lower }}.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
+        {{- '\n   ' }} {{ link_table | upper }}.{{ link_pk }} AS {{ bridge_link_pk }},
+        {{- '\n   ' }} {{ eff_sat_table | upper }}.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
+        {{- '\n   ' }} {{ eff_sat_table | upper }}.{{ eff_sat_load_date }} AS {{ bridge_load_date }}
 
         {%- if not loop.last %}, {%- endif -%}
 
@@ -42,16 +42,16 @@ SELECT
         {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
 
     {%- if loop.first %}
-    LEFT JOIN {{ ref(current_link) }} AS {{ current_link | lower }}
-        ON {{ dbtvault.multikey(src_pk, prefix=['a', current_link | lower], condition='=') }}
+    LEFT JOIN {{ ref(current_link) }} AS {{ current_link | upper }}
+        ON {{ dbtvault.multikey(src_pk, prefix=['a', current_link | upper], condition='=') }}
     {%- else %}
-    LEFT JOIN {{ ref(current_link) }} AS {{ current_link | lower }}
-        ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link | lower }}.{{ link_fk1 }}
+    LEFT JOIN {{ ref(current_link) }} AS {{ current_link | upper }}
+        ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link | upper }}.{{ link_fk1 }}
     {%- endif %}
-    INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat | lower }}
-        ON {{ current_eff_sat | lower }}.{{ eff_sat_pk }} = {{ current_link | lower }}.{{ link_pk }}
-        AND {{ current_eff_sat | lower }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
-        {%- set loop_vars.last_link = current_link | lower -%}
+    INNER JOIN {{ ref(current_eff_sat) }} AS {{ current_eff_sat | upper }}
+        ON {{ current_eff_sat | upper }}.{{ eff_sat_pk }} = {{ current_link | upper }}.{{ link_pk }}
+        AND {{ current_eff_sat | upper }}.{{ eff_sat_load_date }} <= b.AS_OF_DATE
+        {%- set loop_vars.last_link = current_link | upper -%}
         {%- set loop_vars.last_link_fk2 = link_fk2 -%}
     {% endfor %}
 
