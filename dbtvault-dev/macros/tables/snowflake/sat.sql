@@ -25,7 +25,8 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set window_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
-{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
+{%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
@@ -76,7 +77,7 @@ latest_records AS (
 {%- endif %}
 
 
-{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+
 
 ghost AS (
 {{ dbtvault.create_ghost_records(source_model, source_cols, record_source='SOURCE') }}

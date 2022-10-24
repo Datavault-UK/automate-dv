@@ -47,7 +47,10 @@ def feature_sub_types():
         },
         'sats': {
             'main': [
-                'sats',
+                'sats'
+            ],
+            'ghost records': [
+                'sats_ghost_records'
             ],
             'cycles': [
                 'sats_cycles'
@@ -57,7 +60,7 @@ def feature_sub_types():
             ],
             'pm': [
                 'sats_period_mat_base',
-                'sats_period_mat_other'
+                'sats_period_mat_other',
                 'sats_period_mat_inferred_range',
                 'sats_period_mat_provided_range',
                 'sats_daily',
