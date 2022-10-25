@@ -82,6 +82,8 @@ records_to_insert AS (
         FROM ghost AS g
         {%- if dbtvault.is_any_incremental() %}
         WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ dbtvault.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
+        {%- else %}
+        WHERE NOT EXISTS ( SELECT 1 FROM source_data AS stage WHERE {{ dbtvault.prefix([src_hashdiff], 'stage', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
         {%- endif %}
     UNION
     {%- endif %}
