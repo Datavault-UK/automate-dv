@@ -318,15 +318,14 @@ def load_table(context, model_name, vault_structure):
 
     context.vault_structure_metadata = metadata
 
-    stage_metadata = set_stage_metadata(context, stage_model_name=model_name)
-
-    args = {k: v for k, v in stage_metadata.items() if
-           k == "enable_ghost_records"}
-
     dbtvault_generator.raw_vault_structure(model_name=model_name,
                                            vault_structure=vault_structure,
                                            config=config,
                                            **metadata)
+
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
+
+    args = {"enable_ghost_records": context.enable_ghost_records}
 
     logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
 
