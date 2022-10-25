@@ -47,9 +47,7 @@ def feature_sub_types():
         },
         'sats': {
             'main': [
-                'sats'
-            ],
-            'ghost records': [
+                'sats',
                 'sats_ghost_records'
             ],
             'cycles': [
