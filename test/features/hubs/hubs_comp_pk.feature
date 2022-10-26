@@ -275,6 +275,7 @@ Feature: [HUB-COMP-PK] Hubs with composite src_pk
       | md5('1008') | C       | 1008    | 1993-01-03 | *      |
       | md5('1009') | C       | 1009    | 1993-01-03 | *      |
 
+  @not_postgres
   @fixture.single_source_comp_pk_hub
   Scenario: [HUB-COMP-PK-10] Simple load of stage data into an empty hub using insert-by-period
     Given the HUB table does not exist
@@ -297,6 +298,7 @@ Feature: [HUB-COMP-PK] Hubs with composite src_pk
       | md5('1003') | A           | 1003        | 1993-01-03 | TPCH   |
       | md5('1004') | A           | 1004        | 1993-01-04 | TPCH   |
 
+  @not_postgres
   @fixture.single_source_comp_pk_hub
   Scenario: [HUB-COMP-PK-11] Simple load of stage data into an empty hub using insert-by-rank
     Given the HUB table does not exist
@@ -363,6 +365,7 @@ Feature: [HUB-COMP-PK] Hubs with composite src_pk
       | md5('1003') | md5('A')            | 1003        | A           | 1993-01-01 | TPCH   |
       | md5('1004') | md5('A')            | 1004        | A           | 1993-01-01 | TPCH   |
 
+  @not_postgres
   @fixture.multi_source_comp_pk_hub
   Scenario: [HUB-COMP-PK-14] Union three staging tables to feed a empty hub which does not exist, load using period materialisation
     Given the HUB table does not exist
@@ -406,6 +409,7 @@ Feature: [HUB-COMP-PK] Hubs with composite src_pk
       | md5('1005') | A       | 1005    | 1993-01-02 | *      |
       | md5('1006') | A       | 1006    | 1993-01-02 | *      |
 
+  @not_postgres
   @fixture.single_source_comp_pk_nk_hub
   Scenario: [HUB-COMP-PK-15] Simple load of stage data into an empty hub, composite PK and NK, load using period materialisation
     Given the HUB table does not exist

@@ -89,6 +89,7 @@ Feature: [LNK-COMP-PK] Links with composite src_pk
       | md5('1005\|\|ITA') | md5('1005') | md5('1005') | md5('ITA') | 1993-01-01 | CRM    |
       | md5('1006\|\|DEU') | md5('1006') | md5('1006') | md5('DEU') | 1993-01-02 | CRM    |
 
+  @not_postgres
   @fixture.single_source_comp_pk_link
   Scenario: [LNK-COMP-PK-05] Load a simple stage table into a non-existent link table, period load
     Given the LINK table does not exist
@@ -110,6 +111,7 @@ Feature: [LNK-COMP-PK] Links with composite src_pk
       | md5('1006\|\|DEU') | md5('1006') | md5('1006') | md5('DEU') | 1993-01-03 | CRM    |
       | md5('1007\|\|ITA') | md5('1007') | md5('1007') | md5('ITA') | 1993-01-04 | CRM    |
 
+  @not_postgres
   @fixture.single_source_comp_pk_link
   Scenario: [LNK-COMP-PK-06] Load a simple stage table into a non-existent link table, rank load
     Given the LINK table does not exist

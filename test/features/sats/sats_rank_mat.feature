@@ -1,3 +1,4 @@
+@not_postgres
 Feature: [SAT-RM] Satellites Loaded using Rank Materialization
 
   @fixture.satellite

@@ -1,3 +1,4 @@
+@not_postgres
 Feature: [HUB-PM] Hubs Loaded using Period Materialization
 
   @fixture.single_source_hub
@@ -103,6 +104,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
 
   @not_bigquery
   @not_databricks
+  @not_postgres
   @fixture.single_source_hub
   Scenario: [HUB-PM-05] Incremental load by period, of stage data into an empty hub with custom database for target
     Given the HUB table does not exist
@@ -243,6 +245,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
 
   @not_bigquery
   @not_databricks
+  @not_postgres
   @fixture.single_source_hub
   Scenario: [HUB-PM-06] Incremental load by period, of stage data into an empty hub with custom database for source
     Given the HUB table does not exist

@@ -23,6 +23,7 @@ dbt-snowflake = "==1.1.0"
 dbt-bigquery = "==1.1.0"
 dbt-sqlserver = "==1.1.0"
 dbt-databricks = "==1.1.0"
+dbt-postgres = "==1.1.0"
 pexpect = "*"
 filelock = "*"
 
