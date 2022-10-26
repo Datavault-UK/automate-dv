@@ -580,6 +580,7 @@ Feature: [STG] Staging
       | 1004        | Dom           | 13-04-2018   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('13-04-2018\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
 
   @not_sqlserver
+  @not_postgres
   @fixture.staging
   Scenario: [STG-18] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER table does not exist
@@ -606,6 +607,30 @@ Feature: [STG] Staging
   @sqlserver
   @fixture.staging
   Scenario: [STG-18-SQLS] Staging with derived, source columns and hashed when a hashed column overrides a source column.
+    Given the STG_CUSTOMER_HASH table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER_HASH model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER_HASH model
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_ID   |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') | CUSTOMER_NAME |
+    When I stage the STG_CUSTOMER_HASH data
+    Then the STG_CUSTOMER_HASH table should contain expected data
+      | CUSTOMER_ID  | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    |
+      | md5('ALICE') | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE |
+      | md5('BOB')   | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE |
+      | md5('CHAD')  | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE |
+      | md5('DOM')   | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('2018-04-13\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | RAW_STAGE |
+
+  @postgres
+  @fixture.staging
+  Scenario: [STG-18-POSTGRES] Staging with derived, source columns and hashed when a hashed column overrides a source column.
     Given the STG_CUSTOMER_HASH table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -1397,4 +1422,110 @@ Feature: [STG] Staging
       | sha('-2')   | -2                   | -2          | Bob                    | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2006-04-17\|\|BOB\|\|17-214-233-1215') |
       | sha('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2013-02-04\|\|-9\|\|17-214-233-1216')  |
       | sha('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
+
+  @fixture.staging
+  @fixture.enable_sha
+  Scenario: [STG-44] Staging with derived, hashed, ranked and source columns, using SHA256 hash algorithm, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha('1001') | sha('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha('1002') | sha('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003') | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha('1004') | sha('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
+
+  @fixture.staging
+  @fixture.enable_sha
+  Scenario: [STG-45] Staging with derived, hashed, ranked and source columns, using SHA256 hash algorithm, multiple PK column, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK                 | HASHDIFF                                              |
+      | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha('1001\|\|ALICE') | sha('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha('1002\|\|BOB')   | sha('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003\|\|CHAD')  | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha('1004\|\|DOM')   | sha('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
+
+  @fixture.staging
+  Scenario: [STG-46] Staging with derived, hashed, ranked and source columns, using MD5 hash algorithm, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004') | md5('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
+
+  @fixture.staging
+  Scenario: [STG-47] Staging with derived, hashed, ranked and source columns, using MD5 hash algorithm, multiple PK column, single hashdiff column.
+    Given the STG_CUSTOMER table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I have derived columns in the STG_CUSTOMER model
+      | EFFECTIVE_FROM | SOURCE     |
+      | LOAD_DATE      | !RAW_STAGE |
+    And I have hashed columns in the STG_CUSTOMER model
+      | CUSTOMER_PK                 | HASHDIFF                                              |
+      | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
+    And I have ranked columns in the STG_CUSTOMER model
+      | NAME          | PARTITION_BY | ORDER_BY  |
+      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+    When I stage the STG_CUSTOMER data
+    Then the STG_CUSTOMER table should contain expected data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001\|\|ALICE') | md5('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002\|\|BOB')   | md5('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003\|\|CHAD')  | md5('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | md5('1004\|\|DOM')   | md5('DOM')   | 1993-01-01     | RAW_STAGE | 1             |
 

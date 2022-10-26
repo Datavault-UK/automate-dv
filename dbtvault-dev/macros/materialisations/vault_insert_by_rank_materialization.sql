@@ -1,5 +1,9 @@
 {% materialization vault_insert_by_rank, default -%}
 
+    {% if target.type == "postgres" and execute %}
+        {{ exceptions.raise_compiler_error("The vault_insert_by_rank materialisation is currently unavailable on Postgres.") }}
+    {% endif %}
+
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}

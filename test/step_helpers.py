@@ -36,5 +36,11 @@ def filter_metadata(context, metadata: dict) -> dict:
 
     if getattr(context, 'disable_payload', False):
         metadata = {k: v for k, v in metadata.items() if k != "src_payload"}
+    if exclusions := getattr(context, 'payload_exclusions', False):
+        metadata['src_payload'] = {
+            "exclude_columns": "true",
+            "columns": exclusions
+        }
+        context.vault_structure_columns[context.target_model_name]['src_payload'] = metadata['src_payload']
 
     return metadata
