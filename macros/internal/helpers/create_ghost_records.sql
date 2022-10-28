@@ -4,7 +4,7 @@
 
 {%- endmacro -%}
 
-{%- macro default__create_ghost_records(source_model, source_columns, record_source='SOURCE') -%}
+{%- macro default__create_ghost_records(source_model, source_columns, record_source) -%}
 
 {# Retrieve information about columns in the source data #}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
@@ -70,7 +70,7 @@ SELECT
 
 {%- endmacro -%}
 
-{%- macro postgres__create_ghost_records(source_model, source_columns, record_source='source') -%}
+{%- macro postgres__create_ghost_records(source_model, source_columns, record_source) -%}
 
 {# Retrieve information about columns in the source data #}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
@@ -131,7 +131,7 @@ SELECT
 
 {%- endmacro -%}
 
-{%- macro bigquery__create_ghost_records(source_model, source_columns, hashes, record_source='SOURCE') -%}
+{%- macro bigquery__create_ghost_records(source_model, source_columns, hashes, record_source) -%}
 
 {# Retrieve information about columns in the source data #}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
@@ -157,7 +157,7 @@ SELECT
         {%- set type_string = 'TYPE_{}'.format(fetched_type|string()) -%}
         {# Return the corresponding ghost record #}
         {%- set fetched_string = ghost_string[type_string] -%}
-
+        
         {# Ensure record source is not set as just STRING #}
         {%- if fetched_name == record_source -%}
             {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS STRING) AS {}".format(fetched_name) -%}

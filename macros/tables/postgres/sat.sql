@@ -51,7 +51,7 @@ latest_records AS (
 {%- if enable_ghost_record %}
 
 ghost AS (
-{{- dbtvault.create_ghost_records(source_model, source_cols, record_source='source') }}
+{{- dbtvault.create_ghost_records(source_model, source_cols, record_source=src_source) }}
 ),
 
 {%- endif %}
