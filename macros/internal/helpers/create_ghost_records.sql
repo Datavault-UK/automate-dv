@@ -98,12 +98,12 @@ SELECT
         {%- set fetched_string = ghost_string[type_string] -%}
 
         {# Ensure record source is not set as just VARCHAR #}
-        {%- if fetched_name == record_source -%}
+        {%- if fetched_name|upper == record_source -%}
             {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS character varying) AS {}".format(fetched_name) -%}
 
         {# If ghost record is NULL then dont cast #}
-        {%- elif fetched_string == 'null' -%}
-            {%- set col_sql = "NULL AS {}".format(fetched_name) -%}
+        {%- elif fetched_string == 'NULL' -%}
+            {%- set col_sql = "null AS {}".format(fetched_name) -%}
 
     {# if fetched_type is date or bytea add quotes around fetched string before casting #}
         {%- elif fetched_type == 'date' or fetched_type == 'bytea' -%}
