@@ -38,10 +38,10 @@ extends:
   parameters:
     platforms:
       - 'postgres'
-      - 'databricks'
-      - 'sqlserver'
       - 'snowflake'
       - 'bigquery'
+      - 'sqlserver'
+      - 'databricks'
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
