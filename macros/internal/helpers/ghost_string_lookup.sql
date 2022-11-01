@@ -13,7 +13,8 @@
                             'TYPE_bytea':'00000000000000000000000000000000',
                             'TYPE_BINARY(16)':'00000000000000000000000000000000',
                             'TYPE_character varying':'NULL',
-                            'TYPE_date':'1900-01-01'
+                            'TYPE_date':'1900-01-01',
+                            'TYPE_character varying(50)':'NULL'
     } %}
 
 {% do return(string_lookup) %}
