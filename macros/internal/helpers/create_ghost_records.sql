@@ -233,8 +233,8 @@ SELECT
             {%- set col_sql = "CAST('{}' AS BINARY(16)) AS {}".format(fetched_string, fetched_name) -%}
 
         {# If ghost record has type DATE then cast with TO_DATE #}
-        {%- elif fetched_type == 'DATETIME2' -%}
-            {%- set col_sql = "CAST('{}' AS DATETIME2) AS {}".format(fetched_string, fetched_name) -%}
+        {%- elif fetched_type == 'DATETIME2' OR fetched_type == 'date' -%}
+            {%- set col_sql = "CAST('{}' AS {}) AS {}".format(fetched_string, fetched_type, fetched_name) -%}
 
         {# Otherwise CAST as the necessary type #}
         {%- else -%}
