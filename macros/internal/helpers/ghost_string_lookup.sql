@@ -17,6 +17,7 @@
                             'TYPE_character varying':'NULL',
                             'TYPE_date':'1900-01-01',
                             'TYPE_character varying(50)':'NULL',
+                            'TYPE_varchar':'NULL',
                             'TYPE_binary':'00000000000000000000000000000000'
     } %}
 

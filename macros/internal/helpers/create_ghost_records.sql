@@ -222,11 +222,15 @@ SELECT
 
         {# Ensure record source is not set as just VARCHAR #}
         {%- if fetched_name == record_source -%}
-            {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS character varying(50)) AS {}".format(fetched_name) -%}
+            {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS varchar(50)) AS {}".format(fetched_name) -%}
 
-        {# If ghost record is NULL then dont cast #}
+        {# If ghost record is binary #}
+        {%- elif fetched_type == 'binary' -%}
+            {%- set col_sql = "CAST(REPLICATE(CAST(CAST({} AS tinyint) AS {}), 16) AS {}) AS {}".format(fetched_string, 'binary(16)', 'binary(16)', fetched_name) -%}
+
+        {# If ghost record is NULL #}
         {%- elif fetched_string == 'NULL' -%}
-            {%- set col_sql = "NULL AS {}".format(fetched_name) -%}
+            {%- set col_sql = "CAST(NULL AS varchar(50)) AS {}".format(fetched_name) -%}
 
         {# Otherwise CAST as the necessary type #}
         {%- else -%}
