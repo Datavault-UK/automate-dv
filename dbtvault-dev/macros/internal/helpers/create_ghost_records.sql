@@ -206,7 +206,7 @@ SELECT
 {%- for col in columns -%}
 
     {# Setting the column name to have "" around it so it can be found in the source columns #}
-    {%- set string_col = col.column -%}
+    {%- set string_col = '"{}"'.format(col.column) -%}
 
     {# If the column name is in the source columns then do the following, else skip it #}
     {%- if string_col in source_columns -%}
