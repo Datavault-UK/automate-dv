@@ -228,10 +228,6 @@ SELECT
         {%- elif fetched_string == 'NULL' -%}
             {%- set col_sql = "NULL AS {}".format(fetched_name) -%}
 
-        {# If ghost record had type BINARY cast as BINARY(16) #}
-        {%- elif fetched_type == 'BINARY(16)' -%}
-            {%- set col_sql = "CAST('{}' AS BINARY(16)) AS {}".format(fetched_string, fetched_name) -%}
-
         {# Otherwise CAST as the necessary type #}
         {%- else -%}
             {%- set col_sql = "CAST('{}' AS {}) AS {}".format(fetched_string, fetched_type, fetched_name) -%}
