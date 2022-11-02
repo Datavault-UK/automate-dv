@@ -6,7 +6,12 @@ trigger:
       - stage/*
     exclude:
       - feat/*
-      - feat/ghost-records
+
+pr:
+  autoCancel: true
+  branches:
+    exclude:
+      -feat/ghost-records
 
 pool:
   vmImage: ubuntu-latest
