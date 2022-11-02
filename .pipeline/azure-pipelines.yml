@@ -11,7 +11,7 @@ pr:
   autoCancel: true
   branches:
     exclude:
-      -feat/ghost-records
+      - feat/ghost-records
 
 pool:
   vmImage: ubuntu-latest
