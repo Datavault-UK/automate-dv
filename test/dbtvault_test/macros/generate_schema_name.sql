@@ -70,7 +70,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, dbtvault_test.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, dbtvault_test.pipeline_string()|lower) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
