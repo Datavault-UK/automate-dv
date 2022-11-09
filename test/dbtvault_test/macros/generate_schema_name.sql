@@ -78,7 +78,11 @@
 
 {%- macro clean_schema_name(schema_name) -%}
 
+    {%- if target.type == 'databricks' -%}
+    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_')  | trim | lower) -%}
+    {%- else -%}
     {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_')  | trim | upper) -%}
+    {%- endif -%}
 
 {%- endmacro -%}
 
