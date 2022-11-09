@@ -18,6 +18,8 @@
                             'TYPE_date':'1900-01-01',
                             'TYPE_character varying(50)':'NULL',
                             'TYPE_varchar':'NULL',
+                            'TYPE_varchar(100)':'NULL',
+                            'TYPE_string':'00000000000000000000000000000000',
                             'TYPE_binary':'00000000000000000000000000000000'
     } %}
 
