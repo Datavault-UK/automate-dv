@@ -189,16 +189,16 @@ SELECT
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_eff -%}
-	{%- if col.dtype == 'DATE' -%}
-            {%- set col_sql = "CAST('1900-01-01' AS DATE) AS {}".format(src_eff) -%}
+	{%- if col.dtype == 'date' -%}
+            {%- set col_sql = "CAST('1900-01-01' AS date) AS {}".format(src_eff) -%}
         {%- else -%}
             {%- set col_sql = "CAST('1900-01-01 00:00:00' AS {}) AS {}".format(col.dtype, src_eff) -%}
         {%- endif -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_ldts -%}
-       	{%- if col.dtype == 'DATE' -%}
-            {%- set col_sql = "CAST('1900-01-01' AS DATE) AS {}".format(src_eff) -%}
+       	{%- if col.dtype == 'date' -%}
+            {%- set col_sql = "CAST('1900-01-01' AS date) AS {}".format(src_eff) -%}
         {%- else -%}
             {%- set col_sql = "CAST('1900-01-01 00:00:00' AS {}) AS {}".format(col.dtype, src_eff) -%}
         {%- endif -%}
