@@ -26,6 +26,7 @@ dbt-databricks = "==1.1.0"
 dbt-postgres = "==1.1.0"
 pexpect = "*"
 filelock = "*"
+py = "*"
 
 [requires]
 python_version = "3.9"
