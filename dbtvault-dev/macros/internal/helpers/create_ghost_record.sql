@@ -183,33 +183,41 @@ SELECT
     {%- if col_name == src_pk -%}
         {%- set col_sql = "CAST('00000000000000000000000000000000' AS bytea) AS {}".format(src_pk) -%}
     	{%- do col_definitions.append(col_sql) -%}
+    {%- do log('col_sql: ' ~ col_sql, info=true) -%}
 
     {%- elif col_name == src_hashdiff -%}
         {%- set col_sql = "CAST('00000000000000000000000000000000' AS bytea) AS {}".format(src_hashdiff) -%}
         {%- do col_definitions.append(col_sql) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
 
     {%- elif col_name == src_eff -%}
 	{%- if col.dtype == 'date' -%}
             {%- set col_sql = "CAST('1900-01-01' AS date) AS {}".format(src_eff) -%}
+            {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- else -%}
             {%- set col_sql = "CAST('1900-01-01 00:00:00' AS {}) AS {}".format(col.dtype, src_eff) -%}
+            {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- endif -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_ldts -%}
        	{%- if col.dtype == 'date' -%}
             {%- set col_sql = "CAST('1900-01-01' AS date) AS {}".format(src_eff) -%}
+            {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- else -%}
             {%- set col_sql = "CAST('1900-01-01 00:00:00' AS {}) AS {}".format(col.dtype, src_eff) -%}
+            {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- endif -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS character varying) AS {}".format(src_source) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name is in src_payload -%}
         {% set col_sql = "NULL AS {}".format(col_name) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- endif -%}
@@ -237,41 +245,51 @@ SELECT
     {%- if col_name == src_pk -%}
         {%- if hash == 'MD5' -%}
             {%- set col_sql = "CAST(REPLICATE(CAST(CAST('00000000000000000000000000000000' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', src_pk) -%}
+            {%- do log('col_sql: ' ~ col_sql, info=true) -%}
 	{%- elif hash == 'SHA' -%}
         	{%- set hash_alg = 'SHA2_256' -%}
 		{%- set col_sql = "CAST(REPLICATE(CAST(CAST('00000000000000000000000000000000' AS tinyint) AS {}), 32) AS {}) AS {}".format('binary(32)', 'binary(32)', src_pk) -%}
+		{%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- else -%}
         	{%- set hash_alg = 'MD5' -%}
             	{%- set col_sql = "CAST(REPLICATE(CAST(CAST('00000000000000000000000000000000' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', src_pk) -%}
+            	{%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- endif -%}
     	{%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_hashdiff -%}
         {%- if hash == 'MD5' -%}
             {%- set col_sql = "CAST(REPLICATE(CAST(CAST('00000000000000000000000000000000' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', src_hashdiff) -%}
+            {%- do log('col_sql: ' ~ col_sql, info=true) -%}
 	{%- elif hash == 'SHA' -%}
         	{%- set hash_alg = 'SHA2_256' -%}
 		{%- set col_sql = "CAST(REPLICATE(CAST(CAST('00000000000000000000000000000000' AS tinyint) AS {}), 32) AS {}) AS {}".format('binary(32)', 'binary(32)', src_hashdiff) -%}
+		{%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- else -%}
         	{%- set hash_alg = 'MD5' -%}
             	{%- set col_sql = "CAST(REPLICATE(CAST(CAST('00000000000000000000000000000000' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', src_hashdiff) -%}
+            	{%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- endif -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_eff -%}
         {%- set col_sql = "CAST('1900-01-01 00:00:00' AS {}) AS {}".format(col.dtype, src_eff) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_ldts -%}
         {%- set col_sql = "CAST('1900-01-01 00:00:00' AS {}) AS {}".format(col.dtype, src_ldts) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS varchar(50)) AS {}".format(src_source) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name is in src_payload -%}
         {% set col_sql = "CAST(NULL AS varchar(50)) AS {}".format(col_name) -%}
+        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- endif -%}
