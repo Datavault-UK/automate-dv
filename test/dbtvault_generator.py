@@ -363,7 +363,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "alias": alias_macro,
         "alias_all": alias_all_macro,
         "escape_column_names": escape_column_names_macro,
-        "null_columns": null_columns_macro
+        "null_columns": null_columns_macro,
+        "create_ghost_record": create_ghost_record_macro
     }
 
     if generator_functions.get(macro_name):
@@ -478,6 +479,19 @@ def prefix_macro(model_name, **_):
     alias_target=var('alias_target', none)) }}}}
     {{% endif %}}
     """
+
+    template_to_file(template, model_name)
+
+
+def create_ghost_record_macro(model_name, **_):
+    template = f"{{{{ dbtvault.create_ghost_record(src_pk=var('src_pk', none), " \
+               f"src_hashdiff=var('src_hashdiff', none), " \
+               f"src_payload=var('src_payload', none), " \
+               f" src_extra_columns=var('src_extra_columns', none)," \
+               f"src_eff=var('src_eff',none) , " \
+               f"src_ldts=var('src_ldts', none), " \
+               f"src_source=var('src_source', none)," \
+               f"source_model=var('source_-model', none))}}}}"
 
     template_to_file(template, model_name)
 
