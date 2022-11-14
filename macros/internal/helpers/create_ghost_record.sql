@@ -51,6 +51,12 @@
         {% set col_sql = "NULL AS {}".format(col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
+    {%- elif src_extra_columns != none -%}
+        {%- if col_name is in src_extra_columns -%}
+            {% set col_sql = "NULL AS {}".format(col_name) -%}
+            {%- do col_definitions.append(col_sql) -%}
+        {%- endif -%}
+
     {%- endif -%}
 
 {%- endfor -%}
