@@ -491,7 +491,7 @@ def create_ghost_record_macro(model_name, **_):
                f"src_eff=var('src_eff',none) , " \
                f"src_ldts=var('src_ldts', none), " \
                f"src_source=var('src_source', none)," \
-               f"source_model=var('source_-model', none))}}}}"
+               f"source_model=var('source_model', none))}}}}"
 
     template_to_file(template, model_name)
 
