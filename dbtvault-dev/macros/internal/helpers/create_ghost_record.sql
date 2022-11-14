@@ -19,7 +19,7 @@
         {%- if hash == 'MD5' -%}
             {%- set col_sql = "CAST('00000000000000000000000000000000' AS BINARY(16)) AS {}".format(src_pk) -%}
         {%- elif hash == 'SHA' -%}
-            {%- set col_sql = "CAST('00000000000000000000000000000000' AS BINARY(32)) AS {}".format(src_pk) -%}
+            {%- set col_sql = "CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY(32)) AS {}".format(src_pk) -%}
         {%- else -%}
             {%- set col_sql = "CAST('00000000000000000000000000000000' AS BINARY(16)) AS {}".format(src_pk) -%}
         {%- endif -%}
@@ -29,7 +29,7 @@
         {%- if hash == 'MD5' -%}
             {%- set col_sql = "CAST('00000000000000000000000000000000' AS BINARY(16)) AS {}".format(src_hashdiff) -%}
         {%- elif hash == 'SHA' -%}
-            {%- set col_sql = "CAST('00000000000000000000000000000000' AS BINARY(32)) AS {}".format(src_hashdiff) -%}
+            {%- set col_sql = "CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY(32)) AS {}".format(src_hashdiff) -%}
         {%- else -%}
             {%- set col_sql = "CAST('00000000000000000000000000000000' AS BINARY(16)) AS {}".format(src_hashdiff) -%}
         {%- endif -%}
