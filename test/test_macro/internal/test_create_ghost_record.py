@@ -17,8 +17,10 @@ def test_create_ghost_record_with_all_string(request, generate_model):
         "src_extra_columns": '"none"'
     }
 
+    generate_model()
+
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name], args=var_dict)
-    print('dbt_logs', dbt_logs)
+
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
