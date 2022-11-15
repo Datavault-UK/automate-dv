@@ -128,20 +128,17 @@ new_rows AS (
 
         {%- if target.type == "sqlserver" -%}
 
-        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2))
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
         AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
 
         {%- else %}
 
-        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}))
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }})
         AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
 
         {%- endif %}
 
-        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
-                 CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}))
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }})
         AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
 
         {{- "," if not loop.last }}
