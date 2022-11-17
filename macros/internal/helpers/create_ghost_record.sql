@@ -74,7 +74,7 @@ SELECT
         {%- set col_sql = "CAST('00000000000000000000000000000000' AS STRING) AS {}".format(col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif (col_name == src_eff) or (col_name == stc_ldts) -%}
+    {%- elif (col_name == src_eff) or (col_name == src_ldts) -%}
         {%- if col.dtype == 'DATE' -%}
             {%- set col_sql = "CAST('1900-01-01' AS DATE) AS {}".format(col_name) -%}
         {%- else -%}
