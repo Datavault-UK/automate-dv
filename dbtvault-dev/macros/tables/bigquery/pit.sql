@@ -8,10 +8,13 @@
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
+    {%- set enable_ghost_record = var('enable_ghost_records', false) -%
 
+{%- if not enable_ghost_record -%}
 {#- Setting ghost values to replace NULLS -#}
 {%- set ghost_pk = '0x0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
+{%- endif -%}
 
 {%- if dbtvault.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
@@ -43,9 +46,18 @@ backfill AS (
     {%- for sat_name in satellites -%}
         {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
-        {%- set sat_name = sat_name | upper %}
+        {%- set sat_name = sat_name | upper -%}
+        {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
+        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
+
+        {% if enable_ghost_record %}
+        {%- do log('sat_pk: ' ~ sat_pk, true) -%}
+        MIN({{ sat_name | lower ~ '_src' }}.{{ src_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        MIN({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- else -%}
         '{{ ghost_pk }}' AS {{ dbtvault.escape_column_names( sat_name ~ '_' ~ sat_key_name ) }},
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}') AS {{ dbtvault.escape_column_names( sat_name ~ '_' ~ sat_ldts_name ) }}
+        {%- endif -%}
         {{- ',' if not loop.last -}}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
@@ -58,6 +70,7 @@ backfill AS (
         LEFT JOIN {{ ref(sat_name) }} AS {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}
         {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}
         {{ "AND" | indent(4) }} {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }} <= a.AS_OF_DATE
+        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = PARSE_DATETIME('%F %H:%M:%E6S', '1900-01-01 00:00:00.000000')
     {% endfor -%}
 
     GROUP BY
@@ -82,12 +95,19 @@ new_rows AS (
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+        {%- set sat_name = sat_name -%}
         {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
-        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) %}
+        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
+
+        {%- if enable_ghost_record %}
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- else -%}
         COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}),
         '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
         COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }}),
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
+        {%- endif -%}
         {{- "," if not loop.last }}
     {%- endfor %}
     FROM new_rows_as_of_dates AS a
@@ -101,6 +121,8 @@ new_rows AS (
         LEFT JOIN {{ ref(sat_name) }} AS {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}
         {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}
         {{ "AND" | indent(4) }} {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }} <= a.AS_OF_DATE
+        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = PARSE_DATETIME('%F %H:%M:%E6S', '1900-01-01 00:00:00.000000')
+
     {% endfor -%}
 
     GROUP BY
