@@ -19,6 +19,7 @@
         {%- do string_columns.append(src_extra_columns) -%}
     {%- endif -%}
 
+    {%- do log('string_columns: ' ~ string_columns, true) -%}
 {%- for col in columns -%}
     {%- set col_name = '"{}"'.format(col.column) -%}
     {%- if (col_name == src_pk) or (col_name == src_hashdiff) -%}
@@ -39,7 +40,7 @@
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS VARCHAR) AS {}".format(src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif col_name is in string_columns -%}
+    {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
         {% set col_sql = "NULL AS {}".format(col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
@@ -85,7 +86,7 @@ SELECT
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS STRING) AS {}".format(src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif col_name is in string_columns -%}
+    {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
         {% set col_sql = "CAST(NULL AS {}) AS {}".format(col.dtype, col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
@@ -131,7 +132,7 @@ SELECT
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS varchar(100)) AS {}".format(src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif col_name is in string_columns -%}
+    {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
         {% set col_sql = "NULL AS {}".format(col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
@@ -178,7 +179,7 @@ SELECT
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS character varying) AS {}".format(src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif col_name is in string_columns -%}
+    {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
         {% set col_sql = "NULL AS {}".format(col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
@@ -230,7 +231,7 @@ SELECT
         {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif col_name is in string_columns -%}
+    {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
         {% set col_sql = "CAST(NULL AS varchar(50)) AS {}".format(col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 

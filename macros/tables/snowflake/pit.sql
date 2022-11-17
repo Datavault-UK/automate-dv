@@ -44,6 +44,9 @@
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000' %}
 
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+{%- do log('enable: ' ~ enable_ghost_record, true) -%}
+
 {%- if dbtvault.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
 {%- else -%}
@@ -75,8 +78,14 @@ backfill AS (
     {% for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-        {%- set sat_name = sat_name %}
+        {%- set sat_name = sat_name -%}
+        {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
+        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
 
+        {%- if enable_ghost_record -%}
+        MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        MIN({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- else -%}
         {% if target.type == "sqlserver" %}
         CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
@@ -85,9 +94,10 @@ backfill AS (
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
         {% endif -%}
 
+        {%- endif -%}
 
-        {{- ',' if not loop.last -}}
-
+    {%- if not loop.last -%},
+        {%- endif -%}
     {%- endfor %}
     FROM backfill_rows_as_of_dates AS a
 
@@ -100,6 +110,7 @@ backfill AS (
         LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
         ON a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
         AND {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
+        OR {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
     {% endfor -%}
 
     GROUP BY
@@ -126,22 +137,33 @@ new_rows AS (
         {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
         {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
 
+        {% if enable_ghost_record %}
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- else -%}
+
         {%- if target.type == "sqlserver" -%}
 
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+                 CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2))
         AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
 
         {%- else %}
 
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }})
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+                 CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}))
         AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
 
         {%- endif %}
 
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }})
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
+                 CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}))
         AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
 
-        {{- "," if not loop.last }}
+        {%- endif -%}
+        {%- if not loop.last -%},
+        {%- endif -%}
+
     {%- endfor %}
 
     FROM new_rows_as_of_dates AS a
@@ -155,6 +177,7 @@ new_rows AS (
         LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src'}}
         ON a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
         AND {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} <= a.AS_OF_DATE
+        OR {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
 
     {% endfor -%}
 
