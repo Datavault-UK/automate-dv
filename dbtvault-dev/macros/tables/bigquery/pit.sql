@@ -8,7 +8,7 @@
 {%- elif as_of_dates_table is not mapping and as_of_dates_table is not none -%}
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
-    {%- set enable_ghost_record = var('enable_ghost_records', false) -%
+    {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if not enable_ghost_record -%}
 {#- Setting ghost values to replace NULLS -#}
