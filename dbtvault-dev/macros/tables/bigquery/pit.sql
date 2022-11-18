@@ -52,8 +52,8 @@ backfill AS (
 
         {% if enable_ghost_record %}
         {%- do log('sat_pk: ' ~ sat_pk, true) -%}
-        MIN({{ sat_name | lower ~ '_src' }}.{{ src_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-        MIN({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        MIN({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
+        MIN({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
         {%- else -%}
         '{{ ghost_pk }}' AS {{ dbtvault.escape_column_names( sat_name ~ '_' ~ sat_key_name ) }},
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}') AS {{ dbtvault.escape_column_names( sat_name ~ '_' ~ sat_ldts_name ) }}
@@ -69,8 +69,8 @@ backfill AS (
         {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
         LEFT JOIN {{ ref(sat_name) }} AS {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}
         {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}
-        {{ "AND" | indent(4) }} {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }} <= a.AS_OF_DATE
-        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = PARSE_DATETIME('%F %H:%M:%E6S', '1900-01-01 00:00:00.000000')
+        {{ "AND" | indent(4) }} ({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }} <= a.AS_OF_DATE
+        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = PARSE_DATETIME('%F %H:%M:%E6S', '1900-01-01 00:00:00.000000'))
     {% endfor -%}
 
     GROUP BY
@@ -100,8 +100,8 @@ new_rows AS (
         {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
 
         {%- if enable_ghost_record %}
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }}) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {%- else -%}
         COALESCE(MAX({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}),
         '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
@@ -120,8 +120,8 @@ new_rows AS (
         {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
         LEFT JOIN {{ ref(sat_name) }} AS {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}
         {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_pk }}
-        {{ "AND" | indent(4) }} {{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }} <= a.AS_OF_DATE
-        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = PARSE_DATETIME('%F %H:%M:%E6S', '1900-01-01 00:00:00.000000')
+        {{ "AND" | indent(4) }} ({{ dbtvault.escape_column_names( sat_name | lower ~ '_src' ) }}.{{ sat_ldts }} <= a.AS_OF_DATE
+        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = PARSE_DATETIME('%F %H:%M:%E6S', '1900-01-01 00:00:00.000000'))
 
     {% endfor -%}
 
