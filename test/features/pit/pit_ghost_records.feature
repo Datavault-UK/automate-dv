@@ -635,7 +635,7 @@ Feature: [PIT-GR] Point in Time
     When I load the vault
     Then the PIT_CUSTOMER_2S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE | SAT_CUSTOMER_DETAILS_PK          | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK            | SAT_CUSTOMER_LOGIN_LDTS |
-      | md5('1001') | 2018-06-01 | md5('1001')                      | 2018-06-01                | 0000000000000000                 | 1900-01-01              |
+      | md5('1001') | 2018-06-01 | md5('1001')                      | 2018-06-01                | 00000000000000000000000000000000 | 1900-01-01              |
       | md5('1002') | 2018-06-01 | md5('1002')                      | 2018-06-01                | md5('1002')                      | 2018-06-01              |
       | md5('1003') | 2018-06-01 | md5('1003')                      | 2018-06-01                | md5('1003')                      | 2018-06-01              |
       | md5('1004') | 2018-06-01 | 00000000000000000000000000000000 | 1900-01-01                | 00000000000000000000000000000000 | 1900-01-01              |
