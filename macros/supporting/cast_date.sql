@@ -6,9 +6,9 @@
 
     {%- if datetime -%}
         {%- if not as_string -%}
-            TO_DATETIME({{ column_str }})
+            TO_TIMESTAMP({{ column_str }})
         {%- else -%}
-            TO_DATETIME('{{ column_str }}')
+            TO_TIMESTAMP('{{ column_str }}')
         {%- endif -%}
     {%- else -%}
         {%- if not as_string -%}
