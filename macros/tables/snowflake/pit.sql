@@ -84,7 +84,11 @@ backfill AS (
 
         {%- if enable_ghost_record -%}
         MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-        MIN({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- if target.type == "snowflake" -%}
+        TO_TIMESTAMP(MIN({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }})) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- else -%}
+        CAST(MIN({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS DATETIME) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- endif -%}
         {%- else -%}
         {% if target.type == "sqlserver" %}
         CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
@@ -139,7 +143,11 @@ new_rows AS (
 
         {% if enable_ghost_record %}
         MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- if target.type == "snowflake" -%}
+        TO_TIMESTAMP(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }})) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- else -%}
+        CAST(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}) AS DATETIME) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+        {%- endif -%}
         {%- else -%}
 
         {%- if target.type == "sqlserver" -%}
