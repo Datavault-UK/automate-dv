@@ -11,11 +11,6 @@ pr:
   branches:
     include:
       - develop
-
-pr:
-  autoCancel: true
-  branches:
-    exclude:
       - feat/ghost-records
 
 pool:
