@@ -1,1 +1,0 @@
-Feature: [PIT-2S-GR] Point in Time

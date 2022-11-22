@@ -8,8 +8,10 @@ trigger:
       - feat/*
 
 pr:
-  autoCancel: true
+  autoCancel: false
   branches:
+    include:
+      - develop
     exclude:
       - feat/ghost-records
 
