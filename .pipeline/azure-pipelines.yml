@@ -6,6 +6,11 @@ trigger:
       - stage/*
     exclude:
       - feat/*
+pr:
+  autoCancel: false
+  branches:
+    include:
+      - develop
 
 pool:
   vmImage: ubuntu-latest
