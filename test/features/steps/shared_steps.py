@@ -351,7 +351,11 @@ def load_vault(context):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=model_names,
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
+
+    args = {"enable_ghost_records": context.enable_ghost_records}
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=model_names, args=args,
                                      full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
