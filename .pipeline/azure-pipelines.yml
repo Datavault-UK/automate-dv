@@ -6,11 +6,13 @@ trigger:
       - stage/*
     exclude:
       - feat/*
+
 pr:
   autoCancel: false
   branches:
     include:
       - develop
+    exclude:
       - feat/ghost-records
 
 pool:
