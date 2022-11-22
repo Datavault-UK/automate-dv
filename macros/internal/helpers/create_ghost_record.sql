@@ -19,7 +19,6 @@
         {%- do string_columns.append(src_extra_columns) -%}
     {%- endif -%}
 
-    {%- do log('string_columns: ' ~ string_columns, true) -%}
 {%- for col in columns -%}
     {%- set col_name = '"{}"'.format(col.column) -%}
     {%- if (col_name == src_pk) or (col_name == src_hashdiff) -%}
@@ -196,7 +195,7 @@ SELECT
 
 {%- endmacro -%}
 
-{%- macro sqlsever__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
+{%- macro sqlserver__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
@@ -228,7 +227,6 @@ SELECT
 
     {%- elif col_name == src_source -%}
         {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS varchar(50)) AS {}".format(src_source) -%}
-        {%- do log('col_sql: ' ~ col_sql, info=true) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
