@@ -12,8 +12,6 @@ pr:
   branches:
     include:
       - develop
-    exclude:
-      - feat/ghost-records
 
 pool:
   vmImage: ubuntu-latest
