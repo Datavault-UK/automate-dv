@@ -231,7 +231,11 @@
                 "sha256:11f4a252c88a111e5c13797b6a7c779b43da2cff928a7df7a9b0f06eeb55da22",
                 "sha256:5308693ce89ee7c0318c7a1c7f704aafddc86ba7d2a9e87029fcbd08f95da678"
             ],
+<<<<<<< Updated upstream
             "markers": "python_full_version >= '3.7.1' and python_full_version < '4.0.0'",
+=======
+            "markers": "python_version < '4' and python_full_version >= '3.7.1'",
+>>>>>>> Stashed changes
             "version": "==2.2.0"
         },
         "dbt-bigquery": {
