@@ -57,23 +57,26 @@ ghost AS (
 {%- endif %}
 
 records_to_insert AS (
-    {%- if enable_ghost_record -%}
-    SELECT
-        {{ dbtvault.alias_all(source_cols, 'g') }}
-        FROM ghost AS g
-        {%- if dbtvault.is_any_incremental() %}
-        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ dbtvault.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
-        {%- endif %}
-    UNION
-    {%- endif %}
-    SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
+    (SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
     {%- if dbtvault.is_any_incremental() %}
         LEFT JOIN latest_records
             ON {{ dbtvault.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
             WHERE {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} != {{ dbtvault.prefix([src_hashdiff], 'stage') }}
                 OR {{ dbtvault.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+    {%- endif -%}
+    )
+    {%- if enable_ghost_record -%}
+    UNION
+    (SELECT
+        {{ dbtvault.alias_all(source_cols, 'g') }}
+        FROM ghost AS g
+        {%- if dbtvault.is_any_incremental() %}
+        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ dbtvault.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
+        {%- endif -%}
+    )
     {%- endif %}
+
 )
 
 SELECT * FROM records_to_insert
