@@ -48,6 +48,7 @@
 {%- macro bigquery__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
 
     {%- if datetime -%}
+    
         {%- if not as_string -%}
             CAST(PARSE_DATETIME('%F %H:%M:%E6S', {{ column_str }}))
         {%- else -%}
