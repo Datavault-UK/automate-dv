@@ -484,14 +484,22 @@ def prefix_macro(model_name, **_):
 
 
 def create_ghost_record_macro(model_name, **_):
-    template = f"{{{{ dbtvault.create_ghost_record(src_pk=var('src_pk', none), " \
-               f"src_hashdiff=var('src_hashdiff', none), " \
-               f"src_payload=var('src_payload', none), " \
-               f" src_extra_columns=var('src_extra_columns', none)," \
-               f"src_eff=var('src_eff',none) , " \
-               f"src_ldts=var('src_ldts', none), " \
-               f"src_source=var('src_source', none)," \
-               f"source_model=var('source_model', none))}}}}"
+    template = f"""
+               -- depends_on: {{{{ ref('raw_source_sat') }}}}
+               {{% if execute %}}
+               {{%- if var('source_model', '') != '' -%}}
+                   {{%- set source_relation = ref(var('source_model')) -%}}
+               {{% endif %}}
+               {{{{ dbtvault.create_ghost_record(src_pk=var('src_pk', none),
+               src_hashdiff=var('src_hashdiff', none),
+               src_payload=var('src_payload', none),
+               src_extra_columns=var('src_extra_columns', none),
+               src_eff=var('src_eff',none) ,
+               src_ldts=var('src_ldts', none),
+               src_source=var('src_source', none),
+               source_model=var('source_model', none))}}}}
+               {{% endif %}}
+               """
 
     template_to_file(template, model_name)
 
