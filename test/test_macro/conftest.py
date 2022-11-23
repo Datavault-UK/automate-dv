@@ -80,3 +80,10 @@ def setup(tmp_path_factory, worker_id):
             else:
                 test_setup()
                 fn.write_text(json.dumps({'status': 'in-use'}))
+
+
+@pytest.fixture(scope='module', autouse=True)
+def cleanup(tmp_path_factory, worker_id):
+    os.chdir(test.TEST_PROJECT_ROOT)
+    behave_helpers.clean_models()
+    behave_helpers.clean_target()
