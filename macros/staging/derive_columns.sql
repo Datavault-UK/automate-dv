@@ -72,7 +72,7 @@
     {%- if source_relation is defined and source_relation is not none -%}
 
         {%- for col in source_cols -%}
-            {%- if col not in exclude_columns -%}
+            {%- if col | lower not in exclude_columns | map('lower') | list -%}
                 {%- do src_columns.append(dbtvault.escape_column_names(col)) -%}
             {%- endif -%}
         {%- endfor -%}
