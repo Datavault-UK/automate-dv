@@ -53,7 +53,7 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{% if dbtvault.is_any_incremental() %}
+{%- if dbtvault.is_any_incremental() %}
 
 latest_records AS (
     SELECT {{ dbtvault.prefix(window_cols, 'a', alias_target='target') }}
@@ -73,7 +73,7 @@ latest_records AS (
     WHERE a.rank = 1
 ),
 
-{%- endif -%}
+{%- endif %}
 
 records_to_insert AS (
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
