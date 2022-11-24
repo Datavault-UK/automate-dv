@@ -2,9 +2,11 @@ import io
 import os
 import shutil
 import textwrap
+from functools import partial
 
 import ruamel.yaml
 
+from env import env_utils
 from test import *
 
 
@@ -508,7 +510,8 @@ def extract_column_names(context, model_name: str, model_params: dict, ignored_p
     processing_functions = {
         "pit": process_pit_columns,
         "bridge": process_bridge_columns,
-        "xts": process_xts_columns
+        "xts": process_xts_columns,
+        "sat": process_sat_columns,
     }
 
     processed_headings = []
@@ -520,8 +523,10 @@ def extract_column_names(context, model_name: str, model_params: dict, ignored_p
 
     if column_dicts:
         if vault_structure_type in processing_functions.keys() and vault_structure_type in model_name.lower():
-            extracted_headings = list(filter(None, map(processing_functions[context.vault_structure_type],
-                                                       column_dicts)))
+            extracted_headings = list(
+                filter(None,
+                       map(partial(processing_functions[context.vault_structure_type],
+                                   context=context), column_dicts)))
         else:
             extracted_headings = list(filter(None, map(process_other_columns,
                                                        column_dicts)))
@@ -529,7 +534,7 @@ def extract_column_names(context, model_name: str, model_params: dict, ignored_p
         processed_headings.extend(extracted_headings)
     processed_headings.extend(column_strings)
 
-    return list(flatten(processed_headings))
+    return list(set(flatten(processed_headings)))
 
 
 def process_structure_metadata(vault_structure, model_name, config, **kwargs):
@@ -579,7 +584,7 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
             "model_name": model_name}
 
 
-def process_xts_columns(column_def: dict):
+def process_xts_columns(column_def: dict, context=None):
     column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
 
     if not column_def:
@@ -588,7 +593,16 @@ def process_xts_columns(column_def: dict):
         return [f"{list(col.keys())[0]}" for col in list(column_def.values())[0].values()]
 
 
-def process_pit_columns(column_def: dict):
+def process_sat_columns(column_def: dict, context=None):
+    if exclude_columns := column_def.get('columns'):
+        original_columns = list(flatten(
+            [val for col, val in context.vault_structure_columns_original[context.target_model_name].items()]))
+        payload_columns = list(set(original_columns) - set(exclude_columns))
+
+        return payload_columns
+
+
+def process_pit_columns(column_def: dict, context=None):
     column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
 
     if not column_def:
@@ -599,7 +613,7 @@ def process_pit_columns(column_def: dict):
         return [satellite_columns_hk + satellite_columns_ldts]
 
 
-def process_bridge_columns(column_def: dict):
+def process_bridge_columns(column_def: dict, context=None):
     column_def = {k: v for k, v in column_def.items() if isinstance(v, dict)}
 
     if not column_def:
@@ -630,12 +644,14 @@ def template_to_file(template, model_name):
         f.write(template.strip())
 
 
-def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
+def add_seed_config(seed_name: str, seed_config: dict, include_columns=None,
+                    additional_config=None):
     """
     Append a given dictionary to the end of the dbt_project.yml file
         :param seed_name: Name of seed file to configure
         :param seed_config: Configuration dict for seed file
         :param include_columns: A list of columns to add to the seed config, All if not provided
+        :param additional_config: Additional configuration defined by external metadata (fixtures etc.)
     """
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
@@ -646,10 +662,18 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None):
         seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
                                        k in include_columns}
 
+    if additional_config:
+        seed_config = {**seed_config, **additional_config}
+
+    if env_utils.platform() == 'postgres':
+        quoted_columns = False
+    else:
+        quoted_columns = True
+
     seed_properties = {
         'version': 2,
         'seeds': [
-            {'name': seed_name, 'config': {**seed_config, '+quote_columns': True}}
+            {'name': seed_name, 'config': {**seed_config, 'quote_columns': quoted_columns}}
         ]
     }
 
@@ -723,6 +747,20 @@ def append_end_date_config(context, config: dict) -> dict:
     return config
 
 
+def append_model_text_config(context, config) -> dict:
+    """
+    Append custom database config if attribute is present.
+    """
+
+    if hasattr(context, 'text'):
+        if context.text:
+            config_text_dict = parse_step_text(context.text)
+            config = {**config,
+                      **config_text_dict}
+
+    return config
+
+
 def append_dict_to_schema_yml(yaml_dict):
     """
     Append a given dictionary to the end of the schema_test.yml file
@@ -778,3 +816,23 @@ def dict_to_yaml_string(yaml_dict: dict, sequence=4, offset=2):
     yaml_str = buf.getvalue().decode('utf-8')
 
     return yaml_str
+
+
+def parse_step_text(step_text: str):
+    config_dict = dict()
+
+    if pair_list := step_text.split(","):
+        for pair in pair_list:
+            pair_dict = {str(pair.split(':')[0]).strip(): str(pair.split(':')[1]).strip()}
+            config_dict = {**config_dict, **pair_dict}
+
+    return config_dict
+
+
+def handle_step_text_dict(context):
+    if hasattr(context, 'text'):
+
+        if context.text:
+            config_dict = parse_step_text(context.text)
+
+            return config_dict

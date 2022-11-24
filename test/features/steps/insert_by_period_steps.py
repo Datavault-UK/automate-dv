@@ -43,6 +43,7 @@ def load_table(context, model_name, vault_structure, period):
               "period": period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
+    config = dbtvault_generator.append_model_text_config(context, config)
 
     context.vault_structure_metadata = metadata
 
