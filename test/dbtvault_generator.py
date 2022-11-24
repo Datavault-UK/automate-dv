@@ -31,7 +31,8 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "xts": xts,
         "ma_sat": ma_sat,
         "bridge": bridge,
-        "pit": pit
+        "pit": pit,
+        "ref_table": ref_table
     }
 
     processed_metadata = process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -340,6 +341,30 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
 
     template_to_file(template, model_name)
 
+def ref_table(model_name, src_pk, src_ldts, src_source, source_model,
+              config, src_extra_columns=None, depends_on=""):
+    """
+    Generate a reference table model template
+        :param model_name: Name of the model file
+        :param src_pk: Source pk
+        :param src_ldts: Source load date timestamp
+        :param src_source: Source record source column
+        :param source_model: Model name to select from
+        :param config: Optional model config string
+        :param src_extra_columns: Additional columns to add to the reference table
+        :param depends_on: Optional forced dependency
+    """
+
+    template = f"""
+    {depends_on}    
+    {{{{ config({config}) }}}}
+    {{{{ dbtvault.ref_table(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source}, 
+                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                      source_model={source_model})   }}}}
+    """
+
+    template_to_file(template, model_name)
+
 
 def macro_model(model_name, macro_name, metadata=None):
     """
@@ -544,7 +569,8 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "t_link": "incremental",
         "ma_sat": "incremental",
         "pit": "pit_incremental",
-        "bridge": "bridge_incremental"
+        "bridge": "bridge_incremental",
+        "ref_table": "incremental"
     }
 
     if config:

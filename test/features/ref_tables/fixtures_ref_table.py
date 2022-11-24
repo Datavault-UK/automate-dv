@@ -2,7 +2,7 @@ from behave import fixture
 
 def set_vault_structure_definition(context):
     context.vault_structure_columns = {
-        "REF": {
+        "REF_TABLE": {
             "src_pk": "DATE_PK",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -17,7 +17,7 @@ def set_metadata(context):
 # Snowflake
 
 @fixture
-def single_source_ref_snowflake(context):
+def single_source_ref_table_snowflake(context):
     """
     Define the structures and metadata to load single-source reference tables
     """
@@ -25,7 +25,7 @@ def single_source_ref_snowflake(context):
     set_metadata(context)
 
     context.seed_config = {
-        "REF": {
+        "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "VARCHAR",
                 "YEAR": "VARCHAR",
@@ -35,7 +35,7 @@ def single_source_ref_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "RAW_REF": {
+        "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "VARCHAR",
                 "YEAR": "VARCHAR",
@@ -48,7 +48,7 @@ def single_source_ref_snowflake(context):
 # BigQuery
 
 @fixture
-def single_source_ref_bigquery(context):
+def single_source_ref_table_bigquery(context):
     """
     Define the structures and metadata to load single-source reference tables
     """
@@ -56,7 +56,7 @@ def single_source_ref_bigquery(context):
     set_metadata(context)
 
     context.seed_config = {
-        "REF": {
+        "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "STRING",
                 "YEAR": "STRING",
@@ -66,7 +66,7 @@ def single_source_ref_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
-        "RAW_REF": {
+        "RAW_REF_TABLE": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
@@ -80,7 +80,7 @@ def single_source_ref_bigquery(context):
 # SQLServer
 
 @fixture
-def single_source_ref_sqlserver(context):
+def single_source_ref_table_sqlserver(context):
     """
     Define the structures and metadata to load single-source reference tables
     """
@@ -88,7 +88,7 @@ def single_source_ref_sqlserver(context):
     set_metadata(context)
 
     context.seed_config = {
-        "REF": {
+        "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "VARCHAR(10)",
                 "YEAR": "STRING",
@@ -98,7 +98,7 @@ def single_source_ref_sqlserver(context):
                 "SOURCE": "VARCHAR(3)"
             }
         },
-        "RAW_REF": {
+        "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "VARCHAR(10)",
                 "YEAR": "STRING",
@@ -111,7 +111,7 @@ def single_source_ref_sqlserver(context):
 # Databricks
 
 @fixture
-def single_source_ref_databricks(context):
+def single_source_ref_table_databricks(context):
     """
     Define the structures and metadata to load single-source reference tables
     """
@@ -119,7 +119,7 @@ def single_source_ref_databricks(context):
     set_metadata(context)
 
     context.seed_config = {
-        "REF": {
+        "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "STRING",
                 "YEAR": "STRING",
@@ -129,7 +129,7 @@ def single_source_ref_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
-        "RAW_REF": {
+        "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "STRING",
                 "YEAR": "STRING",
@@ -142,7 +142,7 @@ def single_source_ref_databricks(context):
 # Postgres
 
 @fixture
-def single_source_ref_postgres(context):
+def single_source_ref_table_postgres(context):
     """
     Define the structures and metadata to load single-source reference tables
     """
@@ -150,7 +150,7 @@ def single_source_ref_postgres(context):
     set_metadata(context)
 
     context.seed_config = {
-        "REF": {
+        "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "VARCHAR",
                 "YEAR": "VARCHAR",
@@ -160,7 +160,7 @@ def single_source_ref_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "RAW_REF": {
+        "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "VARCHAR",
                 "YEAR": "VARCHAR",
