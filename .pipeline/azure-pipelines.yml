@@ -46,7 +46,6 @@ extends:
       - 'databricks'
       - 'sqlserver'
       - 'snowflake'
-      - 'sqlserver'
       - 'bigquery'
     runConfig:
       - groupName: 'staging'
