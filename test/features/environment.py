@@ -14,6 +14,7 @@ from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
+from test.features.refs import fixtures_ref
 
 fixture_registry_utils = {
     "fixture.enable_sha": behave_fixtures.enable_sha,
@@ -219,6 +220,13 @@ fixtures_registry = {
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
          "databricks": '',
          "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
+
+    "fixture.single_source_ref":
+        {"snowflake": fixtures_ref.single_source_ref_snowflake,
+         "bigquery": fixtures_ref.single_source_ref_bigquery,
+         "sqlserver": fixtures_ref.single_source_ref_sqlserver,
+         "databricks": fixtures_ref.single_source_ref_databricks,
+         "postgres": fixtures_ref.single_source_ref_postgres},
 
 }
 

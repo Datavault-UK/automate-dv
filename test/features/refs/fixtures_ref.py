@@ -1,0 +1,172 @@
+from behave import fixture
+
+def set_vault_structure_definition(context):
+    context.vault_structure_columns = {
+        "REF": {
+            "src_pk": "DATE_PK",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+
+def set_metadata(context):
+    set_vault_structure_definition(context)
+
+
+# Snowflake
+
+@fixture
+def single_source_ref_snowflake(context):
+    """
+    Define the structures and metadata to load single-source reference tables
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "REF": {
+            "column_types": {
+                "DATE_PK": "VARCHAR",
+                "YEAR": "VARCHAR",
+                "MONTH": "VARCHAR",
+                "DAY": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_REF": {
+            "column_types": {
+                "DATE_PK": "VARCHAR",
+                "YEAR": "VARCHAR",
+                "MONTH": "VARCHAR",
+                "DAY": "VARCHAR"
+            }
+        }
+    }
+
+# BigQuery
+
+@fixture
+def single_source_ref_bigquery(context):
+    """
+    Define the structures and metadata to load single-source reference tables
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "REF": {
+            "column_types": {
+                "DATE_PK": "STRING",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_REF": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+# SQLServer
+
+@fixture
+def single_source_ref_sqlserver(context):
+    """
+    Define the structures and metadata to load single-source reference tables
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "REF": {
+            "column_types": {
+                "DATE_PK": "VARCHAR(10)",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(3)"
+            }
+        },
+        "RAW_REF": {
+            "column_types": {
+                "DATE_PK": "VARCHAR(10)",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING"
+            }
+        }
+    }
+
+# Databricks
+
+@fixture
+def single_source_ref_databricks(context):
+    """
+    Define the structures and metadata to load single-source reference tables
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "REF": {
+            "column_types": {
+                "DATE_PK": "STRING",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_REF": {
+            "column_types": {
+                "DATE_PK": "STRING",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING"
+            }
+        }
+    }
+
+# Postgres
+
+@fixture
+def single_source_ref_postgres(context):
+    """
+    Define the structures and metadata to load single-source reference tables
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "REF": {
+            "column_types": {
+                "DATE_PK": "VARCHAR",
+                "YEAR": "VARCHAR",
+                "MONTH": "VARCHAR",
+                "DAY": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_REF": {
+            "column_types": {
+                "DATE_PK": "VARCHAR",
+                "YEAR": "VARCHAR",
+                "MONTH": "VARCHAR",
+                "DAY": "VARCHAR"
+            }
+        }
+    }
+
