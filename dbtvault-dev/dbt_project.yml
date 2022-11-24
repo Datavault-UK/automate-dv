@@ -19,5 +19,6 @@ vars:
   hash: MD5
   null_key_required: '-1' # Default -1, allows user to configure
   null_key_optional: '-2' # Default -2, allows user to configure
-  disable_ghost_records: false #default false to ghost records are enabled
+  enable_ghost_records: false #default false to ghost records are enabled
+  system_record_value: 'DBTVAULT_SYSTEM' #Default DBTVAULT_SYSTEM, allows user to configure
 

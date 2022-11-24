@@ -63,3 +63,11 @@ def enable_ghost_records(context):
     """
     context.enable_ghost_records = True
 
+
+@behave.fixture
+def system_record_value(context):
+    """
+    Configures the source value for ghost record
+    """
+    context.system_record_value = 'OTHER_SYSTEM'
+
