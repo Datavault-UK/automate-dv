@@ -24,17 +24,20 @@
 
 {%- macro default__ref_table(src_pk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_extra_columns, src_ldts, src_source]) -%}
+{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_extra_columns, src_ldts, src_source]) %}
+
 
     WITH non_historized AS (
+        {%- for src in source_model %}
         SELECT
-            {{ src_pk }},
-            {%- for ref_col in src_extra_columns %}
-                {{ ref_col }},
-            {% endfor %}
-            {{ src_source }},
-            {{ src_ldts}}
-        FROM {{ source_model }}
+        {{ src_pk }},
+        {%- for ref_col in src_extra_columns %}
+        {{ ref_col }},
+        {%- endfor -%}
+        {{ src_ldts }},
+        {{ src_source }}
+        FROM {{ ref(src) }}
+        {%- endfor %}
     )
 
     SELECT * FROM non_historized

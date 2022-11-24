@@ -4,6 +4,7 @@ def set_vault_structure_definition(context):
     context.vault_structure_columns = {
         "REF_TABLE": {
             "src_pk": "DATE_PK",
+            "src_extra_columns": ["YEAR", "MONTH", "DAY", "DAY_OF_WEEK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
@@ -40,7 +41,9 @@ def single_source_ref_table_snowflake(context):
                 "DATE_PK": "VARCHAR",
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
-                "DAY": "VARCHAR"
+                "DAY": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
             }
         }
     }
