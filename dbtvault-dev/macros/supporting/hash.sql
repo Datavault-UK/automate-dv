@@ -49,21 +49,18 @@
 
     {% if not is_hashdiff -%}
 
-        {%- set concat_string -%}
+        {%- set concat_sql -%}
         NULLIF({{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}} {{ ', ' -}}
                '{{ all_null | join(concat_string) }}')
         {%- endset -%}
 
         {%- set hashed_column -%}
-        CAST({{ hash_alg | replace('[PLACEHOLDER]', concat_string) }} AS {{ dbtvault.type_binary() }}{{ '\n' }}
+        CAST({{ hash_alg | replace('[PLACEHOLDER]', concat_sql) }} AS {{ dbtvault.type_binary() }}{{ '\n' }}
         {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
 
         {%- endset -%}
 
     {%- else -%}
-        {%- set concat_string -%}
-
-        {%- endset -%}
 
         {%- set hashed_column -%}
 
