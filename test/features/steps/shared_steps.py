@@ -25,6 +25,8 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
 
+    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+
     if not getattr(context, "ranked_columns", None):
         context.ranked_columns = dict()
         context.ranked_columns[stage_model_name] = dict()
@@ -61,7 +63,8 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "hash": context.hashing,
         "null_key_required": context.null_key_required,
         "null_key_optional": context.null_key_optional,
-        "enable_ghost_records": context.enable_ghost_records
+        "enable_ghost_records": context.enable_ghost_records,
+        "system_record_value": context.system_record_value
     }
 
     return dbt_vars
@@ -325,7 +328,9 @@ def load_table(context, model_name, vault_structure):
 
     context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
 
-    args = {"enable_ghost_records": context.enable_ghost_records}
+    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+
+    args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
 
     logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
 
@@ -353,7 +358,9 @@ def load_vault(context):
 
     context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
 
-    args = {"enable_ghost_records": context.enable_ghost_records}
+    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+
+    args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
 
     logs = dbt_runner.run_dbt_models(mode="run", model_names=model_names, args=args,
                                      full_refresh=is_full_refresh)
@@ -429,7 +436,7 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
-                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records"}
+                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -460,7 +467,7 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
-                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records"}
+                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -531,7 +538,7 @@ def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
     args = {k: v for k, v in stage_metadata.items() if
-            k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records"}
+            k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
     text_args = dbtvault_generator.handle_step_text_dict(context)
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
