@@ -10,6 +10,7 @@
 {%- macro default__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
+{%- set source_str = var('system_record_value', 'DBTVAULT_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
@@ -36,7 +37,7 @@
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
-        {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS VARCHAR) AS {}".format(src_source) -%}
+        {%- set col_sql = "CAST('{}' AS {}) AS {}".format(source_str, col.dtype, src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
@@ -58,6 +59,7 @@ SELECT
 
 {%- macro bigquery__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
+{%- set source_str = var('system_record_value', 'DBTVAULT_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
@@ -82,7 +84,7 @@ SELECT
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
-        {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS STRING) AS {}".format(src_source) -%}
+        {%- set col_sql = "CAST('{}' AS {}) AS {}".format(source_str, col.dtype, src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
@@ -104,6 +106,7 @@ SELECT
 
 {%- macro databricks__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
+{%- set source_str = var('system_record_value', 'DBTVAULT_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
@@ -128,7 +131,7 @@ SELECT
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
-        {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS varchar(100)) AS {}".format(src_source) -%}
+        {%- set col_sql = "CAST('{}' AS {}) AS {}".format(source_str, col.dtype, src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
@@ -151,6 +154,7 @@ SELECT
 {%- macro postgres__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
+{%- set source_str = var('system_record_value', 'DBTVAULT_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
@@ -175,11 +179,11 @@ SELECT
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
-        {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS character varying) AS {}".format(src_source) -%}
+        {%- set col_sql = "CAST('{}' AS {}) AS {}".format(source_str, col.dtype, src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
-        {% set col_sql = "NULL AS {}".format(col_name) -%}
+        {% set col_sql = "CAST(NULL AS {}) AS {}".format(col.dtype, col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- endif -%}
@@ -198,6 +202,7 @@ SELECT
 {%- macro sqlserver__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
+{%- set source_str = var('system_record_value', 'DBTVAULT_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
@@ -226,7 +231,7 @@ SELECT
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif col_name == src_source -%}
-        {%- set col_sql = "CAST('DBTVAULT_SYSTEM' AS varchar(50)) AS {}".format(src_source) -%}
+        {%- set col_sql = "CAST('{}' AS {}) AS {}".format(source_str, col.dtype, src_source) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
