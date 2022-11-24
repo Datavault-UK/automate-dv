@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Hub Features" type="PyBehaveRunConfigurationType" factoryName="Behave">
-    <module name="dbtvault" />
+    <module name="dbtvault-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <option name="SDK_HOME" value="" />
@@ -18,6 +18,11 @@
       <ENTRIES>
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
+    </EXTENSION>
+    <EXTENSION ID="software.aws.toolkits.jetbrains.core.execution.PythonAwsConnectionExtension">
+      <option name="credential" />
+      <option name="region" />
+      <option name="useCurrentConnection" value="false" />
     </EXTENSION>
     <WHAT_TO_RUN WHAT_TO_RUN="$PROJECT_DIR$/test/features/hubs" />
     <option name="ADDITIONAL_ARGS" value="" />

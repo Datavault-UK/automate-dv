@@ -39,18 +39,22 @@ dbtvault:
       password: "{{ op://private/sqlserver/password }}"
 
     databricks:
-      type: spark
-      method: odbc
-      driver: /opt/simba/spark/lib/64/libsparkodbc_sb64.so
+      type: databricks
       schema: "{{ op://private/databricks/schema }}"
       host: "{{ op://private/databricks/host }}"
-      port: "{{ {{ op://private/databricks/port }} | as_number }}"
-
+      http_path: "{{ op://private/databricks/http_path }}"
       token: "{{ op://private/databricks/token }}"
-      endpoint: "{{ op://private/databricks/endpoint }}"
 
-      user: "{{ op://private/databricks/user }}"
+      threads: 4
 
+    postgres:
+      type: postgres
+      host: "{{ op://private/postgres/host }}"
+      port: 8100
+      database: "{{ op://private/postgres/database }}"
+      schema: "{{ op://private/postgres/schema }}"
+      user: "{{ op://private/postgres/user }}"
+      password: "{{ op://private/postgres/password }}"
       threads: 4
 
   target: "snowflake"
