@@ -30,7 +30,7 @@
     WITH non_historized AS (
         {%- for src in source_model %}
         SELECT
-        {{ src_pk }},
+        DISTINCT({{ src_pk }}),
         {%- for ref_col in src_extra_columns %}
         {{ ref_col }},
         {%- endfor -%}
