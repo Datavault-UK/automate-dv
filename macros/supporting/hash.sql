@@ -16,7 +16,7 @@
 
 {%- set hash_alg = dbtvault.select_hash_alg(hash) -%}
 
-{%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {}))), '')".format(dbtvault.type_string()) %}
+{%- set standardise = dbtvault.standard_column_wrapper() %}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
 {%- if is_hashdiff and dbtvault.is_list(columns) -%}
@@ -28,10 +28,11 @@
     {%- set column_str = dbtvault.as_constant(columns) -%}
     {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
 
-    CAST(({{ hash_alg }}({{ standardise | replace('[EXPRESSION]', escaped_column_str) }})) AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names(alias) | indent(4) }}
+    CAST({{ hash_alg | replace('[PLACEHOLDER]', standardise | replace('[EXPRESSION]', escaped_column_str)) }} AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names(alias) | indent(4) }}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
+
     {%- set all_null = [] -%}
     {%- set processed_columns = [] -%}
 
@@ -39,9 +40,7 @@
         {%- set column_str = dbtvault.as_constant(column) -%}
         {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
 
-        {%- set column_expression -%}
-            IFNULL({{ standardise | replace('[EXPRESSION]', escaped_column_str) }}, '{{ null_placeholder_string}}')
-        {%- endset -%}
+        {%- set column_expression = dbtvault.null_expression(escaped_column_str) -%}
 
         {%- do all_null.append(null_placeholder_string) -%}
         {%- do processed_columns.append(column_expression) -%}
@@ -50,23 +49,26 @@
 
     {% if not is_hashdiff -%}
 
-        {%- set hashed_column -%}
+        {%- set concat_string -%}
+        NULLIF({{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}} {{ ', ' -}}
+               '{{ all_null | join(concat_string) }}')
+        {%- endset -%}
 
-        CAST({{ hash_alg }}(NULLIF(
-        {{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}} {{ ', ' -}}
-        '{{ all_null | join(concat_string) }}')) AS {{ dbtvault.type_binary() }}{{ '\n' }}
+        {%- set hashed_column -%}
+        CAST({{ hash_alg | replace('[PLACEHOLDER]', concat_string) }} AS {{ dbtvault.type_binary() }}{{ '\n' }}
         {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
 
         {%- endset -%}
 
     {%- else -%}
+        {%- set concat_string -%}
+
+        {%- endset -%}
 
         {%- set hashed_column -%}
 
-        CAST({{ hash_alg }}(
-         {{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}}
-           ) AS {{ dbtvault.type_binary() }}{{ '\n' }}
-         {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
+        CAST({{ hash_alg | replace('[PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string) ) }} AS {{ dbtvault.type_binary() }}{{ '\n' }}
+        {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
 
         {%- endset -%}
 
@@ -75,7 +77,6 @@
     {{ hashed_column }}
 
 {%- endif -%}
-
 
 {%- endmacro -%}
 
