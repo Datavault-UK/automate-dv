@@ -5,9 +5,11 @@
                                                 rank_column=rank_column,
                                                 rank_iteration=rank_iteration) %}
     {% do return(macro) %}
-    {%- endmacro %}
+{%- endmacro %}
 
-    {% macro default__replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) %}
+
+
+{% macro default__replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) %}
 
     {%- set rank_filter -%}
     {{ rank_column }}:: INTEGER = {{ rank_iteration }}::INTEGER
