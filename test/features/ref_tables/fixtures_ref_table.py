@@ -32,6 +32,7 @@ def single_source_ref_table_snowflake(context):
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
+                "DAY_OF_WEEK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -42,6 +43,7 @@ def single_source_ref_table_snowflake(context):
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
+                "DAY_OF_WEEK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -65,15 +67,18 @@ def single_source_ref_table_bigquery(context):
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         },
         "RAW_REF_TABLE": {
             "column_types": {
-                "CUSTOMER_ID": "STRING",
-                "CUSTOMER_MT_ID": "STRING",
-                "CUSTOMER_NAME": "STRING",
+                "DATE_PK": "STRING",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
@@ -97,6 +102,7 @@ def single_source_ref_table_sqlserver(context):
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(3)"
             }
@@ -106,7 +112,10 @@ def single_source_ref_table_sqlserver(context):
                 "DATE_PK": "VARCHAR(10)",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
-                "DAY": "STRING"
+                "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(3)"
             }
         }
     }
@@ -128,6 +137,7 @@ def single_source_ref_table_databricks(context):
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -137,7 +147,10 @@ def single_source_ref_table_databricks(context):
                 "DATE_PK": "STRING",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
-                "DAY": "STRING"
+                "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
@@ -159,6 +172,7 @@ def single_source_ref_table_postgres(context):
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
+                "DAY_OF_WEEK": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -168,7 +182,10 @@ def single_source_ref_table_postgres(context):
                 "DATE_PK": "VARCHAR",
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
-                "DAY": "VARCHAR"
+                "DAY": "VARCHAR",
+                "DAY_OF_WEEK": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
             }
         }
     }

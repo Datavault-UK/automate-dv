@@ -64,7 +64,7 @@ Feature: [REF-NH] No-History Reference Tables
       | <null>     | 2022 | 11    | 6   | Sunday      | 2022-11-01 | MDS    |
       |            | 2022 | 11    | 7   | Monday      | 2022-11-01 | MDS    |
     And I stage the REF_DATE data
-    When I load the REF_TABLE reference table
+    When I load the REF_TABLE ref_table
     Then the REF_TABLE table should contain expected data
       | DATE_PK    | YEAR | MONTH | DAY | DAY_OF_WEEK | LOAD_DATE  | SOURCE |
       | 2022-11-01 | 2022 | 11    | 1   | Tuesday     | 2022-11-01 | MDS    |
