@@ -36,6 +36,12 @@
 
 {% endmacro %}
 
+{% macro databricks__hash_alg_md5() -%}
+
+    {% do return('MD5([PLACEHOLDER])') %}
+
+{% endmacro %}
+
 
 {#- SHA256 -#}
 
@@ -49,5 +55,11 @@
 {% macro default__hash_alg_sha256() -%}
 
     {% do return('SHA2_BINARY') %}
+
+{% endmacro %}
+
+{% macro databricks__hash_alg_sha256() -%}
+
+    {% do return('SHA2') %}
 
 {% endmacro %}
