@@ -49,13 +49,11 @@ hashed_columns AS (
     "TEST_COLUMN_9",
     "BOOKING_DATE",
 
-    CAST(MD5_BINARY(
-         CONCAT(
-             IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_DOB" AS VARCHAR))), ''), '^^'), '||',
-             IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), ''), '^^'), '||',
-             IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_NAME" AS VARCHAR))), ''), '^^')
-         )) AS BINARY(16)
-    ) AS "CUST_CUSTOMER_HASHDIFF"
+    CAST(MD5_BINARY(CONCAT(
+        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_DOB" AS VARCHAR))), ''), '^^'), '||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), ''), '^^'), '||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_NAME" AS VARCHAR))), ''), '^^')
+    )) AS BINARY(16)) AS "CUST_CUSTOMER_HASHDIFF"
 
     FROM source_data
 ),
