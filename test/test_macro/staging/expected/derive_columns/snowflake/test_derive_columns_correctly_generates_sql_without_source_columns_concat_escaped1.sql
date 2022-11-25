@@ -1,6 +1,6 @@
 CONCAT(
     "CUSTOMER_NAME", '||',
-    "CUSTOMER DOB",
+    "CUSTOMER DOB", '||',
     "PHONE"
 ) AS "CUSTOMER_DETAILS",
 'STG_BOOKING' AS "SOURCE",
