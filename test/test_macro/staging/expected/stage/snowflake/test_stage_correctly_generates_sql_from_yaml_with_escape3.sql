@@ -85,16 +85,13 @@ hashed_columns AS (
              IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_DOB" AS VARCHAR))), ''), '^^'), '||',
              IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), ''), '^^'), '||',
              IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_NAME" AS VARCHAR))), ''), '^^')
-         )) AS BINARY(16)
-    ) AS "CUST_CUSTOMER_HASHDIFF",
+    )) AS BINARY(16)) AS "CUST_CUSTOMER_HASHDIFF",
 
-    CAST(MD5_BINARY(
-         CONCAT(
-             IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), ''), '^^'), '||',
-             IFNULL(NULLIF(UPPER(TRIM(CAST("NATIONALITY" AS VARCHAR))), ''), '^^'), '||',
-             IFNULL(NULLIF(UPPER(TRIM(CAST("PHONE" AS VARCHAR))), ''), '^^')
-         )) AS BINARY(16)
-    ) AS "CUSTOMER_HASHDIFF"
+    CAST(MD5_BINARY(CONCAT(
+        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), ''), '^^'), '||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST("NATIONALITY" AS VARCHAR))), ''), '^^'), '||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST("PHONE" AS VARCHAR))), ''), '^^')
+    )) AS BINARY(16)) AS "CUSTOMER_HASHDIFF"
 
     FROM derived_columns
 ),
