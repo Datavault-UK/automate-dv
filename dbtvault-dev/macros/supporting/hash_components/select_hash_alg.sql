@@ -38,7 +38,7 @@
 
 {% macro databricks__hash_alg_md5() -%}
 
-    {% do return('MD5([PLACEHOLDER])') %}
+    {% do return('UPPER(MD5([PLACEHOLDER]))') %}
 
 {% endmacro %}
 
