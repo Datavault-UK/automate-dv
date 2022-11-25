@@ -64,7 +64,7 @@
 
         {%- set hashed_column -%}
 
-        CAST({{ hash_alg | replace('[PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string) ) }} AS {{ dbtvault.type_binary() }}{{ '\n' }}
+        CAST({{ hash_alg | replace('[PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string) ) }} AS {{ dbtvault.type_binary() }}
         {{- '' -}}) AS {{ dbtvault.escape_column_names(alias) }}
 
         {%- endset -%}
