@@ -5,7 +5,19 @@
 
 {%- macro default__standard_column_wrapper() -%}
 
-    {%- set standardise = "NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {}))), '')".format(dbtvault.type_string()) %}
+    {%- set standardise -%}
+        NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string() }}))), '')
+    {%- endset -%}
+
+    {% do return(standardise) -%}
+
+{%- endmacro -%}
+
+{%- macro databricks__standard_column_wrapper() -%}
+
+    {%- set standardise -%}
+        NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string(is_hash=true) }}))), '')
+    {%- endset -%}
 
     {% do return(standardise) -%}
 
