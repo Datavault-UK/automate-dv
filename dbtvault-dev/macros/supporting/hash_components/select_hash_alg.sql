@@ -54,12 +54,12 @@
 
 {% macro default__hash_alg_sha256() -%}
 
-    {% do return('SHA2_BINARY') %}
+    {% do return('SHA2_BINARY([PLACEHOLDER])') %}
 
 {% endmacro %}
 
 {% macro databricks__hash_alg_sha256() -%}
 
-    {% do return('SHA2') %}
+    {% do return('SHA2([PLACEHOLDER])') %}
 
 {% endmacro %}
