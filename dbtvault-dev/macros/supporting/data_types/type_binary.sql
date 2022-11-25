@@ -15,5 +15,5 @@
 {%- endmacro -%}
 
 {%- macro postgres__type_binary() -%}
-    VARCHAR
+    BYTEA
 {%- endmacro -%}
