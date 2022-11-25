@@ -17,3 +17,7 @@
 {%- macro postgres__type_binary() -%}
     BYTEA
 {%- endmacro -%}
+
+{%- macro databricks__type_binary() -%}
+    STRING
+{%- endmacro -%}
