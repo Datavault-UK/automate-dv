@@ -22,7 +22,7 @@ SELECT
 
         {%- if not loop.last %}, {%- endif -%}
 
-    {% endfor -%}
+    {% endfor %}
 
     FROM {{ source_model }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
