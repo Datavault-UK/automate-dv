@@ -112,7 +112,7 @@ bridge AS (
         {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) %}
         c.{{ bridge_link_pk }}
         {%- if not loop.last %}, {%- endif -%}
-        {%- endfor -%}
+        {%- endfor %}
 
     FROM candidate_rows AS c
 
