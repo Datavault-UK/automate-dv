@@ -22,3 +22,13 @@
     {% do return(standardise) -%}
 
 {%- endmacro -%}
+
+{%- macro sqlserver__standard_column_wrapper() -%}
+
+    {%- set standardise -%}
+        NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string() }}(MAX)))), '')
+    {%- endset -%}
+
+    {% do return(standardise) -%}
+
+{%- endmacro -%}
