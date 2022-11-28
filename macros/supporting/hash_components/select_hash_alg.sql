@@ -66,7 +66,7 @@
 
 {% macro sqlserver__hash_alg_sha256() -%}
 
-    {% do return("CAST(HASHBYTES('SHA_256', [PLACEHOLDER]) AS {})".format(dbtvault.type_binary())) %}
+    {% do return("CAST(HASHBYTES('SHA2_256', [PLACEHOLDER]) AS {})".format(dbtvault.type_binary())) %}
 
 {% endmacro %}
 
