@@ -30,6 +30,12 @@
 
 {% endmacro %}
 
+{% macro sqlserver__hash_alg_md5() -%}
+
+    {% do return("CAST(HASHBYTES('MD5', [PLACEHOLDER]) AS {}({}))".format(dbtvault.type_binary(), 16)) %}
+
+{% endmacro %}
+
 {% macro postgres__hash_alg_md5() -%}
 
     {% do return('UPPER(MD5([PLACEHOLDER]))') %}
@@ -55,6 +61,12 @@
 {% macro default__hash_alg_sha256() -%}
 
     {% do return('SHA2_BINARY([PLACEHOLDER])') %}
+
+{% endmacro %}
+
+{% macro sqlserver__hash_alg_sha256() -%}
+
+    {% do return("CAST(HASHBYTES('SHA_256', [PLACEHOLDER]) AS {}({}))".format(dbtvault.type_binary(), 32)) %}
 
 {% endmacro %}
 
