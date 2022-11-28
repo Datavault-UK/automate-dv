@@ -70,6 +70,6 @@
 
 {% macro databricks__hash_alg_sha256() -%}
 
-    {% do return('SHA2([PLACEHOLDER])') %}
+    {% do return('UPPER(SHA2([PLACEHOLDER], 256))') %}
 
 {% endmacro %}
