@@ -26,12 +26,12 @@
 
 {%- macro sqlserver__binary_ghost(alias, hash) -%}
     {%- if hash == 'MD5' -%}
-        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS 'binary(16)'), 16) AS 'binary(16)') AS {{alias}}
+         {{return("CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', alias))}}
 	{%- elif hash == 'SHA' -%}
         {%- set hash_alg = 'SHA2_256' -%}
-		CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS 'binary(32)'), 32) AS 'binary(32)') AS {{alias}}
+		{{return("CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS {}), 32) AS {}) AS {}".format('binary(32)', 'binary(32)', alias))}}
     {%- else -%}
         {%- set hash_alg = 'MD5' -%}
-        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS 'binary(16)'), 16) AS 'binary(16)') AS {{alias}}
+        {{return("CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', alias))}}
     {%- endif -%}
 {%- endmacro -%}
