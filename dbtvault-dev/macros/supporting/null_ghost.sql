@@ -10,10 +10,10 @@
     CAST(NULL AS {{datatype}}) AS {{alias}}
 {%- endmacro -%}
 
-{%- postgres__null_ghost(datatype, alias) -%}
-    {{dbtvault.bigquery__null_ghost(datatype, alias) -%}}
+{%- macro postgres__null_ghost(datatype, alias) -%}
+    {{ dbtvault.bigquery__null_ghost(datatype, alias) }}
 {%- endmacro -%}
 
-{%- sqlserver__null_ghost(datatype, alias) -%}
-    {{dbtvault.bigquery__null_ghost(datatype, alias) -%}}
+{%- macro sqlserver__null_ghost(datatype, alias) -%}
+    {{ dbtvault.bigquery__null_ghost(datatype, alias) }}
 {%- endmacro -%}
