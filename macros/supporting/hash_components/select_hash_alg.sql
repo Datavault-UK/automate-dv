@@ -32,7 +32,7 @@
 
 {% macro sqlserver__hash_alg_md5() -%}
 
-    {% do return("CAST(HASHBYTES('MD5', [PLACEHOLDER]) AS {}({}))".format(dbtvault.type_binary(), 16)) %}
+    {% do return("CAST(HASHBYTES('MD5', [PLACEHOLDER]) AS {})".format(dbtvault.type_binary())) %}
 
 {% endmacro %}
 
@@ -66,7 +66,7 @@
 
 {% macro sqlserver__hash_alg_sha256() -%}
 
-    {% do return("CAST(HASHBYTES('SHA_256', [PLACEHOLDER]) AS {}({}))".format(dbtvault.type_binary(), 32)) %}
+    {% do return("CAST(HASHBYTES('SHA_256', [PLACEHOLDER]) AS {})".format(dbtvault.type_binary())) %}
 
 {% endmacro %}
 
