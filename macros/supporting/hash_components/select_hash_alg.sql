@@ -20,19 +20,19 @@
 
 {% macro default__hash_alg_md5() -%}
 
-    {% do return('MD5_BINARY([PLACEHOLDER])') %}
+    {% do return(dbtvault.cast_binary('MD5_BINARY([PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro bigquery__hash_alg_md5() -%}
 
-    {% do return('MD5([PLACEHOLDER])') %}
+    {% do return(dbtvault.cast_binary('MD5([PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro sqlserver__hash_alg_md5() -%}
 
-    {% do return("CAST(HASHBYTES('MD5', [PLACEHOLDER]) AS {})".format(dbtvault.type_binary())) %}
+    {% do return(dbtvault.cast_binary("HASHBYTES('MD5', [PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
@@ -60,13 +60,13 @@
 
 {% macro default__hash_alg_sha256() -%}
 
-    {% do return('SHA2_BINARY([PLACEHOLDER])') %}
+    {% do return(dbtvault.cast_binary('SHA2_BINARY([PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro sqlserver__hash_alg_sha256() -%}
 
-    {% do return("CAST(HASHBYTES('SHA2_256', [PLACEHOLDER]) AS {})".format(dbtvault.type_binary())) %}
+    {% do return(dbtvault.cast_binary("HASHBYTES('SHA2_256', [PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
