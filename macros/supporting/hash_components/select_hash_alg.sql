@@ -58,6 +58,16 @@
 
 {% endmacro %}
 
+{% macro postgres__hash_alg_sha256() -%}
+    {#- * MD5 is simple function call to md5(val) -#}
+    {#- * SHA256 needs input cast to BYTEA and then its BYTEA result encoded as hex text output -#}
+    {#-   e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
+    {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
+
+    {% do return("UPPER(ENCODE(SHA256(CAST([PLACEHOLDER] AS {})), 'hex'))".format(dbtvault.type_binary())) %}
+
+{% endmacro %}
+
 {% macro databricks__hash_alg_sha256() -%}
 
     {% do return('SHA2([PLACEHOLDER])') %}
