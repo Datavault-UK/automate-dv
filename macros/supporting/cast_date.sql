@@ -76,6 +76,20 @@
 
 {%- macro postgres__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
 
-    {{ dbtvault.snowflake__cast_date(column_str=column_str, as_string=as_string, datetime=datetime, alias=alias)}}
+{%- if datetime -%}
+        {%- if not as_string -%}
+            TO_TIMESTAMP({{ column_str }})
+        {%- else -%}
+            TO_TIMESTAMP('{{ column_str }}', 'YYY-MM-DD HH24:MI:SS.MS')
+        {%- endif -%}
+    {%- else -%}
+        {%- if not as_string -%}
+            TO_DATE({{ column_str }})
+        {%- else -%}
+            TO_DATE('{{ column_str }}', 'YYY-MM-DD')
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif %}
 
 {%- endmacro -%}
