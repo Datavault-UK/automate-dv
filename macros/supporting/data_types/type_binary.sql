@@ -14,10 +14,6 @@
     STRING
 {%- endmacro -%}
 
-{%- macro sqlserver__type_binary() -%}
-    BINARY
-{%- endmacro -%}
-
 {%- macro postgres__type_binary() -%}
     BYTEA
 {%- endmacro -%}
