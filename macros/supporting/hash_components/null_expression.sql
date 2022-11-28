@@ -27,3 +27,13 @@
     {% do return(column_expression) %}
 
 {%- endmacro -%}
+
+{%- macro sqlserver__null_expression(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string) -%}
+
+    {%- set column_expression -%}
+        COALESCE({{ standardise | replace('[EXPRESSION]', column_str) }}, '{{ null_placeholder_string }}')
+    {%- endset -%}
+
+    {% do return(column_expression) %}
+
+{%- endmacro -%}
