@@ -26,21 +26,25 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_extra_columns, src_ldts, src_source]) %}
 
-    WITH non_historized AS (
+    WITH to_insert AS (
         {%- for src in source_model %}
         SELECT DISTINCT
         {{ dbtvault.prefix(source_cols, 'a') }}
         FROM {{ ref(src) }} AS a
         WHERE a.{{ src_pk }} IS NOT NULL
-        {%- if dbtvault.is_any_incremental() %}
-        UNION
-        SELECT DISTINCT
-        {{ dbtvault.prefix(source_cols, 'b') }}
-        FROM {{ this }} AS b
-        WHERE b.{{ src_pk }} IS NOT NULL
-        {%- endif %}
         {%- endfor %}
-    )
+    ),
+
+    non_historized AS (
+    SELECT
+    {{ dbtvault.prefix(source_cols, 'a') }}
+    FROM to_insert AS a
+    {%- if dbtvault.is_any_incremental() %}
+    LEFT JOIN {{ this }} AS d
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','d'], condition='=') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='d', condition='IS NULL') }}
+    {%- endif %}
+)
 
     SELECT * FROM non_historized
 
