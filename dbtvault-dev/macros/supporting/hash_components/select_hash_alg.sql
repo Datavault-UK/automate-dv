@@ -38,13 +38,13 @@
 
 {% macro postgres__hash_alg_md5() -%}
 
-    {% do return('UPPER(MD5([PLACEHOLDER]))') %}
+    {% do return(dbtvault.cast_binary('UPPER(MD5([PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
 
 {% macro databricks__hash_alg_md5() -%}
 
-    {% do return('UPPER(MD5([PLACEHOLDER]))') %}
+    {% do return(dbtvault.cast_binary('UPPER(MD5([PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
 
