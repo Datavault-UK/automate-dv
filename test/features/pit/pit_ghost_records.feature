@@ -1,4 +1,4 @@
-Feature: [PIT-GR] Point in Time
+Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
@@ -648,8 +648,8 @@ Feature: [PIT-GR] Point in Time
       | md5('1003') | 2018-06-05 | md5('1003')                      | 2018-06-03                | md5('1003')                      | 2018-06-01              |
       | md5('1004') | 2018-06-05 | md5('1004')                      | 2018-06-05                | md5('1004')                      | 2018-06-04              |
 
-@fixture.pit_two_sats
-@fixture.enable_ghost_records
+  @fixture.pit_two_sats
+  @fixture.enable_ghost_records
   Scenario: [PIT-GR-11] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_2S table does not exist
     And the raw vault contains empty tables
@@ -696,7 +696,7 @@ Feature: [PIT-GR] Point in Time
       | md5('1003')             	     | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01     | 2018-06-01 | *               |
       | md5('1003')             	     | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *               |
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *               |
-      Then the SAT_CUSTOMER_LOGIN table should contain expected data
+    Then the SAT_CUSTOMER_LOGIN table should contain expected data
       | CUSTOMER_PK      		         | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE          | EFFECTIVE_FROM | HASHDIFF			                            |
       | 00000000000000000000000000000000 | <null>          | <null>      | 1900-01-01 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000             |
       | md5('1001')             	     | 2018-06-01      | Tablet      | 2018-06-02 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01 00:00:00.000')	    |
@@ -731,8 +731,3 @@ Feature: [PIT-GR] Point in Time
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')                      | 2018-06-03 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
       | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
-
-
-
-
-

@@ -3,9 +3,9 @@
 {%- endmacro -%}
 
 {%- macro default__binary_ghost(alias, hash) -%}
-    {%- if hash == 'MD5' -%}
+    {%- if hash | lower == 'md5' -%}
         CAST('00000000000000000000000000000000' AS BINARY(16)) AS {{alias}}
-    {%- elif hash == 'SHA' -%}
+    {%- elif hash | lower == 'sha' -%}
         CAST('0000000000000000000000000000000000000000000000000000000000000000' AS BINARY(32)) AS {{alias}}
     {%- else -%}
         CAST('00000000000000000000000000000000' AS BINARY(16)) AS {{alias}} -%}
@@ -25,9 +25,9 @@
 {%- endmacro -%}
 
 {%- macro sqlserver__binary_ghost(alias, hash) -%}
-    {%- if hash == 'MD5' -%}
+    {%- if hash | lower == 'md5' -%}
          {{return("CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS {}), 16) AS {}) AS {}".format('binary(16)', 'binary(16)', alias))}}
-	{%- elif hash == 'SHA' -%}
+	{%- elif hash | lower == 'sha' -%}
         {%- set hash_alg = 'SHA2_256' -%}
 		{{return("CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS {}), 32) AS {}) AS {}".format('binary(32)', 'binary(32)', alias))}}
     {%- else -%}

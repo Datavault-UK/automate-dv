@@ -92,7 +92,7 @@ records_to_insert AS (
         {%- if dbtvault.is_any_incremental() %}
         WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ dbtvault.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
         {%- endif %}
-    UNION
+    UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
     {%- endif %}
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
