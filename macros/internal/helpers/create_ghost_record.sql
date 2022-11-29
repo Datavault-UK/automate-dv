@@ -1,5 +1,14 @@
 {%- macro create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
+    {{- adapter.dispatch('create_ghost_record', 'dbtvault')(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                           src_payload=src_payload, src_extra_columns=src_extra_columns,
+                                           src_eff=src_eff, src_ldts=src_ldts,
+                                           src_source=src_source, source_model=source_model) -}}
+
+{%- endmacro -%}
+
+{%- macro default__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
+
 {%- set hash = var('hash', 'MD5') -%}
 {%- set source_str = var('system_record_value', 'DBTVAULT_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
