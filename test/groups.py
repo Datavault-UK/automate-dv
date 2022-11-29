@@ -56,11 +56,15 @@ def feature_sub_types():
             'incremental': [
                 'sats_incremental'
             ],
-            'pm': [
+            'pm_core': [
                 'sats_period_mat_base',
-                'sats_period_mat_other',
+                'sats_period_mat_other'
+            ],
+            'pm_range': [
                 'sats_period_mat_inferred_range',
-                'sats_period_mat_provided_range',
+                'sats_period_mat_provided_range'
+            ],
+            'pm_datepart': [
                 'sats_daily',
                 'sats_monthly'
             ],
@@ -136,7 +140,8 @@ def feature_sub_types():
         },
         'pit': {
             'main': [
-                'pit'
+                'pit',
+                'pit_ghost_records'
             ],
             '1sat_base': [
                 'pit_one_sat_base',
