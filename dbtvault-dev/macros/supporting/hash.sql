@@ -59,13 +59,15 @@
         {%- endset -%}
 
     {%- else -%}
-
-        {%- set hashed_column -%}
-
-        {{ hash_alg | replace('[PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string) ) }} AS {{ dbtvault.escape_column_names(alias) }}
-
-        {%- endset -%}
-
+        {% if dbtvault.is_list(processed_columns) and processed_columns | length > 1 %}
+            {%- set hashed_column -%}
+                {{ hash_alg | replace('[PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string)) }} AS {{ dbtvault.escape_column_names(alias) }}
+            {%- endset -%}
+        {%- else -%}
+            {%- set hashed_column -%}
+                {{ hash_alg | replace('[PLACEHOLDER]', processed_columns[0]) }} AS {{ dbtvault.escape_column_names(alias) }}
+            {%- endset -%}
+        {%- endif -%}
     {%- endif -%}
 
     {{ hashed_column }}
