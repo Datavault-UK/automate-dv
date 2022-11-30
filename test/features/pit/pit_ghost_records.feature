@@ -2,7 +2,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-01] Load into a pit table where the AS OF table is already established with increments of a day
+  Scenario: [PIT-GR-01] Load into a pit table where the AS OF table is already established with increments of a day with ghost records enabled
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -53,7 +53,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-02] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
+  Scenario: [PIT-GR-02] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghost records
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -102,7 +102,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-03] Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins
+  Scenario: [PIT-GR-03] Load into a pit table where the AS OF table is already established and the AS OF table has increments of 30 mins and ghost records
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -153,7 +153,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-04] Load into a pit table where the AS OF table dates are before the satellites have received any entries
+  Scenario: [PIT-GR-04] Load into a pit table where the AS OF table dates are before the satellites have received any entries and ghost records
     Given the PIT_CUSTOMER table does not exist
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -204,7 +204,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-05] Load into a pit table where the AS OF table dates are after the most recent satellite entries
+  Scenario: [PIT-GR-05] Load into a pit table where the AS OF table dates are after the most recent satellite entries and ghost records
     Given the PIT_CUSTOMER table does not exist
     And the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
@@ -255,7 +255,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-06] Load into a pit table over several cycles where new record is introduced on the 3rd day
+  Scenario: [PIT-GR-06] Load into a pit table over several cycles where new record is introduced on the 3rd day and ghost records
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -362,7 +362,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-07] Load into a pit table where the as_of_dates table changes
+  Scenario: [PIT-GR-07] Load into a pit table where the as_of_dates table changes and ghost records
     Given the raw vault contains empty tables
       | HUB          | SAT                  | PIT          |
       | HUB_CUSTOMER | SAT_CUSTOMER_DETAILS | PIT_CUSTOMER |
@@ -433,8 +433,8 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1002') | 2019-01-05 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 | md5('1002')           | 2019-01-05 00:00:00.000000 | md5('1002')             | 2019-01-05 00:00:00.000000 |
 
   @fixture.pit_one_sat
-  @fixture.enable_ghost_record
-  Scenario: [PIT-GR-08] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
+  @fixture.enable_ghost_records
+  Scenario: [PIT-GR-08] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps and ghost records
     Given the PIT_CUSTOMER_1S_TS table does not exist
     And the raw vault contains empty tables
       | HUB                | LINK | SAT                     | PIT                |
@@ -502,7 +502,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-09] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
+  Scenario: [PIT-GR-09] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates and ghost records
     Given the PIT_CUSTOMER_2S table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                  | PIT             |
@@ -567,7 +567,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-10] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
+  Scenario: [PIT-GR-10] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates and ghost records
     Given the PIT_CUSTOMER_2S table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                  | PIT             |
@@ -650,7 +650,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-11] Base load into a pit table from two satellites with dates with an encompassing range of AS OF dates
+  Scenario: [PIT-GR-11] PIT and SAT  cycle test with two satellites and ghost records in each and date
     Given the PIT_CUSTOMER_2S table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                  | PIT             |
@@ -697,17 +697,17 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03 | *               |
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *               |
     Then the SAT_CUSTOMER_LOGIN table should contain expected data
-      | CUSTOMER_PK                      | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE          | EFFECTIVE_FROM | HASHDIFF                                 |
-      | 00000000000000000000000000000000 | <null>          | <null>      | 1900-01-01 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000         |
-      | md5('1001')                      | 2018-06-01      | Tablet      | 2018-06-02 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01 00:00:00.000') |
-      | md5('1001')                      | 2018-06-02      | Laptop      | 2018-06-02 | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02 00:00:00.000') |
-      | md5('1001')                      | 2018-06-03      | Phone       | 2018-06-04 | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03 00:00:00.000')  |
-      | md5('1002')                      | 2018-06-01      | Tablet      | 2018-06-01 | *               | 2018-06-01     | md5('TABLET\|\|2018-06-01 00:00:00.000') |
-      | md5('1002')                      | 2018-06-01      | Phone       | 2018-06-02 | *               | 2018-06-02     | md5('PHONE\|\|2018-06-01 00:00:00.000')  |
-      | md5('1002')                      | 2018-06-01      | Tablet      | 2018-06-03 | *               | 2018-06-03     | md5('TABLET\|\|2018-06-01 00:00:00.000') |
-      | md5('1003')                      | 2018-06-01      | Phone       | 2018-06-01 | *               | 2018-06-01     | md5('PHONE\|\|2018-06-01 00:00:00.000')  |
-      | md5('1003')                      | 2018-06-01      | Tablet      | 2018-06-01 | *               | 2018-06-01     | md5('TABLET\|\|2018-06-01 00:00:00.000') |
-      | md5('1003')                      | 2018-06-01      | Laptop      | 2018-06-01 | *               | 2018-06-01     | md5('LAPTOP\|\|2018-06-01 00:00:00.000') |
+      | CUSTOMER_PK                      | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE          | EFFECTIVE_FROM | HASHDIFF                         |
+      | 00000000000000000000000000000000 | <null>          | <null>      | 1900-01-01 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000 |
+      | md5('1001')                      | 2018-06-01      | Tablet      | 2018-06-02 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01')      |
+      | md5('1001')                      | 2018-06-02      | Laptop      | 2018-06-02 | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02')      |
+      | md5('1001')                      | 2018-06-03      | Phone       | 2018-06-04 | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03')       |
+      | md5('1002')                      | 2018-06-01      | Tablet      | 2018-06-01 | *               | 2018-06-01     | md5('TABLET\|\|2018-06-01')      |
+      | md5('1002')                      | 2018-06-01      | Phone       | 2018-06-02 | *               | 2018-06-02     | md5('PHONE\|\|2018-06-01')       |
+      | md5('1002')                      | 2018-06-01      | Tablet      | 2018-06-03 | *               | 2018-06-03     | md5('TABLET\|\|2018-06-01')      |
+      | md5('1003')                      | 2018-06-01      | Phone       | 2018-06-01 | *               | 2018-06-01     | md5('PHONE\|\|2018-06-01')       |
+      | md5('1003')                      | 2018-06-01      | Tablet      | 2018-06-01 | *               | 2018-06-01     | md5('TABLET\|\|2018-06-01')      |
+      | md5('1003')                      | 2018-06-01      | Laptop      | 2018-06-01 | *               | 2018-06-01     | md5('LAPTOP\|\|2018-06-01')      |
     Then the PIT_CUSTOMER_2S table should contain expected data
       | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_PK          | SAT_CUSTOMER_DETAILS_LDTS | SAT_CUSTOMER_LOGIN_PK            | SAT_CUSTOMER_LOGIN_LDTS |
       | md5('1001') | 2018-05-31 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000   | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000 |
@@ -731,3 +731,88 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')                      | 2018-06-03 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
       | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
+
+  @not.snowflake
+  @fixture.pit_two_sats
+  @fixture.enable_ghost_records
+  Scenario: [PIT-GR-12] PIT and SAT  cycle test with two satellites and ghost records in each and datetime
+    Given the PIT_CUSTOMER_TS table does not exist
+    And the raw vault contains empty tables
+      | HUB             | LINK | SAT                     | PIT             |
+      | HUB_CUSTOMER_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_TS |
+      |                 |      | SAT_CUSTOMER_LOGIN_TS   |                 |
+    And the RAW_STAGE_DETAILS_TS table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME | SOURCE |
+      | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01    | *      |
+      | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01    | *      |
+      | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-05    | *      |
+      | 1003        | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-01    | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | 2018-06-03    | *      |
+      | 1003        | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | 2018-06-05    | *      |
+    And I stage the STG_CUSTOMER_DETAILS_TS data
+    And the RAW_STAGE_LOGIN_TS table contains data
+      | CUSTOMER_ID | LAST_LOGIN_DATE     | DEVICE_USED | LOAD_DATETIME | SOURCE |
+      | 1001        | 2018-06-01 00:00:00 | Tablet      | 2018-06-02    | *      |
+      | 1001        | 2018-06-02 00:00:00 | Laptop      | 2018-06-02    | *      |
+      | 1001        | 2018-06-03 00:00:00 | Phone       | 2018-06-04    | *      |
+      | 1002        | 2018-06-01 00:00:00 | Tablet      | 2018-06-01    | *      |
+      | 1002        | 2018-06-01 00:00:00 | Phone       | 2018-06-02    | *      |
+      | 1002        | 2018-06-01 00:00:00 | Tablet      | 2018-06-03    | *      |
+      | 1003        | 2018-06-01 00:00:00 | Phone       | 2018-06-01    | *      |
+      | 1003        | 2018-06-01 00:00:00 | Tablet      | 2018-06-01    | *      |
+      | 1003        | 2018-06-01 00:00:00 | Laptop      | 2018-06-01    | *      |
+    And I stage the STG_CUSTOMER_LOGIN_TS data
+    And the AS_OF_DATE table is created and populated with data
+      | AS_OF_DATE |
+      | 2018-05-31 |
+      | 2018-06-01 |
+      | 2018-06-02 |
+      | 2018-06-03 |
+      | 2018-06-04 |
+      | 2018-06-05 |
+      | 2018-06-06 |
+    When I load the vault
+    Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
+      | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE          |
+      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | DBTVAULT_SYSTEM |
+      | md5('1001')                      | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01    | *               |
+      | md5('1002')                      | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01    | *               |
+      | md5('1002')                      | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05    | *               |
+      | md5('1003')                      | Chad          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAD')  | 2018-06-01     | 2018-06-01    | *               |
+      | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-12   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-12\|\|CHAZ')  | 2018-06-03     | 2018-06-03    | *               |
+      | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05    | *               |
+    Then the SAT_CUSTOMER_LOGIN_TS table should contain expected data
+      | CUSTOMER_PK                      | LAST_LOGIN_DATE     | DEVICE_USED | LOAD_DATETIME | SOURCE          | EFFECTIVE_FROM | HASHDIFF                             |
+      | 00000000000000000000000000000000 | <null>              | <null>      | 1900-01-01    | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000     |
+      | md5('1001')                      | 2018-06-01 00:00:00 | Tablet      | 2018-06-02    | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01 00:00:00') |
+      | md5('1001')                      | 2018-06-02 00:00:00 | Laptop      | 2018-06-02    | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02 00:00:00') |
+      | md5('1001')                      | 2018-06-03 00:00:00 | Phone       | 2018-06-04    | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03 00:00:00')  |
+      | md5('1002')                      | 2018-06-01 00:00:00 | Tablet      | 2018-06-01    | *               | 2018-06-01     | md5('TABLET\|\|2018-06-01 00:00:00') |
+      | md5('1002')                      | 2018-06-01 00:00:00 | Phone       | 2018-06-02    | *               | 2018-06-02     | md5('PHONE\|\|2018-06-01 00:00:00')  |
+      | md5('1002')                      | 2018-06-01 00:00:00 | Tablet      | 2018-06-03    | *               | 2018-06-03     | md5('TABLET\|\|2018-06-01 00:00:00') |
+      | md5('1003')                      | 2018-06-01 00:00:00 | Phone       | 2018-06-01    | *               | 2018-06-01     | md5('PHONE\|\|2018-06-01 00:00:00')  |
+      | md5('1003')                      | 2018-06-01 00:00:00 | Tablet      | 2018-06-01    | *               | 2018-06-01     | md5('TABLET\|\|2018-06-01 00:00:00') |
+      | md5('1003')                      | 2018-06-01 00:00:00 | Laptop      | 2018-06-01    | *               | 2018-06-01     | md5('LAPTOP\|\|2018-06-01 00:00:00') |
+    Then the PIT_CUSTOMER_TS table should contain expected data
+      | CUSTOMER_PK | AS_OF_DATE              | SAT_CUSTOMER_DETAILS_TS_PK       | SAT_CUSTOMER_DETAILS_TS_LDTS | SAT_CUSTOMER_LOGIN_TS_PK         | SAT_CUSTOMER_LOGIN_TS_LDTS |
+      | md5('1001') | 2018-05-31 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000    |
+      | md5('1001') | 2018-06-01 00:00:00.000 | md5('1001')                      | 2018-06-01 00:00:00.000      | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000    |
+      | md5('1001') | 2018-06-02 00:00:00.000 | md5('1001')                      | 2018-06-01 00:00:00.000      | md5('1001')                      | 2018-06-02 00:00:00.000    |
+      | md5('1001') | 2018-06-03 00:00:00.000 | md5('1001')                      | 2018-06-01 00:00:00.000      | md5('1001')                      | 2018-06-02 00:00:00.000    |
+      | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')                      | 2018-06-01 00:00:00.000      | md5('1001')                      | 2018-06-04 00:00:00.000    |
+      | md5('1001') | 2018-06-05 00:00:00.000 | md5('1001')                      | 2018-06-01 00:00:00.000      | md5('1001')                      | 2018-06-04 00:00:00.000    |
+      | md5('1001') | 2018-06-06 00:00:00.000 | md5('1001')                      | 2018-06-01 00:00:00.000      | md5('1001')                      | 2018-06-04 00:00:00.000    |
+      | md5('1002') | 2018-05-31 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000    |
+      | md5('1002') | 2018-06-01 00:00:00.000 | md5('1002')                      | 2018-06-01 00:00:00.000      | md5('1002')                      | 2018-06-01 00:00:00.000    |
+      | md5('1002') | 2018-06-02 00:00:00.000 | md5('1002')                      | 2018-06-01 00:00:00.000      | md5('1002')                      | 2018-06-02 00:00:00.000    |
+      | md5('1002') | 2018-06-03 00:00:00.000 | md5('1002')                      | 2018-06-01 00:00:00.000      | md5('1002')                      | 2018-06-03 00:00:00.000    |
+      | md5('1002') | 2018-06-04 00:00:00.000 | md5('1002')                      | 2018-06-01 00:00:00.000      | md5('1002')                      | 2018-06-03 00:00:00.000    |
+      | md5('1002') | 2018-06-05 00:00:00.000 | md5('1002')                      | 2018-06-05 00:00:00.000      | md5('1002')                      | 2018-06-03 00:00:00.000    |
+      | md5('1002') | 2018-06-06 00:00:00.000 | md5('1002')                      | 2018-06-05 00:00:00.000      | md5('1002')                      | 2018-06-03 00:00:00.000    |
+      | md5('1003') | 2018-05-31 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000    |
+      | md5('1003') | 2018-06-01 00:00:00.000 | md5('1003')                      | 2018-06-01 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
+      | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                      | 2018-06-01 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
+      | md5('1003') | 2018-06-03 00:00:00.000 | md5('1003')                      | 2018-06-03 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
+      | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')                      | 2018-06-03 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
+      | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
+      | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
