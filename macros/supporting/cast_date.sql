@@ -50,9 +50,9 @@
     {%- if datetime -%}
     
         {%- if not as_string -%}
-            CAST(PARSE_DATETIME('%F %H:%M:%E6S', {{ column_str }}))
+            PARSE_DATETIME('%F %H:%M:%E6S', {{ column_str }})
         {%- else -%}
-            CAST(PARSE_DATETIME('%F %H:%M:%E6S', '{{ column_str }}'))
+            PARSE_DATETIME('%F %H:%M:%E6S', '{{ column_str }}')
         {%- endif -%}
     {%- else -%}
         {%- if not as_string -%}
