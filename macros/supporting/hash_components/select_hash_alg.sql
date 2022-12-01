@@ -64,6 +64,12 @@
 
 {% endmacro %}
 
+{% macro bigquery__hash_alg_sha256() -%}
+
+    {% do return(dbtvault.cast_binary('UPPER(TO_HEX(SHA256([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+
+{% endmacro %}
+
 {% macro sqlserver__hash_alg_sha256() -%}
 
     {% do return(dbtvault.cast_binary("HASHBYTES('SHA2_256', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
@@ -73,7 +79,7 @@
 {% macro postgres__hash_alg_sha256() -%}
     {#- * MD5 is simple function call to md5(val) -#}
     {#- * SHA256 needs input cast to BYTEA and then its BYTEA result encoded as hex text output -#}
-    {#-   e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
+    {#- e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
     {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
 
     {% do return(dbtvault.cast_binary("UPPER(ENCODE(SHA256(CAST([HASH_STRING_PLACEHOLDER] AS {})), 'hex'))".format(dbtvault.type_binary()), quote=false))  %}
