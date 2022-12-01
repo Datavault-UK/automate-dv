@@ -33,6 +33,7 @@
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set window_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
@@ -53,7 +54,7 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{% if dbtvault.is_any_incremental() %}
+{%- if dbtvault.is_any_incremental() %}
 
 latest_records AS (
     SELECT {{ dbtvault.prefix(window_cols, 'a', alias_target='target') }}
@@ -73,9 +74,26 @@ latest_records AS (
     WHERE a.rank = 1
 ),
 
-{%- endif -%}
+{%- endif %}
+
+{%- if enable_ghost_record %}
+
+ghost AS (
+    {{- dbtvault.create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) }}
+),
+
+{%- endif %}
 
 records_to_insert AS (
+    {%- if enable_ghost_record -%}
+    SELECT
+        {{ dbtvault.alias_all(source_cols, 'g') }}
+        FROM ghost AS g
+        {%- if dbtvault.is_any_incremental() %}
+        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ dbtvault.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
+        {%- endif %}
+    UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+    {%- endif %}
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
     {%- if dbtvault.is_any_incremental() %}
@@ -87,5 +105,4 @@ records_to_insert AS (
 )
 
 SELECT * FROM records_to_insert
-
 {%- endmacro -%}
