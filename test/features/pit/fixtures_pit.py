@@ -791,7 +791,7 @@ def pit_two_sats_snowflake(context):
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "LAST_LOGIN_DATE": "DATETIME",
+                "LAST_LOGIN_DATE": "DATE",
                 "DEVICE_USED": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -859,7 +859,7 @@ def pit_two_sats_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "DEVICE_USED": "VARCHAR",
-                "LAST_LOGIN_DATE": "DATETIME",
+                "LAST_LOGIN_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -1271,6 +1271,12 @@ def pit_two_sats_bigquery(context):
              "LAST_LOGIN_DATE",
              "DEVICE_USED",
              "LOAD_DATETIME",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN_TIME":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATETIME",
              "SOURCE"]
     }
 
@@ -1298,13 +1304,22 @@ def pit_two_sats_bigquery(context):
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
-                "LAST_LOGIN_DATE": "DATETIME",
+                "LAST_LOGIN_DATE": "DATE",
                 "DEVICE_USED": "STRING",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_LOGIN_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "DEVICE_USED": "STRING",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_LOGIN_TIME": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
                 "LAST_LOGIN_DATE": "DATETIME",
@@ -1366,13 +1381,24 @@ def pit_two_sats_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "DEVICE_USED": "STRING",
-                "LAST_LOGIN_DATE": "DATETIME",
+                "LAST_LOGIN_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         },
         "SAT_CUSTOMER_LOGIN_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "DEVICE_USED": "STRING",
+                "LAST_LOGIN_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN_TIME": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
@@ -1778,6 +1804,12 @@ def pit_two_sats_sqlserver(context):
              "LAST_LOGIN_DATE",
              "DEVICE_USED",
              "LOAD_DATETIME",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN_TIME":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATETIME",
              "SOURCE"]
     }
 
@@ -1805,7 +1837,7 @@ def pit_two_sats_sqlserver(context):
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(50)",
-                "LAST_LOGIN_DATE": "DATETIME2",
+                "LAST_LOGIN_DATE": "DATE",
                 "DEVICE_USED": "VARCHAR(50)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
@@ -1873,7 +1905,7 @@ def pit_two_sats_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "DEVICE_USED": "VARCHAR(50)",
-                "LAST_LOGIN_DATE": "DATETIME2",
+                "LAST_LOGIN_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
