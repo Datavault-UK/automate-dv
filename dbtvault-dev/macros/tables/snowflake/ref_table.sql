@@ -26,16 +26,16 @@
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_extra_columns, src_ldts, src_source]) %}
 
-    WITH to_insert AS (
-        {%- for src in source_model %}
-        SELECT DISTINCT
-        {{ dbtvault.prefix(source_cols, 'a') }}
-        FROM {{ ref(src) }} AS a
-        WHERE a.{{ src_pk }} IS NOT NULL
-        {%- endfor %}
-    ),
+WITH to_insert AS (
+    {%- for src in source_model %}
+    SELECT DISTINCT
+    {{ dbtvault.prefix(source_cols, 'a') }}
+    FROM {{ ref(src) }} AS a
+    WHERE a.{{ src_pk }} IS NOT NULL
+    {%- endfor %}
+),
 
-    non_historized AS (
+non_historized AS (
     SELECT
     {{ dbtvault.prefix(source_cols, 'a') }}
     FROM to_insert AS a
@@ -46,6 +46,6 @@
     {%- endif %}
 )
 
-    SELECT * FROM non_historized
+SELECT * FROM non_historized
 
 {%- endmacro -%}
