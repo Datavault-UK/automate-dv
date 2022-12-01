@@ -1852,15 +1852,6 @@ def pit_two_sats_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
-        "RAW_STAGE_LOGIN_TIME": {
-            "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "LAST_LOGIN_DATE": "DATETIME2",
-                "DEVICE_USED": "VARCHAR(50)",
-                "LOAD_DATETIME": "DATETIME2",
-                "SOURCE": "VARCHAR(50)"
-            }
-        },
         "HUB_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
