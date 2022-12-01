@@ -83,7 +83,7 @@ extends:
       - groupName: 'pit'
         displayName: 'Point-In-Time Tables'
         disabledForPlatform: ['databricks', 'postgres']
-        subGroups: [ 'main', '1sat_base', '1sat_inc', '2sat' ]
+        subGroups: [ 'main', 'ghost_records', '1sat_base', '1sat_inc', '2sat' ]
       - groupName: 'bridge'
         displayName: 'Bridge Tables'
         disabledForPlatform: ['databricks', 'postgres']

@@ -1905,7 +1905,7 @@ def pit_two_sats_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "DEVICE_USED": "VARCHAR(50)",
-                "LAST_LOGIN_DATE": "DATETIME2",
+                "LAST_LOGIN_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
