@@ -140,7 +140,9 @@ def feature_sub_types():
         },
         'pit': {
             'main': [
-                'pit',
+                'pit'
+            ],
+            'ghost_records': [
                 'pit_ghost_records'
             ],
             '1sat_base': [
