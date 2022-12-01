@@ -20,31 +20,31 @@
 
 {% macro default__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('MD5_BINARY([PLACEHOLDER])', quote=false)) %}
+    {% do return(dbtvault.cast_binary('MD5_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro bigquery__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('MD5([PLACEHOLDER])', quote=false)) %}
+    {% do return(dbtvault.cast_binary('UPPER(TO_HEX(MD5([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
 
 {% endmacro %}
 
 {% macro sqlserver__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary("HASHBYTES('MD5', [PLACEHOLDER])", quote=false)) %}
+    {% do return(dbtvault.cast_binary("HASHBYTES('MD5', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
 {% macro postgres__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(MD5([PLACEHOLDER]))', quote=false)) %}
+    {% do return(dbtvault.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
 
 {% macro databricks__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(MD5([PLACEHOLDER]))', quote=false)) %}
+    {% do return(dbtvault.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
 
@@ -60,13 +60,13 @@
 
 {% macro default__hash_alg_sha256() -%}
 
-    {% do return(dbtvault.cast_binary('SHA2_BINARY([PLACEHOLDER])', quote=false)) %}
+    {% do return(dbtvault.cast_binary('SHA2_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro sqlserver__hash_alg_sha256() -%}
 
-    {% do return(dbtvault.cast_binary("HASHBYTES('SHA2_256', [PLACEHOLDER])", quote=false)) %}
+    {% do return(dbtvault.cast_binary("HASHBYTES('SHA2_256', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
@@ -76,12 +76,12 @@
     {#-   e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
     {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
 
-    {% do return("UPPER(ENCODE(SHA256(CAST([PLACEHOLDER] AS {})), 'hex'))".format(dbtvault.type_binary())) %}
+    {% do return(dbtvault.cast_binary("UPPER(ENCODE(SHA256(CAST([HASH_STRING_PLACEHOLDER] AS {})), 'hex'))".format(dbtvault.type_binary()), quote=false))  %}
 
 {% endmacro %}
 
 {% macro databricks__hash_alg_sha256() -%}
 
-    {% do return('UPPER(SHA2([PLACEHOLDER], 256))') %}
+    {% do return('UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))') %}
 
 {% endmacro %}
