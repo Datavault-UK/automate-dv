@@ -23,3 +23,11 @@
     BINARY(32)
     {%- endif -%}
 {%- endmacro -%}
+
+{%- macro redshift__type_binary() -%}
+    {%- if var('hash') == 'MD5' -%}
+    VARBYTE(16)
+    {%- elif var('hash') == 'SHA' -%}
+    VARBYTE(32)
+    {%- endif -%}
+{%- endmacro -%}

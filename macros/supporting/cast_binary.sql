@@ -21,3 +21,9 @@
     {{ dbtvault.default__cast_binary(column_str=column_str, alias=alias) }}
 
 {%- endmacro -%}
+
+{%- macro redshift__cast_binary(column_str, alias=none) -%}
+
+    TO_VARBYTE('{{ column_str }}', 'hex') {% if alias %} AS {{ alias }} {%- endif %}
+
+{%- endmacro -%}

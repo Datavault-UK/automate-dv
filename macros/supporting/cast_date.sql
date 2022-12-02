@@ -78,3 +78,23 @@
     {{ dbtvault.snowflake__cast_date(column_str=column_str, as_string=as_string, datetime=datetime, alias=alias)}}
 
 {%- endmacro -%}
+
+{%- macro redshift__cast_date(column_str, as_string=false, datetime=false, alias=none) -%}
+
+    {%- if datetime -%}
+        {%- if not as_string -%}
+            TO_TIMESTAMP({{ column_str }}, 'YYYY-MM-DD HH24:MI:SS')
+        {%- else -%}
+            TO_TIMESTAMP('{{ column_str }}',  'YYYY-MM-DD HH24:MI:SS')
+        {%- endif -%}
+    {%- else -%}
+        {%- if not as_string -%}
+            TO_DATE({{ column_str }}, 'YYYY-MM-DD')
+        {%- else -%}
+            TO_DATE('{{ column_str }}' , 'YYYY-MM-DD')
+        {%- endif -%}
+    {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif %}
+
+{%- endmacro -%}
