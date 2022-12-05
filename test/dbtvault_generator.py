@@ -605,10 +605,20 @@ def process_xts_columns(column_def: dict, context=None):
 
 
 def process_sat_columns(column_def: dict, context=None):
-    if exclude_columns := column_def.get('columns'):
+    if exclude_columns := column_def.get('columns', column_def.get('exclude_columns', '')):
         original_columns = list(flatten(
             [val for col, val in context.vault_structure_columns_original[context.target_model_name].items()]))
-        payload_columns = list(set(original_columns) - set(exclude_columns))
+
+        if isinstance(exclude_columns, list):
+            payload_columns = list(set(original_columns) - set(exclude_columns))
+        else:
+            payload_columns = []
+            for col in original_columns:
+                if isinstance(col, dict):
+                    if col_name := col.get('alias'):
+                        payload_columns.append(col_name)
+                else:
+                    payload_columns.append(col)
 
         return payload_columns
 

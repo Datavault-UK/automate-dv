@@ -15,7 +15,7 @@ def set_vault_structure_definition(context):
         },
         "SATELLITE_PL_EXCLUDE": {
             "src_pk": "CUSTOMER_PK",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"],
+            "src_payload": ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_ID'],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
@@ -24,6 +24,14 @@ def set_vault_structure_definition(context):
         "SATELLITE_HD_ALIAS": {
             "src_pk": "CUSTOMER_PK",
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": {"source_column": "HASHDIFF", "alias": "CUSTOMER_HASHDIFF"},
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_ID'],
             "src_hashdiff": {"source_column": "HASHDIFF", "alias": "CUSTOMER_HASHDIFF"},
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
@@ -160,6 +168,19 @@ def satellite_snowflake(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
