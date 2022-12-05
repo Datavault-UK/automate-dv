@@ -8,9 +8,22 @@
 
 {%- if dbtvault.is_list(columns) -%}
 
-    {%- for column in columns -%}
-        {{ dbtvault.alias(alias_config=column, prefix=prefix) }}
-        {%- if not loop.last -%} , {% endif -%}
+    {%- set processed_columns = [] -%}
+
+    {%- for col in columns -%}
+        {%- if col not in processed_columns -%}
+
+            {{ dbtvault.alias(alias_config=col, prefix=prefix) }}
+            {%- if not loop.last -%} , {% endif -%}
+
+            {%- if col is mapping -%}
+                {%- if col['source_column'] and col['alias'] -%}
+                    {%- do processed_columns.append(col['source_column']) -%}
+                {% endif -%}
+            {%- else -%}
+                {%- do processed_columns.append(col) -%}
+            {% endif -%}
+        {% endif -%}
     {%- endfor -%}
 
 {%- elif columns is string -%}
