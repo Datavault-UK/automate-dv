@@ -538,7 +538,9 @@ def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
     args = {k: v for k, v in stage_metadata.items() if
-            k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
+            k in ["hash", "null_key_required",
+                  "null_key_optional", "enable_ghost_records",
+                  "system_record_value"]}
     text_args = dbtvault_generator.handle_step_text_dict(context)
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
@@ -708,6 +710,15 @@ def step_impl(context, model_name):
     context.vault_structure_columns[model_name]['src_payload'] = {
         "exclude_columns": "true",
         "columns": exclusions
+    }
+
+
+@step("I do not exclude any columns from the {model_name} table")
+def step_impl(context, model_name):
+    context.vault_structure_columns_original = copy.deepcopy(context.vault_structure_columns)
+
+    context.vault_structure_columns[model_name]['src_payload'] = {
+        "exclude_columns": "true"
     }
 
 
