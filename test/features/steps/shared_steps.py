@@ -23,6 +23,10 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.null_key_optional = getattr(context, "null_key_optional", "-2")
 
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
+
+    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+
     context.disable_upper_in_hash = getattr(context, "disable_upper_in_hash", 'UPPER')
 
     if not getattr(context, "ranked_columns", None):
@@ -61,7 +65,9 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "hash": context.hashing,
         "disable_upper_in_hash": context.disable_upper_in_hash,
         "null_key_required": context.null_key_required,
-        "null_key_optional": context.null_key_optional
+        "null_key_optional": context.null_key_optional,
+        "enable_ghost_records": context.enable_ghost_records,
+        "system_record_value": context.system_record_value
     }
 
     return dbt_vars
@@ -323,7 +329,13 @@ def load_table(context, model_name, vault_structure):
                                            config=config,
                                            **metadata)
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
+
+    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+
+    args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
 
     assert "Completed successfully" in logs
 
@@ -347,7 +359,13 @@ def load_vault(context):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=model_names,
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
+
+    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+
+    args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=model_names, args=args,
                                      full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
@@ -421,6 +439,7 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
+                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
                 k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "disable_upper_in_hash"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
@@ -452,6 +471,7 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
+                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
                 k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "disable_upper_in_hash"}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
@@ -523,6 +543,7 @@ def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
     args = {k: v for k, v in stage_metadata.items() if
+            k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
             k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "disable_upper_in_hash"}
     text_args = dbtvault_generator.handle_step_text_dict(context)
 

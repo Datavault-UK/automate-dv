@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/mssql/server:2019-latest
 
 ENV ACCEPT_EULA=Y
-ENV SA_PASSWORD=SlA7Qs3w!O
+ENV MSSQL_SA_PASSWORD=SlA7Qs3w!O
 ENV MSSQL_PID=Developer
 ENV PATH="$PATH:/opt/mssql-tools/bin:/opt/mssql/bin"
 
