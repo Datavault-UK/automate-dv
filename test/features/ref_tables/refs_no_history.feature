@@ -1,7 +1,7 @@
 Feature: [REF-NH] No-History Reference Tables
 
   @fixture.single_source_ref_table
-  Scenario: [REF-NH-01] Simple load of reference data into an empty reference table
+  Scenario: [REF-NH-01] Simple load of reference data into a non-existent reference table
     Given the REF_TABLE table does not exist
     And the RAW_REF_TABLE table contains data
       | DATE_PK    | YEAR | MONTH | DAY | DAY_OF_WEEK | LOAD_DATE  | SOURCE |

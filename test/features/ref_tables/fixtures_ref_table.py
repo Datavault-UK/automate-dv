@@ -28,7 +28,7 @@ def single_source_ref_table_snowflake(context):
     context.seed_config = {
         "REF_TABLE": {
             "column_types": {
-                "DATE_PK": "VARCHAR",
+                "DATE_PK": "DATE",
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
@@ -39,7 +39,7 @@ def single_source_ref_table_snowflake(context):
         },
         "RAW_REF_TABLE": {
             "column_types": {
-                "DATE_PK": "VARCHAR",
+                "DATE_PK": "DATE",
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
@@ -63,7 +63,7 @@ def single_source_ref_table_bigquery(context):
     context.seed_config = {
         "REF_TABLE": {
             "column_types": {
-                "DATE_PK": "STRING",
+                "DATE_PK": "DATE",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
@@ -74,7 +74,7 @@ def single_source_ref_table_bigquery(context):
         },
         "RAW_REF_TABLE": {
             "column_types": {
-                "DATE_PK": "STRING",
+                "DATE_PK": "DATE",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
@@ -98,7 +98,7 @@ def single_source_ref_table_sqlserver(context):
     context.seed_config = {
         "REF_TABLE": {
             "column_types": {
-                "DATE_PK": "VARCHAR(10)",
+                "DATE_PK": "DATE",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
@@ -109,7 +109,7 @@ def single_source_ref_table_sqlserver(context):
         },
         "RAW_REF_TABLE": {
             "column_types": {
-                "DATE_PK": "VARCHAR(10)",
+                "DATE_PK": "DATE",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
@@ -133,7 +133,7 @@ def single_source_ref_table_databricks(context):
     context.seed_config = {
         "REF_TABLE": {
             "column_types": {
-                "DATE_PK": "STRING",
+                "DATE_PK": "DATE",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
@@ -144,7 +144,7 @@ def single_source_ref_table_databricks(context):
         },
         "RAW_REF_TABLE": {
             "column_types": {
-                "DATE_PK": "STRING",
+                "DATE_PK": "DATE",
                 "YEAR": "STRING",
                 "MONTH": "STRING",
                 "DAY": "STRING",
@@ -168,7 +168,7 @@ def single_source_ref_table_postgres(context):
     context.seed_config = {
         "REF_TABLE": {
             "column_types": {
-                "DATE_PK": "VARCHAR",
+                "DATE_PK": "DATE",
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
@@ -179,7 +179,7 @@ def single_source_ref_table_postgres(context):
         },
         "RAW_REF_TABLE": {
             "column_types": {
-                "DATE_PK": "VARCHAR",
+                "DATE_PK": "DATE",
                 "YEAR": "VARCHAR",
                 "MONTH": "VARCHAR",
                 "DAY": "VARCHAR",
