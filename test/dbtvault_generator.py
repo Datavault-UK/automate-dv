@@ -367,7 +367,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "null_columns": null_columns_macro,
         "create_ghost_record": create_ghost_record_macro,
         "null_expression": null_expression_macro,
-        "select_hash_alg": select_hash_alg_macro
+        "select_hash_alg": select_hash_alg_macro,
+        "standard_column_wrapper": standard_column_wrapper_macro
     }
 
     if generator_functions.get(macro_name):
@@ -528,6 +529,14 @@ def null_expression_macro(model_name, **_):
 def select_hash_alg_macro(model_name, **_):
     template = f"""
                {{{{ dbtvault.select_hash_alg(hash=var('hash', none))}}}}
+               """
+
+    template_to_file(template, model_name)
+
+
+def standard_column_wrapper_macro(model_name, **_):
+    template = f"""
+               {{{{ dbtvault.standard_column_wrapper()}}}}
                """
 
     template_to_file(template, model_name)
