@@ -2,6 +2,10 @@
 
     {%- set default_database = var('database', target.database)  -%}
 
+    {% if target.type == 'databricks' and target.catalog and not default_database %}
+        {%- set default_database = target.catalog -%}
+    {% endif %}
+
     {%- if custom_database_name is none -%}
 
         {{ default_database }}
