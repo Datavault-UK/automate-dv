@@ -1,7 +1,7 @@
 <div align="center">
   <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png" alt="dbtvault">
 
-  [![Build Status](https://dev.azure.com/data-vault/dbtvault/_apis/build/status/Datavault-UK.dbtvault?branchName=develop)](https://dev.azure.com/data-vault/dbtvault/_build/latest?definitionId=5&branchName=develop)
+  [![Build Status](https://dev.azure.com/data-vault/dbtvault/_apis/build/status/Datavault-UK.dbtvault-dev?branchName=develop)](https://dev.azure.com/data-vault/dbtvault/_build/latest?definitionId=5&branchName=develop)
   [![Docs](https://readthedocs.org/projects/dbtvault/badge/?version=stable)](https://dbtvault.readthedocs.io/en/stable/?badge=stable)
   [![Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
   

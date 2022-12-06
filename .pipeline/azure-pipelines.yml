@@ -7,6 +7,12 @@ trigger:
     exclude:
       - feat/*
 
+pr:
+  autoCancel: false
+  branches:
+    include:
+      - develop
+
 pool:
   vmImage: ubuntu-latest
 
@@ -37,11 +43,11 @@ extends:
   template: templates/platform_template.yml
   parameters:
     platforms:
-      - 'postgres'
-      - 'databricks'
       - 'sqlserver'
+      - 'postgres'
       - 'snowflake'
       - 'bigquery'
+      - 'databricks'
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
@@ -61,7 +67,7 @@ extends:
       - groupName: 'sats'
         displayName: 'Satellites'
         disabledForPlatform: []
-        subGroups: [ 'main', 'cycles', 'incremental', 'pm', 'rank' ]
+        subGroups: [ 'main', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
         disabledForPlatform: ['databricks', 'postgres']
@@ -77,7 +83,7 @@ extends:
       - groupName: 'pit'
         displayName: 'Point-In-Time Tables'
         disabledForPlatform: ['databricks', 'postgres']
-        subGroups: [ 'main', '1sat_base', '1sat_inc', '2sat' ]
+        subGroups: [ 'main', 'ghost_records', '1sat_base', '1sat_inc', '2sat' ]
       - groupName: 'bridge'
         displayName: 'Bridge Tables'
         disabledForPlatform: ['databricks', 'postgres']

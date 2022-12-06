@@ -55,6 +55,23 @@ def disable_payload(context):
     """
     context.disable_payload = True
 
+
+@behave.fixture
+def enable_ghost_records(context):
+    """
+    Indicate ghost records should be implemented in any tables
+    """
+    context.enable_ghost_records = True
+
+
+@behave.fixture
+def system_record_value(context):
+    """
+    Configures the source value for ghost record
+    """
+    context.system_record_value = 'OTHER_SYSTEM'
+
+
 @behave.fixture
 def disable_hashing_upper_case(context):
     """
