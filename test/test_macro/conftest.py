@@ -16,7 +16,8 @@ mark_metadata_mapping = {
     "multi_source_multi_nk_hub": structure_metadata.multi_source_multi_nk_hub,
     "single_source_link": structure_metadata.single_source_link,
     "multi_source_link": structure_metadata.multi_source_link,
-    "single_source_sat": structure_metadata.single_source_sat
+    "single_source_sat": structure_metadata.single_source_sat,
+    "single_source_ref_table": structure_metadata.single_source_ref_table
 }
 
 

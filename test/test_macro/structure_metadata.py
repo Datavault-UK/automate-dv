@@ -61,3 +61,10 @@ def single_source_sat() -> dict:
                 src_hashdiff="HASHDIFF",
                 src_ldts="LOAD_DATE",
                 src_source="RECORD_SOURCE")
+
+
+def single_source_ref_table() -> dict:
+    return dict(source_model="raw_source_sat",
+                src_pk="CUSTOMER_PK",
+                src_ldts="LOAD_DATE",
+                src_source="RECORD_SOURCE")
