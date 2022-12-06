@@ -1,4 +1,8 @@
-{%- macro null_expression(column_str=column_str) -%}
+{%- macro null_expression(column_str) -%}
+
+    {%- if execute and not column_str -%}
+        {%- do exceptions.raise_compiler_error("Must provide a column_str argument to null expression macro!") -%}
+    {%- endif -%}
 
     {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
     {%- set standardise = dbtvault.standard_column_wrapper() %}
@@ -7,7 +11,7 @@
 {%- endmacro %}
 
 
-{%- macro default__null_expression(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string) -%}
+{%- macro default__null_expression(standardise, column_str, null_placeholder_string) -%}
 
     {%- set column_expression -%}
         IFNULL({{ standardise | replace('[EXPRESSION]', column_str) }}, '{{ null_placeholder_string}}')
@@ -18,7 +22,7 @@
 {%- endmacro -%}
 
 
-{%- macro postgres__null_expression(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string) -%}
+{%- macro postgres__null_expression(standardise, column_str, null_placeholder_string) -%}
 
     {%- set column_expression -%}
         COALESCE({{ standardise | replace('[EXPRESSION]', column_str) }}, '{{ null_placeholder_string }}')
@@ -28,7 +32,7 @@
 
 {%- endmacro -%}
 
-{%- macro sqlserver__null_expression(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string) -%}
+{%- macro sqlserver__null_expression(standardise, column_str, null_placeholder_string) -%}
 
     {%- set column_expression -%}
         ISNULL({{ standardise | replace('[EXPRESSION]', column_str) }}, '{{ null_placeholder_string }}')
