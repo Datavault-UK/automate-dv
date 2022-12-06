@@ -7,6 +7,8 @@
         BINARY(16)
     {%- elif var('hash') | lower == 'sha' -%}
         BINARY(32)
+    {%- else -%}
+        BINARY(16)
     {%- endif -%}
 {%- endmacro -%}
 
