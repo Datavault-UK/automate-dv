@@ -19,7 +19,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -52,7 +52,7 @@
         with data as (
             select
                 COALESCE(CAST(MAX({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
-                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          CAST({{ current_timestamp() }} AS DATETIME)) as STOP_TIMESTAMP
             from {{ target_relation }}
         )
@@ -87,7 +87,7 @@
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -117,7 +117,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
-                COALESCE({{ dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -146,7 +146,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
+                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                          {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
