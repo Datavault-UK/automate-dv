@@ -1,4 +1,4 @@
-{%- macro select_hash_alg(hash=hash) -%}
+{%- macro select_hash_alg(hash) -%}
 
     {%- if hash | lower == 'md5' -%}
         {%- do return(dbtvault.hash_alg_md5()) -%}
