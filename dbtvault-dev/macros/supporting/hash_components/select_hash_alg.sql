@@ -1,5 +1,11 @@
 {%- macro select_hash_alg(hash) -%}
 
+    {%- set available_hash_algorithms = ['md5', 'sha'] -%}
+
+    {%- if execute and hash | lower not in available_hash_algorithms %}
+        {%- do exceptions.warn("Configured hash ('{}') not recognised. Must be one of: {} (case insensitive)".format(hash | lower, available_hash_algorithms | join(', '))) -%}
+    {%- endif -%}
+
     {%- if hash | lower == 'md5' -%}
         {%- do return(dbtvault.hash_alg_md5()) -%}
     {%- elif hash | lower == 'sha' -%}
