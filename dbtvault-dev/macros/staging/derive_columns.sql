@@ -17,7 +17,7 @@
 
     {#- Add aliases of derived columns to excludes and full SQL to includes -#}
     {%- for derived_column in columns -%}
-        {% set column_config = columns[derived_column] %}
+        {%- set column_config = columns[derived_column] -%}
 
         {%- if dbtvault.is_list(column_config) -%}
             {%- set column_list = [] -%}
@@ -84,12 +84,13 @@
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
-        {{- col | indent(4) -}}{{ ",\n" if not loop.last }}
+        {{- col -}}{{ ",\n" if not loop.last }}
     {%- endfor -%}
 
 {%- else -%}
 
 {%- if execute -%}
+
 {{ exceptions.raise_compiler_error("Invalid column configuration:
 expected format, either: {'source_relation': Relation, 'columns': {column_name: column_value}}
 or: {'source_relation': Relation, 'columns': {column_name: {'source_column': column_value, 'escape': true / false}}}
