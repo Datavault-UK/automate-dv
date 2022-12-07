@@ -149,6 +149,18 @@ def satellite_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "SATELLITE_PL_EXCLUDE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -157,18 +169,6 @@ def satellite_snowflake(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "HASHDIFF": "BINARY(16)",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "SATELLITE_HD_ALIAS": {
-            "column_types": {
-                "CUSTOMER_PK": "BINARY(16)",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -306,6 +306,32 @@ def satellite_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "SATELLITE_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "SATELLITE_TS": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -420,6 +446,32 @@ def satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -544,6 +596,32 @@ def satellite_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "SATELLITE_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
         "SATELLITE_TS": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -660,6 +738,32 @@ def satellite_postgres(context):
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR`"
             }
         },
         "SATELLITE_TS": {
