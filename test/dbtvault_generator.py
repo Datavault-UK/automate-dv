@@ -358,13 +358,17 @@ def macro_model(model_name, macro_name, metadata=None):
         "hash_columns": hash_columns_macro,
         "rank_columns": rank_columns_macro,
         "stage": stage_macro,
+        "concat_ws": concat_ws_macro,
         "expand_column_list": expand_column_list_macro,
         "as_constant": as_constant_macro,
         "alias": alias_macro,
         "alias_all": alias_all_macro,
         "escape_column_names": escape_column_names_macro,
         "null_columns": null_columns_macro,
-        "create_ghost_record": create_ghost_record_macro
+        "create_ghost_record": create_ghost_record_macro,
+        "null_expression": null_expression_macro,
+        "select_hash_alg": select_hash_alg_macro,
+        "standard_column_wrapper": standard_column_wrapper_macro
     }
 
     if generator_functions.get(macro_name):
@@ -378,6 +382,16 @@ def hash_macro(model_name, **_):
     {{% if execute %}}
     {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
     {{% endif %}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def concat_ws_macro(model_name, **_):
+    template = f"""
+    {{%- if execute -%}}
+    {{{{ dbtvault.concat_ws(string_list=var('string_list')) }}}}
+    {{%- endif -%}}
     """
 
     template_to_file(template, model_name)
@@ -499,6 +513,30 @@ def create_ghost_record_macro(model_name, **_):
                src_source=var('src_source', none),
                source_model=var('source_model', none))}}}}
                {{% endif %}}
+               """
+
+    template_to_file(template, model_name)
+
+
+def null_expression_macro(model_name, **_):
+    template = f"""
+               {{{{ dbtvault.null_expression(column_str=var('column_str', none))}}}}
+               """
+
+    template_to_file(template, model_name)
+
+
+def select_hash_alg_macro(model_name, **_):
+    template = f"""
+               {{{{ dbtvault.select_hash_alg(hash=var('hash', none))}}}}
+               """
+
+    template_to_file(template, model_name)
+
+
+def standard_column_wrapper_macro(model_name, **_):
+    template = f"""
+               {{{{ dbtvault.standard_column_wrapper()}}}}
                """
 
     template_to_file(template, model_name)
