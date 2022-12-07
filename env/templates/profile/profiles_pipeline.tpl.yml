@@ -48,9 +48,12 @@ dbtvault:
       schema: "{{ op://dbtvault/sqlserver_pipeline/schema }}"
       user: "{{ op://dbtvault/sqlserver_pipeline/user }}"
       password: "{{ op://dbtvault/sqlserver_pipeline/password }}"
+      encrypt: true
+      trust_cert: true
 
     databricks:
       type: databricks
+      catalog: hive_metastore
       schema: "{{ op://dbtvault/databricks_pipeline/schema }}"
       host: "{{ op://dbtvault/databricks_pipeline/host }}"
       http_path: "{{ op://dbtvault/databricks_pipeline/http_path }}"

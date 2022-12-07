@@ -22,7 +22,8 @@ fixture_registry_utils = {
     "fixture.disable_union": behave_fixtures.disable_union,
     "fixture.disable_payload": behave_fixtures.disable_payload,
     "fixture.enable_ghost_records": behave_fixtures.enable_ghost_records,
-    "fixture.system_record_value": behave_fixtures.system_record_value
+    "fixture.system_record_value": behave_fixtures.system_record_value,
+    "fixture.disable_hashing_upper_case": behave_fixtures.disable_hashing_upper_case
 }
 
 fixtures_registry = {
