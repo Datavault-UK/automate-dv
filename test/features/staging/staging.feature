@@ -1437,7 +1437,7 @@ Feature: [STG] Staging
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_PK | HASHDIFF                  |
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
@@ -1464,7 +1464,7 @@ Feature: [STG] Staging
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK                 | HASHDIFF                                              |
+      | CUSTOMER_PK                 | HASHDIFF                  |
       | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
@@ -1490,7 +1490,7 @@ Feature: [STG] Staging
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK | HASHDIFF                                              |
+      | CUSTOMER_PK | HASHDIFF                  |
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
@@ -1516,7 +1516,7 @@ Feature: [STG] Staging
       | EFFECTIVE_FROM | SOURCE     |
       | LOAD_DATE      | !RAW_STAGE |
     And I have hashed columns in the STG_CUSTOMER model
-      | CUSTOMER_PK                 | HASHDIFF                                              |
+      | CUSTOMER_PK                 | HASHDIFF                  |
       | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
