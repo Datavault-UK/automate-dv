@@ -37,9 +37,12 @@ dbtvault:
       schema: "{{ op://private/sqlserver/schema }}"
       user: "{{ op://private/sqlserver/user }}"
       password: "{{ op://private/sqlserver/password }}"
+      encrypt: true
+      trust_cert: true
 
     databricks:
       type: databricks
+      catalog: hive_metastore
       schema: "{{ op://private/databricks/schema }}"
       host: "{{ op://private/databricks/host }}"
       http_path: "{{ op://private/databricks/http_path }}"
