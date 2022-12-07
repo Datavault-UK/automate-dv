@@ -16,7 +16,8 @@
 
 {%- set hash_alg = dbtvault.select_hash_alg(hash) -%}
 
-{%- set standardise = dbtvault.standard_column_wrapper() %}
+{%- set disable_upper_in_hash = var('disable_upper_in_hash', 'UPPER') -%}
+{%- set standardise = dbtvault.standard(disable_upper_in_hash) -%}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
 {%- if is_hashdiff and dbtvault.is_list(columns) -%}
