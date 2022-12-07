@@ -9,7 +9,7 @@ from test import dbtvault_generator, dbt_runner, behave_helpers, context_utils, 
 
 def set_stage_metadata(context, stage_model_name) -> dict:
     """
-        Setup the context to include required staging metadata and return as a dictionary to
+        Set up the context to include required staging metadata and return as a dictionary to
         support providing the variables in the command line to dbt instead
     """
 
@@ -27,7 +27,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
 
-    context.disable_upper_in_hash = getattr(context, "disable_upper_in_hash", 'UPPER')
+    context.hash_content_casing = getattr(context, "hash_content_casing", 'UPPER')
 
     if not getattr(context, "ranked_columns", None):
         context.ranked_columns = dict()
@@ -63,7 +63,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "derived_columns": context.derived_columns,
         "null_columns": context.null_columns,
         "hash": context.hashing,
-        "disable_upper_in_hash": context.disable_upper_in_hash,
+        "hash_content_casing": context.hash_content_casing,
         "null_key_required": context.null_key_required,
         "null_key_optional": context.null_key_optional,
         "enable_ghost_records": context.enable_ghost_records,
@@ -222,11 +222,13 @@ def create_empty_stage(context, processed_stage_name):
     stage_hashed_column_headings = list(context.hashed_columns[processed_stage_name].keys())
     stage_derived_column_headings = list(context.derived_columns[processed_stage_name].keys())
     stage_null_column_headings_list = []
+
     for v in list(context.null_columns[processed_stage_name].values()):
         if isinstance(v, list):
             stage_null_column_headings_list.extend(v)
         else:
             stage_null_column_headings_list.append(v)
+
     stage_null_column_headings = list(v + "_ORIGINAL" for v in stage_null_column_headings_list)
 
     stage_headings = stage_source_column_headings + stage_hashed_column_headings + \
@@ -330,7 +332,6 @@ def load_table(context, model_name, vault_structure):
                                            **metadata)
 
     context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
-
     context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
 
     args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
@@ -440,7 +441,7 @@ def create_csv(context, table_name):
 
         args = {k: v for k, v in stage_metadata.items() if
                 k in ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
-                      "disable_upper_in_hash"]}
+                      "hash_content_casing"]}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -472,7 +473,7 @@ def create_csv(context, table_name):
 
         args = {k: v for k, v in stage_metadata.items() if
                 k in ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
-                      "disable_upper_in_hash"]}
+                      "hash_content_casing"]}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -544,7 +545,7 @@ def stage_processing(context, processed_stage_name):
 
     args = {k: v for k, v in stage_metadata.items() if
             ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
-             "disable_upper_in_hash"]}
+             "hash_content_casing"]}
     text_args = dbtvault_generator.handle_step_text_dict(context)
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
