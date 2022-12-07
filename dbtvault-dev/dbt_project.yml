@@ -17,6 +17,7 @@ clean-targets:
 
 vars:
   hash: MD5
+  disable_upper_in_hash: 'UPPER' # Default UPPER, alternatively DISABLED
   null_key_required: '-1' # Default -1, allows user to configure
   null_key_optional: '-2' # Default -2, allows user to configure
   enable_ghost_records: false #default false to ghost records are enabled
