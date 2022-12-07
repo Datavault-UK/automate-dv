@@ -71,3 +71,11 @@ def system_record_value(context):
     """
     context.system_record_value = 'OTHER_SYSTEM'
 
+
+@behave.fixture
+def disable_hashing_upper_case(context):
+    """
+    Stop hashing in upper case
+    """
+    context.disable_upper_in_hash = 'DISABLED'
+

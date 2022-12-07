@@ -63,6 +63,11 @@
         {%- set custom_schema_name = target.schema -%}
     {%- endif -%}
 
+    {% if execute -%}
+        {% do log('custom_schema_name: ' ~ custom_schema_name, true) -%}
+        {% do log('schema: ' ~ schema, true) -%}
+    {% endif -%}
+
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
     {%- set schema_name = "{}_{}{}".format(schema_name, target.name, dbtvault_test.pipeline_string()) -%}
@@ -73,7 +78,11 @@
 
 {%- macro clean_schema_name(schema_name) -%}
 
-    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | trim | upper) -%}
+    {%- if target.type == 'databricks' -%}
+    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_')  | trim | lower) -%}
+    {%- else -%}
+    {%- do return(schema_name | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_')  | trim | upper) -%}
+    {%- endif -%}
 
 {%- endmacro -%}
 
@@ -81,8 +90,8 @@
 {%- macro pipeline_string() -%}
 
     {%- set pipeline_str -%}
-        {{- '_' ~ env_var('PIPELINE_BRANCH', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') if env_var('PIPELINE_BRANCH', '') -}}
-        {{- '_' ~ env_var('PIPELINE_JOB', '') | replace('-','_') | replace('.','_') | replace('/','_') | replace(' ','_') if env_var('PIPELINE_JOB', '') -}}
+        {{- '_' ~ env_var('PIPELINE_BRANCH', '') if env_var('PIPELINE_BRANCH', '') -}}
+        {{- '_' ~ env_var('PIPELINE_JOB', '') if env_var('PIPELINE_JOB', '') -}}
     {%- endset -%}
 
     {% do return(pipeline_str | upper) %}
