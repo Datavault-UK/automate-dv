@@ -27,6 +27,8 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
 
+    context.disable_upper_in_hash = getattr(context, "disable_upper_in_hash", 'UPPER')
+
     if not getattr(context, "ranked_columns", None):
         context.ranked_columns = dict()
         context.ranked_columns[stage_model_name] = dict()
@@ -61,6 +63,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "derived_columns": context.derived_columns,
         "null_columns": context.null_columns,
         "hash": context.hashing,
+        "disable_upper_in_hash": context.disable_upper_in_hash,
         "null_key_required": context.null_key_required,
         "null_key_optional": context.null_key_optional,
         "enable_ghost_records": context.enable_ghost_records,
@@ -436,7 +439,8 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
-                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
+                k in ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
+                      "disable_upper_in_hash"]}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -467,7 +471,8 @@ def create_csv(context, table_name):
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
         args = {k: v for k, v in stage_metadata.items() if
-                k == "hash" or k == "null_key_required" or k == "null_key_optional" or k == "enable_ghost_records" or k == "system_record_value"}
+                k in ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
+                      "disable_upper_in_hash"]}
 
         dbtvault_generator.raw_vault_structure(model_name=table_name,
                                                vault_structure='stage',
@@ -538,9 +543,8 @@ def stage_processing(context, processed_stage_name):
     stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
 
     args = {k: v for k, v in stage_metadata.items() if
-            k in ["hash", "null_key_required",
-                  "null_key_optional", "enable_ghost_records",
-                  "system_record_value"]}
+            ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
+             "disable_upper_in_hash"]}
     text_args = dbtvault_generator.handle_step_text_dict(context)
 
     dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
