@@ -6,7 +6,7 @@
 {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
 
 {{ dbtvault.prepend_generated_by() }}
