@@ -699,3 +699,29 @@ def test_stage_raises_error_with_missing_source(request, generate_model):
 
     assert 'Staging error: Missing source_model configuration. ' \
            'A source model name must be provided.' in dbt_logs
+
+
+@pytest.mark.macro
+def test_stage_correctly_generates_sql_for_only_source_and_derived_columns_with_cross_cte_escaping(request,
+                                                                                                   generate_model):
+    metadata = {
+        "source_model": "raw_source",
+        "derived_columns": {
+            'CUSTOMER_DETAILS': {
+                'source_column': ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'PHONE'],
+                'escape': True
+            },
+            'SOURCE': "!STG_BOOKING",
+            'EFFECTIVE_FROM': 'LOAD_DATE'
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql

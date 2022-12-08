@@ -87,10 +87,15 @@
 
     {#- Makes sure the columns are appended in a logical order. Source columns then derived columns -#}
     {%- set include_columns = src_columns + der_columns -%}
+    {%- set columns_to_escape = dbtvault.process_columns_to_escape(columns) | list -%}
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
-        {{- col -}}{{ ",\n" if not loop.last }}
+        {%- if col | lower in columns_to_escape | map('lower') | list -%}
+            {{- dbtvault.escape_column_name(col) -}}{{ ",\n" if not loop.last }}
+        {%- else -%}
+            {{- col -}}{{ ",\n" if not loop.last }}
+        {%- endif -%}
     {%- endfor -%}
 
 {%- else -%}
