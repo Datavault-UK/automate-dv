@@ -2,16 +2,16 @@ WITH source_data AS (
 
     SELECT
 
-    "BOOKING_FK",
-    "ORDER_FK",
-    "CUSTOMER_PK",
-    "CUSTOMER_ID",
-    "LOAD_DATE",
-    "RECORD_SOURCE",
-    "CUSTOMER_DOB",
-    "CUSTOMER_NAME",
-    "NATIONALITY",
-    "PHONE",
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_PK,
+    CUSTOMER_ID,
+    LOAD_DATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
     "TEST_COLUMN_2",
     "TEST_COLUMN_3",
     "TEST_COLUMN_4",
@@ -20,7 +20,7 @@ WITH source_data AS (
     "TEST_COLUMN_7",
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
-    "BOOKING_DATE"
+    BOOKING_DATE
 
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
@@ -29,16 +29,16 @@ derived_columns AS (
 
     SELECT
 
-    "BOOKING_FK",
-    "ORDER_FK",
-    "CUSTOMER_PK",
-    "CUSTOMER_ID",
-    "LOAD_DATE",
-    "RECORD_SOURCE",
-    "CUSTOMER_DOB",
-    "CUSTOMER_NAME",
-    "NATIONALITY",
-    "PHONE",
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_PK,
+    CUSTOMER_ID,
+    LOAD_DATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
     "TEST_COLUMN_2",
     "TEST_COLUMN_3",
     "TEST_COLUMN_4",
@@ -47,9 +47,9 @@ derived_columns AS (
     "TEST_COLUMN_7",
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
-    "BOOKING_DATE",
-    'STG_BOOKING' AS "SOURCE",
-    LOAD_DATE AS "EFFECTIVE_FROM"
+    BOOKING_DATE,
+    'STG_BOOKING' AS SOURCE,
+    LOAD_DATE AS EFFECTIVE_FROM
 
     FROM source_data
 ),
@@ -58,8 +58,8 @@ columns_to_select AS (
 
     SELECT
 
-    "SOURCE",
-    "EFFECTIVE_FROM"
+    SOURCE,
+    EFFECTIVE_FROM
 
     FROM derived_columns
 )
