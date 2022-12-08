@@ -522,9 +522,9 @@ Feature: [SAT] Satellites
       | md5('1003') | Chad          | 2013-02-04   | 17-214-233-1216 | 1003        | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 2018-04-13   | 17-214-233-1217 | 1004        | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
-   @fixture.satellite
-   @fixture.disable_hashing_upper_case
-   Scenario: [SAT-22] Load data into a non-existent satellite mixed case not being changed to UPPER in hashdiff
+  @fixture.satellite
+  @fixture.disable_hashing_upper_case
+  Scenario: [SAT-22] Load data into a non-existent satellite mixed case not being changed to UPPER in hashdiff
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
