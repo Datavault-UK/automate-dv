@@ -368,7 +368,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "create_ghost_record": create_ghost_record_macro,
         "null_expression": null_expression_macro,
         "select_hash_alg": select_hash_alg_macro,
-        "standard_column_wrapper": standard_column_wrapper_macro
+        "standard_column_wrapper": standard_column_wrapper_macro,
+        "process_columns_to_escape": process_columns_to_escape_macro,
     }
 
     if generator_functions.get(macro_name):
@@ -537,6 +538,14 @@ def select_hash_alg_macro(model_name, **_):
 def standard_column_wrapper_macro(model_name, **_):
     template = f"""
                {{{{ dbtvault.standard_column_wrapper()}}}}
+               """
+
+    template_to_file(template, model_name)
+
+
+def process_columns_to_escape_macro(model_name, **_):
+    template = f"""
+               {{{{ dbtvault.process_columns_to_escape(derived_columns_list=var('derived_columns_list', none))}}}}
                """
 
     template_to_file(template, model_name)
