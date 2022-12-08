@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}

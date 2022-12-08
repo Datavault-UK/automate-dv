@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro cast_binary(column_str, alias=none, quote=true) -%}
     {{ return(adapter.dispatch('cast_binary', 'dbtvault')(column_str=column_str, alias=alias, quote=quote)) }}
 {%- endmacro -%}
