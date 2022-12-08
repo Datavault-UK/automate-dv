@@ -446,6 +446,7 @@ def satellite_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_ID": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
