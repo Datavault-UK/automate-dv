@@ -14,7 +14,7 @@
 
         {%- for col in columns -%}
 
-            {%- if col not in processed_columns -%}
+            {%- if col | lower not in processed_columns | map('lower') | list -%}
 
                 {%- if col is mapping -%}
 

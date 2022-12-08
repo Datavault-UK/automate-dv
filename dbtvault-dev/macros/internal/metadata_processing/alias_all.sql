@@ -11,13 +11,13 @@
     {%- set processed_columns = [] -%}
 
     {%- for col in columns -%}
-        {%- if col not in processed_columns -%}
+        {%- if col | lower not in processed_columns | map('lower') | list -%}
 
             {{ dbtvault.alias(alias_config=col, prefix=prefix) }}
             {%- if not loop.last -%} , {% endif -%}
 
             {%- if col is mapping -%}
-                {%- if col['source_column'] and col['alias'] -%}
+                {%- if col['source_column'] | lower and col['alias'] | lower -%}
                     {%- do processed_columns.append(col['source_column']) -%}
                 {% endif -%}
             {%- else -%}
