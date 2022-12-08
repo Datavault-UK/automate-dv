@@ -135,9 +135,9 @@ new_rows AS (
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
 
         {% if enable_ghost_record %}
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name}}_{{ sat_pk_name)) }},
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name}}_{{ sat_pk_name }},
         {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
-        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name}}_{{ sat_ldts_name)) }}
+        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name}}_{{ sat_ldts_name }}
         {%- else -%}
 
         {%- if target.type == "sqlserver" -%}
