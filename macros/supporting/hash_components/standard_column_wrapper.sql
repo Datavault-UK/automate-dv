@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro standard_column_wrapper() -%}
 
     {%- set hash_content_casing = var('hash_content_casing', 'upper') -%}

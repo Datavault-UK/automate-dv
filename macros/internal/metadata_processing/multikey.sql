@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro multikey(columns, prefix=none, condition=none, operator='AND') -%}
 
     {{- adapter.dispatch('multikey', 'dbtvault')(columns=columns, prefix=prefix, condition=condition, operator=operator) -}}
