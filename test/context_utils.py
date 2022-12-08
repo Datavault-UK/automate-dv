@@ -175,10 +175,15 @@ def parse_hashdiffs(columns_as_series: Series) -> Series:
             columns.append(hashdiff_dict)
         elif re.search(exclude_pattern, item):
             raw_item = re.findall(exclude_pattern, item)[0]
-            split_item = str(raw_item).split(",")
-            hashdiff_dict = {"is_hashdiff": True,
-                             "exclude_columns": True,
-                             "columns": split_item}
+
+            if not raw_item:
+                hashdiff_dict = {"is_hashdiff": True,
+                                 "exclude_columns": True}
+            else:
+                split_item = str(raw_item).split(",")
+                hashdiff_dict = {"is_hashdiff": True,
+                                 "exclude_columns": True,
+                                 "columns": split_item}
 
             columns.append(hashdiff_dict)
         else:
