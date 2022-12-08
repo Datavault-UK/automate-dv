@@ -50,10 +50,10 @@ derived_columns AS (
     BOOKING_DATE,
     'STG_BOOKING' AS SOURCE,
     CONCAT(
-        BOOKING_DATE, '||',
+        "BOOKING_DATE", '||',
         'STG_BOOKING', '||',
-        CUSTOMER_ID, '||',
-        CUSTOMER_NAME
+        "CUSTOMER_ID", '||',
+        "CUSTOMER_NAME"
     ) AS BOOKING_DETAILS
 
     FROM source_data
