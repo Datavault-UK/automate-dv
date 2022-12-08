@@ -12,7 +12,7 @@ def test_null_columns_correctly_generates_sql_with_required_column(request, gene
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -27,7 +27,7 @@ def test_null_columns_correctly_generates_sql_with_required_column_lc(request, g
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -42,7 +42,7 @@ def test_null_columns_correctly_generates_sql_with_required_no_optional_column(r
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -57,7 +57,7 @@ def test_null_columns_correctly_generates_sql_with_optional_column(request, gene
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -72,7 +72,7 @@ def test_null_columns_correctly_generates_sql_with_optional_column_lc(request, g
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -87,7 +87,7 @@ def test_null_columns_correctly_generates_sql_with_optional_no_required_column(r
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -102,7 +102,7 @@ def test_null_columns_correctly_generates_sql_with_required_and_optional_column(
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -117,7 +117,7 @@ def test_null_columns_correctly_generates_sql_with_required_columns(request, gen
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -132,7 +132,7 @@ def test_null_columns_correctly_generates_sql_with_required_columns_no_optional_
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -147,7 +147,7 @@ def test_null_columns_correctly_generates_sql_with_optional_columns(request, gen
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -162,7 +162,7 @@ def test_null_columns_correctly_generates_sql_with_optional_columns_no_required_
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -177,7 +177,7 @@ def test_null_columns_correctly_generates_sql_with_required_and_optional_columns
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -192,7 +192,7 @@ def test_null_columns_correctly_generates_sql_with_required_column_and_optional_
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -207,7 +207,7 @@ def test_null_columns_correctly_generates_sql_with_required_columns_and_optional
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
@@ -222,11 +222,9 @@ def test_null_columns_correctly_generates_sql_with_required_and_optional_columns
     generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
-                                                     args=var_dict)
+                                         args=var_dict)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert macro_test_helpers.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
-
-
