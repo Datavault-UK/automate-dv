@@ -8,46 +8,61 @@
 
 {%- macro default__prefix(columns=none, prefix_str=none, alias_target='source') -%}
 
+    {%- set processed_columns = [] -%}
+
     {%- if columns and prefix_str -%}
 
         {%- for col in columns -%}
 
-            {%- if col is mapping -%}
+            {%- if col | lower not in processed_columns | map('lower') | list -%}
 
-                {%- if alias_target == 'source' -%}
+                {%- if col is mapping -%}
 
-                    {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+                    {%- if alias_target == 'source' -%}
 
-                {%- elif alias_target == 'target' -%}
+                        {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
 
-                    {{- dbtvault.prefix([col['alias']], prefix_str) -}}
+                        {%- do processed_columns.append(col['source_column']) -%}
+
+                    {%- elif alias_target == 'target' -%}
+
+                        {{- dbtvault.prefix([col['alias']], prefix_str) -}}
+
+                         {%- do processed_columns.append(col['alias']) -%}
+
+                    {%- else -%}
+
+                        {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+
+                        {%- do processed_columns.append(col['source_column']) -%}
+
+                    {%- endif -%}
+
+                    {%- if not loop.last -%} , {% endif %}
 
                 {%- else -%}
 
-                    {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+                    {%- if col is iterable and col is not string -%}
 
-                {%- endif -%}
+                        {{- dbtvault.prefix(col, prefix_str) -}}
 
-                {%- if not loop.last -%} , {% endif %}
+                        {%- do processed_columns.append(col) -%}
 
-            {%- else -%}
+                    {%- elif col is not none -%}
 
-                {%- if col is iterable and col is not string -%}
+                        {{- prefix_str}}.{{col.strip() -}}
 
-                    {{- dbtvault.prefix(col, prefix_str) -}}
+                        {%- do processed_columns.append(col) -%}
+                    {% else %}
 
-                {%- elif col is not none -%}
-
-                    {{- prefix_str}}.{{col.strip() -}}
-                {% else %}
-
-                    {%- if execute -%}
-                        {{- exceptions.raise_compiler_error("Unexpected or missing configuration for '" ~ this ~ "' Unable to prefix columns.") -}}
+                        {%- if execute -%}
+                            {{- exceptions.raise_compiler_error("Unexpected or missing configuration for '" ~ this ~ "' Unable to prefix columns.") -}}
+                        {%- endif -%}
                     {%- endif -%}
+
+                    {{- ', ' if not loop.last -}}
+
                 {%- endif -%}
-
-                {{- ', ' if not loop.last -}}
-
             {%- endif -%}
 
         {%- endfor -%}
