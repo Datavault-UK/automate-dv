@@ -51,12 +51,12 @@ relation object from source_model -#}
     {%- set all_source_columns = [] -%}
 {%- endif -%}
 
-{%- set derived_column_names = dbtvault.extract_column_names(derived_columns) | map('upper') | list -%}
-{%- set null_column_names = dbtvault.extract_null_column_names(null_columns) | map('upper') | list -%}
-{%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) | map('upper') | list -%}
-{%- set ranked_column_names = dbtvault.extract_column_names(ranked_columns) | map('upper') | list -%}
-{%- set exclude_column_names = derived_column_names + null_column_names + hashed_column_names | map('upper') | list -%}
-{%- set source_and_derived_column_names = (all_source_columns + derived_column_names) | map('upper') | unique | list -%}
+{%- set derived_column_names = dbtvault.extract_column_names(derived_columns) | list -%}
+{%- set null_column_names = dbtvault.extract_null_column_names(null_columns) | list -%}
+{%- set hashed_column_names = dbtvault.extract_column_names(hashed_columns) | list -%}
+{%- set ranked_column_names = dbtvault.extract_column_names(ranked_columns) | list -%}
+{%- set exclude_column_names = derived_column_names + null_column_names + hashed_column_names | list -%}
+{%- set source_and_derived_column_names = (all_source_columns + derived_column_names) | unique | list -%}
 
 {%- set source_columns_to_select = dbtvault.process_columns_to_select(all_source_columns, exclude_column_names) -%}
 {%- set derived_columns_to_select = dbtvault.process_columns_to_select(source_and_derived_column_names, null_column_names + hashed_column_names) | unique | list -%}
@@ -154,7 +154,7 @@ columns_to_select AS (
 
     SELECT
 
-    {{ dbtvault.print_list(dbtvault.escape_column_names(final_columns_to_select | unique | list)) }}
+    {{ dbtvault.print_list(final_columns_to_select | unique | list) }}
 
     FROM {{ last_cte }}
 )
