@@ -718,6 +718,15 @@ def step_impl(context, model_name):
     }
 
 
+@step("I do not exclude any columns from the {model_name} table")
+def step_impl(context, model_name):
+    context.vault_structure_columns_original = copy.deepcopy(context.vault_structure_columns)
+
+    context.vault_structure_columns[model_name]['src_payload'] = {
+        "exclude_columns": "true"
+    }
+
+
 @given("I am using the {database_name} database")
 def step_impl(context, database_name):
     context.database_name = database_name
