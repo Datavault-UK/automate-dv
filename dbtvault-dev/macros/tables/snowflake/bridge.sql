@@ -83,7 +83,7 @@ candidate_rows AS (
                    AS_OF_DATE,
                    {% for bridge_step in bridge_walk.keys() -%}
 
-                       {%- set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
+                       {%- set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
 
                        {{ bridge_link_pk }} {%- if not loop.last %}, {% endif -%}
 
@@ -91,7 +91,7 @@ candidate_rows AS (
                ORDER BY
                    {% for bridge_step in bridge_walk.keys() -%}
 
-                       {%- set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) -%}
+                       {%- set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
 
                        {{ bridge_load_date }} DESC {%- if not loop.last %}, {% endif -%}
 
@@ -109,7 +109,7 @@ bridge AS (
 
         {% for bridge_step in bridge_walk.keys() %}
 
-        {% set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) %}
+        {% set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] %}
         c.{{ bridge_link_pk }}
         {%- if not loop.last %}, {%- endif -%}
         {%- endfor %}
@@ -117,7 +117,7 @@ bridge AS (
     FROM candidate_rows AS c
 
 {%- for bridge_step in bridge_walk.keys() -%}
-    {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) %}
+    {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
 
     {% if loop.first -%} WHERE {%- else -%} AND {%- endif %} {{ dbtvault.cast_date(dbtvault.prefix([bridge_end_date], 'c')) }} = {{ dbtvault.cast_date(max_datetime, true, false) }}
 

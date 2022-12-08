@@ -20,8 +20,8 @@
 
 {%- macro default__xts(src_pk, src_satellite, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{%- set hashdiff_escaped = dbtvault.escape_column_names('HASHDIFF') -%}
-{%- set satellite_name_escaped = dbtvault.escape_column_names('SATELLITE_NAME') %}
+{%- set hashdiff = 'HASHDIFF' -%}
+{%- set satellite_name = 'SATELLITE_NAME' %}
 {%- set satellite_count = src_satellite.keys() | list | length %}
 {%- set stage_count = source_model | length %}
 
@@ -41,8 +41,8 @@
 
 {{ cte_name }} AS (
     SELECT {{ dbtvault.prefix([src_pk], 's') }},
-           s.{{ hashdiff }} AS {{ hashdiff_escaped }},
-           s.{{ satellite_name }} AS {{ satellite_name_escaped }},
+           s.{{ hashdiff }},
+           s.{{ satellite_name }},
            {%- if dbtvault.is_something(src_extra_columns) -%}
                {{ dbtvault.prefix([src_extra_columns], 's') }},
            {%- endif %}
@@ -79,8 +79,8 @@ union_satellites AS (
 records_to_insert AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        a.{{ hashdiff_escaped }},
-        a.{{ satellite_name_escaped }} ,
+        a.{{ hashdiff }},
+        a.{{ satellite_name }},
         {%- if dbtvault.is_something(src_extra_columns) -%}
             {{ dbtvault.prefix([src_extra_columns], 'a') }},
         {%- endif %}
@@ -90,13 +90,13 @@ records_to_insert AS (
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
         ON (
-            a.{{ hashdiff_escaped }} = d.{{ hashdiff_escaped }}
+            a.{{ hashdiff }} = d.{{ hashdiff }}
             AND a.{{ src_ldts }} = d.{{ src_ldts }}
-            AND a.{{ satellite_name_escaped }} = d.{{ satellite_name_escaped }}
+            AND a.{{ satellite_name }} = d.{{ satellite_name }}
         )
-    WHERE d.{{ hashdiff_escaped }} IS NULL
+    WHERE d.{{ hashdiff }} IS NULL
     AND d.{{ src_ldts }} IS NULL
-    AND d.{{ satellite_name_escaped }} IS NULL
+    AND d.{{ satellite_name }} IS NULL
     {%- endif %}
 )
 
