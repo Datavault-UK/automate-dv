@@ -26,9 +26,9 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
+    {%- set escaped_column_str = column_str -%}
 
-    {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', standardise | replace('[EXPRESSION]', escaped_column_str)) }} AS {{ dbtvault.escape_column_names(alias) | indent(4) }}
+    {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', standardise | replace('[EXPRESSION]', escaped_column_str)) }} AS {{ alias | indent(4) }}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -38,7 +38,7 @@
 
     {%- for column in columns -%}
         {%- set column_str = dbtvault.as_constant(column) -%}
-        {%- set escaped_column_str = dbtvault.escape_column_names(column_str) -%}
+        {%- set escaped_column_str = column_str -%}
 
         {%- set column_expression = dbtvault.null_expression(escaped_column_str) -%}
 
@@ -55,17 +55,17 @@
         {%- endset -%}
 
         {%- set hashed_column -%}
-        {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', concat_sql) }} AS {{ dbtvault.escape_column_names(alias) }}
+        {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', concat_sql) }} AS {{ alias }}
         {%- endset -%}
 
     {%- else -%}
         {% if dbtvault.is_list(processed_columns) and processed_columns | length > 1 %}
             {%- set hashed_column -%}
-                {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string)) }} AS {{ dbtvault.escape_column_names(alias) }}
+                {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string)) }} AS {{ alias }}
             {%- endset -%}
         {%- else -%}
             {%- set hashed_column -%}
-                {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', processed_columns[0]) }} AS {{ dbtvault.escape_column_names(alias) }}
+                {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', processed_columns[0]) }} AS {{ alias }}
             {%- endset -%}
         {%- endif -%}
     {%- endif -%}

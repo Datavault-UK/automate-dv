@@ -11,9 +11,6 @@
                                            src_ldts=src_ldts,
                                            source_model=source_model) -}}
 
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-
     {{- dbtvault.prepend_generated_by() }}
 
     {% for stg in stage_tables_ldts %}

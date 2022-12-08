@@ -80,7 +80,7 @@ WITH source_data AS (
 
     SELECT
 
-    {{- "\n\n    " ~ dbtvault.print_list(dbtvault.escape_column_names(all_source_columns)) if all_source_columns else " *" }}
+    {{- "\n\n    " ~ dbtvault.print_list(all_source_columns) if all_source_columns else " *" }}
 
     FROM {{ source_relation }}
     {%- set last_cte = "source_data" %}
@@ -106,7 +106,7 @@ null_columns AS (
 
     SELECT
 
-    {{ dbtvault.print_list(dbtvault.escape_column_names(derived_columns_to_select)) }}{{"," if dbtvault.is_something(derived_columns_to_select) else ""}}
+    {{ dbtvault.print_list(derived_columns_to_select) }}{{"," if dbtvault.is_something(derived_columns_to_select) else ""}}
 
     {{ dbtvault.null_columns(source_relation=none, columns=null_columns) | indent(4) }}
 
@@ -123,7 +123,7 @@ hashed_columns AS (
 
     SELECT
 
-    {{ dbtvault.print_list(dbtvault.escape_column_names(derived_and_null_columns_to_select)) }},
+    {{ dbtvault.print_list(derived_and_null_columns_to_select) }},
 
     {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
     {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
