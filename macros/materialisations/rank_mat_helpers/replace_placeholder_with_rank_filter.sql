@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_rank_filter',

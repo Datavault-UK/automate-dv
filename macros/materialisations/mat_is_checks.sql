@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro is_any_incremental() -%}
     {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or dbtvault.is_pit_incremental() or dbtvault.is_bridge_incremental() or is_incremental() -%}
         {%- do return(true) -%}

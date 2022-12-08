@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro select_hash_alg(hash) -%}
 
     {%- set available_hash_algorithms = ['md5', 'sha'] -%}
