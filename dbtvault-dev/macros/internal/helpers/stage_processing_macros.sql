@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro process_columns_to_select(columns_list=none, exclude_columns_list=none) -%}
 
     {% set columns_list = columns_list | map('upper') | list %}
@@ -50,7 +55,7 @@
     {%- set processed_hash_columns = {} -%}
 
     {%- for col, col_mapping in hash_columns.items() -%}
-        
+
         {%- if col_mapping is mapping -%}
             {%- if col_mapping.exclude_columns -%}
 

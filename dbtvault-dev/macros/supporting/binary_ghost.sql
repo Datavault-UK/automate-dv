@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro binary_ghost(alias, hash) -%}
     {{ adapter.dispatch('binary_ghost', 'dbtvault')(alias=alias, hash=hash) }}
 {%- endmacro -%}

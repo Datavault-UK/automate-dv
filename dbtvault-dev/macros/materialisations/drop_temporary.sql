@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% macro drop_temporary_special(tmp_relation) %}
     {# In databricks and sqlserver a temporary view/table can only be dropped by #}
     {# the connection or session that created it so drop it now before the commit below closes this session #}

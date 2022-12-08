@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro type_string(is_hash=false, char_length=255) -%}
   {{- return(adapter.dispatch('type_string', 'dbtvault')(is_hash=is_hash, char_length=char_length)) -}}
 {%- endmacro -%}

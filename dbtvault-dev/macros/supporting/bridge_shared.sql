@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro bridge_overlap_and_new_rows(src_pk, bridge_walk, source_model, new_as_of_dates_cte) -%}
 
 SELECT
