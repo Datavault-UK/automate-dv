@@ -21,28 +21,25 @@
     {%- endif -%}
 
 {%- for col in columns -%}
-    {%- if (target.type == 'snowflake') or (target.type == 'sqlserver') -%}
-        {%- set col_name = '"{}"'.format(col.column) -%}
-    {%- elif (target.type == 'bigquery') or (target.type == 'databricks') -%}
-        {%- set col_name = '`{}`'.format(col.column) -%}
-    {%- elif target.type == 'postgres' -%}
-        {%- set col_name = col.column.upper() -%}
-    {%- endif -%}
 
-    {%- if (col_name == src_pk) or (col_name == src_hashdiff) -%}
+    {%- set col_name = col.column -%}
+
+    {%- if (col_name | lower == src_pk | lower) or (col_name | lower == src_hashdiff | lower) -%}
         {%- set col_sql = dbtvault.binary_ghost(alias=col_name, hash=hash) -%}
-    {%- do col_definitions.append(col_sql) -%}
+        {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif (col_name == src_eff) or (col_name == src_ldts) -%}
-    {%- if (col.dtype == 'DATE') or (col.dtype == 'date') -%}
-        {%- set col_sql = dbtvault.cast_date('1900-01-01', as_string=true, datetime=false, alias=col_name)-%}
-    {%- else -%}
-        {%- set col_sql = dbtvault.cast_date('1900-01-01 00:00:00', as_string=true, datetime=true, alias=col_name)-%}
-    {%- endif -%}
-    {%- do col_definitions.append(col_sql) -%}
+    {%- elif (col_name | lower == src_eff | lower) or (col_name | lower == src_ldts | lower) -%}
+        {%- if (col.dtype | lower == 'date') -%}
+            {%- set col_sql = dbtvault.cast_date('1900-01-01', as_string=true, datetime=false, alias=col_name)-%}
+        {%- else -%}
+            {%- set col_sql = dbtvault.cast_date('1900-01-01 00:00:00', as_string=true, datetime=true, alias=col_name)-%}
+        {%- endif -%}
+        {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif col_name == src_source -%}
-        {%- set col_sql = "CAST('{}' AS {}) AS {}".format(source_str, col.dtype, src_source) -%}
+    {%- elif col_name | lower == src_source | lower -%}
+        {%- set col_sql -%}
+            CAST('{{ source_str }}' AS {{ col.dtype }}) AS {{ src_source }}
+        {%- endset -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name is in string_columns[0]) or (col_name is in string_columns[1]) -%}
