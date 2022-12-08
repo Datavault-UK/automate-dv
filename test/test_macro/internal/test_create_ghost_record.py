@@ -9,12 +9,12 @@ macro_name = "create_ghost_record"
 def test_create_ghost_record_with_all_string_and_no_extra_columns(request, generate_model):
     var_dict = {
         "source_model": "raw_source_sat",
-        "src_pk": '"CUSTOMER_PK"',
-        "src_hashdiff": '"HASHDIFF"',
-        "src_payload": '"TEST_COLUMN_1"',
-        "src_eff": '"EFFECTIVE_FROM"',
-        "src_ldts": '"LOAD_DATE"',
-        "src_source": '"RECORD_SOURCE"'
+        "src_pk": 'CUSTOMER_PK',
+        "src_hashdiff": 'HASHDIFF',
+        "src_payload": 'TEST_COLUMN_1',
+        "src_eff": 'EFFECTIVE_FROM',
+        "src_ldts": 'LOAD_DATE',
+        "src_source": 'RECORD_SOURCE'
     }
 
     generate_model()
