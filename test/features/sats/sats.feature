@@ -420,7 +420,7 @@ Feature: [SAT] Satellites
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | TPCH_CUSTOMER  | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
-  Scenario: [SAT-17] Satellite with exclude payload columns flag  starting with an empty satellite.
+  Scenario: [SAT-17] Satellite with exclude payload columns flag starting with an empty satellite.
     Given I exclude the following columns for the SATELLITE table
       | EXCLUDE COLUMNS |
       | CUSTOMER_DOB    |
@@ -466,8 +466,65 @@ Feature: [SAT] Satellites
       | md5('1004') | Dom           | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite
+  Scenario: [SAT-19] Satellite with exclude payload columns flag and no column list starting with a non-existent satellite.
+    Given the SATELLITE table does not exist
+    And I do not exclude any columns from the SATELLITE table
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the SATELLITE sat
+    Then the SATELLITE table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_ID | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | Alice         | 1997-04-24   | 17-214-233-1214 | 1001        | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 2006-04-17   | 17-214-233-1215 | 1002        | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 2013-02-04   | 17-214-233-1216 | 1003        | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 2018-04-13   | 17-214-233-1217 | 1004        | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.satellite
+  Scenario: [SAT-20] Satellite with exclude payload columns flag and no column list and hashdiff aliasing starting with a non-existent satellite.
+    Given the SATELLITE_HD_ALIAS table does not exist
+    And I do not exclude any columns from the SATELLITE_HD_ALIAS table
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the SATELLITE_HD_ALIAS sat
+    Then the SATELLITE_HD_ALIAS table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_ID | CUSTOMER_HASHDIFF                                     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | Alice         | 1997-04-24   | 17-214-233-1214 | 1001        | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 2006-04-17   | 17-214-233-1215 | 1002        | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 2013-02-04   | 17-214-233-1216 | 1003        | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 2018-04-13   | 17-214-233-1217 | 1004        | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.satellite
+  Scenario: [SAT-21] Satellite with exclude payload columns flag and no column list starting with an empty satellite.
+    Given I do not exclude any columns from the SATELLITE_PL_EXCLUDE table
+    And the SATELLITE_PL_EXCLUDE sat is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
+      | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
+      | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
+      | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER data
+    When I load the SATELLITE_PL_EXCLUDE sat
+    Then the SATELLITE_PL_EXCLUDE table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_ID | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | Alice         | 1997-04-24   | 17-214-233-1214 | 1001        | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | Bob           | 2006-04-17   | 17-214-233-1215 | 1002        | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1003') | Chad          | 2013-02-04   | 17-214-233-1216 | 1003        | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1004') | Dom           | 2018-04-13   | 17-214-233-1217 | 1004        | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.satellite
   @fixture.disable_hashing_upper_case
-  Scenario: [SAT-19] Load data into a non-existent satellite mixed case not being changed to UPPER in hashdiff
+  Scenario: [SAT-22] Load data into a non-existent satellite mixed case not being changed to UPPER in hashdiff
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -486,7 +543,7 @@ Feature: [SAT] Satellites
 
   @fixture.satellite
   @fixture.disable_hashing_upper_case
-  Scenario: [SAT-20] Load data into a non-existent satellite lower case not being changed to UPPER in hashdiff
+  Scenario: [SAT-23] Load data into a non-existent satellite lower case not being changed to UPPER in hashdiff
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
@@ -505,7 +562,7 @@ Feature: [SAT] Satellites
 
   @fixture.satellite
   @fixture.disable_hashing_upper_case
-  Scenario: [SAT-21] Load data into a non-existent satellite UPPER case not being changed in hashdiff
+  Scenario: [SAT-24] Load data into a non-existent satellite UPPER case not being changed in hashdiff
     Given the SATELLITE table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
