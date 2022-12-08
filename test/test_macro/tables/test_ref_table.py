@@ -7,14 +7,7 @@ macro_name = "ref_table"
 
 @pytest.mark.single_source_ref_table
 def test_ref_table_macro_correctly_generates_sql_for_single_source(request, generate_model):
-    metadata = {
-        "source_model": "raw_source_sat",
-        "src_pk": "CUSTOMER_PK",
-        "src_ldts": "LOAD_DATE",
-        "src_source": "RECORD_SOURCE"
-    }
-
-    generate_model(metadata)
+    generate_model()
 
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
                                          full_refresh=True)

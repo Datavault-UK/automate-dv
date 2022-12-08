@@ -64,7 +64,8 @@ def single_source_sat() -> dict:
 
 
 def single_source_ref_table() -> dict:
-    return dict(source_model="raw_source_sat",
-                src_pk="CUSTOMER_PK",
+    return dict(source_model="raw_source_ref_table",
+                src_pk="DATE_PK",
+                src_extra_columns=["YEAR", "MONTH", "DAY", "DAY_OF_WEEK"],
                 src_ldts="LOAD_DATE",
-                src_source="RECORD_SOURCE")
+                src_source="SOURCE")
