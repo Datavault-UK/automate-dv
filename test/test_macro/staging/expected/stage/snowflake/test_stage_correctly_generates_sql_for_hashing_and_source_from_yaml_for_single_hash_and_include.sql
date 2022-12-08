@@ -2,16 +2,16 @@ WITH source_data AS (
 
     SELECT
 
-    "BOOKING_FK",
-    "ORDER_FK",
-    "CUSTOMER_PK",
-    "CUSTOMER_ID",
-    "LOAD_DATE",
-    "RECORD_SOURCE",
-    "CUSTOMER_DOB",
-    "CUSTOMER_NAME",
-    "NATIONALITY",
-    "PHONE",
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_PK,
+    CUSTOMER_ID,
+    LOAD_DATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
     "TEST_COLUMN_2",
     "TEST_COLUMN_3",
     "TEST_COLUMN_4",
@@ -20,7 +20,7 @@ WITH source_data AS (
     "TEST_COLUMN_7",
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
-    "BOOKING_DATE"
+    BOOKING_DATE
 
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
@@ -29,16 +29,16 @@ hashed_columns AS (
 
     SELECT
 
-    "BOOKING_FK",
-    "ORDER_FK",
-    "CUSTOMER_PK",
-    "CUSTOMER_ID",
-    "LOAD_DATE",
-    "RECORD_SOURCE",
-    "CUSTOMER_DOB",
-    "CUSTOMER_NAME",
-    "NATIONALITY",
-    "PHONE",
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_PK,
+    CUSTOMER_ID,
+    LOAD_DATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
     "TEST_COLUMN_2",
     "TEST_COLUMN_3",
     "TEST_COLUMN_4",
@@ -47,13 +47,13 @@ hashed_columns AS (
     "TEST_COLUMN_7",
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
-    "BOOKING_DATE",
+    BOOKING_DATE,
 
     CAST(MD5_BINARY(CONCAT(
-        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_DOB" AS VARCHAR))), ''), '^^'), '||',
-        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_ID" AS VARCHAR))), ''), '^^'), '||',
-        IFNULL(NULLIF(UPPER(TRIM(CAST("CUSTOMER_NAME" AS VARCHAR))), ''), '^^')
-    )) AS BINARY(16)) AS "HASHDIFF"
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_DOB AS VARCHAR))), ''), '^^'), '||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_ID AS VARCHAR))), ''), '^^'), '||',
+        IFNULL(NULLIF(UPPER(TRIM(CAST(CUSTOMER_NAME AS VARCHAR))), ''), '^^')
+    )) AS BINARY(16)) AS HASHDIFF
 
     FROM source_data
 ),
@@ -62,16 +62,16 @@ columns_to_select AS (
 
     SELECT
 
-    "BOOKING_FK",
-    "ORDER_FK",
-    "CUSTOMER_PK",
-    "CUSTOMER_ID",
-    "LOAD_DATE",
-    "RECORD_SOURCE",
-    "CUSTOMER_DOB",
-    "CUSTOMER_NAME",
-    "NATIONALITY",
-    "PHONE",
+    BOOKING_FK,
+    ORDER_FK,
+    CUSTOMER_PK,
+    CUSTOMER_ID,
+    LOAD_DATE,
+    RECORD_SOURCE,
+    CUSTOMER_DOB,
+    CUSTOMER_NAME,
+    NATIONALITY,
+    PHONE,
     "TEST_COLUMN_2",
     "TEST_COLUMN_3",
     "TEST_COLUMN_4",
@@ -80,8 +80,8 @@ columns_to_select AS (
     "TEST_COLUMN_7",
     "TEST_COLUMN_8",
     "TEST_COLUMN_9",
-    "BOOKING_DATE",
-    "HASHDIFF"
+    BOOKING_DATE,
+    HASHDIFF
 
     FROM hashed_columns
 )
