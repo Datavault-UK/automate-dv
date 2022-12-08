@@ -47,13 +47,13 @@
                     {%- endfor -%}
 
                     {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
-                    {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(derived_column) -%}
+                    {%- set concat_string = concat ~ " AS " ~ derived_column -%}
 
                     {%- do der_columns.append(concat_string) -%}
                 {%- else -%}
                     {%- set column_str = dbtvault.as_constant(column_config['source_column']) -%}
                     {%- if column_escape is true -%}
-                        {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ dbtvault.escape_column_names(derived_column)) -%}
+                        {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ derived_column) -%}
                     {%- else -%}
                         {%- do der_columns.append(column_str ~ " AS " ~ derived_column) -%}
                     {%- endif -%}
