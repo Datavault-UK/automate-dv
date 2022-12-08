@@ -131,7 +131,8 @@ def test_derive_columns_correctly_generates_sql_without_source_columns_concat_es
                 'source_column': ['CUSTOMER_NAME', 'CUSTOMER DOB', 'PHONE'],
                 'escape': True
             },
-            'SOURCE': "!STG_BOOKING", 'EFFECTIVE_FROM': 'LOAD_DATE'
+            'SOURCE': "!STG_BOOKING",
+            'EFFECTIVE_FROM': 'LOAD_DATE'
         }
     }
 
