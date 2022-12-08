@@ -63,21 +63,21 @@
 
 {%- macro default__null_column_sql(col_name, default_value) -%}
 
-    {{ col_name_esc }} AS {{ col_name ~ "_ORIGINAL" }},
-    IFNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name }}
+    {{ col_name }} AS {{ col_name ~ "_ORIGINAL" }},
+    IFNULL({{ col_name }}, '{{ default_value }}') AS {{ col_name }}
 
 {%- endmacro -%}
 
 {%- macro sqlserver__null_column_sql(col_name, default_value) -%}
 
-    {{ col_name_esc }} AS {{ col_name ~ "_ORIGINAL" }},
-    ISNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name }}
+    {{ col_name }} AS {{ col_name ~ "_ORIGINAL" }},
+    ISNULL({{ col_name }}, '{{ default_value }}') AS {{ col_name }}
 
 {%- endmacro -%}
 
 {%- macro postgres__null_column_sql(col_name, default_value) -%}
 
-    {{ col_name_esc }} AS {{ col_name ~ "_ORIGINAL" }},
-    COALESCE({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name }}
+    {{ col_name }} AS {{ col_name ~ "_ORIGINAL" }},
+    COALESCE({{ col_name }}, '{{ default_value }}') AS {{ col_name }}
 
 {%- endmacro -%}
