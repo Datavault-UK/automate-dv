@@ -1,0 +1,6 @@
+CONCAT(
+    BOOKING_DATE, '||',
+    STG_BOOKING, '||',
+    CUSTOMER_ID, '||',
+    CUSTOMER_NAME
+)

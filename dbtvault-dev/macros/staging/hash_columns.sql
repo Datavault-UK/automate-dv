@@ -10,10 +10,10 @@
 
     {%- for col in columns -%}
 
-        {% if columns[col] is mapping and columns[col].is_hashdiff -%}
+        {%- if columns[col] is mapping and columns[col].is_hashdiff -%}
 
-            {{- dbtvault.hash(columns=columns[col]['columns'], 
-                              alias=col, 
+            {{- dbtvault.hash(columns=columns[col]['columns'],
+                              alias=col,
                               is_hashdiff=columns[col]['is_hashdiff']) -}}
 
         {%- elif columns[col] is not mapping -%}
@@ -21,7 +21,7 @@
             {{- dbtvault.hash(columns=columns[col],
                               alias=col,
                               is_hashdiff=false) -}}
-        
+
         {%- elif columns[col] is mapping and not columns[col].is_hashdiff -%}
 
             {%- if execute -%}
@@ -32,7 +32,7 @@
 
         {%- endif -%}
 
-        {{- ",\n" if not loop.last -}}
+        {{- ",\n\n" if not loop.last -}}
     {%- endfor -%}
 
 {%- endif %}
