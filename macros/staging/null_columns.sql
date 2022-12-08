@@ -63,27 +63,21 @@
 
 {%- macro default__null_column_sql(col_name, default_value) -%}
 
-    {%- set col_name_esc = dbtvault.escape_column_names(col_name) -%}
-    {%- set col_name_orig_esc = dbtvault.escape_column_names(col_name ~ "_ORIGINAL") -%}
-    {{ col_name_esc }} AS {{ col_name_orig_esc }},
-    IFNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name_esc }}
+    {{ col_name_esc }} AS {{ col_name ~ "_ORIGINAL" }},
+    IFNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name }}
 
 {%- endmacro -%}
 
 {%- macro sqlserver__null_column_sql(col_name, default_value) -%}
 
-    {%- set col_name_esc = dbtvault.escape_column_names(col_name) -%}
-    {%- set col_name_orig_esc = dbtvault.escape_column_names(col_name ~ "_ORIGINAL") -%}
-    {{ col_name_esc }} AS {{ col_name_orig_esc }},
-    ISNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name_esc }}
+    {{ col_name_esc }} AS {{ col_name ~ "_ORIGINAL" }},
+    ISNULL({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name }}
 
 {%- endmacro -%}
 
 {%- macro postgres__null_column_sql(col_name, default_value) -%}
 
-    {%- set col_name_esc = dbtvault.escape_column_names(col_name) -%}
-    {%- set col_name_orig_esc = dbtvault.escape_column_names(col_name ~ "_ORIGINAL") -%}
-    {{ col_name_esc }} AS {{ col_name_orig_esc }},
-    COALESCE({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name_esc }}
+    {{ col_name_esc }} AS {{ col_name ~ "_ORIGINAL" }},
+    COALESCE({{ col_name_esc }}, '{{ default_value }}') AS {{ col_name }}
 
 {%- endmacro -%}

@@ -4,11 +4,6 @@
                                            src_ldts=src_ldts, src_source=src_source,
                                            source_model=source_model) -}}
 
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
     {%- if not dbtvault.is_list(source_model) -%}
         {%- set source_model = [source_model] -%}
     {%- endif -%}
@@ -46,8 +41,8 @@
 
 {{ cte_name }} AS (
     SELECT {{ dbtvault.prefix([src_pk], 's') }},
-           s.{{ dbtvault.escape_column_names(hashdiff) }} AS {{ hashdiff_escaped }},
-           s.{{ dbtvault.escape_column_names(satellite_name) }} AS {{ satellite_name_escaped }},
+           s.{{ hashdiff }} AS {{ hashdiff_escaped }},
+           s.{{ satellite_name }} AS {{ satellite_name_escaped }},
            {%- if dbtvault.is_something(src_extra_columns) -%}
                {{ dbtvault.prefix([src_extra_columns], 's') }},
            {%- endif %}
