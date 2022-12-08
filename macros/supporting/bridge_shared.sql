@@ -7,14 +7,14 @@ SELECT
         {%- set link_table = bridge_walk[bridge_step]['link_table'] -%}
         {%- set eff_sat_table = bridge_walk[bridge_step]['eff_sat_table'] -%}
 
-        {%- set link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_pk']) -%}
+        {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
 
-        {%- set bridge_link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_link_pk']) -%}
-        {%- set bridge_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_end_date']) -%}
-        {%- set bridge_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['bridge_load_date']) -%}
+        {%- set bridge_link_pk = bridge_walk[bridge_step]['bridge_link_pk'] -%}
+        {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] -%}
+        {%- set bridge_load_date = bridge_walk[bridge_step]['bridge_load_date'] -%}
 
-        {%- set eff_sat_end_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_end_date']) -%}
-        {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) %}
+        {%- set eff_sat_end_date = bridge_walk[bridge_step]['eff_sat_end_date'] -%}
+        {%- set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] %}
 
         {{- '\n   ' }} {{ link_table | lower }}.{{ link_pk }} AS {{ bridge_link_pk }},
         {{- '\n   ' }} {{ eff_sat_table | lower }}.{{ eff_sat_end_date }} AS {{ bridge_end_date }},
@@ -34,12 +34,12 @@ SELECT
         {%- set current_link = bridge_walk[bridge_step]['link_table'] -%}
         {%- set current_eff_sat = bridge_walk[bridge_step]['eff_sat_table'] -%}
 
-        {%- set link_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_pk']) -%}
-        {%- set link_fk1 = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_fk1']) -%}
-        {%- set link_fk2 = dbtvault.escape_column_names(bridge_walk[bridge_step]['link_fk2']) -%}
+        {%- set link_pk = bridge_walk[bridge_step]['link_pk'] -%}
+        {%- set link_fk1 = bridge_walk[bridge_step]['link_fk1'] -%}
+        {%- set link_fk2 = bridge_walk[bridge_step]['link_fk2'] -%}
 
-        {%- set eff_sat_pk = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_pk']) -%}
-        {%- set eff_sat_load_date = dbtvault.escape_column_names(bridge_walk[bridge_step]['eff_sat_load_date']) -%}
+        {%- set eff_sat_pk = bridge_walk[bridge_step]['eff_sat_pk'] -%}
+        {%- set eff_sat_load_date = bridge_walk[bridge_step]['eff_sat_load_date'] -%}
 
     {%- if loop.first %}
     LEFT JOIN {{ ref(current_link) }} AS {{ current_link | lower }}
