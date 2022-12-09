@@ -174,5 +174,5 @@ def feature_sub_types():
             'main': [
                 'ref_tables'
             ]
-        }
+        },
     }

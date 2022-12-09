@@ -93,5 +93,5 @@ extends:
         displayName: 'Load Cycles'
         disabledForPlatform: ['databricks', 'postgres']
       - groupName: 'ref_tables'
-          displayName: 'Reference Tables'
-          disabledForPlatform: [ 'databricks', 'postgres', 'bigquery', 'sqlserver']
+        displayName: 'Reference Tables'
+        disabledForPlatform: [ 'databricks', 'postgres', 'bigquery', 'sqlserver']
