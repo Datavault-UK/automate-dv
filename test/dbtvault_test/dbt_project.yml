@@ -16,6 +16,9 @@ clean-targets:
   - target
   - dbt_packages
 
+seeds:
+  +quote_columns: true
+
 vars:
   hash: MD5
   hash_content_casing: 'UPPER' # Default UPPER, alternatively DISABLED
