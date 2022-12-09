@@ -10,7 +10,7 @@ def test_process_columns_to_escape_with_list_is_successful(request, generate_mod
     var_dict = {
         'derived_columns_list': {
             'CUSTOMER_DETAILS': {
-                'source_column': ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'PHONE'],
+                'source_column': ['CUSTOMER_NAME', 'CUSTOMER DOB', 'PHONE'],
                 'escape': True
             },
             'SOURCE': "!STG_BOOKING",
