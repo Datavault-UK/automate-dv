@@ -1,9 +1,9 @@
 {%- macro create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- adapter.dispatch('create_ghost_record', 'dbtvault')(src_pk=src_pk, src_hashdiff=src_hashdiff,
-                                           src_payload=src_payload, src_extra_columns=src_extra_columns,
-                                           src_eff=src_eff, src_ldts=src_ldts,
-                                           src_source=src_source, source_model=source_model) -}}
+                                                            src_payload=src_payload, src_extra_columns=src_extra_columns,
+                                                            src_eff=src_eff, src_ldts=src_ldts,
+                                                            src_source=src_source, source_model=source_model) -}}
 
 {%- endmacro -%}
 
@@ -14,11 +14,11 @@
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
-{%- set string_columns = [] -%}
-    {%- do string_columns.append(src_payload) -%}
-    {%- if src_extra_columns != none -%}
-        {%- do string_columns.append(src_extra_columns) -%}
-    {%- endif -%}
+{%- set string_columns = [src_payload] -%}
+
+{%- if src_extra_columns != none -%}
+    {%- do string_columns.append(src_extra_columns) -%}
+{%- endif -%}
 
 {%- for col in columns -%}
 
