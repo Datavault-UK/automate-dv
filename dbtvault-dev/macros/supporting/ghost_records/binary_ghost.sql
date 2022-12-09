@@ -5,11 +5,11 @@
 {%- macro default__binary_ghost(alias, hash) -%}
 
     {%- if hash | lower == 'md5' -%}
-        {{ dbtvault.cast_binary(column_str='00000000000000000000000000000000', alias=alias, quote=true) }}
+        {{ dbtvault.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
     {%- elif hash | lower == 'sha' -%}
-        {{ dbtvault.cast_binary(column_str='0000000000000000000000000000000000000000000000000000000000000000', alias=alias, quote=true)}}
+        {{ dbtvault.cast_binary(column_str=modules.itertools.repeat('0', 64) | join (''), alias=alias, quote=true) }}
     {%- else -%}
-        {{ dbtvault.cast_binary(column_str='00000000000000000000000000000000', alias=alias, quote=true) }}
+        {{ dbtvault.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
     {%- endif -%}
 {%- endmacro -%}
 
