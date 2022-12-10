@@ -52,7 +52,7 @@ derived_columns AS (
         "CUSTOMER_NAME", '||',
         "CUSTOMER_DOB", '||',
         "PHONE"
-    ) AS "CUSTOMER_DETAILS",
+    ) AS CUSTOMER_DETAILS,
     'STG_BOOKING' AS SOURCE,
     LOAD_DATE AS EFFECTIVE_FROM
 
@@ -82,7 +82,7 @@ columns_to_select AS (
     TEST_COLUMN_8,
     TEST_COLUMN_9,
     BOOKING_DATE,
-    "CUSTOMER_DETAILS",
+    CUSTOMER_DETAILS,
     SOURCE,
     EFFECTIVE_FROM
 

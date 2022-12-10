@@ -545,7 +545,9 @@ def standard_column_wrapper_macro(model_name, **_):
 
 def process_columns_to_escape_macro(model_name, **_):
     template = f"""
+               {{% if execute %}}
                {{{{ dbtvault.process_columns_to_escape(derived_columns_list=var('derived_columns_list', none))}}}}
+               {{% endif %}}
                """
 
     template_to_file(template, model_name)
