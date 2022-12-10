@@ -47,6 +47,7 @@
                     {%- endfor -%}
 
                     {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
+                    {%- set concat_string = concat ~ " AS " ~ derived_column -%}
 
                     {%- do der_columns.append(concat_string) -%}
                 {%- else -%}
