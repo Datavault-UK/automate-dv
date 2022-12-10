@@ -20,7 +20,7 @@ WITH source_data AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-    BOOKING_DATE
+    "BOOKING_DATE"
 
     FROM [DATABASE_NAME].[SCHEMA_NAME].raw_source
 ),
@@ -47,7 +47,7 @@ derived_columns AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-    BOOKING_DATE,
+    "BOOKING_DATE",
     'STG_BOOKING' AS SOURCE,
     "BOOKING_DATE" AS EFFECTIVE_FROM
 
@@ -75,7 +75,7 @@ hashed_columns AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-    BOOKING_DATE,
+    "BOOKING_DATE",
     SOURCE,
     EFFECTIVE_FROM,
 
@@ -117,7 +117,7 @@ columns_to_select AS (
     TEST_COLUMN_7,
     TEST_COLUMN_8,
     TEST_COLUMN_9,
-    BOOKING_DATE,
+    "BOOKING_DATE",
     SOURCE,
     EFFECTIVE_FROM,
     CUSTOMER_PK,
