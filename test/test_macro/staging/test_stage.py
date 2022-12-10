@@ -390,6 +390,68 @@ def test_stage_correctly_generates_sql_for_only_ranked_from_yaml(request, genera
 
 
 @pytest.mark.macro
+def test_stage_correctly_generates_sql_for_only_null_required_from_yaml(request, generate_model):
+    metadata = {
+        "include_source_columns": False,
+        "source_model": "raw_source",
+        "null_columns": {
+            "required": ["CUSTOMER_ID"]
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_stage_correctly_generates_sql_for_only_null_optional_from_yaml(request, generate_model):
+    metadata = {
+        "include_source_columns": False,
+        "source_model": "raw_source",
+        "null_columns": {
+            "optional": ["CUSTOMER_DOB"]
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
+def test_stage_correctly_generates_sql_for_null_and_source_from_yaml(request, generate_model):
+    metadata = {
+        "source_model": "raw_source",
+        "null_columns": {
+            "required": ["CUSTOMER_ID"]
+        }
+    }
+
+    generate_model(metadata)
+
+    dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.macro
 def test_stage_correctly_generates_sql_for_hashing_and_source_from_yaml(request, generate_model):
     metadata = {
         "source_model": "raw_source",

@@ -381,7 +381,10 @@ def macro_model(model_name, macro_name, metadata=None):
 def hash_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
-    {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
+    {{{{ dbtvault.hash(columns=var('columns'), 
+                       alias=var('alias'), 
+                       is_hashdiff=var('is_hashdiff', false), 
+                       columns_to_escape=var('columns_to_escape', false)) }}}}
     {{% endif %}}
     """
 
@@ -451,6 +454,7 @@ def stage_macro(model_name, metadata):
                f"{{{{ dbtvault.stage(include_source_columns=metadata_dict.get('include_source_columns', none),\n" \
                f"                  source_model=metadata_dict.get('source_model', none),\n" \
                f"                  derived_columns=metadata_dict.get('derived_columns', none),\n" \
+               f"                  null_columns=metadata_dict.get('null_columns', none),\n" \
                f"                  hashed_columns=metadata_dict.get('hashed_columns', none),\n" \
                f"                  ranked_columns=metadata_dict.get('ranked_columns', none)) }}}}"
 

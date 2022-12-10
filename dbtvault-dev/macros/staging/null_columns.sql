@@ -45,7 +45,7 @@
     {%- if dbtvault.is_something(ns.optional) -%}
         {%- filter indent(width=0) -%}
         {%- for col_name in ns.optional -%}
-            {{ dbtvault.null_column_sql(col_name, optional_value) }}{{ ",\n" if not loop.last else "\n" }}
+            {{ dbtvault.null_column_sql(col_name, optional_value) }}{{ ",\n" if not loop.last }}
         {%- endfor -%}
         {%- endfilter -%}
     {%- endif -%}

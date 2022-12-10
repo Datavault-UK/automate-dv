@@ -1,14 +1,14 @@
-{%- macro hash(columns=none, alias=none, is_hashdiff=false) -%}
+{%- macro hash(columns=none, alias=none, is_hashdiff=false, columns_to_escape=none) -%}
 
     {%- if is_hashdiff is none -%}
         {%- set is_hashdiff = false -%}
     {%- endif -%}
 
-    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias, is_hashdiff=is_hashdiff) -}}
+    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) -}}
 
 {%- endmacro %}
 
-{%- macro default__hash(columns, alias, is_hashdiff) -%}
+{%- macro default__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
 {%- set hash = var('hash', 'md5') -%}
 {%- set concat_string = var('concat_string', '||') -%}
@@ -26,9 +26,12 @@
 {#- If single column to hash -#}
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
-    {%- set escaped_column_str = column_str -%}
 
-    {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', standardise | replace('[EXPRESSION]', escaped_column_str)) }} AS {{ alias | indent(4) }}
+    {%- if column_str in columns_to_escape -%}
+        {%- set column_str = dbtvault.escape_column_name(column_str) -%}
+    {%- endif -%}
+
+    {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', standardise | replace('[EXPRESSION]', column_str)) }} AS {{ alias | indent(4) }}
 
 {#- Else a list of columns to hash -#}
 {%- else -%}
@@ -37,10 +40,13 @@
     {%- set processed_columns = [] -%}
 
     {%- for column in columns -%}
-        {%- set column_str = dbtvault.as_constant(column) -%}
-        {%- set escaped_column_str = column_str -%}
+        {%- if column in columns_to_escape -%}
+            {%- set column = dbtvault.escape_column_name(column) -%}
+        {%- endif -%}
 
-        {%- set column_expression = dbtvault.null_expression(escaped_column_str) -%}
+        {%- set column_str = dbtvault.as_constant(column) -%}
+
+        {%- set column_expression = dbtvault.null_expression(column_str) -%}
 
         {%- do all_null.append(null_placeholder_string) -%}
         {%- do processed_columns.append(column_expression) -%}

@@ -127,7 +127,7 @@ hashed_columns AS (
     {{ dbtvault.print_list(list_to_print=derived_and_null_columns_to_select, columns_to_escape=columns_to_escape) }},
 
     {% set processed_hash_columns = dbtvault.process_hash_column_excludes(hashed_columns, all_source_columns) -%}
-    {{- dbtvault.hash_columns(columns=processed_hash_columns) | indent(4) }}
+    {{- dbtvault.hash_columns(columns=processed_hash_columns, columns_to_escape=columns_to_escape) | indent(4) }}
 
     FROM {{ last_cte }}
     {%- set last_cte = "hashed_columns" -%}
