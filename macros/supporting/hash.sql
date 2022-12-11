@@ -88,29 +88,29 @@
 {%- endmacro -%}
 
 
-{%- macro bigquery__hash(columns, alias, is_hashdiff) -%}
+{%- macro bigquery__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
-
-{%- endmacro -%}
-
-
-{%- macro sqlserver__hash(columns, alias, is_hashdiff) -%}
-
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
+    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
-{%- macro postgres__hash(columns, alias, is_hashdiff) -%}
+{%- macro sqlserver__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
+    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
-{%- macro databricks__hash(columns, alias, is_hashdiff) -%}
+{%- macro postgres__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff) }}
+    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+
+{%- endmacro -%}
+
+
+{%- macro databricks__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
+
+    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
