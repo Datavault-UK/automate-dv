@@ -34,7 +34,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
             setattr(context, stage_section, {stage_model_name: dict()})
         else:
             if not getattr(context, stage_section).get(stage_model_name, None):
-                context[stage_section][stage_model_name] = dict()
+                setattr(context, stage_section, {stage_model_name: dict()})
 
     dbt_vars = {
         "include_source_columns": context.include_source_columns,
