@@ -5,8 +5,8 @@
 
 {%- macro process_columns_to_select(columns_list=none, exclude_columns_list=none) -%}
 
-    {% set columns_list = columns_list | map('upper') | list %}
-    {% set exclude_columns_list = exclude_columns_list | map('upper') | list %}
+    {% set columns_list = columns_list | list %}
+    {% set exclude_columns_list = exclude_columns_list | list %}
 
     {% set columns_to_select = [] %}
 
@@ -20,7 +20,7 @@
 
         {%- for col in columns_list -%}
 
-            {%- if col not in exclude_columns_list -%}
+            {%- if (col | upper) not in (exclude_columns_list | map('upper') | list) -%}
                 {%- do columns_to_select.append(col) -%}
             {%- endif -%}
 
