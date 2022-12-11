@@ -27,7 +27,7 @@
 {%- if columns is string -%}
     {%- set column_str = dbtvault.as_constant(columns) -%}
 
-    {%- if columns_to_escape -%}
+    {%- if dbtvault.is_something(columns_to_escape) -%}
         {%- if column_str in columns_to_escape -%}
             {%- set column_str = dbtvault.escape_column_name(column_str) -%}
         {%- endif -%}
