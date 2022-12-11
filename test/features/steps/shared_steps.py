@@ -29,33 +29,12 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.hash_content_casing = getattr(context, "hash_content_casing", 'UPPER')
 
-    if not getattr(context, "ranked_columns", None):
-        context.ranked_columns = dict()
-        context.ranked_columns[stage_model_name] = dict()
-    else:
-        if not context.ranked_columns.get(stage_model_name, None):
-            context.ranked_columns[stage_model_name] = dict()
-
-    if not getattr(context, "hashed_columns", None):
-        context.hashed_columns = dict()
-        context.hashed_columns[stage_model_name] = dict()
-    else:
-        if not context.hashed_columns.get(stage_model_name, None):
-            context.hashed_columns[stage_model_name] = dict()
-
-    if not getattr(context, "derived_columns", None):
-        context.derived_columns = dict()
-        context.derived_columns[stage_model_name] = dict()
-    else:
-        if not context.derived_columns.get(stage_model_name, None):
-            context.derived_columns[stage_model_name] = dict()
-
-    if not getattr(context, "null_columns", None):
-        context.null_columns = dict()
-        context.null_columns[stage_model_name] = dict()
-    else:
-        if not context.null_columns.get(stage_model_name, None):
-            context.null_columns[stage_model_name] = dict()
+    for stage_section in ['ranked_columns', 'hashed_columns', 'derived_columns', 'null_columns']:
+        if not getattr(context, stage_section, None):
+            setattr(context, stage_section, {stage_model_name: dict()})
+        else:
+            if not getattr(context, stage_section).get(stage_model_name, None):
+                context[stage_section][stage_model_name] = dict()
 
     dbt_vars = {
         "include_source_columns": context.include_source_columns,
