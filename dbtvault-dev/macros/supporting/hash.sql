@@ -4,7 +4,8 @@
         {%- set is_hashdiff = false -%}
     {%- endif -%}
 
-    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) -}}
+    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias,
+                                             is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) -}}
 
 {%- endmacro %}
 
@@ -42,8 +43,10 @@
     {%- set processed_columns = [] -%}
 
     {%- for column in columns -%}
-        {%- if column in columns_to_escape -%}
-            {%- set column = dbtvault.escape_column_name(column) -%}
+        {%- if dbtvault.is_something(columns_to_escape) -%}
+            {%- if column in columns_to_escape -%}
+                {%- set column = dbtvault.escape_column_name(column) -%}
+            {%- endif -%}
         {%- endif -%}
 
         {%- set column_str = dbtvault.as_constant(column) -%}
