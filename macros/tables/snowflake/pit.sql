@@ -70,24 +70,23 @@ backfill AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
-
     {% for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_name = sat_name -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
 
         {%- if enable_ghost_record -%}
         MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
         MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {%- else -%}
         {% if target.type == "sqlserver" %}
         CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ sat_name }}_{{ sat_pk_name }},
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {% else %}
-        CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ sat_name }}_{{ sat_pk_name }}
+        CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ sat_name }}_{{ sat_pk_name }},
         CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {% endif -%}
 
@@ -133,11 +132,11 @@ new_rows AS (
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
 
         {% if enable_ghost_record %}
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name}}_{{ sat_pk_name }},
-        {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
-        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name}}_{{ sat_ldts_name }}
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
+        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {%- else -%}
 
         {%- if target.type == "sqlserver" -%}
