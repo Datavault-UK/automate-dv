@@ -82,32 +82,28 @@ backfill AS (
         MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
         MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {%- else -%}
-        {% if target.type == "sqlserver" %}
-        CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ sat_name }}_{{ sat_pk_name }},
-        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
-        {% else %}
-        CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ sat_name }}_{{ sat_ldts_name }}
-        {% endif -%}
+
+        {{ dbtvault.cast_binary(ghost_pk, quote=true, alias=sat_name ~ '_' ~ sat_pk_name) }},
+        {{ dbtvault.cast_date(ghost_date, as_string=true, datetime=true, alias=sat_name ~ '_' ~ sat_ldts_name) }}
 
         {%- endif -%}
 
-    {%- if not loop.last -%},
-        {%- endif -%}
+        {%- if not loop.last -%},{%- endif -%}
     {%- endfor %}
+
     FROM backfill_rows_as_of_dates AS a
 
-    {% for sat_name in satellites -%}
+    {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
-        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
 
         LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
-        ON a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
-        AND {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
-        OR {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
-    {% endfor -%}
+            ON a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
+            AND {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
+            OR {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
+    {% endfor %}
 
     GROUP BY
         {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
@@ -127,56 +123,45 @@ new_rows AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
-    {%- for sat_name in satellites %}
-        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
-        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
+
+    {%- for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list)[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list)[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
         {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
 
         {% if enable_ghost_record %}
         MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
-        {%- else -%}
-
-        {%- if target.type == "sqlserver" -%}
-
-        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2))
-        AS {{ sat_name }}_{{ sat_pk_name }}
-
+        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }},
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}))
+                 {{ dbtvault.cast_binary(ghost_pk, quote=true) }})
         AS {{ sat_name }}_{{ sat_pk_name }},
 
-        {%- endif %}
-
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
-                 CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}))
+                 {{ dbtvault.cast_date(ghost_date, as_string=true, datetime=true) }})
         AS {{ sat_name }}_{{ sat_ldts_name }}
+        {%- endif -%}
 
-        {%- endif -%}
-        {%- if not loop.last -%},
-        {%- endif -%}
+        {%- if not loop.last -%},{%- endif -%}
 
     {%- endfor %}
 
     FROM new_rows_as_of_dates AS a
 
-    {% for sat_name in satellites -%}
+    {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
-        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
 
-        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src'}}
-        ON a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
-        AND {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} <= a.AS_OF_DATE
-        OR {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
-
-    {% endfor -%}
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
+            ON a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+            AND {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} <= a.AS_OF_DATE
+            OR {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
+    {% endfor %}
 
     GROUP BY
         {{ dbtvault.prefix([src_pk], 'a') }},
