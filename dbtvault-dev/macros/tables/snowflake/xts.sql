@@ -20,14 +20,14 @@
 
 {%- macro default__xts(src_pk, src_satellite, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{%- set hashdiff = 'HASHDIFF' -%}
-{%- set satellite_name = 'SATELLITE_NAME' %}
+{%- set hashdiff_col_name_alias = 'HASHDIFF' -%}
+{%- set satellite_name_col_name_alias = 'SATELLITE_NAME' %}
 {%- set satellite_count = src_satellite.keys() | list | length %}
 {%- set stage_count = source_model | length %}
 
 {%- if execute -%}
     {%- do dbt_utils.log_info('Loading {} from {} source(s) and {} satellite(s)'.format("{}.{}.{}".format(this.database, this.schema, this.identifier),
-                                                                                       stage_count, satellite_count)) -%}
+                                                                                        stage_count, satellite_count)) -%}
 {%- endif %}
 
 {%- set ns = namespace(last_cte= "") %}
@@ -41,8 +41,8 @@
 
 {{ cte_name }} AS (
     SELECT {{ dbtvault.prefix([src_pk], 's') }},
-           s.{{ hashdiff }},
-           s.{{ satellite_name }},
+           s.{{ hashdiff }} AS {{ hashdiff_col_name_alias }},
+           s.{{ satellite_name }} AS {{ satellite_name_col_name_alias }},
            {%- if dbtvault.is_something(src_extra_columns) -%}
                {{ dbtvault.prefix([src_extra_columns], 's') }},
            {%- endif %}
@@ -79,8 +79,8 @@ union_satellites AS (
 records_to_insert AS (
     SELECT DISTINCT
         {{ dbtvault.prefix([src_pk], 'a') }},
-        a.{{ hashdiff }},
-        a.{{ satellite_name }},
+        a.{{ hashdiff_col_name_alias }},
+        a.{{ satellite_name_col_name_alias }},
         {%- if dbtvault.is_something(src_extra_columns) -%}
             {{ dbtvault.prefix([src_extra_columns], 'a') }},
         {%- endif %}
@@ -90,13 +90,13 @@ records_to_insert AS (
     {%- if dbtvault.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
         ON (
-            a.{{ hashdiff }} = d.{{ hashdiff }}
+            a.{{ hashdiff_col_name_alias }} = d.{{ hashdiff_col_name_alias }}
             AND a.{{ src_ldts }} = d.{{ src_ldts }}
-            AND a.{{ satellite_name }} = d.{{ satellite_name }}
+            AND a.{{ satellite_name_col_name_alias }} = d.{{ satellite_name_col_name_alias }}
         )
-    WHERE d.{{ hashdiff }} IS NULL
+    WHERE d.{{ hashdiff_col_name_alias }} IS NULL
     AND d.{{ src_ldts }} IS NULL
-    AND d.{{ satellite_name }} IS NULL
+    AND d.{{ satellite_name_col_name_alias }} IS NULL
     {%- endif %}
 )
 
