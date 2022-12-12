@@ -389,7 +389,7 @@ def staging_escaped_sqlserver(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "SOURCE": "VARCHAR(10)",
-                "COLUMN": "VARCHAR(10)",
+                "CUSTOMER_DOB_UK": "VARCHAR(10)",
                 "DBTVAULT_RANK": "INT",
                 "DBTVAULT_RANK2": "INT",
             }
