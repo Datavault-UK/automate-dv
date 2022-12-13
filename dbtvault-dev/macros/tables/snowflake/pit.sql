@@ -80,7 +80,7 @@ backfill AS (
 
         {%- if enable_ghost_record -%}
         MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
+        MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true, alias=sat_name ~ '_' ~ sat_ldts_name) }})
         {%- else -%}
 
         {{ dbtvault.cast_binary(ghost_pk, quote=true, alias=sat_name ~ '_' ~ sat_pk_name) }},
@@ -133,7 +133,7 @@ new_rows AS (
 
         {% if enable_ghost_record %}
         MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }},
+        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
