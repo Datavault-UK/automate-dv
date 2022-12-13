@@ -25,6 +25,8 @@
     {%- do string_columns.append(src_extra_columns) -%}
 {%- endif -%}
 
+{%- set string_columns = dbtvault.expand_column_list(string_columns) -%}
+
 {%- for col in columns -%}
 
     {%- set col_name = col.column -%}
@@ -47,8 +49,7 @@
         {%- endset -%}
         {%- do col_definitions.append(col_sql) -%}
 
-    {%- elif ((col_name | lower) is in (string_columns[0] | map('lower') | list))
-             or ((col_name | lower) is in (string_columns[1] | map('lower') | list)) -%}
+    {%- elif (col_name | lower) is in (string_columns | map('lower') | list) -%}
         {% set col_sql = dbtvault.null_ghost(col.dtype, col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
