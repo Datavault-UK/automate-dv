@@ -70,7 +70,8 @@ backfill AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
-    {% for sat_name in satellites -%}
+
+    {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
         {%- set sat_name = sat_name -%}
@@ -78,14 +79,13 @@ backfill AS (
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
         {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
 
-        {%- if enable_ghost_record -%}
+        {% if enable_ghost_record %}
         MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true, alias=sat_name ~ '_' ~ sat_ldts_name) }})
-        {%- else -%}
+        MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true) }}) AS {{ sat_name }}_{{ sat_ldts_name }}
+        {%- else %}
 
         {{ dbtvault.cast_binary(ghost_pk, quote=true, alias=sat_name ~ '_' ~ sat_pk_name) }},
         {{ dbtvault.cast_date(ghost_date, as_string=true, datetime=true, alias=sat_name ~ '_' ~ sat_ldts_name) }}
-
         {%- endif -%}
 
         {%- if not loop.last -%},{%- endif -%}
