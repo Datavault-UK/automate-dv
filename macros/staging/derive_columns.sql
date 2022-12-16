@@ -33,7 +33,7 @@
             {%- endfor -%}
 
             {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
-            {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(derived_column) -%}
+            {%- set concat_string = concat ~ " AS " ~ derived_column -%}
 
             {%- do der_columns.append(concat_string) -%}
         {%- else -%}
@@ -52,20 +52,20 @@
                     {%- endfor -%}
 
                     {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
-                    {%- set concat_string = concat ~ " AS " ~ dbtvault.escape_column_names(derived_column) -%}
+                    {%- set concat_string = concat ~ " AS " ~ derived_column -%}
 
                     {%- do der_columns.append(concat_string) -%}
                 {%- else -%}
                     {%- set column_str = dbtvault.as_constant(column_config['source_column']) -%}
                     {%- if column_escape is true -%}
-                        {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ dbtvault.escape_column_names(derived_column)) -%}
+                        {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ derived_column) -%}
                     {%- else -%}
-                        {%- do der_columns.append(column_str ~ " AS " ~ dbtvault.escape_column_names(derived_column)) -%}
+                        {%- do der_columns.append(column_str ~ " AS " ~ derived_column) -%}
                     {%- endif -%}
                 {%- endif -%}
             {%- else -%}
                 {%- set column_str = dbtvault.as_constant(column_config) -%}
-                {%- do der_columns.append(column_str ~ " AS " ~ dbtvault.escape_column_names(derived_column)) -%}
+                {%- do der_columns.append(column_str ~ " AS " ~ derived_column) -%}
             {%- endif -%}
         {%- endif -%}
 
@@ -78,7 +78,7 @@
 
         {%- for col in source_cols -%}
             {%- if col | lower not in exclude_columns | map('lower') | list -%}
-                {%- do src_columns.append(dbtvault.escape_column_names(col)) -%}
+                {%- do src_columns.append(col) -%}
             {%- endif -%}
         {%- endfor -%}
 
@@ -86,10 +86,15 @@
 
     {#- Makes sure the columns are appended in a logical order. Source columns then derived columns -#}
     {%- set include_columns = src_columns + der_columns -%}
+    {%- set columns_to_escape = dbtvault.process_columns_to_escape(columns) | list -%}
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
-        {{- col -}}{{ ",\n" if not loop.last }}
+        {%- if col | lower in columns_to_escape | map('lower') | list -%}
+            {{- dbtvault.escape_column_name(col) -}}{{ ",\n" if not loop.last }}
+        {%- else -%}
+            {{- col -}}{{ ",\n" if not loop.last }}
+        {%- endif -%}
     {%- endfor -%}
 
 {%- else -%}
