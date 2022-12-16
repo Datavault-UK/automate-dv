@@ -9,14 +9,6 @@
                                            src_ldts=src_ldts, src_source=src_source,
                                            source_model=source_model) -}}
 
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
-    {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-    {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
     {{ dbtvault.prepend_generated_by() }}
 
     {{ adapter.dispatch('t_link', 'dbtvault')(src_pk=src_pk, src_fk=src_fk, src_payload=src_payload,
