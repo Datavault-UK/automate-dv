@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro rank_columns(columns=none) -%}
 
     {{- adapter.dispatch('rank_columns', 'dbtvault')(columns=columns) -}}
