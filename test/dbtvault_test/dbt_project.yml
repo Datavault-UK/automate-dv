@@ -1,5 +1,5 @@
 name: dbtvault_test
-version: 0.9.0
+version: 0.9.1
 require-dbt-version: [ ">=1.0.0", "<2.0.0" ]
 config-version: 2
 profile: dbtvault
@@ -16,9 +16,12 @@ clean-targets:
   - target
   - dbt_packages
 
+seeds:
+  +quote_columns: true
+
 vars:
   hash: MD5
-  disable_upper_in_hash: 'UPPER' # Default UPPER, alternatively DISABLED
+  hash_content_casing: 'UPPER' # Default UPPER, alternatively DISABLED
   null_key_required: '-1' # Default -1, allows user to configure
   null_key_optional: '-2' # Default -2, allows user to configure
   enable_ghost_records: false # default true so ghost records are enabled

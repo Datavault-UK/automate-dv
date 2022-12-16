@@ -368,7 +368,8 @@ def macro_model(model_name, macro_name, metadata=None):
         "create_ghost_record": create_ghost_record_macro,
         "null_expression": null_expression_macro,
         "select_hash_alg": select_hash_alg_macro,
-        "standard_column_wrapper": standard_column_wrapper_macro
+        "standard_column_wrapper": standard_column_wrapper_macro,
+        "process_columns_to_escape": process_columns_to_escape_macro,
     }
 
     if generator_functions.get(macro_name):
@@ -380,7 +381,10 @@ def macro_model(model_name, macro_name, metadata=None):
 def hash_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
-    {{{{ dbtvault.hash(columns=var('columns'), alias=var('alias'), is_hashdiff=var('is_hashdiff', false)) }}}}
+    {{{{ dbtvault.hash(columns=var('columns'), 
+                       alias=var('alias'), 
+                       is_hashdiff=var('is_hashdiff', false), 
+                       columns_to_escape=var('columns_to_escape', false)) }}}}
     {{% endif %}}
     """
 
@@ -450,6 +454,7 @@ def stage_macro(model_name, metadata):
                f"{{{{ dbtvault.stage(include_source_columns=metadata_dict.get('include_source_columns', none),\n" \
                f"                  source_model=metadata_dict.get('source_model', none),\n" \
                f"                  derived_columns=metadata_dict.get('derived_columns', none),\n" \
+               f"                  null_columns=metadata_dict.get('null_columns', none),\n" \
                f"                  hashed_columns=metadata_dict.get('hashed_columns', none),\n" \
                f"                  ranked_columns=metadata_dict.get('ranked_columns', none)) }}}}"
 
@@ -537,6 +542,16 @@ def select_hash_alg_macro(model_name, **_):
 def standard_column_wrapper_macro(model_name, **_):
     template = f"""
                {{{{ dbtvault.standard_column_wrapper()}}}}
+               """
+
+    template_to_file(template, model_name)
+
+
+def process_columns_to_escape_macro(model_name, **_):
+    template = f"""
+               {{% if execute %}}
+               {{{{ dbtvault.process_columns_to_escape(derived_columns_list=var('derived_columns_list', none))}}}}
+               {{% endif %}}
                """
 
     template_to_file(template, model_name)

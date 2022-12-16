@@ -9,17 +9,6 @@
                                            src_payload=src_payload, src_ldts=src_ldts, src_source=src_source,
                                            source_model=source_model) -}}
 
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_cdk = dbtvault.escape_column_names(src_cdk) -%}
-
-    {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
-    {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-
-    {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
     {{ dbtvault.prepend_generated_by() }}
 
     {{ adapter.dispatch('ma_sat', 'dbtvault')(src_pk=src_pk, src_cdk=src_cdk, src_hashdiff=src_hashdiff,
