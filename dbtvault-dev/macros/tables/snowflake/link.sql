@@ -4,12 +4,6 @@
                                            src_ldts=src_ldts, src_source=src_source,
                                            source_model=source_model) -}}
 
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_fk = dbtvault.escape_column_names(src_fk) -%}
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
-
     {%- if not dbtvault.is_list(source_model) -%}
         {%- set source_model = [source_model] -%}
     {%- endif -%}
@@ -31,7 +25,7 @@
 {%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
 
 {{ 'WITH ' -}}
