@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro concat_ws(string_list, separator="||") -%}
 
     {{- adapter.dispatch('concat_ws', 'dbtvault')(string_list=string_list, separator=separator) -}}

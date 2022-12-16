@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro sqlserver__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_extra_columns, src_ldts, src_source]) -%}
