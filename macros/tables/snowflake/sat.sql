@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
@@ -5,19 +10,9 @@
                                            source_model=source_model) -}}
 
     {%- set src_payload = dbtvault.process_payload_column_excludes(
-                      src_pk=src_pk, src_hashdiff=src_hashdiff,
-                      src_payload=src_payload, src_extra_columns=src_extra_columns, src_eff=src_eff,
-                      src_ldts=src_ldts, src_source=src_source, source_model=source_model) -%}
-
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
-
-    {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-    {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
+                              src_pk=src_pk, src_hashdiff=src_hashdiff,
+                              src_payload=src_payload, src_extra_columns=src_extra_columns, src_eff=src_eff,
+                              src_ldts=src_ldts, src_source=src_source, source_model=source_model) -%}
 
     {{ dbtvault.prepend_generated_by() }}
 
@@ -33,9 +28,10 @@
 {%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set window_cols = dbtvault.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = dbtvault.expand_column_list(columns=[src_pk]) -%}
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
 
 WITH source_data AS (
@@ -53,7 +49,7 @@ WITH source_data AS (
     {% endif %}
 ),
 
-{% if dbtvault.is_any_incremental() %}
+{%- if dbtvault.is_any_incremental() %}
 
 latest_records AS (
     SELECT {{ dbtvault.prefix(window_cols, 'a', alias_target='target') }}
@@ -73,9 +69,26 @@ latest_records AS (
     WHERE a.rank = 1
 ),
 
-{%- endif -%}
+{%- endif %}
+
+{%- if enable_ghost_record %}
+
+ghost AS (
+    {{- dbtvault.create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) }}
+),
+
+{%- endif %}
 
 records_to_insert AS (
+    {%- if enable_ghost_record -%}
+    SELECT
+        {{ dbtvault.alias_all(source_cols, 'g') }}
+        FROM ghost AS g
+        {%- if dbtvault.is_any_incremental() %}
+        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ dbtvault.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ dbtvault.prefix([src_hashdiff], 'g') }} )
+        {%- endif %}
+    UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+    {%- endif %}
     SELECT DISTINCT {{ dbtvault.alias_all(source_cols, 'stage') }}
     FROM source_data AS stage
     {%- if dbtvault.is_any_incremental() %}
@@ -87,5 +100,4 @@ records_to_insert AS (
 )
 
 SELECT * FROM records_to_insert
-
 {%- endmacro -%}

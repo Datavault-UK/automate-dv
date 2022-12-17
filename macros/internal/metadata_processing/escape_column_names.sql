@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro escape_column_names(columns=none) -%}
 
     {%- if dbtvault.is_list(columns) -%}
@@ -93,54 +98,3 @@
     {%- endif -%}
 
 {%- endmacro -%}
-
-
-{%- macro escape_column_name(column) -%}
-
-    {{- adapter.dispatch('escape_column_name', 'dbtvault')(column=column) -}}
-
-{%- endmacro %}
-
-{%- macro default__escape_column_name(column) -%}
-
-    {# Do not escape a constant (single quoted) value #}
-    {%- if column | first == "'" and column | last == "'" -%}
-        {%- set escaped_column_name = column -%}
-    {%- else -%}
-        {%- set escape_char_default_left, escape_char_default_right = dbtvault.get_escape_characters() -%}
-        {%- set escape_char_left  = var('escape_char_left',  escape_char_default_left) -%}
-        {%- set escape_char_right = var('escape_char_right', escape_char_default_right) -%}
-
-        {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
-    {%- endif -%}
-
-    {%- do return(escaped_column_name) -%}
-
-{%- endmacro -%}
-
-{% macro get_escape_characters() -%}
-
-    {% do return(adapter.dispatch('get_escape_characters', 'dbtvault')()) -%}
-
-{%- endmacro %}
-
-{%- macro snowflake__get_escape_characters() %}
-    {%- do return (('"', '"')) -%}
-{%- endmacro %}
-
-{%- macro bigquery__get_escape_characters() %}
-    {%- do return (('`', '`')) -%}
-{%- endmacro %}
-
-{%- macro sqlserver__get_escape_characters() %}
-    {%- do return (('"', '"')) -%}
-{%- endmacro %}
-
-{%- macro databricks__get_escape_characters() %}
-    {%- do return (('`', '`')) -%}
-{%- endmacro %}
-
-{%- macro postgres__get_escape_characters() %}
-    {#- DO NOT QUOTE FOR NOW. Postgres has a "feature" which froces explicit casing and breaks the SQL-92 standard -#}
-    {%- do return (('', '')) -%}
-{%- endmacro %}

@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) -%}
 
     {%- if dbtvault.is_something(src_extra_columns) and execute -%}
@@ -10,9 +15,6 @@
                                            stage_tables_ldts=stage_tables_ldts,
                                            src_ldts=src_ldts,
                                            source_model=source_model) -}}
-
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
 
     {{- dbtvault.prepend_generated_by() }}
 
@@ -44,6 +46,8 @@
 {%- set ghost_pk = '0000000000000000' -%}
 {%- set ghost_date = '1900-01-01 00:00:00.000' %}
 
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+
 {%- if dbtvault.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
 {%- else -%}
@@ -72,35 +76,39 @@ backfill AS (
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
 
-    {% for sat_name in satellites -%}
+    {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-        {%- set sat_name = sat_name %}
+        {%- set sat_name = sat_name -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
 
-        {% if target.type == "sqlserver" %}
-        CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
-        {% else %}
-        CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-        CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}) AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
-        {% endif -%}
+        {% if enable_ghost_record %}
+        MIN({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
+        MIN({{ dbtvault.cast_date(column_str=column_str, datetime=true) }}) AS {{ sat_name }}_{{ sat_ldts_name }}
+        {%- else %}
 
+        {{ dbtvault.cast_binary(ghost_pk, quote=true, alias=sat_name ~ '_' ~ sat_pk_name) }},
+        {{ dbtvault.cast_date(ghost_date, as_string=true, datetime=true, alias=sat_name ~ '_' ~ sat_ldts_name) }}
+        {%- endif -%}
 
-        {{- ',' if not loop.last -}}
-
+        {%- if not loop.last -%},{%- endif -%}
     {%- endfor %}
+
     FROM backfill_rows_as_of_dates AS a
 
-    {% for sat_name in satellites -%}
+    {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-        {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
-        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
 
         LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
-        ON a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
-        AND {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
-    {% endfor -%}
+            ON a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
+            AND {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
+            OR {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
+    {% endfor %}
 
     GROUP BY
         {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
@@ -120,46 +128,45 @@ new_rows AS (
     SELECT
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
-    {%- for sat_name in satellites %}
-        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
-        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-        {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
-        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
 
-        {%- if target.type == "sqlserver" -%}
+    {%- for sat_name in satellites -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list)[0] -%}
+        {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list)[0] -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
+        {%- set column_str = "{}.{}".format(sat_name | lower ~ '_src', sat_ldts) -%}
 
-        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 CONVERT({{ dbtvault.type_binary() }}, '{{ ghost_pk }}', 2))
-        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-
+        {% if enable_ghost_record %}
+        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
+        MAX({{ dbtvault.cast_date(column_str=column_str, datetime=true)}}) AS {{ sat_name }}_{{ sat_ldts_name }}
         {%- else %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-                 CAST('{{ ghost_pk }}' AS {{ dbtvault.type_binary() }}))
-        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_pk_name)) }},
-
-        {%- endif %}
+                 {{ dbtvault.cast_binary(ghost_pk, quote=true) }})
+        AS {{ sat_name }}_{{ sat_pk_name }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
-                 CAST('{{ ghost_date }}' AS {{ dbtvault.type_timestamp() }}))
-        AS {{ dbtvault.escape_column_names("{}_{}".format(sat_name, sat_ldts_name)) }}
+                 {{ dbtvault.cast_date(ghost_date, as_string=true, datetime=true) }})
+        AS {{ sat_name }}_{{ sat_ldts_name }}
+        {%- endif -%}
 
-        {{- "," if not loop.last }}
+        {%- if not loop.last -%},{%- endif -%}
+
     {%- endfor %}
 
     FROM new_rows_as_of_dates AS a
 
-    {% for sat_name in satellites -%}
+    {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] -%}
-        {%- set sat_pk = dbtvault.escape_column_names(satellites[sat_name]['pk'][sat_pk_name]) -%}
-        {%- set sat_ldts = dbtvault.escape_column_names(satellites[sat_name]['ldts'][sat_ldts_name]) -%}
+        {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
+        {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] %}
 
-        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src'}}
-        ON a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
-        AND {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} <= a.AS_OF_DATE
-
-    {% endfor -%}
+        LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
+            ON a.{{ src_pk }} = {{ sat_name | lower }}_src.{{ sat_pk }}
+            AND {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} <= a.AS_OF_DATE
+            OR {{ sat_name | lower ~ '_src'}}.{{ sat_ldts }} = '1900-01-01 00:00:00.000'
+    {% endfor %}
 
     GROUP BY
         {{ dbtvault.prefix([src_pk], 'a') }},
