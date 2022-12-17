@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro concat_ws(string_list, separator="||") -%}
 
     {{- adapter.dispatch('concat_ws', 'dbtvault')(string_list=string_list, separator=separator) -}}
@@ -6,23 +11,23 @@
 
 {%- macro default__concat_ws(string_list, separator="||") -%}
 
-    CONCAT_WS('{{ separator }}', {{ string_list | join(", ") }})
+CONCAT(
+{%- for str in string_list %}
+    {{ str }}
+{%- if not loop.last %}, '{{ separator }}', {%- endif -%}
+{%- endfor %}
+)
 
 {%- endmacro -%}
 
 {%- macro bigquery__concat_ws(string_list, separator="||") -%}
 
-    {{- 'CONCAT(' -}}
-    {%- for str in string_list -%}
-        {{- "{}".format(str) -}}
-        {{- ",'{}',".format(separator) if not loop.last -}}
-    {%- endfor -%}
-    {{- '\n)' -}}
+    {{ dbtvault.default__concat_ws(string_list=string_list, separator=separator) }}
 
 {%- endmacro -%}
 
 {%- macro sqlserver__concat_ws(string_list, separator="||") -%}
 
-{{ dbtvault.default__concat_ws(string_list=string_list, separator=separator) }}
+    {{ dbtvault.default__concat_ws(string_list=string_list, separator=separator) }}
 
 {%- endmacro -%}
