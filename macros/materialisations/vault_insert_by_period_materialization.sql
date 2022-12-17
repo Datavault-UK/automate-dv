@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% materialization vault_insert_by_period, default -%}
 
     {% if target.type == "postgres" and execute %}
@@ -14,7 +19,7 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
-    {%- set timestamp_field = dbtvault.escape_column_names(config.require('timestamp_field')) -%}
+    {%- set timestamp_field = config.require('timestamp_field') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}

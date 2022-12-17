@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro rank_columns(columns=none) -%}
 
     {{- adapter.dispatch('rank_columns', 'dbtvault')(columns=columns) -}}
@@ -34,9 +39,9 @@
 
                     {%- if order_by_col is mapping %}
                         {%- set column_name, direction = order_by_col.items()|first -%}
-                        {%- set order_by_str = "{} {}".format(dbtvault.escape_column_names(column_name), direction) | trim -%}
+                        {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
                     {%- else -%}
-                        {%- set order_by_str = dbtvault.escape_column_names(order_by_col) -%}
+                        {%- set order_by_str = order_by_col -%}
                     {%- endif -%}
 
                     {%- do order_by_str_lst.append(order_by_str) -%}
@@ -53,16 +58,16 @@
                     {%- set direction = '' -%}
                 {%- endif -%}
 
-                {%- set order_by_str = "{} {}".format(dbtvault.escape_column_names(column_name), direction) | trim -%}
+                {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
             {%- endif -%}
 
             {%- if dbtvault.is_list(partition_by) -%}
-                {%- set partition_by_str = dbtvault.escape_column_names(partition_by) | join(", ") -%}
+                {%- set partition_by_str = partition_by | join(", ") -%}
             {%- else -%}
-                {%- set partition_by_str = dbtvault.escape_column_names(partition_by) -%}
+                {%- set partition_by_str = partition_by -%}
             {%- endif -%}
 
-            {{- "{} OVER (PARTITION BY {} ORDER BY {}) AS {}".format(rank_type, partition_by_str, order_by_str, dbtvault.escape_column_names(col)) | indent(4) -}}
+            {{- "{} OVER (PARTITION BY {} ORDER BY {}) AS {}".format(rank_type, partition_by_str, order_by_str, col) | indent(4) -}}
 
         {%- endif -%}
 

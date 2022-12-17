@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% materialization vault_insert_by_rank, default -%}
 
     {% if target.type == "postgres" and execute %}
@@ -14,7 +19,7 @@
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
-    {%- set rank_column = dbtvault.escape_column_names(config.require('rank_column')) -%}
+    {%- set rank_column = config.require('rank_column') -%}
     {%- set rank_source_models = config.require('rank_source_models') -%}
 
     {%- set min_max_ranks = dbtvault.get_min_max_ranks(rank_column, rank_source_models) | as_native -%}
