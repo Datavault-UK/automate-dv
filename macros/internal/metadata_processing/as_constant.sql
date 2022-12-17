@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro as_constant(column_str=none) -%}
 
     {{- adapter.dispatch('as_constant', 'dbtvault')(column_str=column_str) -}}
@@ -9,11 +14,11 @@
     {%- if column_str is not none and column_str is string and column_str -%}
 
         {%- if column_str | first == "!" -%}
-        
+
             {{- return("'" ~ column_str[1:] ~ "'") -}}
-        
+
         {%- else -%}
-        
+
             {{- return(column_str) -}}
 
         {%- endif -%}
