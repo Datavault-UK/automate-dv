@@ -13,6 +13,14 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "SATELLITE_TZ": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM_TZ",
+            "src_ldts": "LOAD_DATE_TZ",
+            "src_source": "SOURCE"
+        },
         "SATELLITE_PL_EXCLUDE": {
             "src_pk": "CUSTOMER_PK",
             "src_payload": ['CUSTOMER_NAME', 'CUSTOMER_DOB', 'CUSTOMER_PHONE', 'CUSTOMER_ID'],
@@ -66,6 +74,13 @@ def set_staging_definition(context):
              "CUSTOMER_PHONE",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_TZ":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_DOB",
+             "CUSTOMER_PHONE",
+             "LOAD_DATE_TZ",
              "SOURCE"]
     }
 
@@ -80,6 +95,11 @@ def set_staging_definition(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
+        "STG_CUSTOMER_TZ": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "CUSTOMER_DOB", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
         "STG_CUSTOMER_NO_PK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
@@ -90,6 +110,9 @@ def set_staging_definition(context):
     context.derived_columns = {
         "STG_CUSTOMER": {
             "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_TZ": {
+            "EFFECTIVE_FROM_TZ": "LOAD_DATE_TZ"
         },
         "STG_CUSTOMER_TS": {
             "EFFECTIVE_FROM": "LOAD_DATETIME"
@@ -127,6 +150,16 @@ def satellite_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "RAW_STAGE_TS": {
             "column_types": {
                 "CUSTOMER_ID": "NUMBER(38, 0)",
@@ -146,6 +179,18 @@ def satellite_snowflake(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -272,6 +317,16 @@ def satellite_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
         "RAW_STAGE_TS": {
             "column_types": {
                 "CUSTOMER_ID": "STRING",
@@ -303,6 +358,18 @@ def satellite_bigquery(context):
                 "CUSTOMER_HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -428,6 +495,16 @@ def satellite_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE_TZ": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -438,6 +515,18 @@ def satellite_sqlserver(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM_TZ": "DATETIME2",
+                "LOAD_DATE_TZ": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -564,6 +653,16 @@ def satellite_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
         "RAW_STAGE_TS": {
             "column_types": {
                 "CUSTOMER_ID": "DECIMAL(38,0)",
@@ -583,6 +682,18 @@ def satellite_databricks(context):
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         },
@@ -708,6 +819,16 @@ def satellite_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "RAW_STAGE_TS": {
             "column_types": {
                 "CUSTOMER_ID": "NUMERIC(38, 0)",
@@ -727,6 +848,18 @@ def satellite_postgres(context):
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
