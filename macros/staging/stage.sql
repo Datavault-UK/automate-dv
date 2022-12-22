@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) Business Thinking Ltd. 2019-2022
- *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro stage(include_source_columns=none, source_model=none, hashed_columns=none, derived_columns=none, null_columns=none, ranked_columns=none) -%}
