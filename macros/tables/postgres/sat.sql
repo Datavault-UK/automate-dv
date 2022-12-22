@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) Business Thinking Ltd. 2019-2022
- *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2022
+ * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro postgres__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
@@ -13,8 +13,6 @@
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
-
-{{ dbtvault.prepend_generated_by() }}
 
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
