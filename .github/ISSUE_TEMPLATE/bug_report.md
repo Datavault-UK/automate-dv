@@ -1,7 +1,7 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: "[BUG] "
+title: "[BUG] <my bug title>"
 labels: bug
 assignees: DVAlexHiggs
 
@@ -10,10 +10,11 @@ assignees: DVAlexHiggs
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**Versions**
+**Environment**
 
-dbt: 
-dbtvault: 
+dbt version: 
+dbtvault version: 
+Database/Platform:  
 
 **To Reproduce**
 Steps to reproduce the behavior:
