@@ -14,8 +14,6 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
 
-{{ dbtvault.prepend_generated_by() }}
-
 WITH source_data AS (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
     SELECT {{ dbtvault.prefix(source_cols_with_rank, 'a', alias_target='source') }}

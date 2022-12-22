@@ -74,13 +74,16 @@ latest_records AS (
 {%- if enable_ghost_record %}
 
 ghost AS (
-    {{- dbtvault.create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) }}
+    {{ dbtvault.create_ghost_record(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                    src_payload=src_payload, src_extra_columns=src_extra_columns,
+                                    src_eff=src_eff, src_ldts=src_ldts,
+                                    src_source=src_source, source_model=source_model) }}
 ),
 
 {%- endif %}
 
 records_to_insert AS (
-    {%- if enable_ghost_record -%}
+    {%- if enable_ghost_record %}
     SELECT
         {{ dbtvault.alias_all(source_cols, 'g') }}
         FROM ghost AS g
