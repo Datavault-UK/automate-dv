@@ -81,4 +81,3 @@ def setup(tmp_path_factory, worker_id):
             else:
                 test_setup()
                 fn.write_text(json.dumps({'status': 'in-use'}))
-

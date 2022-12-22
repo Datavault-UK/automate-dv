@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro check_placeholder(model_sql, placeholder='__PERIOD_FILTER__') -%}
 
     {%- if model_sql.find(placeholder) == -1 -%}

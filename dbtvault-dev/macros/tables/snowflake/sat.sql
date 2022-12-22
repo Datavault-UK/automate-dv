@@ -1,3 +1,8 @@
+/*
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- dbtvault.check_required_parameters(src_pk=src_pk, src_hashdiff=src_hashdiff, src_payload=src_payload,
@@ -8,16 +13,6 @@
                               src_pk=src_pk, src_hashdiff=src_hashdiff,
                               src_payload=src_payload, src_extra_columns=src_extra_columns, src_eff=src_eff,
                               src_ldts=src_ldts, src_source=src_source, source_model=source_model) -%}
-
-    {%- set src_pk = dbtvault.escape_column_names(src_pk) -%}
-    {%- set src_hashdiff = dbtvault.escape_column_names(src_hashdiff) -%}
-
-    {%- set src_payload = dbtvault.escape_column_names(src_payload) -%}
-
-    {%- set src_extra_columns = dbtvault.escape_column_names(src_extra_columns) -%}
-    {%- set src_eff = dbtvault.escape_column_names(src_eff) -%}
-    {%- set src_ldts = dbtvault.escape_column_names(src_ldts) -%}
-    {%- set src_source = dbtvault.escape_column_names(src_source) -%}
 
     {{ dbtvault.prepend_generated_by() }}
 
@@ -36,7 +31,7 @@
 {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + dbtvault.escape_column_names([config.get('rank_column')]) -%}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
 
 WITH source_data AS (
