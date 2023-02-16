@@ -8,9 +8,9 @@
 {%- endmacro -%}
 
 {%- macro default__type_binary() -%}
-    {%- if var('hash') | lower == 'md5' -%}
+    {%- if var('hash', 'MD5') | lower == 'md5' -%}
         BINARY(16)
-    {%- elif var('hash') | lower == 'sha' -%}
+    {%- elif var('hash', 'MD5') | lower == 'sha' -%}
         BINARY(32)
     {%- else -%}
         BINARY(16)
