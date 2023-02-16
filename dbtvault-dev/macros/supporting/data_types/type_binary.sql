@@ -15,7 +15,6 @@
     {%- else -%}
         BINARY(16)
     {%- endif -%}
-    {%- do log('Using type binary: ' ~ 'binary', info=true) -%}
 {%- endmacro -%}
 
 {%- macro bigquery__type_binary() -%}
