@@ -15,19 +15,19 @@ def set_stage_metadata(context, stage_model_name) -> dict:
 
     context.processed_stage_name = step_helpers.process_stage_names(context, stage_model_name)
 
-    context.include_source_columns = getattr(context, "include_source_columns", True)
+    context.include_source_columns = getattr(context, "include_source_columns", None)
 
-    context.hashing = getattr(context, "hashing", "MD5")
+    context.hashing = getattr(context, "hashing", None)
 
-    context.null_key_required = getattr(context, "null_key_required", "-1")
+    context.null_key_required = getattr(context, "null_key_required", None)
 
-    context.null_key_optional = getattr(context, "null_key_optional", "-2")
+    context.null_key_optional = getattr(context, "null_key_optional", None)
 
-    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
 
-    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+    context.system_record_value = getattr(context, "system_record_value", None)
 
-    context.hash_content_casing = getattr(context, "hash_content_casing", 'UPPER')
+    context.hash_content_casing = getattr(context, "hash_content_casing", None)
 
     for stage_section in ['ranked_columns', 'hashed_columns', 'derived_columns', 'null_columns']:
         if not getattr(context, stage_section, None):
@@ -49,6 +49,8 @@ def set_stage_metadata(context, stage_model_name) -> dict:
         "enable_ghost_records": context.enable_ghost_records,
         "system_record_value": context.system_record_value
     }
+
+    dbt_vars = {vkey: vdata for vkey, vdata in dbt_vars.items() if vdata}
 
     return dbt_vars
 
@@ -311,10 +313,12 @@ def load_table(context, model_name, vault_structure):
                                            config=config,
                                            **metadata)
 
-    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
-    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
+    context.system_record_value = getattr(context, "system_record_value", None)
 
     args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
+
+    args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
     logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
 
@@ -340,11 +344,12 @@ def load_vault(context):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    context.enable_ghost_records = getattr(context, "enable_ghost_records", False)
-
-    context.system_record_value = getattr(context, "system_record_value", "DBTVAULT_SYSTEM")
+    context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
+    context.system_record_value = getattr(context, "system_record_value", None)
 
     args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
+
+    args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
     logs = dbt_runner.run_dbt_models(mode="run", model_names=model_names, args=args,
                                      full_refresh=is_full_refresh)
