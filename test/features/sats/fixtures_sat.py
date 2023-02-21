@@ -81,6 +81,13 @@ def set_staging_definition(context):
              "CUSTOMER_DOB",
              "CUSTOMER_PHONE",
              "LOAD_DATE_TZ",
+             "SOURCE"],
+        "RAW_STAGE_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_DOB",
+             "CUSTOMER_PHONE",
+             "LOAD_DATE_TZ",
              "SOURCE"]
     }
 
@@ -447,6 +454,16 @@ def satellite_cycle_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "STRING",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -456,6 +473,18 @@ def satellite_cycle_bigquery(context):
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         }

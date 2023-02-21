@@ -56,9 +56,9 @@
     {% set period_boundary_sql -%}
         with data as (
             select
-                COALESCE(CAST(MAX({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
+                COALESCE(CAST(MAX({{ timestamp_field }}) AS TIMESTAMP), CAST('{{ start_date }}' AS TIMESTAMP)) as START_TIMESTAMP,
                 COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         CAST({{ current_timestamp() }} AS DATETIME)) as STOP_TIMESTAMP
+                         CAST({{ current_timestamp() }} AS TIMESTAMP)) as STOP_TIMESTAMP
             from {{ target_relation }}
         )
         select

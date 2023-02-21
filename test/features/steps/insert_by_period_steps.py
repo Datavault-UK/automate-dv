@@ -38,7 +38,7 @@ def load_table(context, model_name, vault_structure, period):
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": "LOAD_DATE",
+              "timestamp_field": "LOAD_DATE_TZ",
               "date_source_models": context.processed_stage_name,
               "period": period}
 
