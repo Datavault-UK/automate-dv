@@ -69,12 +69,25 @@
         {%- endset -%}
     {%- endif -%}
 
+    {%- if target.type == "databricks" -%}
+        {%- set list_custom_schemas_sql -%}
+        SHOW SCHEMAS
+        {%- endset -%}
+    {%- endif -%}
+
     {%- set custom_schema_list = dbt_utils.get_query_results_as_dict(list_custom_schemas_sql) -%}
 
-    {%- for custom_schema_name in custom_schema_list['SCHEMA_NAME'] -%}
-        {%- do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) -%}
-        {%- do log("Schema '{}' dropped.".format(custom_schema_name), true) -%}
-    {%- endfor -%}
+    {%- if target.type == "databricks" -%}
+        {%- for custom_schema_name in custom_schema_list['databaseName'] | reject("equalto", "default") | list -%}
+            {%- do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) -%}
+            {%- do log("Schema '{}' dropped.".format(custom_schema_name), true) -%}
+        {%- endfor -%}
+    {% else %}
+        {%- for custom_schema_name in custom_schema_list['SCHEMA_NAME'] -%}
+            {%- do adapter.drop_schema(api.Relation.create(database=target.database, schema=custom_schema_name)) -%}
+            {%- do log("Schema '{}' dropped.".format(custom_schema_name), true) -%}
+        {%- endfor -%}
+    {%- endif -%}
 
 {% endmacro %}
 
