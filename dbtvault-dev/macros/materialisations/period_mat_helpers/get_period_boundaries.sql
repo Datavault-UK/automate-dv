@@ -52,12 +52,11 @@
 {% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
-
     {% set period_boundary_sql -%}
         with data as (
             select
                 COALESCE(CAST(MAX({{ timestamp_field }}) AS TIMESTAMP), CAST('{{ start_date }}' AS TIMESTAMP)) as START_TIMESTAMP,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ dbtvault.timestamp_add('hour', 1, from_date_or_timestamp) }},
                          CAST({{ current_timestamp() }} AS TIMESTAMP)) as STOP_TIMESTAMP
             from {{ target_relation }}
         )

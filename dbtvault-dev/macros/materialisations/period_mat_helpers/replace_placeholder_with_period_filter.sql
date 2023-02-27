@@ -37,9 +37,9 @@
 {% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
-            (DATE({{ timestamp_field }}) >= DATE_TRUNC(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
-             DATE({{ timestamp_field }}) < DATE_TRUNC(DATE_ADD(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
-      AND DATE({{ timestamp_field }}) >= DATE('{{ start_timestamp }}'))
+            (TIMESTAMP({{ timestamp_field }}) >= TIMESTAMP_TRUNC(TIMESTAMP_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
+             TIMESTAMP({{ timestamp_field }}) < TIMESTAMP_TRUNC(TIMESTAMP_ADD(TIMESTAMP_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
+      AND TIMESTAMP({{ timestamp_field }}) >= TIMESTAMP('{{ start_timestamp }}'))
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
