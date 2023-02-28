@@ -14,6 +14,7 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
     {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+    {%- set hash = var('hash', 'MD5') -%}
 
 {%- if not enable_ghost_record -%}
 {#- Setting ghost values to replace NULLS -#}
@@ -49,18 +50,28 @@ backfill AS (
         {{ dbtvault.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
-        {%- set sat_key_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
+        {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
         {%- set sat_ldts_name = (satellites[sat_name]['ldts'].keys() | list )[0] | upper -%}
         {%- set sat_name = sat_name | upper -%}
         {%- set sat_pk = satellites[sat_name]['pk'][sat_pk_name] -%}
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
 
         {% if enable_ghost_record %}
-        MIN({{ sat_name | lower ~ '_src' }}.{{ src_pk }}) AS {{ sat_name }}_{{ sat_pk_name }},
-        DATETIME(MIN({{ sat_name | lower ~ '_src' }}.{{ src_ldts }})) AS {{ sat_name }}_{{ sat_ldts_name }}
+
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+            {{ dbtvault.binary_ghost(none, hash) }})
+        AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
+            {{ dbtvault.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
+        AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
+
         {%- else -%}
-        '{{ ghost_pk }}' AS {{ sat_name ~ '_' ~ sat_key_name }},
-        PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}') AS {{ sat_name ~ '_' ~ sat_ldts_name }}
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+        '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
+        PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
         {%- endif -%}
         {{- ',' if not loop.last -}}
     {%- endfor %}
@@ -74,9 +85,7 @@ backfill AS (
         LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
         {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
         {{ "AND" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
-        {%- if enable_ghost_record %}
-        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = DATETIME('1900-01-01')
-        {%- endif -%}
+
     {% endfor %}
 
     GROUP BY
@@ -106,13 +115,23 @@ new_rows AS (
         {%- set sat_ldts = satellites[sat_name]['ldts'][sat_ldts_name] -%}
 
         {%- if enable_ghost_record %}
-        MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
-        DATETIME(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }})) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
+
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
+            {{ dbtvault.binary_ghost(none, hash) }})
+        AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+
+        COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
+            {{ dbtvault.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
+        AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
+
         {%- else -%}
+
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
         '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
+
         {%- endif -%}
         {{- "," if not loop.last }}
     {%- endfor %}
@@ -127,9 +146,6 @@ new_rows AS (
         LEFT JOIN {{ ref(sat_name) }} AS {{ sat_name | lower ~ '_src' }}
         {{ "ON" | indent(4) }} a.{{ src_pk }} = {{ sat_name | lower ~ '_src' }}.{{ sat_pk }}
         {{ "AND" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} <= a.AS_OF_DATE
-        {%- if enable_ghost_record %}
-        {{ "OR" | indent(4) }} {{ sat_name | lower ~ '_src' }}.{{ sat_ldts }} = DATETIME('1900-01-01')
-        {%- endif %}
 
     {% endfor -%}
 

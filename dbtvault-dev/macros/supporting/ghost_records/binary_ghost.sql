@@ -20,10 +20,12 @@
 
 {%- macro sqlserver__binary_ghost(alias, hash) -%}
     {%- if hash | lower == 'md5' -%}
-        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(16)), 16) AS BINARY(16)) AS {{ alias }}
+        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(16)), 16) AS BINARY(16))
 	{%- elif hash | lower == 'sha' -%}
-        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(32)), 32) AS BINARY(32)) AS {{ alias }}
+        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(32)), 32) AS BINARY(32))
     {%- else -%}
-        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(16)), 16) AS BINARY(16)) AS {{ alias }}
+        CAST(REPLICATE(CAST(CAST('0' AS tinyint) AS BINARY(16)), 16) AS BINARY(16))
     {%- endif -%}
+
+    {%- if alias %} AS {{ alias }} {%- endif -%}
 {%- endmacro -%}
