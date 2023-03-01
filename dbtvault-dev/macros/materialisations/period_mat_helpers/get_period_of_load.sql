@@ -28,10 +28,10 @@
 {%- endmacro -%}
 
 
-{%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro bigquery__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
 
     {% set period_of_load_sql -%}
-        SELECT TIMESTAMP_TRUNC(TIMESTAMP_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
+        SELECT {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}

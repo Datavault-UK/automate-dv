@@ -20,6 +20,7 @@
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
+    {%- set timestamp_field_type = config.get('timestamp_field_type', default='DATE') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
@@ -36,7 +37,7 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field, timestamp_field_type,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
@@ -49,21 +50,21 @@
         {% do adapter.drop_relation(existing_relation) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field, timestamp_field_type,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif full_refresh_mode %}
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field, timestamp_field_type,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
         {% set period_boundaries = dbtvault.get_period_boundaries(target_relation,
-                                                                  timestamp_field,
+                                                                  timestamp_field, timestamp_field_type,
                                                                   start_stop_dates.start_date,
                                                                   start_stop_dates.stop_date,
                                                                   period) %}
@@ -76,7 +77,7 @@
 
             {%- set iteration_number = i + 1 -%}
 
-            {%- set period_of_load = dbtvault.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
+            {%- set period_of_load = dbtvault.get_period_of_load(period, i, period_boundaries.start_timestamp, timestamp_field_type) -%}
 
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
