@@ -53,74 +53,85 @@
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
 
-        {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
-        {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
-        {%- set loop_vars = {'sum_rows_inserted': 0} -%}
+        {% if min_max_ranks.max_rank | int > 100000 %}
+            {%- set error_message -%}
+            'Max iterations is 100,000. Consider using a different rank column
+            or loading a smaller amount of data.
+            vault_insert_by materialisations are not intended for this purpose,
+            please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
+            {%- endset -%}
 
-        {% for i in range(min_max_ranks.max_rank | int ) -%}
+            {{- exceptions.raise_compiler_error(error_message) -}}
+        {% else %}
+            {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
+            {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
+            {%- set loop_vars = {'sum_rows_inserted': 0} -%}
 
-            {%- set iteration_number = i + 1 -%}
+            {% for i in range(min_max_ranks.max_rank | int ) -%}
 
-            {%- set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
+                {%- set iteration_number = i + 1 -%}
 
-            {{ dbt_utils.log_info("Running for {} {} of {} on column '{}' [{}]".format('rank', iteration_number, min_max_ranks.max_rank, rank_column, model.unique_id)) }}
+                {%- set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
 
-            {% set tmp_relation = make_temp_relation(target_relation) %}
+                {{ dbt_utils.log_info("Running for {} {} of {} on column '{}' [{}]".format('rank', iteration_number, min_max_ranks.max_rank, rank_column, model.unique_id)) }}
 
-            {# This call statement drops and then creates a temporary table #}
-            {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
-            {# See MSSQL note and drop code below #}
-            {% call statement() -%}
-                {{ create_table_as(True, tmp_relation, filtered_sql) }}
+                {% set tmp_relation = make_temp_relation(target_relation) %}
+
+                {# This call statement drops and then creates a temporary table #}
+                {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
+                {# See MSSQL note and drop code below #}
+                {% call statement() -%}
+                    {{ create_table_as(True, tmp_relation, filtered_sql) }}
+                {%- endcall %}
+
+                {{ adapter.expand_target_column_types(from_relation=tmp_relation,
+                                                      to_relation=target_relation) }}
+
+                {%- set insert_query_name = 'main-' ~ i -%}
+                {% call statement(insert_query_name, fetch_result=True) -%}
+                    INSERT INTO {{ target_relation }} ({{ target_cols_csv }})
+                    (
+                        SELECT {{ target_cols_csv }}
+                        FROM {{ tmp_relation.include(schema=True) }}
+                    );
+                {%- endcall %}
+
+                {% set result = load_result(insert_query_name) %}
+                {% if 'response' in result.keys() %} {# added in v0.19.0 #}
+                    {# Investigate for Databricks #}
+                    {%- if result['response']['rows_affected'] == None %}
+                        {% set rows_inserted = 0 %}
+                    {%- else %}
+                        {% set rows_inserted = result['response']['rows_affected'] %}
+                    {%- endif %}
+
+                {% else %} {# older versions #}
+                    {% set rows_inserted = result['status'].split(" ")[2] | int %}
+                {% endif %}
+
+                {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
+                {%- do loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
+
+                {{ dbt_utils.log_info("Ran for {} {} of {}; {} records inserted [{}]".format('rank', iteration_number,
+                                                                                              min_max_ranks.max_rank,
+                                                                                              rows_inserted,
+                                                                                              model.unique_id)) }}
+
+                {# In databricks and sqlserver a temporary view/table can only be dropped by #}
+                {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
+                {% if target.type in ['databricks', 'sqlserver'] %}
+                    {{ dbtvault.drop_temporary_special(tmp_relation) }}
+                {% else %}
+                    {% do to_drop.append(tmp_relation) %}
+                {% endif %}
+
+                {% do adapter.commit() %}
+
+            {% endfor %}
+            {% call noop_statement('main', "INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
+                {{ filtered_sql }}
             {%- endcall %}
-
-            {{ adapter.expand_target_column_types(from_relation=tmp_relation,
-                                                  to_relation=target_relation) }}
-
-            {%- set insert_query_name = 'main-' ~ i -%}
-            {% call statement(insert_query_name, fetch_result=True) -%}
-                INSERT INTO {{ target_relation }} ({{ target_cols_csv }})
-                (
-                    SELECT {{ target_cols_csv }}
-                    FROM {{ tmp_relation.include(schema=True) }}
-                );
-            {%- endcall %}
-
-            {% set result = load_result(insert_query_name) %}
-            {% if 'response' in result.keys() %} {# added in v0.19.0 #}
-                {# Investigate for Databricks #}
-                {%- if result['response']['rows_affected'] == None %}
-                    {% set rows_inserted = 0 %}
-                {%- else %}
-                    {% set rows_inserted = result['response']['rows_affected'] %}
-                {%- endif %}
-
-            {% else %} {# older versions #}
-                {% set rows_inserted = result['status'].split(" ")[2] | int %}
-            {% endif %}
-
-            {%- set sum_rows_inserted = loop_vars['sum_rows_inserted'] + rows_inserted -%}
-            {%- do loop_vars.update({'sum_rows_inserted': sum_rows_inserted}) %}
-
-            {{ dbt_utils.log_info("Ran for {} {} of {}; {} records inserted [{}]".format('rank', iteration_number,
-                                                                                          min_max_ranks.max_rank,
-                                                                                          rows_inserted,
-                                                                                          model.unique_id)) }}
-
-            {# In databricks and sqlserver a temporary view/table can only be dropped by #}
-            {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
-            {% if target.type in ['databricks', 'sqlserver'] %}
-                {{ dbtvault.drop_temporary_special(tmp_relation) }}
-            {% else %}
-                {% do to_drop.append(tmp_relation) %}
-            {% endif %}
-
-            {% do adapter.commit() %}
-
-        {% endfor %}
-        {% call noop_statement('main', "INSERT {}".format(loop_vars['sum_rows_inserted']) ) -%}
-            {{ filtered_sql }}
-        {%- endcall %}
+        {% endif %}
 
     {% endif %}
 
