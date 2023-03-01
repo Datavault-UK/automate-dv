@@ -7,7 +7,7 @@ from env import env_utils
 from test import dbtvault_generator, dbt_runner, behave_helpers, context_utils, step_helpers
 
 
-def set_stage_metadata(context, stage_model_name, timestamp_field=None, timestamp_field_type=None) -> dict:
+def set_stage_metadata(context, stage_model_name, timestamp_field='LOAD_DATE', timestamp_field_type='DATE') -> dict:
     """
         Set up the context to include required staging metadata and return as a dictionary to
         support providing the variables in the command line to dbt instead
