@@ -48,10 +48,7 @@
 {%- endmacro %}
 
 
-
-
 {% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
-
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
     {% set period_boundary_sql -%}
         with data as (

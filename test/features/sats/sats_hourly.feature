@@ -1,6 +1,7 @@
 @not_postgres
 Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily interval
 
+  @bigquery
   @fixture.satellite_cycle
   Scenario: [SAT-PM-H-01] Satellite load over several daily cycles with insert_by_period into
   empty satellite and an inferred date range.
@@ -49,25 +50,26 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF\|\|17-214-233-1222')   | 1990-02-03   | Geoff         | 17-214-233-1222 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1223')   | 1978-06-16   | Karen         | 17-214-233-1223 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
 
+  @bigquery
   @fixture.satellite_cycle
   Scenario: [SAT-PM-H-02] Satellite load with daily interval and intra-batch duplicates on base load.
-    Given the SATELLITE table does not exist
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | 1001        | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
-      | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
-      | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
-    And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-03 to 2019-05-05 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
-      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-03 to 2019-05-05 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
-      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
+    Given the SATELLITE_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
+      | 1001        | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+    And I stage the STG_CUSTOMER_TZ data with LOAD_DATE_TZ as type TIMESTAMP
+    And I insert by period into the SATELLITE_TZ sat by hour with date range: 2019-05-03 12:00:00.000000 to 2019-05-05 20:00:00.000000 and LDTS LOAD_DATE_TZ with type TIMESTAMP
+    Then the SATELLITE_TZ table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
+      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+    And I insert by period into the SATELLITE_TZ sat by hour with date range: 2019-05-03 12:00:00.000000 to 2019-05-05 20:00:00.000000 and LDTS LOAD_DATE_TZ with type TIMESTAMP
+    Then the SATELLITE_TZ table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
+      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
 
   @fixture.satellite_cycle
   Scenario: [SAT-PM-H-03] Satellite load with daily interval and intra-batch duplicates on incremental load.

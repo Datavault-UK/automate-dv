@@ -33,8 +33,6 @@
 {% endmacro %}
 
 
-
-
 {% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, timestamp_field_type, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
