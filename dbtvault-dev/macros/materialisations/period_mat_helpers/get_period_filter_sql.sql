@@ -3,7 +3,7 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+{%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset, timestamp_field_type=None) -%}
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
                                     'dbtvault')(target_cols_csv=target_cols_csv,
@@ -12,14 +12,15 @@
                                                 period=period,
                                                 start_timestamp=start_timestamp,
                                                 stop_timestamp=stop_timestamp,
-                                                offset=offset) %}
+                                                offset=offset,
+                                                timestamp_field_type=timestamp_field_type) %}
     {% do return(macro) %}
 {%- endmacro %}
 
 
 
 
-{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
+{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset, timestamp_field_type='DATE') -%}
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
@@ -27,7 +28,8 @@
                                                                                        timestamp_field,
                                                                                        start_timestamp,
                                                                                        stop_timestamp,
-                                                                                       offset, period)}) -%}
+                                                                                       offset, period,
+                                                                                       timestamp_field_type)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
 

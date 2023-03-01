@@ -7,14 +7,18 @@ from env import env_utils
 from test import dbtvault_generator, dbt_runner, behave_helpers, context_utils, step_helpers
 
 
-def set_stage_metadata(context, stage_model_name) -> dict:
+def set_stage_metadata(context, stage_model_name, timestamp_field=None, timestamp_field_type=None) -> dict:
     """
         Set up the context to include required staging metadata and return as a dictionary to
         support providing the variables in the command line to dbt instead
     """
 
     context.processed_stage_name = step_helpers.process_stage_names(context, stage_model_name)
-
+    
+    context.timestamp_field = step_helpers.timestamp_field_name(context, timestamp_field)
+    
+    context.timestamp_field_type = step_helpers.timestamp_field_data_type(context, timestamp_field_type)
+      
     context.include_source_columns = getattr(context, "include_source_columns", None)
 
     context.hashing = getattr(context, "hashing", None)
@@ -522,6 +526,31 @@ def create_csv(context, raw_stage_model_name):
         context.raw_stage_models = seed_file_name
 
         assert "Completed successfully" in logs
+
+
+@step("I stage the {processed_stage_name} data with {timestamp_field} as type {timestamp_field_type}")
+def stage_processing(context, processed_stage_name, timestamp_field, timestamp_field_type):
+    stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name, timestamp_field=timestamp_field, timestamp_field_type=timestamp_field_type)
+
+    args = {k: v for k, v in stage_metadata.items() if
+            ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
+             "hash_content_casing"]}
+    text_args = dbtvault_generator.handle_step_text_dict(context)
+
+    dbtvault_generator.raw_vault_structure(model_name=processed_stage_name,
+                                           config=text_args,
+                                           vault_structure="stage",
+                                           source_model=context.raw_stage_models,
+                                           hashed_columns=context.hashed_columns[processed_stage_name],
+                                           derived_columns=context.derived_columns[processed_stage_name],
+                                           ranked_columns=context.ranked_columns[processed_stage_name],
+                                           null_columns=context.null_columns[processed_stage_name],
+                                           include_source_columns=context.include_source_columns)
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[processed_stage_name],
+                                     args=args)
+
+    assert "Completed successfully" in logs
 
 
 @step("I stage the {processed_stage_name} data")

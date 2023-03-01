@@ -64,10 +64,10 @@
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
         {% set period_boundaries = dbtvault.get_period_boundaries(target_relation,
-                                                                  timestamp_field, timestamp_field_type,
+                                                                  timestamp_field,
                                                                   start_stop_dates.start_date,
                                                                   start_stop_dates.stop_date,
-                                                                  period) %}
+                                                                  period, timestamp_field_type) %}
 
         {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
         {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}
@@ -85,7 +85,7 @@
 
             {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
                                                                   period_boundaries.start_timestamp,
-                                                                  period_boundaries.stop_timestamp, i) %}
+                                                                  period_boundaries.stop_timestamp, i, timestamp_field_type) %}
 
 
 

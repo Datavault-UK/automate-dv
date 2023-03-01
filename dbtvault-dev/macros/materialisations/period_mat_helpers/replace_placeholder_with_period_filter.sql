@@ -3,7 +3,7 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
+{%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type='DATE') -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_period_filter',
                                     'dbtvault')(core_sql=core_sql,
@@ -11,7 +11,8 @@
                                                 start_timestamp=start_timestamp,
                                                 stop_timestamp=stop_timestamp,
                                                 offset=offset,
-                                                period=period) %}
+                                                period=period,
+                                                timestamp_field_type=timestamp_field_type) %}
     {% do return(macro) %}
 {%- endmacro %}
 
@@ -38,7 +39,7 @@
 
     {%- set period_filter -%}
             ({{ timestamp_field_type }}({{ timestamp_field }}) >= {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
-             {{ timestamp_field_type }}({{ timestamp_field }}) < {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD({{ timestamp_field_type }}_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
+             {{ timestamp_field_type }}({{ timestamp_field }}) < {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD({{ timestamp_field_type }}_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
       AND {{ timestamp_field_type }}({{ timestamp_field }}) >= {{ timestamp_field_type }}('{{ start_timestamp }}'))
     {%- endset -%}
 

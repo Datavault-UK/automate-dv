@@ -27,7 +27,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | 1007        | Geoff         | 1990-02-03   | 17-214-233-1222 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1217 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
-    And I stage the STG_CUSTOMER_TZ data
+    And I stage the STG_CUSTOMER_TZ data with LOAD_DATE_TZ as type TIMESTAMP
     And I insert by period into the SATELLITE_TZ sat by hour
     Then the SATELLITE_TZ table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_DOB | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |

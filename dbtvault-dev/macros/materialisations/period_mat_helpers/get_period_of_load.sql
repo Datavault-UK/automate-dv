@@ -3,12 +3,13 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro get_period_of_load(period, offset, start_timestamp, timestamp_field_type='DATE') -%}
 
     {% set macro = adapter.dispatch('get_period_of_load',
                                     'dbtvault')(period=period,
                                                 offset=offset,
-                                                start_timestamp=start_timestamp) %}
+                                                start_timestamp=start_timestamp,
+                                                timestamp_field_type=timestamp_field_type) %}
 
     {% do return(macro) %}
 {%- endmacro %}

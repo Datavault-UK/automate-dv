@@ -3,14 +3,15 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+{%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type='DATE') -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     'dbtvault')(target_relation=target_relation,
                                                 timestamp_field=timestamp_field,
                                                 start_date=start_date,
                                                 stop_date=stop_date,
-                                                period=period) %}
+                                                period=period,
+                                                timestamp_field_type=timestamp_field_type) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -49,7 +50,7 @@
 
 
 
-{% macro bigquery__get_period_boundaries(target_relation, timestamp_field, timestamp_field_type, start_date, stop_date, period) -%}
+{% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
     {% set period_boundary_sql -%}
@@ -60,10 +61,11 @@
                     CAST('{{ start_date }}' AS {{ timestamp_field_type }}))
                 as START_TIMESTAMP,
                 COALESCE(
-                    {%- if timestamp_field_type == 'DATE' OR timestamp_field_type == 'DATETIME' -%}
+                    {%- if timestamp_field_type == 'DATE' -%}
                     {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                     {%- else -%}
-                    TIMESTAMP_ADD(TIMESTAMP CAST({{ from_date_or_timestamp}} AS TIMESTAMP), INTERVAL 1 HOUR),
+                    {{ timestamp_field_type }}_ADD(CAST({{ from_date_or_timestamp}} AS {{ timestamp_field_type }}), INTERVAL 1 HOUR),
+                    {% endif %}
                     CAST({{ current_timestamp() }} AS {{ timestamp_field_type }}))
                 as STOP_TIMESTAMP
             from {{ target_relation }}
