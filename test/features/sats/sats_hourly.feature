@@ -1,7 +1,6 @@
 @not_postgres
 Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily interval
 
-  @bigquery
   @fixture.satellite_cycle
   Scenario: [SAT-PM-H-01] Satellite load over several daily cycles with insert_by_period into
   empty satellite and an inferred date range.
@@ -50,7 +49,6 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF\|\|17-214-233-1222')   | 1990-02-03   | Geoff         | 17-214-233-1222 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1223')   | 1978-06-16   | Karen         | 17-214-233-1223 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
 
-  @bigquery
   @fixture.satellite_cycle
   Scenario: [SAT-PM-H-02] Satellite load with daily interval and intra-batch duplicates on base load.
     Given the SATELLITE_TZ table does not exist

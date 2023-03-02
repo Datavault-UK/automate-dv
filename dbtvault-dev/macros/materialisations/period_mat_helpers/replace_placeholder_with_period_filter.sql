@@ -19,13 +19,13 @@
 
 
 
-{% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {%- set period_filter -%}
-        (TO_DATE({{ timestamp_field }})
-        >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
-             TO_DATE({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
-      AND (TO_DATE({{ timestamp_field }}) >= TO_DATE('{{ start_timestamp }}'))
+        (TO_{{ timestamp_field_type }}({{ timestamp_field }})
+        >= DATE_TRUNC('{{ period }}', TO_{{ timestamp_field_type }}('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
+             TO_{{ timestamp_field_type }}({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_{{ timestamp_field_type }}('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
+      AND (TO_{{ timestamp_field_type }}({{ timestamp_field }}) >= TO_{{ timestamp_field_type }}('{{ start_timestamp }}'))
     {%- endset -%}
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
 

@@ -18,14 +18,23 @@
 
 
 
-{% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+{% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
-
+    {%- do log('stop: ' ~ stop_date, info=true) -%}
+    {%- do log('type: ' ~ timestamp_field_type, info=true) -%}
+    {%- do log('relation: ' ~ target_relation, info=true) -%}
+    {%- do log('start: ' ~ start_date, info=true) -%}
+    {%- do log('from date: ' ~ from_date_or_timestamp, info=true) -%}
     {% set period_boundary_sql -%}
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE(
+                {%- if timestamp_field_type == 'DATE' -%}
+                {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                {%- else -%}
+                {{ timestamp_field_type}}ADD('hour', 1, TO_{{ timestamp_field_type}}({{ from_date_or_timestamp }})),
+                {%- endif -%}
                          {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )

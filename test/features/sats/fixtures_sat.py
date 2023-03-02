@@ -272,6 +272,19 @@ def satellite_snowflake(context):
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
+        },
+        "SATELLITE_AC_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE_TZ": "",
+                "SOURCE": "VARCHAR"
+            }
         }
     }
 
@@ -296,6 +309,17 @@ def satellite_cycle_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -305,6 +329,18 @@ def satellite_cycle_snowflake(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         }

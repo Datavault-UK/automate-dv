@@ -15,10 +15,10 @@
 {%- endmacro %}
 
 
-{%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro default__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
 
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{ start_timestamp }}'))) AS period_of_load
+        SELECT DATE_TRUNC('{{ period }}', {{ timestamp_field_type }}ADD({{ period }}, {{ offset }}, TO_{{ timestamp_field_type }}('{{ start_timestamp }}'))) AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
@@ -43,7 +43,7 @@
 {%- endmacro -%}
 
 
-{%- macro sqlserver__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro sqlserver__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:23] %}
 
@@ -59,16 +59,16 @@
 {%- endmacro -%}
 
 
-{%- macro databricks__get_period_of_load(period, offset, start_timestamp) -%}
-    {% do return(dbtvault.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}
+{%- macro databricks__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
+    {% do return(dbtvault.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp, timestamp_field_type=timestamp_field_type)) %}
 {%- endmacro -%}
 
 
 
-{%- macro postgres__get_period_of_load(period, offset, start_timestamp) -%}
+{%- macro postgres__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
     {# Postgres uses different DateTime arithmetic #}
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC('{{ period }}',
+        SELECT {{ timestamp_field_type }}_TRUNC('{{ period }}',
                TO_TIMESTAMP('{{ start_timestamp }}', 'YYYY-MM-DD HH24:MI:SS') + interval '{{ offset }} {{ period }}'
         ) AS period_of_load
     {%- endset %}
