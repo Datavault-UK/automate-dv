@@ -66,7 +66,8 @@ def feature_sub_types():
             ],
             'pm_datepart': [
                 'sats_daily',
-                'sats_monthly'
+                'sats_monthly',
+                'sats_hourly'
             ],
             'rank': [
                 'sats_rank_mat'
