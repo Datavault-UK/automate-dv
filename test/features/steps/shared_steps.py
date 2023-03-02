@@ -14,10 +14,6 @@ def set_stage_metadata(context, stage_model_name, timestamp_field='LOAD_DATE', t
     """
 
     context.processed_stage_name = step_helpers.process_stage_names(context, stage_model_name)
-    
-    context.timestamp_field = step_helpers.timestamp_field_name(context, timestamp_field)
-    
-    context.timestamp_field_type = step_helpers.timestamp_field_data_type(context, timestamp_field_type)
       
     context.include_source_columns = getattr(context, "include_source_columns", None)
 

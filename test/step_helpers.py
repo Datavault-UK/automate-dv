@@ -44,29 +44,3 @@ def filter_metadata(context, metadata: dict) -> dict:
         context.vault_structure_columns[context.target_model_name]['src_payload'] = metadata['src_payload']
 
     return metadata
-
-
-def timestamp_field_name(context, timestamp_field):
-
-    if hasattr(context, timestamp_field):
-
-        field = timestamp_field
-
-        return field
-
-    else:
-
-        return timestamp_field
-
-
-def timestamp_field_data_type(context, timestamp_field_type):
-
-    if hasattr(context, timestamp_field_type):
-
-        field_type = timestamp_field_type
-
-        return field_type
-
-    else:
-
-        return timestamp_field_type

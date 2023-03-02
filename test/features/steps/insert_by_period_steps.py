@@ -6,13 +6,14 @@ from test import dbtvault_generator, step_helpers, dbt_runner
 @step("I insert by period into the {model_name} {vault_structure} "
       "by {period} with date range: {start_date} to {stop_date} and LDTS {timestamp_field} "
       "with type {timestamp_field_type}")
-def load_table(context, model_name, vault_structure, period, start_date, stop_date, timestamp_field, timestamp_field_type):
+def load_table(context, model_name, vault_structure, period, start_date, stop_date, timestamp_field,
+               timestamp_field_type):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": context.timestamp_field,
-              "timestamp_field_type": context.timestamp_field_type,
+              "timestamp_field": timestamp_field,
+              "timestamp_field_type": timestamp_field_type,
               "start_date": start_date,
               "stop_date": stop_date,
               "period": period}
@@ -41,13 +42,43 @@ def load_table(context, model_name, vault_structure, period, start_date, stop_da
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": context.timestamp_field,
-              "timestamp_field_type": context.timestamp_field_type,
+              "timestamp_field": timestamp_field,
+              "timestamp_field_type": 'DATE',
               "start_date": start_date,
               "stop_date": stop_date,
               "period": period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    is_full_refresh = step_helpers.is_full_refresh(context)
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+                                     full_refresh=is_full_refresh)
+
+    assert "Completed successfully" in logs
+
+
+@step("I insert by period into the {model_name} {vault_structure} by {period} with LDTS {timestamp_field} as type {"
+      "timestamp_field_type}")
+def load_table(context, model_name, vault_structure, period, timestamp_field, timestamp_field_type):
+    metadata = {"source_model": context.processed_stage_name,
+                **context.vault_structure_columns[model_name]}
+
+    config = {"materialized": "vault_insert_by_period",
+              "timestamp_field": timestamp_field,
+              "date_source_models": context.processed_stage_name,
+              "timestamp_field_type": timestamp_field_type,
+              "period": period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
+    config = dbtvault_generator.append_model_text_config(context, config)
 
     context.vault_structure_metadata = metadata
 
@@ -70,9 +101,9 @@ def load_table(context, model_name, vault_structure, period):
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": context.timestamp_field,
+              "timestamp_field": "LOAD_DATE",
               "date_source_models": context.processed_stage_name,
-              "timestamp_field_type": context.timestamp_field_type,
+              "timestamp_field_type": "DATE",
               "period": period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
@@ -93,14 +124,16 @@ def load_table(context, model_name, vault_structure, period):
     assert "Completed successfully" in logs
 
 
-@step("if I insert by period into the {model_name} {vault_structure} by {period} this will fail with \"{error_message}\" error")
-def load_table(context, model_name, vault_structure, period, error_message):
+@step("if I insert by period into the {model_name} {vault_structure} by {period} with LDTS {timestamp_field} as type "
+      "{timestamp_field_type} this will fail with \"{error_message}\" error")
+def load_table(context, model_name, vault_structure, period, timestamp_field, timestamp_field_type, error_message):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": "LOAD_DATE",
+              "timestamp_field": timestamp_field,
               "date_source_models": context.processed_stage_name,
+              "timestamp_field_type": timestamp_field_type,
               "period": period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
@@ -121,15 +154,73 @@ def load_table(context, model_name, vault_structure, period, error_message):
     assert error_message in logs
 
 
+@step("if I insert by period into the {model_name} {vault_structure} by {period} this will fail with \"{error_message}\" error")
+def load_table(context, model_name, vault_structure, period, error_message):
+    metadata = {"source_model": context.processed_stage_name,
+                **context.vault_structure_columns[model_name]}
+
+    config = {"materialized": "vault_insert_by_period",
+              "timestamp_field": "LOAD_DATE",
+              "date_source_models": context.processed_stage_name,
+              "timestamp_field_type": "DATE",
+              "period": period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
+    config = dbtvault_generator.append_model_text_config(context, config)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    is_full_refresh = step_helpers.is_full_refresh(context)
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+                                     full_refresh=is_full_refresh)
+
+    assert error_message in logs
+
+
+@step("I insert by period starting from {start_date} by {period} into the {model_name} {vault_structure} with LDTS {"
+      "timestmap_field} as type {timestamp_field_type}")
+def load_table(context, start_date, period, model_name, vault_structure, timestamp_field, timestamp_field_type):
+    metadata = {"source_model": context.processed_stage_name,
+                **context.vault_structure_columns[model_name]}
+
+    config = {"materialized": "vault_insert_by_period",
+              "timestamp_field": timestamp_field,
+              "start_date": start_date,
+              "timestamp_field_type": timestamp_field_type,
+              "period": period}
+
+    config = dbtvault_generator.append_end_date_config(context, config)
+
+    context.vault_structure_metadata = metadata
+
+    dbtvault_generator.raw_vault_structure(model_name=model_name,
+                                           vault_structure=vault_structure,
+                                           config=config,
+                                           **metadata)
+
+    is_full_refresh = step_helpers.is_full_refresh(context)
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+                                     full_refresh=is_full_refresh)
+
+    assert "Completed successfully" in logs
+
+
 @step("I insert by period starting from {start_date} by {period} into the {model_name} {vault_structure}")
 def load_table(context, start_date, period, model_name, vault_structure):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}
 
     config = {"materialized": "vault_insert_by_period",
-              "timestamp_field": context.timestamp_field,
+              "timestamp_field": "LOAD_DATE",
               "start_date": start_date,
-              "timestamp_field_type": context.timestamp_field_type,
+              "timestamp_field_type": "DATE",
               "period": period}
 
     config = dbtvault_generator.append_end_date_config(context, config)
