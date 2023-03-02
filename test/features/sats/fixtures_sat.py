@@ -61,6 +61,15 @@ def set_vault_structure_definition(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "SATELLITE_AC_TZ": {
+            "src_pk": "CUSTOMER_PK",
+            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_PHONE", "CUSTOMER_DOB"],
+            "src_hashdiff": "HASHDIFF",
+            "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM_TZ",
+            "src_ldts": "LOAD_DATE_TZ",
+            "src_source": "SOURCE"
         }
     }
 
@@ -428,6 +437,19 @@ def satellite_bigquery(context):
                 "CUSTOMER_MT_ID": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE_AC_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         }
