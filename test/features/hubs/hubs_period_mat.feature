@@ -381,3 +381,35 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | md5('1005') | 1005        | 1993-01-05 | TPCH   |
       | md5('1006') | 1006        | 1993-01-06 | TPCH   |
       | md5('1007') | 1007        | 1993-01-07 | TPCH   |
+
+  @fixture.single_source_hub
+  Scenario: [HUB-PM-07] Simple load of stage data into a non existent hub with millisecond time period
+        This will fail with a max iterations error message
+    Given the HUB table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1003        | Chad          | 1993-01-03 | TPCH   |
+      | 1004        | Dom           | 1993-01-04 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    Then if I insert by period into the HUB hub by millisecond this will fail with "Max iterations" error
+
+  @fixture.single_source_hub
+  Scenario: [HUB-PM-08] Simple load of stage data into an empty hub with millisecond time period
+        This will fail with a max iterations error message
+    Given the HUB hub is empty
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1002        | Bob           | 1993-01-02 | TPCH   |
+      | 1003        | Chad          | 1993-01-03 | TPCH   |
+      | 1004        | Dom           | 1993-01-04 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    Then if I insert by period into the HUB hub by millisecond this will fail with "Max iterations" error

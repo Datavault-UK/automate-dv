@@ -30,6 +30,8 @@
 
     {%- do dbtvault.check_placeholder(sql) -%}
 
+    {%- do dbtvault.check_num_periods(start_stop_dates.start_date, start_stop_dates.stop_date, period) -%}
+
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
     -- `BEGIN` happens here:
