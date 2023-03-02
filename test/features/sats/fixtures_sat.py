@@ -282,7 +282,7 @@ def satellite_snowflake(context):
                 "HASHDIFF": "BINARY(16)",
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "EFFECTIVE_FROM_TZ": "TIMESTAMP_TZ",
-                "LOAD_DATE_TZ": "",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -846,6 +846,19 @@ def satellite_databricks(context):
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
             }
+        },
+        "SATELLITE_AC_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "VARCHAR(100)"
+            }
         }
     }
 
@@ -870,6 +883,17 @@ def satellite_cycle_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -879,6 +903,18 @@ def satellite_cycle_databricks(context):
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         }

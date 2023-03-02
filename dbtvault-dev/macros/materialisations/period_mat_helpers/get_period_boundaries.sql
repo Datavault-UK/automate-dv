@@ -20,11 +20,7 @@
 
 {% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
-    {%- do log('stop: ' ~ stop_date, info=true) -%}
-    {%- do log('type: ' ~ timestamp_field_type, info=true) -%}
-    {%- do log('relation: ' ~ target_relation, info=true) -%}
-    {%- do log('start: ' ~ start_date, info=true) -%}
-    {%- do log('from date: ' ~ from_date_or_timestamp, info=true) -%}
+
     {% set period_boundary_sql -%}
         WITH period_data AS (
             SELECT
@@ -107,7 +103,12 @@
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                CAST(COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                CAST(COALESCE(
+            {%- if period == 'hour' -%}
+                {{ dbtvault.dateadd('hour', 1, from_date_or_timestamp) }},
+            {%- else -%}
+                {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+            {%- endif -%}
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -137,7 +138,12 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE(
+            {%- if period == 'hour' -%}
+                {{ dbtvault.dateadd('hour', 1, from_date_or_timestamp) }},
+            {%- else -%}
+                {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+            {%- endif -%}
                          {{ current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )

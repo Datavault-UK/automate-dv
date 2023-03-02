@@ -1,8 +1,8 @@
 @not_postgres
-Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily interval
+Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with hourly interval
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-01] Satellite load over several daily cycles with insert_by_period into
+  Scenario: [SAT-PM-H-01] Satellite load over several hourly cycles with insert_by_period into
   empty satellite and an inferred date range.
 
     Given the RAW_STAGE_TZ stage is empty
@@ -50,7 +50,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1223')   | 1978-06-16   | Karen         | 17-214-233-1223 | 2019-08-07 04:00:00.000000 | 2019-08-07 04:00:00.000000 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-02] Satellite load with daily interval and intra-batch duplicates on base load.
+  Scenario: [SAT-PM-H-02] Satellite load with hourly interval and intra-batch duplicates on base load.
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
@@ -71,7 +71,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
 
   @bigquery
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-03] Satellite load with daily interval and intra-batch duplicates on incremental load.
+  Scenario: [SAT-PM-H-03] Satellite load with hourly interval and intra-batch duplicates on incremental load.
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
@@ -90,7 +90,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-04 03:00:00.000000 | 2019-05-04 03:00:00.000000 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-04] Satellite load with daily interval and intra-load duplicates.
+  Scenario: [SAT-PM-H-04] Satellite load with hourly interval and intra-load duplicates.
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
@@ -114,7 +114,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1004') | md5('1995-08-10\|\|1004\|\|DAVID\|\|17-214-233-1217')   | David         | 1995-08-10   | 17-214-233-1217 | 2019-05-03 04:00:00.000000 | 2019-05-03 04:00:00.000000 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-05] Satellite load with daily interval and intra-batch base load and intra-load duplicates
+  Scenario: [SAT-PM-H-05] Satellite load with hourly interval and intra-batch base load and intra-load duplicates
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
@@ -140,7 +140,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1004') | md5('1995-08-10\|\|1004\|\|DAVID\|\|17-214-233-1217')   | David         | 1995-08-10   | 17-214-233-1217 | 2019-05-03 07:00:00.000000 | 2019-05-03 07:00:00.000000 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-06] Satellite load with daily interval, loading with different stage data
+  Scenario: [SAT-PM-H-06] Satellite load with hourly interval, loading with different stage data
     And the SATELLITE_TZ sat is empty
     When the RAW_STAGE_TZ is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
@@ -201,7 +201,7 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with daily in
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | TPCH_CUSTOMER  | 1993-01-01 07:00:00.000000 | 1993-01-01 07:00:00.000000 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-H-09] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates.
+  Scenario: [SAT-PM-H-09] Satellite load over several hourly cycles with insert_by_period into populated satellite, with partial duplicates.
     Given the RAW_STAGE_TZ stage is empty
     And the SATELLITE_TZ sat is already populated with data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM_TZ          | LOAD_DATE_TZ               | SOURCE |
