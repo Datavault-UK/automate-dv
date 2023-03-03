@@ -92,7 +92,7 @@
 
 
 
-{% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+{% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date = start_date[0:27] %}
@@ -129,7 +129,7 @@
 {%- endmacro %}
 
 
-{% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+{% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
 

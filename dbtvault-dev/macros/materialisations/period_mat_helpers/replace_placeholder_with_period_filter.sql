@@ -33,7 +33,7 @@
 {% endmacro %}
 
 
-{% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, timestamp_field_type, start_timestamp, stop_timestamp, offset, period) %}
+{% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {%- set period_filter -%}
             ({{ timestamp_field_type }}({{ timestamp_field }}) >= {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
@@ -49,7 +49,7 @@
 
 
 
-{% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:27] %}
@@ -67,7 +67,7 @@
 
 
 
-{% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
+{% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {%- set period_filter -%}
         {{ timestamp_field }}::DATE >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}', 'YYYY-MM-DD') + INTERVAL '{{ offset }} {{ period }}')
