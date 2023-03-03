@@ -704,6 +704,17 @@ def satellite_cycle_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(15)",
+                "EFFECTIVE_FROM_TZ": "DATETIME2",
+                "LOAD_DATE_TZ": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -713,6 +724,18 @@ def satellite_cycle_sqlserver(context):
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(15)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM_TZ": "DATETIME2",
+                "LOAD_DATE_TZ": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         }
