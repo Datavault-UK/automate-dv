@@ -101,17 +101,12 @@
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
-            SELECT
+           SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                CAST(COALESCE(
-            {%- if period == 'hour' -%}
-                {{ dbtvault.dateadd('hour', 1, from_date_or_timestamp) }},
-            {%- else -%}
-                {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-            {%- endif -%}
+                CAST(COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
-        )
+      )
         SELECT
             start_timestamp,
             stop_timestamp,
