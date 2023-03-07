@@ -89,7 +89,8 @@ def set_staging_definition(context):
              "CUSTOMER_NAME",
              "CUSTOMER_DOB",
              "CUSTOMER_PHONE",
-             "LOAD_DATE_TZ",
+             "CUSTOMER_MT_ID",
+              "LOAD_DATE_TZ",
              "SOURCE"],
         "RAW_STAGE_TS":
             ["CUSTOMER_ID",
@@ -172,6 +173,7 @@ def satellite_snowflake(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE_TZ": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
@@ -316,6 +318,7 @@ def satellite_cycle_snowflake(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EFFECTIVE_FROM_TZ": "TIMESTAMP_TZ",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE_TZ": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
@@ -375,6 +378,7 @@ def satellite_bigquery(context):
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
@@ -518,6 +522,7 @@ def satellite_cycle_bigquery(context):
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
@@ -567,7 +572,6 @@ def satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -588,6 +592,7 @@ def satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE_TZ": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -680,6 +685,19 @@ def satellite_sqlserver(context):
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
+        },
+        "SATELLITE_AC_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "EFFECTIVE_FROM_TZ": "DATETIME2",
+                "LOAD_DATE_TZ": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
         }
     }
 
@@ -711,6 +729,7 @@ def satellite_cycle_sqlserver(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(15)",
                 "EFFECTIVE_FROM_TZ": "DATETIME2",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE_TZ": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -769,6 +788,7 @@ def satellite_databricks(context):
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -913,6 +933,7 @@ def satellite_cycle_databricks(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "EFFECTIVE_FROM_TZ": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR(100)",
                 "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
@@ -971,6 +992,7 @@ def satellite_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "LOAD_DATE_TZ": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
@@ -1069,6 +1091,19 @@ def satellite_postgres(context):
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_AC_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM_TZ": "DATETIME",
+                "LOAD_DATE_TZ": "DATETIME",
                 "SOURCE": "VARCHAR"
             }
         }
