@@ -18,7 +18,7 @@
 {%- macro default__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
 
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC('{{ period }}', {{ timestamp_field_type }}ADD({{ period }}, {{ offset }}, TO_{{ timestamp_field_type }}('{{ start_timestamp }}'))) AS period_of_load
+        SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_TIMESTAMP('{{ start_timestamp }}'))) AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
@@ -62,7 +62,6 @@
 {%- macro databricks__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
     {% do return(dbtvault.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp, timestamp_field_type=timestamp_field_type)) %}
 {%- endmacro -%}
-
 
 
 {%- macro postgres__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}

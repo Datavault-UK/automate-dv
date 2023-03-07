@@ -17,23 +17,17 @@
 {%- endmacro %}
 
 
-
 {% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
-            SELECT
+           SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE(
-                {%- if timestamp_field_type == 'DATE' -%}
-                {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                {%- else -%}
-                {{ timestamp_field_type}}ADD('hour', 1, TO_{{ timestamp_field_type}}({{ from_date_or_timestamp }})),
-                {%- endif -%}
-                         {{ current_timestamp() }} ) AS stop_timestamp
+                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                         {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
-        )
+         )
         SELECT
             start_timestamp,
             stop_timestamp,
@@ -88,8 +82,6 @@
 
     {% do return(period_boundaries) %}
 {%- endmacro %}
-
-
 
 
 {% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
@@ -158,7 +150,6 @@
 
     {% do return(period_boundaries) %}
 {%- endmacro %}
-
 
 
 {% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}

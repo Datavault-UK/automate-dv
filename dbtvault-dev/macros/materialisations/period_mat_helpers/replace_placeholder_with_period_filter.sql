@@ -17,15 +17,13 @@
 {%- endmacro %}
 
 
-
-
 {% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {%- set period_filter -%}
-        (TO_{{ timestamp_field_type }}({{ timestamp_field }})
-        >= DATE_TRUNC('{{ period }}', TO_{{ timestamp_field_type }}('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
-             TO_{{ timestamp_field_type }}({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_{{ timestamp_field_type }}('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
-      AND (TO_{{ timestamp_field_type }}({{ timestamp_field }}) >= TO_{{ timestamp_field_type }}('{{ start_timestamp }}'))
+        (TO_TIMESTAMP({{ timestamp_field }})
+        >= DATE_TRUNC('{{ period }}', TO_TIMESTAMP('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}') AND
+             TO_TIMESTAMP({{ timestamp_field }}) < DATE_TRUNC('{{ period }}', TO_TIMESTAMP('{{ start_timestamp }}') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}'))
+      AND (TO_TIMESTAMP({{ timestamp_field }}) >= TO_TIMESTAMP('{{ start_timestamp }}'))
     {%- endset -%}
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
 
@@ -47,8 +45,6 @@
 {% endmacro %}
 
 
-
-
 {% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
@@ -64,7 +60,6 @@
 
     {% do return(filtered_sql) %}
 {% endmacro %}
-
 
 
 {% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
