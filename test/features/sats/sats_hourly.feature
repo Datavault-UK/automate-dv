@@ -69,7 +69,6 @@ Feature: [SAT-PM-H] Satellites Loaded using Period Materialization with hourly i
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
 
-  @bigquery
   @fixture.satellite_cycle
   Scenario: [SAT-PM-H-03] Satellite load with hourly interval and intra-batch duplicates on incremental load.
     Given the SATELLITE_TZ table does not exist
