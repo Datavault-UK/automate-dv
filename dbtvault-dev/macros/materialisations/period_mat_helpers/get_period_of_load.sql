@@ -67,9 +67,7 @@
 {%- macro postgres__get_period_of_load(period, offset, start_timestamp, timestamp_field_type) -%}
     {# Postgres uses different DateTime arithmetic #}
     {% set period_of_load_sql -%}
-        SELECT {{ timestamp_field_type }}_TRUNC('{{ period }}',
-               TO_TIMESTAMP('{{ start_timestamp }}', 'YYYY-MM-DD HH24:MI:SS') + interval '{{ offset }} {{ period }}'
-        ) AS period_of_load
+        SELECT DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}') AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}

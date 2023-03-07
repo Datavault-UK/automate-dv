@@ -159,7 +159,7 @@
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
                 COALESCE({{ dbtvault.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
-                         {{ current_timestamp() }} ) AS stop_timestamp
+                         {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT

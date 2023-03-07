@@ -65,9 +65,9 @@
 {% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {%- set period_filter -%}
-        {{ timestamp_field }}::DATE >= DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}', 'YYYY-MM-DD') + INTERVAL '{{ offset }} {{ period }}')
-        AND {{ timestamp_field }}::DATE < DATE_TRUNC('{{ period }}', TO_DATE('{{ start_timestamp }}','YYYY-MM-DD') + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}')
-        AND {{ timestamp_field }}::DATE >= TO_DATE('{{ start_timestamp }}','YYYY-MM-DD')
+        {{ timestamp_field }}::TIMESTAMP >= DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}')
+        AND {{ timestamp_field }}::TIMESTAMP < DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}' + INTERVAL '1 {{ period }}')
+        AND {{ timestamp_field }}::TIMESTAMP >= TIMESTAMP '{{ start_timestamp }}'
     {%- endset -%}
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
 
