@@ -20,11 +20,7 @@
             WITH stage AS (
             {% for source_model in date_source_models %}
                 SELECT
-                    {% if target.type =='bigquery' %}
-                    CAST({{ timestamp_field }} AS TIMESTAMP) AS {{ timestamp_field }}
-                    {% else %}
                     {{ timestamp_field }}
-                    {% endif %}
                     FROM {{ ref(source_model) }}
                 {% if not loop.last %} UNION ALL {% endif %}
             {% endfor %})
