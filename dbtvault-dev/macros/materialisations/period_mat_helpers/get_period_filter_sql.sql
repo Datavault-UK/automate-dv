@@ -3,7 +3,7 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset, timestamp_field_type=None) -%}
+{%- macro get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
                                     'dbtvault')(target_cols_csv=target_cols_csv,
@@ -12,30 +12,28 @@
                                                 period=period,
                                                 start_timestamp=start_timestamp,
                                                 stop_timestamp=stop_timestamp,
-                                                offset=offset,
-                                                timestamp_field_type=timestamp_field_type) %}
+                                                offset=offset) %}
     {% do return(macro) %}
 {%- endmacro %}
 
 
 
 
-{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset, timestamp_field_type='DATE') -%}
+{% macro default__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
     {%- set filtered_sql = {'sql': base_sql} -%}
 
     {%- do filtered_sql.update({'sql': dbtvault.replace_placeholder_with_period_filter(core_sql=filtered_sql.sql,
                                                                                        timestamp_field=timestamp_field,
                                                                                        start_timestamp=start_timestamp,
                                                                                        stop_timestamp=stop_timestamp,
-                                                                                       offset=offset, period=period,
-                                                                                       timestamp_field_type=timestamp_field_type)}) -%}
+                                                                                       offset=offset, period=period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}
 
 
 
 
-{% macro sqlserver__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset, timestamp_field_type) -%}
+{% macro sqlserver__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
@@ -43,15 +41,14 @@
                                                                                        timestamp_field=timestamp_field,
                                                                                        start_timestamp=start_timestamp,
                                                                                        stop_timestamp=stop_timestamp,
-                                                                                       offset=offset, period=period,
-                                                                                       timestamp_field_type=timestamp_field_type)}) -%}
+                                                                                       offset=offset, period=period)}) -%}
     {# MSSQL does not allow CTEs in a subquery #}
     {{ filtered_sql.sql }}
 {%- endmacro %}
 
 
 
-{% macro postgres__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset, timestamp_field_type) -%}
+{% macro postgres__get_period_filter_sql(target_cols_csv, base_sql, timestamp_field, period, start_timestamp, stop_timestamp, offset) -%}
 
     {%- set filtered_sql = {'sql': base_sql} -%}
 
@@ -59,7 +56,6 @@
                                                                                        timestamp_field=timestamp_field,
                                                                                        start_timestamp=start_timestamp,
                                                                                        stop_timestamp=stop_timestamp,
-                                                                                       offset=offset, period=period,
-                                                                                       timestamp_field_type=timestamp_field_type)}) -%}
+                                                                                       offset=offset, period=period)}) -%}
     select {{ target_cols_csv }} from ({{ filtered_sql.sql }})
 {%- endmacro %}

@@ -3,21 +3,20 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type='DATE') -%}
+{%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     'dbtvault')(target_relation=target_relation,
                                                 timestamp_field=timestamp_field,
                                                 start_date=start_date,
                                                 stop_date=stop_date,
-                                                period=period,
-                                                timestamp_field_type=timestamp_field_type) %}
+                                                period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
 
 
-{% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
+{% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
 
     {% set period_boundary_sql -%}
@@ -47,7 +46,7 @@
 {%- endmacro %}
 
 
-{% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
+{% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
 
@@ -82,7 +81,7 @@
 {%- endmacro %}
 
 
-{% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
+{% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date = start_date[0:27] %}
@@ -114,7 +113,7 @@
 {%- endmacro %}
 
 
-{% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
+{% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
 
@@ -150,7 +149,7 @@
 {%- endmacro %}
 
 
-{% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
+{% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (

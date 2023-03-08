@@ -3,7 +3,7 @@
  * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type='DATE') -%}
+{%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_period_filter',
                                     'dbtvault')(core_sql=core_sql,
@@ -11,13 +11,12 @@
                                                 start_timestamp=start_timestamp,
                                                 stop_timestamp=stop_timestamp,
                                                 offset=offset,
-                                                period=period,
-                                                timestamp_field_type=timestamp_field_type) %}
+                                                period=period) %}
     {% do return(macro) %}
 {%- endmacro %}
 
 
-{% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
+{% macro default__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
         (TO_TIMESTAMP({{ timestamp_field }})
@@ -31,7 +30,7 @@
 {% endmacro %}
 
 
-{% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
+{% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
             (TIMESTAMP({{ timestamp_field }}) >= DATE_TRUNC(DATE_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
@@ -45,7 +44,7 @@
 {% endmacro %}
 
 
-{% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
+{% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:27] %}
@@ -62,7 +61,7 @@
 {% endmacro %}
 
 
-{% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
+{% macro postgres__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
 
     {%- set period_filter -%}
         {{ timestamp_field }}::TIMESTAMP >= DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}')
