@@ -58,7 +58,7 @@
                     CAST('{{ start_date }}' AS TIMESTAMP))
                 as START_TIMESTAMP,
                 COALESCE(
-                   TIMESTAMP_ADD(CAST({{ from_date_or_timestamp }} AS TIMESTAMP), INTERVAL 86399999 millisecond),
+                    TIMESTAMP_ADD(CAST({{ from_date_or_timestamp }} AS TIMESTAMP), INTERVAL 86399999 millisecond),
                     CAST({{ current_timestamp() }} AS TIMESTAMP))
                 as STOP_TIMESTAMP
             from {{ target_relation }}
