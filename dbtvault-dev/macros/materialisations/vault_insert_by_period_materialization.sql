@@ -5,10 +5,6 @@
 
 {% materialization vault_insert_by_period, default -%}
 
-    {% if target.type == "postgres" and execute %}
-        {{ exceptions.raise_compiler_error("The vault_insert_by_period materialisation is currently unavailable on Postgres.") }}
-    {% endif %}
-
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}
@@ -63,6 +59,9 @@
                                                                        start_timestamp=start_stop_dates.start_date,
                                                                        stop_timestamp=start_stop_dates.stop_date,
                                                                        offset=0, period=period) %}
+        {% if target.type == "postgres" %}
+            {{ dbtvault.drop_temporary_special(target_relation) }}
+        {% endif %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
         {% set period_boundaries = dbtvault.get_period_boundaries(target_relation,
@@ -95,7 +94,11 @@
             {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
             {# See MSSQL note and drop code below #}
 
-            {# [ ] TODO check dbt postgres implementation for a possible fix #}
+            {# Postgres needs to have an alias appended #}
+            {% if target.type == "postgres" %}
+                {% set tmp_table_sql = tmp_table_sql ~ ' AS SUBQUERY_ALIAS' %}
+            {% endif %}
+
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}

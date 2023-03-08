@@ -150,7 +150,7 @@
 {%- endmacro %}
 
 
-{% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+{% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (

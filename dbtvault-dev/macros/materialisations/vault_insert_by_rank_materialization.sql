@@ -5,10 +5,6 @@
 
 {% materialization vault_insert_by_rank, default -%}
 
-    {% if target.type == "postgres" and execute %}
-        {{ exceptions.raise_compiler_error("The vault_insert_by_rank materialisation is currently unavailable on Postgres.") }}
-    {% endif %}
-
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}
@@ -50,6 +46,9 @@
 
     {% elif full_refresh_mode %}
         {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
+        {% if target.type == "postgres" %}
+            {{ dbtvault.drop_temporary_special(target_relation) }}
+        {% endif %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
 

@@ -1,4 +1,3 @@
-@not_postgres
 Feature: [LNK-PM] Links Loaded using Period Materialization
 
   @fixture.single_source_link

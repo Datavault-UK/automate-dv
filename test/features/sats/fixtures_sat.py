@@ -1003,7 +1003,7 @@ def satellite_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1076,8 +1076,8 @@ def satellite_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "HASHDIFF": "BYTEA",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1102,8 +1102,8 @@ def satellite_postgres(context):
                 "CUSTOMER_DOB": "DATE",
                 "HASHDIFF": "BYTEA",
                 "CUSTOMER_MT_ID": "VARCHAR",
-                "EFFECTIVE_FROM_TZ": "DATETIME",
-                "LOAD_DATE_TZ": "DATETIME",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -1130,6 +1130,27 @@ def satellite_cycle_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
@@ -1139,6 +1160,94 @@ def satellite_cycle_postgres(context):
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_PL_EXCLUDE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR`"
+            }
+        },
+        "SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_AC_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         }

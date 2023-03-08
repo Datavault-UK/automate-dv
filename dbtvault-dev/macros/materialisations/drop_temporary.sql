@@ -13,6 +13,8 @@
             DROP VIEW {{ tmp_relation }};
         {% elif target.type == 'sqlserver' %}
             DROP TABLE {{ tmp_relation }};
+        {% elif target.type == 'postgres' %}
+            DROP TABLE {{ tmp_relation }};
         {% endif %}
     {%- endcall %}
 
