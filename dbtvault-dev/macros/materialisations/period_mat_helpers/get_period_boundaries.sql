@@ -48,21 +48,19 @@
 
 
 {% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period, timestamp_field_type) -%}
+
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
+
     {% set period_boundary_sql -%}
         with data as (
             select
                 COALESCE(
-                    CAST(MAX({{ timestamp_field }}) AS {{ timestamp_field_type }}),
-                    CAST('{{ start_date }}' AS {{ timestamp_field_type }}))
+                    CAST(MAX({{ timestamp_field }}) AS TIMESTAMP),
+                    CAST('{{ start_date }}' AS TIMESTAMP))
                 as START_TIMESTAMP,
                 COALESCE(
-                    {%- if timestamp_field_type == 'DATE' -%}
-                    {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                    {%- else -%}
-                    {{ timestamp_field_type }}_ADD(CAST({{ from_date_or_timestamp}} AS {{ timestamp_field_type }}), INTERVAL 1 HOUR),
-                    {% endif %}
-                    CAST({{ current_timestamp() }} AS {{ timestamp_field_type }}))
+                   TIMESTAMP_ADD(CAST({{ from_date_or_timestamp }} AS TIMESTAMP), INTERVAL 86399999 millisecond),
+                    CAST({{ current_timestamp() }} AS TIMESTAMP))
                 as STOP_TIMESTAMP
             from {{ target_relation }}
         )

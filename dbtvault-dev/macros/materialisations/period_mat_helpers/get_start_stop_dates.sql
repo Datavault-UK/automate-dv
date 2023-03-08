@@ -6,21 +6,26 @@
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
-
         {%- set start_date = config.get('start_date') -%}
         {%- set stop_date = config.get('stop_date', default=none) -%}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
     {% elif date_source_models is not none %}
-
+        {%- do log('start date is none', info=true) -%}
         {% if date_source_models is string %}
             {% set date_source_models = [date_source_models] %}
         {% endif %}
         {% set query_sql %}
             WITH stage AS (
             {% for source_model in date_source_models %}
-                SELECT {{ timestamp_field }} FROM {{ ref(source_model) }}
+                SELECT
+                    {% if target.type =='bigquery' %}
+                    CAST({{ timestamp_field }} AS TIMESTAMP) AS {{ timestamp_field }}
+                    {% else %}
+                    {{ timestamp_field }}
+                    {% endif %}
+                    FROM {{ ref(source_model) }}
                 {% if not loop.last %} UNION ALL {% endif %}
             {% endfor %})
 

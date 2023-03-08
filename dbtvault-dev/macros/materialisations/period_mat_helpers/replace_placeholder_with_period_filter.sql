@@ -34,9 +34,9 @@
 {% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period, timestamp_field_type) %}
 
     {%- set period_filter -%}
-            ({{ timestamp_field_type }}({{ timestamp_field }}) >= {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
-             {{ timestamp_field_type }}({{ timestamp_field }}) < {{ timestamp_field_type }}_TRUNC({{ timestamp_field_type }}_ADD({{ timestamp_field_type }}_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
-      AND {{ timestamp_field_type }}({{ timestamp_field }}) >= {{ timestamp_field_type }}('{{ start_timestamp }}'))
+            (TIMESTAMP({{ timestamp_field }}) >= DATE_TRUNC(DATE_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
+             TIMESTAMP({{ timestamp_field }}) < DATE_TRUNC(DATE_ADD(DATE_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
+      AND TIMESTAMP({{ timestamp_field }}) >= TIMESTAMP('{{ start_timestamp }}'))
     {%- endset -%}
 
     {%- set filtered_sql = core_sql | replace("__PERIOD_FILTER__", period_filter) -%}
