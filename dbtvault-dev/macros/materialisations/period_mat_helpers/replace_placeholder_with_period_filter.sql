@@ -31,17 +31,15 @@
 
 
 {% macro bigquery__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
-    {%- if period in ['hour', 'day'] -%}
-        {%- set timestamp_field_type = 'TIMESTAMP' -%}
-    {%- elif period == 'month' -%}
+    {%- if period == 'month' -%}
         {%- set timestamp_field_type = 'DATE' -%}
     {%- else -%}
         {%- set timestamp_field_type = 'TIMESTAMP' -%}
     {%- endif -%}
 
     {%- set period_filter -%}
-            ({{ timestamp_field_type }}({{ timestamp_field }}) >= DATE_TRUNC(DATE_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
-             {{ timestamp_field_type }}({{ timestamp_field }}) < DATE_TRUNC(DATE_ADD(DATE_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
+            ({{ timestamp_field_type }}({{ timestamp_field }}) >= DATE_TRUNC(TIMESTAMP_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }} ) AND
+             {{ timestamp_field_type }}({{ timestamp_field }}) < DATE_TRUNC(TIMESTAMP_ADD(TIMESTAMP_ADD( {{ timestamp_field_type }}('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), INTERVAL 1 {{ period }}), {{ period }} )
       AND TIMESTAMP({{ timestamp_field }}) >= TIMESTAMP('{{ start_timestamp }}'))
     {%- endset -%}
 

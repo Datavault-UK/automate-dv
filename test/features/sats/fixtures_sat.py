@@ -572,6 +572,7 @@ def satellite_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
