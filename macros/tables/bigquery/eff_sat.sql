@@ -140,7 +140,7 @@ new_closed_records AS (
         h.{{ src_ldts }},
         lo.{{ src_source }}
     FROM source_data AS h
-    LEFT JOIN Latest_open AS lo
+    LEFT JOIN latest_open AS lo
     ON lo.{{ src_pk }} = h.{{ src_pk }}
     LEFT JOIN latest_closed AS lc
     ON lc.{{ src_pk }} = h.{{ src_pk }}
