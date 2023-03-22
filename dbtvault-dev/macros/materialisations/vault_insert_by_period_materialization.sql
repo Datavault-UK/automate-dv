@@ -22,6 +22,26 @@
     {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
 
     {%- set period = config.get('period', default='day') -%}
+    {%- if period == 'microsecond' -%}
+        {%- set error_message -%}
+        'Max iterations is 100,000. Consider using a different datepart value (e.g. day)
+        or loading data for a shorter time period.
+        vault_insert_by materialisations are not intended for this purpose,
+        please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
+        {%- endset -%}
+
+        {{- exceptions.raise_compiler_error(error_message) -}}
+    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
+        {%- set warn_message -%}
+        'This is not a recommended datepart value. Consider using a different datepart value (e.g. day)
+        or loading data for a shorter time period.
+        vault_insert_by materialisations are not intended for this purpose,
+        please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
+        {%- endset -%}
+
+        {{- exceptions.warn(warn_message) -}}
+    {%- endif -%}
+
     {%- set to_drop = [] -%}
 
     {%- do dbtvault.check_placeholder(sql) -%}
