@@ -18,12 +18,12 @@
 
 {% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
-
+    {%- set datepart = period -%}
     {% set period_boundary_sql -%}
         WITH period_data AS (
            SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
          )
@@ -49,6 +49,7 @@
 {% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
+    {%- set datepart = period -%}
 
     {% set period_boundary_sql -%}
         with data as (
@@ -58,11 +59,7 @@
                     CAST('{{ start_date }}' AS TIMESTAMP))
                 as START_TIMESTAMP,
                 COALESCE(
-                    {%- if period is in ['millisecond', 'microsecond', 'second', 'minute', 'hour'] -%}
-                    TIMESTAMP_ADD(CAST({{ from_date_or_timestamp }} AS TIMESTAMP), INTERVAL 86399999 millisecond),
-                    {%- else -%}
-                    DATE_ADD(CAST({{ from_date_or_timestamp }} AS TIMESTAMP), INTERVAL 86399999 millisecond),
-                    {%- endif -%}
+                    {{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                     CAST({{ current_timestamp() }} AS TIMESTAMP))
                 as STOP_TIMESTAMP
             from {{ target_relation }}
@@ -90,13 +87,16 @@
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date = start_date[0:27] %}
     {% set stop_date = stop_date[0:27] %}
+            {%- do log('Start Date: ' ~ start_date, info=true) -%}
+            {%- do log('Stop Date: ' ~ stop_date, info=true) -%}
+    {%- set datepart = period -%}
     {%- set from_date_or_timestamp = "CAST(NULLIF('{}','none') AS DATETIME2)".format(stop_date | lower) %}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
            SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                CAST(COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                CAST(COALESCE({{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
       )
@@ -159,7 +159,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
+                COALESCE({{ dbtvault.timestamp_add('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                          {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
         )

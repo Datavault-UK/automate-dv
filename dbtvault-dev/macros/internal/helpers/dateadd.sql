@@ -18,8 +18,8 @@
 {% macro sqlserver__dateadd(datepart, interval, from_date_or_timestamp) %}
 
     dateadd(
-        millisecond,
-        86399999,
+        {{ datepart }},
+        {{ interval }},
         CAST({{ from_date_or_timestamp }} AS DATETIME2)
     )
 
