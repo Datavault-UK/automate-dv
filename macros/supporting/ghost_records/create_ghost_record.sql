@@ -40,11 +40,7 @@
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif ((col_name | lower) == (src_eff | lower)) or ((col_name | lower) == (src_ldts | lower))-%}
-        {%- if (col.dtype | lower) == 'date' -%}
-            {%- set col_sql = dbtvault.cast_date('1900-01-01', as_string=true, datetime=false, alias=col_name)-%}
-        {%- else -%}
-            {%- set col_sql = dbtvault.cast_date('1900-01-01 00:00:00', as_string=true, datetime=true, alias=col_name, date_type=col.dtype)-%}
-        {%- endif -%}
+        {% set col_sql = dbtvault.date_ghost(date_type = (col.dtype | lower), alias=col_name) -%}
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name | lower) == (src_source | lower) -%}
