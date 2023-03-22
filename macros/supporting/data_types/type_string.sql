@@ -21,9 +21,9 @@
 
 {%- macro databricks__type_string(is_hash=false, char_length=255) -%}
     {%- if is_hash -%}
-        {%- if var('hash') | lower == 'md5' -%}
+        {%- if var('hash', 'MD5') | lower == 'md5' -%}
             VARCHAR(16)
-        {%- elif var('hash') | lower == 'sha' -%}
+        {%- elif var('hash', 'MD5') | lower == 'sha' -%}
             VARCHAR(32)
         {%- endif -%}
     {%- else -%}
