@@ -59,7 +59,7 @@
                     CAST('{{ start_date }}' AS TIMESTAMP))
                 as START_TIMESTAMP,
                 COALESCE(
-                    {{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }},
+                    CAST({{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }} AS TIMESTAMP),
                     CAST({{ current_timestamp() }} AS TIMESTAMP))
                 as STOP_TIMESTAMP
             from {{ target_relation }}
@@ -87,8 +87,6 @@
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date = start_date[0:27] %}
     {% set stop_date = stop_date[0:27] %}
-            {%- do log('Start Date: ' ~ start_date, info=true) -%}
-            {%- do log('Stop Date: ' ~ stop_date, info=true) -%}
     {%- set datepart = period -%}
     {%- set from_date_or_timestamp = "CAST(NULLIF('{}','none') AS DATETIME2)".format(stop_date | lower) %}
 
@@ -120,18 +118,14 @@
 {% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
-
+            {%- set datepart = period -%}
     {% set period_boundary_sql -%}
 
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
                 COALESCE(
-            {%- if period == 'hour' -%}
-                {{ dbtvault.dateadd('hour', 1, from_date_or_timestamp) }},
-            {%- else -%}
-                {{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-            {%- endif -%}
+                {{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )

@@ -410,5 +410,62 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | 1002        | Bob           | 1993-01-02 | TPCH   |
       | 1003        | Chad          | 1993-01-03 | TPCH   |
       | 1004        | Dom           | 1993-01-04 | TPCH   |
+  @fixture.single_source_hub
+  Scenario: [HUB-PM-09] Simple load of stage data into an empty hub with period of seconds
+    Given the HUB_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE_TZ               | SOURCE |
+      | 1001        | Alice         | 1993-01-01 00:00:01.000000 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 00:00:01.000000 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:00:02.000000 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:00:02.000000 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:00:02.000000 | TPCH   |
+      | 1003        | Chad          | 1993-01-01 00:00:03.000000 | TPCH   |
+      | 1004        | Dom           | 1993-01-01 00:00:04.000000 | TPCH   |
     And I stage the STG_CUSTOMER data
-    Then if I insert by period into the HUB hub by millisecond this will fail with "Max iterations" error
+    And I insert by period into the HUB_TZ hub by second with date range: 1993-01-01 00:00:01.000000 to 1993-01-01 00:00:04.000000 and LDTS LOAD_DATE_TZ
+    And I insert by period into the HUB_TZ hub by second with date range: 1993-01-01 00:00:01.000000 to 1993-01-01 00:00:04.000000 and LDTS LOAD_DATE_TZ
+    Then the HUB_TZ table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE_TZ               | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 00:00:01.000000 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 00:00:02.000000 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-01 00:00:03.000000 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-01 00:00:04.000000 | TPCH   |
+
+  @fixture.single_source_hub
+  Scenario: [HUB-PM-10] Simple load of stage data into an empty hub with period of minute
+    Given the HUB_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE_TZ               | SOURCE |
+      | 1001        | Alice         | 1993-01-01 00:01:00.000000 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 00:01:00.000000 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:02:00.000000 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:02:00.000000 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:02:00.000000 | TPCH   |
+      | 1003        | Chad          | 1993-01-01 00:03:00.000000 | TPCH   |
+      | 1004        | Dom           | 1993-01-01 00:04:00.000000 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    And I insert by period into the HUB_TZ hub by minute with date range: 1993-01-01 00:01:00.000000 to 1993-01-01 00:04:00.000000 and LDTS LOAD_DATE_TZ
+    And I insert by period into the HUB_TZ hub by minute with date range: 1993-01-01 00:01:00.000000 to 1993-01-01 00:04:00.000000 and LDTS LOAD_DATE_TZ
+    Then the HUB_TZ table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE_TZ               | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 00:01:00.000000 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 00:02:00.000000 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-01 00:03:00.000000 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-01 00:04:00.000000 | TPCH   |
+
+      @fixture.single_source_hub
+  Scenario: [HUB-PM-11] Simple load of stage data into an empty hub with microsecond time period
+  This will fail with a max iterations error message
+    Given the HUB_TZ hub is empty
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE_TZ               | SOURCE |
+      | 1001        | Alice         | 1993-01-01 00:00:00.000001 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 00:00:00.000001 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:00:00.000002 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:00:00.000002 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 00:00:00.000002 | TPCH   |
+      | 1003        | Chad          | 1993-01-01 00:00:00.000003 | TPCH   |
+      | 1004        | Dom           | 1993-01-01 00:00:00.000004 | TPCH   |
+    And I stage the STG_CUSTOMER data
+    Then if I insert by period into the HUB_TZ hub by microsecond with LDTS LOAD_DATE_TZ this will fail with "This datepart" error

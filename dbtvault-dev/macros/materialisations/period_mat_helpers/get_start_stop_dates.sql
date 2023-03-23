@@ -12,7 +12,6 @@
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
     {% elif date_source_models is not none %}
-        {%- do log('start date is none', info=true) -%}
         {% if date_source_models is string %}
             {% set date_source_models = [date_source_models] %}
         {% endif %}

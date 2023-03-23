@@ -16,7 +16,6 @@
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
     {%- set timestamp_field = config.require('timestamp_field') -%}
-    {%- set timestamp_field_type = config.get('timestamp_field_type', default='DATE') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
@@ -24,18 +23,16 @@
     {%- set period = config.get('period', default='day') -%}
     {%- if period == 'microsecond' -%}
         {%- set error_message -%}
-        'Max iterations is 100,000. Consider using a different datepart value (e.g. day)
-        or loading data for a shorter time period.
-        vault_insert_by materialisations are not intended for this purpose,
+        'This datepart (microsecond) is too small and cannot be used for this purpose, consider using a different datepart value (e.g. day).
+         Vault_insert_by materialisations are not intended for this purpose,
         please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
         {%- endset -%}
 
         {{- exceptions.raise_compiler_error(error_message) -}}
     {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
         {%- set warn_message -%}
-        'This is not a recommended datepart value. Consider using a different datepart value (e.g. day)
-        or loading data for a shorter time period.
-        vault_insert_by materialisations are not intended for this purpose,
+        'WARNING: This is not a recommended datepart value. Consider using a different datepart value (e.g. day).
+        Vault_insert_by materialisations are not intended for this purpose,
         please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
         {%- endset -%}
 
@@ -98,7 +95,7 @@
 
             {%- set iteration_number = i + 1 -%}
 
-            {%- set period_of_load = dbtvault.get_period_of_load(period, i, period_boundaries.start_timestamp, timestamp_field_type) -%}
+            {%- set period_of_load = dbtvault.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
 
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
