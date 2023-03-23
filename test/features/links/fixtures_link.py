@@ -9,6 +9,12 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "LINK_TZ": {
+            "src_pk": "CUSTOMER_NATION_PK",
+            "src_fk": ["CUSTOMER_FK", "NATION_FK"],
+            "src_ldts": "LOAD_DATE_TZ",
+            "src_source": "SOURCE"
+        },
         "LINK_AC": {
             "src_pk": "CUSTOMER_NATION_PK",
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
@@ -71,6 +77,15 @@ def single_source_link_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "LINK_TZ": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "LINK_AC": {
             "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
@@ -89,6 +104,17 @@ def single_source_link_snowflake(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -228,6 +254,15 @@ def single_source_link_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "LINK_TZ": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
         "LINK_AC": {
             "column_types": {
                 "CUSTOMER_NATION_PK": "STRING",
@@ -247,6 +282,18 @@ def single_source_link_bigquery(context):
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "NATION_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "LOAD_DATE_TZ": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         }
@@ -389,6 +436,15 @@ def single_source_link_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "LINK_TZ": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE_TZ": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "LINK_AC": {
             "column_types": {
                 "CUSTOMER_NATION_PK": "BINARY(16)",
@@ -410,7 +466,19 @@ def single_source_link_sqlserver(context):
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
-        }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "NATION_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(20)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "LOAD_DATE_TZ": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
     }
 
 
@@ -536,6 +604,15 @@ def single_source_link_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "LINK_TZ": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "LINK_AC": {
             "column_types": {
                 "CUSTOMER_NATION_PK": "STRING",
@@ -555,6 +632,17 @@ def single_source_link_databricks(context):
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE_TZ": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
             }
         }
     }
@@ -693,6 +781,15 @@ def single_source_link_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "LINK_TZ": {
+            "column_types": {
+                "CUSTOMER_NATION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "NATION_FK": "BINARY(16)",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "LINK_AC": {
             "column_types": {
                 "CUSTOMER_NATION_PK": "BYTEA",
@@ -711,6 +808,17 @@ def single_source_link_postgres(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "NATION_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE_TZ": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         }

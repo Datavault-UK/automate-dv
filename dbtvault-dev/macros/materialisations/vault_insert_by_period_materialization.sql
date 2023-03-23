@@ -31,7 +31,7 @@
         {{- exceptions.raise_compiler_error(error_message) -}}
     {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
         {%- set warn_message -%}
-        'WARNING: This is not a recommended datepart value. Consider using a different datepart value (e.g. day).
+        'WARNING: This is not a recommended datepart value, consider using a different datepart value (e.g. day).
         Vault_insert_by materialisations are not intended for this purpose,
         please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
         {%- endset -%}
