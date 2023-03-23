@@ -61,17 +61,17 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
   Scenario: [LNK-PM-03] Load a simple stage table into a non-existent link table with period second
     Given the LINK_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE_TZ               | SOURCE |
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE                  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 00:00:01.000000 | CRM    |
       | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 00:00:01.000000 | CRM    |
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 00:00:02.000000 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 00:00:03.000000 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 00:00:04.000000 | CRM    |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the LINK_TZ link by second with LDTS LOAD_DATE_TZ
-    And I insert by period into the LINK_TZ link by second with LDTS LOAD_DATE_TZ
+    And I insert by period into the LINK_TZ link by second
+    And I insert by period into the LINK_TZ link by second
     Then the LINK_TZ table should contain expected data
-      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE_TZ               | SOURCE |
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE                  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 00:00:01.000000 | CRM    |
       | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 00:00:01.000000 | CRM    |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 00:00:02.000000 | CRM    |
@@ -82,17 +82,17 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
   Scenario: [LNK-PM-04] Load a simple stage table into a non-existent link table with period hour
     Given the LINK_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE_TZ               | SOURCE |
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE                  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 01:00:00.000000 | CRM    |
       | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 01:00:00.000000 | CRM    |
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 02:00:00.000000 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 03:00:00.000000 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 04:00:00.000000 | CRM    |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the LINK_TZ link by hour with LDTS LOAD_DATE_TZ
-    And I insert by period into the LINK_TZ link by hour with LDTS LOAD_DATE_TZ
+    And I insert by period into the LINK_TZ link by hour
+    And I insert by period into the LINK_TZ link by hour
     Then the LINK_TZ table should contain expected data
-      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE_TZ               | SOURCE |
+      | CUSTOMER_NATION_PK | CUSTOMER_FK | NATION_FK  | LOAD_DATE                  | SOURCE |
       | md5('1001\|\|GBR') | md5('1001') | md5('GBR') | 1993-01-01 01:00:00.000000 | CRM    |
       | md5('1002\|\|POL') | md5('1002') | md5('POL') | 1993-01-01 01:00:00.000000 | CRM    |
       | md5('1003\|\|AUS') | md5('1003') | md5('AUS') | 1993-01-01 02:00:00.000000 | CRM    |
@@ -104,11 +104,11 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
   This will fail with a datepart error message
     Given the LINK_TZ link is empty
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE_TZ               | SOURCE |
+      | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE                  | SOURCE |
       | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 01:00:00.000000 | CRM    |
       | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 01:00:00.000000 | CRM    |
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 02:00:00.000000 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 03:00:00.000000 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 04:00:00.000000 | CRM    |
     And I stage the STG_CUSTOMER data
-    Then if I insert by period into the LINK_TZ link by microsecond with LDTS LOAD_DATE_TZ this will fail with "This datepart" error
+    Then if I insert by period into the LINK_TZ link by microsecond  this will fail with "This datepart" error

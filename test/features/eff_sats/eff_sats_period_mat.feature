@@ -170,4 +170,70 @@ Feature: [EFF-PM] Effectivity Satellites Loaded using Period Materialization
       | md5('2000\|\|AAA') | md5('2000') | md5('AAA') | 2020-01-02 | 2020-01-03 | 2020-01-03     | 2020-01-03 | *      |
       | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-03 | 9999-12-31 | 2020-01-03     | 2020-01-03 | *      |
 
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [EFF-PM-09] 2 loads, Link is Changed Back Again, driving key is ORDER_PK with period minute
+    Given the EFF_SAT_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:01:00.000000 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:01:00.000000 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:01:00.000000 | orders |
+      | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-10 00:02:00.000000 | orders |
+      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-10 00:02:00.000000 | orders |
+      | 4000        | CCC      | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-10 00:03:00.000000 | orders |
+      | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-10 00:03:00.000000 | orders |
+    And I stage the STG_CUSTOMER data
+    And I insert by period into the EFF_SAT_TZ eff_sat by minute
+    And I insert by period into the EFF_SAT_TZ eff_sat by minute
+    Then the EFF_SAT_TZ table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:01:00.000000 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:01:00.000000 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:01:00.000000 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-10 00:02:00.000000 | orders |
+      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-10 00:02:00.000000 | orders |
+      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-10 00:03:00.000000 | orders |
+      | md5('5000\|\|CCC') | md5('5000') | md5('CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-10 00:03:00.000000 | orders |
 
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [EFF-PM-10] 2 loads, Link is Changed Back Again, driving key is ORDER_PK with period hour
+    Given the EFF_SAT_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 01:00:00.000000 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 01:00:00.000000 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 01:00:00.000000 | orders |
+      | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-10 02:00:00.000000 | orders |
+      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-10 02:00:00.000000 | orders |
+      | 4000        | CCC      | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-10 03:00:00.000000 | orders |
+      | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-10 03:00:00.000000 | orders |
+    And I stage the STG_CUSTOMER data
+    And I insert by period into the EFF_SAT_TZ eff_sat by hour
+    And I insert by period into the EFF_SAT_TZ eff_sat by hour
+    Then the EFF_SAT_TZ table should contain expected data
+      | CUSTOMER_ORDER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
+      | md5('1000\|\|AAA') | md5('1000') | md5('AAA') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 01:00:00.000000 | orders |
+      | md5('2000\|\|BBB') | md5('2000') | md5('BBB') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 01:00:00.000000 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 01:00:00.000000 | orders |
+      | md5('3000\|\|CCC') | md5('3000') | md5('CCC') | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-10 02:00:00.000000 | orders |
+      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-10 02:00:00.000000 | orders |
+      | md5('4000\|\|CCC') | md5('4000') | md5('CCC') | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-10 03:00:00.000000 | orders |
+      | md5('5000\|\|CCC') | md5('5000') | md5('CCC') | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-10 03:00:00.000000 | orders |
+
+  @fixture.enable_auto_end_date
+  @fixture.eff_satellite
+  Scenario: [EFF-PM-11] 2 loads, Link is Changed Back Again, driving key is ORDER_PK with period microseconds will return a datepart error
+    Given the EFF_SAT_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:00:00.000001 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:00:00.000001 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:00:00.000001 | orders |
+      | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-10 00:00:00.000002 | orders |
+      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-10 00:00:00.000002 | orders |
+      | 4000        | CCC      | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-10 00:00:00.000003 | orders |
+      | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-10 00:00:00.000003 | orders |
+    And I stage the STG_CUSTOMER data
+    Then if I insert by period into the EFF_SAT_TZ eff_sat by microsecond  this will fail with "This datepart" error

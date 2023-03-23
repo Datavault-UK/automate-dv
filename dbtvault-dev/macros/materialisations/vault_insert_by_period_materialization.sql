@@ -23,7 +23,7 @@
     {%- set period = config.get('period', default='day') -%}
     {%- if period == 'microsecond' -%}
         {%- set error_message -%}
-        'This datepart (microsecond) is too small and cannot be used for this purpose, consider using a different datepart value (e.g. day).
+        'This datepart ({{ period }}) is too small and cannot be used for this purpose, consider using a different datepart value (e.g. day).
          Vault_insert_by materialisations are not intended for this purpose,
         please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
         {%- endset -%}
@@ -31,7 +31,7 @@
         {{- exceptions.raise_compiler_error(error_message) -}}
     {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
         {%- set warn_message -%}
-        'WARNING: This is not a recommended datepart value, consider using a different datepart value (e.g. day).
+        'WARNING: The use of this datepart ({{ period }}) is not recommended, consider using a different datepart value (e.g. day).
         Vault_insert_by materialisations are not intended for this purpose,
         please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
         {%- endset -%}

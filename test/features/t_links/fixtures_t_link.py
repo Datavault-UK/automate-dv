@@ -18,7 +18,7 @@ def set_vault_structure_definition(context):
             "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
                             "TYPE", "AMOUNT"],
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE_TZ",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "T_LINK_AC": {
@@ -97,7 +97,7 @@ def t_link_snowflake(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMBER(38,2)",
-                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -125,7 +125,7 @@ def t_link_snowflake(context):
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMBER(38,2)",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -216,7 +216,7 @@ def t_link_bigquery(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "STRING",
                 "AMOUNT": "STRING",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -244,7 +244,7 @@ def t_link_bigquery(context):
                 "TYPE": "STRING",
                 "AMOUNT": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -351,7 +351,7 @@ def t_link_sqlserver(context):
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "TYPE": "VARCHAR(50)",
                 "AMOUNT": "DECIMAL(38,2)",
-                "LOAD_DATE_TZ": "DATETIME2",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -379,7 +379,7 @@ def t_link_sqlserver(context):
                 "TYPE": "VARCHAR(50)",
                 "AMOUNT": "DECIMAL(38,2)",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE_TZ": "DATETIME2",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -477,7 +477,7 @@ def t_link_databricks(context):
             "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
                             "TYPE", "AMOUNT"],
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE_TZ",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
     }
@@ -503,7 +503,7 @@ def t_link_databricks(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "VARCHAR(50)",
                 "AMOUNT": "DECIMAL(38,2)",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -531,7 +531,7 @@ def t_link_databricks(context):
                 "TYPE": "VARCHAR(50)",
                 "AMOUNT": "DECIMAL(38,2)",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(50)"
             }
         }
@@ -638,7 +638,7 @@ def t_link_postgres(context):
             "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
                             "TYPE", "AMOUNT"],
             "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE_TZ",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         }
     }
@@ -664,7 +664,7 @@ def t_link_postgres(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMERIC(38,2)",
-                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -692,7 +692,7 @@ def t_link_postgres(context):
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMERIC(38,2)",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         }

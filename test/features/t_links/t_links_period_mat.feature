@@ -94,7 +94,7 @@ Feature: [TLK-PM] Transactional Links using Period Materialization
   Scenario: [TLK-PM-04] Load an empty Transactional Link with the period materialisation with period millisecond
     Given the T_LINK_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE_TZ               | SOURCE |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE                  | SOURCE |
       | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-21 00:00:00.001000 | SAP    |
       | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-21 00:00:00.002000 | SAP    |
       | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-21 00:00:00.002000 | SAP    |
@@ -106,7 +106,7 @@ Feature: [TLK-PM] Transactional Links using Period Materialization
     And I insert by period into the T_LINK_TZ t_link by millisecond
     And I insert by period into the T_LINK_TZ t_link by millisecond
     Then the T_LINK_TZ table should contain expected data
-      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE_TZ               | SOURCE |
+      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
       | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 00:00:00.001000 | SAP    |
       | md5('1234\|\|4322\|\|12345679') | md5('1234') | md5('4322') | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-19     | 2019-09-21 00:00:00.002000 | SAP    |
       | md5('1234\|\|4323\|\|12345680') | md5('1234') | md5('4323') | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-19     | 2019-09-21 00:00:00.002000 | SAP    |
@@ -119,48 +119,38 @@ Feature: [TLK-PM] Transactional Links using Period Materialization
   Scenario: [TLK-PM-05] Load an empty Transactional Link with the period materialisation with period minute
     Given the T_LINK_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE_TZ | SOURCE |
-      | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-21   | SAP    |
-      | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-22   | SAP    |
-      | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-22   | SAP    |
-      | 1234        | 4324     | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-23   | SAP    |
-      | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-24   | SAP    |
-      | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25   | SAP    |
-      | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26   | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE                  | SOURCE |
+      | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-21 00:01:00.000000 | SAP    |
+      | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-21 00:02:00.000000 | SAP    |
+      | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-21 00:02:00.000000 | SAP    |
+      | 1234        | 4324     | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-21 00:03:00.000000 | SAP    |
+      | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-21 00:04:00.000000 | SAP    |
+      | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-21 00:05:00.000000 | SAP    |
+      | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-21 00:06:00.000000 | SAP    |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the T_LINK_TZ t_link by day
-    And I insert by period into the T_LINK_TZ t_link by day
+    And I insert by period into the T_LINK_TZ t_link by minute
+    And I insert by period into the T_LINK_TZ t_link by minute
     Then the T_LINK_TZ table should contain expected data
-      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE_TZ | SOURCE |
-      | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21   | SAP    |
-      | md5('1234\|\|4322\|\|12345679') | md5('1234') | md5('4322') | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-19     | 2019-09-22   | SAP    |
-      | md5('1234\|\|4323\|\|12345680') | md5('1234') | md5('4323') | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-19     | 2019-09-22   | SAP    |
-      | md5('1234\|\|4324\|\|12345681') | md5('1234') | md5('4324') | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-19     | 2019-09-23   | SAP    |
-      | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-19     | 2019-09-24   | SAP    |
-      | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-25   | SAP    |
-      | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26   | SAP    |
+      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
+      | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21 00:01:00.000000 | SAP    |
+      | md5('1234\|\|4322\|\|12345679') | md5('1234') | md5('4322') | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-19     | 2019-09-21 00:02:00.000000 | SAP    |
+      | md5('1234\|\|4323\|\|12345680') | md5('1234') | md5('4323') | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-19     | 2019-09-21 00:02:00.000000 | SAP    |
+      | md5('1234\|\|4324\|\|12345681') | md5('1234') | md5('4324') | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-19     | 2019-09-21 00:03:00.000000 | SAP    |
+      | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-19     | 2019-09-21 00:04:00.000000 | SAP    |
+      | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-21 00:05:00.000000 | SAP    |
+      | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-21 00:06:00.000000 | SAP    |
 
   @fixture.t_link
   Scenario: [TLK-PM-06] Load an empty Transactional Link with the period materialisation with period microsecond. This will fail with a datepart error message.
     Given the T_LINK_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE_TZ | SOURCE |
-      | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-21   | SAP    |
-      | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-22   | SAP    |
-      | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-22   | SAP    |
-      | 1234        | 4324     | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-23   | SAP    |
-      | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-24   | SAP    |
-      | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25   | SAP    |
-      | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26   | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE                  | SOURCE |
+      | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-21 00:00:00.000001 | SAP    |
+      | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-22 00:00:00.000002 | SAP    |
+      | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-22 00:00:00.000002 | SAP    |
+      | 1234        | 4324     | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-23 00:00:00.000003 | SAP    |
+      | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-24 00:00:00.000004 | SAP    |
+      | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25 00:00:00.000005 | SAP    |
+      | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26 00:00:00.000006 | SAP    |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the T_LINK_TZ t_link by day
-    And I insert by period into the T_LINK_TZ t_link by day
-    Then the T_LINK_TZ table should contain expected data
-      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE_TZ | SOURCE |
-      | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-19     | 2019-09-21   | SAP    |
-      | md5('1234\|\|4322\|\|12345679') | md5('1234') | md5('4322') | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-19     | 2019-09-22   | SAP    |
-      | md5('1234\|\|4323\|\|12345680') | md5('1234') | md5('4323') | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-19     | 2019-09-22   | SAP    |
-      | md5('1234\|\|4324\|\|12345681') | md5('1234') | md5('4324') | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-19     | 2019-09-23   | SAP    |
-      | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-19     | 2019-09-24   | SAP    |
-      | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-19     | 2019-09-25   | SAP    |
-      | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-19     | 2019-09-26   | SAP    |
+    Then if I insert by period into the T_LINK_TZ t_link by microsecond this will fail with "This datepart" error

@@ -12,7 +12,7 @@ def set_vault_structure_definition(context):
         "LINK_TZ": {
             "src_pk": "CUSTOMER_NATION_PK",
             "src_fk": ["CUSTOMER_FK", "NATION_FK"],
-            "src_ldts": "LOAD_DATE_TZ",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "LINK_AC": {
@@ -82,7 +82,7 @@ def single_source_link_snowflake(context):
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
-                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -114,7 +114,7 @@ def single_source_link_snowflake(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -259,7 +259,7 @@ def single_source_link_bigquery(context):
                 "CUSTOMER_NATION_PK": "STRING",
                 "CUSTOMER_FK": "STRING",
                 "NATION_FK": "STRING",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -293,7 +293,7 @@ def single_source_link_bigquery(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         }
@@ -441,7 +441,7 @@ def single_source_link_sqlserver(context):
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
-                "LOAD_DATE_TZ": "DATETIME2",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -475,7 +475,7 @@ def single_source_link_sqlserver(context):
                 "CUSTOMER_MT_ID": "VARCHAR(20)",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
-                "LOAD_DATE_TZ": "DATETIME2",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -609,7 +609,7 @@ def single_source_link_databricks(context):
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -641,7 +641,7 @@ def single_source_link_databricks(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -786,7 +786,7 @@ def single_source_link_postgres(context):
                 "CUSTOMER_NATION_PK": "BINARY(16)",
                 "CUSTOMER_FK": "BINARY(16)",
                 "NATION_FK": "BINARY(16)",
-                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -818,7 +818,7 @@ def single_source_link_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         }

@@ -12,7 +12,7 @@ def set_vault_structure_definition(context):
         "HUB_TZ": {
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE_TZ",
+            "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
         "HUB_AC": {
@@ -82,7 +82,7 @@ def single_source_hub_snowflake(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -117,7 +117,7 @@ def single_source_hub_snowflake(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
-                "LOAD_DATE_TZ": "TIMESTAMP_TZ",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -394,7 +394,7 @@ def single_source_hub_bigquery(context):
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "STRING",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -431,7 +431,7 @@ def single_source_hub_bigquery(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         }
@@ -717,7 +717,7 @@ def single_source_hub_sqlserver(context):
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_ID": "VARCHAR(4)",
-                "LOAD_DATE_TZ": "DATETIME2",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(4)"
             }
         },
@@ -758,7 +758,7 @@ def single_source_hub_sqlserver(context):
                 "CUSTOMER_CK": "VARCHAR(13)",
                 "CUSTOMER_NAME": "VARCHAR(5)",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE_TZ": "DATETIME2",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(4)"
             }
         }
@@ -1035,7 +1035,7 @@ def single_source_hub_databricks(context):
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_ID": "VARCHAR(100)",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         },
@@ -1070,7 +1070,7 @@ def single_source_hub_databricks(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR(100)",
                 "CUSTOMER_NAME": "VARCHAR(100)",
-                "LOAD_DATE_TZ": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         }
@@ -1346,7 +1346,7 @@ def single_source_hub_postgres(context):
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATE_TZ": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
