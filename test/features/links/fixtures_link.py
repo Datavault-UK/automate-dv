@@ -606,11 +606,11 @@ def single_source_link_databricks(context):
         },
         "LINK_TZ": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_NATION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "NATION_FK": "STRING",
                 "LOAD_DATE": "TIMESTAMP",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(100)"
             }
         },
         "LINK_AC": {
@@ -636,13 +636,13 @@ def single_source_link_databricks(context):
         },
         "RAW_STAGE_TZ": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR",
-                "NATION_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "NATION_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
-                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
                 "LOAD_DATE": "TIMESTAMP",
-                "SOURCE": "VARCHAR"
+                "SOURCE": "VARCHAR(100)"
             }
         }
     }
@@ -783,9 +783,9 @@ def single_source_link_postgres(context):
         },
         "LINK_TZ": {
             "column_types": {
-                "CUSTOMER_NATION_PK": "BINARY(16)",
-                "CUSTOMER_FK": "BINARY(16)",
-                "NATION_FK": "BINARY(16)",
+                "CUSTOMER_NATION_PK": "BYTEA",
+                "CUSTOMER_FK": "BYTEA",
+                "NATION_FK": "BYTEA",
                 "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
