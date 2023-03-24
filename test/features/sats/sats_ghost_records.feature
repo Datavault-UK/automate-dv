@@ -296,7 +296,7 @@ Feature: [SAT-GR] Implementing ghost records
   Scenario: [SAT-GR-14] Load data and ghost record into non-existent satellite with TIMESTAMP_TZ date types
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE_TZ        | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE           | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 00:00:00 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 00:00:00 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 00:00:00 | *      |
@@ -304,7 +304,7 @@ Feature: [SAT-GR] Implementing ghost records
     And I stage the STG_CUSTOMER_TZ data
     When I load the SATELLITE_TZ sat
     Then the SATELLITE_TZ table should contain expected data
-      | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM_TZ   | LOAD_DATE_TZ        | SOURCE          |
+      | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM      | LOAD_DATE           | SOURCE          |
       | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01 00:00:00 | 1900-01-01 00:00:00 | DBTVAULT_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01 00:00:00 | 1993-01-01 00:00:00 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01 00:00:00 | 1993-01-01 00:00:00 | *               |

@@ -66,7 +66,9 @@ def feature_sub_types():
             ],
             'pm_datepart': [
                 'sats_daily',
-                'sats_monthly',
+                'sats_monthly'
+            ],
+            'pm_small_datepart': [
                 'sats_hourly',
                 'sats_various'
             ],

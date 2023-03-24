@@ -105,10 +105,10 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
     Given the LINK_TZ link is empty
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | NATION_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE                  | SOURCE |
-      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 01:00:00.000000 | CRM    |
-      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 01:00:00.000000 | CRM    |
-      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 02:00:00.000000 | CRM    |
-      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 03:00:00.000000 | CRM    |
-      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 04:00:00.000000 | CRM    |
+      | 1001        | GBR       | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 00:00:00.000001 | CRM    |
+      | 1002        | POL       | Alice         | 2006-04-17   | 17-214-233-1214 | 1993-01-01 00:00:00.000001 | CRM    |
+      | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-01 00:00:00.000002 | CRM    |
+      | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-01 00:00:00.000003 | CRM    |
+      | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-01 00:00:00.000004 | CRM    |
     And I stage the STG_CUSTOMER data
-    Then if I insert by period into the LINK_TZ link by microsecond  this will fail with "This datepart" error
+    Then if I insert by period into the LINK_TZ link by microsecond this will fail with "This datepart" error

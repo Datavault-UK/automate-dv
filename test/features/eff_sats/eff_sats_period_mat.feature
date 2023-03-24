@@ -227,13 +227,13 @@ Feature: [EFF-PM] Effectivity Satellites Loaded using Period Materialization
   Scenario: [EFF-PM-11] 2 loads, Link is Changed Back Again, driving key is ORDER_PK with period microseconds will return a datepart error
     Given the EFF_SAT_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
-      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM | LOAD_DATE                  | SOURCE |
-      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:00:00.000001 | orders |
-      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:00:00.000001 | orders |
-      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09     | 2020-01-10 00:00:00.000001 | orders |
-      | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11     | 2020-01-10 00:00:00.000002 | orders |
-      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11     | 2020-01-10 00:00:00.000002 | orders |
-      | 4000        | CCC      | 2020-01-11 | 2020-01-12 | 2020-01-12     | 2020-01-10 00:00:00.000003 | orders |
-      | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12     | 2020-01-10 00:00:00.000003 | orders |
+      | CUSTOMER_ID | ORDER_ID | START_DATE | END_DATE   | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | 1000        | AAA      | 2020-01-09 | 9999-12-31 | 2020-01-09 00:00:00.000001 | 2020-01-10 00:00:00.000001 | orders |
+      | 2000        | BBB      | 2020-01-09 | 9999-12-31 | 2020-01-09 00:00:00.000001 | 2020-01-10 00:00:00.000001 | orders |
+      | 3000        | CCC      | 2020-01-09 | 9999-12-31 | 2020-01-09 00:00:00.000001 | 2020-01-10 00:00:00.000001 | orders |
+      | 3000        | CCC      | 2020-01-09 | 2020-01-11 | 2020-01-11 00:00:00.000002 | 2020-01-10 00:00:00.000002 | orders |
+      | 4000        | CCC      | 2020-01-11 | 9999-12-31 | 2020-01-11 00:00:00.000002 | 2020-01-10 00:00:00.000002 | orders |
+      | 4000        | CCC      | 2020-01-11 | 2020-01-12 | 2020-01-12 00:00:00.000003 | 2020-01-10 00:00:00.000003 | orders |
+      | 5000        | CCC      | 2020-01-12 | 9999-12-31 | 2020-01-12 00:00:00.000003 | 2020-01-10 00:00:00.000003 | orders |
     And I stage the STG_CUSTOMER data
-    Then if I insert by period into the EFF_SAT_TZ eff_sat by microsecond  this will fail with "This datepart" error
+    Then if I insert by period into the EFF_SAT_TZ eff_sat by microsecond this will fail with "This datepart" error

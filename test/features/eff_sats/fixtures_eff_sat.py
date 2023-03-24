@@ -444,7 +444,7 @@ def eff_satellite_bigquery(context):
                 "CUSTOMER_CK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "EFFECTIVE_FROM": "TIMESTAMP",
                 "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
@@ -468,7 +468,7 @@ def eff_satellite_bigquery(context):
                 "ORDER_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "EFFECTIVE_FROM": "TIMESTAMP",
                 "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
