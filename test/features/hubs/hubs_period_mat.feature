@@ -397,22 +397,9 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
     And I stage the STG_CUSTOMER data
     Then if I insert by period into the HUB hub by millisecond this will fail with "Max iterations" error
 
-  @fixture.single_source_hub
-  Scenario: [HUB-PM-08] Simple load of stage data into an empty hub with millisecond time period
-        This will fail with a max iterations error message
-    Given the HUB hub is empty
-    And the RAW_STAGE table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
-      | 1001        | Alice         | 1993-01-01 | TPCH   |
-      | 1001        | Alice         | 1993-01-01 | TPCH   |
-      | 1002        | Bob           | 1993-01-02 | TPCH   |
-      | 1002        | Bob           | 1993-01-02 | TPCH   |
-      | 1002        | Bob           | 1993-01-02 | TPCH   |
-      | 1003        | Chad          | 1993-01-03 | TPCH   |
-      | 1004        | Dom           | 1993-01-04 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [HUB-PM-09] Simple load of stage data into an empty hub with period of seconds
+  Scenario: [HUB-PM-08] Simple load of stage data into an empty hub with period of seconds
     Given the HUB_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE                  | SOURCE |
@@ -434,7 +421,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | md5('1004') | 1004        | 1993-01-01 00:00:04.000000 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [HUB-PM-10] Simple load of stage data into an empty hub with period of minute
+  Scenario: [HUB-PM-09] Simple load of stage data into an empty hub with period of minute
     Given the HUB_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE                  | SOURCE |
@@ -456,7 +443,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | md5('1004') | 1004        | 1993-01-01 00:04:00.000000 | TPCH   |
 
   @fixture.single_source_hub
-  Scenario: [HUB-PM-11] Simple load of stage data into an empty hub with microsecond time period
+  Scenario: [HUB-PM-10] Simple load of stage data into an empty hub with microsecond time period
   This will fail with a datepart error message
     Given the HUB_TZ hub is empty
     And the RAW_STAGE_TZ table contains data
