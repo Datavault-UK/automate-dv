@@ -397,7 +397,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
     And I stage the STG_CUSTOMER data
     Then if I insert by period into the HUB hub by millisecond this will fail with "Max iterations" error
 
-
+  @not_sqlserver
   @fixture.single_source_hub
   Scenario: [HUB-PM-08] Simple load of stage data into an empty hub with period of seconds
     Given the HUB_TZ table does not exist

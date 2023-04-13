@@ -57,6 +57,7 @@ Feature: [LNK-PM] Links Loaded using Period Materialization
       | md5('1008\|\|AUS') | md5('1008') | md5('AUS') | 1993-01-04 | *      |
       | md5('1009\|\|DEU') | md5('1009') | md5('DEU') | 1993-01-04 | *      |
 
+  @not_sqlserver
   @fixture.single_source_link
   Scenario: [LNK-PM-03] Load a simple stage table into a non-existent link table with period second
     Given the LINK_TZ table does not exist
