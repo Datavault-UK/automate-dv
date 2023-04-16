@@ -58,7 +58,7 @@ row_rank_{{ source_number }} AS (
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
-    {%- if target.type != 'bigquery' -%}
+    {%- if target.type != 'bigquery' %}
     QUALIFY row_number = 1
     {%- endif -%}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
