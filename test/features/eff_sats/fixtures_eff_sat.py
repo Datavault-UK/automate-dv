@@ -131,8 +131,8 @@ def eff_satellite_snowflake(context):
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
                 "START_DATE": "TIMESTAMP_TZ",
-                "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "END_DATE": "TIMESTAMP_TZ",
+                "EFFECTIVE_FROM": "TIMESTAMP_TZ",
                 "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
@@ -155,8 +155,8 @@ def eff_satellite_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
                 "START_DATE": "TIMESTAMP_TZ",
-                "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "END_DATE": "TIMESTAMP_TZ",
+                "EFFECTIVE_FROM": "TIMESTAMP_TZ",
                 "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
@@ -755,8 +755,8 @@ def eff_satellite_sqlserver(context):
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "CUSTOMER_CK": "VARCHAR(11)",
                 "START_DATE": "DATETIME2",
-                "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -779,8 +779,8 @@ def eff_satellite_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "ORDER_PK": "BINARY(16)",
                 "START_DATE": "DATETIME2",
-                "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "END_DATE": "DATETIME2",
+                "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -1091,8 +1091,8 @@ def eff_satellite_postgres(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
                 "START_DATE": "TIMESTAMPTZ",
-                "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "END_DATE": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
                 "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
@@ -1115,8 +1115,8 @@ def eff_satellite_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "ORDER_PK": "BYTEA",
                 "START_DATE": "TIMESTAMPTZ",
-                "END_DATE": "DATE",
-                "EFFECTIVE_FROM": "DATE",
+                "END_DATE": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
                 "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }

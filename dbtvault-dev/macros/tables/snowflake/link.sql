@@ -58,10 +58,13 @@ row_rank_{{ source_number }} AS (
     WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
     AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
+    {%- if target.type != 'bigquery' %}
     QUALIFY row_number = 1
+    {%- endif -%}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
-),{{ "\n" if not loop.last }}
-{% endfor -%}
+    ),{{ "\n" if not loop.last }}
+    {% endfor -%}
+
 {% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}
