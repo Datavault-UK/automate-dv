@@ -62,8 +62,8 @@ row_rank_{{ source_number }} AS (
     QUALIFY row_number = 1
     {%- endif -%}
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
-    ),{{ "\n" if not loop.last }}
-    {% endfor -%}
+),{{ "\n" if not loop.last }}
+{% endfor -%}
 
 {% if stage_count > 1 %}
 stage_union AS (
