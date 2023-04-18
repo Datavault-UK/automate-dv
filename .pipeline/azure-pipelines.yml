@@ -68,7 +68,7 @@ extends:
       - groupName: 'sats'
         displayName: 'Satellites'
         disabledForPlatform: []
-        subGroups: [ 'main', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'pm_small_datepart', 'rank' ]
+        subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'pm_small_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
         disabledForPlatform: ['databricks', 'postgres']

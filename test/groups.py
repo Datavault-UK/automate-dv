@@ -50,6 +50,9 @@ def feature_sub_types():
                 'sats',
                 'sats_ghost_records'
             ],
+            'comp_pk': [
+                'sats_comp_pk'
+            ],
             'cycles': [
                 'sats_cycles'
             ],
