@@ -400,40 +400,6 @@ def satellite_cycle_snowflake(context):
     }
 
 
-@fixture
-def satellite_comp_pk_snowflake(context):
-    """
-    Define the structures and metadata to load satellites
-    """
-
-    set_metadata(context)
-
-    context.seed_config = {
-        "RAW_STAGE_COMP": {
-            "column_types": {
-                "CUSTOMER_ID": "NUMBER(38, 0)",
-                "ORDER_ID": "VARCHAR",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "SATELLITE_COMP": {
-            "column_types": {
-             "CUSTOMER_PK": "BINARY(16)",
-             "ORDER_PK": "BINARY(16)",
-             "CUSTOMER_NAME": "VARCHAR",
-             "CUSTOMER_PHONE": "VARCHAR",
-             "CUSTOMER_DOB": "DATE",
-             "HASHDIFF": "BINARY(16)",
-             "EFFECTIVE_FROM": "DATE",
-             "LOAD_DATE": "DATE",
-             "SOURCE": "VARCHAR"
-            }
-        }
-    }
 # BigQuery
 
 
@@ -474,6 +440,30 @@ def satellite_bigquery(context):
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "STRING"
             }
         },
@@ -679,6 +669,30 @@ def satellite_sqlserver(context):
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "ORDER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -888,6 +902,30 @@ def satellite_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38,0)",
+                "ORDER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "CUSTOMER_PHONE": "VARCHAR(100)",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
         "SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -1089,6 +1127,30 @@ def satellite_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATETIME": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_DOB": "DATE",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         },
