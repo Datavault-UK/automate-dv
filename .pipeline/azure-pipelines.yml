@@ -72,7 +72,7 @@ extends:
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
         disabledForPlatform: ['databricks', 'postgres']
-        subGroups: [ 'main', 'auto', 'disabled', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'auto', 'disabled', 'mat' ]
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
         disabledForPlatform: ['databricks', 'postgres']

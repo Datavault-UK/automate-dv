@@ -84,6 +84,9 @@ def feature_sub_types():
                 'eff_sats',
                 'eff_sats_multi_part'
             ],
+            'comp_pk': [
+                'eff_sats_comp_pk'
+            ],
             'auto': [
                 'eff_sats_auto_end_dating_detail_base',
                 'eff_sats_auto_end_dating_detail_inc',

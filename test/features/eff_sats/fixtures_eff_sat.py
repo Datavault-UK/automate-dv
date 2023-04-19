@@ -78,6 +78,36 @@ def set_vault_structure_definition(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATETIME",
             "src_source": "SOURCE"
+        },
+        "EFF_SAT_COMP_FK": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": ["CUSTOMER_PK", "PART_PK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_COMP_DK": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK", "PART_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_COMP_PK": {
+            "src_pk": ["CUSTOMER_ORDER_PK", "ORDER_PART_PK"],
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": ["CUSTOMER_PK", "PART_PK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -89,6 +119,14 @@ def set_staging_definition(context):
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID"
+        },
+        "STG_CUSTOMER_COMP": {
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "ORDER_PART_PK": ["ORDER_ID", "PART_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "PART_PK": "PART_ID"
         }
     }
 
@@ -137,6 +175,18 @@ def eff_satellite_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "PART_ID": "VARCHAR",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "EFF_SAT": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
@@ -181,6 +231,46 @@ def eff_satellite_snowflake(context):
                 "ORDER_PK": "BINARY(16)",
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_COMP_FK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PART_PK": "BINARY(16)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_COMP_DK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PART_PK": "BINARY(16)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_COMP_PK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "ORDER_PART_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PART_PK": "BINARY(16)",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -449,6 +539,20 @@ def eff_satellite_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "EFF_SAT": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "STRING",
@@ -493,6 +597,46 @@ def eff_satellite_bigquery(context):
                 "ORDER_PK": "STRING",
                 "CUSTOMER_MT_ID": "STRING",
                 "CUSTOMER_CK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_FK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_DK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_PK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "ORDER_PART_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -761,6 +905,20 @@ def eff_satellite_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "ORDER_ID": "VARCHAR(50)",
+                "PART_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "CUSTOMER_CK": "VARCHAR(11)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "EFF_SAT": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
@@ -805,6 +963,46 @@ def eff_satellite_sqlserver(context):
                 "ORDER_PK": "BINARY(16)",
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
                 "CUSTOMER_CK": "VARCHAR(11)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_COMP_FK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PART_PK": "BINARY(16)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_COMP_DK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PART_PK": "BINARY(16)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_COMP_PK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BINARY(16)",
+                "ORDER_PART_PK": "BINARY(16)",
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "PART_PK": "BINARY(16)",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",

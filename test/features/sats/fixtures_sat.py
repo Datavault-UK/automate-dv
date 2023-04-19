@@ -916,7 +916,7 @@ def satellite_databricks(context):
         "SATELLITE_COMP": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "ORDER_PK": "STRING)",
+                "ORDER_PK": "STRING",
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "CUSTOMER_PHONE": "VARCHAR(100)",
                 "CUSTOMER_DOB": "DATE",
