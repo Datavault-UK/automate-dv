@@ -22,7 +22,7 @@ WITH source_data AS (
     SELECT DISTINCT {{ dbtvault.prefix(source_cols, 's', alias_target='source') }}
     {%- endif %}
     FROM {{ ref(source_model) }} AS s
-    WHERE {{ dbtvault.multikey([src_pk], prefix='s', condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
     {%- for child_key in src_cdk %}
         AND {{ dbtvault.multikey(child_key, prefix='s', condition='IS NOT NULL') }}
     {%- endfor %}
@@ -47,7 +47,7 @@ source_data_with_count AS (
         FROM (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}, {{ dbtvault.prefix([src_hashdiff], 's', alias_target='source') }}, {{ dbtvault.prefix(cdk_cols, 's') }} FROM source_data AS s) AS t
         GROUP BY {{ dbtvault.prefix([src_pk], 't') }}
     ) AS b
-    ON {{ dbtvault.multikey([src_pk], prefix=['a','b'], condition='=') }}
+    ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
 ),
 
 {# Select latest records from satellite, restricted to PKs in source data -#}
@@ -63,7 +63,7 @@ latest_records AS (
             ORDER BY {{ dbtvault.prefix([src_ldts], 'inner_mas') }} DESC) AS latest_rank
     FROM {{ this }} AS inner_mas
     INNER JOIN (SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }} FROM source_data as s ) AS spk
-        ON {{ dbtvault.multikey([src_pk], prefix=['inner_mas', 'spk'], condition='=') }}
+        ON {{ dbtvault.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
     ) AS mas
     WHERE latest_rank = 1
 ),
@@ -101,17 +101,17 @@ records_to_insert AS (
                 ,lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
-                    ON {{ dbtvault.multikey([src_pk], prefix=['lr', 'lg'], condition='=') }}
+                    ON {{ dbtvault.multikey(src_pk, prefix=['lr', 'lg'], condition='=') }}
                     AND {{ dbtvault.prefix([src_ldts], 'lr') }} = {{ dbtvault.prefix([src_ldts], 'lg') }}
             ) AS active_records
-            WHERE {{ dbtvault.multikey([src_pk], prefix=['stage', 'active_records'], condition='=') }}
+            WHERE {{ dbtvault.multikey(src_pk, prefix=['stage', 'active_records'], condition='=') }}
                 AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'active_records', alias_target='target') }}
 {# In order to maintain the parallel with the standard satellite, we don''t allow for groups of records to be updated if the ldts is the only difference #}
 {#        AND {{ dbtvault.prefix([src_ldts], 'stage') }} = {{ dbtvault.prefix([src_ldts], 'active_records') }} #}
                 AND {{ dbtvault.multikey(src_cdk, prefix=['stage', 'active_records'], condition='=') }}
                 AND stage.source_count = active_records.latest_count
         )
-        AND {{ dbtvault.multikey([src_pk], prefix=['source_data_with_count', 'stage'], condition='=') }}
+        AND {{ dbtvault.multikey(src_pk, prefix=['source_data_with_count', 'stage'], condition='=') }}
     )
 {# endif any_incremental -#}
 {%- endif %}
