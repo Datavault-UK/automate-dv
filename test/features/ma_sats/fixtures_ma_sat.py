@@ -113,6 +113,15 @@ def set_vault_structure_definition(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "src_pk": ["CUSTOMER_PK","ORDER_PK"],
+            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -164,7 +173,13 @@ def set_staging_definition(context):
             "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "ORDER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
-        }
+        },
+        "STG_CUSTOMER_TWO_CDK_COMP": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "ORDER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
+        },
     }
 
     context.derived_columns = {
@@ -193,6 +208,9 @@ def set_staging_definition(context):
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_COMP": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_TWO_CDK_COMP": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
@@ -242,6 +260,17 @@ def set_staging_definition(context):
                 "ORDER_ID",
                 "CUSTOMER_NAME",
                 "CUSTOMER_PHONE",
+                "EFFECTIVE_FROM",
+                "LOAD_DATE",
+                "SOURCE"
+            ],
+        "RAW_STAGE_TWO_CDK_COMP":
+            [
+                "CUSTOMER_ID",
+                "ORDER_ID",
+                "CUSTOMER_NAME",
+                "CUSTOMER_PHONE",
+                "EXTENSION",
                 "EFFECTIVE_FROM",
                 "LOAD_DATE",
                 "SOURCE"
@@ -320,6 +349,17 @@ def multi_active_satellite_snowflake(context):
                 "ORDER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMBER(38, 0)",
+                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMBER(38, 0)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
@@ -457,6 +497,19 @@ def multi_active_satellite_snowflake(context):
                 "ORDER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMBER(38, 0)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -688,6 +741,18 @@ def multi_active_satellite_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "RAW_STAGE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "MULTI_ACTIVE_SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -821,6 +886,19 @@ def multi_active_satellite_bigquery(context):
                 "ORDER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -1052,6 +1130,18 @@ def multi_active_satellite_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38,0)",
+                "ORDER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38,0)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "MULTI_ACTIVE_SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -1185,6 +1275,19 @@ def multi_active_satellite_sqlserver(context):
                 "ORDER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "BINARY(16)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38,0)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
@@ -1389,6 +1492,11 @@ def multi_active_satellite_postgres(context):
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_NAME"]}
+        },
+        "STG_CUSTOMER_TWO_CDK_COMP": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "ORDER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
         }
     }
 
@@ -1418,6 +1526,9 @@ def multi_active_satellite_postgres(context):
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_TWO_CDK_COMP": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
     }
@@ -1463,7 +1574,17 @@ def multi_active_satellite_postgres(context):
              "EXTENSION",
              "EFFECTIVE_FROM",
              "LOAD_DATETIME",
-             "SOURCE"]
+             "SOURCE"],
+
+        "RAW_STAGE_TWO_CDK_COMP":
+            ["CUSTOMER_ID",
+             "ORDER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EXTENSION",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"],
     }
 
     context.vault_structure_columns = {
@@ -1556,6 +1677,15 @@ def multi_active_satellite_postgres(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "src_pk": ["CUSTOMER_PK","ORDER_PK"],
+            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -1604,6 +1734,17 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",
                 "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMERIC(38, 0)",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1713,6 +1854,19 @@ def multi_active_satellite_postgres(context):
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "EXTENSION": "NUMERIC(38, 0)",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",

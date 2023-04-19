@@ -103,10 +103,14 @@ def feature_sub_types():
             ]
         },
         'ma_sats': {
+            'comp_pk': [
+                'mas_one_cdk_comp_pk',
+                'mas_two_cdk_comp_pk'
+            ],
             '1cdk': [
                 'mas_one_cdk_0_base',
                 'mas_one_cdk_1_inc',
-                'mas_one_cdk_base_sats'
+                'mas_one_cdk_base_sats',
             ],
             '1cdk_cycles': [
                 'mas_one_cdk_base_sats_cycles',
