@@ -41,7 +41,7 @@ WITH source_data AS (
             OVER (PARTITION BY {{ dbtvault.prefix([src_pk], 's') }}) AS source_count
     {% endif %}
     FROM {{ ref(source_model) }} AS s
-    WHERE {{ dbtvault.multikey([src_pk], prefix='s', condition='IS NOT NULL') }}
+    WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
     {%- for child_key in cdk_cols %}
         AND {{ dbtvault.multikey(child_key, prefix='s', condition='IS NOT NULL') }}
     {%- endfor %}
@@ -72,7 +72,7 @@ latest_records AS (
             SELECT DISTINCT {{ dbtvault.prefix([src_pk], 's') }}
             FROM source_data as s
         ) AS spk
-            ON {{ dbtvault.multikey([src_pk], prefix=['inner_mas', 'spk'], condition='=') }}
+            ON {{ dbtvault.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
             QUALIFY latest_rank = 1
     ) AS mas
 ),
@@ -106,15 +106,15 @@ records_to_insert AS (
                 lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
-                    ON {{ dbtvault.multikey([src_pk], prefix=['lr', 'lg'], condition='=') }}
+                    ON {{ dbtvault.multikey(src_pk, prefix=['lr', 'lg'], condition='=') }}
                     AND {{ dbtvault.prefix([src_ldts], 'lr') }} = {{ dbtvault.prefix([src_ldts], 'lg') }}
             ) AS active_records
-            WHERE {{ dbtvault.multikey([src_pk], prefix=['stage', 'active_records'], condition='=') }}
+            WHERE {{ dbtvault.multikey(src_pk, prefix=['stage', 'active_records'], condition='=') }}
                 AND {{ dbtvault.prefix([src_hashdiff], 'stage') }} = {{ dbtvault.prefix([src_hashdiff], 'active_records', alias_target='target') }}
                 AND {{ dbtvault.multikey(cdk_cols, prefix=['stage', 'active_records'], condition='=') }}
                 AND stage.source_count = active_records.latest_count
         )
-        AND {{ dbtvault.multikey([src_pk], prefix=['source_data', 'stage'], condition='=') }}
+        AND {{ dbtvault.multikey(src_pk, prefix=['source_data', 'stage'], condition='=') }}
     )
 {# endif any_incremental -#}
 {%- endif %}
