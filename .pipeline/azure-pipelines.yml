@@ -76,7 +76,7 @@ extends:
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
         disabledForPlatform: ['databricks', 'postgres']
-        subGroups: [ '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
+        subGroups: [ 'comp_pk', '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
       - groupName: 'xts'
         displayName: 'Extended Tracking Satellites'
         disabledForPlatform: ['databricks', 'postgres']
