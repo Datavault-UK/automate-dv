@@ -14,7 +14,3 @@ target-path: "target"
 clean-targets:
   - "target"
   - "dbt_packages"
-
-vars:
-  escape_char_left: ''
-  escape_char_right: ''
