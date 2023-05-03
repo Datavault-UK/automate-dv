@@ -92,6 +92,7 @@
     {%- for col in include_columns -%}
         {%- if col | lower in columns_to_escape | map('lower') | list -%}
             {{- dbtvault.escape_column_name(col) -}}{{ ",\n" if not loop.last }}
+
         {%- else -%}
             {{- col -}}{{ ",\n" if not loop.last }}
         {%- endif -%}

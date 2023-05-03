@@ -7,7 +7,15 @@
 
     {%- set escape_char_left, escape_char_right = adapter.dispatch('get_escape_characters', 'dbtvault')() -%}
 
-    {%- do return((var('escape_char_left', escape_char_left), var('escape_char_right', escape_char_right))) -%}
+    {%- if ((var('escape_char_left', escape_char_left) == '') and (var('escape_char_right', escape_char_right) == '')) -%}
+        {%- do return((escape_char_left, escape_char_right)) -%}
+    {%- elif var('escape_char_left', escape_char_left) == '' -%}
+        {%- do return((escape_char_left, var('escape_char_right', escape_char_right))) -%}
+    {%- elif var('escape_char_right', escape_char_right) == '' -%}
+        {%- do return((var('escape_char_left', escape_char_left), escape_char_right)) -%}
+    {%- else -%}
+        {%- do return((var('escape_char_left', escape_char_left), var('escape_char_right', escape_char_right))) -%}
+    {%- endif -%}
 
 {%- endmacro %}
 

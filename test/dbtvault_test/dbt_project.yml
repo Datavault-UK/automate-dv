@@ -19,3 +19,6 @@ clean-targets:
 seeds:
   +quote_columns: true
 
+vars:
+  escape_char_left: ''
+  escape_char_right: ''
