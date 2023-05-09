@@ -4,8 +4,7 @@ from behave import *
 from behave.model import Table, Row
 
 from env import env_utils
-from test import dbtvault_generator, dbt_runner, behave_helpers, context_utils, step_helpers, context_helpers
-from test import dbt_file_utils
+from test import dbtvault_generator, dbt_runner, behave_helpers, context_utils, step_helpers
 
 
 def set_stage_metadata(context, stage_model_name) -> dict:
@@ -716,48 +715,3 @@ def step_impl(context, model_name):
 @given("I am using the {database_name} database")
 def step_impl(context, database_name):
     context.database_name = database_name
-
-
-@given("there is data available")
-def step_impl(context):
-    context.sample_table_name = "sample_data"
-
-    context.input_seed_name = context_helpers.sample_data_to_database(context, context.sample_table_name)
-
-    logs = dbt_runner.run_dbt_operation(macro_name='check_table_exists',
-                                        args={"model_name": context.sample_table_name})
-
-    assert f"Table '{context.sample_table_name}' exists." in logs
-
-
-@step("using hash calculation on table")
-def step_impl(context):
-    columns = context.table.headings[0]
-    sample_table_name = context.sample_table_name
-    context.sample_schema_name = "DEVELOPMENT_DBTVAULT_USER"
-    sample_schema_name = context.sample_schema_name
-    model_name = f'{context.sample_table_name}_model'
-
-    sql = f"{{{{- dbtvault_test.get_hash_length(hash_alg, \042{columns}\042, \042{sample_schema_name}\042, \042{sample_table_name}\042) -}}}}"
-
-    dbt_file_utils.generate_model(model_name, sql)
-
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
-
-
-@then("the {table_name} table should contain the following data")
-def step_impl(context, table_name):
-    context.table_name = table_name.lower()
-    context.model_name = f'{context.table_name}_model'
-    context.expected_seed_name = context_helpers.sample_data_to_database(context, f"{context.table_name}_expected")
-    columns_to_compare = context.table.headings
-    context.unique_id = context.table.headings[0]
-
-    dbt_file_utils.write_model_test_properties(actual_model_name=context.model_name,
-                                               expected_model_name=context.expected_seed_name,
-                                               unique_id=context.unique_id,
-                                               columns_to_compare=columns_to_compare)
-
-    logs = dbt_runner.run_dbt_command(["dbt", "test"])
-
-    assert "1 of 1 PASS" in logs

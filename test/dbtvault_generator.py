@@ -730,7 +730,7 @@ def add_seed_config(seed_name: str, seed_config: dict, include_columns=None,
     yml = ruamel.yaml.YAML()
     yml.preserve_quotes = True
     yml.indent(sequence=4, offset=2)
-    properties_path = SEEDS_DIR / 'properties.yml'
+    properties_path = TEMP_SEED_DIR / 'vault_properties.yml'
 
     if include_columns:
         seed_config['column_types'] = {k: v for k, v in seed_config['column_types'].items() if
