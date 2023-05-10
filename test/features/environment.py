@@ -108,14 +108,14 @@ fixtures_registry = {
         {"snowflake": fixtures_t_link.t_link_snowflake,
          "bigquery": fixtures_t_link.t_link_bigquery,
          "sqlserver": fixtures_t_link.t_link_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_t_link.t_link_databricks,
          "postgres": fixtures_t_link.t_link_postgres},
 
     "fixture.t_link_comp_pk":
         {"snowflake": fixtures_t_link.t_link_comp_pk_snowflake,
          "bigquery": fixtures_t_link.t_link_comp_pk_bigquery,
          "sqlserver": fixtures_t_link.t_link_comp_pk_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_t_link.t_link_comp_pk_databricks,
          "postgres": fixtures_t_link.t_link_comp_pk_postgres},
 
     "fixture.satellite":
@@ -136,28 +136,28 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat.eff_satellite_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_postgres},
 
     "fixture.eff_satellite_datetime":
         {"snowflake": fixtures_eff_sat.eff_satellite_datetime_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_datetime_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_datetime_postgres},
 
     "fixture.eff_satellite_auto_end_dating":
         {"snowflake": fixtures_eff_sat.eff_satellite_auto_end_dating_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_auto_end_dating_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_auto_end_dating_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_auto_end_dating_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres},
 
     "fixture.eff_satellite_multipart":
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_multipart_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_multipart_postgres},
 
     "fixture.multi_active_satellite":
