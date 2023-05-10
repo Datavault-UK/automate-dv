@@ -108,14 +108,14 @@ fixtures_registry = {
         {"snowflake": fixtures_t_link.t_link_snowflake,
          "bigquery": fixtures_t_link.t_link_bigquery,
          "sqlserver": fixtures_t_link.t_link_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_t_link.t_link_databricks,
          "postgres": fixtures_t_link.t_link_postgres},
 
     "fixture.t_link_comp_pk":
         {"snowflake": fixtures_t_link.t_link_comp_pk_snowflake,
          "bigquery": fixtures_t_link.t_link_comp_pk_bigquery,
          "sqlserver": fixtures_t_link.t_link_comp_pk_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_t_link.t_link_comp_pk_databricks,
          "postgres": fixtures_t_link.t_link_comp_pk_postgres},
 
     "fixture.satellite":
