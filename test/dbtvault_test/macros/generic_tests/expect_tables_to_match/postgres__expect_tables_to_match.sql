@@ -14,8 +14,6 @@
 {%- set source_columns_processed = [] -%}
 {%- set bytea_columns = [] -%}
 
-{%- do log('COMPARE: ' ~ compare_columns, info=True) -%}
-{%- do log('SOURCE: ' ~ source_columns, info=True) -%}
 {%- for expected_col in expected_columns -%}
     {%- if expected_col.column|lower|string in compare_columns|map('lower')|list|string -%}
         {%- if expected_col.dtype == 'bytea' -%}
@@ -24,35 +22,35 @@
     {%- endif -%}
 {%- endfor -%}
 
-{%- for compare_col in compare_columns -%}
+{%- for compare_col in compare_columns | sort -%}
     {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- do columns_processed.append(compare_col) -%}
 {%- endfor %}
 
+{%- set source_column_names = [] -%}
 {%- for source_col in source_columns -%}
-    {%- do log('Source Column: ' ~ source_col.column|string, info=True) -%}
-    {%- do log('Bytea Column: ' ~ bytea_columns, info=True) -%}
-    {%- if source_col.column|string not in bytea_columns -%}
-        {%- do source_columns_list.append(source_col.column) -%}
-        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
-    {%- elif source_col.column|string in bytea_columns -%}
-        {%- do source_columns_list.append(source_col.column) -%}
-        {%- do source_columns_processed.append("(UPPER(ENCODE({}, 'hex'))::BYTEA)::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- do source_column_names.append(source_col.column) -%}
+{%- endfor -%}
+
+{%- for source_col in source_column_names | sort -%}
+    {%- if source_col|string not in bytea_columns -%}
+        {%- do source_columns_list.append(source_col) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col, source_col)) -%}
+    {%- elif source_col|string in bytea_columns -%}
+        {%- do source_columns_list.append(source_col) -%}
+        {%- do source_columns_processed.append("(UPPER(ENCODE({}, 'hex'))::BYTEA)::VARCHAR AS {}".format(source_col, source_col)) -%}
     {%- else -%}
-        {%- do source_columns_list.append(source_col.column) -%}
-        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+        {%- do source_columns_list.append(source_col) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col, source_col)) -%}
     {%- endif -%}
-
-
-
 {%- endfor %}
 
-{%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
-{%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
+{%- set compare_columns_string = compare_columns_processed | join(", ") -%}
+{%- set source_columns_string = source_columns_processed | join(", ") -%}
 
 {# Unquote the columns  string list #}
-{#{%- set columns_string = columns_processed | sort | join(", ") -%}#}
-{%- set columns_string = columns_processed | sort | join(", ") -%}
+{#{%- set columns_string = columns_processed | join(", ") -%}#}
+{%- set columns_string = columns_processed | join(", ") -%}
 
 
 {# POSTGRES#}
