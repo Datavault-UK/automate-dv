@@ -7,12 +7,12 @@
 
     {% set macro = adapter.dispatch('get_period_filter_sql',
                                     'automate_dv')(target_cols_csv=target_cols_csv,
-                                                base_sql=base_sql,
-                                                timestamp_field=timestamp_field,
-                                                period=period,
-                                                start_timestamp=start_timestamp,
-                                                stop_timestamp=stop_timestamp,
-                                                offset=offset) %}
+                                                   base_sql=base_sql,
+                                                   timestamp_field=timestamp_field,
+                                                   period=period,
+                                                   start_timestamp=start_timestamp,
+                                                   stop_timestamp=stop_timestamp,
+                                                   offset=offset) %}
     {% do return(macro) %}
 {%- endmacro %}
 
