@@ -4,7 +4,7 @@ Please refer to our contribution guidelines over on our [development repository]
 
 ## We'd love to hear from you
 
-dbtvault is very much a work in progress – we’re constantly adding quality of life improvements and will be adding
+AutomateDV is very much a work in progress – we’re constantly adding quality of life improvements and will be adding
 new table types regularly.
 
 Rest assured we’re working on future releases – [our roadmap contains information on what’s coming](https://dbtvault.readthedocs.io/en/latest/roadmap/).
