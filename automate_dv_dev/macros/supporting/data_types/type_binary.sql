@@ -4,7 +4,7 @@
  */
 
 {%- macro type_binary() -%}
-  {{- return(adapter.dispatch('type_binary', 'dbtvault')()) -}}
+  {{- return(adapter.dispatch('type_binary', 'automate_dv')()) -}}
 {%- endmacro -%}
 
 {%- macro default__type_binary() -%}

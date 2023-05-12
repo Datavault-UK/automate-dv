@@ -5,17 +5,17 @@
 
 {%- macro xts(src_pk, src_satellite, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-    {{- dbtvault.check_required_parameters(src_pk=src_pk, src_satellite=src_satellite,
+    {{- automate_dv.check_required_parameters(src_pk=src_pk, src_satellite=src_satellite,
                                            src_ldts=src_ldts, src_source=src_source,
                                            source_model=source_model) -}}
 
-    {%- if not dbtvault.is_list(source_model) -%}
+    {%- if not automate_dv.is_list(source_model) -%}
         {%- set source_model = [source_model] -%}
     {%- endif -%}
 
-    {{ dbtvault.prepend_generated_by() }}
+    {{ automate_dv.prepend_generated_by() }}
 
-    {{ adapter.dispatch('xts', 'dbtvault')(src_pk=src_pk,
+    {{ adapter.dispatch('xts', 'automate_dv')(src_pk=src_pk,
                                             src_satellite=src_satellite,
                                             src_extra_columns=src_extra_columns,
                                             src_ldts=src_ldts,
@@ -45,16 +45,16 @@
         {%- set cte_name = "satellite_{}_from_{}".format(satellite_name, src) | lower %}
 
 {{ cte_name }} AS (
-    SELECT {{ dbtvault.prefix([src_pk], 's') }},
+    SELECT {{ automate_dv.prefix([src_pk], 's') }},
            s.{{ hashdiff }} AS {{ hashdiff_col_name_alias }},
            s.{{ satellite_name }} AS {{ satellite_name_col_name_alias }},
-           {%- if dbtvault.is_something(src_extra_columns) -%}
-               {{ dbtvault.prefix([src_extra_columns], 's') }},
+           {%- if automate_dv.is_something(src_extra_columns) -%}
+               {{ automate_dv.prefix([src_extra_columns], 's') }},
            {%- endif %}
            s.{{ src_ldts }},
            s.{{ src_source }}
     FROM {{ ref(src) }} AS s
-    WHERE {{ dbtvault.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
 ),
 
     {%- set ns.last_cte = cte_name %}
@@ -83,16 +83,16 @@ union_satellites AS (
 
 records_to_insert AS (
     SELECT DISTINCT
-        {{ dbtvault.prefix([src_pk], 'a') }},
+        {{ automate_dv.prefix([src_pk], 'a') }},
         a.{{ hashdiff_col_name_alias }},
         a.{{ satellite_name_col_name_alias }},
-        {%- if dbtvault.is_something(src_extra_columns) -%}
-            {{ dbtvault.prefix([src_extra_columns], 'a') }},
+        {%- if automate_dv.is_something(src_extra_columns) -%}
+            {{ automate_dv.prefix([src_extra_columns], 'a') }},
         {%- endif %}
         a.{{ src_ldts }},
         a.{{ src_source }}
     FROM {{ ns.last_cte }} AS a
-    {%- if dbtvault.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
         ON (
             a.{{ hashdiff_col_name_alias }} = d.{{ hashdiff_col_name_alias }}

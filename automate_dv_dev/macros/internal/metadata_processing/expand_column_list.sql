@@ -11,7 +11,7 @@
 
 {%- set col_list = [] -%}
 
-{%- if dbtvault.is_list(columns) -%}
+{%- if automate_dv.is_list(columns) -%}
 
     {%- set columns = columns | reject("none") %}
 
@@ -22,7 +22,7 @@
             {%- do col_list.append(col) -%}
 
         {#- If list of lists -#}
-        {%- elif dbtvault.is_list(col) -%}
+        {%- elif automate_dv.is_list(col) -%}
 
             {%- for cols in col -%}
 

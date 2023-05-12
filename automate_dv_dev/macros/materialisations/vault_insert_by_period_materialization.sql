@@ -22,14 +22,14 @@
     {%- set timestamp_field = config.require('timestamp_field') -%}
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
-    {%- set start_stop_dates = dbtvault.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
+    {%- set start_stop_dates = automate_dv.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
 
     {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
 
-    {%- do dbtvault.check_placeholder(sql) -%}
+    {%- do automate_dv.check_placeholder(sql) -%}
 
-    {%- do dbtvault.check_num_periods(start_stop_dates.start_date, start_stop_dates.stop_date, period) -%}
+    {%- do automate_dv.check_num_periods(start_stop_dates.start_date, start_stop_dates.stop_date, period) -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
@@ -38,7 +38,7 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
@@ -51,20 +51,20 @@
         {% do adapter.drop_relation(existing_relation) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif full_refresh_mode %}
-        {% set filtered_sql = dbtvault.replace_placeholder_with_period_filter(sql, timestamp_field,
+        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(sql, timestamp_field,
                                                                        start_stop_dates.start_date,
                                                                        start_stop_dates.stop_date,
                                                                        0, period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
-        {% set period_boundaries = dbtvault.get_period_boundaries(target_relation,
+        {% set period_boundaries = automate_dv.get_period_boundaries(target_relation,
                                                                   timestamp_field,
                                                                   start_stop_dates.start_date,
                                                                   start_stop_dates.stop_date,
@@ -78,13 +78,13 @@
 
             {%- set iteration_number = i + 1 -%}
 
-            {%- set period_of_load = dbtvault.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
+            {%- set period_of_load = automate_dv.get_period_of_load(period, i, period_boundaries.start_timestamp) -%}
 
             {{ dbt_utils.log_info("Running for {} {} of {} ({}) [{}]".format(period, iteration_number, period_boundaries.num_periods, period_of_load, model.unique_id)) }}
 
             {% set tmp_relation = make_temp_relation(target_relation) %}
 
-            {% set tmp_table_sql = dbtvault.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
+            {% set tmp_table_sql = automate_dv.get_period_filter_sql(target_cols_csv, sql, timestamp_field, period,
                                                                   period_boundaries.start_timestamp,
                                                                   period_boundaries.stop_timestamp, i) %}
 
@@ -138,7 +138,7 @@
             {# In databricks and sqlserver a temporary view/table can only be dropped by #}
             {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
             {% if target.type in ['databricks', 'sqlserver'] %}
-                {{ dbtvault.drop_temporary_special(tmp_relation) }}
+                {{ automate_dv.drop_temporary_special(tmp_relation) }}
             {% else %}
                 {% do to_drop.append(tmp_relation) %}
             {% endif %}

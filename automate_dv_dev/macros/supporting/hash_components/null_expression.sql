@@ -10,9 +10,9 @@
     {%- endif -%}
 
     {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
-    {%- set standardise = dbtvault.standard_column_wrapper() %}
+    {%- set standardise = automate_dv.standard_column_wrapper() %}
 
-    {{ return(adapter.dispatch('null_expression', 'dbtvault')(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string)) }}
+    {{ return(adapter.dispatch('null_expression', 'automate_dv')(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string)) }}
 {%- endmacro %}
 
 

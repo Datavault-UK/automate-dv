@@ -5,7 +5,7 @@
 
 {%- macro null_columns(source_relation=none, columns=none) -%}
 
-    {{- adapter.dispatch('null_columns', 'dbtvault')(source_relation=source_relation, columns=columns) -}}
+    {{- adapter.dispatch('null_columns', 'automate_dv')(source_relation=source_relation, columns=columns) -}}
 
 {%- endmacro %}
 
@@ -17,19 +17,19 @@
 
     {%- for col in columns -%}
         {%- if col.lower() == 'required' -%}
-            {% if dbtvault.is_something(columns[col]) %}
+            {% if automate_dv.is_something(columns[col]) %}
                 {%- if columns[col] is string -%}
                     {%- set ns.required = [columns[col]] -%}
-                {%- elif dbtvault.is_list(columns[col]) -%}
+                {%- elif automate_dv.is_list(columns[col]) -%}
                     {%- set ns.required = columns[col] -%}
                 {%- endif -%}
             {%- endif -%}
         {%- endif -%}
         {%- if col.lower() == 'optional' -%}
-            {% if dbtvault.is_something(columns[col]) %}
+            {% if automate_dv.is_something(columns[col]) %}
                 {%- if columns[col] is string -%}
                     {%- set ns.optional = [columns[col]] -%}
-                {%- elif dbtvault.is_list(columns[col]) -%}
+                {%- elif automate_dv.is_list(columns[col]) -%}
                     {%- set ns.optional = columns[col] -%}
                 {%- endif -%}
             {%- endif -%}
@@ -39,18 +39,18 @@
     {%- set required_value = var('null_key_required', '-1') -%}
     {%- set optional_value = var('null_key_optional', '-2') -%}
 
-    {%- if dbtvault.is_something(ns.required) -%}
+    {%- if automate_dv.is_something(ns.required) -%}
         {%- filter indent(width=0) -%}
         {%- for col_name in ns.required -%}
-            {{ dbtvault.null_column_sql(col_name, required_value) }}{{ ",\n" if not loop.last }}{{ ",\n" if loop.last and dbtvault.is_something(ns.optional) else "" }}
+            {{ automate_dv.null_column_sql(col_name, required_value) }}{{ ",\n" if not loop.last }}{{ ",\n" if loop.last and automate_dv.is_something(ns.optional) else "" }}
         {%- endfor -%}
         {%- endfilter -%}
     {%- endif -%}
 
-    {%- if dbtvault.is_something(ns.optional) -%}
+    {%- if automate_dv.is_something(ns.optional) -%}
         {%- filter indent(width=0) -%}
         {%- for col_name in ns.optional -%}
-            {{ dbtvault.null_column_sql(col_name, optional_value) }}{{ ",\n" if not loop.last }}
+            {{ automate_dv.null_column_sql(col_name, optional_value) }}{{ ",\n" if not loop.last }}
         {%- endfor -%}
         {%- endfilter -%}
     {%- endif -%}
@@ -62,7 +62,7 @@
 
 {%- macro null_column_sql(col_name, default_value) -%}
 
-    {{- adapter.dispatch('null_column_sql', 'dbtvault')(col_name=col_name, default_value=default_value) -}}
+    {{- adapter.dispatch('null_column_sql', 'automate_dv')(col_name=col_name, default_value=default_value) -}}
 
 {%- endmacro -%}
 

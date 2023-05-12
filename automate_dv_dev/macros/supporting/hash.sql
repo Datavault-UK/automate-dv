@@ -9,7 +9,7 @@
         {%- set is_hashdiff = false -%}
     {%- endif -%}
 
-    {{- adapter.dispatch('hash', 'dbtvault')(columns=columns, alias=alias,
+    {{- adapter.dispatch('hash', 'automate_dv')(columns=columns, alias=alias,
                                              is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) -}}
 
 {%- endmacro %}
@@ -20,22 +20,22 @@
 {%- set concat_string = var('concat_string', '||') -%}
 {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
 
-{%- set hash_alg = dbtvault.select_hash_alg(hash) -%}
+{%- set hash_alg = automate_dv.select_hash_alg(hash) -%}
 
-{%- set standardise = dbtvault.standard_column_wrapper() %}
+{%- set standardise = automate_dv.standard_column_wrapper() %}
 
 {#- Alpha sort columns before hashing if a hashdiff -#}
-{%- if is_hashdiff and dbtvault.is_list(columns) -%}
+{%- if is_hashdiff and automate_dv.is_list(columns) -%}
     {%- set columns = columns|sort -%}
 {%- endif -%}
 
 {#- If single column to hash -#}
 {%- if columns is string -%}
-    {%- set column_str = dbtvault.as_constant(columns) -%}
+    {%- set column_str = automate_dv.as_constant(columns) -%}
 
-    {%- if dbtvault.is_something(columns_to_escape) -%}
+    {%- if automate_dv.is_something(columns_to_escape) -%}
         {%- if column_str in columns_to_escape -%}
-            {%- set column_str = dbtvault.escape_column_name(column_str) -%}
+            {%- set column_str = automate_dv.escape_column_name(column_str) -%}
         {%- endif -%}
     {%- endif -%}
 
@@ -48,15 +48,15 @@
     {%- set processed_columns = [] -%}
 
     {%- for column in columns -%}
-        {%- if dbtvault.is_something(columns_to_escape) -%}
+        {%- if automate_dv.is_something(columns_to_escape) -%}
             {%- if column in columns_to_escape -%}
-                {%- set column = dbtvault.escape_column_name(column) -%}
+                {%- set column = automate_dv.escape_column_name(column) -%}
             {%- endif -%}
         {%- endif -%}
 
-        {%- set column_str = dbtvault.as_constant(column) -%}
+        {%- set column_str = automate_dv.as_constant(column) -%}
 
-        {%- set column_expression = dbtvault.null_expression(column_str) -%}
+        {%- set column_expression = automate_dv.null_expression(column_str) -%}
 
         {%- do all_null.append(null_placeholder_string) -%}
         {%- do processed_columns.append(column_expression) -%}
@@ -66,7 +66,7 @@
     {% if not is_hashdiff -%}
 
         {%- set concat_sql -%}
-        NULLIF({{ dbtvault.concat_ws(processed_columns, separator=concat_string) -}} {{ ', ' -}}
+        NULLIF({{ automate_dv.concat_ws(processed_columns, separator=concat_string) -}} {{ ', ' -}}
                '{{ all_null | join(concat_string) }}')
         {%- endset -%}
 
@@ -75,9 +75,9 @@
         {%- endset -%}
 
     {%- else -%}
-        {% if dbtvault.is_list(processed_columns) and processed_columns | length > 1 %}
+        {% if automate_dv.is_list(processed_columns) and processed_columns | length > 1 %}
             {%- set hashed_column -%}
-                {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', dbtvault.concat_ws(processed_columns, separator=concat_string)) }} AS {{ alias }}
+                {{ hash_alg | replace('[HASH_STRING_PLACEHOLDER]', automate_dv.concat_ws(processed_columns, separator=concat_string)) }} AS {{ alias }}
             {%- endset -%}
         {%- else -%}
             {%- set hashed_column -%}
@@ -95,27 +95,27 @@
 
 {%- macro bigquery__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
 {%- macro sqlserver__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
 {%- macro postgres__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}
 
 
 {%- macro databricks__hash(columns, alias, is_hashdiff, columns_to_escape) -%}
 
-    {{ dbtvault.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
+    {{ automate_dv.default__hash(columns=columns, alias=alias, is_hashdiff=is_hashdiff, columns_to_escape=columns_to_escape) }}
 
 {%- endmacro -%}

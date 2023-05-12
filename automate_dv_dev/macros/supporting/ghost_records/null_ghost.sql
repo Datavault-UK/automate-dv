@@ -4,7 +4,7 @@
  */
 
 {%- macro null_ghost(datatype, alias) -%}
-    {{ adapter.dispatch('null_ghost', 'dbtvault')(datatype=datatype, alias=alias) }}
+    {{ adapter.dispatch('null_ghost', 'automate_dv')(datatype=datatype, alias=alias) }}
 {%- endmacro -%}
 
 {%- macro default__null_ghost(datatype, alias) -%}
@@ -16,9 +16,9 @@
 {%- endmacro -%}
 
 {%- macro postgres__null_ghost(datatype, alias) -%}
-    {{ dbtvault.bigquery__null_ghost(datatype, alias) }}
+    {{ automate_dv.bigquery__null_ghost(datatype, alias) }}
 {%- endmacro -%}
 
 {%- macro sqlserver__null_ghost(datatype, alias) -%}
-    {{ dbtvault.bigquery__null_ghost(datatype, alias) }}
+    {{ automate_dv.bigquery__null_ghost(datatype, alias) }}
 {%- endmacro -%}

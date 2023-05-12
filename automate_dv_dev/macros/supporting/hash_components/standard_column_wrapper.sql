@@ -15,7 +15,7 @@
                                                                                 available_case_configs | join(','))) -%}
     {%- endif -%}
 
-    {{ return(adapter.dispatch('standard_column_wrapper', 'dbtvault')(hash_content_casing=hash_content_casing | lower)) }}
+    {{ return(adapter.dispatch('standard_column_wrapper', 'automate_dv')(hash_content_casing=hash_content_casing | lower)) }}
 {%- endmacro %}
 
 
@@ -23,11 +23,11 @@
 
     {%- if hash_content_casing == 'upper' -%}
         {%- set standardise -%}
-            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string() }}))), '')
+            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string() }}))), '')
         {%- endset -%}
     {%- else -%}
         {%- set standardise -%}
-            NULLIF(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string() }})), '')
+            NULLIF(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string() }})), '')
         {%- endset -%}
     {%- endif -%}
 
@@ -40,11 +40,11 @@
 
     {%- if hash_content_casing == 'upper' -%}
         {%- set standardise -%}
-            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string(is_hash=true) }}))), '')
+            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string(is_hash=true) }}))), '')
         {%- endset -%}
     {%- else -%}
         {%- set standardise -%}
-            NULLIF(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string(is_hash=true) }})), '')
+            NULLIF(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string(is_hash=true) }})), '')
         {%- endset -%}
     {%- endif -%}
 
@@ -57,11 +57,11 @@
 
     {%- if hash_content_casing == 'upper' -%}
         {%- set standardise -%}
-            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string() }}(MAX)))), '')
+            NULLIF(UPPER(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string() }}(MAX)))), '')
         {%- endset -%}
     {%- else -%}
         {%- set standardise -%}
-            NULLIF(TRIM(CAST([EXPRESSION] AS {{ dbtvault.type_string() }}(MAX))), '')
+            NULLIF(TRIM(CAST([EXPRESSION] AS {{ automate_dv.type_string() }}(MAX))), '')
         {%- endset -%}
     {%- endif -%}
 

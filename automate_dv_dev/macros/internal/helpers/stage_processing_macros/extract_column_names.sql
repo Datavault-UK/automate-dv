@@ -3,7 +3,7 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-AutomateDV (f.k.a dbtvault)
+AutomateDV (f.k.a automate_dv)
 
 {%- macro extract_column_names(columns_dict=none) -%}
 

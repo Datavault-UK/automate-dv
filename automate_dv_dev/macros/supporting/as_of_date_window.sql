@@ -57,7 +57,7 @@ backfill_as_of AS (
 ),
 
 new_rows_pks AS (
-    SELECT {{ dbtvault.prefix([src_pk], 'h') }}
+    SELECT {{ automate_dv.prefix([src_pk], 'h') }}
     FROM {{ source_model }} AS h
 
     {% if target.type == "bigquery" -%}
@@ -87,7 +87,7 @@ overlap_pks AS (
     SELECT a.*
     FROM {{ this }} AS a
     INNER JOIN {{ source_model }} as b
-        ON {{ dbtvault.multikey(src_pk, prefix=['a','b'], condition='=') }}
+        ON {{ automate_dv.multikey(src_pk, prefix=['a','b'], condition='=') }}
     {% if target.type == "bigquery" -%}
     INNER JOIN min_date
     ON 1 = 1

@@ -3,7 +3,7 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-AutomateDV (f.k.a dbtvault)
+AutomateDV (f.k.a automate_dv)
 
 {%- macro process_columns_to_select(columns_list=none, exclude_columns_list=none) -%}
 
@@ -12,13 +12,13 @@ AutomateDV (f.k.a dbtvault)
 
     {% set columns_to_select = [] %}
 
-    {% if not dbtvault.is_list(columns_list) or not dbtvault.is_list(exclude_columns_list)  %}
+    {% if not automate_dv.is_list(columns_list) or not automate_dv.is_list(exclude_columns_list)  %}
 
         {{- exceptions.raise_compiler_error("One or both arguments are not of list type.") -}}
 
     {%- endif -%}
 
-    {%- if dbtvault.is_something(columns_list) and dbtvault.is_something(exclude_columns_list) -%}
+    {%- if automate_dv.is_something(columns_list) and automate_dv.is_something(exclude_columns_list) -%}
 
         {%- for col in columns_list -%}
 
