@@ -151,7 +151,7 @@ def check_project(c, project='test'):
 
     available_projects = {
         "dev": {"work_dir": str(test.PROJECT_ROOT / "automate_dv_dev")},
-        "test": {"work_dir": str(test.TESTS_ROOT / "dbtvault_test")},
+        "test": {"work_dir": str(test.TESTS_ROOT / "automate_dv_test")},
     }
 
     if not project:
