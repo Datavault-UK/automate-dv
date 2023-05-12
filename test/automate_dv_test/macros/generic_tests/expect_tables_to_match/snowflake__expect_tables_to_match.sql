@@ -5,7 +5,7 @@
 
 {%- test expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
-    {%- set macro = adapter.dispatch('test_expect_tables_to_match', 'automate_dv_dev') -%}
+    {%- set macro = adapter.dispatch('test_expect_tables_to_match', 'automate_dv_test') -%}
 
     {{ macro(model, unique_id, compare_columns, expected_seed) }}
 

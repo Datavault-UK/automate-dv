@@ -5,7 +5,7 @@
 
 {%- macro drop_model(model_name) -%}
 
-    {% set schema_name = automate_dv_dev.get_schema_name() %}
+    {% set schema_name = automate_dv_test.get_schema_name() %}
 
     {%- if target.type == 'databricks' -%}
         {%- set source_relation = adapter.get_relation(
@@ -30,7 +30,7 @@
 
 {% macro check_model_exists(model_name) %}
 
-    {% set schema_name = automate_dv_dev.get_schema_name() %}
+    {% set schema_name = automate_dv_test.get_schema_name() %}
 
     {%- if target.type == 'databricks' -%}
         {%- set source_relation = adapter.get_relation(
@@ -55,7 +55,7 @@
 {% macro drop_all_custom_schemas(schema_prefix=none) %}
 
     {%- if not schema_prefix -%}
-        {% set schema_name = automate_dv_dev.get_schema_name() -%}
+        {% set schema_name = automate_dv_test.get_schema_name() -%}
     {%- else -%}
         {% set schema_name = schema_prefix -%}
     {%- endif -%}
@@ -98,7 +98,7 @@
 
 {%- macro drop_test_schemas() -%}
 
-    {% set schema_name = automate_dv_dev.get_schema_name() %}
+    {% set schema_name = automate_dv_test.get_schema_name() %}
 
     {%- if target.type == 'databricks' -%}
         {% do adapter.drop_schema(api.Relation.create(schema=schema_name)) %}
@@ -125,7 +125,7 @@
 
 {%- macro drop_current_schema() -%}
 
-    {% set schema_to_drop = automate_dv_dev.get_schema_name() %}
+    {% set schema_to_drop = automate_dv_test.get_schema_name() %}
 
     {%- if target.type == 'databricks' -%}
         {% do adapter.drop_schema(api.Relation.create(schema=schema_to_drop)) %}
@@ -140,7 +140,7 @@
 
 {%- macro create_test_schemas() -%}
 
-    {% set schema_name = automate_dv_dev.get_schema_name() %}
+    {% set schema_name = automate_dv_test.get_schema_name() %}
 
     {%- if target.type == 'databricks' -%}
         {% do adapter.create_schema(api.Relation.create(schema=schema_name)) %}
