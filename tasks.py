@@ -70,7 +70,7 @@ def setup(c, platform=None, project=None, disable_op=False, env='internal'):
     logger.info('Checking dbt connection... (running dbt debug)')
     run_dbt(c, 'debug', platform=platform, project='test', disable_op=disable_op)
 
-    logger.info(f'Installing automate-dv-dev in test project...')
+    logger.info(f'Installing automate_dv_dev in test project...')
     run_dbt(c, 'deps', platform=platform, project='test', disable_op=disable_op)
     logger.info(f'Setup complete!')
 
@@ -150,7 +150,7 @@ def check_project(c, project='test'):
     """
 
     available_projects = {
-        "dev": {"work_dir": str(test.PROJECT_ROOT / "automate-dv-dev")},
+        "dev": {"work_dir": str(test.PROJECT_ROOT / "automate_dv_dev")},
         "test": {"work_dir": str(test.TESTS_ROOT / "dbtvault_test")},
     }
 
