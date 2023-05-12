@@ -2,16 +2,16 @@
   <img src="https://user-images.githubusercontent.com/25080503/237990810-ab2e14cf-a449-47ac-8c72-6f0857816194.png#gh-light-mode-only" alt="AutomateDV">
   <img src="https://user-images.githubusercontent.com/25080503/237990915-6afbeba8-9e80-44cb-a57b-5b5966ab5c02.png#gh-dark-mode-only" alt="AutomateDV">
 
-  [![Documentation Status](https://img.shields.io/badge/docs-stable-blue)](https://dbtvault.readthedocs.io/en/stable/?badge=stable)
+  [![Documentation Status](https://img.shields.io/badge/docs-stable-blue)](https://automate-dv.readthedocs.io/en/stable/?badge=stable)
   [![Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 </div>
 <div align="center">
   
-  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.3%20%3C=1.4.x-orange?logo=dbt)](https://dbtvault.readthedocs.io/en/latest/versions/)
+  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.3%20%3C=1.4.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
 
 </div>
 
-[Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
+[Changelog and past doc versions](https://automate-dv.readthedocs.io/en/latest/changelog/)
 
 # AutomateDV by [Datavault](https://www.data-vault.co.uk)
 
@@ -30,13 +30,13 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://dbtvault.readthedocs.io/en/latest/worked_example/we_worked_example/)
+- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
 - [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
 ## Supported platforms:
 
-[Platform support matrix](https://dbtvault.readthedocs.io/en/latest/macros/#platform-support)
+[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/macros/#platform-support)
 
 ## Installation
 
