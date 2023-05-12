@@ -23,7 +23,7 @@ We've tested the package rigorously, but if you think you've found a bug please 
 at a minimum (or use the issue templates) so we can fix it as quickly as possible:
 
 - The version of dbt being used
-- The version of dbtvault being used.
+- The version of automate_dv being used.
 - Steps to reproduce the issue
 - Any error messages or dbt log files which can give more detail of the problem
 

@@ -5,10 +5,10 @@
 
 {%- macro check_num_periods(start_date, stop_date, period) -%}
 
-    {% set num_periods = adapter.dispatch('check_num_periods',
-                                    'automate_dv')(start_date=start_date,
-                                                stop_date=stop_date,
-                                                period=period) %}
+    {% set num_periods = adapter.dispatch('check_num_periods', 'automate_dv')(
+                                          start_date=start_date,
+                                          stop_date=stop_date,
+                                          period=period) %}
 
     {%- if num_periods > 100000 -%}
         {%- set error_message -%}

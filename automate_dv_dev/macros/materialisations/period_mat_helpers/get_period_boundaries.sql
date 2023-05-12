@@ -7,10 +7,10 @@
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     'automate_dv')(target_relation=target_relation,
-                                                timestamp_field=timestamp_field,
-                                                start_date=start_date,
-                                                stop_date=stop_date,
-                                                period=period) %}
+                                                   timestamp_field=timestamp_field,
+                                                   start_date=start_date,
+                                                   stop_date=stop_date,
+                                                   period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
