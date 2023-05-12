@@ -1,7 +1,9 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
+
+AutomateDV (f.k.a dbtvault)
 
 {%- macro print_list(list_to_print=none, indent=4, columns_to_escape=none) -%}
 
