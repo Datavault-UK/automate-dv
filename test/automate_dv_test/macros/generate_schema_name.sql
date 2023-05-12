@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% macro generate_schema_name(custom_schema_name, node) -%}
     {{ automate_dv_dev.get_schema_name(custom_schema_name=custom_schema_name) }}
 {%- endmacro %}
