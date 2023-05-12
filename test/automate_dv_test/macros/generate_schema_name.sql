@@ -4,12 +4,12 @@
  */
 
 {% macro generate_schema_name(custom_schema_name, node) -%}
-    {{ automate_dv_dev.get_schema_name(custom_schema_name=custom_schema_name) }}
+    {{ automate_dv_test.get_schema_name(custom_schema_name=custom_schema_name) }}
 {%- endmacro %}
 
 
 {% macro get_schema_name(custom_schema_name) -%}
-    {{- adapter.dispatch('get_schema_name', 'automate_dv_dev')(custom_schema_name=custom_schema_name) -}}
+    {{- adapter.dispatch('get_schema_name', 'automate_dv_test')(custom_schema_name=custom_schema_name) -}}
 {%- endmacro -%}
 
 {% macro default__get_schema_name(custom_schema_name=none) -%}
@@ -22,7 +22,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_dev.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -38,7 +38,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.project, automate_dv_dev.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.project, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -54,7 +54,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_dev.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -75,7 +75,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, automate_dv_dev.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
