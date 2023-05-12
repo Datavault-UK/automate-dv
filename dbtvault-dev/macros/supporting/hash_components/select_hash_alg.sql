@@ -49,7 +49,7 @@
 
 {% macro postgres__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
+    {% do return("DECODE(MD5([HASH_STRING_PLACEHOLDER]), 'hex')") %}
 
 {% endmacro %}
 
@@ -93,7 +93,7 @@
     {#- e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
     {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
 
-    {% do return(dbtvault.cast_binary("UPPER(ENCODE(SHA256(CAST([HASH_STRING_PLACEHOLDER] AS {})), 'hex'))".format(dbtvault.type_binary()), quote=false))  %}
+    {% do return("SHA256(CAST([HASH_STRING_PLACEHOLDER] AS BYTEA))")  %}
 
 {% endmacro %}
 

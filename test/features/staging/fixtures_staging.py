@@ -739,3 +739,67 @@ def staging_null_columns_postgres(context):
             }
         }
     }
+
+
+@fixture
+def hashing_snowflake(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR"
+
+            }
+        }
+    }
+
+
+@fixture
+def hashing_bigquery(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "STRING"
+
+            }
+        }
+    }
+
+
+@fixture
+def hashing_sqlserver(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR(50)"
+
+            }
+        }
+    }
+
+@fixture
+def hashing_databricks(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR"
+
+            }
+        }
+    }
+
+@fixture
+def hashing_postgres(context):
+    context.seed_config = {
+
+        "sample_data": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR"
+
+            }
+        }
+    }
+
