@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) Business Thinking Ltd. 2019-2022
- *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {# Same as default except we do not use escaping #}
@@ -35,7 +35,7 @@
 
 {# POSTGRES#}
 {# unique_id usage must be quoted #}
-{%  set unique_id_quoted = dbtvault.escape_column_name(unique_id) %}
+{%  set unique_id_quoted = automate_dv.escape_column_name(unique_id) %}
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}
