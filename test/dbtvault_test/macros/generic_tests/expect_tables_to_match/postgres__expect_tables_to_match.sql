@@ -7,22 +7,44 @@
 {%- macro postgres__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
+{%- set expected_columns = adapter.get_columns_in_relation(ref(expected_seed)) -%}
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
+{%- set bytea_columns = [] -%}
+
+{%- do log('COMPARE: ' ~ compare_columns, info=True) -%}
+{%- do log('SOURCE: ' ~ source_columns, info=True) -%}
+{%- for expected_col in expected_columns -%}
+    {%- if expected_col.column|lower|string in compare_columns|map('lower')|list|string -%}
+        {%- if expected_col.dtype == 'bytea' -%}
+            {%- do bytea_columns.append(expected_col.column|lower) -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
 
 {%- for compare_col in compare_columns -%}
-
     {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
     {%- do columns_processed.append(compare_col) -%}
-
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
+    {%- do log('Source Column: ' ~ source_col.column|string, info=True) -%}
+    {%- do log('Bytea Column: ' ~ bytea_columns, info=True) -%}
+    {%- if source_col.column|string not in bytea_columns -%}
+        {%- do source_columns_list.append(source_col.column) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- elif source_col.column|string in bytea_columns -%}
+        {%- do source_columns_list.append(source_col.column) -%}
+        {%- do source_columns_processed.append("(UPPER(ENCODE({}, 'hex'))::BYTEA)::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- else -%}
+        {%- do source_columns_list.append(source_col.column) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+    {%- endif -%}
 
-    {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+
+
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
