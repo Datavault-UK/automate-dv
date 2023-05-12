@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Harness Tests" type="tests" factoryName="py.test">
-    <module name="dbtvault-dev" />
+    <module name="automate-dv-dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <option name="SDK_HOME" value="" />
