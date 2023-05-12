@@ -59,7 +59,7 @@ or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-m
 
 # Call the macro
 {{ automate_dv.hub(src_pk, src_nk, src_ldts,
-                src_source, source_model) }}
+                   src_source, source_model) }}
 ```
 
 ## Join our Slack Channel
