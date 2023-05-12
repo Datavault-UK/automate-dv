@@ -3,7 +3,7 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-AutomateDV (f.k.a dbtvault)
+AutomateDV (f.k.a automate_dv)
 
 {%- macro process_hash_column_excludes(hash_columns=none, source_columns=none) -%}
 
@@ -16,7 +16,7 @@ AutomateDV (f.k.a dbtvault)
 
                 {%- if col_mapping.columns -%}
 
-                    {%- set columns_to_hash = dbtvault.process_columns_to_select(source_columns, col_mapping.columns) -%}
+                    {%- set columns_to_hash = automate_dv.process_columns_to_select(source_columns, col_mapping.columns) -%}
 
                     {%- do hash_columns[col].pop('exclude_columns') -%}
                     {%- do hash_columns[col].update({'columns': columns_to_hash}) -%}

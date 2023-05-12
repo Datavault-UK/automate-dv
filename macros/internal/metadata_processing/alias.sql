@@ -5,7 +5,7 @@
 
 {%- macro alias(alias_config=none, prefix=none) -%}
 
-    {{- adapter.dispatch('alias', 'dbtvault')(alias_config=alias_config, prefix=prefix) -}}
+    {{- adapter.dispatch('alias', 'automate_dv')(alias_config=alias_config, prefix=prefix) -}}
 
 {%- endmacro %}
 
@@ -29,7 +29,7 @@
 
         {%- if prefix -%}
 
-        {{- dbtvault.prefix([alias_config], prefix) -}}
+        {{- automate_dv.prefix([alias_config], prefix) -}}
 
         {%- else -%}
 

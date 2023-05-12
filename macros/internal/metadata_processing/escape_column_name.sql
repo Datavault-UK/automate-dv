@@ -5,7 +5,7 @@
 
 {%- macro escape_column_name(column) -%}
 
-    {{- adapter.dispatch('escape_column_name', 'dbtvault')(column=column) -}}
+    {{- adapter.dispatch('escape_column_name', 'automate_dv')(column=column) -}}
 
 {%- endmacro %}
 
@@ -15,7 +15,7 @@
     {%- if column | first == "'" and column | last == "'" -%}
         {%- set escaped_column_name = column -%}
     {%- else -%}
-        {%- set escape_char_left, escape_char_right = dbtvault.get_escape_characters() -%}
+        {%- set escape_char_left, escape_char_right = automate_dv.get_escape_characters() -%}
 
         {%- set escaped_column_name = escape_char_left ~ column | replace(escape_char_left, '') | replace(escape_char_right, '') | trim ~ escape_char_right -%}
     {%- endif -%}

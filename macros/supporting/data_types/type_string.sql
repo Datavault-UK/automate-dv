@@ -4,7 +4,7 @@
  */
 
 {%- macro type_string(is_hash=false, char_length=255) -%}
-  {{- return(adapter.dispatch('type_string', 'dbtvault')(is_hash=is_hash, char_length=char_length)) -}}
+  {{- return(adapter.dispatch('type_string', 'automate_dv')(is_hash=is_hash, char_length=char_length)) -}}
 {%- endmacro -%}
 
 {%- macro default__type_string(is_hash, char_length) -%}

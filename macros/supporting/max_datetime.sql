@@ -5,7 +5,7 @@
 
 {%- macro max_datetime() -%}
 
-    {%- do return(adapter.dispatch('max_datetime', 'dbtvault')()) -%}
+    {%- do return(adapter.dispatch('max_datetime', 'automate_dv')()) -%}
 
 {%- endmacro %}
 

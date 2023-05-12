@@ -4,7 +4,7 @@
  */
 
 {%- macro type_timestamp() -%}
-  {{- return(adapter.dispatch('type_timestamp', 'dbtvault')()) -}}
+  {{- return(adapter.dispatch('type_timestamp', 'automate_dv')()) -}}
 {%- endmacro -%}
 
 {%- macro default__type_timestamp() -%}

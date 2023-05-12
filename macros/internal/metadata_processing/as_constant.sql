@@ -5,7 +5,7 @@
 
 {%- macro as_constant(column_str=none) -%}
 
-    {{- adapter.dispatch('as_constant', 'dbtvault')(column_str=column_str) -}}
+    {{- adapter.dispatch('as_constant', 'automate_dv')(column_str=column_str) -}}
 
 {%- endmacro %}
 

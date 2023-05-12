@@ -6,7 +6,7 @@
 {%- macro bridge_overlap_and_new_rows(src_pk, bridge_walk, source_model, new_as_of_dates_cte) -%}
 
 SELECT
-    {{ dbtvault.prefix([src_pk], 'a') }},
+    {{ automate_dv.prefix([src_pk], 'a') }},
     b.AS_OF_DATE,
     {%- for bridge_step in bridge_walk.keys() -%}
         {%- set link_table = bridge_walk[bridge_step]['link_table'] -%}
@@ -48,7 +48,7 @@ SELECT
 
     {%- if loop.first %}
     LEFT JOIN {{ ref(current_link) }} AS {{ current_link | lower }}
-        ON {{ dbtvault.multikey(src_pk, prefix=['a', current_link | lower], condition='=') }}
+        ON {{ automate_dv.multikey(src_pk, prefix=['a', current_link | lower], condition='=') }}
     {%- else %}
     LEFT JOIN {{ ref(current_link) }} AS {{ current_link | lower }}
         ON {{ loop_vars.last_link }}.{{ loop_vars.last_link_fk2 }} = {{ current_link | lower }}.{{ link_fk1 }}
