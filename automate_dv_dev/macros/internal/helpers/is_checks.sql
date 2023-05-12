@@ -21,7 +21,7 @@
 
 {%- macro is_nothing(obj) -%}
 
-    {%- if obj is none or obj is undefined or not obj or dbtvault.is_list(obj, empty_is_false=true) -%}
+    {%- if obj is none or obj is undefined or not obj or automate_dv.is_list(obj, empty_is_false=true) -%}
         {%- do return(true) -%}
     {%- else -%}
         {%- do return(false) -%}
@@ -35,7 +35,7 @@
 
     {%- if obj is not none and obj is defined and obj -%}
         {#- if an empty list, do not consider the object something -#}
-        {% if dbtvault.is_list(empty_is_false=true) %}
+        {% if automate_dv.is_list(empty_is_false=true) %}
             {%- do return(true) -%}
         {%- else -%}
             {%- do return(false) -%}

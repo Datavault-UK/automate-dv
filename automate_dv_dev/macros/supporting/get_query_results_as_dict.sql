@@ -4,7 +4,7 @@
  */
 
 {% macro get_query_results_as_dict(query) %}
-    {{ return(adapter.dispatch('get_query_results_as_dict', 'dbtvault')(query)) }}
+    {{ return(adapter.dispatch('get_query_results_as_dict', 'automate_dv')(query)) }}
 {% endmacro %}
 
 {% macro default__get_query_results_as_dict(query) %}

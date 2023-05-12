@@ -4,7 +4,7 @@
  */
 
 {% macro log_relation_sources(relation, source_count) %}
-    {{ return(adapter.dispatch('log_relation_sources', 'dbtvault')(relation=relation, source_count=source_count)) }}
+    {{ return(adapter.dispatch('log_relation_sources', 'automate_dv')(relation=relation, source_count=source_count)) }}
 {%- endmacro -%}
 
 {% macro default__log_relation_sources(relation, source_count) %}

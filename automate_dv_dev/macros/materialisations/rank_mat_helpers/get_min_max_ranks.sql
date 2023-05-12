@@ -22,7 +22,7 @@
             FROM stage
         {% endset %}
 
-        {% set min_max_dict = dbtvault.get_query_results_as_dict(query_sql) %}
+        {% set min_max_dict = automate_dv.get_query_results_as_dict(query_sql) %}
 
         {% set min_rank = min_max_dict['MIN'][0] | string %}
         {% set max_rank = min_max_dict['MAX'][0] | string %}

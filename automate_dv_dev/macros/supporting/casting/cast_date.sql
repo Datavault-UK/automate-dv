@@ -5,9 +5,9 @@
 
 {%- macro cast_date(column_str, as_string=false, datetime=false, alias=none, date_type=none) -%}
     {%- if datetime -%}
-        {{- dbtvault.cast_datetime(column_str=column_str, as_string=as_string, alias=alias, date_type=date_type) -}}
+        {{- automate_dv.cast_datetime(column_str=column_str, as_string=as_string, alias=alias, date_type=date_type) -}}
     {%- else -%}
-        {{ return(adapter.dispatch('cast_date', 'dbtvault')(column_str=column_str, as_string=as_string, alias=alias)) }}
+        {{ return(adapter.dispatch('cast_date', 'automate_dv')(column_str=column_str, as_string=as_string, alias=alias)) }}
     {%- endif -%}
 {%- endmacro -%}
 
@@ -53,7 +53,7 @@
 
 {%- macro databricks__cast_date(column_str, as_string=false, alias=none) -%}
 
-    {{ dbtvault.snowflake__cast_date(column_str=column_str, as_string=as_string, alias=alias)}}
+    {{ automate_dv.snowflake__cast_date(column_str=column_str, as_string=as_string, alias=alias)}}
 
 {%- endmacro -%}
 

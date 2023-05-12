@@ -5,20 +5,20 @@
 
 {%- macro alias_all(columns=none, prefix=none) -%}
 
-    {{- adapter.dispatch('alias_all', 'dbtvault')(columns=columns, prefix=prefix) -}}
+    {{- adapter.dispatch('alias_all', 'automate_dv')(columns=columns, prefix=prefix) -}}
 
 {%- endmacro %}
 
 {%- macro default__alias_all(columns, prefix) -%}
 
-{%- if dbtvault.is_list(columns) -%}
+{%- if automate_dv.is_list(columns) -%}
 
     {%- set processed_columns = [] -%}
 
     {%- for col in columns -%}
         {%- if col | lower not in processed_columns | map('lower') | list -%}
 
-            {{ dbtvault.alias(alias_config=col, prefix=prefix) }}
+            {{ automate_dv.alias(alias_config=col, prefix=prefix) }}
             {%- if not loop.last -%} , {% endif -%}
 
             {%- if col is mapping -%}
@@ -33,7 +33,7 @@
 
 {%- elif columns is string -%}
 
-{{ dbtvault.alias(alias_config=columns, prefix=prefix) }}
+{{ automate_dv.alias(alias_config=columns, prefix=prefix) }}
 
 {%- else -%}
 

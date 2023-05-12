@@ -6,7 +6,7 @@
 {%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    'dbtvault')(target_relation=target_relation,
+                                    'automate_dv')(target_relation=target_relation,
                                                 timestamp_field=timestamp_field,
                                                 start_date=start_date,
                                                 stop_date=stop_date,
@@ -24,7 +24,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -37,7 +37,7 @@
         FROM period_data
     {%- endset %}
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
@@ -57,7 +57,7 @@
         with data as (
             select
                 COALESCE(CAST(MAX({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          CAST({{ current_timestamp() }} AS DATETIME)) as STOP_TIMESTAMP
             from {{ target_relation }}
         )
@@ -69,7 +69,7 @@
     {%- endset %}
 
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
@@ -92,7 +92,7 @@
         WITH period_data AS (
             SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                CAST(COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                CAST(COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -103,7 +103,7 @@
         FROM period_data
     {%- endset %}
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
@@ -122,7 +122,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
                          {{ current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -134,7 +134,7 @@
         FROM period_data
     {%- endset %}
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
@@ -151,7 +151,7 @@
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbtvault.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
+                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
                          {{ current_timestamp() }} ) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -162,7 +162,7 @@
         FROM period_data
     {%- endset %}
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
