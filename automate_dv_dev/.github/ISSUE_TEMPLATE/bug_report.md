@@ -13,7 +13,7 @@ A clear and concise description of what the bug is.
 **Versions**
 
 dbt: 
-dbtvault: 
+automate_dv: 
 
 **To Reproduce**
 Steps to reproduce the behavior:
