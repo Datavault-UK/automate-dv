@@ -15,7 +15,7 @@
 {%- macro default__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
-{%- set source_str = var('system_record_value', 'automate_dv_SYSTEM') -%}
+{%- set source_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
