@@ -1,8 +1,0 @@
-packages:
-
-  #Live
-  #  - git: "https://github.com/Datavault-UK/dbtvault"
-  #    revision: v0.7.0
-
-  #Dev
-  - local: "../../dbtvault-dev"

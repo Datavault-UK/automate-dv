@@ -1,23 +1,23 @@
 <div align="center">
-  <img src="https://user-images.githubusercontent.com/25080503/65772647-89525700-e132-11e9-80ff-12ad30a25466.png" alt="dbtvault">
+  <img src="https://user-images.githubusercontent.com/25080503/237990810-ab2e14cf-a449-47ac-8c72-6f0857816194.png#gh-light-mode-only" alt="AutomateDV">
+  <img src="https://user-images.githubusercontent.com/25080503/237990915-6afbeba8-9e80-44cb-a57b-5b5966ab5c02.png#gh-dark-mode-only" alt="AutomateDV">
 
-  [![Documentation Status](https://img.shields.io/badge/docs-stable-blue)](https://dbtvault.readthedocs.io/en/stable/?badge=stable)
+  [![Documentation Status](https://img.shields.io/badge/docs-stable-blue)](https://automate-dv.readthedocs.io/en/stable/?badge=stable)
   [![Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 </div>
 <div align="center">
   
-  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.3%20%3C=1.4.x-orange?logo=dbt)](https://dbtvault.readthedocs.io/en/latest/versions/)
+  [![dbt Versions](https://img.shields.io/badge/compatible%20dbt%20versions-%3E=1.3%20%3C=1.4.x-orange?logo=dbt)](https://automate-dv.readthedocs.io/en/latest/versions/)
 
 </div>
 
+[Changelog and past doc versions](https://automate-dv.readthedocs.io/en/latest/changelog/)
 
-[Changelog and past doc versions](https://dbtvault.readthedocs.io/en/latest/changelog/stable)
+# AutomateDV by [Datavault](https://www.data-vault.co.uk)
 
-# dbtvault by [Datavault](https://www.data-vault.co.uk)
+Build your own Data Vault data warehouse! AutomateDV is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on your data platform.
 
-Build your own Data Vault data warehouse! dbtvault is a free to use dbt package that generates & executes the ETL you need to run a Data Vault 2.0 Data Warehouse on your data platform.
-
-What does dbtvault offer?
+What does AutomateDV offer?
 - productivity gains, fewer errors
 - multi-threaded execution of the generated SQL
 - your data modeller can generate most of the ETL code directly from their mapping metadata
@@ -30,13 +30,13 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://dbtvault.readthedocs.io/en/latest/worked_example/we_worked_example/)
+- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/we_worked_example/)
 
 - [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
 ## Supported platforms:
 
-[Platform support matrix](https://dbtvault.readthedocs.io/en/latest/macros/#platform-support)
+[Platform support matrix](https://automate-dv.readthedocs.io/en/latest/macros/#platform-support)
 
 ## Installation
 
@@ -58,13 +58,13 @@ or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-m
 ...
 
 # Call the macro
-{{ dbtvault.hub(src_pk, src_nk, src_ldts,
+{{ automate_dv.hub(src_pk, src_nk, src_ldts,
                 src_source, source_model) }}
 ```
 
 ## Join our Slack Channel
 
-Talk to our developers and other members of our growing community, get support and discuss anything related to dbtvault or Data Vault 2.0
+Talk to our developers and other members of our growing community, get support and discuss anything related to AutomateDV or Data Vault 2.0
 
 [![Join our Slack](https://img.shields.io/badge/Slack-Join-yellow?style=flat&logo=slack)](https://join.slack.com/t/dbtvault/shared_invite/enQtODY5MTY3OTIyMzg2LWJlZDMyNzM4YzAzYjgzYTY0MTMzNTNjN2EyZDRjOTljYjY0NDYyYzEwMTlhODMzNGY3MmU2ODNhYWUxYmM2NjA)
 

@@ -14,7 +14,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *               |
@@ -34,7 +34,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *               |
@@ -45,7 +45,7 @@ Feature: [SAT-GR] Implementing ghost records
   Scenario: [SAT-GR-03] Load data and ghost record into satellite already populated with a ghost record
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1004')                      | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *               |
       | md5('1006')                      | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
     And the RAW_STAGE table contains data
@@ -58,7 +58,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-02     | 1993-01-02 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-02     | 1993-01-02 | *               |
@@ -83,7 +83,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-02     | 1993-01-02 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-02     | 1993-01-02 | *               |
@@ -124,7 +124,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | sha('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | sha('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
       | sha('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | sha('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *               |
       | sha('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | sha('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *               |
@@ -145,7 +145,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | sha('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | sha('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
       | sha('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | sha('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *               |
       | sha('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | sha('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *               |
@@ -157,7 +157,7 @@ Feature: [SAT-GR] Implementing ghost records
   Scenario: [SAT-GR-SHA-08] Load data and ghost record into satellite already populated with a ghost record with SHA hash
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | sha('1004')                      | Dom           | 17-214-233-1217 | 2018-04-13   | sha('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *               |
       | sha('1006')                      | Frida         | 17-214-233-1214 | 2018-04-13   | sha('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
     And the RAW_STAGE table contains data
@@ -170,7 +170,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | sha('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | sha('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *               |
       | sha('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | sha('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-02     | 1993-01-02 | *               |
       | sha('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | sha('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-02     | 1993-01-02 | *               |
@@ -196,7 +196,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | sha('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | sha('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *               |
       | sha('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | sha('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-02     | 1993-01-02 | *               |
       | sha('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | sha('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-02     | 1993-01-02 | *               |
@@ -250,7 +250,7 @@ Feature: [SAT-GR] Implementing ghost records
   Scenario: [SAT-GR-12] Load data and ghost record into satellite already populated with a ghost record and change of source system
     Given the SATELLITE sat is already populated with data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1004')                      | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *               |
       | md5('1006')                      | Frida         | 17-214-233-1214 | 2018-04-13   | md5('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
     And the RAW_STAGE table contains data
@@ -263,7 +263,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-02     | 1993-01-02 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-02     | 1993-01-02 | *               |
@@ -285,7 +285,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE_HD_ALIAS sat
     Then the SATELLITE_HD_ALIAS table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_HASHDIFF                                     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *               |
@@ -305,7 +305,7 @@ Feature: [SAT-GR] Implementing ghost records
     When I load the SATELLITE_TZ sat
     Then the SATELLITE_TZ table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                              | EFFECTIVE_FROM_TZ   | LOAD_DATE_TZ        | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01 00:00:00 | 1900-01-01 00:00:00 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>          | <null>       | 00000000000000000000000000000000                      | 1900-01-01 00:00:00 | 1900-01-01 00:00:00 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01 00:00:00 | 1993-01-01 00:00:00 | *               |
       | md5('1002')                      | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01 00:00:00 | 1993-01-01 00:00:00 | *               |
       | md5('1003')                      | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01 00:00:00 | 1993-01-01 00:00:00 | *               |

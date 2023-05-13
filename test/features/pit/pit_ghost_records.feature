@@ -11,14 +11,14 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000000 | *               |
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -28,7 +28,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
@@ -62,14 +62,14 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000000 | *               |
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -77,7 +77,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
@@ -111,14 +111,14 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000000 | *               |
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE           | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 10:01:00.000000 | Phone       | 2019-01-01 10:15:00 | *               |
       | 1001        | 2019-01-01 10:36:00.000000 | Phone       | 2019-01-01 10:45:00 | *               |
       | 1001        | 2019-01-01 10:56:00.000000 | Laptop      | 2019-01-01 11:15:00 | *               |
@@ -128,7 +128,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE           | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-01 10:15:00 | *               |
       | 1001        | blue             | ab12         | 2019-01-01 10:45:00 | *               |
       | 1001        | brown            | ab12         | 2019-01-01 11:15:00 | *               |
@@ -162,14 +162,14 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000000 | *               |
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -179,7 +179,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
@@ -213,14 +213,14 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000000 | *               |
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -230,7 +230,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
@@ -263,7 +263,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | Alice         | 5 Forrest road Hampshire | 1997-04-24   | 2019-01-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2019-01-01 00:00:00.000000 | *               |
@@ -271,7 +271,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -281,7 +281,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
@@ -370,7 +370,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | Alice         | 5 Forrest road Hampshire | 1997-04-24   | 2019-01-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2019-01-01 00:00:00.000000 | *               |
@@ -378,7 +378,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -388,7 +388,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     When the RAW_STAGE_PROFILE is loaded
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
@@ -441,7 +441,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | HUB_CUSTOMER_1S_TS |      | SAT_CUSTOMER_DETAILS_TS | PIT_CUSTOMER_1S_TS |
     And the RAW_STAGE_DETAILS_TS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATETIME           | SOURCE          |
-      | <null>      | <null>        | <null>                    | <null>       | 1900-01-01 00:00:00.000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                    | <null>       | 1900-01-01 00:00:00.000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 00:00:00.000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 00:00:00.000 | *               |
       | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-01 23:59:59.999 | *               |
@@ -510,7 +510,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |                 |      | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE          |
-      | <null>      | <null>        | <null>                    | <null>       | 1900-01-01 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                    | <null>       | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 | *               |
       | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-05 | *               |
@@ -520,7 +520,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE          |
-      | <null>      | <null>          | <null>      | 1900-01-01 | DBTVAULT_SYSTEM |
+      | <null>      | <null>          | <null>      | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2018-06-01      | Tablet      | 2018-06-02 | *               |
       | 1001        | 2018-06-02      | Laptop      | 2018-06-02 | *               |
       | 1001        | 2018-06-03      | Phone       | 2018-06-04 | *               |
@@ -575,7 +575,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |                 |      | SAT_CUSTOMER_LOGIN   |                 |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | LOAD_DATE  | SOURCE          |
-      | <null>      | <null>        | <null>                    | <null>       | 1900-01-01 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                    | <null>       | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | 2018-06-01 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | 2018-06-01 | *               |
       | 1002        | Bob           | 22 Forrest road Hampshire | 2006-04-17   | 2018-06-03 | *               |
@@ -585,7 +585,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE          |
-      | <null>      | <null>          | <null>      | 1900-01-01 | DBTVAULT_SYSTEM |
+      | <null>      | <null>          | <null>      | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2018-06-01      | Tablet      | 2018-06-03 | *               |
       | 1001        | 2018-06-02      | Laptop      | 2018-06-03 | *               |
       | 1001        | 2018-06-03      | Phone       | 2018-06-03 | *               |
@@ -689,7 +689,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     When I load the vault
     Then the SAT_CUSTOMER_DETAILS table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01 | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01 | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01 | *               |
       | md5('1002')                      | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01 | *               |
       | md5('1002')                      | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05 | *               |
@@ -698,7 +698,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05 | *               |
     Then the SAT_CUSTOMER_LOGIN table should contain expected data
       | CUSTOMER_PK                      | LAST_LOGIN_DATE | DEVICE_USED | LOAD_DATE  | SOURCE          | EFFECTIVE_FROM | HASHDIFF                         |
-      | 00000000000000000000000000000000 | <null>          | <null>      | 1900-01-01 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000 |
+      | 00000000000000000000000000000000 | <null>          | <null>      | 1900-01-01 | AUTOMATE_DV_SYSTEM | 1900-01-01     | 00000000000000000000000000000000 |
       | md5('1001')                      | 2018-06-01      | Tablet      | 2018-06-02 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01')      |
       | md5('1001')                      | 2018-06-02      | Laptop      | 2018-06-02 | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02')      |
       | md5('1001')                      | 2018-06-03      | Phone       | 2018-06-04 | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03')       |
@@ -774,7 +774,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     When I load the vault
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01    | *               |
       | md5('1002')                      | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01    | *               |
       | md5('1002')                      | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05    | *               |
@@ -783,7 +783,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05    | *               |
     Then the SAT_CUSTOMER_LOGIN_TS table should contain expected data
       | CUSTOMER_PK                      | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE          | EFFECTIVE_FROM | HASHDIFF                                 |
-      | 00000000000000000000000000000000 | <null>                  | <null>      | 1900-01-01 00:00:00.000 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000         |
+      | 00000000000000000000000000000000 | <null>                  | <null>      | 1900-01-01 00:00:00.000 | AUTOMATE_DV_SYSTEM | 1900-01-01     | 00000000000000000000000000000000         |
       | md5('1001')                      | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-02 00:00:00.000 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01 00:00:00.000') |
       | md5('1001')                      | 2018-06-02 00:00:00.000 | Laptop      | 2018-06-02 00:00:00.000 | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02 00:00:00.000') |
       | md5('1001')                      | 2018-06-03 00:00:00.000 | Phone       | 2018-06-04 00:00:00.000 | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03 00:00:00.000')  |
@@ -859,7 +859,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     When I load the vault
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01    | *               |
       | md5('1002')                      | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01    | *               |
       | md5('1002')                      | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05    | *               |
@@ -868,7 +868,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05    | *               |
     Then the SAT_CUSTOMER_LOGIN_TS table should contain expected data
       | CUSTOMER_PK                      | LAST_LOGIN_DATE     | DEVICE_USED | LOAD_DATETIME       | SOURCE          | EFFECTIVE_FROM | HASHDIFF                             |
-      | 00000000000000000000000000000000 | <null>              | <null>      | 1900-01-01 00:00:00 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000     |
+      | 00000000000000000000000000000000 | <null>              | <null>      | 1900-01-01 00:00:00 | AUTOMATE_DV_SYSTEM | 1900-01-01     | 00000000000000000000000000000000     |
       | md5('1001')                      | 2018-06-01 00:00:00 | Tablet      | 2018-06-02 00:00:00 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01 00:00:00') |
       | md5('1001')                      | 2018-06-02 00:00:00 | Laptop      | 2018-06-02 00:00:00 | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02 00:00:00') |
       | md5('1001')                      | 2018-06-03 00:00:00 | Phone       | 2018-06-04 00:00:00 | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03 00:00:00')  |
@@ -944,7 +944,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     When I load the vault
     Then the SAT_CUSTOMER_DETAILS_TS table should contain expected data
       | CUSTOMER_PK                      | CUSTOMER_NAME | CUSTOMER_ADDRESS          | CUSTOMER_DOB | HASHDIFF                                               | EFFECTIVE_FROM | LOAD_DATETIME | SOURCE          |
-      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | DBTVAULT_SYSTEM |
+      | 00000000000000000000000000000000 | <null>        | <null>                    | <null>       | 00000000000000000000000000000000                       | 1900-01-01     | 1900-01-01    | AUTOMATE_DV_SYSTEM |
       | md5('1001')                      | Alice         | 1 Forrest road Hampshire  | 1997-04-24   | md5('1 FORREST ROAD HAMPSHIRE\|\|1997-04-24\|\|ALICE') | 2018-06-01     | 2018-06-01    | *               |
       | md5('1002')                      | Bob           | 2 Forrest road Hampshire  | 2006-04-17   | md5('2 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')   | 2018-06-01     | 2018-06-01    | *               |
       | md5('1002')                      | Bob           | 22 Forrest road Hampshire | 2006-04-17   | md5('22 FORREST ROAD HAMPSHIRE\|\|2006-04-17\|\|BOB')  | 2018-06-05     | 2018-06-05    | *               |
@@ -953,7 +953,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003')                      | Chaz          | 3 Forrest road Hampshire  | 1988-02-11   | md5('3 FORREST ROAD HAMPSHIRE\|\|1988-02-11\|\|CHAZ')  | 2018-06-05     | 2018-06-05    | *               |
     Then the SAT_CUSTOMER_LOGIN_TS table should contain expected data
       | CUSTOMER_PK                      | LAST_LOGIN_DATE         | DEVICE_USED | LOAD_DATETIME           | SOURCE          | EFFECTIVE_FROM | HASHDIFF                                     |
-      | 00000000000000000000000000000000 | <null>                  | <null>      | 1900-01-01 00:00:00.000 | DBTVAULT_SYSTEM | 1900-01-01     | 00000000000000000000000000000000             |
+      | 00000000000000000000000000000000 | <null>                  | <null>      | 1900-01-01 00:00:00.000 | AUTOMATE_DV_SYSTEM | 1900-01-01     | 00000000000000000000000000000000             |
       | md5('1001')                      | 2018-06-01 00:00:00.000 | Tablet      | 2018-06-02 00:00:00.000 | *               | 2018-06-02     | md5('TABLET\|\|2018-06-01 00:00:00.0000000') |
       | md5('1001')                      | 2018-06-02 00:00:00.000 | Laptop      | 2018-06-02 00:00:00.000 | *               | 2018-06-02     | md5('LAPTOP\|\|2018-06-02 00:00:00.0000000') |
       | md5('1001')                      | 2018-06-03 00:00:00.000 | Phone       | 2018-06-04 00:00:00.000 | *               | 2018-06-04     | md5('PHONE\|\|2018-06-03 00:00:00.0000000')  |
@@ -998,7 +998,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       |              | SAT_CUSTOMER_PROFILE |              |
     And the RAW_STAGE_DETAILS table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>        | <null>                   | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | Alice         | 1 Forrest road Hampshire | 1997-04-24   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 2 Forrest road Hampshire | 2006-04-17   | 2018-06-01 00:00:00.000000 | *               |
       | 1002        | Bob           | 3 Forrest road Hampshire | 2006-04-17   | 2018-12-01 00:00:00.000000 | *               |
@@ -1006,7 +1006,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_DETAILS data
     And the RAW_STAGE_LOGIN table contains data
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>                     | <null>      | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | 2019-01-01 02:00:00.000000 | Phone       | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | 2019-01-02 03:00:00.000000 | Phone       | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | 2019-01-03 01:00:00.000000 | Laptop      | 2019-01-04 00:00:00.000000 | *               |
@@ -1016,7 +1016,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     And I stage the STG_CUSTOMER_LOGIN data
     And the RAW_STAGE_PROFILE table contains data
       | CUSTOMER_ID | DASHBOARD_COLOUR | DISPLAY_NAME | LOAD_DATE                  | SOURCE          |
-      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | DBTVAULT_SYSTEM |
+      | <null>      | <null>           | <null>       | 1900-01-01 00:00:00.000000 | AUTOMATE_DV_SYSTEM |
       | 1001        | red              | ab12         | 2019-01-02 00:00:00.000000 | *               |
       | 1001        | blue             | ab12         | 2019-01-03 00:00:00.000000 | *               |
       | 1001        | brown            | ab12         | 2019-01-04 00:00:00.000000 | *               |
