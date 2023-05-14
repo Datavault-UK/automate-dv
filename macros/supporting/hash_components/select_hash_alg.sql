@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro select_hash_alg(hash) -%}
@@ -12,11 +12,11 @@
     {%- endif -%}
 
     {%- if hash | lower == 'md5' -%}
-        {%- do return(dbtvault.hash_alg_md5()) -%}
+        {%- do return(automate_dv.hash_alg_md5()) -%}
     {%- elif hash | lower == 'sha' -%}
-        {%- do return(dbtvault.hash_alg_sha256()) -%}
+        {%- do return(automate_dv.hash_alg_sha256()) -%}
     {%- else -%}
-        {%- do return(dbtvault.hash_alg_md5()) -%}
+        {%- do return(automate_dv.hash_alg_md5()) -%}
     {%- endif -%}
 
 {%- endmacro %}
@@ -25,37 +25,37 @@
 
 {%- macro hash_alg_md5() -%}
 
-    {{- adapter.dispatch('hash_alg_md5', 'dbtvault')() -}}
+    {{- adapter.dispatch('hash_alg_md5', 'automate_dv')() -}}
 
 {%- endmacro %}
 
 {% macro default__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('MD5_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
+    {% do return(automate_dv.cast_binary('MD5_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro bigquery__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(TO_HEX(MD5([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {% do return(automate_dv.cast_binary('UPPER(TO_HEX(MD5([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
 
 {% endmacro %}
 
 {% macro sqlserver__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary("HASHBYTES('MD5', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
+    {% do return(automate_dv.cast_binary("HASHBYTES('MD5', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
 {% macro postgres__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
+    {% do return(automate_dv.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
 
 {% macro databricks__hash_alg_md5() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
+    {% do return(automate_dv.cast_binary('UPPER(MD5([HASH_STRING_PLACEHOLDER]))', quote=false)) %}
 
 {% endmacro %}
 
@@ -65,25 +65,25 @@
 
 {%- macro hash_alg_sha256() -%}
 
-    {{- adapter.dispatch('hash_alg_sha256', 'dbtvault')() -}}
+    {{- adapter.dispatch('hash_alg_sha256', 'automate_dv')() -}}
 
 {%- endmacro %}
 
 {% macro default__hash_alg_sha256() -%}
 
-    {% do return(dbtvault.cast_binary('SHA2_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
+    {% do return(automate_dv.cast_binary('SHA2_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
 {% macro bigquery__hash_alg_sha256() -%}
 
-    {% do return(dbtvault.cast_binary('UPPER(TO_HEX(SHA256([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+    {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA256([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
 
 {% endmacro %}
 
 {% macro sqlserver__hash_alg_sha256() -%}
 
-    {% do return(dbtvault.cast_binary("HASHBYTES('SHA2_256', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
+    {% do return(automate_dv.cast_binary("HASHBYTES('SHA2_256', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
@@ -93,7 +93,7 @@
     {#- e.g. ENCODE(SHA256(CAST(val AS BYTEA)), 'hex') -#}
     {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
 
-    {% do return(dbtvault.cast_binary("UPPER(ENCODE(SHA256(CAST([HASH_STRING_PLACEHOLDER] AS {})), 'hex'))".format(dbtvault.type_binary()), quote=false))  %}
+    {% do return(automate_dv.cast_binary("UPPER(ENCODE(SHA256(CAST([HASH_STRING_PLACEHOLDER] AS {})), 'hex'))".format(automate_dv.type_binary()), quote=false))  %}
 
 {% endmacro %}
 

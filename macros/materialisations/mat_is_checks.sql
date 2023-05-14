@@ -1,10 +1,10 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro is_any_incremental() -%}
-    {%- if dbtvault.is_vault_insert_by_period() or dbtvault.is_vault_insert_by_rank() or dbtvault.is_pit_incremental() or dbtvault.is_bridge_incremental() or is_incremental() -%}
+    {%- if automate_dv.is_vault_insert_by_period() or automate_dv.is_vault_insert_by_rank() or automate_dv.is_pit_incremental() or automate_dv.is_bridge_incremental() or is_incremental() -%}
         {%- do return(true) -%}
     {%- else -%}
         {%- do return(false) -%}

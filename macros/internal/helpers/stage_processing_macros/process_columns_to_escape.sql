@@ -1,14 +1,16 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
+
+AutomateDV (f.k.a automate_dv)
 
 {%- macro process_columns_to_escape(derived_columns_list=none) -%}
 
     {%- if derived_columns_list -%}
 
         {%- set ns = namespace(columns_to_escape=[]) -%}
-        {%- set escape_char_left, escape_char_right = dbtvault.get_escape_characters() -%}
+        {%- set escape_char_left, escape_char_right = automate_dv.get_escape_characters() -%}
         {%- set quote_pattern = '\{}([a-zA-Z\s]+)\{}'.format(escape_char_left, escape_char_right) -%}
         {%- set re = modules.re -%}
 
@@ -16,7 +18,7 @@
 
             {%- if col_def is mapping -%}
                 {%- if col_def['escape'] == true -%}
-                    {%- if dbtvault.is_list(col_def['source_column']) -%}
+                    {%- if automate_dv.is_list(col_def['source_column']) -%}
                         {%- set ns.columns_to_escape = ns.columns_to_escape + col_def['source_column'] -%}
                     {%- else -%}
                         {%- set ns.columns_to_escape = ns.columns_to_escape + [col_def['source_column']] -%}

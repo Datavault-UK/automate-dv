@@ -13,7 +13,7 @@ A clear and concise description of what the bug is.
 **Environment**
 
 dbt version: 
-dbtvault version: 
+automate_dv version: 
 Database/Platform:  
 
 **To Reproduce**

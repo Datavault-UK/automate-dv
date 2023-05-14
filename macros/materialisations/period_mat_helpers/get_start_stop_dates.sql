@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
@@ -28,7 +28,7 @@
             FROM stage
         {% endset %}
 
-        {% set min_max_dict = dbtvault.get_query_results_as_dict(query_sql) %}
+        {% set min_max_dict = automate_dv.get_query_results_as_dict(query_sql) %}
 
         {% set start_date = min_max_dict['MIN'][0] | string %}
         {% set stop_date = min_max_dict['MAX'][0] | string %}

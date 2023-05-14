@@ -1,14 +1,14 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro replace_placeholder_with_rank_filter(core_sql, rank_column, rank_iteration) -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_rank_filter',
-                                    'dbtvault')(core_sql=core_sql,
-                                                rank_column=rank_column,
-                                                rank_iteration=rank_iteration) %}
+                                    'automate_dv')(core_sql=core_sql,
+                                                  rank_column=rank_column,
+                                                  rank_iteration=rank_iteration) %}
     {% do return(macro) %}
 {%- endmacro %}
 

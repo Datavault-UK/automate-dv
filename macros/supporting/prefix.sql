@@ -1,11 +1,11 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro prefix(columns, prefix_str, alias_target) -%}
 
-    {{- adapter.dispatch('prefix', 'dbtvault')(columns=columns,
+    {{- adapter.dispatch('prefix', 'automate_dv')(columns=columns,
                                                prefix_str=prefix_str,
                                                alias_target=alias_target) -}}
 
@@ -25,19 +25,19 @@
 
                     {%- if alias_target == 'source' -%}
 
-                        {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+                        {{- automate_dv.prefix([col['source_column']], prefix_str) -}}
 
                         {%- do processed_columns.append(col['source_column']) -%}
 
                     {%- elif alias_target == 'target' -%}
 
-                        {{- dbtvault.prefix([col['alias']], prefix_str) -}}
+                        {{- automate_dv.prefix([col['alias']], prefix_str) -}}
 
                          {%- do processed_columns.append(col['alias']) -%}
 
                     {%- else -%}
 
-                        {{- dbtvault.prefix([col['source_column']], prefix_str) -}}
+                        {{- automate_dv.prefix([col['source_column']], prefix_str) -}}
 
                         {%- do processed_columns.append(col['source_column']) -%}
 
@@ -49,7 +49,7 @@
 
                     {%- if col is iterable and col is not string -%}
 
-                        {{- dbtvault.prefix(col, prefix_str) -}}
+                        {{- automate_dv.prefix(col, prefix_str) -}}
 
                         {%- do processed_columns.append(col) -%}
 
