@@ -40,7 +40,7 @@ Learn quickly with our worked example:
 
 ## Installation
 
-Check [dbt Hub](https://hub.getdbt.com/datavault-uk/dbtvault/latest/) for the latest installation instructions, 
+Check [dbt Hub](https://hub.getdbt.com/datavault-uk/automate_dv/latest/) for the latest installation instructions, 
 or [read the docs](https://docs.getdbt.com/docs/building-a-dbt-project/package-management/) for more information on installing packages.
 
 ## Usage
