@@ -74,6 +74,8 @@ Talk to our developers and other members of our growing community, get support a
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/showcase/dbtvault/)
 
+[![Youtube](https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/@dbtvault1521)
+
 ## Awards
 
 <p align="left">
