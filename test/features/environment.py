@@ -164,14 +164,14 @@ fixtures_registry = {
         {"snowflake": fixtures_ma_sat.multi_active_satellite_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_ma_sat.multi_active_satellite_databricks,
          "postgres": fixtures_ma_sat.multi_active_satellite_postgres},
 
     "fixture.multi_active_satellite_cycle":
         {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_cycle_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_ma_sat.multi_active_satellite_cycle_databricks,
          "postgres": fixtures_ma_sat.multi_active_satellite_cycle_postgres},
 
     "fixture.xts":

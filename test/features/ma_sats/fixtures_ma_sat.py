@@ -1838,3 +1838,316 @@ def multi_active_satellite_cycle_postgres(context):
             }
         }
     }
+
+# Databricks
+
+@fixture
+def multi_active_satellite_databricks(context):
+    """
+    Define the structures and metadata to load multi active satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_HASHDIFF": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
+
+
+@fixture
+def multi_active_satellite_cycle_databricks(context):
+    """
+    Define the structures and metadata to perform load cycles for multi active satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
