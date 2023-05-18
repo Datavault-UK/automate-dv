@@ -51,7 +51,7 @@ latest_records AS (
                     ORDER BY b.{{ src_ldts }} DESC
                ) AS row_num
         FROM {{ this }} AS b
-    ) AS inner
+    ) AS {%- if target.type != 'databricks' %} inner {%- endif %}
     WHERE row_num = 1
 ),
 
