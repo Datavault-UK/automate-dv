@@ -178,7 +178,7 @@ fixtures_registry = {
         {"snowflake": fixtures_xts.xts_snowflake,
          "bigquery": fixtures_xts.xts_bigquery,
          "sqlserver": fixtures_xts.xts_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_xts.xts_databricks,
          "postgres": fixtures_xts.xts_postgres},
 
     "fixture.pit":
