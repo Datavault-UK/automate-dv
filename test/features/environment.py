@@ -185,21 +185,21 @@ fixtures_registry = {
         {"snowflake": fixtures_pit.pit_snowflake,
          "bigquery": fixtures_pit.pit_bigquery,
          "sqlserver": fixtures_pit.pit_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_pit.pit_databricks,
          "postgres": fixtures_pit.pit_postgres},
 
     "fixture.pit_one_sat":
         {"snowflake": fixtures_pit.pit_one_sat_snowflake,
          "bigquery": fixtures_pit.pit_one_sat_bigquery,
          "sqlserver": fixtures_pit.pit_one_sat_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_pit.pit_one_sat_databricks,
          "postgres": fixtures_pit.pit_one_sat_postgres},
 
     "fixture.pit_two_sats":
         {"snowflake": fixtures_pit.pit_two_sats_snowflake,
          "bigquery": fixtures_pit.pit_two_sats_bigquery,
          "sqlserver": fixtures_pit.pit_two_sats_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_pit.pit_two_sats_databricks,
          "postgres": fixtures_pit.pit_two_sats_postgres},
 
     "fixture.bridge":

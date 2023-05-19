@@ -7,13 +7,10 @@
     {%- set dest_columns = adapter.get_columns_in_relation(target_relation) -%}
     {%- set dest_cols_csv = dest_columns | map(attribute='quoted') | join(', ') -%}
 
-    TRUNCATE TABLE {{ target_relation }};
-
-    INSERT INTO {{ target_relation }} ({{ dest_cols_csv }})
-    (
+    INSERT OVERWRITE {{ target_relation }} ({{ dest_cols_csv }})
        SELECT {{ dest_cols_csv }}
-       FROM {{ tmp_relation }}
-    );
+       FROM {{ tmp_relation }};
+
 {%- endmacro %}
 
 
