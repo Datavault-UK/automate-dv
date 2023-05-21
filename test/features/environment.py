@@ -213,14 +213,14 @@ fixtures_registry = {
         {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_cycle.cycle_databricks,
          "postgres": fixtures_cycle.cycle_postgres},
 
     "fixture.cycle_custom_null_key":
         {"snowflake": fixtures_cycle.cycle_custom_null_key_snowflake,
          "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_cycle.cycle_custom_null_key_databricks,
          "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
 
 
