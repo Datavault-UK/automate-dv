@@ -206,7 +206,7 @@ fixtures_registry = {
         {"snowflake": fixtures_bridge.bridge_snowflake,
          "bigquery": fixtures_bridge.bridge_bigquery,
          "sqlserver": fixtures_bridge.bridge_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_bridge.bridge_databricks,
          "postgres": fixtures_bridge.bridge_postgres},
 
     "fixture.cycle":
