@@ -5,7 +5,7 @@
 
 {%- macro databricks__bridge(src_pk, src_extra_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
-    {{ automate_dv.bridge(src_pk=src_pk,
+    {{ automate_dv.default__bridge(src_pk=src_pk,
                           src_extra_columns=src_extra_columns,
                           src_ldts=src_ldts,
                           as_of_dates_table=as_of_dates_table,
