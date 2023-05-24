@@ -23,8 +23,16 @@
 {%- endfor -%}
 
 {%- for compare_col in compare_columns | sort -%}
-    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
-    {%- do columns_processed.append(compare_col) -%}
+    {%- if compare_col|string not in bytea_columns -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+        {%- do columns_processed.append(compare_col) -%}
+    {%- elif compare_col|string in bytea_columns -%}
+        {%- do compare_columns_processed.append("{} AS {}".format(compare_col, compare_col)) -%}
+        {%- do columns_processed.append(compare_col) -%}
+    {%- else -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+        {%- do columns_processed.append(compare_col) -%}
+    {%- endif -%}
 {%- endfor %}
 
 {%- set source_column_names = [] -%}
@@ -38,7 +46,7 @@
         {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col, source_col)) -%}
     {%- elif source_col|string in bytea_columns -%}
         {%- do source_columns_list.append(source_col) -%}
-        {%- do source_columns_processed.append("(UPPER(ENCODE({}, 'hex'))::BYTEA)::VARCHAR AS {}".format(source_col, source_col)) -%}
+        {%- do source_columns_processed.append("{} AS {}".format(source_col, source_col)) -%}
     {%- else -%}
         {%- do source_columns_list.append(source_col) -%}
         {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col, source_col)) -%}
