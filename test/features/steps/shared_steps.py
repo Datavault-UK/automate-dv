@@ -1,4 +1,5 @@
 import copy
+import os
 
 from behave import *
 from behave.model import Table, Row
@@ -272,6 +273,18 @@ def load_populated_table(context, model_name, vault_structure):
 
         assert "Completed successfully" in seed_logs
         assert "Completed successfully" in logs
+
+    elif env_utils.platform() == "postgres":
+
+        context.target_model_name = model_name
+
+        context_utils.context_table_to_database_table(table=context.table)
+
+        logs = dbt_runner.run_dbt_operation(macro=hash_database_table,
+                                            args={"model_name": context.target_model_name,
+                                                  "table_name": 'raw_stage_seed_unhashed',
+                                                  "columns_to_hash": context.hash_columns,
+                                                  "payload_columns": context.payload_columns})
 
     else:
 

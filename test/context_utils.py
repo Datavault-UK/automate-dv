@@ -6,9 +6,11 @@ import pandas as pd
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from sqlalchemy import create_engine
 
 import test
 from env import env_utils
+from test import dbt_runner
 
 
 def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
@@ -30,6 +32,31 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
         table_df = table_df.replace("<null>", NaN)
 
     return table_df
+
+def context_table_to_database_table(table: Table, use_nan=True) -> pd.DataFrame:
+    """
+    Converts a context table in a feature file into a pandas DataFrame
+        :param table: The context.table from a scenario
+        :param use_nan: Replace <null> placeholder with NaN
+        :return: DataFrame representation of the provided context table
+    """
+
+    engine = create_engine('postgresql://dbtvault_user:password@localhost:8100/dbtvault_db')
+
+    table_df = pd.DataFrame(columns=table.headings, data=table.rows)
+
+    table_df = table_df.apply(parse_escapes)
+    table_df = table_df.apply(parse_lists)
+
+    if use_nan:
+        table_df = table_df.replace("<null>", NaN)
+
+    table_df.to_sql(name='raw_stage_seed_unhashed', con=engine, schema="DEVELOPMENT_DBTVAULT_USER", if_exists='replace')
+
+    logs = dbt_runner.run_dbt_operation(macro_name='check_table_exists',
+                                        args={"model_name": "raw_stage_seed_unhashed"})
+
+    assert f"Table 'raw_stage_seed_unhashed' exists." in logs
 
 
 def context_table_to_csv(table: Table, model_name: str) -> str:

@@ -55,45 +55,6 @@
 
 {%- endmacro -%}
 
-{%- macro snowflake__get_hash_length(columns, schema_name, table_name, automate_dv) -%}
-
-    {%- set hash_alg = var('hash', 'MD5') -%}
-
-    {%- if not automate_dv -%}
-        {%- if hash_alg == 'MD5' -%}
-            {%- set hash -%}
-                MD5_BINARY({{ columns }})
-            {%- endset -%}
-        {%- elif hash_alg == 'SHA' -%}
-            {%- set hash -%}
-                SHA256('{{ columns }}')
-            {%- endset -%}
-        {%- else -%}
-            {%- set hash -%}
-                MD5_BINARY({{ columns }})
-            {%- endset -%}
-        {%- endif -%}
-    {%- elif automate_dv -%}
-        {%- set hash -%}
-            {{- dbtvault.hash(columns=columns, alias='HK', is_hashdiff=false, columns_to_escape=columns) -}}
-        {%- endset -%}
-    {%- endif -%}
-
-    WITH CTE AS (
-        SELECT
-            {{ hash }} AS HK,
-            {{ columns }}
-        FROM {{ schema_name }}.{{ table_name }}
-    )
-
-    SELECT
-        {{ columns }}
-        , LENGTH(HK)
-    FROM CTE
-
-{%- endmacro -%}
-
-
 {%- macro postgres__get_hash_length(columns, schema_name, table_name, automate_dv) -%}
 
     {%- set hash_alg = var('hash', 'MD5') -%}
