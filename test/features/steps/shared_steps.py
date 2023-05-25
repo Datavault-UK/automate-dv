@@ -279,7 +279,9 @@ def load_populated_table(context, model_name, vault_structure):
         context.target_model_name = model_name
         model_name_unhashed = f"{model_name}_unhashed"
 
-        context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
+        hashed_columns = context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
+
+        print(hashed_columns)
 
         columns = context.table.headings
         context.hash_columns = columns[0:1]

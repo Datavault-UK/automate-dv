@@ -53,8 +53,21 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
 
     table_df.to_sql(name=model_name, con=engine, schema="DEVELOPMENT_DBTVAULT_USER", if_exists='replace')
 
+    sql = f"SELECT column_name " \
+          f"from information_schema.columns " \
+          f"where table_name = \'{model_name}\' " \
+          f"and (column_name like \'%_PK\' " \
+          f"or column_name like \'%_FK\' " \
+          f"or column_name like \'%_NK\' " \
+          f"or column_name like \'%HASHDIFF%\')"
+
+    hash_columns = pd.read_sql(sql, con=engine)
+
     dbt_runner.run_dbt_operation(macro_name='check_table_exists',
-                                args={"model_name": model_name})
+                                 args={"model_name": model_name})
+
+    return hash_columns
+
 
 def context_table_to_csv(table: Table, model_name: str) -> str:
     """
