@@ -166,7 +166,7 @@ final as (
         end as {{ cols }},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
-        {{ cols }}
+        NULLIF({{ cols }}, '') AS {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
     FROM hashing_string
