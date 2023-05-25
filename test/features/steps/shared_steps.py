@@ -293,7 +293,13 @@ def load_populated_table(context, model_name, vault_structure):
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 
-        logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
+        context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
+
+        args = {"enable_ghost_records": context.enable_ghost_records}
+
+        args = {vkey: vdata for vkey, vdata in args.items() if vdata}
+
+        logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
 
         assert "Completed successfully" in logs
 
@@ -623,14 +629,18 @@ def expect_data(context, model_name):
             if col not in hashed_columns:
                 payload_columns.append(col)
 
-        print(payload_columns)
-
         sql = f"{{{{- dbtvault_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
                   f"{hashed_columns}, {payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(model_name_expected, sql)
 
-        dbt_runner.run_dbt_models(mode="run", model_names=[model_name_expected])
+        context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
+
+        args = {"enable_ghost_records": context.enable_ghost_records}
+
+        args = {vkey: vdata for vkey, vdata in args.items() if vdata}
+
+        dbt_runner.run_dbt_models(mode="run", model_names=[model_name_expected], args=args)
 
         test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                      expected_output_csv=model_name_expected,

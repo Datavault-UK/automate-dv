@@ -94,6 +94,8 @@
 
 {% macro hash_database_table(model_name, unhashed_table_name, hashed_columns, payload_columns) -%}
 
+    {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+
     {%- set hash_cols = [] -%}
     {%- set payload_cols = [] -%}
 
@@ -140,7 +142,7 @@ hashing_string as (
         CASE
             WHEN end_position_{{ cols }} > 0
             THEN SUBSTRING({{ cols }} from start_position_{{ cols }} for end_position_{{ cols }}-start_position_{{ cols }})
-            ELSE  {{ cols }}
+        {%- if enable_ghost_record %} ELSE {{ cols }} {%- endif %}
         END as {{ cols}},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
@@ -160,7 +162,7 @@ final as (
             when
                 lower(hash_alg_{{ cols }}) = 'sha'
                 then SHA256(CAST({{ cols }} AS BYTEA))
-            else CAST({{ cols }} AS BYTEA)
+            {%- if enable_ghost_record %} else CAST({{ cols }} AS BYTEA) {%- endif %}
         end as {{ cols }},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
