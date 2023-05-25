@@ -23,10 +23,10 @@
 {%- endfor -%}
 
 {%- for compare_col in compare_columns | sort -%}
-    {%- if compare_col|string not in bytea_columns -%}
+    {%- if compare_col|string|lower not in bytea_columns -%}
         {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
         {%- do columns_processed.append(compare_col) -%}
-    {%- elif compare_col|string in bytea_columns -%}
+    {%- elif compare_col|string|lower in bytea_columns -%}
         {%- do compare_columns_processed.append("{} AS {}".format(compare_col, compare_col)) -%}
         {%- do columns_processed.append(compare_col) -%}
     {%- else -%}

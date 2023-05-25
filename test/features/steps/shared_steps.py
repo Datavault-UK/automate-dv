@@ -277,20 +277,22 @@ def load_populated_table(context, model_name, vault_structure):
     elif env_utils.platform() == "postgres":
 
         context.target_model_name = model_name
+        model_name_unhashed = f"{model_name}_unhashed"
 
-        context_utils.context_table_to_database_table(table=context.table)
+        context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
 
         columns = context.table.headings
         context.hash_columns = columns[0:1]
         context.payload_columns = columns[1:]
 
-        sql = f"{{{{- dbtvault_test.hash_database_table({context.target_model_name}, 'raw_stage_seed_unhashed', " \
+        sql = f"{{{{- dbtvault_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
                   f"{context.hash_columns}, {context.payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 
-        logs = dbt_runner.run_dbt_models(mode="run", model_names=[context.target_model_name])
+        logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
 
+        assert "Completed successfully" in logs
 
     else:
 
@@ -606,21 +608,24 @@ def expect_data(context, model_name):
 
     elif env_utils.platform() == "postgres":
 
-        context.expected_model_name = "{}_expected".format(model_name)
+        model_name_unhashed = f"{model_name}_expected_unhashed"
+        model_name_expected = f"{model_name}_expected"
+
+        context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
 
         columns = context.table.headings
         context.hash_columns = columns[0:1]
         context.payload_columns = columns[1:]
 
-        sql = f"{{{{- dbtvault_test.hash_database_table({model_name}, {context.expected_model_name}, " \
+        sql = f"{{{{- dbtvault_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
                   f"{context.hash_columns}, {context.payload_columns}) -}}}}"
 
-        dbt_file_utils.generate_model(context.expected_model_name, sql)
+        dbt_file_utils.generate_model(model_name_expected, sql)
 
-        logs = dbt_runner.run_dbt_models(mode="run", model_names=[context.expected_model_name])
+        dbt_runner.run_dbt_models(mode="run", model_names=[model_name_expected])
 
         test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
-                                                                     expected_output_csv=context.expected_model_name,
+                                                                     expected_output_csv=model_name_expected,
                                                                      unique_id=columns[0],
                                                                      columns_to_compare=columns)
 

@@ -33,7 +33,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
 
     return table_df
 
-def context_table_to_database_table(table: Table, use_nan=True) -> pd.DataFrame:
+def context_table_to_database_table(table: Table, model_name, use_nan=True) -> pd.DataFrame:
     """
     Converts a context table in a feature file into a pandas DataFrame
         :param table: The context.table from a scenario
@@ -51,13 +51,10 @@ def context_table_to_database_table(table: Table, use_nan=True) -> pd.DataFrame:
     if use_nan:
         table_df = table_df.replace("<null>", NaN)
 
-    table_df.to_sql(name='raw_stage_seed_unhashed', con=engine, schema="DEVELOPMENT_DBTVAULT_USER", if_exists='replace')
+    table_df.to_sql(name=model_name, con=engine, schema="DEVELOPMENT_DBTVAULT_USER", if_exists='replace')
 
-    logs = dbt_runner.run_dbt_operation(macro_name='check_table_exists',
-                                        args={"model_name": "raw_stage_seed_unhashed"})
-
-    assert f"Table 'raw_stage_seed_unhashed' exists." in logs
-
+    dbt_runner.run_dbt_operation(macro_name='check_table_exists',
+                                args={"model_name": model_name})
 
 def context_table_to_csv(table: Table, model_name: str) -> str:
     """

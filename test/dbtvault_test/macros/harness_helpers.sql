@@ -92,7 +92,7 @@
 {%- endmacro -%}
 
 
-{% macro hash_database_table(model_name, table_name, hashed_columns, payload_columns) -%}
+{% macro hash_database_table(model_name, unhashed_table_name, hashed_columns, payload_columns) -%}
 
     {%- set hash_cols = [] -%}
     {%- set payload_cols = [] -%}
@@ -116,7 +116,7 @@ WITH core_table AS (
         {{ col }}
             {%- if not loop.last -%},{%- endif -%}
         {%- endfor %}
-    FROM "DEVELOPMENT_DBTVAULT_USER".raw_stage_seed_unhashed
+    FROM "DEVELOPMENT_DBTVAULT_USER"."{{- unhashed_table_name }}"
 ),
 
 positions as (
