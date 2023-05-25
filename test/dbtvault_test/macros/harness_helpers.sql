@@ -127,8 +127,6 @@ positions as (
         {{ cols }},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
-        POSITION('(' in {{ cols }}) + 2 as start_position_{{ cols }},
-        POSITION(')' in {{ cols }}) - 1 AS end_position_{{ cols }},
         {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
@@ -142,8 +140,7 @@ hashing_string as (
         SUBSTRING({{ cols }} from start_position_{{ cols }} for end_position_{{ cols }}-start_position_{{ cols }}) as {{ cols}},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
-        SUBSTRING({{ cols }} from 1 for 3) as hash_alg_{{ cols }},
-        SUBSTRING({{ cols }} from start_position_{{ cols }} for end_position_{{ cols }}-start_position_{{ cols }}) as {{ cols}}
+        {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
     FROM positions
@@ -159,19 +156,10 @@ final as (
             when
                 lower(hash_alg_{{ cols }}) = 'sha'
                 then SHA256(CAST({{ cols }} AS BYTEA))
-            else {{ cols }}
         end as {{ cols }},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
-        case
-            when
-                lower(hash_alg_{{ cols }}) = 'md5'
-                then DECODE(MD5({{ cols }}), 'hex')
-            when
-                lower(hash_alg_{{ cols }}) = 'sha'
-                then SHA256(CAST({{ cols }} AS BYTEA))
-            else {{ cols }}
-        end as {{ cols }}
+        {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
     FROM hashing_string

@@ -279,16 +279,19 @@ def load_populated_table(context, model_name, vault_structure):
         context.target_model_name = model_name
         model_name_unhashed = f"{model_name}_unhashed"
 
-        hashed_columns = context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
+        hashed_columns = context_utils.context_table_to_database_table(table=context.table,
+                                                                       model_name=model_name_unhashed)
 
-        print(hashed_columns)
-
+        payload_columns = []
         columns = context.table.headings
-        context.hash_columns = columns[0:1]
-        context.payload_columns = columns[1:]
+        for col in columns:
+            if col not in hashed_columns:
+                payload_columns.append(col)
+
+        print(payload_columns)
 
         sql = f"{{{{- dbtvault_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
-                  f"{context.hash_columns}, {context.payload_columns}) -}}}}"
+                  f"{hashed_columns}, {context.payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 
@@ -613,14 +616,19 @@ def expect_data(context, model_name):
         model_name_unhashed = f"{model_name}_expected_unhashed"
         model_name_expected = f"{model_name}_expected"
 
-        context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
+        hashed_columns=context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
 
         columns = context.table.headings
-        context.hash_columns = columns[0:1]
-        context.payload_columns = columns[1:]
+        payload_columns = []
+        columns = context.table.headings
+        for col in columns:
+            if col not in hashed_columns:
+                payload_columns.append(col)
+
+        print(payload_columns)
 
         sql = f"{{{{- dbtvault_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
-                  f"{context.hash_columns}, {context.payload_columns}) -}}}}"
+                  f"{hashed_columns}, {payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(model_name_expected, sql)
 

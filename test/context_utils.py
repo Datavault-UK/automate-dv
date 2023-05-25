@@ -33,6 +33,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
 
     return table_df
 
+
 def context_table_to_database_table(table: Table, model_name, use_nan=True) -> pd.DataFrame:
     """
     Converts a context table in a feature file into a pandas DataFrame
@@ -53,15 +54,16 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
 
     table_df.to_sql(name=model_name, con=engine, schema="DEVELOPMENT_DBTVAULT_USER", if_exists='replace')
 
-    sql = f"SELECT column_name " \
-          f"from information_schema.columns " \
-          f"where table_name = \'{model_name}\' " \
-          f"and (column_name like \'%_PK\' " \
-          f"or column_name like \'%_FK\' " \
-          f"or column_name like \'%_NK\' " \
-          f"or column_name like \'%HASHDIFF%\')"
+    sql = f"SELECT column_name FROM information_schema.columns " \
+          f"WHERE (POSITION('_PK' in column_name) > 0 " \
+          f"OR POSITION('_FK' in column_name) > 0 " \
+          f"OR POSITION('_NK' in column_name) > 0 " \
+          f"OR POSITION('HASHDIFF' in column_name) > 0) " \
+          f"AND table_name = '{model_name}'"
 
-    hash_columns = pd.read_sql(sql, con=engine)
+    hash_columns_df = pd.read_sql(sql, con=engine)
+
+    hash_columns = hash_columns_df['column_name'].values.tolist()
 
     dbt_runner.run_dbt_operation(macro_name='check_table_exists',
                                  args={"model_name": model_name})
