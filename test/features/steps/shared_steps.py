@@ -288,10 +288,8 @@ def load_populated_table(context, model_name, vault_structure):
             if col not in hashed_columns:
                 payload_columns.append(col)
 
-        print(payload_columns)
-
         sql = f"{{{{- dbtvault_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
-                  f"{hashed_columns}, {context.payload_columns}) -}}}}"
+                  f"{hashed_columns}, {payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 

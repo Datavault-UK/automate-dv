@@ -109,7 +109,7 @@
 
 WITH core_table AS (
     SELECT
-        {% for col in hash_cols -%}
+        {%- for col in hash_cols %}
         {{ col }},
         {%- endfor -%}
         {%- for col in payload_cols %}
@@ -121,7 +121,7 @@ WITH core_table AS (
 
 positions as (
     SELECT
-        {% for cols in hashed_columns|map('lower') -%}
+        {%- for cols in hashed_columns|map('lower') %}
         POSITION('(' in {{ cols }}) + 2 as start_position_{{ cols }},
         POSITION(')' in {{ cols }}) - 1 AS end_position_{{ cols }},
         {{ cols }},
@@ -135,9 +135,13 @@ positions as (
 
 hashing_string as (
     SELECT
-        {% for cols in hashed_columns|map('lower') -%}
+        {%- for cols in hashed_columns|map('lower') %}
         SUBSTRING({{ cols }} from 1 for 3) as hash_alg_{{ cols }},
-        SUBSTRING({{ cols }} from start_position_{{ cols }} for end_position_{{ cols }}-start_position_{{ cols }}) as {{ cols}},
+        CASE
+            WHEN end_position_{{ cols }} > 0
+            THEN SUBSTRING({{ cols }} from start_position_{{ cols }} for end_position_{{ cols }}-start_position_{{ cols }})
+            ELSE  {{ cols }}
+        END as {{ cols}},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
         {{ cols }}
@@ -148,7 +152,7 @@ hashing_string as (
 
 final as (
     SELECT
-        {% for cols in hashed_columns|map('lower') -%}
+        {%- for cols in hashed_columns|map('lower') %}
         case
             when
                 lower(hash_alg_{{ cols }}) = 'md5'
@@ -156,6 +160,7 @@ final as (
             when
                 lower(hash_alg_{{ cols }}) = 'sha'
                 then SHA256(CAST({{ cols }} AS BYTEA))
+            else CAST({{ cols }} AS BYTEA)
         end as {{ cols }},
         {%- endfor %}
         {%- for cols in payload_columns|map('lower') %}
