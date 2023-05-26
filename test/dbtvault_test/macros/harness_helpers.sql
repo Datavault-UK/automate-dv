@@ -97,7 +97,10 @@
     {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
     {%- set hash_cols = [] -%}
-    {%- set payload_cols = [] -%}
+    {%- set payload_cols_casting = [] -%}
+    {%- set payload_strings = [] -%}
+    {%- set payload_dates = [] -%}
+    {%- set date_type = ['DATE', 'DATETIME', 'TIMESTAMPTZ'] -%}
 
     {%- for cols in hashed_columns -%}
         {%- set hash_str = dbtvault.escape_column_name(cols) -%}
@@ -105,8 +108,14 @@
     {%- endfor -%}
 
     {%- for cols in payload_columns -%}
-        {%- set payload_str = dbtvault.escape_column_name(cols) -%}
-        {%- do payload_cols.append("{} AS {}".format(payload_str, cols|lower)) -%}
+        {%- set payload_str = dbtvault.escape_column_name(cols[0]) -%}
+        {%- set payload_type = cols[1] -%}
+        {%- do payload_cols_casting.append("{}::{} AS {}".format(payload_str, payload_type, payload_str|lower)) -%}
+        {%- if payload_type is in date_type -%}
+            {%- do payload_dates.append(cols[0]) -%}
+        {%- else -%}
+            {%- do payload_strings.append(cols[0]) -%}
+        {%- endif -%}
     {%- endfor -%}
 
 WITH core_table AS (
@@ -114,7 +123,7 @@ WITH core_table AS (
         {%- for col in hash_cols %}
         {{ col }},
         {%- endfor -%}
-        {%- for col in payload_cols %}
+        {%- for col in payload_cols_casting %}
         {{ col }}
             {%- if not loop.last -%},{%- endif -%}
         {%- endfor %}
@@ -128,7 +137,10 @@ positions as (
         POSITION(')' in {{ cols }}) - 1 AS end_position_{{ cols }},
         {{ cols }},
         {%- endfor %}
-        {%- for cols in payload_columns|map('lower') %}
+        {%- for cols in payload_dates|map('lower') %}
+        {{ cols }},
+        {%- endfor %}
+        {%- for cols in payload_strings|map('lower') %}
         {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
@@ -145,7 +157,10 @@ hashing_string as (
         {%- if enable_ghost_record %} ELSE {{ cols }} {%- endif %}
         END as {{ cols}},
         {%- endfor %}
-        {%- for cols in payload_columns|map('lower') %}
+        {%- for cols in payload_dates|map('lower') %}
+        {{ cols }},
+        {%- endfor %}
+        {%- for cols in payload_strings|map('lower') %}
         {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
@@ -165,7 +180,10 @@ final as (
             {%- if enable_ghost_record %} else CAST({{ cols }} AS BYTEA) {%- endif %}
         end as {{ cols }},
         {%- endfor %}
-        {%- for cols in payload_columns|map('lower') %}
+        {%- for cols in payload_dates|map('lower') %}
+        {{ cols }},
+        {%- endfor %}
+        {%- for cols in payload_strings|map('lower') %}
         NULLIF({{ cols }}, '') AS {{ cols }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}

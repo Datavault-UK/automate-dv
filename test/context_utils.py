@@ -57,7 +57,7 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
     sql = f"SELECT column_name FROM information_schema.columns " \
           f"WHERE (POSITION('_PK' in column_name) > 0 " \
           f"OR POSITION('_FK' in column_name) > 0 " \
-          f"OR POSITION('_NK' in column_name) > 0 " \
+          f"OR POSITION('_HK' in column_name) > 0 " \
           f"OR POSITION('HASHDIFF' in column_name) > 0) " \
           f"AND table_name = '{model_name}'"
 

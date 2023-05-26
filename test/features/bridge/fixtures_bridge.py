@@ -462,7 +462,7 @@ def bridge_snowflake(context):
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BINARY(16)",
                 "CUSTOMER_PK": "BINARY(16)",
-                "ORDER_K": "BINARY(16)",
+                "ORDER_PK": "BINARY(16)",
                 "LOAD_DATETIME": "DATETIME",
                 "SOURCE": "VARCHAR"
             }

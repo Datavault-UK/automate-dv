@@ -620,14 +620,16 @@ def expect_data(context, model_name):
         model_name_unhashed = f"{model_name}_expected_unhashed"
         model_name_expected = f"{model_name}_expected"
 
+        seed_config = context.seed_config[model_name]['column_types']['CUSTOMER_PK']
+
         hashed_columns=context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
 
-        columns = context.table.headings
         payload_columns = []
         columns = context.table.headings
         for col in columns:
             if col not in hashed_columns:
-                payload_columns.append(col)
+                data_type = context.seed_config[model_name]['column_types'][col]
+                payload_columns.append([col, data_type])
 
         sql = f"{{{{- dbtvault_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
                   f"{hashed_columns}, {payload_columns}) -}}}}"
