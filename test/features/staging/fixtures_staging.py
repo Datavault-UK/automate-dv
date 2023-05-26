@@ -745,7 +745,7 @@ def staging_null_columns_postgres(context):
 def hashing_snowflake(context):
     context.seed_config = {
 
-        "SAMPLE_DATA": {
+        "sample_data": {
             "column_types": {
                 "VALUE_STRING": "VARCHAR"
 

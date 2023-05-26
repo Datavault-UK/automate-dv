@@ -792,10 +792,7 @@ def step_impl(context, database_name):
 
 @given("there is data available")
 def step_impl(context):
-    if env_utils.platform() == "postgres":
-        context.sample_table_name = "sample_data"
-    else:
-        context.sample_table_name = "SAMPLE_DATA"
+    context.sample_table_name = "sample_data"
 
     context.input_seed_name = context_helpers.sample_data_to_database(context, context.sample_table_name)
 
@@ -810,7 +807,7 @@ def step_impl(context, dbtvault):
     context.hashing = getattr(context, "hashing", None)
     columns = context.table.headings[0]
     sample_table_name = context.sample_table_name
-    context.sample_schema_name = "DEVELOPMENT_DBTVAULT_USER"
+    context.sample_schema_name = "TEST_JOCELYN_SHANNON"
     sample_schema_name = context.sample_schema_name
     model_name = f'{context.sample_table_name}_model'
 
