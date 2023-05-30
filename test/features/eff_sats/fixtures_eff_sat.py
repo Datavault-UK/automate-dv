@@ -976,6 +976,32 @@ def eff_satellite_postgres(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+
+        "EFF_SAT_AC": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_AC_MULTI": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_extra_columns": [
+                "CUSTOMER_MT_ID",
+                "CUSTOMER_CK"
+            ],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -996,6 +1022,35 @@ def eff_satellite_postgres(context):
                 "CUSTOMER_ORDER_PK": "BYTEA",
                 "CUSTOMER_PK": "BYTEA",
                 "ORDER_PK": "BYTEA",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+
+        "EFF_SAT_AC": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+
+        "EFF_SAT_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_CK": "VARCHAR",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
@@ -1038,10 +1093,10 @@ def eff_satellite_datetime_postgres(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1049,11 +1104,11 @@ def eff_satellite_datetime_postgres(context):
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BYTEA",
                 "CUSTOMER_PK": "BYTEA",
-                "ORDER_PK": "BYTEA)",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "ORDER_PK": "BYTEA",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -1066,66 +1121,30 @@ def eff_satellite_testing_auto_end_dating_postgres(context):
     Define the structures and metadata to load effectivity satellites
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER_ORDER": {
-            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        },
-        "STG_ORDER_CUSTOMER": {
-            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "LINK_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "LINK_ORDER_CUSTOMER": {
-            "source_model": "STG_ORDER_CUSTOMER",
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_fk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_CUSTOMER_ORDER": {
-            "source_model": "STG_CUSTOMER_ORDER",
-            "src_pk": "CUSTOMER_ORDER_PK",
-            "src_dfk": ["CUSTOMER_PK"],
-            "src_sfk": "ORDER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "EFF_SAT_ORDER_CUSTOMER": {
-            "src_pk": "ORDER_CUSTOMER_PK",
-            "src_dfk": ["ORDER_PK"],
-            "src_sfk": "CUSTOMER_PK",
-            "src_start_date": "START_DATE",
-            "src_end_date": "END_DATE",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "START_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "RAW_STAGE_CUSTOMER_ORDER": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1133,10 +1152,11 @@ def eff_satellite_testing_auto_end_dating_postgres(context):
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
                 "ORDER_ID": "VARCHAR",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1145,7 +1165,7 @@ def eff_satellite_testing_auto_end_dating_postgres(context):
                 "CUSTOMER_ORDER_PK": "BYTEA",
                 "CUSTOMER_PK": "BYTEA",
                 "ORDER_PK": "BYTEA",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1154,7 +1174,7 @@ def eff_satellite_testing_auto_end_dating_postgres(context):
                 "ORDER_CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_PK": "BYTEA",
                 "ORDER_PK": "BYTEA",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1163,10 +1183,10 @@ def eff_satellite_testing_auto_end_dating_postgres(context):
                 "CUSTOMER_ORDER_PK": "BYTEA",
                 "CUSTOMER_PK": "BYTEA",
                 "ORDER_PK": "BYTEA",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1175,10 +1195,23 @@ def eff_satellite_testing_auto_end_dating_postgres(context):
                 "ORDER_CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_PK": "BYTEA",
                 "ORDER_PK": "BYTEA",
-                "START_DATE": "DATETIME",
-                "END_DATE": "DATETIME",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_ORDER_CUSTOMER_AC": {
+            "column_types": {
+                "ORDER_CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         }
