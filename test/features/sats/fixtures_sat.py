@@ -898,7 +898,7 @@ def satellite_postgres(context):
                 "CUSTOMER_HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR`"
+                "SOURCE": "VARCHAR"
             }
         },
         "SATELLITE_TS": {

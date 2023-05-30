@@ -621,8 +621,6 @@ def expect_data(context, model_name):
         model_name_unhashed = f"{model_name}_expected_unhashed"
         model_name_expected = f"{model_name}_expected"
 
-        seed_config = context.seed_config[model_name]['column_types']['CUSTOMER_PK']
-
         hashed_columns=context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
 
         payload_columns = []
@@ -807,7 +805,7 @@ def step_impl(context, dbtvault):
     context.hashing = getattr(context, "hashing", None)
     columns = context.table.headings[0]
     sample_table_name = context.sample_table_name
-    context.sample_schema_name = "TEST_JOCELYN_SHANNON"
+    context.sample_schema_name = "DEVELOPMENT_DBTVAULT_USER"
     sample_schema_name = context.sample_schema_name
     model_name = f'{context.sample_table_name}_model'
 
