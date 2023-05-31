@@ -4,7 +4,7 @@ Please refer to our contribution guidelines over on our [development repository]
 
 ## We'd love to hear from you
 
-dbtvault is very much a work in progress – we’re constantly adding quality of life improvements and will be adding
+AutomateDV is very much a work in progress – we’re constantly adding quality of life improvements and will be adding
 new table types regularly.
 
 Rest assured we’re working on future releases – [our roadmap contains information on what’s coming](https://dbtvault.readthedocs.io/en/latest/roadmap/).
@@ -23,7 +23,7 @@ We've tested the package rigorously, but if you think you've found a bug please 
 at a minimum (or use the issue templates) so we can fix it as quickly as possible:
 
 - The version of dbt being used
-- The version of dbtvault being used.
+- The version of automate_dv being used.
 - Steps to reproduce the issue
 - Any error messages or dbt log files which can give more detail of the problem
 

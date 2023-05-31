@@ -1,11 +1,11 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro as_constant(column_str=none) -%}
 
-    {{- adapter.dispatch('as_constant', 'dbtvault')(column_str=column_str) -}}
+    {{- adapter.dispatch('as_constant', 'automate_dv')(column_str=column_str) -}}
 
 {%- endmacro %}
 

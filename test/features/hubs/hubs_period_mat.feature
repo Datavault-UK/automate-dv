@@ -108,7 +108,7 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
   Scenario: [HUB-PM-05] Incremental load by period, of stage data into an empty hub with custom database for target
     Given the HUB table does not exist
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -122,11 +122,11 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
     And I stage the STG_CUSTOMER data
     And I insert by period into the HUB hub by day
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And I insert by period into the HUB hub by day
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
@@ -136,11 +136,11 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
     And I stage the STG_CUSTOMER data
     And I insert by period into the HUB hub by day
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And I insert by period into the HUB hub by day
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     Then the HUB table should contain expected data
       | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
@@ -258,11 +258,11 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | 1003        | Chad          | 1993-01-03 | TPCH   |
       | 1004        | Dom           | 1993-01-04 | TPCH   |
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And I stage the STG_CUSTOMER data
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And I insert by period into the HUB hub by day
     And I insert by period into the HUB hub by day
@@ -272,11 +272,11 @@ Feature: [HUB-PM] Hubs Loaded using Period Materialization
       | 1006        | Craig         | 1993-01-06 | TPCH   |
       | 1007        | Amanda        | 1993-01-07 | TPCH   |
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And I stage the STG_CUSTOMER data
       """
-      database: DBTVAULT_TEST
+      database: AUTOMATE_DV_TEST
       """
     And I insert by period into the HUB hub by day
     And I insert by period into the HUB hub by day

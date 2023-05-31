@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% macro timestamp_add(datepart, interval, from_date_or_timestamp) %}
     {{ return(adapter.dispatch('timestamp_add', 'dbtvault')(datepart=datepart, interval=interval,
                                                      from_date_or_timestamp=from_date_or_timestamp)) }}

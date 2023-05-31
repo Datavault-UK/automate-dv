@@ -1,7 +1,9 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
+
+AutomateDV (f.k.a automate_dv)
 
 {%- macro extract_null_column_names(columns_dict=none) -%}
 
@@ -9,8 +11,8 @@
 
     {%- if columns_dict is mapping -%}
         {%- for key, value in columns_dict.items() -%}
-            {%- if dbtvault.is_something(value) -%}
-                {% if dbtvault.is_list(value) %}
+            {%- if automate_dv.is_something(value) -%}
+                {% if automate_dv.is_list(value) %}
                     {% for col_name in value %}
                         {%- do extracted_column_names.append(col_name) -%}
                         {%- do extracted_column_names.append(col_name ~ "_ORIGINAL") -%}

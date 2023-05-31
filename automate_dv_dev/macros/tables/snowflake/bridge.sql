@@ -1,22 +1,22 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro bridge(src_pk, src_extra_columns, as_of_dates_table, bridge_walk, stage_tables_ldts, src_ldts, source_model) -%}
 
-    {%- if dbtvault.is_something(src_extra_columns) and execute -%}
+    {%- if automate_dv.is_something(src_extra_columns) and execute -%}
       {%- do exceptions.warn("WARNING: src_extra_columns not yet available for PITs or Bridges. This parameter will be ignored.") -%}
     {%- endif -%}
 
-    {{- dbtvault.check_required_parameters(src_pk=src_pk,
+    {{- automate_dv.check_required_parameters(src_pk=src_pk,
                                            as_of_dates_table=as_of_dates_table,
                                            bridge_walk=bridge_walk,
                                            stage_tables_ldts=stage_tables_ldts,
                                            src_ldts=src_ldts,
                                            source_model=source_model) -}}
 
-    {{- dbtvault.prepend_generated_by() }}
+    {{- automate_dv.prepend_generated_by() }}
 
     {% for stg in stage_tables_ldts %}
     {{- "-- depends_on: " ~ ref(stg) }}
@@ -31,7 +31,7 @@
         {%- set as_of_dates_table = ref(as_of_dates_table) -%}
     {%- endif %}
 
-    {{ adapter.dispatch('bridge', 'dbtvault')(src_pk=src_pk,
+    {{ adapter.dispatch('bridge', 'automate_dv')(src_pk=src_pk,
                                               src_extra_columns=src_extra_columns,
                                               src_ldts=src_ldts,
                                               as_of_dates_table=as_of_dates_table,
@@ -42,10 +42,10 @@
 
 {%- macro default__bridge(src_pk, src_extra_columns, src_ldts, as_of_dates_table, bridge_walk, stage_tables_ldts, source_model) -%}
 
-{%- set max_datetime = dbtvault.max_datetime() -%}
+{%- set max_datetime = automate_dv.max_datetime() -%}
 
 {#- Setting the new AS_OF dates CTE name -#}
-{%- if dbtvault.is_any_incremental() -%}
+{%- if automate_dv.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of'  -%}
 {%- else -%}
     {%- set new_as_of_dates_cte = 'as_of_dates' -%}
@@ -56,23 +56,23 @@ WITH as_of_dates AS (
     FROM {{ as_of_dates_table }}
 ),
 
-{%- if dbtvault.is_any_incremental() %}
+{%- if automate_dv.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
+{{ automate_dv.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
 
 overlap AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
+    {{ automate_dv.bridge_overlap_and_new_rows(src_pk, bridge_walk, 'overlap_pks', 'overlap_as_of') }}
 ),
 {%- endif %}
 
 new_rows AS (
-    {{ dbtvault.bridge_overlap_and_new_rows(src_pk, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
+    {{ automate_dv.bridge_overlap_and_new_rows(src_pk, bridge_walk, ref(source_model), new_as_of_dates_cte) }}
 ),
 
 {# Full data from bridge walk(s) -#}
 all_rows AS (
     SELECT * FROM new_rows
-    {%- if dbtvault.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() %}
     UNION ALL
     SELECT * FROM overlap
     {%- endif %}
@@ -109,7 +109,7 @@ candidate_rows AS (
 
 bridge AS (
     SELECT
-        {{ dbtvault.prefix([src_pk], 'c') }},
+        {{ automate_dv.prefix([src_pk], 'c') }},
         c.AS_OF_DATE,
 
         {% for bridge_step in bridge_walk.keys() %}
@@ -124,7 +124,7 @@ bridge AS (
 {%- for bridge_step in bridge_walk.keys() -%}
     {%- set bridge_end_date = bridge_walk[bridge_step]['bridge_end_date'] %}
 
-    {% if loop.first -%} WHERE {%- else -%} AND {%- endif %} {{ dbtvault.cast_date(dbtvault.prefix([bridge_end_date], 'c')) }} = {{ dbtvault.cast_date(max_datetime, true, false) }}
+    {% if loop.first -%} WHERE {%- else -%} AND {%- endif %} {{ automate_dv.cast_date(automate_dv.prefix([bridge_end_date], 'c')) }} = {{ automate_dv.cast_date(max_datetime, true, false) }}
 
 {% endfor -%}
 )
