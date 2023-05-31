@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {%- macro date_ghost(date_type, alias) -%}
     {{ adapter.dispatch('date_ghost', 'dbtvault')(date_type=date_type, alias=alias) }}
 {%- endmacro -%}

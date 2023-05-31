@@ -1,18 +1,18 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro postgres__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{%- set source_cols = dbtvault.expand_column_list(columns=[src_pk, src_fk, src_extra_columns, src_ldts, src_source]) -%}
-{%- set fk_cols = dbtvault.expand_column_list([src_fk]) -%}
+{%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_fk, src_extra_columns, src_ldts, src_source]) -%}
+{%- set fk_cols = automate_dv.expand_column_list([src_fk]) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
 
-{{ dbtvault.prepend_generated_by() }}
+{{ automate_dv.prepend_generated_by() }}
 
 {{ 'WITH ' -}}
 
@@ -29,18 +29,18 @@
 row_rank_{{ source_number }} AS (
   SELECT * FROM (
     {%- if model.config.materialized == 'vault_insert_by_rank' %}
-    SELECT {{ dbtvault.prefix(source_cols_with_rank, 'rr') }},
+    SELECT {{ automate_dv.prefix(source_cols_with_rank, 'rr') }},
     {%- else %}
-    SELECT {{ dbtvault.prefix(source_cols, 'rr') }},
+    SELECT {{ automate_dv.prefix(source_cols, 'rr') }},
     {%- endif %}
            ROW_NUMBER() OVER(
-               PARTITION BY {{ dbtvault.prefix([src_pk], 'rr') }}
-               ORDER BY {{ dbtvault.prefix([src_ldts], 'rr') }}
+               PARTITION BY {{ automate_dv.prefix([src_pk], 'rr') }}
+               ORDER BY {{ automate_dv.prefix([src_ldts], 'rr') }}
            ) AS row_number
     FROM {{ ref(src) }} AS rr
     {%- if source_model | length == 1 %}
-    WHERE {{ dbtvault.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='rr', condition='IS NOT NULL') }}
+    AND {{ automate_dv.multikey(fk_cols, prefix='rr', condition='IS NOT NULL') }}
     {%- endif %}
   ) as l
   WHERE row_number = 1
@@ -79,24 +79,24 @@ row_rank_union AS (
   SELECT * FROM (
     SELECT ru.*,
            ROW_NUMBER() OVER(
-               PARTITION BY {{ dbtvault.prefix([src_pk], 'ru') }}
-               ORDER BY {{ dbtvault.prefix([src_ldts], 'ru') }}, {{ dbtvault.prefix([src_source], 'ru') }} ASC
+               PARTITION BY {{ automate_dv.prefix([src_pk], 'ru') }}
+               ORDER BY {{ automate_dv.prefix([src_ldts], 'ru') }}, {{ automate_dv.prefix([src_source], 'ru') }} ASC
            ) AS row_rank_number
     FROM {{ ns.last_cte }} AS ru
-    WHERE {{ dbtvault.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
-    AND {{ dbtvault.multikey(fk_cols, prefix='ru', condition='IS NOT NULL') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='ru', condition='IS NOT NULL') }}
+    AND {{ automate_dv.multikey(fk_cols, prefix='ru', condition='IS NOT NULL') }}
   ) AS a
   WHERE row_rank_number = 1
     {%- set ns.last_cte = "row_rank_union" %}
 ),
 {% endif %}
 records_to_insert AS (
-    SELECT {{ dbtvault.prefix(source_cols, 'a', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='target') }}
     FROM {{ ns.last_cte }} AS a
-    {%- if dbtvault.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
-    ON {{ dbtvault.multikey(src_pk, prefix=['a','d'], condition='=') }}
-    WHERE {{ dbtvault.multikey(src_pk, prefix='d', condition='IS NULL') }}
+    ON {{ automate_dv.multikey(src_pk, prefix=['a','d'], condition='=') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='d', condition='IS NULL') }}
     {%- endif %}
 )
 

@@ -1,20 +1,20 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro binary_ghost(alias, hash) -%}
-    {{ adapter.dispatch('binary_ghost', 'dbtvault')(alias=alias, hash=hash) }}
+    {{ adapter.dispatch('binary_ghost', 'automate_dv')(alias=alias, hash=hash) }}
 {%- endmacro -%}
 
 {%- macro default__binary_ghost(alias, hash) -%}
 
     {%- if hash | lower == 'md5' -%}
-        {{ dbtvault.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
+        {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
     {%- elif hash | lower == 'sha' -%}
-        {{ dbtvault.cast_binary(column_str=modules.itertools.repeat('0', 64) | join (''), alias=alias, quote=true) }}
+        {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 64) | join (''), alias=alias, quote=true) }}
     {%- else -%}
-        {{ dbtvault.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
+        {{ automate_dv.cast_binary(column_str=modules.itertools.repeat('0', 32) | join (''), alias=alias, quote=true) }}
     {%- endif -%}
 {%- endmacro -%}
 
