@@ -9,7 +9,7 @@ macro_name = "rank_columns"
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "BOOKING_DATE"
             }
@@ -31,7 +31,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns(requ
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_asc(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": {"BOOKING_DATE": "ASC"}
             }
@@ -53,7 +53,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_asc(
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_desc(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": {"BOOKING_DATE": "DESC"}
             }
@@ -75,7 +75,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_desc
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_part(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": ["CUSTOMER_ID",
                                  "CUSTOMER_PHONE"],
                 "order_by": "BOOKING_DATE"
@@ -98,7 +98,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_order(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": ["BOOKING_DATE", 'LOAD_DATETIME']
             }
@@ -120,7 +120,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_multi_part_order(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": ["CUSTOMER_ID",
                                  "CUSTOMER_PHONE"],
                 "order_by": ["BOOKING_DATE", 'LOAD_DATETIME']
@@ -144,7 +144,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
                                                                                                    generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": ["CUSTOMER_ID",
                                  "CUSTOMER_PHONE"],
                 "order_by": ["BOOKING_DATE", 'LOAD_DATETIME'],
@@ -168,7 +168,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_mult
 def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_dense_rank(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "BOOKING_DATE",
                 "dense_rank": True
@@ -191,7 +191,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_single_columns_dens
 def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "BOOKING_DATE"
             },
@@ -217,7 +217,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns(re
 def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_asc(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": {"BOOKING_DATE": "ASC"}
             },
@@ -243,7 +243,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_as
 def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_asc_desc(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": {"BOOKING_DATE": "ASC"}
             },
@@ -270,7 +270,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_mu
                                                                                                    generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": [{"BOOKING_DATE": "ASC"}, {"ORDER_DATE": "DESC"}]
             },
@@ -297,7 +297,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_mu
                                                                                                    generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": [{"BOOKING_DATE": "ASC"}, "ORDER_DATE"]
             },
@@ -323,7 +323,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_mu
 def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_dense_rank(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "BOOKING_DATE",
                 "dense_rank": True
@@ -351,7 +351,7 @@ def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_de
 def test_rank_columns_correctly_generates_ranked_columns_for_multiple_columns_some_dense_rank(request, generate_model):
     metadata = {
         "columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "BOOKING_DATE",
             },
