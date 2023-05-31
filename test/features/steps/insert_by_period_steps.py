@@ -32,7 +32,6 @@ def load_table(context, model_name, vault_structure, period, start_date, stop_da
     assert "Completed successfully" in logs
 
 
-
 @step("I insert by period into the {model_name} {vault_structure} by {period}")
 def load_table(context, model_name, vault_structure, period):
     metadata = {"source_model": context.processed_stage_name,
@@ -61,8 +60,8 @@ def load_table(context, model_name, vault_structure, period):
     assert "Completed successfully" in logs
 
 
-
-@step("if I insert by period into the {model_name} {vault_structure} by {period} this will fail with \"{error_message}\" error")
+@step(
+    "if I insert by period into the {model_name} {vault_structure} by {period} this will fail with \"{error_message}\" error")
 def load_table(context, model_name, vault_structure, period, error_message):
     metadata = {"source_model": context.processed_stage_name,
                 **context.vault_structure_columns[model_name]}

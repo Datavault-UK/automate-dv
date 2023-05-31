@@ -115,7 +115,7 @@ def set_vault_structure_definition(context):
             "src_source": "SOURCE"
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
-            "src_pk": ["CUSTOMER_PK","ORDER_PK"],
+            "src_pk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
@@ -1442,6 +1442,7 @@ def multi_active_satellite_cycle_sqlserver(context):
         }
     }
 
+
 # Postgres
 
 
@@ -1679,7 +1680,7 @@ def multi_active_satellite_postgres(context):
             "src_source": "SOURCE"
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
-            "src_pk": ["CUSTOMER_PK","ORDER_PK"],
+            "src_pk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",

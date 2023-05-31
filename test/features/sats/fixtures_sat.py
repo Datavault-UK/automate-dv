@@ -72,7 +72,7 @@ def set_vault_structure_definition(context):
             "src_source": "SOURCE"
         },
         "SATELLITE_COMP": {
-            "src_pk": ["CUSTOMER_PK","ORDER_PK"],
+            "src_pk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_payload": ["CUSTOMER_NAME", "CUSTOMER_DOB", "CUSTOMER_PHONE"],
             "src_hashdiff": "HASHDIFF",
             "src_eff": "EFFECTIVE_FROM",
@@ -98,7 +98,7 @@ def set_staging_definition(context):
              "CUSTOMER_DOB",
              "CUSTOMER_PHONE",
              "CUSTOMER_MT_ID",
-              "LOAD_DATE",
+             "LOAD_DATE",
              "SOURCE"],
         "RAW_STAGE_TS":
             ["CUSTOMER_ID",

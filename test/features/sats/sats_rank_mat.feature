@@ -240,7 +240,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
   Scenario: [SAT-RM-12] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 6 decimal places
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.387396 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.387397 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.387398 | *      |
@@ -250,7 +250,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.387396 | 1993-01-01 11:14:54.387396 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.387397 | 1993-01-01 11:14:54.387397 | *      |
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.387398 | 1993-01-01 11:14:54.387398 | *      |
@@ -296,7 +296,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_DOB | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID\|\|17-214-233-1217') | 1992-01-30   | David         | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
 
- @fixture.enable_full_refresh
+  @fixture.enable_full_refresh
   @fixture.satellite_cycle
   Scenario: [SAT-PM-B-15] Base load of a satellite using full refresh and only start date should only contain first period records
     Given the RAW_STAGE stage is empty

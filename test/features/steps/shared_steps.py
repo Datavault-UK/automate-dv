@@ -14,7 +14,7 @@ def set_stage_metadata(context, stage_model_name) -> dict:
     """
 
     context.processed_stage_name = step_helpers.process_stage_names(context, stage_model_name)
-      
+
     context.include_source_columns = getattr(context, "include_source_columns", None)
 
     context.hashing = getattr(context, "hashing", None)
