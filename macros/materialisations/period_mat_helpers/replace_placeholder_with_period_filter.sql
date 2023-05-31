@@ -6,7 +6,7 @@
 {%- macro replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) -%}
 
     {% set macro = adapter.dispatch('replace_placeholder_with_period_filter',
-                                    'dbtvault')(core_sql=core_sql,
+                                    'automate_dv')(core_sql=core_sql,
                                                 timestamp_field=timestamp_field,
                                                 start_timestamp=start_timestamp,
                                                 stop_timestamp=stop_timestamp,
@@ -56,7 +56,7 @@
         {%- set error_message -%}
         'This datepart ({{ period }}) is too small and cannot be used for this purpose in MS SQL Server, consider using a different datepart value (e.g. day).
          Vault_insert_by materialisations are not intended for this purpose,
-        please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
+        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
         {%- endset -%}
 
         {{- exceptions.raise_compiler_error(error_message) -}}

@@ -6,7 +6,7 @@
 {%- macro get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set macro = adapter.dispatch('get_period_boundaries',
-                                    'dbtvault')(target_relation=target_relation,
+                                    'automate_dv')(target_relation=target_relation,
                                                 timestamp_field=timestamp_field,
                                                 start_date=start_date,
                                                 stop_date=stop_date,
@@ -23,7 +23,7 @@
         WITH period_data AS (
            SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }},
+                COALESCE({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
          )
@@ -36,7 +36,7 @@
         FROM period_data
     {%- endset %}
 
-    {% set period_boundaries_dict = dbtvault.get_query_results_as_dict(period_boundary_sql) %}
+    {% set period_boundaries_dict = automate_dv.get_query_results_as_dict(period_boundary_sql) %}
 
     {% set period_boundaries = {'start_timestamp': period_boundaries_dict['START_TIMESTAMP'][0] | string,
                                 'stop_timestamp': period_boundaries_dict['STOP_TIMESTAMP'][0] | string,
@@ -59,7 +59,7 @@
                     CAST('{{ start_date }}' AS TIMESTAMP))
                 as START_TIMESTAMP,
                 COALESCE(
-                    CAST({{ dbtvault.timestamp_add(datepart, interval, from_date_or_timestamp) }} AS TIMESTAMP),
+                    CAST({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }} AS TIMESTAMP),
                     CAST({{ current_timestamp() }} AS TIMESTAMP))
                 as STOP_TIMESTAMP
             from {{ target_relation }}

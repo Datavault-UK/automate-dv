@@ -4,7 +4,7 @@
  */
 
 {% macro dateadd(datepart, interval, from_date_or_timestamp) %}
-    {{ return(adapter.dispatch('dateadd', 'dbtvault')(datepart=datepart,
+    {{ return(adapter.dispatch('dateadd', 'automate_dv')(datepart=datepart,
                                                      interval=interval,
                                                      from_date_or_timestamp=from_date_or_timestamp)) }}
 {%- endmacro -%}
