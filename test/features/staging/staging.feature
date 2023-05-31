@@ -17,10 +17,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 1             |
@@ -63,10 +63,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | CUSTOMER_PK | HASHDIFF                                      | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | CUSTOMER_PK | HASHDIFF                                      | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
@@ -86,11 +86,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     And I do not include source columns
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                      | DBTVAULT_RANK |
+      | CUSTOMER_PK | HASHDIFF                                      | AUTOMATE_DV_RANK |
       | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1             |
       | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
       | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
@@ -110,10 +110,10 @@ Feature: [STG] Staging
       | LOAD_DATE      | !RAW_STAGE |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
@@ -382,11 +382,11 @@ Feature: [STG] Staging
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     And I do not include source columns
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | DBTVAULT_RANK |
+      | AUTOMATE_DV_RANK |
       | 1             |
       | 1             |
       | 1             |
@@ -742,11 +742,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
@@ -770,11 +770,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER_CONCAT model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER_CONCAT data
     Then the STG_CUSTOMER_CONCAT table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
@@ -799,11 +799,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_NAME_CK   | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_NAME_CK   | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
       | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
       | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
@@ -828,11 +828,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER_NAME model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER_NAME data
     Then the STG_CUSTOMER_NAME table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | DERIVED_CONCAT     | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Alice | 1             | 1              |
       | 1002        | Bob           | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Bob   | 1             | 1              |
       | 1003        | Chad          | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | RAW_STAGE\|\|Chad  | 1             | 1              |
@@ -880,11 +880,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER FLAG | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | INVERTED_FLAG | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER FLAG | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | INVERTED_FLAG | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | Alice         | 1             | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | false         | 1             | 1              |
       | 1002        | Bob           | Bob           | 0             | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | true          | 1             | 1              |
       | 1003        | Chad          | Chad          | 1             | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | false         | 1             | 1              |
@@ -909,11 +909,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_DOB_UK | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_DOB_UK | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | Alice         | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997      | 1             | 1              |
       | 1002        | Bob           | Bob           | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006      | 1             | 1              |
       | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      | 1             | 1              |
@@ -938,11 +938,11 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER_NAME_DOB model
       | NAME           | PARTITION_BY                | ORDER_BY                 |
-      | DBTVAULT_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
-      | DBTVAULT_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
+      | AUTOMATE_DV_RANK  | CUSTOMER_ID                 | LOAD_DATE                |
+      | AUTOMATE_DV_RANK2 | [CUSTOMER_ID,CUSTOMER_NAME] | [LOAD_DATE,CUSTOMER_DOB] |
     When I stage the STG_CUSTOMER_NAME_DOB data
     Then the STG_CUSTOMER_NAME_DOB table should contain expected data
-      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_DOB_UK | DBTVAULT_RANK | DBTVAULT_RANK2 |
+      | CUSTOMER_ID | CUSTOMER NAME | CUSTOMER_NAME | CUSTOMER DOB | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF                                      | EFFECTIVE_FROM | SOURCE    | CUSTOMER_DOB_UK | AUTOMATE_DV_RANK | AUTOMATE_DV_RANK2 |
       | 1001        | Alice         | Alice         | 1997-04-24   | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | RAW_STAGE | 24-04-1997      | 1             | 1              |
       | 1002        | Bob           | Bob           | 2006-04-17   | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | RAW_STAGE | 17-04-2006      | 1             | 1              |
       | 1003        | Chad          | Chad          | 2013-02-04   | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | RAW_STAGE | 04-02-2013      | 1             | 1              |
@@ -1233,10 +1233,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | 1             |
@@ -1259,10 +1259,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | DBTVAULT_RANK |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE | AUTOMATE_DV_RANK |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      | 1             |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      | 1             |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      | 1             |
@@ -1288,10 +1288,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME,CUSTOMER_DOB,CUSTOMER_PHONE') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                      | DBTVAULT_RANK |
+      | CUSTOMER_PK | CUSTOMER_ID_ORIGINAL | CUSTOMER_ID | ORDER_ID_ORIGINAL | ORDER_ID | CUSTOMER_REF_ORIGINAL | CUSTOMER_REF | ORDER_LINE_ORIGINAL | ORDER_LINE | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | EFFECTIVE_FROM | SOURCE    | HASHDIFF                                      | AUTOMATE_DV_RANK |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('1997-04-24\|\|ALICE\|\|17-214-233-1214') | 1             |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2006-04-17\|\|BOB\|\|17-214-233-1215')   | 1             |
       | md5('-1')   | <null>               | -1          | <null>            | -1       | <null>                | -2           | <null>              | -2         | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | md5('2013-02-04\|\|CHAD\|\|17-214-233-1216')  | 1             |
@@ -1438,10 +1438,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha('1001') | sha('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha('1002') | sha('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003') | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
@@ -1465,10 +1465,10 @@ Feature: [STG] Staging
       | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | sha('1001\|\|ALICE') | sha('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | sha('1002\|\|BOB')   | sha('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003\|\|CHAD')  | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
@@ -1491,10 +1491,10 @@ Feature: [STG] Staging
       | CUSTOMER_ID | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001') | md5('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002') | md5('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003') | md5('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
@@ -1517,10 +1517,10 @@ Feature: [STG] Staging
       | [CUSTOMER_ID,CUSTOMER_NAME] | hashdiff('CUSTOMER_NAME') |
     And I have ranked columns in the STG_CUSTOMER model
       | NAME          | PARTITION_BY | ORDER_BY  |
-      | DBTVAULT_RANK | CUSTOMER_ID  | LOAD_DATE |
+      | AUTOMATE_DV_RANK | CUSTOMER_ID  | LOAD_DATE |
     When I stage the STG_CUSTOMER data
     Then the STG_CUSTOMER table should contain expected data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | DBTVAULT_RANK |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | CUSTOMER_PK          | HASHDIFF     | EFFECTIVE_FROM | SOURCE    | AUTOMATE_DV_RANK |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | md5('1001\|\|ALICE') | md5('ALICE') | 1993-01-01     | RAW_STAGE | 1             |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | md5('1002\|\|BOB')   | md5('BOB')   | 1993-01-01     | RAW_STAGE | 1             |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | md5('1003\|\|CHAD')  | md5('CHAD')  | 1993-01-01     | RAW_STAGE | 1             |
