@@ -1,6 +1,6 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {% macro get_min_max_ranks(rank_column, rank_source_models) %}
@@ -22,7 +22,7 @@
             FROM stage
         {% endset %}
 
-        {% set min_max_dict = dbtvault.get_query_results_as_dict(query_sql) %}
+        {% set min_max_dict = automate_dv.get_query_results_as_dict(query_sql) %}
 
         {% set min_rank = min_max_dict['MIN'][0] | string %}
         {% set max_rank = min_max_dict['MAX'][0] | string %}

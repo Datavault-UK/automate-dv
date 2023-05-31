@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro alias(alias_config=none, prefix=none) -%}
 
-    {{- adapter.dispatch('alias', 'dbtvault')(alias_config=alias_config, prefix=prefix) -}}
+    {{- adapter.dispatch('alias', 'automate_dv')(alias_config=alias_config, prefix=prefix) -}}
 
 {%- endmacro %}
 
@@ -29,7 +29,7 @@
 
         {%- if prefix -%}
 
-        {{- dbtvault.prefix([alias_config], prefix) -}}
+        {{- automate_dv.prefix([alias_config], prefix) -}}
 
         {%- else -%}
 

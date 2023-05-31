@@ -1,6 +1,6 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro null_expression(column_str) -%}
@@ -10,9 +10,9 @@
     {%- endif -%}
 
     {%- set null_placeholder_string = var('null_placeholder_string', '^^') -%}
-    {%- set standardise = dbtvault.standard_column_wrapper() %}
+    {%- set standardise = automate_dv.standard_column_wrapper() %}
 
-    {{ return(adapter.dispatch('null_expression', 'dbtvault')(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string)) }}
+    {{ return(adapter.dispatch('null_expression', 'automate_dv')(standardise=standardise, column_str=column_str, null_placeholder_string=null_placeholder_string)) }}
 {%- endmacro %}
 
 

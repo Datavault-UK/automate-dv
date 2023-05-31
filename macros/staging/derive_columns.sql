@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro derive_columns(source_relation=none, columns=none) -%}
 
-    {{- adapter.dispatch('derive_columns', 'dbtvault')(source_relation=source_relation, columns=columns) -}}
+    {{- adapter.dispatch('derive_columns', 'automate_dv')(source_relation=source_relation, columns=columns) -}}
 
 {%- endmacro %}
 
@@ -16,7 +16,7 @@
 {%- set src_columns = [] -%}
 {%- set der_columns = [] -%}
 
-{%- set source_cols = dbtvault.source_columns(source_relation=source_relation) -%}
+{%- set source_cols = automate_dv.source_columns(source_relation=source_relation) -%}
 
 {%- if columns is mapping and columns is not none -%}
 
@@ -24,15 +24,15 @@
     {%- for derived_column in columns -%}
         {%- set column_config = columns[derived_column] -%}
 
-        {%- if dbtvault.is_list(column_config) -%}
+        {%- if automate_dv.is_list(column_config) -%}
             {%- set column_list = [] -%}
 
             {%- for concat_component in column_config -%}
-                {%- set column_str = dbtvault.as_constant(concat_component) -%}
+                {%- set column_str = automate_dv.as_constant(concat_component) -%}
                 {%- do column_list.append(column_str) -%}
             {%- endfor -%}
 
-            {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
+            {%- set concat = automate_dv.concat_ws(column_list, "||") -%}
             {%- set concat_string = concat ~ " AS " ~ derived_column -%}
 
             {%- do der_columns.append(concat_string) -%}
@@ -40,31 +40,31 @@
             {%- if column_config is mapping and column_config -%}
                 {%- set column_escape = column_config['escape'] -%}
 
-                {%- if dbtvault.is_list(column_config['source_column']) -%}
+                {%- if automate_dv.is_list(column_config['source_column']) -%}
                     {%- set column_list = [] -%}
 
                     {%- for concat_component in column_config['source_column'] -%}
-                        {%- set column_str = dbtvault.as_constant(concat_component) -%}
+                        {%- set column_str = automate_dv.as_constant(concat_component) -%}
                         {%- if column_escape is true %}
-                            {%- set column_str = dbtvault.escape_column_names(column_str) -%}
+                            {%- set column_str = automate_dv.escape_column_names(column_str) -%}
                         {% endif %}
                         {%- do column_list.append(column_str) -%}
                     {%- endfor -%}
 
-                    {%- set concat = dbtvault.concat_ws(column_list, "||") -%}
+                    {%- set concat = automate_dv.concat_ws(column_list, "||") -%}
                     {%- set concat_string = concat ~ " AS " ~ derived_column -%}
 
                     {%- do der_columns.append(concat_string) -%}
                 {%- else -%}
-                    {%- set column_str = dbtvault.as_constant(column_config['source_column']) -%}
+                    {%- set column_str = automate_dv.as_constant(column_config['source_column']) -%}
                     {%- if column_escape is true -%}
-                        {%- do der_columns.append(dbtvault.escape_column_names(column_str) ~ " AS " ~ derived_column) -%}
+                        {%- do der_columns.append(automate_dv.escape_column_names(column_str) ~ " AS " ~ derived_column) -%}
                     {%- else -%}
                         {%- do der_columns.append(column_str ~ " AS " ~ derived_column) -%}
                     {%- endif -%}
                 {%- endif -%}
             {%- else -%}
-                {%- set column_str = dbtvault.as_constant(column_config) -%}
+                {%- set column_str = automate_dv.as_constant(column_config) -%}
                 {%- do der_columns.append(column_str ~ " AS " ~ derived_column) -%}
             {%- endif -%}
         {%- endif -%}
@@ -86,12 +86,12 @@
 
     {#- Makes sure the columns are appended in a logical order. Source columns then derived columns -#}
     {%- set include_columns = src_columns + der_columns -%}
-    {%- set columns_to_escape = dbtvault.process_columns_to_escape(columns) | list -%}
+    {%- set columns_to_escape = automate_dv.process_columns_to_escape(columns) | list -%}
 
     {#- Print out all columns in includes -#}
     {%- for col in include_columns -%}
         {%- if col | lower in columns_to_escape | map('lower') | list -%}
-            {{- dbtvault.escape_column_name(col) -}}{{ ",\n" if not loop.last }}
+            {{- automate_dv.escape_column_name(col) -}}{{ ",\n" if not loop.last }}
         {%- else -%}
             {{- col -}}{{ ",\n" if not loop.last }}
         {%- endif -%}

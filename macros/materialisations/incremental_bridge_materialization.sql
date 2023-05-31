@@ -1,6 +1,6 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- materialization bridge_incremental, default -%}
@@ -39,7 +39,7 @@
       {%- do adapter.expand_target_column_types(
              from_relation=tmp_relation,
              to_relation=target_relation) -%}
-      {%- set build_sql = dbtvault.incremental_bridge_replace(tmp_relation, target_relation) -%}
+      {%- set build_sql = automate_dv.incremental_bridge_replace(tmp_relation, target_relation) -%}
 {%- endif -%}
 
   {%- call statement("main") -%}
