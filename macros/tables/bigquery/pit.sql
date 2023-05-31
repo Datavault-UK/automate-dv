@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro bigquery__pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) %}
@@ -22,7 +22,7 @@
 {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 {%- endif -%}
 
-{%- if dbtvault.is_any_incremental() -%}
+{%- if automate_dv.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
 {%- else -%}
     {%- set new_as_of_dates_cte = 'as_of_dates' -%}
@@ -32,13 +32,13 @@ WITH as_of_dates AS (
     SELECT * FROM {{ as_of_table_relation }}
 ),
 
-{%- if dbtvault.is_any_incremental() %}
+{%- if automate_dv.is_any_incremental() %}
 
-{{ dbtvault.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
+{{ automate_dv.as_of_date_window(src_pk, src_ldts, stage_tables_ldts, ref(source_model)) }},
 
 backfill_rows_as_of_dates AS (
     SELECT
-        {{ dbtvault.prefix([src_pk], 'a') }},
+        {{ automate_dv.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM new_rows_pks AS a
     INNER JOIN backfill_as_of AS b
@@ -47,7 +47,7 @@ backfill_rows_as_of_dates AS (
 
 backfill AS (
     SELECT
-        {{ dbtvault.prefix([src_pk], 'a') }},
+        {{ automate_dv.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] | upper -%}
@@ -59,11 +59,11 @@ backfill AS (
         {% if enable_ghost_record %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-            {{ dbtvault.binary_ghost(none, hash) }})
+            {{ automate_dv.binary_ghost(none, hash) }})
         AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
-            {{ dbtvault.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
+            {{ automate_dv.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
         AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
 
         {%- else -%}
@@ -89,14 +89,14 @@ backfill AS (
     {% endfor %}
 
     GROUP BY
-        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
+        {{ automate_dv.prefix([src_pk], 'a') }}, a.AS_OF_DATE
     ORDER BY (1)
 ),
 {%- endif %}
 
 new_rows_as_of_dates AS (
     SELECT
-        {{ dbtvault.prefix([src_pk], 'a') }},
+        {{ automate_dv.prefix([src_pk], 'a') }},
         b.AS_OF_DATE
     FROM {{ ref(source_model) }} AS a
     INNER JOIN {{ new_as_of_dates_cte }} AS b
@@ -105,7 +105,7 @@ new_rows_as_of_dates AS (
 
 new_rows AS (
     SELECT
-        {{ dbtvault.prefix([src_pk], 'a') }},
+        {{ automate_dv.prefix([src_pk], 'a') }},
         a.AS_OF_DATE,
     {%- for sat_name in satellites -%}
         {%- set sat_pk_name = (satellites[sat_name]['pk'].keys() | list )[0] -%}
@@ -117,11 +117,11 @@ new_rows AS (
         {%- if enable_ghost_record %}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-            {{ dbtvault.binary_ghost(none, hash) }})
+            {{ automate_dv.binary_ghost(none, hash) }})
         AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
-            {{ dbtvault.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
+            {{ automate_dv.date_ghost(date_type = sat_ldts.dtype, alias=none) }})
         AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
 
         {%- else -%}
@@ -150,13 +150,13 @@ new_rows AS (
     {% endfor -%}
 
     GROUP BY
-        {{ dbtvault.prefix([src_pk], 'a') }}, a.AS_OF_DATE
+        {{ automate_dv.prefix([src_pk], 'a') }}, a.AS_OF_DATE
     ORDER BY (1)
 ),
 
 pit AS (
     SELECT * FROM new_rows
-{%- if dbtvault.is_any_incremental() %}
+{%- if automate_dv.is_any_incremental() %}
     UNION ALL
     SELECT * FROM overlap_pks
     UNION ALL
