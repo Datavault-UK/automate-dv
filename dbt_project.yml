@@ -1,0 +1,25 @@
+name: dbtvault
+version: 0.9.1
+require-dbt-version: [">=1.0.0", "<2.0.0"]
+config-version: 2
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+docs-paths: ["docs"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  hash: MD5
+  hash_content_casing: 'UPPER' # Default UPPER, alternatively DISABLED
+  null_key_required: '-1' # Default -1, allows user to configure
+  null_key_optional: '-2' # Default -2, allows user to configure
+  enable_ghost_records: false #default false to ghost records are enabled
+  system_record_value: 'DBTVAULT_SYSTEM' #Default DBTVAULT_SYSTEM, allows user to configure
+
