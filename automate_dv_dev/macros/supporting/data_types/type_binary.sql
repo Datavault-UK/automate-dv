@@ -1,16 +1,16 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro type_binary() -%}
-  {{- return(adapter.dispatch('type_binary', 'dbtvault')()) -}}
+  {{- return(adapter.dispatch('type_binary', 'automate_dv')()) -}}
 {%- endmacro -%}
 
 {%- macro default__type_binary() -%}
-    {%- if var('hash') | lower == 'md5' -%}
+    {%- if var('hash', 'MD5') | lower == 'md5' -%}
         BINARY(16)
-    {%- elif var('hash') | lower == 'sha' -%}
+    {%- elif var('hash', 'MD5') | lower == 'sha' -%}
         BINARY(32)
     {%- else -%}
         BINARY(16)

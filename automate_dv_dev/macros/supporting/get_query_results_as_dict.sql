@@ -1,10 +1,10 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {% macro get_query_results_as_dict(query) %}
-    {{ return(adapter.dispatch('get_query_results_as_dict', 'dbtvault')(query)) }}
+    {{ return(adapter.dispatch('get_query_results_as_dict', 'automate_dv')(query)) }}
 {% endmacro %}
 
 {% macro default__get_query_results_as_dict(query) %}

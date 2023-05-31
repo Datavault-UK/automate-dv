@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro hash_columns(columns=none, columns_to_escape=none) -%}
 
-    {{- adapter.dispatch('hash_columns', 'dbtvault')(columns=columns, columns_to_escape=columns_to_escape) -}}
+    {{- adapter.dispatch('hash_columns', 'automate_dv')(columns=columns, columns_to_escape=columns_to_escape) -}}
 
 {%- endmacro %}
 
@@ -17,14 +17,14 @@
 
         {%- if columns[col] is mapping and columns[col].is_hashdiff -%}
 
-            {{- dbtvault.hash(columns=columns[col]['columns'],
+            {{- automate_dv.hash(columns=columns[col]['columns'],
                               alias=col,
                               is_hashdiff=columns[col]['is_hashdiff'],
                               columns_to_escape=columns_to_escape) -}}
 
         {%- elif columns[col] is not mapping -%}
 
-            {{- dbtvault.hash(columns=columns[col],
+            {{- automate_dv.hash(columns=columns[col],
                               alias=col,
                               is_hashdiff=false,
                               columns_to_escape=columns_to_escape) -}}
@@ -35,7 +35,7 @@
                 {%- do exceptions.warn("[" ~ this ~ "] Warning: You provided a list of columns under a 'columns' key, but did not provide the 'is_hashdiff' flag. Use list syntax for PKs.") -%}
             {% endif %}
 
-            {{- dbtvault.hash(columns=columns[col]['columns'], alias=col, columns_to_escape=columns_to_escape) -}}
+            {{- automate_dv.hash(columns=columns[col]['columns'], alias=col, columns_to_escape=columns_to_escape) -}}
 
         {%- endif -%}
 

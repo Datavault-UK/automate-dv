@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) Business Thinking Ltd. 2019-2022
- *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a automate_dv) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro sqlserver__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
@@ -18,14 +18,14 @@
     {%- set compare_col_data_type = expected_col.data_type -%}
 
     {%  if compare_col in compare_columns %}
-        {%- do columns_processed.append(dbtvault.escape_column_names(compare_col)) -%}
+        {%- do columns_processed.append(automate_dv.escape_column_names(compare_col)) -%}
 
         {% if compare_col_data_type[0:6] == 'binary' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(automate_dv.escape_column_names(compare_col), automate_dv.escape_column_names(compare_col))) -%}
         {% elif compare_col_data_type[0:8] == 'datetime' %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(automate_dv.escape_column_names(compare_col), automate_dv.escape_column_names(compare_col))) -%}
         {% else %}
-            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
+            {%- do compare_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(automate_dv.escape_column_names(compare_col), automate_dv.escape_column_names(compare_col))) -%}
         {% endif %}
     {% endif %}
 
@@ -33,14 +33,14 @@
 
 {%- for source_col in source_columns -%}
 
-    {%- do source_columns_list.append(dbtvault.escape_column_names(source_col.column)) -%}
+    {%- do source_columns_list.append(automate_dv.escape_column_names(source_col.column)) -%}
 
     {% if source_col.data_type[0:6] == 'binary' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}, 2) AS {}".format(automate_dv.escape_column_names(source_col.column), automate_dv.escape_column_names(source_col.column))) -%}
     {% elif source_col.data_type[0:8] == 'datetime' %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(50), {}, 121) AS {}".format(automate_dv.escape_column_names(source_col.column), automate_dv.escape_column_names(source_col.column))) -%}
     {% else %}
-        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
+        {%- do source_columns_processed.append("CONVERT(VARCHAR(MAX), {}) AS {}".format(automate_dv.escape_column_names(source_col.column), automate_dv.escape_column_names(source_col.column))) -%}
     {% endif %}
 
 {%- endfor %}

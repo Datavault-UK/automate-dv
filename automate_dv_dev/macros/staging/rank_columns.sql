@@ -1,11 +1,11 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2022
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro rank_columns(columns=none) -%}
 
-    {{- adapter.dispatch('rank_columns', 'dbtvault')(columns=columns) -}}
+    {{- adapter.dispatch('rank_columns', 'automate_dv')(columns=columns) -}}
 
 {%- endmacro %}
 
@@ -21,7 +21,7 @@
             {%- set partition_by = columns[col].partition_by -%}
             {%- set dense_rank = columns[col].dense_rank -%}
 
-            {%- if dbtvault.is_nothing(dense_rank) %}
+            {%- if automate_dv.is_nothing(dense_rank) %}
                 {%- set rank_type = "RANK()" -%}
             {%- elif dense_rank is true -%}
                 {%- set rank_type = "DENSE_RANK()" -%}
@@ -31,7 +31,7 @@
                 {% endif %}
             {%- endif -%}
 
-            {%- if dbtvault.is_list(order_by) -%}
+            {%- if automate_dv.is_list(order_by) -%}
 
                 {%- set order_by_str_lst = [] -%}
 
@@ -61,7 +61,7 @@
                 {%- set order_by_str = "{} {}".format(column_name, direction) | trim -%}
             {%- endif -%}
 
-            {%- if dbtvault.is_list(partition_by) -%}
+            {%- if automate_dv.is_list(partition_by) -%}
                 {%- set partition_by_str = partition_by | join(", ") -%}
             {%- else -%}
                 {%- set partition_by_str = partition_by -%}
