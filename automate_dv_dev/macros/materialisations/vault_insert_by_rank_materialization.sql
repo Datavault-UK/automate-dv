@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {% materialization vault_insert_by_rank, default -%}
@@ -18,11 +18,11 @@
     {%- set rank_column = config.require('rank_column') -%}
     {%- set rank_source_models = config.require('rank_source_models') -%}
 
-    {%- set min_max_ranks = dbtvault.get_min_max_ranks(rank_column, rank_source_models) | as_native -%}
+    {%- set min_max_ranks = automate_dv.get_min_max_ranks(rank_column, rank_source_models) | as_native -%}
 
     {%- set to_drop = [] -%}
 
-    {%- do dbtvault.check_placeholder(sql, "__RANK_FILTER__") -%}
+    {%- do automate_dv.check_placeholder(sql, "__RANK_FILTER__") -%}
 
     {{ run_hooks(pre_hooks, inside_transaction=False) }}
 
@@ -31,7 +31,7 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
+        {% set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
         {% do to_drop.append(tmp_relation) %}
@@ -41,13 +41,13 @@
         {{ log("Dropping relation " ~ target_relation ~ " because it is a view and this model is a table (vault_insert_by_rank).") }}
         {% do adapter.drop_relation(existing_relation) %}
 
-        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
+        {% set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif full_refresh_mode %}
-        {% set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
+        {% set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
         {% if target.type == "postgres" %}
-            {{ dbtvault.drop_temporary_special(target_relation) }}
+            {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
@@ -57,7 +57,7 @@
             'Max iterations is 100,000. Consider using a different rank column
             or loading a smaller amount of data.
             vault_insert_by materialisations are not intended for this purpose,
-            please see https://dbtvault.readthedocs.io/en/latest/materialisations/'
+            please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
             {%- endset -%}
 
             {{- exceptions.raise_compiler_error(error_message) -}}
@@ -70,7 +70,7 @@
 
                 {%- set iteration_number = i + 1 -%}
 
-                {%- set filtered_sql = dbtvault.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
+                {%- set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, iteration_number) -%}
 
                 {{ dbt_utils.log_info("Running for {} {} of {} on column '{}' [{}]".format('rank', iteration_number, min_max_ranks.max_rank, rank_column, model.unique_id)) }}
 
@@ -119,7 +119,7 @@
                 {# In databricks and sqlserver a temporary view/table can only be dropped by #}
                 {# the connection or session that created it so drop it now before the commit below closes this session #}                                                                            model.unique_id)) }}
                 {% if target.type in ['databricks', 'sqlserver'] %}
-                    {{ dbtvault.drop_temporary_special(tmp_relation) }}
+                    {{ automate_dv.drop_temporary_special(tmp_relation) }}
                 {% else %}
                     {% do to_drop.append(tmp_relation) %}
                 {% endif %}

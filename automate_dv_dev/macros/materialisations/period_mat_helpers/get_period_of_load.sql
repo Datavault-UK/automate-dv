@@ -6,7 +6,7 @@
 {%- macro get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set macro = adapter.dispatch('get_period_of_load',
-                                    'dbtvault')(period=period,
+                                    'automate_dv')(period=period,
                                                 offset=offset,
                                                 start_timestamp=start_timestamp) %}
 
@@ -20,7 +20,7 @@
         SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_TIMESTAMP('{{ start_timestamp }}'))) AS period_of_load
     {%- endset %}
 
-    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
+    {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
 
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
@@ -40,7 +40,7 @@
         {%- endif -%}
     {%- endset %}
 
-    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
+    {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
 
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
@@ -56,7 +56,7 @@
         SELECT DATEADD({{ period }}, DATEDIFF({{period}}, 0, DATEADD({{ period }}, {{ offset }}, CAST('{{ start_timestamp_mssql }}' AS DATETIME2))), 0) AS period_of_load
     {%- endset %}
 
-    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
+    {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
 
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
@@ -65,7 +65,7 @@
 
 
 {%- macro databricks__get_period_of_load(period, offset, start_timestamp) -%}
-    {% do return(dbtvault.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}
+    {% do return(automate_dv.default__get_period_of_load(period=period, offset=offset, start_timestamp=start_timestamp)) %}
 {%- endmacro -%}
 
 
@@ -75,7 +75,7 @@
         SELECT DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}') AS period_of_load
     {%- endset %}
 
-    {% set period_of_load_dict = dbtvault.get_query_results_as_dict(period_of_load_sql) %}
+    {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
 
     {% set period_of_load = period_of_load_dict['PERIOD_OF_LOAD'][0] | string %}
 
