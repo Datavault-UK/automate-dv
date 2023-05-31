@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro expand_column_list(columns=none) -%}
@@ -11,7 +11,7 @@
 
 {%- set col_list = [] -%}
 
-{%- if dbtvault.is_list(columns) -%}
+{%- if automate_dv.is_list(columns) -%}
 
     {%- set columns = columns | reject("none") %}
 
@@ -22,7 +22,7 @@
             {%- do col_list.append(col) -%}
 
         {#- If list of lists -#}
-        {%- elif dbtvault.is_list(col) -%}
+        {%- elif automate_dv.is_list(col) -%}
 
             {%- for cols in col -%}
 

@@ -1,10 +1,15 @@
+/*
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
+ */
+
 {% macro generate_schema_name(custom_schema_name, node) -%}
-    {{ dbtvault_test.get_schema_name(custom_schema_name=custom_schema_name) }}
+    {{ automate_dv_test.get_schema_name(custom_schema_name=custom_schema_name) }}
 {%- endmacro %}
 
 
 {% macro get_schema_name(custom_schema_name) -%}
-    {{- adapter.dispatch('get_schema_name', 'dbtvault_test')(custom_schema_name=custom_schema_name) -}}
+    {{- adapter.dispatch('get_schema_name', 'automate_dv_test')(custom_schema_name=custom_schema_name) -}}
 {%- endmacro -%}
 
 {% macro default__get_schema_name(custom_schema_name=none) -%}
@@ -17,7 +22,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, dbtvault_test.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -33,7 +38,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.project, dbtvault_test.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.project, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -49,7 +54,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, dbtvault_test.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
@@ -70,7 +75,7 @@
 
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
-    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, dbtvault_test.pipeline_string()) -%}
+    {%- set schema_name = "{}_{}{}".format(schema_name, target.name, automate_dv_test.pipeline_string()) -%}
 
     {% do return(clean_schema_name(schema_name)) %}
 
