@@ -5,7 +5,7 @@
 
 {% macro get_escape_characters() -%}
 
-    {%- set escape_char_left, escape_char_right = adapter.dispatch('get_escape_characters', 'dbtvault')() -%}
+    {%- set escape_char_left, escape_char_right = adapter.dispatch('get_escape_characters', 'automate_dv')() -%}
 
     {%- if ((var('escape_char_left', escape_char_left) == '') and (var('escape_char_right', escape_char_right) == '')) -%}
         {%- do return((escape_char_left, escape_char_right)) -%}
