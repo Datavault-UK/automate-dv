@@ -39,6 +39,8 @@ REQUIRED_ENV_VARS = {
 
 AVAILABLE_PLATFORMS = [p.lower() for p in list(REQUIRED_ENV_VARS)]
 
+PROFILE_NAME = "automate_dv"
+
 
 def platform():
     """Gets the target platform as set by the user via the invoke CLI, stored in invoke.yml"""
@@ -142,11 +144,11 @@ def write_profile_platform_subset(template_path, platform_name):
 
     new_profile_dict = copy.deepcopy(yaml_dict)
 
-    for k, v in yaml_dict['dbtvault']['outputs'].items():
+    for k, v in yaml_dict[PROFILE_NAME]['outputs'].items():
         if k != platform_name:
-            del new_profile_dict['dbtvault']['outputs'][k]
+            del new_profile_dict[PROFILE_NAME]['outputs'][k]
 
-    new_profile_dict['dbtvault']['target'] = platform_name
+    new_profile_dict[PROFILE_NAME]['target'] = platform_name
 
     with open(new_profile_path, 'w') as fh_w:
         yaml_handler.dump(new_profile_dict, fh_w)

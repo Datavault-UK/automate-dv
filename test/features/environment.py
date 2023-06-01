@@ -223,8 +223,6 @@ fixtures_registry = {
          "databricks": '',
          "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
 
-
-
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}

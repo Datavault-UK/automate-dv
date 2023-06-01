@@ -1,4 +1,3 @@
-@not_postgres
 Feature: [HUB-RM] Hubs Loaded using Rank Materialization
 
   @fixture.single_source_hub
