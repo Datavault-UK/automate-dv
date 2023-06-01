@@ -760,6 +760,49 @@ def xts_postgres(context):
         }
     }
 
+    seed_aliases = [
+        {
+            "aliases": [
+                "RAW_STAGE_CUSTOMER",
+                "RAW_STAGE_CUSTOMER_CRM",
+                "RAW_STAGE_CUSTOMER_CRM_2SAT",
+                "RAW_STAGE_CUSTOMER_2SAT",
+                "RAW_STAGE_3SAT"
+            ],
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_FIRSTNAME": "VARCHAR(50)",
+                "CUSTOMER_LASTNAME": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID_2": "VARCHAR(50)",
+                "CUSTOMER_COUNTY": "VARCHAR(50)",
+                "CUSTOMER_CITY": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)",
+            }
+        },
+        {
+            "aliases": [
+                "XTS_2SAT",
+                "XTS_2SAT_AC",
+                "XTS_3SAT",
+                "XTS_AC",
+                "XTS_AC_M"
+            ],
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "SATELLITE_NAME": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "CUSTOMER_MT_ID_2": "VARCHAR",
+                "HASHDIFF": "BYTEA",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        }
+    ]
+
     context.vault_structure_columns = {
         "XTS": {
             "src_pk": "CUSTOMER_PK",
