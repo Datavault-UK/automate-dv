@@ -1365,6 +1365,16 @@ def multi_active_satellite_postgres(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -1383,7 +1393,7 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_ID": "NUMERIC(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1403,7 +1413,7 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1424,8 +1434,8 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "HASHDIFF": "BYTEA",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1436,8 +1446,8 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_HASHDIFF": "BYTEA",
                 "HASHDIFF": "BYTEA",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1482,8 +1492,8 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",
                 "HASHDIFF": "BYTEA",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1506,6 +1516,18 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",
                 "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "HASHDIFF": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "CUSTOMER_MT_ID": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -1718,8 +1740,8 @@ def multi_active_satellite_cycle_postgres(context):
                 "CUSTOMER_ID": "NUMERIC(38, 0)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1740,8 +1762,8 @@ def multi_active_satellite_cycle_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1762,8 +1784,8 @@ def multi_active_satellite_cycle_postgres(context):
                 "HASHDIFF": "BYTEA",
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -1808,8 +1830,8 @@ def multi_active_satellite_cycle_postgres(context):
                 "CUSTOMER_PHONE": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "EXTENSION": "NUMERIC(38, 0)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         },
