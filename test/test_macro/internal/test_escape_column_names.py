@@ -548,6 +548,7 @@ def test_column_is_empty_dictionary_is_successful(request, generate_model):
     assert macro_test_helpers.is_successful_run(dbt_logs)
     assert actual_sql == '{}'
 
+
 @pytest.mark.macro
 def test_escape_string_with_both_empty_string_is_successful(request, generate_model):
     var_dict = {'columns': "COLUMN1", 'escape_char_left': '', 'escape_char_right': ''}
@@ -560,7 +561,9 @@ def test_escape_string_with_both_empty_string_is_successful(request, generate_mo
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert macro_test_helpers.is_successful_run(dbt_logs)
-    assert actual_sql == expected_sql\
+    assert actual_sql == expected_sql
+    assert "Invalid escape_char_left and escape_char_right value provided. Using platform defaults (\"\")" in dbt_logs
+
 
 @pytest.mark.macro
 def test_escape_string_with_left_empty_string_is_successful(request, generate_model):
@@ -574,7 +577,9 @@ def test_escape_string_with_left_empty_string_is_successful(request, generate_mo
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
     assert macro_test_helpers.is_successful_run(dbt_logs)
-    assert actual_sql == expected_sql\
+    assert actual_sql == expected_sql
+    assert "Invalid escape_char_left value provided. Using platform default (\")" in dbt_logs
+
 
 @pytest.mark.macro
 def test_escape_string_with_right_empty_string_is_successful(request, generate_model):
@@ -589,3 +594,4 @@ def test_escape_string_with_right_empty_string_is_successful(request, generate_m
 
     assert macro_test_helpers.is_successful_run(dbt_logs)
     assert actual_sql == expected_sql
+    assert "Invalid escape_char_right value provided. Using platform default (\")" in dbt_logs
