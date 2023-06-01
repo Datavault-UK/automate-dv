@@ -1,4 +1,3 @@
-@not_postgres
 Feature: [SAT-PM-O] Satellites Loaded using Period Materialization for other scenarios
 
   # ABORTED LOADS

@@ -284,7 +284,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | TPCH_CUSTOMER  | 1993-01-02 | *      |
-      | 1002         | Bobby         | 17-214-233-1215 | 2006-04-17   | TPCH_CUSTOMER  | 1993-01-02 | *      |
+      | 1002        | Bobby         | 17-214-233-1215 | 2006-04-17   | TPCH_CUSTOMER  | 1993-01-02 | *      |
       | 1005        | Ewan          | 17-214-233-1218 | 1953-01-03   | TPCH_CUSTOMER  | 1993-01-02 | *      |
       | 1006        | Frida         | 17-214-233-1219 | 1968-09-12   | TPCH_CUSTOMER  | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data

@@ -39,7 +39,7 @@ REQUIRED_ENV_VARS = {
 
 AVAILABLE_PLATFORMS = [p.lower() for p in list(REQUIRED_ENV_VARS)]
 
-PROFILE_NAME = 'automate_dv'
+PROFILE_NAME = "automate_dv"
 
 def platform():
     """Gets the target platform as set by the user via the invoke CLI, stored in invoke.yml"""

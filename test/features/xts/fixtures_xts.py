@@ -1034,5 +1034,3 @@ def xts_postgres(context):
             }
         }
     }
-
-
