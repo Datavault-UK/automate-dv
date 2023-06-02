@@ -1,4 +1,4 @@
-dbtvault:
+automate_dv:
   outputs:
     snowflake:
       type: snowflake
@@ -7,10 +7,11 @@ dbtvault:
       user: "{{ op://private/snowflake/username }}"
       password: "{{ op://private/snowflake/password }}"
 
-      role: "{{ op://dbtvault/snowflake/role }}"
       database: "{{ op://dbtvault/snowflake/database }}"
+      schema: "{{ op://private/snowflake/schema }}"
+
       warehouse: "{{ op://dbtvault/snowflake/warehouse }}"
-      schema: "{{ op://dbtvault/snowflake/schema }}"
+      role: "{{ op://dbtvault/snowflake/role }}"
 
       threads: 4
       client_session_keep_alive: False

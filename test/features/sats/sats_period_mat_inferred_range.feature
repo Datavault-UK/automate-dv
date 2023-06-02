@@ -1,4 +1,3 @@
-@not_postgres
 Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred date ranges
 
   @fixture.satellite_cycle

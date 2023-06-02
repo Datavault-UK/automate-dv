@@ -1,4 +1,3 @@
-@not_postgres
 Feature: [SAT-RM] Satellites Loaded using Rank Materialization
 
   @fixture.satellite
@@ -12,7 +11,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     Then the SATELLITE table should contain expected data
@@ -34,7 +33,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-02 | *      |
       | <null>      | Emily         | 2018-04-13   | 17-214-233-1218 | 1993-01-01 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     Then the SATELLITE table should contain expected data
@@ -53,7 +52,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     And I insert by rank into the SATELLITE sat
@@ -74,7 +73,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
       | <null>      | Emily         | 2018-04-11   | 17-214-233-1218 | 1993-01-01 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     And I insert by rank into the SATELLITE sat
@@ -94,7 +93,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-03 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by LOAD_DATE and ordered by CUSTOMER_ID
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by LOAD_DATE and ordered by CUSTOMER_ID
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     Then the SATELLITE table should contain expected data
@@ -112,7 +111,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-03 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     And I insert by rank into the SATELLITE sat
@@ -132,7 +131,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.396 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.396 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.396 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
@@ -151,7 +150,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-02 11:14:54.396 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-03 11:14:54.396 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.396 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
@@ -178,7 +177,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.399 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.391 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.393 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
@@ -205,7 +204,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.391 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-04 11:14:54.393 | *      |
       | 1004        | Dominic       | 2018-04-13   | 17-214-233-1217 | 1993-01-04 12:14:54.393 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
@@ -226,7 +225,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.397 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.398 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.399 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
@@ -241,17 +240,17 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
   Scenario: [SAT-RM-12] Incremental load of a satellite with multiple timestamps in the same day in rank column partitioned by customer id loads all records, datetimes with 6 decimal places
     Given the SATELLITE_TS table does not exist
     And the RAW_STAGE_TS table contains data
-      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME               | SOURCE |
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATETIME              | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 11:14:54.387396 | *      |
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.387397 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.387398 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.387399 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
     Then the SATELLITE_TS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM              | LOAD_DATETIME               | SOURCE |
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.387396 | 1993-01-01 11:14:54.387396 | *      |
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.387397 | 1993-01-01 11:14:54.387397 | *      |
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.387398 | 1993-01-01 11:14:54.387398 | *      |
@@ -267,7 +266,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | 1002        | Bob           | 2006-04-17   | 17-214-233-1215 | 1993-01-01 11:14:54.3847397 | *      |
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 11:14:54.3847398 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.3847399 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TS stage partitioned by CUSTOMER_ID and ordered by LOAD_DATETIME
     And I stage the STG_CUSTOMER_TS data
     And I insert by rank into the SATELLITE_TS sat
     And I insert by rank into the SATELLITE_TS sat
@@ -277,3 +276,41 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
       | md5('1002') | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 11:14:54.3847397 | 1993-01-01 11:14:54.3847397 | *      |
       | md5('1003') | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01 11:14:54.3847398 | 1993-01-01 11:14:54.3847398 | *      |
       | md5('1004') | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01 11:14:54.3847399 | 1993-01-01 11:14:54.3847399 | *      |
+
+  @fixture.enable_full_refresh
+  @fixture.satellite_cycle
+  Scenario: [SAT-PM-B-14] Base load of a satellite using full refresh and start and end dates should only contain first period records
+    Given the RAW_STAGE stage is empty
+    And the SATELLITE sat is already populated with data
+      | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_DOB | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | 1990-02-03   | Albert        | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')    | 1995-08-07   | Beth          | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1003') | md5('1990-02-03\|\|1003\|\|CHARLEY\|\|17-214-233-1216') | 1990-02-03   | Charley       | 17-214-233-1216 | 2019-05-04     | 2019-05-04 | *      |
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_DOB | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1004        | 1992-01-30   | David         | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I stage the STG_CUSTOMER data
+    And I insert by rank into the SATELLITE sat
+    Then the SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_DOB | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID\|\|17-214-233-1217') | 1992-01-30   | David         | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
+
+  @fixture.enable_full_refresh
+  @fixture.satellite_cycle
+  Scenario: [SAT-PM-B-15] Base load of a satellite using full refresh and only start date should only contain first period records
+    Given the RAW_STAGE stage is empty
+    And the SATELLITE sat is already populated with data
+      | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')    | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
+      | md5('1003') | md5('1990-02-03\|\|1003\|\|CHARLEY\|\|17-214-233-1216') | Charley       | 1990-02-03   | 17-214-233-1216 | 2019-05-04     | 2019-05-04 | *      |
+    When the RAW_STAGE is loaded
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1004        | David         | 1992-01-30   | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
+    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I stage the STG_CUSTOMER data
+    And I insert by rank into the SATELLITE sat
+    Then the SATELLITE table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID\|\|17-214-233-1217') | David         | 1992-01-30   | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
