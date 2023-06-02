@@ -10,7 +10,7 @@
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{%- endif -%}
+{%- endif %}
 
 {{ 'WITH ' -}}
 
@@ -43,8 +43,9 @@ row_rank_{{ source_number }} AS (
     ) l
     WHERE l.row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
-),{{ "\n" if not loop.last }}
-{% endfor -%}
+    ),{{ "\n" if not loop.last }}
+    {% endfor -%}
+
 {% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}

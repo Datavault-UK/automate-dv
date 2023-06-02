@@ -7,27 +7,26 @@
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     'automate_dv')(target_relation=target_relation,
-                                                   timestamp_field=timestamp_field,
-                                                   start_date=start_date,
-                                                   stop_date=stop_date,
-                                                   period=period) %}
+                                                timestamp_field=timestamp_field,
+                                                start_date=start_date,
+                                                stop_date=stop_date,
+                                                period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
 
 
-
 {% macro default__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
-
+    {%- set datepart = period -%}
     {% set period_boundary_sql -%}
         WITH period_data AS (
-            SELECT
+           SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         {{ current_timestamp() }} ) AS stop_timestamp
+                COALESCE({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
+                         {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
-        )
+         )
         SELECT
             start_timestamp,
             stop_timestamp,
@@ -47,18 +46,22 @@
 {%- endmacro %}
 
 
-
-
 {% macro bigquery__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')".format(stop_date | lower) -%}
+    {%- set datepart = period -%}
 
     {% set period_boundary_sql -%}
         with data as (
             select
-                COALESCE(CAST(MAX({{ timestamp_field }}) AS DATETIME), CAST('{{ start_date }}' AS DATETIME)) as START_TIMESTAMP,
-                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
-                         CAST({{ current_timestamp() }} AS DATETIME)) as STOP_TIMESTAMP
+                COALESCE(
+                    CAST(MAX({{ timestamp_field }}) AS TIMESTAMP),
+                    CAST('{{ start_date }}' AS TIMESTAMP))
+                as START_TIMESTAMP,
+                COALESCE(
+                    CAST({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }} AS TIMESTAMP),
+                    CAST({{ current_timestamp() }} AS TIMESTAMP))
+                as STOP_TIMESTAMP
             from {{ target_relation }}
         )
         select
@@ -79,23 +82,30 @@
 {%- endmacro %}
 
 
-
-
 {% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
+    {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
+        {%- set error_message -%}
+        'This datepart ({{ period }}) is too small and cannot be used for this purpose in MS SQL Server, consider using a different datepart value (e.g. day).
+         Vault_insert_by materialisations are not intended for this purpose,
+        please see https://automate_dv.readthedocs.io/en/latest/materialisations/'
+        {%- endset -%}
 
+        {{- exceptions.raise_compiler_error(error_message) -}}
+    {%- endif -%}
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date = start_date[0:27] %}
     {% set stop_date = stop_date[0:27] %}
+    {%- set datepart = period -%}
     {%- set from_date_or_timestamp = "CAST(NULLIF('{}','none') AS DATETIME2)".format(stop_date | lower) %}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
-            SELECT
+           SELECT
                 CAST(COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS DATETIME2)) AS DATETIME2) AS start_timestamp,
-                CAST(COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                CAST(COALESCE({{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }} ) AS DATETIME2) AS stop_timestamp
             FROM {{ target_relation }}
-        )
+      )
         SELECT
             start_timestamp,
             stop_timestamp,
@@ -116,13 +126,14 @@
 {% macro databricks__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {%- set from_date_or_timestamp = "NULLIF('{}','none')::TIMESTAMP".format(stop_date | lower) -%}
-
+            {%- set datepart = period -%}
     {% set period_boundary_sql -%}
 
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), CAST('{{ start_date }}' AS TIMESTAMP)) AS start_timestamp,
-                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, from_date_or_timestamp) }},
+                COALESCE(
+                {{ automate_dv.timestamp_add(datepart, interval, from_date_or_timestamp) }},
                          {{ current_timestamp() }}) AS stop_timestamp
             FROM {{ target_relation }}
         )
@@ -144,15 +155,14 @@
 {%- endmacro %}
 
 
-
 {% macro postgres__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
 
     {% set period_boundary_sql -%}
         WITH period_data AS (
             SELECT
                 COALESCE(MAX({{ timestamp_field }}), '{{ start_date }}')::TIMESTAMP AS start_timestamp,
-                COALESCE({{ automate_dv.dateadd('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
-                         {{ current_timestamp() }} ) AS stop_timestamp
+                COALESCE({{ automate_dv.timestamp_add('millisecond', 86399999, "NULLIF('" ~ stop_date | lower ~ "','none')::TIMESTAMP") }},
+                         {{ current_timestamp() }} )::TIMESTAMP AS stop_timestamp
             FROM {{ target_relation }}
         )
         SELECT

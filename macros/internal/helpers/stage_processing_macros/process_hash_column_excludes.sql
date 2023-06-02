@@ -3,8 +3,6 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-AutomateDV (f.k.a automate_dv)
-
 {%- macro process_hash_column_excludes(hash_columns=none, source_columns=none) -%}
 
     {%- set processed_hash_columns = {} -%}
