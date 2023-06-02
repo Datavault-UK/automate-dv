@@ -65,7 +65,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 12301     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12301     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12301     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
@@ -152,7 +152,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1214 | 12334     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1214 | 12344     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1214 | 12344     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
@@ -239,7 +239,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 12334     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12344     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12344     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
@@ -326,7 +326,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 12301     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12301     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12301     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF table should contain expected data
@@ -413,7 +413,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1214 | 12334     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1214 | 12344     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1214 | 12344     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF table should contain expected data
@@ -500,7 +500,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 12334     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12344     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12344     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK_NO_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF table should contain expected data
@@ -587,7 +587,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 12301     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12301     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12301     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF table should contain expected data
@@ -674,7 +674,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1214 | 12334     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1214 | 12344     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1214 | 12344     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF table should contain expected data
@@ -761,7 +761,7 @@ Feature: [MAS-2CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 12334     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12344     | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 12344     | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF table should contain expected data

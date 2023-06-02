@@ -128,7 +128,7 @@ Feature: [TLK_COMP-PK] Transactional Links with composite src_pk
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-24 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26 | SAP    |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the T_LINK_COMP_PK t_link
     And I insert by rank into the T_LINK_COMP_PK t_link
@@ -146,19 +146,19 @@ Feature: [TLK_COMP-PK] Transactional Links with composite src_pk
   Scenario: [TLK-COMP-PK-06] Load an a non-existent Transactional Link with the incremental materialisation
     Given the T_LINK_COMP_PK table does not exist
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
-      | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50  | 2019-09-21 | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT  | LOAD_DATE  | SOURCE |
+      | 1234        | 4321     | 12345678           | 2019-09-19       | DR   | 2340.50 | 2019-09-21 | SAP    |
     And I stage the STG_CUSTOMER data
     And I load the T_LINK_COMP_PK t_link
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
-      | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40   | 2019-09-22 | SAP    |
-      | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23  | 2019-09-22 | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT  | LOAD_DATE  | SOURCE |
+      | 1234        | 4322     | 12345679           | 2019-09-19       | CR   | 123.40  | 2019-09-22 | SAP    |
+      | 1234        | 4323     | 12345680           | 2019-09-19       | DR   | 2546.23 | 2019-09-22 | SAP    |
     And I stage the STG_CUSTOMER data
     And I load the T_LINK_COMP_PK t_link
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
-      | 1234        | 4324     | 12345681           | 2019-09-19       | CR   | -123.40  | 2019-09-23 | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT  | LOAD_DATE  | SOURCE |
+      | 1234        | 4324     | 12345681           | 2019-09-19       | CR   | -123.40 | 2019-09-23 | SAP    |
     And I stage the STG_CUSTOMER data
     And I load the T_LINK_COMP_PK t_link
     And the RAW_STAGE table contains data
@@ -167,13 +167,13 @@ Feature: [TLK_COMP-PK] Transactional Links with composite src_pk
     And I stage the STG_CUSTOMER data
     And I load the T_LINK_COMP_PK t_link
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
-      | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25 | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT | LOAD_DATE  | SOURCE |
+      | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55 | 2019-09-25 | SAP    |
     And I stage the STG_CUSTOMER data
     And I load the T_LINK_COMP_PK t_link
     And the RAW_STAGE table contains data
-      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
-      | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26 | SAP    |
+      | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT  | LOAD_DATE  | SOURCE |
+      | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34 | 2019-09-26 | SAP    |
     And I stage the STG_CUSTOMER data
     When I load the T_LINK_COMP_PK t_link
     Then the T_LINK_COMP_PK table should contain expected data

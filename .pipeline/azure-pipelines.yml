@@ -68,15 +68,15 @@ extends:
       - groupName: 'sats'
         displayName: 'Satellites'
         disabledForPlatform: []
-        subGroups: [ 'main', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'rank' ]
+        subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'pm_small_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
         disabledForPlatform: ['databricks', 'postgres']
-        subGroups: [ 'main', 'auto', 'disabled', 'mat' ]
+        subGroups: [ 'main', 'comp_pk', 'auto', 'disabled', 'mat' ]
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
         disabledForPlatform: ['databricks', 'postgres']
-        subGroups: [ '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
+        subGroups: [ 'comp_pk', '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
       - groupName: 'xts'
         displayName: 'Extended Tracking Satellites'
         disabledForPlatform: ['databricks', 'postgres']
