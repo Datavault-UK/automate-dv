@@ -128,7 +128,7 @@ Feature: [TLK_COMP-PK] Transactional Links with composite src_pk
       | 1235        | 4325     | 12345682           | 2019-09-19       | CR   | 37645.34 | 2019-09-24 | SAP    |
       | 1236        | 4326     | 12345683           | 2019-09-19       | CR   | 236.55   | 2019-09-25 | SAP    |
       | 1237        | 4327     | 12345684           | 2019-09-19       | DR   | 3567.34  | 2019-09-26 | SAP    |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the T_LINK_COMP_PK t_link
     And I insert by rank into the T_LINK_COMP_PK t_link
