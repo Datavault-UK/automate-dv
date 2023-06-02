@@ -61,7 +61,7 @@
 {%- macro postgres__cast_date(column_str, as_string=false, alias=none) -%}
 
     {%- if as_string -%}
-    TO_DATE({{ column_str }}::VARCHAR, 'YYY-MM-DD')
+    TO_DATE('{{ column_str }}', 'YYY-MM-DD')
     {%- else -%}
     TO_DATE({{ column_str }}::VARCHAR, 'YYY-MM-DD')
     {%- endif -%}
