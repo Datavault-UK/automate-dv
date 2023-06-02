@@ -16,3 +16,14 @@
         {%- endif -%}
 
 {%- endmacro -%}
+
+
+{%- macro postgres__date_ghost(date_type, alias=none) -%}
+
+    {%- if date_type == 'date' -%}
+        {{ automate_dv.cast_date('1900-01-01', as_string=true, datetime=false, alias=alias) }}
+    {%- else -%}
+        to_char(timestamp '1900-01-01 00:00:00', 'YYYY-MM-DD HH24:MI:SS.MS')::timestamp {%- if alias %} AS {{alias}}{%- endif -%}
+    {%- endif -%}
+
+{%- endmacro -%}

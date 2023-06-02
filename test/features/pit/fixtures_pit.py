@@ -2127,16 +2127,16 @@ def pit_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "LAST_LOGIN_DATE": "TIMESTAMPTZ",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
                 "DEVICE_USED": "VARCHAR",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2145,7 +2145,7 @@ def pit_postgres(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "DASHBOARD_COLOUR": "VARCHAR",
                 "DISPLAY_NAME": "VARCHAR",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2153,7 +2153,7 @@ def pit_postgres(context):
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2164,8 +2164,8 @@ def pit_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "EFFECTIVE_FROM": "TIMESTAMPTZ",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2174,9 +2174,9 @@ def pit_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "DEVICE_USED": "VARCHAR",
-                "LAST_LOGIN_DATE": "TIMESTAMPTZ",
-                "EFFECTIVE_FROM": "TIMESTAMPTZ",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2186,26 +2186,26 @@ def pit_postgres(context):
                 "HASHDIFF": "BYTEA",
                 "DASHBOARD_COLOUR": "VARCHAR",
                 "DISPLAY_NAME": "VARCHAR",
-                "EFFECTIVE_FROM": "TIMESTAMPTZ",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
         "AS_OF_DATE": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ"
+                "AS_OF_DATE": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMPTZ",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_LOGIN_PK": "BYTEA",
-                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMPTZ",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_PROFILE_PK": "BYTEA",
-                "SAT_CUSTOMER_PROFILE_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_PROFILE_LDTS": "TIMESTAMP"
             }
         }
     }
@@ -2236,7 +2236,7 @@ def pit_one_sat_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2260,7 +2260,7 @@ def pit_one_sat_postgres(context):
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2268,7 +2268,7 @@ def pit_one_sat_postgres(context):
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2291,62 +2291,62 @@ def pit_one_sat_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "EFFECTIVE_FROM": "TIMESTAMPTZ",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
         "AS_OF_DATE": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ"
+                "AS_OF_DATE": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_1S": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_1S_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_TS": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_LG": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_HG": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP"
             }
         }
     }
@@ -2358,208 +2358,7 @@ def pit_two_sats_postgres(context):
     Define the structures and metadata to perform PIT load
     """
 
-    context.vault_structure_type = "pit"
-
-    context.hashed_columns = {
-        "STG_CUSTOMER_DETAILS": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
-                         }
-        },
-        "STG_CUSTOMER_DETAILS_TS": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["CUSTOMER_ADDRESS", "CUSTOMER_DOB", "CUSTOMER_NAME"]
-                         }
-        },
-        "STG_CUSTOMER_LOGIN": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["DEVICE_USED", "LAST_LOGIN_DATE"]
-                         }
-        },
-        "STG_CUSTOMER_LOGIN_TS": {
-            "CUSTOMER_PK": "CUSTOMER_ID",
-            "HASHDIFF": {"is_hashdiff": True,
-                         "columns": ["DEVICE_USED", "LAST_LOGIN_DATE"]
-                         }
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER_DETAILS": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        },
-        "STG_CUSTOMER_DETAILS_TS": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME"
-        },
-        "STG_CUSTOMER_LOGIN": {
-            "EFFECTIVE_FROM": "LOAD_DATE"
-        },
-        "STG_CUSTOMER_LOGIN_TS": {
-            "EFFECTIVE_FROM": "LOAD_DATETIME"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "HUB_CUSTOMER": {
-            "source_model": ["STG_CUSTOMER_DETAILS",
-                             ],
-            "src_pk": "CUSTOMER_PK",
-            "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "HUB_CUSTOMER_TS": {
-            "source_model": ["STG_CUSTOMER_DETAILS_TS",
-                             ],
-            "src_pk": "CUSTOMER_PK",
-            "src_nk": "CUSTOMER_ID",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "SAT_CUSTOMER_DETAILS": {
-            "source_model": "STG_CUSTOMER_DETAILS",
-            "src_pk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "SAT_CUSTOMER_DETAILS_TS": {
-            "source_model": "STG_CUSTOMER_DETAILS_TS",
-            "src_pk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
-            "src_payload": ["CUSTOMER_NAME", "CUSTOMER_ADDRESS", "CUSTOMER_DOB"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "SAT_CUSTOMER_LOGIN": {
-            "source_model": "STG_CUSTOMER_LOGIN",
-            "src_pk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
-            "src_payload": ["DEVICE_USED", "LAST_LOGIN_DATE"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "SAT_CUSTOMER_LOGIN_TS": {
-            "source_model": "STG_CUSTOMER_LOGIN_TS",
-            "src_pk": "CUSTOMER_PK",
-            "src_hashdiff": "HASHDIFF",
-            "src_payload": ["DEVICE_USED", "LAST_LOGIN_DATE"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATETIME",
-            "src_source": "SOURCE"
-        },
-        "PIT_CUSTOMER": {
-            "source_model": "HUB_CUSTOMER",
-            "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATE",
-            "satellites":
-                {
-                    "SAT_CUSTOMER_DETAILS": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATE"}
-                    },
-                    "SAT_CUSTOMER_LOGIN": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATE"}
-                    }
-                },
-            "stage_tables_ldts":
-                {
-                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
-                    "STG_CUSTOMER_LOGIN": "LOAD_DATE"
-                },
-            "src_ldts": "LOAD_DATE"
-        },
-        "PIT_CUSTOMER_TS": {
-            "source_model": "HUB_CUSTOMER_TS",
-            "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATE",
-            "satellites":
-                {
-                    "SAT_CUSTOMER_DETAILS_TS": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATETIME"}
-                    },
-                    "SAT_CUSTOMER_LOGIN_TS": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATETIME"}
-                    }
-                },
-            "stage_tables_ldts":
-                {
-                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
-                    "STG_CUSTOMER_LOGIN_TS": "LOAD_DATETIME",
-                },
-            "src_ldts": "LOAD_DATETIME"
-        },
-        "PIT_CUSTOMER_LG": {
-            "source_model": "HUB_CUSTOMER_TS",
-            "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATE",
-            "satellites":
-                {
-                    "SAT_CUSTOMER_DETAILS_TS": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATETIME"}
-                    },
-                    "SAT_CUSTOMER_LOGIN_TS": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATETIME"}
-                    }
-                },
-            "stage_tables_ldts":
-                {
-                    "STG_CUSTOMER_DETAILS_TS": "LOAD_DATETIME",
-                    "STG_CUSTOMER_LOGIN_TS": "LOAD_DATETIME",
-                },
-            "src_ldts": "LOAD_DATETIME"
-        },
-        "PIT_CUSTOMER_HG": {
-            "source_model": "HUB_CUSTOMER",
-            "src_pk": "CUSTOMER_PK",
-            "as_of_dates_table": "AS_OF_DATE",
-            "satellites":
-                {
-                    "SAT_CUSTOMER_DETAILS": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATE"}
-                    },
-                    "SAT_CUSTOMER_LOGIN": {
-                        "pk":
-                            {"PK": "CUSTOMER_PK"},
-                        "ldts":
-                            {"LDTS": "LOAD_DATE"}
-                    }
-                },
-            "stage_tables_ldts":
-                {
-                    "STG_CUSTOMER_DETAILS": "LOAD_DATE",
-                    "STG_CUSTOMER_LOGIN": "LOAD_DATE",
-                },
-            "src_ldts": "LOAD_DATE"
-        }
-    }
+    set_metadata(context)
 
     context.stage_columns = {
         "RAW_STAGE_DETAILS":
@@ -2607,14 +2406,14 @@ def pit_two_sats_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_LOGIN": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "LAST_LOGIN_DATE": "TIMESTAMPTZ",
+                "LAST_LOGIN_DATE": "DATE",
                 "DEVICE_USED": "VARCHAR",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -2623,9 +2422,9 @@ def pit_two_sats_postgres(context):
         "RAW_STAGE_LOGIN_TS": {
             "column_types": {
                 "CUSTOMER_ID": "VARCHAR",
-                "LAST_LOGIN_DATE": "TIMESTAMPTZ",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
                 "DEVICE_USED": "VARCHAR",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2637,11 +2436,19 @@ def pit_two_sats_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_CUSTOMER_2S": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "HUB_CUSTOMER_TS": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_ID": "VARCHAR",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2664,8 +2471,8 @@ def pit_two_sats_postgres(context):
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_ADDRESS": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
-                "EFFECTIVE_FROM": "TIMESTAMPTZ",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -2674,7 +2481,7 @@ def pit_two_sats_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "DEVICE_USED": "VARCHAR",
-                "LAST_LOGIN_DATE": "TIMESTAMPTZ",
+                "LAST_LOGIN_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
@@ -2685,55 +2492,65 @@ def pit_two_sats_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "DEVICE_USED": "VARCHAR",
-                "LAST_LOGIN_DATE": "TIMESTAMPTZ",
-                "EFFECTIVE_FROM": "TIMESTAMPTZ",
-                "LOAD_DATETIME": "TIMESTAMPTZ",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
         "AS_OF_DATE": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ"
+                "AS_OF_DATE": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMPTZ",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_LOGIN_PK": "BYTEA",
-                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_2S": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "BYTEA",
+                "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "BYTEA",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_TS": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMPTZ",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_LOGIN_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_LOGIN_TS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_LOGIN_TS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_LG": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMPTZ",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_LOGIN_TS_PK": "BYTEA",
-                "SAT_CUSTOMER_LOGIN_TS_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_LOGIN_TS_LDTS": "TIMESTAMP"
             }
         },
         "PIT_CUSTOMER_HG": {
             "column_types": {
-                "AS_OF_DATE": "TIMESTAMPTZ",
+                "AS_OF_DATE": "TIMESTAMP",
                 "CUSTOMER_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
-                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMPTZ",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_LOGIN_PK": "BYTEA",
-                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMPTZ"
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
             }
         }
     }
