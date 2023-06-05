@@ -62,7 +62,7 @@
 
 {%- macro postgres__cast_datetime(column_str, as_string=false, alias=none, date_type=none) -%}
 
-    TO_TIMESTAMP({{ column_str }}, 'YYY-MM-DD HH24:MI:SS.MS')
+    to_char(timestamp {{ column_str }}, 'YYYY-MM-DD HH24:MI:SS.MS')::timestamp
 
     {%- if alias %} AS {{ alias }} {%- endif %}
 
