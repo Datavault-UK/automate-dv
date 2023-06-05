@@ -6,7 +6,7 @@
 {%- macro ref_table(src_pk, src_extra_columns, src_ldts, src_source, source_model) -%}
 
 {{- automate_dv.check_required_parameters(src_pk=src_pk, src_ldts=src_ldts, src_source=src_source,
-                                           source_model=source_model) -}}
+                                          source_model=source_model) -}}
 
     {%- set src_pk = automate_dv.escape_column_names(src_pk) -%}
     {%- set src_extra_columns = automate_dv.escape_column_names(src_extra_columns) -%}
@@ -22,8 +22,8 @@
     {{- automate_dv.prepend_generated_by() -}}
 
     {{- adapter.dispatch('ref_table', 'automate_dv')(src_pk=src_pk, src_extra_columns=src_extra_columns,
-                                            src_ldts=src_ldts, src_source=src_source,
-                                            source_model=source_model) -}}
+                                                     src_ldts=src_ldts, src_source=src_source,
+                                                     source_model=source_model) -}}
 
 {%- endmacro -%}
 

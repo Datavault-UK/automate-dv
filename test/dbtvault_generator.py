@@ -341,6 +341,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
 
     template_to_file(template, model_name)
 
+
 def ref_table(model_name, src_pk, src_ldts, src_source, source_model,
               config, src_extra_columns=None, depends_on=""):
     """
@@ -358,9 +359,9 @@ def ref_table(model_name, src_pk, src_ldts, src_source, source_model,
     template = f"""
     {depends_on}    
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.ref_table(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source}, 
-                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                      source_model={source_model})   }}}}
+    {{{{ automate_dv.ref_table(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source}, 
+                               src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                               source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
