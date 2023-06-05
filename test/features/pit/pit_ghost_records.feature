@@ -330,6 +330,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
     When the RAW_STAGE_DETAILS is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_ADDRESS         | CUSTOMER_DOB | LOAD_DATE                  | SOURCE |
       | 1003        | Chad          | 4 Forrest road Hampshire | 1998-01-16   | 2019-01-06 00:00:00.000000 | *      |
+    And I stage the STG_CUSTOMER_DETAILS data
     When the RAW_STAGE_LOGIN is loaded
       | CUSTOMER_ID | LAST_LOGIN_DATE            | DEVICE_USED | LOAD_DATE                  | SOURCE |
       | 1001        | 2019-01-05 06:00:00.000000 | Tablet      | 2019-01-06 00:00:00.000000 | *      |
@@ -817,6 +818,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
 
+  @postgres
   @bigquery
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
@@ -901,11 +903,11 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003') | 2018-06-04 00:00:00 | md5('1003')                      | 2018-06-03 00:00:00          | md5('1003')                      | 2018-06-01 00:00:00        |
       | md5('1003') | 2018-06-05 00:00:00 | md5('1003')                      | 2018-06-05 00:00:00          | md5('1003')                      | 2018-06-01 00:00:00        |
       | md5('1003') | 2018-06-06 00:00:00 | md5('1003')                      | 2018-06-05 00:00:00          | md5('1003')                      | 2018-06-01 00:00:00        |
-
+    
   @sqlserver
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
-  Scenario: [PIT-GR-14] PIT and SAT  cycle test with two satellites and ghost records in each and datetime
+  Scenario: [PIT-GR-14] PIT and SAT cycle test with two satellites and ghost records in each and datetime
     Given the PIT_CUSTOMER_TS table does not exist
     And the raw vault contains empty tables
       | HUB             | LINK | SAT                     | PIT             |

@@ -311,7 +311,7 @@ Feature: [HUB-COMP-PK] Hubs with composite src_pk
       | 1002        | B           | Bob           | 1993-01-03 | TPCH   |
       | 1003        | A           | Chad          | 1993-01-03 | TPCH   |
       | 1004        | A           | Dom           | 1993-01-04 | TPCH   |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the HUB hub
     And I insert by rank into the HUB hub

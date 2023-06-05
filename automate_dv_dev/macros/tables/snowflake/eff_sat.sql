@@ -51,22 +51,28 @@ latest_records AS (
                     ORDER BY b.{{ src_ldts }} DESC
                ) AS row_num
         FROM {{ this }} AS b
-    ) AS inner
-    WHERE row_num = 1
+    )
+    {%- if target.type == 'sqlserver' -%}
+        l
+        WHERE l.row_num = 1
+    {%- else -%}
+        AS inner_rank
+        WHERE row_num = 1
+    {%- endif -%}
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
 latest_open AS (
     SELECT {{ automate_dv.alias_all(source_cols, 'c') }}
     FROM latest_records AS c
-    WHERE TO_DATE(c.{{ src_end_date }}) = TO_DATE('{{ max_datetime }}')
+    WHERE {{ automate_dv.cast_date(automate_dv.alias(src_end_date, 'c')) }} = {{ automate_dv.cast_date(automate_dv.cast_datetime(max_datetime, as_string=true)) }}
 ),
 
 {# Selecting the closed records of the most recent records for each link hashkey -#}
 latest_closed AS (
     SELECT {{ automate_dv.alias_all(source_cols, 'd') }}
     FROM latest_records AS d
-    WHERE TO_DATE(d.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
+    WHERE {{ automate_dv.cast_date(automate_dv.alias(src_end_date, 'd')) }} != {{ automate_dv.cast_date(automate_dv.cast_datetime(max_datetime, as_string=true)) }}
 ),
 
 {# Identifying the completely new link relationships to be opened in eff sat -#}
@@ -112,7 +118,7 @@ new_reopened_records AS (
     FROM source_data AS g
     INNER JOIN latest_closed AS lc
     ON {{ automate_dv.multikey(src_pk, prefix=['g','lc'], condition='=') }}
-    WHERE TO_DATE(g.{{ src_end_date }}) = TO_DATE('{{ max_datetime }}')
+    WHERE {{ automate_dv.cast_date(automate_dv.alias(src_end_date, 'g')) }} = {{ automate_dv.cast_date(automate_dv.cast_datetime(max_datetime, as_string=true)) }}
 ),
 
 {%- if is_auto_end_dating %}
@@ -143,7 +149,7 @@ new_closed_records AS (
 new_closed_records AS (
     SELECT DISTINCT
         {{ automate_dv.prefix([src_pk], 'lo') }},
-        {{ automate_dv.alias_all(fk_cols, 'h') }},
+        {{ automate_dv.alias_all(fk_cols, 'lo') }},
         {% if automate_dv.is_something(src_extra_columns) %}
             {{ automate_dv.prefix([src_extra_columns], 'h') }},
         {% endif -%}
@@ -157,7 +163,7 @@ new_closed_records AS (
     ON {{ automate_dv.multikey(src_pk, prefix=['lo', 'h'], condition='=') }}
     LEFT JOIN latest_closed AS lc
     ON {{ automate_dv.multikey(src_pk, prefix=['lc', 'h'], condition='=') }}
-    WHERE TO_DATE(h.{{ src_end_date }}) != TO_DATE('{{ max_datetime }}')
+    WHERE {{ automate_dv.cast_date(automate_dv.alias(src_end_date, 'h')) }} != {{ automate_dv.cast_date(automate_dv.cast_datetime(max_datetime, as_string=true)) }}
     AND {{ automate_dv.multikey(src_pk, prefix='lo', condition='IS NOT NULL') }}
     AND {{ automate_dv.multikey(src_pk, prefix='lc', condition='IS NULL') }}
 ),
@@ -167,9 +173,17 @@ new_closed_records AS (
 
 records_to_insert AS (
     SELECT * FROM new_open_records
-    UNION
+    {% if target.type == 'bigquery' -%}
+        UNION DISTINCT
+    {%- else -%}
+        UNION
+    {%- endif %}
     SELECT * FROM new_reopened_records
-    UNION
+    {% if target.type == 'bigquery' -%}
+        UNION DISTINCT
+    {%- else -%}
+        UNION
+    {%- endif %}
     SELECT * FROM new_closed_records
 )
 
@@ -185,4 +199,5 @@ records_to_insert AS (
 {%- endif %}
 
 SELECT * FROM records_to_insert
+
 {%- endmacro -%}

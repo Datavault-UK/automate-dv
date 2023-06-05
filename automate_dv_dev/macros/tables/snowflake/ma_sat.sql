@@ -41,7 +41,7 @@ WITH source_data AS (
             OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 's') }}) AS source_count
     {% endif %}
     FROM {{ ref(source_model) }} AS s
-    WHERE {{ automate_dv.multikey([src_pk], prefix='s', condition='IS NOT NULL') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
     {%- for child_key in cdk_cols %}
         AND {{ automate_dv.multikey(child_key, prefix='s', condition='IS NOT NULL') }}
     {%- endfor %}
@@ -72,7 +72,7 @@ latest_records AS (
             SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }}
             FROM source_data as s
         ) AS spk
-            ON {{ automate_dv.multikey([src_pk], prefix=['inner_mas', 'spk'], condition='=') }}
+            ON {{ automate_dv.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
             QUALIFY latest_rank = 1
     ) AS mas
 ),
@@ -106,15 +106,15 @@ records_to_insert AS (
                 lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
-                    ON {{ automate_dv.multikey([src_pk], prefix=['lr', 'lg'], condition='=') }}
+                    ON {{ automate_dv.multikey(src_pk, prefix=['lr', 'lg'], condition='=') }}
                     AND {{ automate_dv.prefix([src_ldts], 'lr') }} = {{ automate_dv.prefix([src_ldts], 'lg') }}
             ) AS active_records
-            WHERE {{ automate_dv.multikey([src_pk], prefix=['stage', 'active_records'], condition='=') }}
+            WHERE {{ automate_dv.multikey(src_pk, prefix=['stage', 'active_records'], condition='=') }}
                 AND {{ automate_dv.prefix([src_hashdiff], 'stage') }} = {{ automate_dv.prefix([src_hashdiff], 'active_records', alias_target='target') }}
                 AND {{ automate_dv.multikey(cdk_cols, prefix=['stage', 'active_records'], condition='=') }}
                 AND stage.source_count = active_records.latest_count
         )
-        AND {{ automate_dv.multikey([src_pk], prefix=['source_data', 'stage'], condition='=') }}
+        AND {{ automate_dv.multikey(src_pk, prefix=['source_data', 'stage'], condition='=') }}
     )
 {# endif any_incremental -#}
 {%- endif %}

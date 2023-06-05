@@ -122,7 +122,7 @@ Feature: [LNK-COMP-PK] Links with composite src_pk
       | 1003        | AUS       | Bob           | 2013-02-04   | 17-214-233-1215 | 1993-01-02 | CRM    |
       | 1006        | DEU       | Chad          | 2018-04-13   | 17-214-233-1216 | 1993-01-02 | CRM    |
       | 1007        | ITA       | Dom           | 1990-01-01   | 17-214-233-1217 | 1993-01-02 | CRM    |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by LOAD_DATE and ordered by CUSTOMER_ID
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by LOAD_DATE and ordered by CUSTOMER_ID
     And I stage the STG_CUSTOMER data
     And I insert by rank into the LINK link
     And I insert by rank into the LINK link

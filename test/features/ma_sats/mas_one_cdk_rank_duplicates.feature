@@ -65,7 +65,7 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -152,7 +152,7 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
@@ -239,7 +239,7 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1234 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
     Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data

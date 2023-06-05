@@ -9,6 +9,12 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "HUB_TZ": {
+            "src_pk": "CUSTOMER_PK",
+            "src_nk": "CUSTOMER_ID",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "HUB_AC": {
             "src_pk": "CUSTOMER_PK",
             "src_nk": "CUSTOMER_ID",
@@ -72,6 +78,14 @@ def single_source_hub_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "TIMESTAMP_TZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "HUB_AC": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -96,6 +110,14 @@ def single_source_hub_snowflake(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -368,6 +390,14 @@ def single_source_hub_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "HUB_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "STRING",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
         "HUB_AC": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -393,6 +423,15 @@ def single_source_hub_bigquery(context):
                 "CUSTOMER_MT_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         }
@@ -674,6 +713,14 @@ def single_source_hub_sqlserver(context):
                 "SOURCE": "VARCHAR(4)"
             }
         },
+        "HUB_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BINARY(16)",
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
         "HUB_AC": {
             "column_types": {
                 "CUSTOMER_PK": "BINARY(16)",
@@ -701,6 +748,17 @@ def single_source_hub_sqlserver(context):
                 "CUSTOMER_NAME": "VARCHAR(5)",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(4)"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(4)",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "CUSTOMER_CK": "VARCHAR(13)",
+                "CUSTOMER_NAME": "VARCHAR(5)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(4)"
             }
         }
@@ -973,6 +1031,14 @@ def single_source_hub_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "HUB_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
         "HUB_AC": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
@@ -997,6 +1063,14 @@ def single_source_hub_databricks(context):
                 "CUSTOMER_ID": "VARCHAR(100)",
                 "CUSTOMER_NAME": "VARCHAR(100)",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(100)"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(100)",
+                "CUSTOMER_NAME": "VARCHAR(100)",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(100)"
             }
         }
@@ -1268,6 +1342,14 @@ def single_source_hub_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "HUB_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "CUSTOMER_ID": "VARCHAR",
+                "LOAD_DATE": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "HUB_AC": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
@@ -1292,6 +1374,14 @@ def single_source_hub_postgres(context):
                 "CUSTOMER_ID": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "LOAD_DATE": "TIMESTAMPTZ",
                 "SOURCE": "VARCHAR"
             }
         }
