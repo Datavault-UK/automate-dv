@@ -68,4 +68,4 @@ def single_source_ref_table() -> dict:
                 src_pk="DATE_PK",
                 src_extra_columns=["YEAR", "MONTH", "DAY", "DAY_OF_WEEK"],
                 src_ldts="LOAD_DATE",
-                src_source="SOURCE")
+                src_source="RECORD_SOURCE")
