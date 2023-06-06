@@ -1479,6 +1479,16 @@ def cycle_postgres(context):
     Define the structures and metadata to perform vault load cycles
     """
 
+    context.null_columns = {
+        "STG_CUSTOMER": {
+            "required": "CUSTOMER_ID"
+        },
+        "STG_BOOKING": {
+            "required": ["BOOKING_ID", "CUSTOMER_ID"],
+            "optional": "PHONE"
+        }
+    }
+
     context.hashed_columns = {
         "STG_CUSTOMER": {
             "CUSTOMER_PK": "CUSTOMER_ID",
@@ -1866,42 +1876,42 @@ def cycle_custom_null_key_postgres(context):
     context.seed_config = {
         "RAW_STAGE_CUSTOMER": {
             "column_types": {
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "RAW_STAGE_BOOKING": {
             "column_types": {
-                "BOOKING_ID": "VARCHAR(50)",
-                "CUSTOMER_ID": "VARCHAR(50)",
-                "PRICE": "DECIMAL(38,2)",
+                "BOOKING_ID": "VARCHAR",
+                "CUSTOMER_ID": "VARCHAR",
+                "PRICE": "NUMERIC(38,2)",
                 "DEPARTURE_DATE": "DATE",
                 "BOOKING_DATE": "DATE",
-                "PHONE": "VARCHAR(50)",
-                "DESTINATION": "VARCHAR(50)",
-                "NATIONALITY": "VARCHAR(50)",
+                "PHONE": "VARCHAR",
+                "DESTINATION": "VARCHAR",
+                "NATIONALITY": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "HUB_CUSTOMER": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
-                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "HUB_BOOKING": {
             "column_types": {
                 "BOOKING_PK": "BYTEA",
-                "BOOKING_ID": "VARCHAR(50)",
+                "BOOKING_ID": "VARCHAR",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "LINK_CUSTOMER_BOOKING": {
@@ -1910,42 +1920,42 @@ def cycle_custom_null_key_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "BOOKING_PK": "BYTEA",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "SAT_CUST_CUSTOMER_DETAILS": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
-                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_DOB": "DATE",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "SAT_BOOK_CUSTOMER_DETAILS": {
             "column_types": {
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
-                "PHONE": "VARCHAR(50)",
-                "NATIONALITY": "VARCHAR(50)",
+                "PHONE": "VARCHAR",
+                "NATIONALITY": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         },
         "SAT_BOOK_BOOKING_DETAILS": {
             "column_types": {
                 "BOOKING_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
-                "PRICE": "DECIMAL(38,2)",
+                "PRICE": "NUMERIC(38,2)",
                 "BOOKING_DATE": "DATE",
                 "DEPARTURE_DATE": "DATE",
-                "DESTINATION": "VARCHAR(50)",
+                "DESTINATION": "VARCHAR",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "VARCHAR"
             }
         }
     }
