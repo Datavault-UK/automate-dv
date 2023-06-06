@@ -1,7 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from env import env_utils
-from test import dbtvault_generator, behave_helpers
+from test import automate_dv_generator, behave_helpers
 from test.features import behave_fixtures
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
@@ -260,10 +260,10 @@ def before_all(context):
     env_utils.setup_environment()
 
     # Delete temp YAML files
-    dbtvault_generator.clean_test_schema_file()
+    automate_dv_generator.clean_test_schema_file()
 
     # Backup YAML prior to run
-    dbtvault_generator.backup_project_yml()
+    automate_dv_generator.backup_project_yml()
 
 
 def before_feature(context, feature):
@@ -280,7 +280,7 @@ def before_scenario(context, scenario):
         behave_helpers.clean_models()
         behave_helpers.clean_target()
 
-        dbtvault_generator.clean_test_schema_file()
+        automate_dv_generator.clean_test_schema_file()
 
 
 def before_tag(context, tag):
@@ -299,7 +299,7 @@ def after_all(context):
     Force Restore of dbt_project.yml
     """
 
-    dbtvault_generator.restore_project_yml()
+    automate_dv_generator.restore_project_yml()
 
 
 def decide_to_run(tags, obj, obj_type):

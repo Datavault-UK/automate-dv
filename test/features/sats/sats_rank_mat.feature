@@ -289,7 +289,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_DOB | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1004        | 1992-01-30   | David         | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     Then the SATELLITE table should contain expected data
@@ -308,7 +308,7 @@ Feature: [SAT-RM] Satellites Loaded using Rank Materialization
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | 1004        | David         | 1992-01-30   | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the SATELLITE sat
     Then the SATELLITE table should contain expected data

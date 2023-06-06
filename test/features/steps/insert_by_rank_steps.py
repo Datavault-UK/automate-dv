@@ -1,6 +1,6 @@
 from behave import *
 
-from test import dbtvault_generator, step_helpers, dbt_runner
+from test import automate_dv_generator, step_helpers, dbt_runner
 
 
 @step("I insert by rank into the {model_name} {vault_structure} with a {rank_column} rank column")
@@ -14,10 +14,10 @@ def rank_insert(context, model_name, vault_structure, rank_column):
 
     context.vault_structure_metadata = metadata
 
-    dbtvault_generator.raw_vault_structure(model_name=model_name,
-                                           vault_structure=vault_structure,
-                                           config=config,
-                                           **metadata)
+    automate_dv_generator.raw_vault_structure(model_name=model_name,
+                                              vault_structure=vault_structure,
+                                              config=config,
+                                              **metadata)
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
@@ -40,10 +40,10 @@ def rank_insert(context, model_name, vault_structure):
 
     context.vault_structure_metadata = metadata
 
-    dbtvault_generator.raw_vault_structure(model_name=model_name,
-                                           vault_structure=vault_structure,
-                                           config=config,
-                                           **metadata)
+    automate_dv_generator.raw_vault_structure(model_name=model_name,
+                                              vault_structure=vault_structure,
+                                              config=config,
+                                              **metadata)
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
