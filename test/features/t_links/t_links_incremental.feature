@@ -16,6 +16,7 @@ Feature: [TLK-INC] Incremental Transactional Links
     And I load the T_LINK t_link
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT | LOAD_DATE | SOURCE |
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -48,6 +49,7 @@ Feature: [TLK-INC] Incremental Transactional Links
       | 1234        | 5323     | 12345680           | 2019-09-20       | DR   | 2546.23 | 2019-09-22 | SAP    |
       | 1238        | 5327     | 22345684           | 2019-09-20       | DR   | 5012.32 | 2019-09-22 | SAP    |
       | 1238        | 5327     | 22345684           | 2019-09-20       | DR   | 5012.32 | 2019-09-22 | SAP    |
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -82,6 +84,7 @@ Feature: [TLK-INC] Incremental Transactional Links
       | 1234        | 5323     | 12345680           | 2019-09-20       | DR   | 2546.23 | 2019-09-22 | SAP    |
       | 1238        | 5327     | 22345684           | 2019-09-20       | DR   | 5012.32 | 2019-09-22 | SAP    |
       | 1238        | 5327     | 22345684           | 2019-09-20       | DR   | 5012.32 | 2019-09-22 | SAP    |
+    And I stage the STG_CUSTOMER data
     And I load the T_LINK t_link
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | LOAD_DATE  | SOURCE |
@@ -90,6 +93,7 @@ Feature: [TLK-INC] Incremental Transactional Links
       | 1234        | 5323     | 12345680           | 2019-09-21       | DR   | 2.04     | 2019-09-23 | SAP    |
       | 1234        | 5323     | 12345680           | 2019-09-21       | DR   | 2.04     | 2019-09-23 | SAP    |
       | 1235        | 4325     | 12345682           | 2019-09-21       | CR   | 37645.34 | 2019-09-23 | SAP    |
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -121,6 +125,7 @@ Feature: [TLK-INC] Incremental Transactional Links
     And I load the T_LINK t_link
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | ORDER_ID | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT | LOAD_DATE | SOURCE |
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -229,6 +234,7 @@ Feature: [TLK-INC] Incremental Transactional Links
       | 1234        | 4321     | 12345678           | 2019-09-21       | DR   | 2.04     | 2019-09-23 | SAP    |
       | 1234        | 4321     | 12345678           | 2019-09-21       | DR   | 2.04     | 2019-09-23 | SAP    |
       | 1235        | 4325     | 12345682           | 2019-09-21       | CR   | 37645.34 | 2019-09-23 | SAP    |
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -270,6 +276,7 @@ Feature: [TLK-INC] Incremental Transactional Links
       | 1234        | 5323     | 12345680           | 2019-09-20       | DR   | 2546.23 | TPCH_CUSTOMER  | 2019-09-22 | SAP    |
       | 1238        | 5327     | 22345684           | 2019-09-20       | DR   | 5012.32 | TPCH_CUSTOMER  | 2019-09-22 | SAP    |
       | 1238        | 5327     | 22345684           | 2019-09-20       | DR   | 5012.32 | TPCH_CUSTOMER  | 2019-09-22 | SAP    |
+    And I stage the STG_CUSTOMER data
     When I load the T_LINK_AC t_link
     Then the T_LINK_AC table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | CUSTOMER_MT_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
