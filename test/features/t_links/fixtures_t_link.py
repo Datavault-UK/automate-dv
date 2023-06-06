@@ -608,40 +608,7 @@ def t_link_postgres(context):
     Define the structures and metadata to load transactional links
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        },
-        "T_LINK_TZ": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -664,7 +631,7 @@ def t_link_postgres(context):
                 "TRANSACTION_DATE": "DATE",
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMERIC(38,2)",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -692,7 +659,22 @@ def t_link_postgres(context):
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMERIC(38,2)",
                 "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "BYTEA",
+                "CUSTOMER_FK": "BYTEA",
+                "ORDER_FK": "BYTEA",
+                "TRANSACTION_NUMBER": "NUMERIC(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMERIC(38,2)",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         }
@@ -705,31 +687,7 @@ def t_link_comp_pk_postgres(context):
     Define the structures and metadata to load transactional links with composite src_pk
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
-            "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -744,7 +702,7 @@ def t_link_comp_pk_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "BYTEA",
                 "TRANSACTION_NUMBER": "NUMERIC(38,0)",
