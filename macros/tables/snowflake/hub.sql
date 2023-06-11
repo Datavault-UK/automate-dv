@@ -110,7 +110,7 @@ records_to_insert AS (
     ON {{ automate_dv.multikey(src_pk, prefix=['a','d'], condition='=') }}
     {%- if predicates is not none %}
                 {% for predicate in predicates %}
-                    and d.{{ predicate }}
+                    AND d.{{ predicate }}
                 {% endfor %}
             {% endif %}
     {%- endif %}
