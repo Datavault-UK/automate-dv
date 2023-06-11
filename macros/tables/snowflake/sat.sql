@@ -69,7 +69,7 @@ latest_records AS (
                 WHERE 1=1
             {%- if predicates is not none %}
                 {% for predicate in predicates %}
-                    and {{ predicate }}
+                    AND {{ predicate }}
                 {% endfor %}
             {% endif %}
     ) AS a
