@@ -63,7 +63,7 @@ extends:
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'sats'
         displayName: 'Satellites'
-        disabledForPlatform: []
+        disabledForPlatform: ['databricks']
         subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'pm_small_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
