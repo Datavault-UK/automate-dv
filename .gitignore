@@ -5,13 +5,6 @@ logs/
 
 *target/
 
-test/automate_dv_test/dbt_modules/
-test/automate_dv_test/dbt_packages/
-test/automate_dv_test/models/*.sql
-test/automate_dv_test/data/temp/*
-test/automate_dv_test/seeds/temp/*
-test/automate_dv_test/models/schema_test.yml
-test/backup_files/dbt_project.bak.yml
 
 *.user.yml
 *profiles.yml
@@ -19,13 +12,23 @@ test/backup_files/dbt_project.bak.yml
 *invoke.yml
 
 *.pytest_cache
+
 /automate_dv_dev/dbt_modules/
 
 
-test/automate_dv_test/seeds/vault_properties.yml
 /env/templates/*_profile.yml
 /env/templates/profile/*_profile.yml
 /env/templates/db/*_db.env
 /env/composed/*_profile.yml
 /env/composed/*_db.env
+
+test/backup_files/dbt_project.bak.yml
+/test/automate_dv_test/seeds/vault_properties.yml
 /test/automate_dv_test/bigquery.json
+/test/automate_dv_test/dbt_packages/
+test/automate_dv_test/dbt_modules/
+test/automate_dv_test/dbt_packages/
+test/automate_dv_test/models/*.sql
+test/automate_dv_test/data/temp/*
+test/automate_dv_test/seeds/temp/*
+test/automate_dv_test/models/schema_test.yml

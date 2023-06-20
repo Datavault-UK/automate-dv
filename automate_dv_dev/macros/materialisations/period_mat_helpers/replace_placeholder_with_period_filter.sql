@@ -53,14 +53,9 @@
 
 {% macro sqlserver__replace_placeholder_with_period_filter(core_sql, timestamp_field, start_timestamp, stop_timestamp, offset, period) %}
     {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
-        {%- set error_message -%}
-        'This datepart ({{ period }}) is too small and cannot be used for this purpose in MS SQL Server, consider using a different datepart value (e.g. day).
-         Vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.raise_compiler_error(error_message) -}}
+        {{ automate_dv.sqlserver_datepart_too_small_error(period=period) }}
     {%- endif -%}
+
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_timestamp_mssql = start_timestamp[0:27] %}
     {%- set period_filter -%}

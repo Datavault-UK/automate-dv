@@ -184,4 +184,9 @@ def feature_sub_types():
                 'bridge_one_hub_three_links'
             ]
         },
+        'ref_tables': {
+            'main': [
+                'ref_tables'
+            ]
+        },
     }

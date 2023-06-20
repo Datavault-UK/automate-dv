@@ -1,7 +1,7 @@
 from behave.fixture import use_fixture_by_tag
 
 from env import env_utils
-from test import dbtvault_generator, behave_helpers
+from test import automate_dv_generator, behave_helpers
 from test.features import behave_fixtures
 from test.features.bridge import fixtures_bridge
 from test.features.cycle import fixtures_cycle
@@ -14,6 +14,7 @@ from test.features.sats import fixtures_sat
 from test.features.staging import fixtures_staging
 from test.features.t_links import fixtures_t_link
 from test.features.xts import fixtures_xts
+from test.features.ref_tables import fixtures_ref_table
 
 fixture_registry_utils = {
     "fixture.enable_sha": behave_fixtures.enable_sha,
@@ -223,6 +224,13 @@ fixtures_registry = {
          "databricks": '',
          "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
 
+    "fixture.single_source_ref_table":
+        {"snowflake": fixtures_ref_table.single_source_ref_table_snowflake,
+         "bigquery": fixtures_ref_table.single_source_ref_table_bigquery,
+         "sqlserver": fixtures_ref_table.single_source_ref_table_sqlserver,
+         "databricks": fixtures_ref_table.single_source_ref_table_databricks,
+         "postgres": fixtures_ref_table.single_source_ref_table_postgres},
+
 }
 
 fixture_registry_snowflake = {k: v['snowflake'] for k, v in fixtures_registry.items()}
@@ -252,10 +260,10 @@ def before_all(context):
     env_utils.setup_environment()
 
     # Delete temp YAML files
-    dbtvault_generator.clean_test_schema_file()
+    automate_dv_generator.clean_test_schema_file()
 
     # Backup YAML prior to run
-    dbtvault_generator.backup_project_yml()
+    automate_dv_generator.backup_project_yml()
 
 
 def before_feature(context, feature):
@@ -272,7 +280,7 @@ def before_scenario(context, scenario):
         behave_helpers.clean_models()
         behave_helpers.clean_target()
 
-        dbtvault_generator.clean_test_schema_file()
+        automate_dv_generator.clean_test_schema_file()
 
 
 def before_tag(context, tag):
@@ -291,7 +299,7 @@ def after_all(context):
     Force Restore of dbt_project.yml
     """
 
-    dbtvault_generator.restore_project_yml()
+    automate_dv_generator.restore_project_yml()
 
 
 def decide_to_run(tags, obj, obj_type):

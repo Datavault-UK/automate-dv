@@ -6,19 +6,12 @@
 {%- macro check_num_periods(start_date, stop_date, period) -%}
 
     {% set num_periods = adapter.dispatch('check_num_periods',
-                                    'automate_dv')(start_date=start_date,
-                                                stop_date=stop_date,
-                                                period=period) %}
+                                          'automate_dv')(start_date=start_date,
+                                                         stop_date=stop_date,
+                                                         period=period) %}
 
     {%- if num_periods > 100000 -%}
-        {%- set error_message -%}
-        'Max iterations is 100,000. Consider using a different datepart value (e.g. day)
-        or loading data for a shorter time period.
-        vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.raise_compiler_error(error_message) -}}
+        {{ automate_dv.sqlserver_max_iterations_error() }}
     {%- endif -%}
 
     {% do return(num_periods) %}
