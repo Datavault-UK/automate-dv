@@ -47,7 +47,7 @@ source_data_with_count AS (
         FROM (SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }}, {{ automate_dv.prefix([src_hashdiff], 's', alias_target='source') }}, {{ automate_dv.prefix(cdk_cols, 's') }} FROM source_data AS s) AS t
         GROUP BY {{ automate_dv.prefix([src_pk], 't') }}
     ) AS b
-    ON {{ automate_dv.multikey([src_pk], prefix=['a','b'], condition='=') }}
+    ON {{ automate_dv.multikey(src_pk, prefix=['a','b'], condition='=') }}
 ),
 
 {# Select latest records from satellite, restricted to PKs in source data -#}
@@ -110,17 +110,17 @@ records_to_insert AS (
                 lg.latest_count
                 FROM latest_records AS lr
                 INNER JOIN latest_group_details AS lg
-                    ON {{ automate_dv.multikey([src_pk], prefix=['lr', 'lg'], condition='=') }}
+                    ON {{ automate_dv.multikey(src_pk, prefix=['lr', 'lg'], condition='=') }}
                     AND {{ automate_dv.prefix([src_ldts], 'lr') }} = {{ automate_dv.prefix([src_ldts], 'lg') }}
             ) AS active_records
-            WHERE {{ automate_dv.multikey([src_pk], prefix=['stage', 'active_records'], condition='=') }}
+            WHERE {{ automate_dv.multikey(src_pk, prefix=['stage', 'active_records'], condition='=') }}
                 AND {{ automate_dv.prefix([src_hashdiff], 'stage') }} = {{ automate_dv.prefix([src_hashdiff], 'active_records', alias_target='target') }}
 {#- In order to maintain the parallel with the standard satellite, we don''t allow for groups of records to be updated if the ldts is the only difference -#}
 {#-        AND {{ automate_dv.prefix([src_ldts], 'stage') }} = {{ automate_dv.prefix([src_ldts], 'active_records') }} #}
                 AND {{ automate_dv.multikey(cdk_cols, prefix=['stage', 'active_records'], condition='=') }}
                 AND stage.source_count = active_records.latest_count
         )
-        AND {{ automate_dv.multikey([src_pk], prefix=['source_data_with_count', 'stage'], condition='=') }}
+        AND {{ automate_dv.multikey(src_pk, prefix=['source_data_with_count', 'stage'], condition='=') }}
     )
 {# endif any_incremental -#}
 {%- endif %}
