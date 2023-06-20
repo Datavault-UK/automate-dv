@@ -244,6 +244,7 @@ def cycle_snowflake(context):
         }
     }
 
+
 @fixture
 def cycle_custom_null_key_snowflake(context):
     """

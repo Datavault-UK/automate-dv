@@ -1,4 +1,4 @@
-dbtvault:
+automate_dv:
   outputs:
     snowflake:
       type: snowflake

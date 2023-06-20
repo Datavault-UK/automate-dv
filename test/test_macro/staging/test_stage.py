@@ -225,7 +225,7 @@ def test_stage_correctly_generates_sql_from_yaml_with_ranked(request, generate_m
             "EFFECTIVE_FROM": "BOOKING_DATE"
         },
         "ranked_columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "LOAD_DATE"
             }
@@ -368,7 +368,7 @@ def test_stage_correctly_generates_sql_for_only_ranked_from_yaml(request, genera
         "include_source_columns": False,
         "source_model": "raw_source",
         "ranked_columns": {
-            "DBTVAULT_RANK": {
+            "AUTOMATE_DV_RANK": {
                 "partition_by": "CUSTOMER_ID",
                 "order_by": "LOAD_DATE"
             },
