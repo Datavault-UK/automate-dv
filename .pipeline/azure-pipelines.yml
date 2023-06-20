@@ -52,11 +52,14 @@ extends:
     runConfig:
       - groupName: 'staging'
         displayName: 'Staging'
+        disabledForPlatform: [ ]
       - groupName: 'hubs'
         displayName: 'Hubs'
+        disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'links'
         displayName: 'Links'
+        disabledForPlatform: [ ]
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
@@ -65,7 +68,8 @@ extends:
       - groupName: 'sats'
         displayName: 'Satellites'
         disabledForPlatform: [ 'databricks', 'postgres' ]
-        subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'pm_small_datepart', 'rank' ]
+        subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart',
+                     'pm_small_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
         disabledForPlatform: [ 'databricks', 'postgres' ]
