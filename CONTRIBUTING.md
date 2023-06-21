@@ -154,11 +154,11 @@ Connection:
   client_session_keep_alive: False
   Connection test: OK connection ok
 
-(dbtvault) INFO: Installing dbtvault-dev in test project...
+(dbtvault) INFO: Installing automate_dv_dev in test project...
 (dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
 Running with dbt=0.20.0
-Installing ../../dbtvault-dev
-  Installed from <local @ ../../dbtvault-dev>
+Installing ../../automate_dv_dev
+  Installed from <local @ ../../automate_dv_dev>
 Installing dbt-labs/dbt_utils@0.7.0
   Installed from version 0.7.0
 (dbtvault) INFO: Setup complete!
