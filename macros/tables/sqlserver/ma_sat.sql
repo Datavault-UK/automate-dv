@@ -22,7 +22,7 @@ WITH source_data AS (
     SELECT DISTINCT {{ automate_dv.prefix(source_cols, 's', alias_target='source') }}
     {%- endif %}
     FROM {{ ref(source_model) }} AS s
-    WHERE {{ automate_dv.multikey([src_pk], prefix='s', condition='IS NOT NULL') }}
+    WHERE {{ automate_dv.multikey(src_pk, prefix='s', condition='IS NOT NULL') }}
     {%- for child_key in cdk_cols %}
         AND {{ automate_dv.multikey(child_key, prefix='s', condition='IS NOT NULL') }}
     {%- endfor %}
@@ -67,7 +67,7 @@ latest_records AS (
             SELECT DISTINCT {{ automate_dv.prefix([src_pk], 's') }}
             FROM source_data as s
         ) AS spk
-            ON {{ automate_dv.multikey([src_pk], prefix=['inner_mas', 'spk'], condition='=') }}
+            ON {{ automate_dv.multikey(src_pk, prefix=['inner_mas', 'spk'], condition='=') }}
             {%- if target.type =='databricks' %}
             QUALIFY latest_rank = 1
             {%- endif %}

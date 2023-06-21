@@ -51,8 +51,13 @@ latest_records AS (
                     ORDER BY b.{{ src_ldts }} DESC
                ) AS row_num
         FROM {{ this }} AS b
-    ) AS {%- if target.type != 'databricks' %} inner {%- endif %}
-    WHERE row_num = 1
+    ) {%- if target.type == 'sqlserver' -%}
+        l
+        WHERE l.row_num = 1
+    {%- else -%}
+        AS inner_rank
+        WHERE row_num = 1
+    {%- endif -%}
 ),
 
 {# Selecting the open records of the most recent records for each link hashkey -#}
