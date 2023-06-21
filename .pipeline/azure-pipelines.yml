@@ -63,7 +63,7 @@ extends:
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 't_links'
         displayName: 'Transactional Links'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']
         subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'sats'
         displayName: 'Satellites'
@@ -71,24 +71,24 @@ extends:
         subGroups: [ 'main', 'comp_pk', 'cycles', 'incremental', 'pm_core', 'pm_range', 'pm_datepart', 'pm_small_datepart', 'rank' ]
       - groupName: 'eff_sats'
         displayName: 'Effectivity Satellites'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']
         subGroups: [ 'main', 'comp_pk', 'auto', 'disabled', 'mat' ]
       - groupName: 'ma_sats'
         displayName: 'Multi-Active Satellites'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']
         subGroups: [ 'comp_pk', '1cdk', '1cdk_cycles', '2cdk', '2cdk_cycles', 'incremental', 'pm', 'rm', 'rm_dup' ]
       - groupName: 'xts'
         displayName: 'Extended Tracking Satellites'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']
         subGroups: [ 'main', 'incremental' ]
       - groupName: 'pit'
         displayName: 'Point-In-Time Tables'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']
         subGroups: [ 'main', 'ghost_records', '1sat_base', '1sat_inc', '2sat' ]
       - groupName: 'bridge'
         displayName: 'Bridge Tables'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']
         subGroups: [ 'inc', '1link', '2link', '3link' ]
       - groupName: 'cycle'
         displayName: 'Load Cycles'
-        disabledForPlatform: ['databricks', 'postgres']
+        disabledForPlatform: ['databricks']

@@ -221,7 +221,7 @@ fixtures_registry = {
          "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
          "databricks": '',
-         "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
+         "postgres": fixtures_cycle.cycle_custom_null_key_postgres},
 
 }
 
