@@ -1586,6 +1586,33 @@ def eff_satellite_databricks(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
         "EFF_SAT": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "STRING",
@@ -1596,6 +1623,18 @@ def eff_satellite_databricks(context):
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_TZ": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
             }
         },
         "EFF_SAT_AC": {
@@ -1623,6 +1662,46 @@ def eff_satellite_databricks(context):
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_COMP_FK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_DK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_PK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "ORDER_PART_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
             }
         }
     }

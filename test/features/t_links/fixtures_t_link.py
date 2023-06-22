@@ -544,6 +544,21 @@ def t_link_databricks(context):
                 "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(50)"
             }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
         }
     }
 

@@ -2218,156 +2218,230 @@ def multi_active_satellite_databricks(context):
     context.seed_config = {
         "RAW_STAGE": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TS": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "LOAD_DATETIME": "TIMESTAMP",
-                "SOURCE": "VARCHAR(50)"
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TWO_CDK": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EXTENSION": "DECIMAL(38, 0)",
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
             }
         },
         "RAW_STAGE_TWO_CDK_TS": {
             "column_types": {
-                "CUSTOMER_ID": "DECIMAL(38, 0)",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EXTENSION": "DECIMAL(38, 0)",
-                "LOAD_DATETIME": "TIMESTAMP",
-                "SOURCE": "VARCHAR(50)"
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TS": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "TIMESTAMP",
-                "LOAD_DATETIME": "TIMESTAMP",
-                "SOURCE": "VARCHAR(50)"
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_HD_ALIAS": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_HASHDIFF": "STRING",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "TIMESTAMP",
-                "LOAD_DATE": "TIMESTAMP",
-                "SOURCE": "VARCHAR(50)"
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATE": "DATETIME",
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EXTENSION": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EXTENSION": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "TIMESTAMP",
-                "LOAD_DATETIME": "TIMESTAMP",
-                "SOURCE": "VARCHAR(50)"
+                "EFFECTIVE_FROM": "DATETIME",
+                "LOAD_DATETIME": "DATETIME",
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EXTENSION": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "EXTENSION": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
             }
         },
         "MULTI_ACTIVE_SATELLITE_AC": {
             "column_types": {
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
-                "CUSTOMER_NAME": "VARCHAR(50)",
-                "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR(50)"
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
             }
         }
     }
