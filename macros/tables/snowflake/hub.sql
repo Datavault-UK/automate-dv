@@ -113,8 +113,8 @@ records_to_insert AS (
                     AND d.{{ predicate }}
                 {% endfor %}
             {% endif %}
-    {%- endif %}
     WHERE {{ automate_dv.multikey(src_pk, prefix='d', condition='IS NULL') }}
+    {%- endif %}    
 )
 
 SELECT * FROM records_to_insert
