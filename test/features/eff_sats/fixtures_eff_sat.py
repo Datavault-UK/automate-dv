@@ -1260,7 +1260,6 @@ def eff_satellite_postgres(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
-
         "EFF_SAT_AC": {
             "src_pk": "CUSTOMER_ORDER_PK",
             "src_dfk": ["ORDER_PK"],
@@ -1280,6 +1279,36 @@ def eff_satellite_postgres(context):
                 "CUSTOMER_MT_ID",
                 "CUSTOMER_CK"
             ],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_COMP_FK": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": ["CUSTOMER_PK", "PART_PK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_COMP_DK": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK", "PART_PK"],
+            "src_sfk": "CUSTOMER_PK",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_COMP_PK": {
+            "src_pk": ["CUSTOMER_ORDER_PK", "ORDER_PART_PK"],
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": ["CUSTOMER_PK", "PART_PK"],
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1311,6 +1340,18 @@ def eff_satellite_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "PART_ID": "VARCHAR",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "EFF_SAT": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BYTEA",
@@ -1323,7 +1364,6 @@ def eff_satellite_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
-
         "EFF_SAT_AC": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BYTEA",
@@ -1337,7 +1377,6 @@ def eff_satellite_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
-
         "EFF_SAT_AC_MULTI": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BYTEA",
@@ -1345,6 +1384,46 @@ def eff_satellite_postgres(context):
                 "ORDER_PK": "BYTEA",
                 "CUSTOMER_MT_ID": "VARCHAR",
                 "CUSTOMER_CK": "VARCHAR",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_COMP_FK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "PART_PK": "BYTEA",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_COMP_DK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "PART_PK": "BYTEA",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "EFF_SAT_COMP_PK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BYTEA",
+                "ORDER_PART_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "PART_PK": "BYTEA",
                 "START_DATE": "DATE",
                 "END_DATE": "DATE",
                 "EFFECTIVE_FROM": "DATE",
