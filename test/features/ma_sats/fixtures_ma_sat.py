@@ -2243,7 +2243,7 @@ def multi_active_satellite_databricks(context):
                 "CUSTOMER_ID": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -2264,7 +2264,7 @@ def multi_active_satellite_databricks(context):
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "EXTENSION": "STRING",
-                "LOAD_DATETIME": "DATETIME",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -2320,8 +2320,8 @@ def multi_active_satellite_databricks(context):
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -2332,8 +2332,8 @@ def multi_active_satellite_databricks(context):
                 "CUSTOMER_PHONE": "STRING",
                 "CUSTOMER_HASHDIFF": "STRING",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATE": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -2378,8 +2378,8 @@ def multi_active_satellite_databricks(context):
                 "CUSTOMER_PHONE": "STRING",
                 "EXTENSION": "STRING",
                 "HASHDIFF": "STRING",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -2515,8 +2515,8 @@ def multi_active_satellite_cycle_databricks(context):
                 "HASHDIFF": "STRING",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
-                "EFFECTIVE_FROM": "DATETIME",
-                "LOAD_DATETIME": "DATETIME",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
                 "SOURCE": "VARCHAR(50)"
             }
         },
