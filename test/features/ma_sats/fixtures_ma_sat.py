@@ -1464,6 +1464,12 @@ def multi_active_satellite_postgres(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
+        "STG_CUSTOMER_COMP": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "HASHDIFF": {"is_hashdiff": True,
+                         "columns": ["CUSTOMER_ID", "ORDER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
         "STG_CUSTOMER_NO_CDK_HASHDIFF": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
@@ -1529,6 +1535,9 @@ def multi_active_satellite_postgres(context):
         "STG_CUSTOMER_TWO_CDK_NO_PK_CDK_HASHDIFF": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
+        "STG_CUSTOMER_COMP": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
         "STG_CUSTOMER_TWO_CDK_COMP": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         }
@@ -1541,24 +1550,33 @@ def multi_active_satellite_postgres(context):
              "CUSTOMER_PHONE",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
-             "SOURCE"],
-
+             "SOURCE"
+             ],
         "RAW_STAGE_TZ":
             ["CUSTOMER_ID",
              "CUSTOMER_NAME",
              "CUSTOMER_PHONE",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
-             "SOURCE"],
-
+             "SOURCE"
+             ],
+        "RAW_STAGE_COMP":
+            ["CUSTOMER_ID",
+             "ORDER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_PHONE",
+             "EFFECTIVE_FROM",
+             "LOAD_DATE",
+             "SOURCE"
+             ],
         "RAW_STAGE_TS":
             ["CUSTOMER_ID",
              "CUSTOMER_NAME",
              "CUSTOMER_PHONE",
              "EFFECTIVE_FROM",
              "LOAD_DATETIME",
-             "SOURCE"],
-
+             "SOURCE"
+             ],
         "RAW_STAGE_TWO_CDK":
             ["CUSTOMER_ID",
              "CUSTOMER_NAME",
@@ -1566,8 +1584,8 @@ def multi_active_satellite_postgres(context):
              "EXTENSION",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
-             "SOURCE"],
-
+             "SOURCE"
+             ],
         "RAW_STAGE_TWO_CDK_TS":
             ["CUSTOMER_ID",
              "CUSTOMER_NAME",
@@ -1575,8 +1593,8 @@ def multi_active_satellite_postgres(context):
              "EXTENSION",
              "EFFECTIVE_FROM",
              "LOAD_DATETIME",
-             "SOURCE"],
-
+             "SOURCE"
+             ],
         "RAW_STAGE_TWO_CDK_COMP":
             ["CUSTOMER_ID",
              "ORDER_ID",
@@ -1585,7 +1603,8 @@ def multi_active_satellite_postgres(context):
              "EXTENSION",
              "EFFECTIVE_FROM",
              "LOAD_DATE",
-             "SOURCE"],
+             "SOURCE"
+             ]
     }
 
     context.vault_structure_columns = {
@@ -1600,6 +1619,15 @@ def multi_active_satellite_postgres(context):
         },
         "MULTI_ACTIVE_SATELLITE_TZ": {
             "src_pk": "CUSTOMER_PK",
+            "src_cdk": ["CUSTOMER_PHONE"],
+            "src_payload": ["CUSTOMER_NAME"],
+            "src_hashdiff": "HASHDIFF",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "MULTI_ACTIVE_SATELLITE_COMP": {
+            "src_pk": ["CUSTOMER_PK", "ORDER_PK"],
             "src_cdk": ["CUSTOMER_PHONE"],
             "src_payload": ["CUSTOMER_NAME"],
             "src_hashdiff": "HASHDIFF",
@@ -1719,6 +1747,16 @@ def multi_active_satellite_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "NUMERIC(38, 0)",
+                "ORDER_ID": "VARCHAR",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "RAW_STAGE_TWO_CDK": {
             "column_types": {
                 "CUSTOMER_ID": "NUMERIC(38, 0)",
@@ -1769,6 +1807,18 @@ def multi_active_satellite_postgres(context):
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "TIMESTAMPTZ",
                 "LOAD_DATE": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "CUSTOMER_NAME": "VARCHAR",
+                "CUSTOMER_PHONE": "VARCHAR",
+                "HASHDIFF": "BYTEA",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
         },

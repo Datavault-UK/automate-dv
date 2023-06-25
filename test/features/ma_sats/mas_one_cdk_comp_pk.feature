@@ -36,7 +36,7 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
       | md5('1004') | md5('DDD') | md5('1004\|\|DOMINIK\|\|17-214-233-1237\|\|DDD') | Dominik       | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-1CD-B-06] Load duplicated data into an empty multi-active satellite
+  Scenario: [MAS-1CD-CP-02] Load duplicated data into an empty multi-active satellite
     Given the MULTI_ACTIVE_SATELLITE_COMP ma_sat is empty
     And the RAW_STAGE_COMP table contains data
       | CUSTOMER_ID | ORDER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
