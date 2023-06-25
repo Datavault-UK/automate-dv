@@ -1243,9 +1243,18 @@ def eff_satellite_postgres(context):
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID"
+        },
+        "STG_CUSTOMER_COMP": {
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "ORDER_PART_PK": ["ORDER_ID", "PART_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "PART_PK": "PART_ID"
         }
     }
 
@@ -1265,6 +1274,16 @@ def eff_satellite_postgres(context):
             "src_dfk": ["ORDER_PK"],
             "src_sfk": "CUSTOMER_PK",
             "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "EFF_SAT_TZ": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK"],
+            "src_sfk": "CUSTOMER_PK",
             "src_start_date": "START_DATE",
             "src_end_date": "END_DATE",
             "src_eff": "EFFECTIVE_FROM",
@@ -1377,6 +1396,18 @@ def eff_satellite_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "EFF_SAT_TZ": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "BYTEA",
+                "CUSTOMER_PK": "BYTEA",
+                "ORDER_PK": "BYTEA",
+                "START_DATE": "TIMESTAMPTZ",
+                "END_DATE": "TIMESTAMPTZ",
+                "EFFECTIVE_FROM": "TIMESTAMPTZ",
+                "LOAD_DATE": "TIMESTAMPTZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "EFF_SAT_AC_MULTI": {
             "column_types": {
                 "CUSTOMER_ORDER_PK": "BYTEA",
@@ -1442,9 +1473,18 @@ def eff_satellite_datetime_postgres(context):
 
     context.hashed_columns = {
         "STG_CUSTOMER": {
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
             "CUSTOMER_PK": "CUSTOMER_ID",
             "ORDER_PK": "ORDER_ID"
+        },
+        "STG_CUSTOMER_COMP": {
+            "ORDER_CUSTOMER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "ORDER_PART_PK": ["ORDER_ID", "PART_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID",
+            "PART_PK": "PART_ID"
         }
     }
 
