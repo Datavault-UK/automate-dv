@@ -8,7 +8,7 @@ automate_dv:
       password: "{{ op://private/snowflake/password }}"
 
       database: "{{ op://dbtvault/snowflake/database }}"
-      schema: "{{ op://private/snowflake/schema }}"
+      schema: "TEST"
 
       warehouse: "{{ op://dbtvault/snowflake/warehouse }}"
       role: "{{ op://dbtvault/snowflake/role }}"
