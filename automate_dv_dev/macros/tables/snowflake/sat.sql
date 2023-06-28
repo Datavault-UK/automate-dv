@@ -42,7 +42,8 @@ WITH source_data AS (
     {%- endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
-    AND  {{ automate_dv.cast_date(src_ldts) }} > {{ automate_dv.cast_date(water_level_date,  as_string=true) }}
+    --apply water level
+    --AND  {{ automate_dv.cast_date(src_ldts) }} > {{ automate_dv.cast_date(water_level_date,  as_string=true) }}
     {%- if model.config.materialized == 'vault_insert_by_period' %}
     AND __PERIOD_FILTER__
     {% elif model.config.materialized == 'vault_insert_by_rank' %}
@@ -51,7 +52,6 @@ WITH source_data AS (
 ),
 
 {%- if automate_dv.is_any_incremental() %}
-
 latest_records AS (
     SELECT {{ automate_dv.prefix(window_cols, 'a', alias_target='target') }}
     FROM (
@@ -69,8 +69,24 @@ latest_records AS (
     ) AS a
     WHERE a.rank = 1
 ),
-
 {%- endif %}
+
+
+unique_source_records AS (
+    SELECT
+    {{ automate_dv.alias_all(source_cols, 'sd') }}
+    {%- if automate_dv.is_any_incremental() %}
+    , ROW_NUMBER() OVER(PARTITION BY automate_dv.prefix([src_pk], 'sd') ORDER BY automate_dv.prefix([src_ldts], 'sd') as row_number
+    {%- endif %}
+    FROM source_data as sd
+    QUALIFY 
+         CASE
+            WHEN {{ src_hashdiff }} = LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }}) 
+            THEN FALSE
+            ELSE TRUE
+         END
+),
+
 
 {%- if enable_ghost_record %}
 
@@ -83,25 +99,51 @@ ghost AS (
 
 {%- endif %}
 
+-- records_to_insert AS (
+--     {%- if enable_ghost_record %}
+--     SELECT
+--         {{ automate_dv.alias_all(source_cols, 'g') }}
+--         FROM ghost AS g
+--         {%- if automate_dv.is_any_incremental() %}
+--         WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+--         {%- endif %}
+--     UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+--     {%- endif %}
+--     SELECT DISTINCT {{ automate_dv.alias_all(source_cols, 'stage') }}
+--     FROM source_data AS stage
+--     {%- if automate_dv.is_any_incremental() %}
+--     LEFT JOIN latest_records
+--     ON {{ automate_dv.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+--         AND {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'stage') }}
+--     WHERE {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+--     {%- endif %}
+-- )
+
 records_to_insert AS (
-    {%- if enable_ghost_record %}
-    SELECT
-        {{ automate_dv.alias_all(source_cols, 'g') }}
-        FROM ghost AS g
-        {%- if automate_dv.is_any_incremental() %}
-        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
-        {%- endif %}
-    UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
-    {%- endif %}
+--     {%- if enable_ghost_record %}
+--     SELECT
+--         {{ automate_dv.alias_all(source_cols, 'g') }}
+--         FROM ghost AS g
+--         {%- if automate_dv.is_any_incremental() %}
+--         WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+--         {%- endif %}
+--     UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+--     {%- endif %}
     SELECT DISTINCT {{ automate_dv.alias_all(source_cols, 'stage') }}
-    FROM source_data AS stage
+    FROM unique_source_records AS stage
     {%- if automate_dv.is_any_incremental() %}
-    LEFT JOIN latest_records
-    ON {{ automate_dv.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
-        AND {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'stage') }}
-    WHERE {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+--     LEFT JOIN latest_records
+--     ON {{ automate_dv.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+--         AND {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'stage') }}
+--     WHERE {{ automate_dv.prefix([src_hashdiff], 'latest_records', alias_target='target') }} IS NULL
+     WHERE NOT EXISTS (
+        SELECT 1
+        FROM latest_entries_in_sat
+        WHERE {{ automate_dv.multikey(src_hk, prefix=['latest_records','stage'], condition='=') }}
+            AND {{ automate_dv.multikey(src_pk, prefix=['latest_records','stage'], condition='=') }}
+            AND stage.row_number = 1)
     {%- endif %}
 )
-
+    
 SELECT * FROM records_to_insert
 {%- endmacro -%}
