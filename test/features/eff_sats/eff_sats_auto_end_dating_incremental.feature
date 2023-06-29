@@ -275,6 +275,7 @@ Feature: [EFF-AU-INC] Effectively satellites
       | 2000        | BBB      | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
       | 3001        | CCC      | 2020-01-09 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
       | 5000        | EEE      | 2020-01-11 00:00:00.000 | 9999-12-31 23:59:59.999 | 2020-01-11 00:00:00.000 | 2020-01-11 00:00:00.000 | orders |
+    And I stage the STG_CUSTOMER data
     When I load the EFF_SAT_ORDER_CUSTOMER eff_sat
     Then the EFF_SAT_ORDER_CUSTOMER table should contain expected data
       | ORDER_CUSTOMER_PK  | CUSTOMER_PK | ORDER_PK   | START_DATE              | END_DATE                | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |

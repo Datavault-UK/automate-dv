@@ -275,6 +275,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
       | 1007        | George             | Gardener          | 2013-02-04   | 17-214-233-1222 | Lincolnshire    | Lincoln       | 1993-01-03 | *      |
       | 1008        | Heather            | Hughes            | 2018-04-13   | 17-214-233-1223 | East Sussex     | Brighton      | 1993-01-03 | *      |
       | 1009        | Bill               | Waren             | 2003-11-04   | 18-214-233-1214 | Somerset        | Bath          | 1993-01-03 | *      |
+    And I stage the STG_CUSTOMER data
     When I load the XTS xts
     Then the XTS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                          | SATELLITE_NAME | LOAD_DATE  | SOURCE |
@@ -447,6 +448,7 @@ Feature: [XTS-INC] Extended Record Tracking Satellites
       | 1007        | George             | Gardener          | 2013-02-04   | 17-214-233-1222 | Lincolnshire    | Lincoln       | 1993-01-03 | *      |
       | 1008        | Heather            | Hughes            | 2018-04-13   | 17-214-233-1223 | East Sussex     | Brighton      | 1993-01-03 | *      |
       | 1009        | Bill               | Waren             | 2003-11-04   | 17-214-233-1224 | Somerset        | Bath          | 1993-01-03 | *      |
+    And I stage the STG_CUSTOMER_2SAT data
     When I load the XTS_2SAT xts
     Then the XTS_2SAT table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                     | SATELLITE_NAME       | LOAD_DATE  | SOURCE |
