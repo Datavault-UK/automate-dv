@@ -479,6 +479,16 @@ def t_link_databricks(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "T_LINK_AC": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -534,6 +544,21 @@ def t_link_databricks(context):
                 "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR(50)"
             }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
         }
     }
 
@@ -559,7 +584,7 @@ def t_link_comp_pk_databricks(context):
     }
 
     context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
             "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
             "src_payload": ["TRANSACTION_DATE",
@@ -583,7 +608,7 @@ def t_link_comp_pk_databricks(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "STRING",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",

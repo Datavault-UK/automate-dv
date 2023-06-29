@@ -51,8 +51,7 @@ latest_records AS (
                     ORDER BY b.{{ src_ldts }} DESC
                ) AS row_num
         FROM {{ this }} AS b
-    )
-    {%- if target.type == 'sqlserver' -%}
+    ) {%- if target.type == 'sqlserver' -%}
         l
         WHERE l.row_num = 1
     {%- else -%}

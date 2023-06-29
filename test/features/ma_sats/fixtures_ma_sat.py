@@ -2277,3 +2277,390 @@ def multi_active_satellite_cycle_postgres(context):
             }
         }
     }
+
+# Databricks
+
+@fixture
+def multi_active_satellite_databricks(context):
+    """
+    Define the structures and metadata to load multi active satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TZ": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_HD_ALIAS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_HASHDIFF": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_NAME": "STRING",
+                "CUSTOMER_PHONE": "STRING",
+                "EXTENSION": "STRING",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+
+@fixture
+def multi_active_satellite_cycle_databricks(context):
+    """
+    Define the structures and metadata to perform load cycles for multi active satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "DECIMAL(38, 0)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "MULTI_ACTIVE_SATELLITE_TWO_CDK_NO_PK_CDK_HASHDIFF": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_PHONE": "VARCHAR(50)",
+                "EXTENSION": "DECIMAL(38, 0)",
+                "HASHDIFF": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }

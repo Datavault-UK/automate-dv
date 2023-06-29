@@ -429,7 +429,6 @@ def set_metadata(context):
 
 # Snowflake
 
-
 @fixture
 def pit_snowflake(context):
     """
@@ -2550,6 +2549,538 @@ def pit_two_sats_postgres(context):
                 "SAT_CUSTOMER_DETAILS_PK": "BYTEA",
                 "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
                 "SAT_CUSTOMER_LOGIN_PK": "BYTEA",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
+            }
+        }
+    }
+
+# BigQuery
+
+
+@fixture
+def pit_databricks(context):
+    """
+    Define the structures and metadata to perform PIT load
+    """
+
+    set_metadata(context)
+
+    context.stage_columns = {
+        "RAW_STAGE_DETAILS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_PROFILE":
+            ["CUSTOMER_ID",
+             "DASHBOARD_COLOUR",
+             "DISPLAY_NAME",
+             "LOAD_DATE",
+             "SOURCE"]
+    }
+
+    context.seed_config = {
+        "RAW_STAGE_DETAILS": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "DASHBOARD_COLOUR": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_LOGIN": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "DASHBOARD_COLOUR": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_PROFILE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "DASHBOARD_COLOUR": "VARCHAR(50)",
+                "DISPLAY_NAME": "VARCHAR(50)",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "DASHBOARD_COLOUR": "VARCHAR(50)",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_PROFILE": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "DASHBOARD_COLOUR": "VARCHAR(50)",
+                "DISPLAY_NAME": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "AS_OF_DATE": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_PROFILE_PK": "STRING",
+                "SAT_CUSTOMER_PROFILE_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_AC": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_PROFILE_PK": "STRING",
+                "SAT_CUSTOMER_PROFILE_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_M_AC": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "DASHBOARD_COLOUR": "VARCHAR(50)",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_PROFILE_PK": "STRING",
+                "SAT_CUSTOMER_PROFILE_LDTS": "TIMESTAMP"
+            }
+        }
+    }
+
+
+@fixture
+def pit_one_sat_databricks(context):
+    """
+    Define the structures and metadata to perform PIT load
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE_DETAILS": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_DETAILS_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_1S_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "AS_OF_DATE": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_1S": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_1S_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_TS": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_LG": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_HG": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP"
+            }
+        }
+    }
+
+
+@fixture
+def pit_two_sats_databricks(context):
+    """
+    Define the structures and metadata to perform PIT load
+    """
+
+    set_metadata(context)
+
+    context.stage_columns = {
+        "RAW_STAGE_DETAILS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_DETAILS_TS":
+            ["CUSTOMER_ID",
+             "CUSTOMER_NAME",
+             "CUSTOMER_ADDRESS",
+             "CUSTOMER_DOB",
+             "LOAD_DATETIME",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATE",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN_TS":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATETIME",
+             "SOURCE"],
+        "RAW_STAGE_LOGIN_TIME":
+            ["CUSTOMER_ID",
+             "LAST_LOGIN_DATE",
+             "DEVICE_USED",
+             "LOAD_DATETIME",
+             "SOURCE"]
+    }
+
+    context.seed_config = {
+        "RAW_STAGE_DETAILS": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_DETAILS_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_LOGIN": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "DATE",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_LOGIN_TS": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_LOGIN_TIME": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_2S": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_DETAILS_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "CUSTOMER_NAME": "VARCHAR(50)",
+                "CUSTOMER_ADDRESS": "VARCHAR(50)",
+                "CUSTOMER_DOB": "DATE",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN_TS": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "SAT_CUSTOMER_LOGIN_TIME": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "HASHDIFF": "STRING",
+                "DEVICE_USED": "VARCHAR(50)",
+                "LAST_LOGIN_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "AS_OF_DATE": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_2S": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_TS": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_TS_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_TS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_LG": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_TS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_TS_PK": "STRING",
+                "SAT_CUSTOMER_LOGIN_TS_LDTS": "TIMESTAMP"
+            }
+        },
+        "PIT_CUSTOMER_HG": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_PK": "STRING",
+                "SAT_CUSTOMER_DETAILS_LDTS": "TIMESTAMP",
+                "SAT_CUSTOMER_LOGIN_PK": "STRING",
                 "SAT_CUSTOMER_LOGIN_LDTS": "TIMESTAMP"
             }
         }

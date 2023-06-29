@@ -1692,3 +1692,365 @@ def eff_satellite_multipart_postgres(context):
             }
         }
     }
+
+
+@fixture
+def eff_satellite_databricks(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_CK": "VARCHAR(50)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "RAW_STAGE_COMP": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "PART_ID": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "CUSTOMER_CK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_TZ": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_AC": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_AC_MULTI": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "CUSTOMER_CK": "VARCHAR(50)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_COMP_FK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_DK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "EFF_SAT_COMP_PK": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "ORDER_PART_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PART_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        }
+    }
+
+@fixture
+def eff_satellite_datetime_databricks(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    set_metadata(context)
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "ORDER_PK": "ORDER_ID"
+        }
+    }
+
+    context.vault_structure_columns['EFF_SAT'] = {
+        "src_pk": "CUSTOMER_ORDER_PK",
+        "src_dfk": ["ORDER_PK"],
+        "src_sfk": "CUSTOMER_PK",
+        "src_start_date": "START_DATE",
+        "src_end_date": "END_DATE",
+        "src_eff": "EFFECTIVE_FROM",
+        "src_ldts": "LOAD_DATETIME",
+        "src_source": "SOURCE"
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
+
+
+@fixture
+def eff_satellite_auto_end_dating_databricks(context):
+    """
+    Define the structures and metadata to load effectivity satellites
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_STAGE_ORDER_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "START_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "LINK_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "LINK_ORDER_CUSTOMER": {
+            "column_types": {
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_ORDER_CUSTOMER": {
+            "column_types": {
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_ORDER_CUSTOMER_AC": {
+            "column_types": {
+                "ORDER_CUSTOMER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }
+
+
+@fixture
+def eff_satellite_multipart_databricks(context):
+    """
+    Define the structures and metadata to load effectivity satellites with multipart keys
+    """
+
+    context.hashed_columns = {
+        "STG_CUSTOMER": {
+            "CUSTOMER_ORDER_PK": ["CUSTOMER_ID", "ORDER_ID", "NATION_ID", "PLATFORM_ID", "ORGANISATION_ID"],
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "NATION_PK": "NATION_ID",
+            "ORDER_PK": "ORDER_ID",
+            "PLATFORM_PK": "PLATFORM_ID",
+            "ORGANISATION_PK": "ORGANISATION_ID"
+        }
+    }
+
+    context.vault_structure_columns = {
+        "EFF_SAT": {
+            "src_pk": "CUSTOMER_ORDER_PK",
+            "src_dfk": ["ORDER_PK", "PLATFORM_PK", "ORGANISATION_PK"],
+            "src_sfk": ["CUSTOMER_PK", "NATION_PK"],
+            "src_start_date": "START_DATE",
+            "src_end_date": "END_DATE",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        }
+    }
+
+    context.seed_config = {
+        "RAW_STAGE": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "NATION_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "PLATFORM_ID": "VARCHAR(50)",
+                "ORGANISATION_ID": "VARCHAR(50)",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PLATFORM_PK": "STRING",
+                "ORGANISATION_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "NATION_PK": "STRING",
+                "START_DATE": "DATE",
+                "END_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        }
+    }

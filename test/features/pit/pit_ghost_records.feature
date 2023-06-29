@@ -820,6 +820,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
 
   @postgres
   @bigquery
+  @databricks
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
   Scenario: [PIT-GR-13] PIT and SAT  cycle test with two satellites and ghost records in each and datetime

@@ -1148,3 +1148,190 @@ def bridge_postgres(context):
             }
         }
     }
+
+
+# DATABRICKS
+
+@fixture
+def bridge_databricks(context):
+    """
+    Define the structures and metadata to perform bridge load
+    """
+
+    set_metadata(context)
+
+    context.seed_config = {
+        "RAW_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "CUSTOMER_MT_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_ORDER_PRODUCT": {
+            "column_types": {
+                "ORDER_ID": "VARCHAR(50)",
+                "PRODUCT_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "RAW_PRODUCT_COMPONENT": {
+            "column_types": {
+                "PRODUCT_ID": "VARCHAR(50)",
+                "COMPONENT_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "HUB_CUSTOMER_M_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "TEST_COLUMN": "VARCHAR(50)",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "LINK_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_K": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "LINK_ORDER_PRODUCT": {
+            "column_types": {
+                "ORDER_PRODUCT_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PRODUCT_PK": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "LINK_PRODUCT_COMPONENT": {
+            "column_types": {
+                "PRODUCT_COMPONENT_PK": "STRING",
+                "PRODUCT_PK": "STRING",
+                "COMPONENT_PK": "STRING",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_ORDER_PRODUCT": {
+            "column_types": {
+                "ORDER_PRODUCT_PK": "STRING",
+                "ORDER_PK": "STRING",
+                "PRODUCT_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "EFF_SAT_PRODUCT_COMPONENT": {
+            "column_types": {
+                "PRODUCT_COMPONENT_PK": "STRING",
+                "PRODUCT_PK": "STRING",
+                "COMPONENT_PK": "STRING",
+                "START_DATE": "TIMESTAMP",
+                "END_DATE": "TIMESTAMP",
+                "EFFECTIVE_FROM": "TIMESTAMP",
+                "LOAD_DATETIME": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "AS_OF_DATE": {
+            "column_types": {
+                "AS_OF_DATE": "TIMESTAMP"
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "CUSTOMER_ID": "VARCHAR(50)"
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_M_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "TEST_COLUMN": "VARCHAR(50)",
+                "LINK_CUSTOMER_ORDER_PK": "STRING"
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "LINK_ORDER_PRODUCT_PK": "STRING",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "LINK_ORDER_PRODUCT_PK": "STRING",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "LINK_ORDER_PRODUCT_PK": "STRING",
+                "LINK_PRODUCT_COMPONENT_PK": "STRING",
+            }
+        },
+        "BRIDGE_CUSTOMER_ORDER_PRODUCT_COMPONENT_AC": {
+            "column_types": {
+                "CUSTOMER_PK": "STRING",
+                "AS_OF_DATE": "TIMESTAMP",
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "LINK_CUSTOMER_ORDER_PK": "STRING",
+                "LINK_ORDER_PRODUCT_PK": "STRING",
+                "LINK_PRODUCT_COMPONENT_PK": "STRING",
+            }
+        }
+    }

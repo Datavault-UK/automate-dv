@@ -109,14 +109,14 @@ fixtures_registry = {
         {"snowflake": fixtures_t_link.t_link_snowflake,
          "bigquery": fixtures_t_link.t_link_bigquery,
          "sqlserver": fixtures_t_link.t_link_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_t_link.t_link_databricks,
          "postgres": fixtures_t_link.t_link_postgres},
 
     "fixture.t_link_comp_pk":
         {"snowflake": fixtures_t_link.t_link_comp_pk_snowflake,
          "bigquery": fixtures_t_link.t_link_comp_pk_bigquery,
          "sqlserver": fixtures_t_link.t_link_comp_pk_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_t_link.t_link_comp_pk_databricks,
          "postgres": fixtures_t_link.t_link_comp_pk_postgres},
 
     "fixture.satellite":
@@ -137,92 +137,92 @@ fixtures_registry = {
         {"snowflake": fixtures_eff_sat.eff_satellite_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_postgres},
 
     "fixture.eff_satellite_datetime":
         {"snowflake": fixtures_eff_sat.eff_satellite_datetime_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_datetime_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_datetime_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_datetime_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_datetime_postgres},
 
     "fixture.eff_satellite_auto_end_dating":
         {"snowflake": fixtures_eff_sat.eff_satellite_auto_end_dating_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_auto_end_dating_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_auto_end_dating_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_auto_end_dating_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_testing_auto_end_dating_postgres},
 
     "fixture.eff_satellite_multipart":
         {"snowflake": fixtures_eff_sat.eff_satellite_multipart_snowflake,
          "bigquery": fixtures_eff_sat.eff_satellite_multipart_bigquery,
          "sqlserver": fixtures_eff_sat.eff_satellite_multipart_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_eff_sat.eff_satellite_multipart_databricks,
          "postgres": fixtures_eff_sat.eff_satellite_multipart_postgres},
 
     "fixture.multi_active_satellite":
         {"snowflake": fixtures_ma_sat.multi_active_satellite_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_ma_sat.multi_active_satellite_databricks,
          "postgres": fixtures_ma_sat.multi_active_satellite_postgres},
 
     "fixture.multi_active_satellite_cycle":
         {"snowflake": fixtures_ma_sat.multi_active_satellite_cycle_snowflake,
          "bigquery": fixtures_ma_sat.multi_active_satellite_cycle_bigquery,
          "sqlserver": fixtures_ma_sat.multi_active_satellite_cycle_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_ma_sat.multi_active_satellite_cycle_databricks,
          "postgres": fixtures_ma_sat.multi_active_satellite_cycle_postgres},
 
     "fixture.xts":
         {"snowflake": fixtures_xts.xts_snowflake,
          "bigquery": fixtures_xts.xts_bigquery,
          "sqlserver": fixtures_xts.xts_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_xts.xts_databricks,
          "postgres": fixtures_xts.xts_postgres},
 
     "fixture.pit":
         {"snowflake": fixtures_pit.pit_snowflake,
          "bigquery": fixtures_pit.pit_bigquery,
          "sqlserver": fixtures_pit.pit_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_pit.pit_databricks,
          "postgres": fixtures_pit.pit_postgres},
 
     "fixture.pit_one_sat":
         {"snowflake": fixtures_pit.pit_one_sat_snowflake,
          "bigquery": fixtures_pit.pit_one_sat_bigquery,
          "sqlserver": fixtures_pit.pit_one_sat_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_pit.pit_one_sat_databricks,
          "postgres": fixtures_pit.pit_one_sat_postgres},
 
     "fixture.pit_two_sats":
         {"snowflake": fixtures_pit.pit_two_sats_snowflake,
          "bigquery": fixtures_pit.pit_two_sats_bigquery,
          "sqlserver": fixtures_pit.pit_two_sats_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_pit.pit_two_sats_databricks,
          "postgres": fixtures_pit.pit_two_sats_postgres},
 
     "fixture.bridge":
         {"snowflake": fixtures_bridge.bridge_snowflake,
          "bigquery": fixtures_bridge.bridge_bigquery,
          "sqlserver": fixtures_bridge.bridge_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_bridge.bridge_databricks,
          "postgres": fixtures_bridge.bridge_postgres},
 
     "fixture.cycle":
         {"snowflake": fixtures_cycle.cycle_snowflake,
          "bigquery": fixtures_cycle.cycle_bigquery,
          "sqlserver": fixtures_cycle.cycle_sqlserver,
-         "databricks": '',
+         "databricks": fixtures_cycle.cycle_databricks,
          "postgres": fixtures_cycle.cycle_postgres},
 
     "fixture.cycle_custom_null_key":
         {"snowflake": fixtures_cycle.cycle_custom_null_key_snowflake,
          "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
-         "databricks": '',
-         "postgres": fixtures_cycle.cycle_custom_null_key_postgres},
+         "databricks": fixtures_cycle.cycle_custom_null_key_databricks,
+         "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
 
     "fixture.single_source_ref_table":
         {"snowflake": fixtures_ref_table.single_source_ref_table_snowflake,
