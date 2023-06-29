@@ -818,6 +818,7 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000      | md5('1003')                      | 2018-06-01 00:00:00.000    |
 
   @bigquery
+  @databricks
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
   Scenario: [PIT-GR-13] PIT and SAT  cycle test with two satellites and ghost records in each and datetime
