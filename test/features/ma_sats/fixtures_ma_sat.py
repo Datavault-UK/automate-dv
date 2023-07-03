@@ -1502,7 +1502,6 @@ def multi_active_satellite_postgres(context):
         },
         "STG_CUSTOMER_TWO_CDK_COMP": {
             "CUSTOMER_PK": "CUSTOMER_ID",
-            "ORDER_PK": "ORDER_ID",
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "ORDER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME", "EXTENSION"]}
         }
@@ -1717,15 +1716,6 @@ def multi_active_satellite_postgres(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
-        },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
-            "src_pk": ["CUSTOMER_PK", "ORDER_PK"],
-            "src_cdk": ["CUSTOMER_PHONE", "EXTENSION"],
-            "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": "HASHDIFF",
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
         }
     }
 
@@ -1826,19 +1816,6 @@ def multi_active_satellite_postgres(context):
                 "ORDER_PK": "BYTEA",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "HASHDIFF": "BYTEA",
-                "EFFECTIVE_FROM": "DATE",
-                "LOAD_DATE": "DATE",
-                "SOURCE": "VARCHAR"
-            }
-        },
-        "MULTI_ACTIVE_SATELLITE_TWO_CDK_COMP": {
-            "column_types": {
-                "CUSTOMER_PK": "BYTEA",
-                "ORDER_PK": "BYTEA",
-                "CUSTOMER_NAME": "VARCHAR",
-                "CUSTOMER_PHONE": "VARCHAR",
-                "EXTENSION": "NUMERIC(38, 0)",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
