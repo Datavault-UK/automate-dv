@@ -60,35 +60,38 @@ latest_records AS (
     WHERE a.rank = 1
 ),
 {%- endif %}
+    
 
+first_record_in_set AS (
+    SELECT DISTINCT 
+    {{ automate_dv.alias_all(source_cols, 'f') }}
+    , ROW_NUMBER() OVER(PARTITION BY {{ automate_dv.prefix([src_pk], 'deduped') }} ORDER BY {{ automate_dv.prefix([src_ldts], 'deduped') }} as asc_row_number
+    FROM source_data AS f
+    QUALIFY asc_row_number = 1
+),
 
 unique_source_records AS (
-    SELECT
-    {{ automate_dv.alias_all(source_cols, 'sd') }}
-    {%- if automate_dv.is_any_incremental() %}
-    , ROW_NUMBER() OVER(PARTITION BY {{ automate_dv.prefix([src_pk], 'sd') }} ORDER BY {{ automate_dv.prefix([src_ldts], 'sd') }} as asc_row_number
-    {%- endif %}
+    SELECT 
+    {{ automate_dv.alias_all(source_cols, 'deduped') }}
+    FROM (
+    SELECT DISTINCT
+        {{ automate_dv.alias_all(source_cols, 'sd') }}
     FROM source_data as sd
-    QUALIFY
-         CASE
-            WHEN {{ src_hashdiff }} = LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC)
-            THEN FALSE
-            ELSE TRUE
-         END
+    QUALIFY {{ src_hashdiff }} != LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC)) AS deduped
 ),
 
 records_to_insert AS (
-        SELECT DISTINCT {{ source_cols }}
-        FROM unique_source_records as usr
+        SELECT * FROM (
+            SELECT {{ source_cols }}
+            FROM first_record_in_set as usr
+            UNION
+            SELECT {{ source_cols }}
+            FROM unique_source_records as usr) rejoined_records
         {%- if automate_dv.is_any_incremental() %}
-             WHERE NOT EXISTS (
-                SELECT 1
-                FROM latest_records
-                WHERE {{ automate_dv.multikey(src_pk, prefix=['latest_records','usr'], condition='=') }}
-                    AND {{ automate_dv.multikey(src_hashdiff, prefix=['latest_records','usr'], condition='=') }}
-                    AND {{ automate_dv.prefix(['asc_row_number'], 'usr') }} = 1
+            WHERE {{ automate_dv.multikey(src_pk, prefix=['latest_records','rejoined_records'], condition='=') }}
+            AND {{ automate_dv.multikey(src_hashdiff, prefix=['latest_records','rejoined_records'], condition='=') }}
+            AND {{ automate_dv.prefix(['asc_row_number'], 'rejoined_records') }} = 1
         {%- endif %}
-
 )
 
 SELECT * FROM records_to_insert
