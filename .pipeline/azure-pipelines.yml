@@ -94,7 +94,7 @@ extends:
       - groupName: 'cycle'
         displayName: 'Load Cycles'
         disabledForPlatform: [ ]
-#      - groupName: 'ref_tables'
-#        displayName: 'Reference Tables'
-#        disabledForPlatform: [ 'databricks', 'postgres', 'bigquery', 'sqlserver' ]
-#        subGroups: [ 'main' ]
+      - groupName: 'ref_tables'
+        displayName: 'Reference Tables'
+        disabledForPlatform: [ 'databricks', 'postgres', 'bigquery', 'sqlserver', 'snowflake']
+        subGroups: [ 'main' ]
