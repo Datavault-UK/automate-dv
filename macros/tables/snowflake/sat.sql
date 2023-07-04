@@ -36,7 +36,7 @@
 
 
 WITH source_data AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
+    SELECT a.*
     FROM {{ ref(source_model) }} AS a
     WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
 ),
@@ -60,18 +60,18 @@ latest_records AS (
     WHERE a.rank = 1
 ),
 {%- endif %}
-    
+
 
 first_record_in_set AS (
-    SELECT DISTINCT 
-    {{ automate_dv.alias_all(source_cols, 'f') }}
-    , ROW_NUMBER() OVER(PARTITION BY {{ automate_dv.prefix([src_pk], 'deduped') }} ORDER BY {{ automate_dv.prefix([src_ldts], 'deduped') }} as asc_row_number
-    FROM source_data AS f
+    SELECT
+    {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
+    , ROW_NUMBER() OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ) as asc_row_number
+    FROM source_data as sd
     QUALIFY asc_row_number = 1
 ),
 
 unique_source_records AS (
-    SELECT 
+    SELECT
     {{ automate_dv.alias_all(source_cols, 'deduped') }}
     FROM (
     SELECT DISTINCT
@@ -81,17 +81,17 @@ unique_source_records AS (
 ),
 
 records_to_insert AS (
-        SELECT * FROM (
-            SELECT {{ source_cols }}
-            FROM first_record_in_set as usr
-            UNION
-            SELECT {{ source_cols }}
-            FROM unique_source_records as usr) rejoined_records
+        SELECT {{ automate_dv.prefix(source_cols, 'frin', alias_target='target') }}
+        FROM first_record_in_set AS frin
         {%- if automate_dv.is_any_incremental() %}
-            WHERE {{ automate_dv.multikey(src_pk, prefix=['latest_records','rejoined_records'], condition='=') }}
-            AND {{ automate_dv.multikey(src_hashdiff, prefix=['latest_records','rejoined_records'], condition='=') }}
-            AND {{ automate_dv.prefix(['asc_row_number'], 'rejoined_records') }} = 1
+        LEFT JOIN LATEST_RECORDS lr
+            ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
+            AND {{ automate_dv.multikey(src_hashdiff, prefix=['lr','frin'], condition='=') }}
+            WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
         {%- endif %}
+        UNION
+        SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='target') }}
+        FROM unique_source_records as usr
 )
 
 SELECT * FROM records_to_insert
