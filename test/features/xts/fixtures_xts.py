@@ -813,6 +813,8 @@ def xts_postgres(context):
         }
     }
 
+    context.seed_config = compile_aliased_metadata(seed_aliases, seed_metadata)
+
 
 @fixture
 def xts_databricks(context):
