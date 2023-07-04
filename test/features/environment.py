@@ -222,7 +222,7 @@ fixtures_registry = {
          "bigquery": fixtures_cycle.cycle_custom_null_key_bigquery,
          "sqlserver": fixtures_cycle.cycle_custom_null_key_sqlserver,
          "databricks": fixtures_cycle.cycle_custom_null_key_databricks,
-         "postgres": fixtures_cycle.cycle_custom_null_key_sqlserver},
+         "postgres": fixtures_cycle.cycle_custom_null_key_postgres},
 
     "fixture.single_source_ref_table":
         {"snowflake": fixtures_ref_table.single_source_ref_table_snowflake,
