@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {% macro drop_temporary_special(tmp_relation) %}
@@ -12,6 +12,8 @@
         {% if target.type == 'databricks' %}
             DROP VIEW {{ tmp_relation }};
         {% elif target.type == 'sqlserver' %}
+            DROP TABLE {{ tmp_relation }};
+        {% elif target.type == 'postgres' %}
             DROP TABLE {{ tmp_relation }};
         {% endif %}
     {%- endcall %}

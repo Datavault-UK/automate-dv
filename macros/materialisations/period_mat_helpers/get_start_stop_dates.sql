@@ -1,26 +1,26 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {% macro get_start_stop_dates(timestamp_field, date_source_models) %}
 
     {% if config.get('start_date', default=none) is not none %}
-
         {%- set start_date = config.get('start_date') -%}
         {%- set stop_date = config.get('stop_date', default=none) -%}
 
         {% do return({'start_date': start_date,'stop_date': stop_date}) %}
 
     {% elif date_source_models is not none %}
-
         {% if date_source_models is string %}
             {% set date_source_models = [date_source_models] %}
         {% endif %}
         {% set query_sql %}
             WITH stage AS (
             {% for source_model in date_source_models %}
-                SELECT {{ timestamp_field }} FROM {{ ref(source_model) }}
+                SELECT
+                    {{ timestamp_field }}
+                    FROM {{ ref(source_model) }}
                 {% if not loop.last %} UNION ALL {% endif %}
             {% endfor %})
 
