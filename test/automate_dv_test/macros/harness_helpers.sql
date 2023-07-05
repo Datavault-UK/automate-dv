@@ -16,38 +16,6 @@
 
 {%- endmacro -%}
 
-{%- macro check_source_exists(source_name, table_name) -%}
-
-    {%- set source = source(source_name, table_name) -%}
-    {%- set source_relation = adapter.get_relation(database=source.database,
-                                                   schema=source.schema,
-                                                   identifier=source.identifier)-%}
-
-
-    {%- if source_relation.is_table or source_relation.is_view -%}
-        {%- do log("Source '{}:{}' exists.".format(source_name, table_name), true) -%}
-        {%- do return(True) %}
-    {%- else -%}
-        {%- do log("Source '{}:{}' does not exist.".format(source_name, table_name), true) -%}
-        {%- do return(False) %}
-    {%- endif -%}
-
-{%- endmacro -%}
-
-
-{%- macro recreate_schema(schema_name=None) -%}
-
-    {%- if not schema_name -%}
-        {%- set schema_name = automate_dv_test.get_schema_name() %}
-    {%- endif -%}
-
-    {%- set schema_relation = api.Relation.create(database=target.database, schema=schema_name) -%}
-
-    {%- do adapter.drop_schema(schema_relation) -%}
-    {%- do adapter.create_schema(schema_relation) -%}
-
-{%- endmacro -%}
-
 
 {% macro hash_database_table(model_name, unhashed_table_name, hashed_columns, payload_columns) -%}
 
