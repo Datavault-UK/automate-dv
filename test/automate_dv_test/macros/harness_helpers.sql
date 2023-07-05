@@ -60,12 +60,12 @@
     {%- set date_type = ['DATE', 'DATETIME', 'TIMESTAMPTZ'] -%}
 
     {%- for cols in hashed_columns -%}
-        {%- set hash_str = dbtvault.escape_column_name(cols) -%}
+        {%- set hash_str = automate_dv.escape_column_name(cols) -%}
         {%- do hash_cols.append("{} AS {}".format(hash_str, cols|lower)) -%}
     {%- endfor -%}
 
     {%- for cols in payload_columns -%}
-        {%- set payload_str = dbtvault.escape_column_name(cols[0]) -%}
+        {%- set payload_str = automate_dv.escape_column_name(cols[0]) -%}
         {%- set payload_type = cols[1] -%}
         {%- do payload_cols_casting.append("{}::{} AS {}".format(payload_str, payload_type, payload_str|lower)) -%}
         {%- if payload_type is in date_type -%}

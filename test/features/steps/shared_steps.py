@@ -643,12 +643,12 @@ def expect_data(context, model_name):
 
         dbt_runner.run_dbt_models(mode="run", model_names=[model_name_expected], args=args)
 
-        test_yaml = dbtvault_generator.create_test_model_schema_dict(target_model_name=model_name,
+        test_yaml = automate_dv_generator.create_test_model_schema_dict(target_model_name=model_name,
                                                                      expected_output_csv=model_name_expected,
                                                                      unique_id=columns[0],
                                                                      columns_to_compare=columns)
 
-        dbtvault_generator.append_dict_to_schema_yml(test_yaml)
+        automate_dv_generator.append_dict_to_schema_yml(test_yaml)
 
         logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
