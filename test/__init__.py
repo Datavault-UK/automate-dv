@@ -4,7 +4,7 @@ from pathlib import PurePath, Path
 PROJECT_ROOT = PurePath(__file__).parents[1]
 PROFILE_DIR = Path(f"{PROJECT_ROOT}/env")
 TESTS_ROOT = Path(f"{PROJECT_ROOT}/test")
-TEST_PROJECT_ROOT = Path(f"{TESTS_ROOT}/dbtvault_test")
+TEST_PROJECT_ROOT = Path(f"{TESTS_ROOT}/automate_dv_test")
 TEST_MODELS_ROOT = TEST_PROJECT_ROOT / 'models'
 TEST_MACRO_ROOT = Path(f"{TESTS_ROOT}/test_macro/")
 TEST_HARNESS_TESTS_ROOT = Path(f"{TESTS_ROOT}/test_harness/")
@@ -15,7 +15,7 @@ INVOKE_YML_FILE = PROJECT_ROOT / 'invoke.yml'
 OP_DB_FILE = PROJECT_ROOT / 'env/db.env'
 BACKUP_TEST_SCHEMA_YML_FILE = TESTS_ROOT / 'backup_files/schema_test.bak.yml'
 BACKUP_DBT_PROJECT_YML_FILE = TESTS_ROOT / 'backup_files/dbt_project.bak.yml'
-COMPILED_TESTS_DBT_ROOT = Path(f"{TEST_PROJECT_ROOT}/target/compiled/dbtvault_test/models/")
+COMPILED_TESTS_DBT_ROOT = Path(f"{TEST_PROJECT_ROOT}/target/compiled/automate_dv_test/models/")
 ENV_TEMPLATE_DIR = PROJECT_ROOT / 'env/templates'
 
 FEATURES_ROOT = TESTS_ROOT / 'features'

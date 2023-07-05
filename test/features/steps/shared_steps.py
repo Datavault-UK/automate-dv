@@ -289,7 +289,7 @@ def load_populated_table(context, model_name, vault_structure):
                 data_type = context.seed_config[model_name]['column_types'][col]
                 payload_columns.append([col, data_type])
 
-        sql = f"{{{{- dbtvault_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
+        sql = f"{{{{- automate_dv_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
                   f"{hashed_columns}, {payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
@@ -630,7 +630,7 @@ def expect_data(context, model_name):
                 data_type = context.seed_config[model_name]['column_types'][col]
                 payload_columns.append([col, data_type])
 
-        sql = f"{{{{- dbtvault_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
+        sql = f"{{{{- automate_dv_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
                   f"{hashed_columns}, {payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(model_name_expected, sql)
@@ -810,10 +810,10 @@ def step_impl(context, dbtvault):
     model_name = f'{context.sample_table_name}_model'
 
     if dbtvault == 'test':
-        sql = f"{{{{- dbtvault_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
+        sql = f"{{{{- automate_dv_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
                   f"\042{sample_table_name}\042, automate_dv = False) -}}}}"
     elif dbtvault == 'dbtvault':
-        sql = f"{{{{- dbtvault_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
+        sql = f"{{{{- automate_dv_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
                   f"\042{sample_table_name}\042, automate_dv = True) -}}}}"
 
     dbt_file_utils.generate_model(model_name, sql)
