@@ -1,14 +1,14 @@
-{%- macro get_hash_length(columns, schema_name, table_name, automate_dv) -%}
+{%- macro get_hash_length(columns, schema_name, table_name, use_package) -%}
 
-    {{- adapter.dispatch('get_hash_length', 'automate_dv_test')(columns=columns, schema_name=schema_name, table_name=table_name, automate_dv=automate_dv) -}}
+    {{- adapter.dispatch('get_hash_length', 'automate_dv_test')(columns=columns, schema_name=schema_name, table_name=table_name, use_package=use_package) -}}
 
 {%- endmacro -%}
 
-{%- macro default__get_hash_length(columns, schema_name, table_name, automate_dv) -%}
+{%- macro default__get_hash_length(columns, schema_name, table_name, use_package) -%}
 
     {%- set hash_alg = var('hash', 'MD5') -%}
 
-    {%- if not automate_dv -%}
+    {%- if not use_package -%}
         {%- if hash_alg == 'MD5' -%}
             {%- set hash -%}
                 MD5_BINARY({{ columns }}) AS HK
@@ -22,9 +22,9 @@
                 MD5_BINARY({{ columns }}) AS HK
             {%- endset -%}
         {%- endif -%}
-    {%- elif automate_dv -%}
+    {%- elif use_package -%}
         {%- set hash -%}
-            {{- dbtvault.hash(columns=columns, alias='HK', is_hashdiff=false, columns_to_escape=columns) -}}
+            {{- automate_dv.hash(columns=columns, alias='HK', is_hashdiff=false, columns_to_escape=columns) -}}
         {%- endset -%}
     {%- endif -%}
 
@@ -40,11 +40,11 @@
 
 {%- endmacro -%}
 
-{%- macro postgres__get_hash_length(columns, schema_name, table_name, automate_dv) -%}
+{%- macro postgres__get_hash_length(columns, schema_name, table_name, use_package) -%}
 
     {%- set hash_alg = var('hash', 'MD5') -%}
 
-    {%- if not automate_dv -%}
+    {%- if not use_package -%}
         {%- if hash_alg == 'MD5' -%}
             {%- set hash -%}
                 DECODE(MD5("{{ columns }}"), 'hex') AS HK
@@ -58,9 +58,9 @@
                 DECODE(MD5("{{ columns }}"), 'hex') AS HK
             {%- endset -%}
         {%- endif -%}
-    {%- elif automate_dv -%}
+    {%- elif use_package -%}
         {%- set hash -%}
-            {{- dbtvault.hash(columns=columns, alias='HK', is_hashdiff=false, columns_to_escape=columns) -}}
+            {{- automate_dv.hash(columns=columns, alias='HK', is_hashdiff=false, columns_to_escape=columns) -}}
         {%- endset -%}
     {%- endif -%}
 

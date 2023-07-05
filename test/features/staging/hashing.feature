@@ -1,3 +1,4 @@
+@postgres
 Feature: [HASH] Check the hash string length for postgres
 
   @fixture.hashing

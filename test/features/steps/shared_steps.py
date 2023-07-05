@@ -5,10 +5,8 @@ from behave import *
 from behave.model import Table, Row
 
 from env import env_utils
-from test import automate_dv_generator, dbt_runner, behave_helpers, context_utils, step_helpers
+from test import automate_dv_generator, dbt_runner, behave_helpers, context_utils, step_helpers, context_helpers
 from test import dbt_file_utils
-from test import dbtvault_generator, dbt_runner, behave_helpers, context_utils, step_helpers, context_helpers
-
 
 def set_stage_metadata(context, stage_model_name) -> dict:
     """
@@ -813,10 +811,10 @@ def step_impl(context, dbtvault):
 
     if dbtvault == 'test':
         sql = f"{{{{- automate_dv_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
-                  f"\042{sample_table_name}\042, automate_dv = False) -}}}}"
+                  f"\042{sample_table_name}\042, use_package = False) -}}}}"
     elif dbtvault == 'dbtvault':
         sql = f"{{{{- automate_dv_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
-                  f"\042{sample_table_name}\042, automate_dv = True) -}}}}"
+                  f"\042{sample_table_name}\042, use_package = True) -}}}}"
 
     dbt_file_utils.generate_model(model_name, sql)
 

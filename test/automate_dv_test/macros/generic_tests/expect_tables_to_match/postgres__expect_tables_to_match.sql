@@ -63,7 +63,7 @@
 
 {# POSTGRES#}
 {# unique_id usage must be quoted #}
-{%  set unique_id_quoted = dbtvault.escape_column_name(unique_id) %}
+{%  set unique_id_quoted = automate_dv.escape_column_name(unique_id) %}
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}
