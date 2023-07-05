@@ -18,7 +18,7 @@ Feature: [MAS-RM] Multi Active Satellites
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -48,7 +48,7 @@ Feature: [MAS-RM] Multi Active Satellites
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1216 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1217 | 1993-01-02 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -81,7 +81,7 @@ Feature: [MAS-RM] Multi Active Satellites
       | 1002        | Bob           | 17-214-233-1215 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1235 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data
@@ -129,7 +129,7 @@ Feature: [MAS-RM] Multi Active Satellites
       | 1004        | Dom           | 17-214-233-1237 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
-    And I have a rank column DBTVAULT_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
+    And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
     And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
     Then the MULTI_ACTIVE_SATELLITE table should contain expected data

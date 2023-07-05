@@ -212,6 +212,7 @@ Feature: [TLK] Transactional Links
       | 1237        | 1249     | 12345696           | 2019-09-21       | CR   | 40000.00 | 2019-09-23 | SAP    |
       | 1239        | 1250     | 12345697           | 2019-09-21       | DR   | 34.87    | 2019-09-23 | SAP    |
       | 1239        | 1251     | 12345698           | 2019-09-21       | CR   | 4567.87  | 2019-09-23 | SAP    |
+    And I stage the STG_CUSTOMER data
     And I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -298,11 +299,11 @@ Feature: [TLK] Transactional Links
     And I stage the STG_CUSTOMER data
     When I load the T_LINK_AC t_link
     Then the T_LINK_AC table should contain expected data
-      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | CUSTOMER_MT_ID | EFFECTIVE_FROM |  LOAD_DATE  | SOURCE |
-      | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
-      | md5('1234\|\|4322\|\|12345679') | md5('1234') | md5('4322') | 12345679           | 2019-09-19       | CR   | 123.40   | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
-      | md5('1234\|\|4323\|\|12345680') | md5('1234') | md5('4323') | 12345680           | 2019-09-19       | DR   | 2546.23  | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
-      | md5('1234\|\|4324\|\|12345681') | md5('1234') | md5('4324') | 12345681           | 2019-09-19       | CR   | -123.40  | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
-      | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
-      | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
-      | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | TPCH_CUSTOMER  | 2019-09-19     |  2019-09-21 | SAP    |
+      | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | CUSTOMER_MT_ID | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1234\|\|4321\|\|12345678') | md5('1234') | md5('4321') | 12345678           | 2019-09-19       | DR   | 2340.50  | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |
+      | md5('1234\|\|4322\|\|12345679') | md5('1234') | md5('4322') | 12345679           | 2019-09-19       | CR   | 123.40   | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |
+      | md5('1234\|\|4323\|\|12345680') | md5('1234') | md5('4323') | 12345680           | 2019-09-19       | DR   | 2546.23  | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |
+      | md5('1234\|\|4324\|\|12345681') | md5('1234') | md5('4324') | 12345681           | 2019-09-19       | CR   | -123.40  | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |
+      | md5('1235\|\|4325\|\|12345682') | md5('1235') | md5('4325') | 12345682           | 2019-09-19       | CR   | 37645.34 | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |
+      | md5('1236\|\|4326\|\|12345683') | md5('1236') | md5('4326') | 12345683           | 2019-09-19       | CR   | 236.55   | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |
+      | md5('1237\|\|4327\|\|12345684') | md5('1237') | md5('4327') | 12345684           | 2019-09-19       | DR   | 3567.34  | TPCH_CUSTOMER  | 2019-09-19     | 2019-09-21 | SAP    |

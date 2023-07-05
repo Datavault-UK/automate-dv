@@ -1,6 +1,6 @@
 /*
- *  Copyright (c) Business Thinking Ltd. 2019-2022
- *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * Copyright (c) Business Thinking Ltd. 2019-2023
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- test expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
@@ -21,21 +21,21 @@
 
 {%- for compare_col in compare_columns -%}
 
-    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(dbtvault.escape_column_names(compare_col), dbtvault.escape_column_names(compare_col))) -%}
-    {%- do columns_processed.append(dbtvault.escape_column_names(compare_col)) -%}
+    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(automate_dv.escape_column_names(compare_col), automate_dv.escape_column_names(compare_col))) -%}
+    {%- do columns_processed.append(automate_dv.escape_column_names(compare_col)) -%}
 
 {%- endfor %}
 
 {%- for source_col in source_columns -%}
 
-    {%- do source_columns_list.append(dbtvault.escape_column_names(source_col.column)) -%}
-    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(dbtvault.escape_column_names(source_col.column), dbtvault.escape_column_names(source_col.column))) -%}
+    {%- do source_columns_list.append(automate_dv.escape_column_names(source_col.column)) -%}
+    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(automate_dv.escape_column_names(source_col.column), automate_dv.escape_column_names(source_col.column))) -%}
 {%- endfor %}
 
 {%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
 {%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
 {%- set columns_string = columns_processed | sort | join(", ") -%}
-{%  set compare_columns = dbtvault.escape_column_names(compare_columns) %}
+{%  set compare_columns = automate_dv.escape_column_names(compare_columns) %}
 
 WITH actual_data AS (
     SELECT * FROM {{ model }}

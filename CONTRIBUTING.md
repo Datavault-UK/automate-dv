@@ -155,7 +155,7 @@ Connection:
   Connection test: OK connection ok
 
 (dbtvault) INFO: Installing automate_dv_dev in test project...
-(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/automate_dv_test'
+(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
 Running with dbt=0.20.0
 Installing ../../automate_dv_dev
   Installed from <local @ ../../automate_dv_dev>

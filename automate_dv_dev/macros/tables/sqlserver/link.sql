@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro sqlserver__link(src_pk, src_fk, src_extra_columns, src_ldts, src_source, source_model) -%}
@@ -10,7 +10,7 @@
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{%- endif -%}
+{%- endif %}
 
 {{ 'WITH ' -}}
 
@@ -43,8 +43,9 @@ row_rank_{{ source_number }} AS (
     ) l
     WHERE l.row_number = 1
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
-),{{ "\n" if not loop.last }}
-{% endfor -%}
+    ),{{ "\n" if not loop.last }}
+    {% endfor -%}
+
 {% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}

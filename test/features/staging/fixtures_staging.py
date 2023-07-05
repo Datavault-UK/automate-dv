@@ -22,7 +22,7 @@ def staging_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "VARCHAR"
+                "AUTOMATE_DV_RANK": "VARCHAR"
             }
         },
         "RAW_STAGE": {
@@ -59,8 +59,8 @@ def staging_escaped_snowflake(context):
                 "SOURCE": "VARCHAR",
                 "COLUMN": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
-                "DBTVAULT_RANK": "VARCHAR",
-                "DBTVAULT_RANK2": "VARCHAR"
+                "AUTOMATE_DV_RANK": "VARCHAR",
+                "AUTOMATE_DV_RANK2": "VARCHAR"
             }
         },
         "RAW_STAGE": {
@@ -95,7 +95,7 @@ def staging_null_columns_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "VARCHAR",
+                "AUTOMATE_DV_RANK": "VARCHAR",
                 "CUSTOMER_ID_ORIGINAL": "VARCHAR",
                 "CUSTOMER_REF": "VARCHAR",
                 "CUSTOMER_REF_ORIGINAL": "VARCHAR",
@@ -181,8 +181,8 @@ def staging_escaped_bigquery(context):
                 "SOURCE": "STRING",
                 "COLUMN": "STRING",
                 "CUSTOMER_NAME": "STRING",
-                "DBTVAULT_RANK": "STRING",
-                "DBTVAULT_RANK2": "STRING"
+                "AUTOMATE_DV_RANK": "STRING",
+                "AUTOMATE_DV_RANK2": "STRING"
             }
         },
         "RAW_STAGE": {
@@ -217,7 +217,7 @@ def staging_null_columns_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "STRING",
+                "AUTOMATE_DV_RANK": "STRING",
                 "CUSTOMER_ID_ORIGINAL": "STRING",
                 "CUSTOMER_REF": "STRING",
                 "CUSTOMER_REF_ORIGINAL": "STRING",
@@ -265,7 +265,7 @@ def staging_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
+                "AUTOMATE_DV_RANK": "INT",
                 "CUSTOMER_NK": "VARCHAR(30)",
                 "CUSTOMER_DOB_UK": "VARCHAR(10)"
             }
@@ -281,7 +281,7 @@ def staging_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
+                "AUTOMATE_DV_RANK": "INT",
                 "CUSTOMER_NK": "VARCHAR(30)",
                 "CUSTOMER_DOB_UK": "VARCHAR(10)"
             }
@@ -297,8 +297,8 @@ def staging_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT",
+                "AUTOMATE_DV_RANK": "INT",
+                "AUTOMATE_DV_RANK2": "INT",
                 "CUSTOMER_NK": "VARCHAR(30)",
                 "CUSTOMER_DOB_UK": "VARCHAR(10)",
                 "DERIVED_CONCAT": "VARCHAR(50)"
@@ -338,8 +338,8 @@ def staging_escaped_sqlserver(context):
                 "SOURCE": "VARCHAR(10)",
                 "COLUMN": "VARCHAR(50)",
                 "CUSTOMER_NAME": "VARCHAR(10)",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT"
+                "AUTOMATE_DV_RANK": "INT",
+                "AUTOMATE_DV_RANK2": "INT"
             }
         },
         "STG_CUSTOMER_CONCAT": {
@@ -354,8 +354,8 @@ def staging_escaped_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT",
+                "AUTOMATE_DV_RANK": "INT",
+                "AUTOMATE_DV_RANK2": "INT",
                 "DERIVED_CONCAT": "VARCHAR(50)"
             }
         },
@@ -372,8 +372,8 @@ def staging_escaped_sqlserver(context):
                 "EFFECTIVE_FROM": "DATE",
                 "SOURCE": "VARCHAR(10)",
                 "DERIVED_CONCAT": "VARCHAR(50)",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT"
+                "AUTOMATE_DV_RANK": "INT",
+                "AUTOMATE_DV_RANK2": "INT"
             }
         },
         "STG_CUSTOMER_NAME_DOB": {
@@ -390,8 +390,8 @@ def staging_escaped_sqlserver(context):
                 "EFFECTIVE_FROM": "DATE",
                 "SOURCE": "VARCHAR(10)",
                 "CUSTOMER_DOB_UK": "VARCHAR(10)",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT",
+                "AUTOMATE_DV_RANK": "INT",
+                "AUTOMATE_DV_RANK2": "INT",
             }
         },
         "RAW_STAGE": {
@@ -436,7 +436,7 @@ def staging_null_columns_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
+                "AUTOMATE_DV_RANK": "INT",
                 "CUSTOMER_ID_ORIGINAL": "VARCHAR(5)",
                 "CUSTOMER_REF": "VARCHAR(10)",
                 "CUSTOMER_REF_ORIGINAL": "VARCHAR(10)",
@@ -485,7 +485,7 @@ def staging_databricks(context):
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "VARCHAR(100)"
+                "AUTOMATE_DV_RANK": "VARCHAR(100)"
             }
         },
         "RAW_STAGE": {
@@ -522,8 +522,8 @@ def staging_escaped_databricks(context):
                 "SOURCE": "VARCHAR(100)",
                 "COLUMN": "VARCHAR(100)",
                 "CUSTOMER_NAME": "VARCHAR(100)",
-                "DBTVAULT_RANK": "VARCHAR(100)",
-                "DBTVAULT_RANK2": "VARCHAR(100)"
+                "AUTOMATE_DV_RANK": "VARCHAR(100)",
+                "AUTOMATE_DV_RANK2": "VARCHAR(100)"
             }
         },
         "RAW_STAGE": {
@@ -558,7 +558,7 @@ def staging_null_columns_databricks(context):
                 "CUSTOMER_PK": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "VARCHAR(100)",
+                "AUTOMATE_DV_RANK": "VARCHAR(100)",
                 "CUSTOMER_ID_ORIGINAL": "VARCHAR(100)",
                 "CUSTOMER_REF": "VARCHAR(100)",
                 "CUSTOMER_REF_ORIGINAL": "VARCHAR(100)",
@@ -606,7 +606,7 @@ def staging_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "VARCHAR"
+                "AUTOMATE_DV_RANK": "VARCHAR"
             }
         },
         "STG_CUSTOMER_HASH": {
@@ -620,7 +620,7 @@ def staging_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
+                "AUTOMATE_DV_RANK": "INT",
                 "CUSTOMER_NK": "VARCHAR(30)",
                 "CUSTOMER_DOB_UK": "VARCHAR(10)"
             }
@@ -636,8 +636,8 @@ def staging_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "INT",
-                "DBTVAULT_RANK2": "INT",
+                "AUTOMATE_DV_RANK": "INT",
+                "AUTOMATE_DV_RANK2": "INT",
                 "CUSTOMER_NK": "VARCHAR(30)",
                 "CUSTOMER_DOB_UK": "VARCHAR(10)",
                 "DERIVED_CONCAT": "VARCHAR(50)"
@@ -677,8 +677,8 @@ def staging_escaped_postgres(context):
                 "SOURCE": "VARCHAR",
                 "COLUMN": "VARCHAR",
                 "CUSTOMER_NAME": "VARCHAR",
-                "DBTVAULT_RANK": "VARCHAR",
-                "DBTVAULT_RANK2": "VARCHAR"
+                "AUTOMATE_DV_RANK": "VARCHAR",
+                "AUTOMATE_DV_RANK2": "VARCHAR"
             }
         },
         "RAW_STAGE": {
@@ -713,7 +713,7 @@ def staging_null_columns_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
-                "DBTVAULT_RANK": "VARCHAR",
+                "AUTOMATE_DV_RANK": "VARCHAR",
                 "CUSTOMER_ID_ORIGINAL": "VARCHAR",
                 "CUSTOMER_REF": "VARCHAR",
                 "CUSTOMER_REF_ORIGINAL": "VARCHAR",

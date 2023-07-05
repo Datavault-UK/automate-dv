@@ -31,7 +31,8 @@ def raw_vault_structure(model_name, vault_structure, config=None, **kwargs):
         "xts": xts,
         "ma_sat": ma_sat,
         "bridge": bridge,
-        "pit": pit
+        "pit": pit,
+        "ref_table": ref_table
     }
 
     processed_metadata = process_structure_metadata(vault_structure=vault_structure, model_name=model_name,
@@ -63,12 +64,12 @@ def stage(model_name, source_model: dict, derived_columns=None, null_columns=Non
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.stage(include_source_columns={str(include_source_columns).lower()},
-                        source_model={source_model},
-                        derived_columns={derived_columns},
-                        null_columns={null_columns},
-                        hashed_columns={hashed_columns},
-                        ranked_columns={ranked_columns}) }}}}
+    {{{{ automate_dv.stage(include_source_columns={str(include_source_columns).lower()},
+                           source_model={source_model},
+                           derived_columns={derived_columns},
+                           null_columns={null_columns},
+                           hashed_columns={hashed_columns},
+                           ranked_columns={ranked_columns}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -93,10 +94,10 @@ def hub(model_name, src_pk, src_nk,
     template = f"""
     {depends_on}    
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.hub(src_pk={src_pk}, src_nk={src_nk}, 
-                      src_ldts={src_ldts}, src_source={src_source}, 
-                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                      source_model={source_model})   }}}}
+    {{{{ automate_dv.hub(src_pk={src_pk}, src_nk={src_nk}, 
+                         src_ldts={src_ldts}, src_source={src_source}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                         source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
@@ -121,10 +122,10 @@ def link(model_name, src_pk, src_fk,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.link(src_pk={src_pk}, src_fk={src_fk}, 
-                       src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                       src_ldts={src_ldts}, src_source={src_source}, 
-                       source_model={source_model})   }}}}
+    {{{{ automate_dv.link(src_pk={src_pk}, src_fk={src_fk}, 
+                          src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                          src_ldts={src_ldts}, src_source={src_source}, 
+                          source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
@@ -150,11 +151,11 @@ def t_link(model_name, src_pk, src_fk, src_eff, src_ldts, src_source, source_mod
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.t_link(src_pk={src_pk}, src_fk={src_fk}, 
-                         src_payload={src_payload if src_payload else 'none'},
-                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                         src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
-                         source_model={source_model}) }}}}
+    {{{{ automate_dv.t_link(src_pk={src_pk}, src_fk={src_fk}, 
+                            src_payload={src_payload if src_payload else 'none'},
+                            src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                            src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
+                            source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -181,10 +182,10 @@ def sat(model_name, src_pk, src_hashdiff, src_payload,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
-                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                      src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
-                      source_model={source_model}) }}}}
+    {{{{ automate_dv.sat(src_pk={src_pk}, src_hashdiff={src_hashdiff}, src_payload={src_payload},
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                         src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source}, 
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -213,11 +214,11 @@ def eff_sat(model_name, src_pk, src_dfk, src_sfk,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.eff_sat(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
-                          src_start_date={src_start_date}, src_end_date={src_end_date},
-                          src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                          src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source},
-                          source_model={source_model}) }}}}
+    {{{{ automate_dv.eff_sat(src_pk={src_pk}, src_dfk={src_dfk}, src_sfk={src_sfk},
+                             src_start_date={src_start_date}, src_end_date={src_end_date},
+                             src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                             src_eff={src_eff}, src_ldts={src_ldts}, src_source={src_source},
+                             source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -242,12 +243,12 @@ def ma_sat(model_name, src_pk, src_cdk, src_hashdiff, src_payload,
 
     template = f"""
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.ma_sat(src_pk={src_pk}, src_cdk={src_cdk}, src_hashdiff={src_hashdiff}, 
-                         src_payload={src_payload}, 
-                         src_eff={src_eff if src_eff else 'none'}, 
-                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                         src_ldts={src_ldts}, src_source={src_source}, 
-                         source_model={source_model}) }}}}
+    {{{{ automate_dv.ma_sat(src_pk={src_pk}, src_cdk={src_cdk}, src_hashdiff={src_hashdiff}, 
+                            src_payload={src_payload}, 
+                            src_eff={src_eff if src_eff else 'none'}, 
+                            src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                            src_ldts={src_ldts}, src_source={src_source}, 
+                            source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -271,10 +272,10 @@ def xts(model_name, src_pk, src_satellite, src_ldts, src_source, source_model,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.xts(src_pk={src_pk}, src_satellite={src_satellite}, 
-                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                      src_ldts={src_ldts}, src_source={src_source},
-                      source_model={source_model}) }}}}
+    {{{{ automate_dv.xts(src_pk={src_pk}, src_satellite={src_satellite}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                         src_ldts={src_ldts}, src_source={src_source},
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -299,13 +300,13 @@ def pit(model_name, source_model, src_pk, as_of_dates_table, satellites,
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.pit(src_pk={src_pk}, 
-                      src_extra_columns={src_extra_columns if src_extra_columns else 'none'},
-                      as_of_dates_table={as_of_dates_table}, 
-                      satellites={satellites}, 
-                      stage_tables_ldts={stage_tables_ldts},
-                      src_ldts={src_ldts},
-                      source_model={source_model}) }}}}
+    {{{{ automate_dv.pit(src_pk={src_pk}, 
+                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'},
+                         as_of_dates_table={as_of_dates_table}, 
+                         satellites={satellites}, 
+                         stage_tables_ldts={stage_tables_ldts},
+                         src_ldts={src_ldts},
+                         source_model={source_model}) }}}}
     """
 
     template_to_file(template, model_name)
@@ -329,13 +330,38 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template = f"""
     {depends_on}
     {{{{ config({config}) }}}}
-    {{{{ dbtvault.bridge(src_pk={src_pk}, 
-                         src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
-                         src_ldts={src_ldts}, 
-                         as_of_dates_table={as_of_dates_table}, 
-                         bridge_walk={bridge_walk}, 
-                         stage_tables_ldts={stage_tables_ldts},
-                         source_model={source_model}) }}}}
+    {{{{ automate_dv.bridge(src_pk={src_pk}, 
+                            src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                            src_ldts={src_ldts}, 
+                            as_of_dates_table={as_of_dates_table}, 
+                            bridge_walk={bridge_walk}, 
+                            stage_tables_ldts={stage_tables_ldts},
+                            source_model={source_model}) }}}}
+    """
+
+    template_to_file(template, model_name)
+
+
+def ref_table(model_name, src_pk, src_ldts, src_source, source_model,
+              config, src_extra_columns=None, depends_on=""):
+    """
+    Generate a reference table model template
+        :param model_name: Name of the model file
+        :param src_pk: Source pk
+        :param src_ldts: Source load date timestamp
+        :param src_source: Source record source column
+        :param source_model: Model name to select from
+        :param config: Optional model config string
+        :param src_extra_columns: Additional columns to add to the reference table
+        :param depends_on: Optional forced dependency
+    """
+
+    template = f"""
+    {depends_on}    
+    {{{{ config({config}) }}}}
+    {{{{ automate_dv.ref_table(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source}, 
+                               src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
+                               source_model={source_model})   }}}}
     """
 
     template_to_file(template, model_name)
@@ -381,10 +407,10 @@ def macro_model(model_name, macro_name, metadata=None):
 def hash_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
-    {{{{ dbtvault.hash(columns=var('columns'), 
-                       alias=var('alias'), 
-                       is_hashdiff=var('is_hashdiff', false), 
-                       columns_to_escape=var('columns_to_escape', false)) }}}}
+    {{{{ automate_dv.hash(columns=var('columns'), 
+                          alias=var('alias'), 
+                          is_hashdiff=var('is_hashdiff', false), 
+                          columns_to_escape=var('columns_to_escape', false)) }}}}
     {{% endif %}}
     """
 
@@ -394,7 +420,7 @@ def hash_macro(model_name, **_):
 def concat_ws_macro(model_name, **_):
     template = f"""
     {{%- if execute -%}}
-    {{{{ dbtvault.concat_ws(string_list=var('string_list')) }}}}
+    {{{{ automate_dv.concat_ws(string_list=var('string_list')) }}}}
     {{%- endif -%}}
     """
 
@@ -410,7 +436,7 @@ def derive_columns_macro(model_name, **_):
         {{% endif %}}
     {{% endif %}}
     
-    {{{{ dbtvault.derive_columns(source_relation=source_relation, columns=var('columns', [])) }}}}
+    {{{{ automate_dv.derive_columns(source_relation=source_relation, columns=var('columns', [])) }}}}
     """
 
     template_to_file(template, model_name)
@@ -419,7 +445,7 @@ def derive_columns_macro(model_name, **_):
 def null_columns_macro(model_name, **_):
     template = f"""
     {{%- if execute -%}}
-    {{{{ dbtvault.null_columns(columns=var('columns', [])) }}}}
+    {{{{ automate_dv.null_columns(columns=var('columns', [])) }}}}
     {{% endif %}}
     """
 
@@ -431,7 +457,7 @@ def hash_columns_macro(model_name, metadata):
                f"{dict_to_yaml_string(metadata)}" \
                f"{{%- endset -%}}\n\n" \
                f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
-               f"{{{{ dbtvault.hash_columns(columns=metadata_dict['columns']) }}}}"
+               f"{{{{ automate_dv.hash_columns(columns=metadata_dict['columns']) }}}}"
 
     template_to_file(textwrap.dedent(template), model_name)
 
@@ -441,7 +467,7 @@ def rank_columns_macro(model_name, metadata):
                f"{dict_to_yaml_string(metadata)}" \
                f"{{%- endset -%}}\n\n" \
                f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
-               f"{{{{ dbtvault.rank_columns(columns=metadata_dict['columns']) }}}}"
+               f"{{{{ automate_dv.rank_columns(columns=metadata_dict['columns']) }}}}"
 
     template_to_file(textwrap.dedent(template), model_name)
 
@@ -451,42 +477,42 @@ def stage_macro(model_name, metadata):
                f"{dict_to_yaml_string(metadata)}" \
                f"{{%- endset -%}}\n\n" \
                f"{{% set metadata_dict = fromyaml(yaml_metadata) %}}\n\n" \
-               f"{{{{ dbtvault.stage(include_source_columns=metadata_dict.get('include_source_columns', none),\n" \
-               f"                  source_model=metadata_dict.get('source_model', none),\n" \
-               f"                  derived_columns=metadata_dict.get('derived_columns', none),\n" \
-               f"                  null_columns=metadata_dict.get('null_columns', none),\n" \
-               f"                  hashed_columns=metadata_dict.get('hashed_columns', none),\n" \
-               f"                  ranked_columns=metadata_dict.get('ranked_columns', none)) }}}}"
+               f"{{{{ automate_dv.stage(include_source_columns=metadata_dict.get('include_source_columns', none),\n" \
+               f"                       source_model=metadata_dict.get('source_model', none),\n" \
+               f"                       derived_columns=metadata_dict.get('derived_columns', none),\n" \
+               f"                       null_columns=metadata_dict.get('null_columns', none),\n" \
+               f"                       hashed_columns=metadata_dict.get('hashed_columns', none),\n" \
+               f"                       ranked_columns=metadata_dict.get('ranked_columns', none)) }}}}"
 
     template_to_file(template, model_name)
 
 
 def expand_column_list_macro(model_name, **_):
-    template = "{{- dbtvault.expand_column_list(columns=var('columns', none)) -}}"
+    template = "{{- automate_dv.expand_column_list(columns=var('columns', none)) -}}"
 
     template_to_file(template, model_name)
 
 
 def escape_column_names_macro(model_name, **_):
-    template = "{{- dbtvault.escape_column_names(columns=var('columns', none)) -}}"
+    template = "{{- automate_dv.escape_column_names(columns=var('columns', none)) -}}"
 
     template_to_file(template, model_name)
 
 
 def as_constant_macro(model_name, **_):
-    template = "{{- dbtvault.as_constant(column_str=var('column_str', none)) -}}"
+    template = "{{- automate_dv.as_constant(column_str=var('column_str', none)) -}}"
 
     template_to_file(template, model_name)
 
 
 def alias_macro(model_name, **_):
-    template = "{{ dbtvault.alias(alias_config=var('alias_config', none), prefix=var('prefix', none)) }}"
+    template = "{{ automate_dv.alias(alias_config=var('alias_config', none), prefix=var('prefix', none)) }}"
 
     template_to_file(template, model_name)
 
 
 def alias_all_macro(model_name, **_):
-    template = "{{ dbtvault.alias_all(columns=var('columns', none), prefix=var('prefix', none)) }}"
+    template = "{{ automate_dv.alias_all(columns=var('columns', none), prefix=var('prefix', none)) }}"
 
     template_to_file(template, model_name)
 
@@ -494,7 +520,7 @@ def alias_all_macro(model_name, **_):
 def prefix_macro(model_name, **_):
     template = f"""
     {{% if execute %}}
-    {{{{ dbtvault.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
+    {{{{ automate_dv.prefix(columns=var('columns', none), prefix_str=var('prefix', none), 
     alias_target=var('alias_target', none)) }}}}
     {{% endif %}}
     """
@@ -509,7 +535,7 @@ def create_ghost_record_macro(model_name, **_):
                {{%- if var('source_model', '') != '' -%}}
                    {{%- set source_relation = ref(var('source_model')) -%}}
                {{% endif %}}
-               {{{{ dbtvault.create_ghost_record(src_pk=var('src_pk', none),
+               {{{{ automate_dv.create_ghost_record(src_pk=var('src_pk', none),
                src_hashdiff=var('src_hashdiff', none),
                src_payload=var('src_payload', none),
                src_extra_columns=var('src_extra_columns', none),
@@ -525,7 +551,7 @@ def create_ghost_record_macro(model_name, **_):
 
 def null_expression_macro(model_name, **_):
     template = f"""
-               {{{{ dbtvault.null_expression(column_str=var('column_str', none))}}}}
+               {{{{ automate_dv.null_expression(column_str=var('column_str', none))}}}}
                """
 
     template_to_file(template, model_name)
@@ -533,7 +559,7 @@ def null_expression_macro(model_name, **_):
 
 def select_hash_alg_macro(model_name, **_):
     template = f"""
-               {{{{ dbtvault.select_hash_alg(hash=var('hash', none))}}}}
+               {{{{ automate_dv.select_hash_alg(hash=var('hash', none))}}}}
                """
 
     template_to_file(template, model_name)
@@ -541,7 +567,7 @@ def select_hash_alg_macro(model_name, **_):
 
 def standard_column_wrapper_macro(model_name, **_):
     template = f"""
-               {{{{ dbtvault.standard_column_wrapper()}}}}
+               {{{{ automate_dv.standard_column_wrapper()}}}}
                """
 
     template_to_file(template, model_name)
@@ -550,7 +576,7 @@ def standard_column_wrapper_macro(model_name, **_):
 def process_columns_to_escape_macro(model_name, **_):
     template = f"""
                {{% if execute %}}
-               {{{{ dbtvault.process_columns_to_escape(derived_columns_list=var('derived_columns_list', none))}}}}
+               {{{{ automate_dv.process_columns_to_escape(derived_columns_list=var('derived_columns_list', none))}}}}
                {{% endif %}}
                """
 
@@ -619,7 +645,8 @@ def process_structure_metadata(vault_structure, model_name, config, **kwargs):
         "t_link": "incremental",
         "ma_sat": "incremental",
         "pit": "pit_incremental",
-        "bridge": "bridge_incremental"
+        "bridge": "bridge_incremental",
+        "ref_table": "incremental"
     }
 
     if config:

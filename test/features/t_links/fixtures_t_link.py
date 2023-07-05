@@ -12,6 +12,15 @@ def set_vault_structure_definition(context):
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
         },
+        "T_LINK_TZ": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
         "T_LINK_AC": {
             "src_pk": "TRANSACTION_PK",
             "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
@@ -80,6 +89,18 @@ def t_link_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "TRANSACTION_NUMBER": "NUMBER(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMBER(38,2)",
+                "LOAD_DATE": "TIMESTAMP_TZ",
+                "SOURCE": "VARCHAR"
+            }
+        },
         "T_LINK": {
             "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
@@ -91,6 +112,20 @@ def t_link_snowflake(context):
                 "AMOUNT": "NUMBER(38,2)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "T_LINK_TZ": {
+            "column_types": {
+                "TRANSACTION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "TRANSACTION_NUMBER": "NUMBER(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMBER(38,2)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "TIMESTAMP_TZ",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -173,6 +208,18 @@ def t_link_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "STRING",
+                "ORDER_ID": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "STRING"
+            }
+        },
         "T_LINK": {
             "column_types": {
                 "TRANSACTION_PK": "STRING",
@@ -184,6 +231,20 @@ def t_link_bigquery(context):
                 "AMOUNT": "STRING",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
+            }
+        },
+        "T_LINK_TZ": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "STRING"
             }
         },
@@ -281,6 +342,19 @@ def t_link_sqlserver(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "TRANSACTION_NUMBER": "DECIMAL(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "TYPE": "VARCHAR(50)",
+                "AMOUNT": "DECIMAL(38,2)",
+                "LOAD_DATE": "DATETIME2",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "T_LINK": {
             "column_types": {
                 "TRANSACTION_PK": "BINARY(16)",
@@ -292,6 +366,20 @@ def t_link_sqlserver(context):
                 "AMOUNT": "DECIMAL(38,2)",
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "T_LINK_TZ": {
+            "column_types": {
+                "TRANSACTION_PK": "BINARY(16)",
+                "CUSTOMER_FK": "BINARY(16)",
+                "ORDER_FK": "BINARY(16)",
+                "TRANSACTION_NUMBER": "DECIMAL(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR(50)",
+                "AMOUNT": "DECIMAL(38,2)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
         },
@@ -382,6 +470,25 @@ def t_link_databricks(context):
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "T_LINK_TZ": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
+        },
+        "T_LINK_AC": {
+            "src_pk": "TRANSACTION_PK",
+            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
+            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
+                            "TYPE", "AMOUNT"],
+            "src_extra_columns": "CUSTOMER_MT_ID",
+            "src_eff": "EFFECTIVE_FROM",
+            "src_ldts": "LOAD_DATE",
+            "src_source": "SOURCE"
         }
     }
 
@@ -398,6 +505,18 @@ def t_link_databricks(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR(50)",
+                "ORDER_ID": "VARCHAR(50)",
+                "TRANSACTION_NUMBER": "DECIMAL(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR(50)",
+                "AMOUNT": "DECIMAL(38,2)",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
         "T_LINK": {
             "column_types": {
                 "TRANSACTION_PK": "STRING",
@@ -410,6 +529,35 @@ def t_link_databricks(context):
                 "EFFECTIVE_FROM": "DATE",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "T_LINK_TZ": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "DECIMAL(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR(50)",
+                "AMOUNT": "DECIMAL(38,2)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR(50)"
+            }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "STRING",
+                "CUSTOMER_FK": "STRING",
+                "ORDER_FK": "STRING",
+                "TRANSACTION_NUMBER": "STRING",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "STRING",
+                "AMOUNT": "STRING",
+                "CUSTOMER_MT_ID": "STRING",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "STRING"
             }
         }
     }
@@ -436,7 +584,7 @@ def t_link_comp_pk_databricks(context):
     }
 
     context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
             "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
             "src_payload": ["TRANSACTION_DATE",
@@ -460,7 +608,7 @@ def t_link_comp_pk_databricks(context):
                 "SOURCE": "VARCHAR(50)"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "STRING",
                 "TRANSACTION_NUMBER": "DECIMAL(38,0)",
@@ -485,31 +633,7 @@ def t_link_postgres(context):
     Define the structures and metadata to load transactional links
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK": {
-            "src_pk": "TRANSACTION_PK",
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_NUMBER", "TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -521,6 +645,18 @@ def t_link_postgres(context):
                 "TYPE": "VARCHAR",
                 "AMOUNT": "NUMERIC(38,2)",
                 "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "RAW_STAGE_TZ": {
+            "column_types": {
+                "CUSTOMER_ID": "VARCHAR",
+                "ORDER_ID": "VARCHAR",
+                "TRANSACTION_NUMBER": "NUMERIC(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMERIC(38,2)",
+                "LOAD_DATE": "TIMESTAMP",
                 "SOURCE": "VARCHAR"
             }
         },
@@ -537,6 +673,35 @@ def t_link_postgres(context):
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR"
             }
+        },
+        "T_LINK_TZ": {
+            "column_types": {
+                "TRANSACTION_PK": "BYTEA",
+                "CUSTOMER_FK": "BYTEA",
+                "ORDER_FK": "BYTEA",
+                "TRANSACTION_NUMBER": "NUMERIC(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMERIC(38,2)",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "TIMESTAMP",
+                "SOURCE": "VARCHAR"
+            }
+        },
+        "T_LINK_AC": {
+            "column_types": {
+                "TRANSACTION_PK": "BYTEA",
+                "CUSTOMER_FK": "BYTEA",
+                "ORDER_FK": "BYTEA",
+                "TRANSACTION_NUMBER": "NUMERIC(38,0)",
+                "TRANSACTION_DATE": "DATE",
+                "TYPE": "VARCHAR",
+                "AMOUNT": "NUMERIC(38,2)",
+                "CUSTOMER_MT_ID": "VARCHAR",
+                "EFFECTIVE_FROM": "DATE",
+                "LOAD_DATE": "DATE",
+                "SOURCE": "VARCHAR"
+            }
         }
     }
 
@@ -547,31 +712,7 @@ def t_link_comp_pk_postgres(context):
     Define the structures and metadata to load transactional links with composite src_pk
     """
 
-    context.hashed_columns = {
-        "STG_CUSTOMER": {
-            "TRANSACTION_PK": ["CUSTOMER_ID", "ORDER_ID", "TRANSACTION_NUMBER"],
-            "CUSTOMER_FK": "CUSTOMER_ID",
-            "ORDER_FK": "ORDER_ID"
-        }
-    }
-
-    context.derived_columns = {
-        "STG_CUSTOMER": {
-            "EFFECTIVE_FROM": "TRANSACTION_DATE"
-        }
-    }
-
-    context.vault_structure_columns = {
-        "T_LINK_COMPPK": {
-            "src_pk": ["TRANSACTION_PK", "TRANSACTION_NUMBER"],
-            "src_fk": ["CUSTOMER_FK", "ORDER_FK"],
-            "src_payload": ["TRANSACTION_DATE",
-                            "TYPE", "AMOUNT"],
-            "src_eff": "EFFECTIVE_FROM",
-            "src_ldts": "LOAD_DATE",
-            "src_source": "SOURCE"
-        }
-    }
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -586,7 +727,7 @@ def t_link_comp_pk_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
-        "T_LINK_COMPPK": {
+        "T_LINK_COMP_PK": {
             "column_types": {
                 "TRANSACTION_PK": "BYTEA",
                 "TRANSACTION_NUMBER": "NUMERIC(38,0)",

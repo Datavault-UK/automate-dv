@@ -24,7 +24,7 @@ TEMP_SEED_DIR = TEST_PROJECT_ROOT / 'seeds/temp'
 MODELS_DIR = TEST_PROJECT_ROOT / 'models'
 
 # Setup logging
-logger = logging.getLogger('dbtvault')
+logger = logging.getLogger('automate_dv')
 
 logging.basicConfig(level=logging.INFO)
 

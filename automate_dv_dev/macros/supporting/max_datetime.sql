@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro max_datetime() -%}
@@ -24,5 +24,11 @@
 {%- macro bigquery__max_datetime() -%}
 
     {%- do return(var('max_datetime', '9999-12-31 23:59:59.999999')) -%}
+
+{%- endmacro -%}
+
+{%- macro postgres__max_datetime() %}
+
+    {%- do return(var('max_datetime', '9999-12-31 23:59:59.999')) -%}
 
 {%- endmacro -%}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro cast_date(column_str, as_string=false, datetime=false, alias=none, date_type=none) -%}
@@ -60,10 +60,10 @@
 
 {%- macro postgres__cast_date(column_str, as_string=false, alias=none) -%}
 
-    {%- if not as_string -%}
-        TO_DATE({{ column_str }})
+    {%- if as_string -%}
+    TO_DATE('{{ column_str }}', 'YYY-MM-DD')
     {%- else -%}
-        TO_DATE('{{ column_str }}', 'YYY-MM-DD')
+    TO_DATE({{ column_str }}::VARCHAR, 'YYY-MM-DD')
     {%- endif -%}
 
     {%- if alias %} AS {{ alias }} {%- endif %}

@@ -1,6 +1,6 @@
 /*
  * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
+ * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {%- macro derive_columns(source_relation=none, columns=none) -%}
@@ -92,6 +92,7 @@
     {%- for col in include_columns -%}
         {%- if col | lower in columns_to_escape | map('lower') | list -%}
             {{- automate_dv.escape_column_name(col) -}}{{ ",\n" if not loop.last }}
+
         {%- else -%}
             {{- col -}}{{ ",\n" if not loop.last }}
         {%- endif -%}

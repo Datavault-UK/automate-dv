@@ -6,7 +6,7 @@ from filelock import FileLock
 
 import test
 from env import env_utils
-from test import dbtvault_generator, behave_helpers, dbt_runner
+from test import automate_dv_generator, behave_helpers, dbt_runner
 from . import structure_metadata
 
 mark_metadata_mapping = {
@@ -16,7 +16,8 @@ mark_metadata_mapping = {
     "multi_source_multi_nk_hub": structure_metadata.multi_source_multi_nk_hub,
     "single_source_link": structure_metadata.single_source_link,
     "multi_source_link": structure_metadata.multi_source_link,
-    "single_source_sat": structure_metadata.single_source_sat
+    "single_source_sat": structure_metadata.single_source_sat,
+    "single_source_ref_table": structure_metadata.single_source_ref_table
 }
 
 
@@ -31,17 +32,17 @@ def generate_model(request):
 
         if selected_mark:
             if metadata:
-                dbtvault_generator.raw_vault_structure(model_name=request.node.name,
+                automate_dv_generator.raw_vault_structure(model_name=request.node.name,
                                                        vault_structure=macro_name,
                                                        **metadata)
 
             elif selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] != "macro":
-                dbtvault_generator.raw_vault_structure(model_name=request.node.name,
+                automate_dv_generator.raw_vault_structure(model_name=request.node.name,
                                                        vault_structure=macro_name,
                                                        **mark_metadata_mapping[selected_mark[0]]())
         elif "macro" in applied_marks:
 
-            dbtvault_generator.macro_model(macro_name=macro_name,
+            automate_dv_generator.macro_model(macro_name=macro_name,
                                            model_name=request.node.name,
                                            metadata=metadata)
 
