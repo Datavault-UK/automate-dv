@@ -1,5 +1,13 @@
 def feature_sub_types():
     return {
+        'staging': {
+            'main': [
+                'staging'
+            ],
+            'hashing': [
+                'hashing'
+            ]
+        },
         'hubs': {
             'main': [
                 'hubs'

@@ -53,6 +53,7 @@ extends:
       - groupName: 'staging'
         displayName: 'Staging'
         disabledForPlatform: [ ]
+        subGroups: ['main', 'hashing']
       - groupName: 'hubs'
         displayName: 'Hubs'
         disabledForPlatform: [ ]
