@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 from hashlib import md5, sha256
 
@@ -42,7 +43,9 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
         :return: DataFrame representation of the provided context table
     """
 
-    engine = create_engine('postgresql://dbtvault_user:password@localhost:8100/dbtvault_db')
+    engine = create_engine(
+        f'postgresql://{os.environ["POSTGRES_DB_USER"]}:{os.environ["POSTGRES_DB_PW"]}@'
+        f'{os.environ["POSTGRES_DB_HOST"]}:{os.environ["POSTGRES_DB_PORT"]}/{os.environ["POSTGRES_DB_DATABASE"]}')
 
     table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
