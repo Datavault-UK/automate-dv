@@ -12,8 +12,6 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif -%}
 
-{{ automate_dv.prepend_generated_by() }}
-
 {{ 'WITH ' -}}
 
 {%- if not (source_model is iterable and source_model is not string) -%}
