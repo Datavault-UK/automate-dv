@@ -809,8 +809,16 @@ def step_impl(context, project_type):
     context.hashing = getattr(context, "hashing", None)
     columns = context.table.headings[0]
     sample_table_name = context.sample_table_name
-    context.sample_schema_name = "DEVELOPMENT_DBTVAULT_USER"
-    sample_schema_name = context.sample_schema_name
+
+    if env_utils.is_pipeline():
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}" \
+                 f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper()
+
+    else:
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
+
+    sample_schema_name = context.sample_schema_name = schema
+
     model_name = f'{context.sample_table_name}_model'
 
     if project_type == 'test':
@@ -827,6 +835,8 @@ def step_impl(context, project_type):
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
     logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
+
+    assert "Completed successfully" in logs
 
 
 @then("the {table_name} table should contain the following data")
