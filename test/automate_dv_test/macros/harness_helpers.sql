@@ -53,7 +53,7 @@ WITH core_table AS (
         {{ col }}
             {%- if not loop.last -%},{%- endif -%}
         {%- endfor %}
-    FROM {{ ref(unhashed_table_name) }}
+    FROM "{{ get_schema_name() }}"."{{ unhashed_table_name }}"
 ),
 
 positions as (
