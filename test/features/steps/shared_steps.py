@@ -8,6 +8,7 @@ from env import env_utils
 from test import automate_dv_generator, dbt_runner, behave_helpers, context_utils, step_helpers, context_helpers
 from test import dbt_file_utils
 
+
 def set_stage_metadata(context, stage_model_name) -> dict:
     """
         Set up the context to include required staging metadata and return as a dictionary to
@@ -290,7 +291,7 @@ def load_populated_table(context, model_name, vault_structure):
                 payload_columns.append([col, data_type])
 
         sql = f"{{{{- automate_dv_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
-                  f"{hashed_columns}, {payload_columns}) -}}}}"
+              f"{hashed_columns}, {payload_columns}) -}}}}"
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 
@@ -621,7 +622,8 @@ def expect_data(context, model_name):
         model_name_unhashed = f"{model_name}_expected_unhashed"
         model_name_expected = f"{model_name}_expected"
 
-        hashed_columns=context_utils.context_table_to_database_table(table=context.table, model_name=model_name_unhashed)
+        hashed_columns = context_utils.context_table_to_database_table(table=context.table,
+                                                                       model_name=model_name_unhashed)
 
         payload_columns = []
         columns = context.table.headings
@@ -630,8 +632,10 @@ def expect_data(context, model_name):
                 data_type = context.seed_config[model_name]['column_types'][col]
                 payload_columns.append([col, data_type])
 
-        sql = f"{{{{- automate_dv_test.hash_database_table(\042{model_name_expected}\042, \042{model_name_unhashed}\042, " \
-                  f"{hashed_columns}, {payload_columns}) -}}}}"
+        sql = f"""
+              {{{{- automate_dv_test.hash_database_table("{model_name_expected}", "{model_name_unhashed}", 
+                                                          {hashed_columns}, {payload_columns}) -}}}}
+              """
 
         dbt_file_utils.generate_model(model_name_expected, sql)
 
@@ -644,9 +648,9 @@ def expect_data(context, model_name):
         dbt_runner.run_dbt_models(mode="run", model_names=[model_name_expected], args=args)
 
         test_yaml = automate_dv_generator.create_test_model_schema_dict(target_model_name=model_name,
-                                                                     expected_output_csv=model_name_expected,
-                                                                     unique_id=columns[0],
-                                                                     columns_to_compare=columns)
+                                                                        expected_output_csv=model_name_expected,
+                                                                        unique_id=columns[0],
+                                                                        columns_to_compare=columns)
 
         automate_dv_generator.append_dict_to_schema_yml(test_yaml)
 
@@ -787,7 +791,6 @@ def step_impl(context, database_name):
     context.database_name = database_name
 
 
-
 @given("there is data available")
 def step_impl(context):
     context.sample_table_name = "sample_data"
@@ -800,8 +803,8 @@ def step_impl(context):
     assert f"Table '{context.sample_table_name}' exists." in logs
 
 
-@step("using {dbtvault} hash calculation on table")
-def step_impl(context, dbtvault):
+@step("using {project_type} hash calculation on table")
+def step_impl(context, project_type):
     context.hashing = getattr(context, "hashing", None)
     columns = context.table.headings[0]
     sample_table_name = context.sample_table_name
@@ -809,12 +812,12 @@ def step_impl(context, dbtvault):
     sample_schema_name = context.sample_schema_name
     model_name = f'{context.sample_table_name}_model'
 
-    if dbtvault == 'test':
-        sql = f"{{{{- automate_dv_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
-                  f"\042{sample_table_name}\042, use_package = False) -}}}}"
-    elif dbtvault == 'dbtvault':
-        sql = f"{{{{- automate_dv_test.get_hash_length(\042{columns}\042, \042{sample_schema_name}\042, " \
-                  f"\042{sample_table_name}\042, use_package = True) -}}}}"
+    if project_type == 'test':
+        sql = f"""{{{{- automate_dv_test.get_hash_length("{columns}", "{sample_schema_name}", "{sample_table_name}", 
+                  use_package = False) -}}}}"""
+    elif project_type == 'dbtvault':
+        sql = f"""{{{{- automate_dv_test.get_hash_length("{columns}", "{sample_schema_name}", "{sample_table_name}", 
+                  use_package = True) -}}}}"""
 
     dbt_file_utils.generate_model(model_name, sql)
 

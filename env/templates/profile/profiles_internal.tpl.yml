@@ -54,7 +54,7 @@ automate_dv:
     postgres:
       type: postgres
       host: "{{ op://private/postgres/host }}"
-      port: 8100
+      port: "{{ op://private/postgres/port }}"
       database: "{{ op://private/postgres/database }}"
       schema: "{{ op://private/postgres/schema }}"
       user: "{{ op://private/postgres/user }}"

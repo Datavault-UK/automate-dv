@@ -47,6 +47,8 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
         f'postgresql://{os.environ["POSTGRES_DB_USER"]}:{os.environ["POSTGRES_DB_PW"]}@'
         f'{os.environ["POSTGRES_DB_HOST"]}:{os.environ["POSTGRES_DB_PORT"]}/{os.environ["POSTGRES_DB_DATABASE"]}')
 
+    schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
+
     table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
     table_df = table_df.apply(parse_escapes)
@@ -55,7 +57,7 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
     if use_nan:
         table_df = table_df.replace("<null>", NaN)
 
-    table_df.to_sql(name=model_name, con=engine, schema="DEVELOPMENT_DBTVAULT_USER", if_exists='replace')
+    table_df.to_sql(name=model_name, con=engine, schema=schema, if_exists='replace')
 
     sql = f"SELECT column_name FROM information_schema.columns " \
           f"WHERE (POSITION('_PK' in column_name) > 0 " \

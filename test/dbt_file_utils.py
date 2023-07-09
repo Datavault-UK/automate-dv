@@ -1,6 +1,7 @@
 import ruamel.yaml
 import test
 
+
 def write_seed_properties(seed_name: str, seed_config: dict):
     yml = ruamel.yaml.YAML()
 
