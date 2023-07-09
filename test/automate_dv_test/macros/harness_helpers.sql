@@ -109,8 +109,8 @@ final as (
         {%- for cols in payload_dates|map('lower') %}
         {{ cols }},
         {%- endfor %}
-        {%- for cols in payload_strings|map('lower') %}
-        NULLIF({{ cols }}, '') AS {{ cols }}
+        {%- for col in payload_strings|map('lower') %}
+        COALESCE({{ col }}, NULL) AS {{ col }}
         {%- if not loop.last %},{%- endif -%}
         {%- endfor %}
     FROM hashing_string
