@@ -6,6 +6,7 @@
 
     {%- if source_relation -%}
         {%- do log("Table '{}' exists.".format(model_name), true) -%}
+        {%- do log("Fully qualified name: {}".format(source_relation), true) -%}
         {%- do return(True) %}
     {%- else -%}
         {%- do log("Table '{}' does not exist.".format(model_name), true) -%}
