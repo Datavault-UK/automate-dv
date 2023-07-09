@@ -47,7 +47,11 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
         f'postgresql://{os.environ["POSTGRES_DB_USER"]}:{os.environ["POSTGRES_DB_PW"]}@'
         f'{os.environ["POSTGRES_DB_HOST"]}:{os.environ["POSTGRES_DB_PORT"]}/{os.environ["POSTGRES_DB_DATABASE"]}')
 
-    schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
+    if env_utils.is_pipeline():
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}" \
+                 f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper()
+    else:
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
 
     table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 

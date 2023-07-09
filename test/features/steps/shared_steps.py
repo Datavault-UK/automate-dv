@@ -627,6 +627,7 @@ def expect_data(context, model_name):
 
         payload_columns = []
         columns = context.table.headings
+
         for col in columns:
             if col not in hashed_columns:
                 data_type = context.seed_config[model_name]['column_types'][col]
