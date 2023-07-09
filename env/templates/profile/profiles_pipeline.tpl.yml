@@ -64,7 +64,7 @@ automate_dv:
     postgres:
       type: postgres
       host: "{{ op://dbtvault/postgres_pipeline/host }}"
-      port: "{{ {{ op://dbtvault/postgres_pipeline/port  }} | as_number }}"
+      port: 8100
       database: "{{ op://dbtvault/postgres_pipeline/database }}"
       schema: "{{ op://dbtvault/postgres_pipeline/schema }}"
       user: "{{ op://dbtvault/postgres_pipeline/user }}"
