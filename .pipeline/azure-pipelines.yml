@@ -57,7 +57,7 @@ extends:
       - groupName: 'hubs'
         displayName: 'Hubs'
         disabledForPlatform: [ ]
-        subGroups: [ 'main']
+        subGroups: [ 'main', 'comp_pk', 'incremental', 'mat' ]
       - groupName: 'links'
         displayName: 'Links'
         disabledForPlatform: [ ]
