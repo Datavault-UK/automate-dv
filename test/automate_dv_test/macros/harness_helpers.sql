@@ -53,7 +53,7 @@ WITH core_table AS (
         {{ col }}
             {%- if not loop.last -%},{%- endif -%}
         {%- endfor %}
-    FROM "DEVELOPMENT_DBTVAULT_USER"."{{- unhashed_table_name }}"
+    FROM {{ ref(unhashed_table_name) }}
 ),
 
 positions as (
