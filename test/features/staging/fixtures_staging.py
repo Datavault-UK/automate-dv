@@ -606,7 +606,10 @@ def staging_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
-                "AUTOMATE_DV_RANK": "VARCHAR"
+                "AUTOMATE_DV_RANK": "VARCHAR",
+                "CUSTOMER_NK": "VARCHAR",
+                "DERIVED_CONCAT": "VARCHAR",
+                "AUTOMATE_DV_RANK2": "VARCHAR",
             }
         },
         "STG_CUSTOMER_HASH": {

@@ -46,73 +46,92 @@
 
 WITH core_table AS (
     SELECT
-        {%- for col in hash_cols %}
-        {{ col }},
-        {%- endfor -%}
-        {%- for col in payload_cols_casting %}
+        {%- set cols_to_print = hash_cols + payload_cols_casting -%}
+
+        {%- for col in cols_to_print %}
         {{ col }}
-            {%- if not loop.last -%},{%- endif -%}
-        {%- endfor %}
+        {%- if not loop.last -%},{%- endif %}
+        {% endfor -%}
+
     FROM "{{ get_schema_name() }}"."{{ unhashed_table_name }}"
 ),
 
 positions as (
     SELECT
-        {%- for cols in hashed_columns|map('lower') %}
-        POSITION('(' in {{ cols }}) + 2 as start_position_{{ cols }},
-        POSITION(')' in {{ cols }}) - 1 AS end_position_{{ cols }},
-        {{ cols }},
+        {%- set cols_to_print = [] -%}
+
+        {%- for col in hashed_columns|map('lower') -%}
+            {%- do cols_to_print.append("POSITION('(' in {}) + 2 as start_position_{}".format(col, col)) -%}
+            {%- do cols_to_print.append("POSITION(')' in {}) - 1 as end_position_{}".format(col, col)) -%}
         {%- endfor %}
-        {%- for cols in payload_dates|map('lower') %}
-        {{ cols }},
-        {%- endfor %}
-        {%- for cols in payload_strings|map('lower') %}
-        {{ cols }}
-        {%- if not loop.last %},{%- endif -%}
-        {%- endfor %}
+
+        {%- set cols_to_print = cols_to_print + (hashed_columns|map('lower') | list) + (payload_dates|map('lower') | list) + (payload_strings|map('lower') | list) -%}
+
+        {% for col in cols_to_print %}
+        {{ col }}
+        {%- if not loop.last -%},{%- endif %}
+        {% endfor -%}
+
     FROM core_table
 ),
 
 hashing_string as (
     SELECT
-        {%- for cols in hashed_columns|map('lower') %}
-        SUBSTRING({{ cols }} from 1 for 3) as hash_alg_{{ cols }},
+
+        {%- set cols_to_print = (payload_dates|map('lower') | list) + (payload_strings|map('lower') | list) -%}
+
+        {%- for col in hashed_columns|map('lower') -%}
+        {%- set hashed_col -%}
+        SUBSTRING({{ col }} from 1 for 3) as hash_alg_{{ col }},
         CASE
-            WHEN end_position_{{ cols }} > 0
-            THEN SUBSTRING({{ cols }} from start_position_{{ cols }} for end_position_{{ cols }}-start_position_{{ cols }})
-        {%- if enable_ghost_record %} ELSE {{ cols }} {%- endif %}
-        END as {{ cols}},
+            WHEN end_position_{{ col }} > 0
+            THEN SUBSTRING({{ col }} from start_position_{{ col }} for end_position_{{ col }}-start_position_{{ col }})
+        {%- if enable_ghost_record %} ELSE {{ col }} {%- endif %}
+        END as {{ col }}
+        {%- endset -%}
+
+        {%- do cols_to_print.append(hashed_col) -%}
+
         {%- endfor %}
-        {%- for cols in payload_dates|map('lower') %}
-        {{ cols }},
-        {%- endfor %}
-        {%- for cols in payload_strings|map('lower') %}
-        {{ cols }}
-        {%- if not loop.last %},{%- endif -%}
-        {%- endfor %}
+
+        {% for col in cols_to_print %}
+        {{ col }}
+        {%- if not loop.last -%},{%- endif %}
+        {% endfor %}
+
     FROM positions
 ),
 
 final as (
-    SELECT
-        {%- for cols in hashed_columns|map('lower') %}
+    {%- set cols_to_print = (payload_dates|map('lower') | list) -%}
+
+    {%- for col in payload_strings|map('lower') -%}
+        {%- do cols_to_print.append("COALESCE({}, NULL) AS {}".format(col, col)) -%}
+    {%- endfor -%}
+
+    {% for col in hashed_columns|map('lower') -%}
+        {%- set hashed_col -%}
         case
             when
-                lower(hash_alg_{{ cols }}) = 'md5'
-                then DECODE(MD5({{ cols }}), 'hex')
+                lower(hash_alg_{{ col }}) = 'md5'
+                then DECODE(MD5({{ col }}), 'hex')
             when
-                lower(hash_alg_{{ cols }}) = 'sha'
-                then SHA256(CAST({{ cols }} AS BYTEA))
-            {%- if enable_ghost_record %} else CAST({{ cols }} AS BYTEA) {%- endif %}
-        end as {{ cols }},
-        {%- endfor %}
-        {%- for cols in payload_dates|map('lower') %}
-        {{ cols }},
-        {%- endfor %}
-        {%- for col in payload_strings|map('lower') %}
-        COALESCE({{ col }}, NULL) AS {{ col }}
-        {%- if not loop.last %},{%- endif -%}
-        {%- endfor %}
+                lower(hash_alg_{{ col }}) = 'sha'
+                then SHA256(CAST({{ col }} AS BYTEA))
+            {%- if enable_ghost_record %} else CAST({{ col }} AS BYTEA) {%- endif %}
+        end as {{ col }}
+        {%- endset -%}
+
+        {%- do cols_to_print.append(hashed_col) -%}
+    {%- endfor %}
+
+    SELECT
+
+        {% for col in cols_to_print %}
+        {{ col }}
+        {%- if not loop.last -%},{%- endif %}
+        {% endfor -%}
+
     FROM hashing_string
 )
 

@@ -4,7 +4,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-01] Load over several cycles
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -15,7 +15,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE is loaded
@@ -25,7 +25,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1004        | David         | 17-214-233-1210 | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 17-214-233-1216 | 2019-05-05     | 2019-05-05 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE is loaded
@@ -35,7 +35,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1005        | Elwyn         | 17-214-233-1218 | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 17-214-233-1216 | 2019-05-06     | 2019-05-06 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE is loaded
@@ -46,10 +46,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1011        | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 17-214-233-1218 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1212')    | Beth          | 17-214-233-1212 | 2019-05-04     | 2019-05-04 | *      |
@@ -74,7 +74,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.enable_sha
   Scenario: [MAS-1CD-C-02] Load over several cycles
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -85,7 +85,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE is loaded
@@ -95,7 +95,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1004        | David         | 17-214-233-1210 | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 17-214-233-1216 | 2019-05-05     | 2019-05-05 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE is loaded
@@ -105,7 +105,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1005        | Elwyn         | 17-214-233-1218 | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 17-214-233-1216 | 2019-05-06     | 2019-05-06 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE is loaded
@@ -115,10 +115,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1007        | Geoff         | 17-214-233-1219 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | sha('1001') | sha('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-05-04     | 2019-05-04 | *      |
       | sha('1002') | sha('1002\|\|BETH\|\|17-214-233-1212')    | Beth          | 17-214-233-1212 | 2019-05-04     | 2019-05-04 | *      |
@@ -141,7 +141,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-03] Load over several cycles with sets of records keeping the group size the same while having one or more records changed
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -156,7 +156,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1003        | Charley       | 17-214-233-1223 | 2019-01-01     | 2019-01-01 | *      |
       | 1003        | Charley       | 17-214-233-1233 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE is loaded
@@ -165,7 +165,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1001        | Albert        | 17-214-233-1221 | 2019-01-02     | 2019-01-02 | *      |
       | 1001        | Albert        | 17-214-233-1331 | 2019-01-02     | 2019-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE is loaded
@@ -175,7 +175,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1002        | Beth          | 17-214-233-1332 | 2019-01-03     | 2019-01-03 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE is loaded
@@ -185,10 +185,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1003        | Charlie       | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -212,7 +212,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-04] Load over several cycles with NULL records
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -227,7 +227,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1003        | Charley       | 17-214-233-1223 | 2019-01-01     | 2019-01-01 | *      |
       | 1003        | Charley       | 17-214-233-1233 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE is loaded
@@ -238,7 +238,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1001        | <null>        | 17-214-233-1311 | 2019-01-02     | 2019-01-02 | *      |
       | 1001        | Albert        | 17-214-233-1331 | 2019-01-02     | 2019-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE is loaded
@@ -250,7 +250,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1002        | Beth          | 17-214-233-1332 | 2019-01-03     | 2019-01-03 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE is loaded
@@ -264,10 +264,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1003        | <null>        | 17-214-233-1333 | 2019-01-04     | 2019-01-04 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -289,7 +289,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-05] Load over several cycles with a mix of record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -310,7 +310,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     # Beah (hd-), Chris (hd-), David (new), Jenny (+)
@@ -330,7 +330,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-02     | 2019-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
@@ -346,7 +346,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1006        | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     # Beah (hd), Charley (hd), Geoff (new, dupl), Jenny (hd),
@@ -367,10 +367,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -417,7 +417,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.enable_sha
   Scenario: [MAS-1CD-C-06] Load over several cycles
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -438,7 +438,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     # Beah (hd-), Chris (hd-), David (new), Jenny (+)
@@ -458,7 +458,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-02     | 2019-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
@@ -474,7 +474,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1006        | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     # Beah (hd), Charley (hd), Geoff (new, dupl), Jenny (hd),
@@ -495,10 +495,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | sha('1001') | sha('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | sha('1001') | sha('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -544,7 +544,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-07] 1-day cycle
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -565,10 +565,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -589,7 +589,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-08] 2-day cycle
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -610,7 +610,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     # Beah (hd-), Chris (hd-), David (new), Jenny (+)
@@ -631,10 +631,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-02     | 2019-01-02 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -665,7 +665,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-09] 3-day cycle
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -686,7 +686,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     # Beah (hd-), Chris (hd-), David (new), Jenny (+)
@@ -706,7 +706,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-02     | 2019-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
@@ -722,10 +722,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1006        | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
@@ -762,7 +762,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-1CD-C-10] 4-day cycle
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE is loaded
@@ -783,7 +783,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-01     | 2019-01-01 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-01     | 2019-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 2 ===================
     # Beah (hd-), Chris (hd-), David (new), Jenny (+)
@@ -803,7 +803,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1012        | Albert        | 17-214-233-1225 | 2019-01-02     | 2019-01-02 | *      |
       | 1012        | Albert        | 17-214-233-1235 | 2019-01-02     | 2019-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 3 ===================
     # Beth (hd+), David (-), Freia (new, dupl)
@@ -819,7 +819,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1006        | Freia         | 17-214-233-1212 | 2019-01-03     | 2019-01-03 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # ================ DAY 4 ===================
     # Beah (hd), Charley (hd), Geoff (new, dupl), Jenny (hd),
@@ -840,10 +840,10 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
     And I stage the STG_CUSTOMER data
-    And I load the MULTI_ACTIVE_SATELLITE ma_sat
+    And I load the MAS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |

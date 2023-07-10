@@ -6,7 +6,7 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-PM-D-01] Load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
@@ -66,8 +66,8 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
     And I stage the STG_CUSTOMER data
-    When I insert by period into the MULTI_ACTIVE_SATELLITE ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I insert by period into the MAS ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1212')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
@@ -92,7 +92,7 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-PM-D-02] Load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is empty
+    And the MAS_NO_CDK_HASHDIFF ma_sat is empty
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
@@ -152,8 +152,8 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
     And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
-    When I insert by period into the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
-    Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
+    When I insert by period into the MAS_NO_CDK_HASHDIFF ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
+    Then the MAS_NO_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | HASHDIFF               | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1002') | md5('1002\|\|BETH')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
@@ -178,7 +178,7 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-PM-D-03] Load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
+    And the MAS_NO_PK_CDK_HASHDIFF ma_sat is empty
     When the RAW_STAGE is loaded
     # DAY 1
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -238,8 +238,8 @@ Feature: [MAS-1CD-PM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
     And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
-    When I insert by period into the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
-    Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
+    When I insert by period into the MAS_NO_PK_CDK_HASHDIFF ma_sat by day with date range: 2019-01-01 to 2019-01-04 and LDTS LOAD_DATE
+    Then the MAS_NO_PK_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | HASHDIFF       | CUSTOMER_PHONE  | CUSTOMER_NAME | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALBERT')  | 17-214-233-1211 | Albert        | 2019-01-01     | 2019-01-01 | *      |
       | md5('1002') | md5('BETH')    | 17-214-233-1212 | Beth          | 2019-01-01     | 2019-01-01 | *      |
