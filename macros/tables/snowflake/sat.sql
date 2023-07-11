@@ -65,7 +65,7 @@ latest_records AS (
 first_record_in_set AS (
     SELECT
     {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    , ROW_NUMBER() OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ) as asc_row_number
+    , ROW_NUMBER() OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC) as asc_row_number
     FROM source_data as sd
     QUALIFY asc_row_number = 1
 ),
