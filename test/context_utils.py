@@ -35,7 +35,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
     return table_df
 
 
-def context_table_to_database_table(table: Table, model_name, use_nan=True) -> pd.DataFrame:
+def context_table_to_database_table(table: Table, model_name, use_nan=True) -> list:
     """
     Converts a context table in a feature file into a pandas DataFrame
         :param table: The context.table from a scenario
@@ -58,26 +58,19 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> p
     table_df = table_df.apply(parse_escapes)
     table_df = table_df.apply(parse_lists)
 
+    hashed_columns = table_df.apply(get_hash)
+    hashed_columns_list = hashed_columns.loc[0, :].values.flatten().tolist()
+    hashed_columns_list = [x for x in hashed_columns_list if str(x) != 'nan']
+
     if use_nan:
         table_df = table_df.replace("<null>", NaN)
 
     table_df.to_sql(name=model_name, con=engine, schema=schema, if_exists='replace')
 
-    sql = f"SELECT column_name FROM information_schema.columns " \
-          f"WHERE (POSITION('_PK' in column_name) > 0 " \
-          f"OR POSITION('_FK' in column_name) > 0 " \
-          f"OR POSITION('_HK' in column_name) > 0 " \
-          f"OR POSITION('HASHDIFF' in column_name) > 0) " \
-          f"AND table_name = '{model_name}'"
-
-    hash_columns_df = pd.read_sql(sql, con=engine)
-
-    hash_columns = hash_columns_df['column_name'].values.tolist()
-
     dbt_runner.run_dbt_operation(macro_name='check_table_exists',
                                  args={"model_name": model_name})
 
-    return hash_columns
+    return hashed_columns_list
 
 
 def context_table_to_csv(table: Table, model_name: str) -> str:
@@ -304,6 +297,24 @@ def parse_lists(columns_as_series: Series) -> Series:
     return Series(columns)
 
 
+def get_hash(columns_as_series: Series) -> Series:
+
+    patterns = {
+        'md5': {
+            'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
+        'sha': {
+            'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
+
+    hashed_column_list = []
+
+    item = columns_as_series[0]
+    active_hash_func = [pattern for pattern in patterns if pattern in item]
+    if active_hash_func:
+        hashed_column_list.append(columns_as_series.name)
+
+    return Series(hashed_column_list)
+
+
 def calc_hash(columns_as_series: Series) -> Series:
     """
     Calculates the MD5 hash for a given value
@@ -319,9 +330,8 @@ def calc_hash(columns_as_series: Series) -> Series:
             'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
 
     hashed_list = []
-
+    print(columns_as_series.name)
     for item in columns_as_series:
-
         active_hash_func = [pattern for pattern in patterns if pattern in item]
         if active_hash_func:
             active_hash_func = active_hash_func[0]
