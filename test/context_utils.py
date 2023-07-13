@@ -330,7 +330,7 @@ def calc_hash(columns_as_series: Series) -> Series:
             'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
 
     hashed_list = []
-    print(columns_as_series.name)
+
     for item in columns_as_series:
         active_hash_func = [pattern for pattern in patterns if pattern in item]
         if active_hash_func:

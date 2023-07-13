@@ -36,7 +36,7 @@
     {%- for cols in payload_columns -%}
         {%- set payload_str = automate_dv.escape_column_name(cols[0]) -%}
         {%- set payload_type = cols[1] -%}
-        {%- do payload_cols_casting.append("{}::{} AS {}".format(payload_str, payload_type, payload_str|lower)) -%}
+        {%- do payload_cols_casting.append("NULLIF({}, '')::{} AS {}".format(payload_str, payload_type, payload_str|lower)) -%}
         {%- if payload_type is in date_type -%}
             {%- do payload_dates.append(cols[0]) -%}
         {%- else -%}
