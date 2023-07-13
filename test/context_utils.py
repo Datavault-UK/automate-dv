@@ -59,8 +59,11 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> l
     table_df = table_df.apply(parse_lists)
 
     hashed_columns = table_df.apply(get_hash)
-    hashed_columns_list = hashed_columns.loc[0, :].values.flatten().tolist()
-    hashed_columns_list = [x for x in hashed_columns_list if str(x) != 'nan']
+    if not hashed_columns.empty:
+        hashed_columns_list = hashed_columns.loc[0, :].values.flatten().tolist()
+        hashed_columns_list = [x for x in hashed_columns_list if str(x) != 'nan']
+    else:
+        hashed_columns_list = []
 
     if use_nan:
         table_df = table_df.replace("<null>", NaN)
