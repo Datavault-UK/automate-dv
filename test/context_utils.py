@@ -310,10 +310,11 @@ def get_hash(columns_as_series: Series) -> Series:
 
     hashed_column_list = []
 
-    item = columns_as_series[0]
-    active_hash_func = [pattern for pattern in patterns if pattern in item]
-    if active_hash_func:
-        hashed_column_list.append(columns_as_series.name)
+    for item in columns_as_series:
+        active_hash_func = [pattern for pattern in patterns if pattern in item]
+        if active_hash_func:
+            hashed_column_list.append(columns_as_series.name)
+            break
 
     return Series(hashed_column_list)
 
