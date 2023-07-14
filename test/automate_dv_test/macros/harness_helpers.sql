@@ -61,8 +61,8 @@ positions as (
         {%- set cols_to_print = [] -%}
 
         {%- for col in hashed_columns|map('lower') -%}
-            {%- do cols_to_print.append("POSITION('(' in {}) + 2 as start_position_{}".format(col, col)) -%}
-            {%- do cols_to_print.append("POSITION(')' in {}) - 1 as end_position_{}".format(col, col)) -%}
+                    {%- do cols_to_print.append("POSITION('(' in {}) + 2 as start_position_{}".format(col, col)) -%}
+                    {%- do cols_to_print.append("POSITION(')' in {}) - 1 as end_position_{}".format(col, col)) -%}
         {%- endfor %}
 
         {%- set cols_to_print = cols_to_print + (hashed_columns|map('lower') | list) + (payload_dates|map('lower') | list) + (payload_strings|map('lower') | list) -%}
@@ -86,7 +86,7 @@ hashing_string as (
         CASE
             WHEN end_position_{{ col }} > 0
             THEN SUBSTRING({{ col }} from start_position_{{ col }} for end_position_{{ col }}-start_position_{{ col }})
-        {%- if enable_ghost_record %} ELSE {{ col }} {%- endif %}
+        ELSE {{ col }}
         END as {{ col }}
         {%- endset -%}
 
@@ -118,7 +118,7 @@ final as (
             when
                 lower(hash_alg_{{ col }}) = 'sha'
                 then SHA256(CAST({{ col }} AS BYTEA))
-            {%- if enable_ghost_record %} else CAST({{ col }} AS BYTEA) {%- endif %}
+            else CAST({{ col }} AS BYTEA)
         end as {{ col }}
         {%- endset -%}
 
