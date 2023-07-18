@@ -1,7 +1,7 @@
 packages:
 
   #Live
-  #  - git: "https://github.com/Datavault-UK/dbtvault"
+  #  - git: "https://github.com/Datavault-UK/automate-dv"
   #    revision: v0.7.0
 
   #Dev

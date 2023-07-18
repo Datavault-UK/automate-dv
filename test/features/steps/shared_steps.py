@@ -1,10 +1,12 @@
 import copy
+import os
 
 from behave import *
 from behave.model import Table, Row
 
 from env import env_utils
-from test import automate_dv_generator, dbt_runner, behave_helpers, context_utils, step_helpers
+from test import automate_dv_generator, dbt_runner, behave_helpers, context_utils, step_helpers, context_helpers
+from test import dbt_file_utils
 
 
 def set_stage_metadata(context, stage_model_name) -> dict:
@@ -271,6 +273,36 @@ def load_populated_table(context, model_name, vault_structure):
         logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
 
         assert "Completed successfully" in seed_logs
+        assert "Completed successfully" in logs
+
+    elif env_utils.platform() == "postgres":
+
+        context.target_model_name = model_name
+        model_name_unhashed = f"{model_name}_unhashed"
+
+        hashed_columns = context_utils.context_table_to_database_table(table=context.table,
+                                                                       model_name=model_name_unhashed)
+
+        payload_columns = []
+        columns = context.table.headings
+        for col in columns:
+            if col not in hashed_columns:
+                data_type = context.seed_config[model_name]['column_types'][col]
+                payload_columns.append([col, data_type])
+
+        sql = f"{{{{- automate_dv_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
+              f"{hashed_columns}, {payload_columns}) -}}}}"
+
+        dbt_file_utils.generate_model(context.target_model_name, sql)
+
+        context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
+
+        args = {"enable_ghost_records": context.enable_ghost_records}
+
+        args = {vkey: vdata for vkey, vdata in args.items() if vdata}
+
+        logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
+
         assert "Completed successfully" in logs
 
     else:
@@ -585,6 +617,48 @@ def expect_data(context, model_name):
         assert "Completed successfully" in seed_logs
         assert "1 of 1 PASS" in logs
 
+    elif env_utils.platform() == "postgres":
+
+        model_name_unhashed = f"{model_name}_expected_unhashed"
+        model_name_expected = f"{model_name}_expected"
+
+        hashed_columns = context_utils.context_table_to_database_table(table=context.table,
+                                                                       model_name=model_name_unhashed)
+
+        payload_columns = []
+        columns = context.table.headings
+
+        for col in columns:
+            if col not in hashed_columns:
+                data_type = context.seed_config[model_name]['column_types'][col]
+                payload_columns.append([col, data_type])
+
+        sql = f"""
+              {{{{- automate_dv_test.hash_database_table("{model_name_expected}", "{model_name_unhashed}", 
+                                                          {hashed_columns}, {payload_columns}) -}}}}
+              """
+
+        dbt_file_utils.generate_model(model_name_expected, sql)
+
+        context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
+
+        args = {"enable_ghost_records": context.enable_ghost_records}
+
+        args = {vkey: vdata for vkey, vdata in args.items() if vdata}
+
+        dbt_runner.run_dbt_models(mode="run", model_names=[model_name_expected], args=args)
+
+        test_yaml = automate_dv_generator.create_test_model_schema_dict(target_model_name=model_name,
+                                                                        expected_output_csv=model_name_expected,
+                                                                        unique_id=columns[0],
+                                                                        columns_to_compare=columns)
+
+        automate_dv_generator.append_dict_to_schema_yml(test_yaml)
+
+        logs = dbt_runner.run_dbt_command(["dbt", "test"])
+
+        assert "1 of 1 PASS" in logs
+
     else:
 
         expected_output_csv_name = context_utils.context_table_to_csv(table=context.table,
@@ -716,3 +790,68 @@ def step_impl(context, model_name):
 @given("I am using the {database_name} database")
 def step_impl(context, database_name):
     context.database_name = database_name
+
+
+@given("there is data available")
+def step_impl(context):
+    context.sample_table_name = "sample_data"
+
+    context.input_seed_name = context_helpers.sample_data_to_database(context, context.sample_table_name)
+
+    logs = dbt_runner.run_dbt_operation(macro_name='check_table_exists',
+                                        args={"model_name": context.sample_table_name})
+
+    assert f"Table '{context.sample_table_name}' exists." in logs
+
+
+@step("using {project_type} hash calculation on table")
+def step_impl(context, project_type):
+    context.hashing = getattr(context, "hashing", None)
+    columns = context.table.headings[0]
+    sample_table_name = context.sample_table_name
+
+    if env_utils.is_pipeline():
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}" \
+                 f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper()
+
+    else:
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
+
+    sample_schema_name = context.sample_schema_name = schema
+
+    model_name = f'{context.sample_table_name}_model'
+
+    if project_type == 'test':
+        sql = f"""{{{{- automate_dv_test.get_hash_length("{columns}", "{sample_schema_name}", "{sample_table_name}", 
+                  use_package = False) -}}}}"""
+    elif project_type == 'dbtvault':
+        sql = f"""{{{{- automate_dv_test.get_hash_length("{columns}", "{sample_schema_name}", "{sample_table_name}", 
+                  use_package = True) -}}}}"""
+
+    dbt_file_utils.generate_model(model_name, sql)
+
+    args = {"hash": context.hashing}
+
+    args = {vkey: vdata for vkey, vdata in args.items() if vdata}
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
+
+    assert "Completed successfully" in logs
+
+
+@then("the {table_name} table should contain the following data")
+def step_impl(context, table_name):
+    context.table_name = table_name.lower()
+    context.model_name = f'{context.table_name}_model'
+    context.expected_seed_name = context_helpers.sample_data_to_database(context, f"{context.table_name}_expected")
+    columns_to_compare = context.table.headings
+    context.unique_id = context.table.headings[0]
+
+    dbt_file_utils.write_model_test_properties(actual_model_name=context.model_name,
+                                               expected_model_name=context.expected_seed_name,
+                                               unique_id=context.unique_id,
+                                               columns_to_compare=columns_to_compare)
+
+    logs = dbt_runner.run_dbt_command(["dbt", "test"])
+
+    assert "1 of 1 PASS" in logs

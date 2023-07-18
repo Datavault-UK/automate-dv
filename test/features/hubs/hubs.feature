@@ -562,7 +562,7 @@ Feature: [HUB] Hubs
       | md5('1004') | 1004        | TPCH_CUSTOMER  | CUSTOMER_CK | 1993-01-01 | TPCH   |
 
   @fixture.multi_source_hub
-  Scenario: [HUB-19] Union three staging tables to feed a empty hub which does not exist, with additional columns
+  Scenario: [HUB-19] Union three staging tables to feed a hub which does not exist, with additional columns
     Given the HUB_AC table does not exist
     And the RAW_STAGE_PARTS table contains data
       | PART_ID | PART_NAME | PART_TYPE | PART_SIZE | PART_RETAILPRICE | CUSTOMER_MT_ID | LOAD_DATE  | SOURCE |

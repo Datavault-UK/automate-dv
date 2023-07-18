@@ -21,6 +21,7 @@ ENV_TEMPLATE_DIR = PROJECT_ROOT / 'env/templates'
 FEATURES_ROOT = TESTS_ROOT / 'features'
 SEEDS_DIR = TEST_PROJECT_ROOT / 'seeds'
 TEMP_SEED_DIR = TEST_PROJECT_ROOT / 'seeds/temp'
+MODELS_DIR = TEST_PROJECT_ROOT / 'models'
 
 # Setup logging
 logger = logging.getLogger('automate_dv')

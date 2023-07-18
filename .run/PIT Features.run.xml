@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="PIT Features" type="PyBehaveRunConfigurationType" factoryName="Behave">
-    <module name="dbtvault-dev" />
+    <module name="automate_dv_dev" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <option name="SDK_HOME" value="$USER_HOME$/.local/share/virtualenvs/dbtvault-dev-9HK7lSDa/bin/python" />

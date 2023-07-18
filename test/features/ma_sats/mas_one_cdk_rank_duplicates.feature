@@ -6,7 +6,7 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-RM-D-01] Load over several cycles with a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE ma_sat is empty
+    And the MAS ma_sat is empty
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
@@ -67,8 +67,8 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
     And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER data
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    And I insert by rank into the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1212')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
@@ -93,7 +93,7 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-RM-D-02] Load over several cycles with no CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is empty
+    And the MAS_NO_CDK_HASHDIFF ma_sat is empty
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
@@ -154,8 +154,8 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
     And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_NO_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
+    And I insert by rank into the MAS_NO_CDK_HASHDIFF ma_sat
+    Then the MAS_NO_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | HASHDIFF               | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1002') | md5('1002\|\|BETH')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |
@@ -180,7 +180,7 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-RM-D-03] Load over several cycles with no PK nor CDK in HASHDIFF and a mix of duplicate record change cases
     Given the RAW_STAGE stage is empty
-    And the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is empty
+    And the MAS_NO_PK_CDK_HASHDIFF ma_sat is empty
     When the RAW_STAGE is loaded
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
     # DAY 1
@@ -241,8 +241,8 @@ Feature: [MAS-1CD-RM-D] Multi Active Satellites
       | 1010        | Jenna         | 17-214-233-1244 | 2019-01-04     | 2019-01-04 | *      |
     And I have a rank column AUTOMATE_DV_RANK in the STG_CUSTOMER_NO_PK_CDK_HASHDIFF stage partitioned by CUSTOMER_ID and ordered by LOAD_DATE
     And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
-    And I insert by rank into the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
+    And I insert by rank into the MAS_NO_PK_CDK_HASHDIFF ma_sat
+    Then the MAS_NO_PK_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | HASHDIFF       | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('ALBERT')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | md5('1002') | md5('BETH')    | Beth          | 17-214-233-1212 | 2019-01-01     | 2019-01-01 | *      |

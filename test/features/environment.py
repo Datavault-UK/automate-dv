@@ -49,6 +49,13 @@ fixtures_registry = {
          "databricks": fixtures_staging.staging_null_columns_databricks,
          "postgres": fixtures_staging.staging_null_columns_postgres},
 
+    "fixture.hashing":
+        {"snowflake": fixtures_staging.hashing_snowflake,
+         "bigquery": fixtures_staging.hashing_bigquery,
+         "sqlserver": fixtures_staging.hashing_sqlserver,
+         "databricks": fixtures_staging.hashing_databricks,
+         "postgres": fixtures_staging.hashing_postgres},
+
     "fixture.single_source_hub":
         {"snowflake": fixtures_hub.single_source_hub_snowflake,
          "bigquery": fixtures_hub.single_source_hub_bigquery,

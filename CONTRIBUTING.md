@@ -128,14 +128,14 @@ A successful run should produce something similar to the following output:
 (dbtvault) INFO: Platform set to 'snowflake'
 (dbtvault) INFO: Project set to 'test'
 (dbtvault) INFO: Checking dbt connection... (running dbt debug)
-(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/dbtvault_test'
+(dbtvault) INFO: Project 'test' is available at: '.../dbtvault/test/automate_dv_test'
 Running with dbt=0.20.0
 dbt version: 0.20.0
 python version: 3.9.0
 python path: ~/venvs/dbtvault/bin/python
 os info: Linux-5.4.0-81-generic-x86_64-with-glibc2.31
 Using profiles.yml file at ~/.dbt/profiles.yml
-Using dbt_project.yml file at .../dbtvault/test/dbtvault_test/dbt_project.yml
+Using dbt_project.yml file at .../dbtvault/test/automate_dv_test/dbt_project.yml
 
 Configuration:
   profiles.yml file [OK found and valid]

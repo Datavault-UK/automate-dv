@@ -1,36 +1,64 @@
 /*
- * Copyright (c) Business Thinking Ltd. 2019-2023
- * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
+ *  Copyright (c) Business Thinking Ltd. 2019-2022
+ *  This software includes code developed by the dbtvault Team at Business Thinking Ltd. Trading as Datavault
  */
 
 {# Same as default except we do not use escaping #}
 {%- macro postgres__test_expect_tables_to_match(model, unique_id, compare_columns, expected_seed) -%}
 
 {%- set source_columns = adapter.get_columns_in_relation(model) -%}
+{%- set expected_columns = adapter.get_columns_in_relation(ref(expected_seed)) -%}
 {%- set source_columns_list = [] -%}
 {%- set compare_columns_processed = [] -%}
 {%- set columns_processed = [] -%}
 {%- set source_columns_processed = [] -%}
+{%- set bytea_columns = [] -%}
 
-{%- for compare_col in compare_columns -%}
+{%- for expected_col in expected_columns -%}
+    {%- if expected_col.column|lower|string in compare_columns|map('lower')|list|string -%}
+        {%- if expected_col.dtype == 'bytea' -%}
+            {%- do bytea_columns.append(expected_col.column|lower) -%}
+        {%- endif -%}
+    {%- endif -%}
+{%- endfor -%}
 
-    {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
-    {%- do columns_processed.append(compare_col) -%}
-
+{%- for compare_col in compare_columns | sort -%}
+    {%- if compare_col|string|lower not in bytea_columns -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+        {%- do columns_processed.append(compare_col) -%}
+    {%- elif compare_col|string|lower in bytea_columns -%}
+        {%- do compare_columns_processed.append("{} AS {}".format(compare_col, compare_col)) -%}
+        {%- do columns_processed.append(compare_col) -%}
+    {%- else -%}
+        {%- do compare_columns_processed.append("{}::VARCHAR AS {}".format(compare_col, compare_col)) -%}
+        {%- do columns_processed.append(compare_col) -%}
+    {%- endif -%}
 {%- endfor %}
 
+{%- set source_column_names = [] -%}
 {%- for source_col in source_columns -%}
+    {%- do source_column_names.append(source_col.column) -%}
+{%- endfor -%}
 
-    {%- do source_columns_list.append(source_col.column) -%}
-    {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col.column, source_col.column)) -%}
+{%- for source_col in source_column_names | sort -%}
+    {%- if source_col|string not in bytea_columns -%}
+        {%- do source_columns_list.append(source_col) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col, source_col)) -%}
+    {%- elif source_col|string in bytea_columns -%}
+        {%- do source_columns_list.append(source_col) -%}
+        {%- do source_columns_processed.append("{} AS {}".format(source_col, source_col)) -%}
+    {%- else -%}
+        {%- do source_columns_list.append(source_col) -%}
+        {%- do source_columns_processed.append("{}::VARCHAR AS {}".format(source_col, source_col)) -%}
+    {%- endif -%}
 {%- endfor %}
 
-{%- set compare_columns_string = compare_columns_processed | sort | join(", ") -%}
-{%- set source_columns_string = source_columns_processed | sort | join(", ") -%}
+{%- set compare_columns_string = compare_columns_processed | join(", ") -%}
+{%- set source_columns_string = source_columns_processed | join(", ") -%}
 
 {# Unquote the columns  string list #}
-{#{%- set columns_string = columns_processed | sort | join(", ") -%}#}
-{%- set columns_string = columns_processed | sort | join(", ") -%}
+{#{%- set columns_string = columns_processed | join(", ") -%}#}
+{%- set columns_string = columns_processed | join(", ") -%}
 
 
 {# POSTGRES#}
