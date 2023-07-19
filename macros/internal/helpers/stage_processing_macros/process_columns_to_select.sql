@@ -3,8 +3,6 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-AutomateDV (f.k.a automate_dv)
-
 {%- macro process_columns_to_select(columns_list=none, exclude_columns_list=none) -%}
 
     {% set columns_list = columns_list | list %}

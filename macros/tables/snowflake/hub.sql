@@ -15,12 +15,12 @@
 
     {{ automate_dv.log_relation_sources(this, source_model | length) }}
 
-    {{- automate_dv.prepend_generated_by() -}}
+    {{- automate_dv.prepend_generated_by() }}
 
-    {{- adapter.dispatch('hub', 'automate_dv')(src_pk=src_pk, src_nk=src_nk,
-                                            src_extra_columns=src_extra_columns,
-                                            src_ldts=src_ldts, src_source=src_source,
-                                            source_model=source_model) -}}
+    {{ adapter.dispatch('hub', 'automate_dv')(src_pk=src_pk, src_nk=src_nk,
+                                              src_extra_columns=src_extra_columns,
+                                              src_ldts=src_ldts, src_source=src_source,
+                                              source_model=source_model) -}}
 
 {%- endmacro -%}
 

@@ -5,10 +5,6 @@
 
 {% materialization vault_insert_by_rank, default -%}
 
-    {% if target.type == "postgres" and execute %}
-        {{ exceptions.raise_compiler_error("The vault_insert_by_rank materialisation is currently unavailable on Postgres.") }}
-    {% endif %}
-
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
     {% if target.type == "sqlserver" %}
@@ -50,6 +46,9 @@
 
     {% elif full_refresh_mode %}
         {% set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
+        {% if target.type == "postgres" %}
+            {{ automate_dv.drop_temporary_special(target_relation) }}
+        {% endif %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
 
@@ -58,7 +57,7 @@
             'Max iterations is 100,000. Consider using a different rank column
             or loading a smaller amount of data.
             vault_insert_by materialisations are not intended for this purpose,
-            please see https://automate_dv.readthedocs.io/en/latest/materialisations/'
+            please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
             {%- endset -%}
 
             {{- exceptions.raise_compiler_error(error_message) -}}
