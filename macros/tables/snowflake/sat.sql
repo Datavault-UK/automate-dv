@@ -36,7 +36,7 @@
 
 
 WITH source_data AS (
-    SELECT a.*
+    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
 ),
@@ -71,26 +71,44 @@ first_record_in_set AS (
 ),
 
 unique_source_records AS (
-    SELECT
-    {{ automate_dv.alias_all(source_cols, 'deduped') }}
-    FROM (
     SELECT DISTINCT
-        {{ automate_dv.alias_all(source_cols, 'sd') }}
+        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
     FROM source_data as sd
-    QUALIFY {{ src_hashdiff }} != LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC)) AS deduped
+    QUALIFY {{ src_hashdiff }} != LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC)
 ),
 
+
+{%- if enable_ghost_record %}
+
+ghost AS (
+    {{ automate_dv.create_ghost_record(src_pk=src_pk, src_hashdiff=src_hashdiff,
+                                    src_payload=src_payload, src_extra_columns=src_extra_columns,
+                                    src_eff=src_eff, src_ldts=src_ldts,
+                                    src_source=src_source, source_model=source_model) }}
+),
+
+{%- endif %}
+
 records_to_insert AS (
-        SELECT {{ automate_dv.prefix(source_cols, 'frin', alias_target='target') }}
+    {%- if enable_ghost_record %}
+    SELECT
+        {{ automate_dv.alias_all(source_cols, 'g') }}
+        FROM ghost AS g
+        {%- if automate_dv.is_any_incremental() %}
+        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+        {%- endif %}
+    UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+    {%- endif %}
+        SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
         FROM first_record_in_set AS frin
         {%- if automate_dv.is_any_incremental() %}
         LEFT JOIN LATEST_RECORDS lr
             ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
-            AND {{ automate_dv.multikey(src_hashdiff, prefix=['lr','frin'], condition='=') }}
+            AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
             WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
         {%- endif %}
         UNION
-        SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='target') }}
+        SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
         FROM unique_source_records as usr
 )
 
