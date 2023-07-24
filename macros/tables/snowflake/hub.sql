@@ -28,6 +28,8 @@
 
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_nk, src_extra_columns, src_ldts, src_source]) -%}
 
+{%- set predicates = model.config.get('predicates', none) -%}
+
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
@@ -106,8 +108,13 @@ records_to_insert AS (
     {%- if automate_dv.is_any_incremental() %}
     LEFT JOIN {{ this }} AS d
     ON {{ automate_dv.multikey(src_pk, prefix=['a','d'], condition='=') }}
+    {%- if predicates is not none %}
+                {% for predicate in predicates %}
+                    AND d.{{ predicate }}
+                {% endfor %}
+            {% endif %}
     WHERE {{ automate_dv.multikey(src_pk, prefix='d', condition='IS NULL') }}
-    {%- endif %}
+    {%- endif %}    
 )
 
 SELECT * FROM records_to_insert

@@ -29,6 +29,7 @@
 {%- set window_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+{%- set predicates = model.config.get('predicates', none) -%}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -65,6 +66,12 @@ latest_records AS (
                 FROM source_data
             ) AS source_records
                 ON {{ automate_dv.multikey(src_pk, prefix=['current_records','source_records'], condition='=') }}
+                WHERE 1=1
+            {%- if predicates is not none %}
+                {% for predicate in predicates %}
+                    AND {{ predicate }}
+                {% endfor %}
+            {% endif %}
     ) AS a
     WHERE a.rank = 1
 ),
