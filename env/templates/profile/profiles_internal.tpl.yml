@@ -5,7 +5,7 @@ automate_dv:
       account: "{{ op://dbtvault/snowflake/account }}"
 
       user: "{{ op://private/snowflake/username }}"
-      password: "{{ op://private/snowflake/password }}"
+      authenticator: externalbrowser
 
       database: "{{ op://dbtvault/snowflake/database }}"
       schema: "TEST"

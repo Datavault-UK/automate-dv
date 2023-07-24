@@ -1,4 +1,4 @@
-Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred date ranges
+Feature: [SAT-PM-I] Typical SatellitesLoaded Satellites Loaded, with period_mat_inferred_range scenarios
 
   @fixture.satellite_cycle
   Scenario: [SAT-PM-I-01] Satellite load over several daily cycles with insert_by_period into non-existent satellite
@@ -24,8 +24,7 @@ Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1210 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1211 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day
-    And I insert by period into the SATELLITE sat by day
+    When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1201')  | Albert        | 1990-02-03   | 17-214-233-1201 | 2019-05-04     | 2019-05-04 | *      |
@@ -71,7 +70,7 @@ Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1210 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1211 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day
+    And I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1201')  | Albert        | 1990-02-03   | 17-214-233-1201 | 2019-05-04     | 2019-05-04 | *      |
@@ -123,7 +122,7 @@ Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred 
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1211 | 2019-05-07     | 2019-05-07 | *      |
       | 1013        | Zach          | 1995-06-16   | 17-214-233-1213 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day
+    And I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1201')  | Albert        | 1990-02-03   | 17-214-233-1201 | 2019-05-04     | 2019-05-04 | *      |
@@ -145,6 +144,7 @@ Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred 
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1211')   | Karen         | 1978-06-16   | 17-214-233-1211 | 2019-05-07     | 2019-05-07 | *      |
       | md5('1013') | md5('1995-06-16\|\|1013\|\|ZACH\|\|17-214-233-1213')    | Zach          | 1995-06-16   | 17-214-233-1213 | 2019-05-07     | 2019-05-07 | *      |
 
+#This test fails as new behaviour inserts if a record is deemed as new, compared to previous hashdiff oppose to new compared to previous batch
   @fixture.satellite_cycle
   Scenario: [SAT-PM-I-04] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates.
     Given the RAW_STAGE stage is empty
@@ -180,7 +180,7 @@ Feature: [SAT-PM-I] Satellites Loaded using Period Materialization and inferred 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1210 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1211 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day
+    And I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1201')  | Albert        | 1990-02-03   | 17-214-233-1201 | 2019-05-04     | 2019-05-04 | *      |

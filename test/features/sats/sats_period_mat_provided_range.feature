@@ -1,5 +1,6 @@
-Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided date ranges
+Feature: [SAT-PM-P] Typical Satellite Loaded, with period_mat_provided scenarios
 
+#Scenarios no longer appropriate with new loading scheme (as batch loading is no longer done)
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-02] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
@@ -24,8 +25,9 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
+#    And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
+#    And I insert by period into the SATELLITE sat by day with date range: 2019-05-05 to 2019-05-06 and LDTS LOAD_DATE
+    And I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BEAH\|\|17-214-233-1215')   | Beah          | 1995-08-07   | 17-214-233-1215 | 2019-05-05     | 2019-05-05 | *      |
@@ -62,7 +64,8 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
+    #And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
+    And I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
@@ -111,8 +114,8 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-05-07     | 2019-05-07 | *      |
       | 1013        | Zach          | 1995-06-16   | 17-214-233-1224 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
-
+    #And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-06 and LDTS LOAD_DATE
+    And I load the SATELLITE sat
     # =============== CHECKS ===================
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
@@ -170,7 +173,8 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-05 and LDTS LOAD_DATE
+    #And I insert by period into the SATELLITE sat by day with date range: 2019-05-04 to 2019-05-05 and LDTS LOAD_DATE
+    And I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
@@ -194,8 +198,9 @@ Feature: [SAT-PM-P] Satellites Loaded using Period Materialization for provided 
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 11:14:54.387399 | *      |
       | 1005        | Edward        | 1978-09-21   | 17-214-233-1218 | 1993-01-02 11:14:54.387391 | *      |
     And I stage the STG_CUSTOMER_TS data
-    And I insert by period into the SATELLITE_TS sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATETIME
-    And I insert by period into the SATELLITE_TS sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATETIME
+    #And I insert by period into the SATELLITE_TS sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATETIME
+    #And I insert by period into the SATELLITE_TS sat by day with date range: 1993-01-01 to 1993-01-02 and LDTS LOAD_DATETIME
+    And I load the SATELLITE sat
     Then the SATELLITE_TS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | EFFECTIVE_FROM             | LOAD_DATETIME              | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214')  | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 11:14:54.387396 | 1993-01-01 11:14:54.387396 | *      |
