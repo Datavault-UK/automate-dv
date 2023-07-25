@@ -9,9 +9,7 @@
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{%- endif -%}
-
-{{ automate_dv.prepend_generated_by() }}
+{%- endif %}
 
 {{ 'WITH ' -}}
 

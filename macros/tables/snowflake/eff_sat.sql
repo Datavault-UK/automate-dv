@@ -6,17 +6,17 @@
 {%- macro eff_sat(src_pk, src_dfk, src_sfk, src_extra_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
 
     {{- automate_dv.check_required_parameters(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                           src_start_date=src_start_date, src_end_date=src_end_date,
-                                           src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                           source_model=source_model) -}}
+                                              src_start_date=src_start_date, src_end_date=src_end_date,
+                                              src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                              source_model=source_model) -}}
 
-    {{ automate_dv.prepend_generated_by() }}
+    {{- automate_dv.prepend_generated_by() }}
 
     {{ adapter.dispatch('eff_sat', 'automate_dv')(src_pk=src_pk, src_dfk=src_dfk, src_sfk=src_sfk,
-                                               src_extra_columns=src_extra_columns,
-                                               src_start_date=src_start_date, src_end_date=src_end_date,
-                                               src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
-                                               source_model=source_model) -}}
+                                                  src_extra_columns=src_extra_columns,
+                                                  src_start_date=src_start_date, src_end_date=src_end_date,
+                                                  src_eff=src_eff, src_ldts=src_ldts, src_source=src_source,
+                                                  source_model=source_model) -}}
 {%- endmacro -%}
 
 {%- macro default__eff_sat(src_pk, src_dfk, src_sfk, src_extra_columns, src_start_date, src_end_date, src_eff, src_ldts, src_source, source_model) -%}
