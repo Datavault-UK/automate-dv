@@ -606,7 +606,10 @@ def staging_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "DATE",
-                "AUTOMATE_DV_RANK": "VARCHAR"
+                "AUTOMATE_DV_RANK": "VARCHAR",
+                "CUSTOMER_NK": "VARCHAR",
+                "DERIVED_CONCAT": "VARCHAR",
+                "AUTOMATE_DV_RANK2": "VARCHAR",
             }
         },
         "STG_CUSTOMER_HASH": {
@@ -739,3 +742,67 @@ def staging_null_columns_postgres(context):
             }
         }
     }
+
+
+@fixture
+def hashing_snowflake(context):
+    context.seed_config = {
+
+        "sample_data": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR"
+
+            }
+        }
+    }
+
+
+@fixture
+def hashing_bigquery(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "STRING"
+
+            }
+        }
+    }
+
+
+@fixture
+def hashing_sqlserver(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR(50)"
+
+            }
+        }
+    }
+
+@fixture
+def hashing_databricks(context):
+    context.seed_config = {
+
+        "SAMPLE_DATA": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR"
+
+            }
+        }
+    }
+
+@fixture
+def hashing_postgres(context):
+    context.seed_config = {
+
+        "sample_data": {
+            "column_types": {
+                "VALUE_STRING": "VARCHAR"
+
+            }
+        }
+    }
+

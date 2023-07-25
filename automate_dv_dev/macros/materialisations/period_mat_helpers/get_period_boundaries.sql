@@ -7,10 +7,10 @@
 
     {% set macro = adapter.dispatch('get_period_boundaries',
                                     'automate_dv')(target_relation=target_relation,
-                                                timestamp_field=timestamp_field,
-                                                start_date=start_date,
-                                                stop_date=stop_date,
-                                                period=period) %}
+                                                   timestamp_field=timestamp_field,
+                                                   start_date=start_date,
+                                                   stop_date=stop_date,
+                                                   period=period) %}
 
     {% do return(macro) %}
 {%- endmacro %}
@@ -84,14 +84,9 @@
 
 {% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
     {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
-        {%- set error_message -%}
-        'This datepart ({{ period }}) is too small and cannot be used for this purpose in MS SQL Server, consider using a different datepart value (e.g. day).
-         Vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate_dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.raise_compiler_error(error_message) -}}
+        {{ automate_dv.sqlserver_datepart_too_small_error(period=period) }}
     {%- endif -%}
+
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
     {% set start_date = start_date[0:27] %}
     {% set stop_date = stop_date[0:27] %}

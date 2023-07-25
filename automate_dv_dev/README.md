@@ -89,4 +89,4 @@ Talk to our developers and other members of our growing community, get support a
 [View our contribution guidelines](CONTRIBUTING.md)
 
 ## License
-[Apache 2.0](LICENSE.md)
+[Apache 2.0](LICENSE)

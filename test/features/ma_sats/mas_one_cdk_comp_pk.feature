@@ -3,7 +3,7 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-CP-01] Load data into a non-existent multi-active satellite
-    Given the MULTI_ACTIVE_SATELLITE_COMP table does not exist
+    Given the MAS_COMP table does not exist
     And the RAW_STAGE_COMP table contains data
       | CUSTOMER_ID | ORDER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | AAA      | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
@@ -19,8 +19,8 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
       | 1004        | DDD      | Don           | 17-214-233-1227 | 1993-01-01 | *      |
       | 1004        | DDD      | Dominik       | 17-214-233-1237 | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER_COMP data
-    When I load the MULTI_ACTIVE_SATELLITE_COMP ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_COMP table should contain expected data
+    When I load the MAS_COMP ma_sat
+    Then the MAS_COMP table should contain expected data
       | CUSTOMER_PK | ORDER_PK   | HASHDIFF                                         | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('AAA') | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|AAA')   | Alice         | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('AAA') | md5('1001\|\|ALICE\|\|17-214-233-1224\|\|AAA')   | Alice         | 17-214-233-1224 | 1993-01-01     | 1993-01-01 | *      |
@@ -36,8 +36,8 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
       | md5('1004') | md5('DDD') | md5('1004\|\|DOMINIK\|\|17-214-233-1237\|\|DDD') | Dominik       | 17-214-233-1237 | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.multi_active_satellite
-  Scenario: [MAS-1CD-B-06] Load duplicated data into an empty multi-active satellite
-    Given the MULTI_ACTIVE_SATELLITE_COMP ma_sat is empty
+  Scenario: [MAS-1CD-CP-02] Load duplicated data into an empty multi-active satellite
+    Given the MAS_COMP ma_sat is empty
     And the RAW_STAGE_COMP table contains data
       | CUSTOMER_ID | ORDER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | AAA      | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
@@ -62,8 +62,8 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
       | 1004        | DDD      | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
       | 1004        | DDD      | Dom           | 17-214-233-1237 | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER_COMP data
-    When I load the MULTI_ACTIVE_SATELLITE_COMP ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_COMP table should contain expected data
+    When I load the MAS_COMP ma_sat
+    Then the MAS_COMP table should contain expected data
       | CUSTOMER_PK | ORDER_PK   | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('AAA') | Alice         | 17-214-233-1214 | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|AAA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('AAA') | Alice         | 17-214-233-1224 | md5('1001\|\|ALICE\|\|17-214-233-1224\|\|AAA') | 1993-01-01     | 1993-01-01 | *      |
@@ -80,7 +80,7 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-CP-03] Load data into an empty multi-active satellite where some records have NULL CDK(s) or Attribute(s)
-    Given the MULTI_ACTIVE_SATELLITE_COMP ma_sat is empty
+    Given the MAS_COMP ma_sat is empty
     And the RAW_STAGE_COMP table contains data
       | CUSTOMER_ID | ORDER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | AAA      | Alice         | 17-214-233-1214 | 1993-01-01 | *      |
@@ -99,8 +99,8 @@ Feature: [MAS-1CD-CP] Multi Active Satellites
       | 1005        | <null>   | Frida         | 17-214-233-1228 | 1993-01-01 | *      |
       | <null>      | GGG      | <null>        | <null>          | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER_COMP data
-    When I load the MULTI_ACTIVE_SATELLITE_COMP ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_COMP table should contain expected data
+    When I load the MAS_COMP ma_sat
+    Then the MAS_COMP table should contain expected data
       | CUSTOMER_PK | ORDER_PK   | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('AAA') | Alice         | 17-214-233-1214 | md5('1001\|\|ALICE\|\|17-214-233-1214\|\|AAA') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1001') | md5('AAA') | Alice         | 17-214-233-1224 | md5('1001\|\|ALICE\|\|17-214-233-1224\|\|AAA') | 1993-01-01     | 1993-01-01 | *      |

@@ -42,7 +42,7 @@ def sample_directory_tree(tmp_path):
 
 @pytest.fixture()
 def temporary_prop():
-    logger = logging.getLogger('dbtvault')
+    logger = logging.getLogger('automate_dv')
     logger.propagate = True
     yield
     logger.propagate = False

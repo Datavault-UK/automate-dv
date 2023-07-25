@@ -302,8 +302,8 @@ def run_harness_tests(c, platform=None, disable_op=False):
 
 @task
 def run_integration_tests(c, structures=None, subtype=None, platform=None, disable_op=False):
-    feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'sats_with_oos', 'eff_sats',
-                           'ma_sats', 'xts', 'bridge', 'pit', 'cycle'}
+    feature_directories = {'staging', 'hubs', 'links', 't_links', 'sats', 'eff_sats',
+                           'ma_sats', 'xts', 'pit', 'bridge', 'cycle', 'ref_tables'}
 
     sub_types = groups.feature_sub_types()
 

@@ -4,7 +4,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-2CD-BSC-01] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
+    And the MAS_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -15,7 +15,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1214 | 123       | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 17-214-233-1215 | 123       | 2019-05-04     | 2019-05-04 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -25,7 +25,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1004        | David         | 17-214-233-1210 | 123       | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 17-214-233-1216 | 123       | 2019-05-05     | 2019-05-05 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -35,7 +35,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1005        | Elwyn         | 17-214-233-1218 | 123       | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 17-214-233-1216 | 123       | 2019-05-06     | 2019-05-06 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -46,10 +46,10 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1011        | Karen         | 17-214-233-1217 | 123       | 2019-05-07     | 2019-05-07 | *      |
       | 1010        | Jenny         | 17-214-233-1218 | 123       | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+    Then the MAS_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | EXTENSION | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|123')  | 123       | Albert        | 17-214-233-1211 | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1212\|\|123')    | 123       | Beth          | 17-214-233-1212 | 2019-05-04     | 2019-05-04 | *      |
@@ -73,7 +73,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
   @fixture.multi_active_satellite_cycle
   Scenario: [MAS-2CD-BSC-02] Load over several cycles with Timestamps
     Given the RAW_STAGE_TWO_CDK_TS stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat is empty
+    And the MAS_TWO_CDK_TS ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE_TWO_CDK_TS is loaded
@@ -84,7 +84,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1214 | 123       | 2019-05-04 11:14:54.396 | 2019-05-04 11:14:54.396 | *      |
       | 1012        | Albert        | 17-214-233-1215 | 123       | 2019-05-04 11:14:54.396 | 2019-05-04 11:14:54.396 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK_TS data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
+    And I load the MAS_TWO_CDK_TS ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE_TWO_CDK_TS is loaded
@@ -94,7 +94,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1004        | David         | 17-214-233-1210 | 123       | 2019-05-05 11:14:54.396 | 2019-05-05 11:14:54.396 | *      |
       | 1010        | Jenny         | 17-214-233-1216 | 123       | 2019-05-05 11:14:54.396 | 2019-05-05 11:14:54.396 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK_TS data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
+    And I load the MAS_TWO_CDK_TS ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE_TWO_CDK_TS is loaded
@@ -104,7 +104,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1005        | Elwyn         | 17-214-233-1218 | 123       | 2019-05-06 11:14:54.396 | 2019-05-06 11:14:54.396 | *      |
       | 1006        | Freia         | 17-214-233-1216 | 123       | 2019-05-06 11:14:54.396 | 2019-05-06 11:14:54.396 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK_TS data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
+    And I load the MAS_TWO_CDK_TS ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE_TWO_CDK_TS is loaded
@@ -114,10 +114,10 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1007        | Geoff         | 17-214-233-1219 | 123       | 2019-05-07 11:14:54.396 | 2019-05-07 11:14:54.396 | *      |
       | 1011        | Karen         | 17-214-233-1217 | 123       | 2019-05-07 11:14:54.396 | 2019-05-07 11:14:54.396 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK_TS data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS ma_sat
+    And I load the MAS_TWO_CDK_TS ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK_TS table should contain expected data
+    Then the MAS_TWO_CDK_TS table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | EXTENSION | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM          | LOAD_DATETIME           | SOURCE |
       | md5('1001') | md5('1001\|\|ALBERT\|\|17-214-233-1211\|\|123')  | 123       | Albert        | 17-214-233-1211 | 2019-05-04 11:14:54.396 | 2019-05-04 11:14:54.396 | *      |
       | md5('1002') | md5('1002\|\|BETH\|\|17-214-233-1212\|\|123')    | 123       | Beth          | 17-214-233-1212 | 2019-05-04 11:14:54.396 | 2019-05-04 11:14:54.396 | *      |
@@ -141,7 +141,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
   @fixture.enable_sha
   Scenario: [MAS-2CD-BSC-03] Load over several cycles
     Given the RAW_STAGE_TWO_CDK stage is empty
-    And the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat is empty
+    And the MAS_TWO_CDK ma_sat is empty
 
     # ================ DAY 1 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -152,7 +152,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1010        | Jenny         | 17-214-233-1214 | 123       | 2019-05-04     | 2019-05-04 | *      |
       | 1012        | Albert        | 17-214-233-1215 | 123       | 2019-05-04     | 2019-05-04 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # ================ DAY 2 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -162,7 +162,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1004        | David         | 17-214-233-1210 | 123       | 2019-05-05     | 2019-05-05 | *      |
       | 1010        | Jenny         | 17-214-233-1216 | 123       | 2019-05-05     | 2019-05-05 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # ================ DAY 3 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -172,7 +172,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1005        | Elwyn         | 17-214-233-1218 | 123       | 2019-05-06     | 2019-05-06 | *      |
       | 1006        | Freia         | 17-214-233-1216 | 123       | 2019-05-06     | 2019-05-06 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # ================ DAY 4 ===================
     When the RAW_STAGE_TWO_CDK is loaded
@@ -182,10 +182,10 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | 1007        | Geoff         | 17-214-233-1219 | 123       | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 17-214-233-1217 | 123       | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER_TWO_CDK data
-    And I load the MULTI_ACTIVE_SATELLITE_TWO_CDK ma_sat
+    And I load the MAS_TWO_CDK ma_sat
 
     # =============== CHECKS ===================
-    Then the MULTI_ACTIVE_SATELLITE_TWO_CDK table should contain expected data
+    Then the MAS_TWO_CDK table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                         | EXTENSION | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | sha('1001') | sha('1001\|\|ALBERT\|\|17-214-233-1211\|\|123')  | 123       | Albert        | 17-214-233-1211 | 2019-05-04     | 2019-05-04 | *      |
       | sha('1002') | sha('1002\|\|BETH\|\|17-214-233-1212\|\|123')    | 123       | Beth          | 17-214-233-1212 | 2019-05-04     | 2019-05-04 | *      |

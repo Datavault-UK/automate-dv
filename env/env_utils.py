@@ -33,7 +33,8 @@ REQUIRED_ENV_VARS = {
         "POSTGRES_DB_DATABASE",
         "POSTGRES_DB_SCHEMA",
         "POSTGRES_DB_USER",
-        "POSTGRES_DB_PW"
+        "POSTGRES_DB_PW",
+        "POSTGRES_DB_PORT",
     ]
 }
 
