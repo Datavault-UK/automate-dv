@@ -312,7 +312,7 @@ def load_table(context, model_name, vault_structure):
                                            vault_structure=vault_structure,
                                            config=config,
                                            **metadata)
-
+    is_full_refresh = step_helpers.is_full_refresh(context)
     context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
     context.system_record_value = getattr(context, "system_record_value", None)
 
@@ -320,8 +320,8 @@ def load_table(context, model_name, vault_structure):
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
-
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args,
+                                     full_refresh=is_full_refresh)
     assert "Completed successfully" in logs
 
 

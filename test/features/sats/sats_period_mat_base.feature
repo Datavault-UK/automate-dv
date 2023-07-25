@@ -97,7 +97,7 @@ Feature: [SAT-PM-B] Typical Satellite Loaded, with period_mat_base scenarios
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')    | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
       | md5('1003') | md5('1990-02-03\|\|1003\|\|CHARLEY\|\|17-214-233-1216') | Charley       | 1990-02-03   | 17-214-233-1216 | 2019-05-04     | 2019-05-04 | *      |
-#TODO Fix full refresh without materialisations
+
   @fixture.enable_full_refresh
   @fixture.satellite_cycle
   Scenario: [SAT-PM-B-06] Base load of a satellite using full refresh and only start date should only contain first period records
@@ -127,8 +127,8 @@ Feature: [SAT-PM-B] Typical Satellite Loaded, with period_mat_base scenarios
       | 1003        | Chad          | C              | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | D              | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the SATELLITE_AC sat
       #And I insert by period into the SATELLITE_AC sat by day with date range: 1993-01-01 to 1993-01-03 and LDTS LOAD_DATE
+    And I load the SATELLITE_AC sat
     Then the SATELLITE_AC table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_MT_ID | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | Alice         | A              | 1997-04-24   | 17-214-233-1214 | 1993-01-01     | 1993-01-01 | *      |
