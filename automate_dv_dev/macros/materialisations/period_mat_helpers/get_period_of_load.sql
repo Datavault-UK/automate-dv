@@ -7,8 +7,8 @@
 
     {% set macro = adapter.dispatch('get_period_of_load',
                                     'automate_dv')(period=period,
-                                                offset=offset,
-                                                start_timestamp=start_timestamp) %}
+                                                   offset=offset,
+                                                   start_timestamp=start_timestamp) %}
 
     {% do return(macro) %}
 {%- endmacro %}

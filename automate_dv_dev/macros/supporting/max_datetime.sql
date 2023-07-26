@@ -26,3 +26,9 @@
     {%- do return(var('max_datetime', '9999-12-31 23:59:59.999999')) -%}
 
 {%- endmacro -%}
+
+{%- macro postgres__max_datetime() %}
+
+    {%- do return(var('max_datetime', '9999-12-31 23:59:59.999')) -%}
+
+{%- endmacro -%}

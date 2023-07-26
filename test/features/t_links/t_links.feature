@@ -212,6 +212,7 @@ Feature: [TLK] Transactional Links
       | 1237        | 1249     | 12345696           | 2019-09-21       | CR   | 40000.00 | 2019-09-23 | SAP    |
       | 1239        | 1250     | 12345697           | 2019-09-21       | DR   | 34.87    | 2019-09-23 | SAP    |
       | 1239        | 1251     | 12345698           | 2019-09-21       | CR   | 4567.87  | 2019-09-23 | SAP    |
+    And I stage the STG_CUSTOMER data
     And I load the T_LINK t_link
     Then the T_LINK table should contain expected data
       | TRANSACTION_PK                  | CUSTOMER_FK | ORDER_FK    | TRANSACTION_NUMBER | TRANSACTION_DATE | TYPE | AMOUNT   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |

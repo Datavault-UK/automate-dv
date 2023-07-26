@@ -3,7 +3,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-01] Load data into a populated multi-active satellite where all records load
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1227 | md5('1004\|\|DOM\|\|17-214-233-1227')   | 1993-01-01     | 1993-01-01 | *      |
@@ -26,8 +26,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1005        | Eric          | 17-214-233-1227 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1237 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | md5('1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1001') | Alice         | 17-214-233-1224 | md5('1001\|\|ALICE\|\|17-214-233-1224') | 1993-01-02     | 1993-01-02 | *      |
@@ -50,7 +50,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-02] Load data into a populated multi-active satellite where sets of records have fewer records
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -70,8 +70,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1002        | Bob           | 17-214-233-1235 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1217 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -91,7 +91,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-03] Load data into a populated multi-active satellite where some sets of records have extra records
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -117,8 +117,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -144,7 +144,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-04] Load data into a populated multi-active satellite where sets have the same number of records after records have been added and removed in the stage
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -167,8 +167,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1004        | Dom           | 17-214-233-1247 | 1993-01-02 | *      |
       | 1004        | Dom           | 17-214-233-1257 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -191,7 +191,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-05] Load data into a populated multi-active satellite where sets have the same number of records but some records have different hashdiffs
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -217,8 +217,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1006        | Fridax        | 17-214-233-1224 | 1993-01-02 | *      |
       | 1006        | Frida         | 17-214-233-1234 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                 | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')    | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')    | 1993-01-01     | 1993-01-01 | *      |
@@ -244,7 +244,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-06] Load data into a populated multi-active satellite where some sets of records varying group size and some have different hashdiffs
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')   | 1993-01-01     | 1993-01-01 | *      |
@@ -279,8 +279,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1006        | Fridax        | 17-214-233-1224 | 1993-01-02 | *      |
       | 1006        | Frida         | 17-214-233-1234 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                 | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')    | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')    | 1993-01-01     | 1993-01-01 | *      |
@@ -312,7 +312,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-07] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with existent PK(s)/CDK(s)
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1212 | md5('1002\|\|BOB\|\|17-214-233-1212')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1222 | md5('1002\|\|BOB\|\|17-214-233-1222')   | 1993-01-01     | 1993-01-01 | *      |
@@ -329,8 +329,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1002        | <null>        | 17-214-233-1222 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1232 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1212 | md5('1002\|\|BOB\|\|17-214-233-1212')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1222 | md5('1002\|\|BOB\|\|17-214-233-1222')   | 1993-01-01     | 1993-01-01 | *      |
@@ -343,7 +343,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-08] Load data into a populated satellite where either the PK(s) or the CDK(s) are NULL - with new PK(s)/CDK(s)
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1224 | md5('1004\|\|DOM\|\|17-214-233-1224')   | 1993-01-01     | 1993-01-01 | *      |
@@ -360,8 +360,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1002        | <null>        | 17-214-233-1222 | 1993-01-02 | *      |
       | 1002        | Bob           | 17-214-233-1232 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1224 | md5('1004\|\|DOM\|\|17-214-233-1224')   | 1993-01-01     | 1993-01-01 | *      |
@@ -374,7 +374,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-09] Load data into a populated satellite where the stage records include NULL PK(s) and NULL CDK(s)
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1224 | md5('1004\|\|DOM\|\|17-214-233-1224')   | 1993-01-01     | 1993-01-01 | *      |
@@ -386,8 +386,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE | LOAD_DATE  | SOURCE |
       | <null>      | <null>        | <null>         | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1214 | md5('1004\|\|DOM\|\|17-214-233-1214')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1224 | md5('1004\|\|DOM\|\|17-214-233-1224')   | 1993-01-01     | 1993-01-01 | *      |
@@ -398,7 +398,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-10] Load data into a populated multi-active satellite where hashdiff does not include CDKs
-    Given the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is already populated with data
+    Given the MAS_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -409,8 +409,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1003        | Chad          | 17-214-233-1226 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
-    When I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
+    When I load the MAS_NO_CDK_HASHDIFF ma_sat
+    Then the MAS_NO_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -421,7 +421,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-11] Load data into a populated multi-active satellite where no matching record and hashdiff does not include CDKs
-    Given the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat is already populated with data
+    Given the MAS_NO_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -430,8 +430,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER_NO_CDK_HASHDIFF data
-    When I load the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_NO_CDK_HASHDIFF table should contain expected data
+    When I load the MAS_NO_CDK_HASHDIFF ma_sat
+    Then the MAS_NO_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF            | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('1003\|\|CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -440,7 +440,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-12] Load data into a populated multi-active satellite where hashdiff does not include PKs nor CDKs
-    Given the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
+    Given the MAS_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -451,8 +451,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1003        | Chad          | 17-214-233-1226 | 1993-01-02 | *      |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
-    When I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
+    When I load the MAS_NO_PK_CDK_HASHDIFF ma_sat
+    Then the MAS_NO_PK_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -463,7 +463,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-13] Load data into a populated multi-active satellite where no matching record and hashdiff does not include PKs nor CDKs
-    Given the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
+    Given the MAS_NO_PK_CDK_HASHDIFF ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -472,8 +472,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1003        | Chad          | 17-214-233-1246 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER_NO_PK_CDK_HASHDIFF data
-    When I load the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_NO_PK_CDK_HASHDIFF table should contain expected data
+    When I load the MAS_NO_PK_CDK_HASHDIFF ma_sat
+    Then the MAS_NO_PK_CDK_HASHDIFF table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF    | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1003') | Chad          | 17-214-233-1216 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1226 | md5('CHAD') | 1993-01-01     | 1993-01-01 | *      |
@@ -482,7 +482,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-14] Load data into a populated multi-active satellite where groups of records in the satellite have multiple ldts
-    Given the MULTI_ACTIVE_SATELLITE ma_sat is already populated with data
+    Given the MAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')  | 1993-01-02     | 1993-01-02 | *      |
@@ -495,8 +495,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1002        | Bob           | 17-214-233-1225 | 1993-01-03 | *      |
       | 1002        | Bob           | 17-214-233-1235 | 1993-01-03 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE ma_sat
-    Then the MULTI_ACTIVE_SATELLITE table should contain expected data
+    When I load the MAS ma_sat
+    Then the MAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                               | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1225 | md5('1002\|\|BOB\|\|17-214-233-1225')  | 1993-01-02     | 1993-01-02 | *      |
@@ -507,7 +507,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-15] Load data into a populated multi-active satellite where all records load, using an alias for the hashdiff
-    Given the MULTI_ACTIVE_SATELLITE_HD_ALIAS ma_sat is already populated with data
+    Given the MAS_HD_ALIAS ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1227 | md5('1004\|\|DOM\|\|17-214-233-1227')   | 1993-01-01     | 1993-01-01 | *      |
@@ -530,8 +530,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1005        | Eric          | 17-214-233-1227 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1237 | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE_HD_ALIAS ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_HD_ALIAS table should contain expected data
+    When I load the MAS_HD_ALIAS ma_sat
+    Then the MAS_HD_ALIAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_HASHDIFF                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | md5('1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1001') | Alice         | 17-214-233-1224 | md5('1001\|\|ALICE\|\|17-214-233-1224') | 1993-01-02     | 1993-01-02 | *      |
@@ -554,7 +554,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-16] Load data into a populated multi-active satellite where all records load, with additional columns
-    Given the MULTI_ACTIVE_SATELLITE_AC ma_sat is already populated with data
+    Given the MAS_AC ma_sat is already populated with data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_MT_ID | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1004') | Dom           | 17-214-233-1217 | TPCH_CUSTOMER  | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1227 | TPCH_CUSTOMER  | md5('1004\|\|DOM\|\|17-214-233-1227')   | 1993-01-01     | 1993-01-01 | *      |
@@ -577,8 +577,8 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1005        | Eric          | 17-214-233-1227 | TPCH_CUSTOMER  | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1237 | TPCH_CUSTOMER  | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the MULTI_ACTIVE_SATELLITE_AC ma_sat
-    Then the MULTI_ACTIVE_SATELLITE_AC table should contain expected data
+    When I load the MAS_AC ma_sat
+    Then the MAS_AC table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_MT_ID | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1001') | Alice         | 17-214-233-1224 | TPCH_CUSTOMER  | md5('1001\|\|ALICE\|\|17-214-233-1224') | 1993-01-02     | 1993-01-02 | *      |

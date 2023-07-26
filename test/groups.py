@@ -1,5 +1,13 @@
 def feature_sub_types():
     return {
+        'staging': {
+            'main': [
+                'staging'
+            ],
+            'hashing': [
+                'hashing'
+            ]
+        },
         'hubs': {
             'main': [
                 'hubs'
@@ -182,6 +190,11 @@ def feature_sub_types():
             ],
             '3link': [
                 'bridge_one_hub_three_links'
+            ]
+        },
+        'ref_tables': {
+            'main': [
+                'ref_tables'
             ]
         },
     }

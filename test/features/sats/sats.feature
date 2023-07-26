@@ -467,8 +467,8 @@ Feature: [SAT] Satellites
 
   @fixture.satellite
   Scenario: [SAT-19] Satellite with exclude payload columns flag and no column list starting with a non-existent satellite.
-    Given the SATELLITE table does not exist
-    And I do not exclude any columns from the SATELLITE table
+    Given the SATELLITE_PL_EXCLUDE table does not exist
+    And I do not exclude any columns from the SATELLITE_PL_EXCLUDE table
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
@@ -476,8 +476,8 @@ Feature: [SAT] Satellites
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the SATELLITE sat
-    Then the SATELLITE table should contain expected data
+    When I load the SATELLITE_PL_EXCLUDE sat
+    Then the SATELLITE_PL_EXCLUDE table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_ID | HASHDIFF                                              | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 1997-04-24   | 17-214-233-1214 | 1001        | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 2006-04-17   | 17-214-233-1215 | 1002        | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
@@ -486,8 +486,8 @@ Feature: [SAT] Satellites
 
   @fixture.satellite
   Scenario: [SAT-20] Satellite with exclude payload columns flag and no column list and hashdiff aliasing starting with a non-existent satellite.
-    Given the SATELLITE_HD_ALIAS table does not exist
-    And I do not exclude any columns from the SATELLITE_HD_ALIAS table
+    Given the SATELLITE_PL_EXCLUDE_HD_ALIAS table does not exist
+    And I do not exclude any columns from the SATELLITE_PL_EXCLUDE_HD_ALIAS table
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |
       | 1001        | Alice         | 1997-04-24   | 17-214-233-1214 | 1993-01-01 | *      |
@@ -495,8 +495,8 @@ Feature: [SAT] Satellites
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | *      |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | *      |
     And I stage the STG_CUSTOMER data
-    When I load the SATELLITE_HD_ALIAS sat
-    Then the SATELLITE_HD_ALIAS table should contain expected data
+    When I load the SATELLITE_PL_EXCLUDE_HD_ALIAS sat
+    Then the SATELLITE_PL_EXCLUDE_HD_ALIAS table should contain expected data
       | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | CUSTOMER_ID | CUSTOMER_HASHDIFF                                     | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 1997-04-24   | 17-214-233-1214 | 1001        | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 2006-04-17   | 17-214-233-1215 | 1002        | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |

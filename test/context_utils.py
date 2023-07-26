@@ -1,4 +1,5 @@
 import logging
+import os
 import re
 from hashlib import md5, sha256
 
@@ -6,9 +7,11 @@ import pandas as pd
 from behave.model import Table
 from numpy import NaN
 from pandas import Series
+from sqlalchemy import create_engine
 
 import test
 from env import env_utils
+from test import dbt_runner
 
 
 def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
@@ -30,6 +33,47 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
         table_df = table_df.replace("<null>", NaN)
 
     return table_df
+
+
+def context_table_to_database_table(table: Table, model_name, use_nan=True) -> list:
+    """
+    Converts a context table in a feature file into a pandas DataFrame
+        :param table: The context.table from a scenario
+        :param use_nan: Replace <null> placeholder with NaN
+        :return: DataFrame representation of the provided context table
+    """
+
+    engine = create_engine(
+        f'postgresql://{os.environ["POSTGRES_DB_USER"]}:{os.environ["POSTGRES_DB_PW"]}@'
+        f'{os.environ["POSTGRES_DB_HOST"]}:{os.environ["POSTGRES_DB_PORT"]}/{os.environ["POSTGRES_DB_DATABASE"]}')
+
+    if env_utils.is_pipeline():
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}" \
+                 f"_{os.getenv('PIPELINE_BRANCH')}_{os.getenv('PIPELINE_JOB')}".upper()
+    else:
+        schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
+
+    table_df = pd.DataFrame(columns=table.headings, data=table.rows)
+
+    table_df = table_df.apply(parse_escapes)
+    table_df = table_df.apply(parse_lists)
+
+    hashed_columns = table_df.apply(get_hash)
+    if not hashed_columns.empty:
+        hashed_columns_list = hashed_columns.loc[0, :].values.flatten().tolist()
+        hashed_columns_list = [x for x in hashed_columns_list if str(x) != 'nan']
+    else:
+        hashed_columns_list = []
+
+    if use_nan:
+        table_df = table_df.replace("<null>", NaN)
+
+    table_df.to_sql(name=model_name, con=engine, schema=schema, if_exists='replace')
+
+    dbt_runner.run_dbt_operation(macro_name='check_table_exists',
+                                 args={"model_name": model_name})
+
+    return hashed_columns_list
 
 
 def context_table_to_csv(table: Table, model_name: str) -> str:
@@ -256,6 +300,25 @@ def parse_lists(columns_as_series: Series) -> Series:
     return Series(columns)
 
 
+def get_hash(columns_as_series: Series) -> Series:
+
+    patterns = {
+        'md5': {
+            'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
+        'sha': {
+            'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
+
+    hashed_column_list = []
+
+    for item in columns_as_series:
+        active_hash_func = [pattern for pattern in patterns if pattern in item]
+        if active_hash_func:
+            hashed_column_list.append(columns_as_series.name)
+            break
+
+    return Series(hashed_column_list)
+
+
 def calc_hash(columns_as_series: Series) -> Series:
     """
     Calculates the MD5 hash for a given value
@@ -273,7 +336,6 @@ def calc_hash(columns_as_series: Series) -> Series:
     hashed_list = []
 
     for item in columns_as_series:
-
         active_hash_func = [pattern for pattern in patterns if pattern in item]
         if active_hash_func:
             active_hash_func = active_hash_func[0]
