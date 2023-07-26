@@ -3,14 +3,13 @@
  * This software includes code developed by the AutomateDV (f.k.a dbtvault) Team at Business Thinking Ltd. Trading as Datavault
  */
 
-{%- macro sqlserver__pit(src_pk, src_extra_columns, as_of_dates_table, satellites, stage_tables_ldts, src_ldts, source_model) -%}
+{%- macro postgres__xts(src_pk, src_satellite, src_extra_columns, src_ldts, src_source, source_model) -%}
 
-{{- automate_dv.default__pit(src_pk=src_pk,
+{{- automate_dv.default__xts(src_pk=src_pk,
+                             src_satellite=src_satellite,
                              src_extra_columns=src_extra_columns,
-                             as_of_dates_table=as_of_dates_table,
-                             satellites=satellites,
-                             stage_tables_ldts=stage_tables_ldts,
                              src_ldts=src_ldts,
+                             src_source=src_source,
                              source_model=source_model) -}}
 
 {%- endmacro -%}
