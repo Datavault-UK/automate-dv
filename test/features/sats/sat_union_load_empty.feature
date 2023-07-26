@@ -1,4 +1,4 @@
-Feature: [SAT-LL-E] Loading empty satellites, with new satellite "lag" loading  scheme
+Feature: [SAT-LL-E] Loading empty satellites, with new satellite "union" loading  scheme
 
   @fixture.satellite
   Scenario: [SAT-LL-E-01] Incremental load into empty sat, with first and only record same PK/HD as latest
