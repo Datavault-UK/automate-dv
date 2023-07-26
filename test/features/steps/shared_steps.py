@@ -341,7 +341,7 @@ def load_table(context, model_name, vault_structure):
 
     context.vault_structure_metadata = metadata
 
-    dbtvault_generator.raw_vault_structure(model_name=model_name,
+    automate_dv_generator.raw_vault_structure(model_name=model_name,
                                            vault_structure=vault_structure,
                                            config=config,
                                            **metadata)
