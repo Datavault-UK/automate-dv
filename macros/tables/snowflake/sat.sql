@@ -41,6 +41,7 @@ WITH source_data AS (
 ),
 
 {%- if automate_dv.is_any_incremental() %}
+
 latest_records AS (
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='target') }}
     FROM (
@@ -58,6 +59,7 @@ latest_records AS (
     ) AS a
     WHERE a.rank = 1
 ),
+
 {%- endif %}
 
 
