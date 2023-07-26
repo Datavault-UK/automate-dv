@@ -1,4 +1,4 @@
-Feature: [SAT-LL-ID] Loading intra day non existent satellites, with new "lag" loading scheme
+Feature: [SAT-LL-ID] Loading intra day non existent satellites, with new "union" loading scheme
 
   @fixture.satellite
   Scenario: [SAT-LL-ID-01] Incremental load into non existent sat with timestamp, with first and only record different to latest

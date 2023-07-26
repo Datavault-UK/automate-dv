@@ -1,4 +1,4 @@
-Feature: [SAT-LL-N] Loading previously non existent Satellites, with new  "lag" loading scheme
+Feature: [SAT-LL-N] Loading previously non existent Satellites, with new  "union" loading scheme
 
   @fixture.satellite
   Scenario: [SAT-LL-N-01] Incremental load into non existent sat, with first and only record PK/HD same as latest
