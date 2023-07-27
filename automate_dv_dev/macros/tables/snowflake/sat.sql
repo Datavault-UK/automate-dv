@@ -98,7 +98,7 @@ records_to_insert AS (
         {%- if automate_dv.is_any_incremental() %}
         WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
         {%- endif %}
-    UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+    UNION {%- if target.type == 'bigquery' -%} DISTINCT {%- endif %}
     {%- endif %}
         SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
         FROM first_record_in_set AS frin
@@ -108,7 +108,7 @@ records_to_insert AS (
             AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
             WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
         {%- endif %}
-        UNION {% if target.type == 'bigquery' -%} DISTINCT {%- endif -%}
+        UNION {%- if target.type == 'bigquery' -%} DISTINCT {%- endif %}
         SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
         FROM unique_source_records as usr
 )
