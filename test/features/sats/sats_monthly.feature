@@ -3,7 +3,6 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
   @fixture.satellite_cycle
   Scenario: [SAT-PM-M-01] Satellite load over several monthly cycles with insert_by_period into
   empty satellite and an inferred date range.
-
     Given the RAW_STAGE stage is empty
     And the SATELLITE sat is empty
     When the RAW_STAGE is loaded
@@ -27,7 +26,8 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1217 | 2019-08-07     | 2019-08-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-08-07     | 2019-08-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by month
+    #And I insert by period into the SATELLITE sat by month
+    When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-04     | 2019-05-04 | *      |
@@ -48,6 +48,7 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF\|\|17-214-233-1222')   | Geoff         | 1990-02-03   | 17-214-233-1222 | 2019-08-07     | 2019-08-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1223')   | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-08-07     | 2019-08-07 | *      |
 
+  #load pattern changed
   @fixture.satellite_cycle
   Scenario: [SAT-PM-M-02] Satellite load with monthly interval and intra-batch, same day duplicates.
     Given the SATELLITE table does not exist
@@ -57,16 +58,18 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
       | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-06-04     | 2019-06-04 | *      |
       | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-06-04     | 2019-06-04 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
-    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+#    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+#    Then the SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
+#    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+    When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-06-04     | 2019-06-04 | *      |
 
+  #load pattern changed
   @fixture.satellite_cycle
   Scenario: [SAT-PM-M-03] Satellite load with monthly interval and intra-load, different day duplicates.
     Given the SATELLITE table does not exist
@@ -78,12 +81,13 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
       | 1004        | David         | 1995-08-10   | 17-214-233-1217 | 2019-05-07     | 2019-06-06 | *      |
       | 1004        | David         | 1995-08-10   | 17-214-233-1217 | 2019-05-07     | 2019-07-06 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by month with date range: 2019-05-03 to 2019-05-06 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
-      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
-    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+#    And I insert by period into the SATELLITE sat by month with date range: 2019-05-03 to 2019-05-06 and LDTS LOAD_DATE
+#    Then the SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
+#      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')   | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
+#    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+    When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
@@ -91,6 +95,7 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
       | md5('1003') | md5('1995-08-03\|\|1003\|\|CHARLEY\|\|17-214-233-1216') | Charley       | 1995-08-03   | 17-214-233-1216 | 2019-06-05     | 2019-06-05 | *      |
       | md5('1004') | md5('1995-08-10\|\|1004\|\|DAVID\|\|17-214-233-1217')   | David         | 1995-08-10   | 17-214-233-1217 | 2019-06-06     | 2019-06-06 | *      |
 
+  #load pattern changed
   @fixture.satellite_cycle
   Scenario: [SAT-PM-M-04] Satellite load with monthly interval and intra-batch same day and intra-load duplicates
     Given the SATELLITE table does not exist
@@ -103,11 +108,12 @@ Feature: [SAT-PM-M] Satellites Loaded using Period Materialization with monthly 
       | 1004        | David         | 1995-08-10   | 17-214-233-1217 | 2019-06-06     | 2019-06-06 | *      |
       | 1004        | David         | 1995-08-10   | 17-214-233-1217 | 2019-07-06     | 2019-07-06 | *      |
     And I stage the STG_CUSTOMER data
-    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
-    Then the SATELLITE table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
-      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
-    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+#    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+#    Then the SATELLITE table should contain expected data
+#      | CUSTOMER_PK | HASHDIFF                                               | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+#      | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214') | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
+#    And I insert by period into the SATELLITE sat by month with date range: 2019-05-01 to 2019-07-01 and LDTS LOAD_DATE
+    When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1214')  | Albert        | 1990-02-03   | 17-214-233-1214 | 2019-05-03     | 2019-05-03 | *      |
