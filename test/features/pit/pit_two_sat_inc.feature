@@ -2,6 +2,8 @@ Feature: [PIT-2SI] Point in Time
   Base PIT behaviour with one hub and two satellites - Incremental Loads
 
   # DATES
+  #Scenario is inappropriate; in login detail sat, same PK with diff hashdiff are loaded on same day, so latest record is ambiguous
+  @skip
   @not_bigquery
   @fixture.pit_two_sats
   Scenario: [PIT-2SI-01] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
@@ -83,6 +85,7 @@ Feature: [PIT-2SI] Point in Time
       | md5('1003') | 2018-06-05 | md5('1003')             | 2018-06-03                | md5('1003')           | 2018-06-01              |
       | md5('1004') | 2018-06-05 | md5('1004')             | 2018-06-05                | md5('1004')           | 2018-06-04              |
 
+  @skip
   @bigquery
   @fixture.pit_two_sats
   Scenario: [PIT-2SI-01-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates
@@ -507,6 +510,8 @@ Feature: [PIT-2SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                | 2018-06-02 23:59:59.999      | md5('1004')              | 2018-06-02 23:59:59.999    |
 
   # AS OF - HIGHER GRANULARITY
+  #Scenario is inappropriate; in sat, same PK with diff hashdiff are loaded on same day, so latest record is ambiguous
+  @skip
   @not_bigquery
   @fixture.pit_two_sats
   Scenario: [PIT-2SI-04] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates
@@ -596,6 +601,7 @@ Feature: [PIT-2SI] Point in Time
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')             | 2018-06-03 00:00:00.000   | md5('1003')           | 2018-06-01 00:00:00.000 |
       | md5('1004') | 2018-06-06 00:00:00.000 | md5('1004')             | 2018-06-05 00:00:00.000   | md5('1004')           | 2018-06-03 00:00:00.000 |
 
+  @skip
   @bigquery
   @fixture.pit_two_sats
   Scenario: [PIT-2SI-04-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from two satellites with dates

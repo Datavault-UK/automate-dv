@@ -1,6 +1,7 @@
 Feature: [SAT-PM-P] Typical Satellite Loaded, with period_mat_provided scenarios
 
-#Scenarios no longer appropriate with new loading scheme (as batch loading is no longer done)
+#Scenarios no longer appropriate with new loading scheme (without insert by period)
+  @skip
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-02] Satellite load over several daily cycles with insert_by_period into non-existent satellite, with date range.
     Given the SATELLITE table does not exist
@@ -39,6 +40,7 @@ Feature: [SAT-PM-P] Typical Satellite Loaded, with period_mat_provided scenarios
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN\|\|17-214-233-1220')  | Elwyn         | 2001-07-23   | 17-214-233-1220 | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA\|\|17-214-233-1221')  | Freia         | 1960-01-01   | 17-214-233-1221 | 2019-05-06     | 2019-05-06 | *      |
 
+  @skip
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-03] Satellite load over several daily cycles with insert_by_period into empty satellite, with date range.
     Given the RAW_STAGE stage is empty
@@ -82,6 +84,7 @@ Feature: [SAT-PM-P] Typical Satellite Loaded, with period_mat_provided scenarios
       | md5('1005') | md5('2001-07-23\|\|1005\|\|ELWYN\|\|17-214-233-1220')   | Elwyn         | 2001-07-23   | 17-214-233-1220 | 2019-05-06     | 2019-05-06 | *      |
       | md5('1006') | md5('1960-01-01\|\|1006\|\|FREIA\|\|17-214-233-1221')   | Freia         | 1960-01-01   | 17-214-233-1221 | 2019-05-06     | 2019-05-06 | *      |
 
+  @skip
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-04] Satellite load over several daily cycles with insert_by_period into populated satellite, with partial duplicates and date range
     Given the RAW_STAGE stage is empty
@@ -137,6 +140,7 @@ Feature: [SAT-PM-P] Typical Satellite Loaded, with period_mat_provided scenarios
       | md5('1007') | md5('1990-02-03\|\|1007\|\|GEOFF\|\|17-214-233-1222')   | Geoff         | 1990-02-03   | 17-214-233-1222 | 2019-05-07     | 2019-05-07 | *      |
       | md5('1011') | md5('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1223')   | Karen         | 1978-06-16   | 17-214-233-1223 | 2019-05-07     | 2019-05-07 | *      |
 
+  @skip
   @fixture.satellite_cycle
   Scenario: [SAT-PM-P-05] Satellite load over several daily cycles with insert_by_period into populated satellite, with all duplicates and date range.
     Given the RAW_STAGE stage is empty
@@ -187,6 +191,7 @@ Feature: [SAT-PM-P] Typical Satellite Loaded, with period_mat_provided scenarios
       | md5('1004') | md5('1992-01-30\|\|1004\|\|DAVID\|\|17-214-233-1219')   | David         | 1992-01-30   | 17-214-233-1219 | 2019-05-05     | 2019-05-05 | *      |
       | md5('1010') | md5('1991-03-25\|\|1010\|\|JENNY\|\|17-214-233-1217')   | Jenny         | 1991-03-25   | 17-214-233-1217 | 2019-05-05     | 2019-05-05 | *      |
 
+  @skip
   @fixture.satellite
   Scenario: [SAT-PM-P-06] Incremental load of a satellite with multiple timestamps in the same day loads all records, datetimes with 6 decimal places
     Given the SATELLITE_TS table does not exist
