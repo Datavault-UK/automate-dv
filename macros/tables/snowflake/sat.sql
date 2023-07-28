@@ -108,7 +108,7 @@ records_to_insert AS (
             AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
             WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
         {%- endif %}
-        UNION {%- if target.type == 'snowflake' %} DISTINCT {%- endif %}
+        UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
         SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
         FROM unique_source_records as usr
 )
