@@ -65,17 +65,22 @@ latest_records AS (
 
 first_record_in_set AS (
     SELECT
-    {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    , ROW_NUMBER() OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC) as asc_row_number
+    {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
+    RANK() OVER (
+            PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+            ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+        ) as asc_rank
     FROM source_data as sd
-    QUALIFY asc_row_number = 1
+    QUALIFY asc_rank= 1
 ),
 
 unique_source_records AS (
     SELECT DISTINCT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
     FROM source_data as sd
-    QUALIFY {{ src_hashdiff }} != LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC)
+    QUALIFY {{ src_hashdiff }} != LAG({{ src_hashdiff }}) OVER (
+        PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+        ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC)
 ),
 
 

@@ -46,10 +46,13 @@ latest_records AS (
 first_record_in_set AS (
     SELECT * FROM (
         SELECT
-        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-        , ROW_NUMBER() OVER(PARTITION BY {{ src_pk }} ORDER BY {{ src_ldts }} ASC) as asc_row_number
+        {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
+            RANK() OVER (
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'sd') }}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd') }} ASC
+            ) as asc_rank
         FROM source_data as sd ) rin
-    WHERE rin.asc_row_number = 1
+    WHERE rin.asc_rank = 1
 ),
 
 unique_source_records AS (
@@ -58,8 +61,10 @@ unique_source_records AS (
     FROM (
         SELECT DISTINCT
             {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-            LAG({{ src_hashdiff }}) OVER(PARTITION BY {{ src_pk }}
-                ORDER BY {{ src_ldts }} ASC) as prev_hashdiff
+            LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
+            ) as prev_hashdiff
         FROM source_data as sd
         ) b
     WHERE {{ automate_dv.prefix([src_hashdiff], 'b', alias_target='source') }} != b.prev_hashdiff
