@@ -13,7 +13,6 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
 
-
 WITH source_data AS (
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
     FROM {{ ref(source_model) }} AS a
@@ -23,7 +22,7 @@ WITH source_data AS (
 {%- if automate_dv.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='target') }}
+    SELECT {{ automate_dv.prefix(source_cols, 'b', alias_target='target') }}
     FROM (
         SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
             RANK() OVER (
@@ -36,20 +35,19 @@ latest_records AS (
                 FROM source_data
             ) AS source_records
                 ON {{ automate_dv.multikey(src_pk, prefix=['source_records','current_records'], condition='=') }}
-    ) AS a
-    WHERE a.rank = 1
+    ) AS b
+    WHERE b.rank = 1
 ),
 
 {%- endif %}
-
 
 first_record_in_set AS (
     SELECT * FROM (
         SELECT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
-            RANK() OVER (
-                PARTITION BY {{ automate_dv.prefix([src_pk], 'sd') }}
-                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd') }} ASC
+        RANK() OVER (
+                PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
             ) as asc_rank
         FROM source_data as sd ) rin
     WHERE rin.asc_rank = 1
@@ -63,8 +61,7 @@ unique_source_records AS (
             {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }},
             LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
                 PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
-                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
-            ) as prev_hashdiff
+                ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC) as prev_hashdiff
         FROM source_data as sd
         ) b
     WHERE {{ automate_dv.prefix([src_hashdiff], 'b', alias_target='source') }} != b.prev_hashdiff
