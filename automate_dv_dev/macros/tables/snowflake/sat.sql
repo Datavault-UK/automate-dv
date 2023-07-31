@@ -33,7 +33,6 @@
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
 {%- endif %}
 
-
 WITH source_data AS (
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
     FROM {{ ref(source_model) }} AS a
@@ -43,25 +42,21 @@ WITH source_data AS (
 {%- if automate_dv.is_any_incremental() %}
 
 latest_records AS (
-    SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='target') }}
-    FROM (
-        SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
-            RANK() OVER (
-               PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
-               ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
-            ) AS rank
-        FROM {{ this }} AS current_records
-            JOIN (
-                SELECT DISTINCT {{ automate_dv.prefix([src_pk], 'source_data') }}
-                FROM source_data
-            ) AS source_records
-                ON {{ automate_dv.multikey(src_pk, prefix=['source_records','current_records'], condition='=') }}
-    ) AS a
-    WHERE a.rank = 1
+    SELECT {{ automate_dv.prefix(source_cols, 'current_records', alias_target='target') }},
+        RANK() OVER (
+           PARTITION BY {{ automate_dv.prefix([src_pk], 'current_records') }}
+           ORDER BY {{ automate_dv.prefix([src_ldts], 'current_records') }} DESC
+        ) AS rank_num
+    FROM {{ this }} AS current_records
+        JOIN (
+            SELECT DISTINCT {{ automate_dv.prefix([src_pk], 'source_data') }}
+            FROM source_data
+        ) AS source_records
+            ON {{ automate_dv.multikey(src_pk, prefix=['source_records','current_records'], condition='=') }}
+    QUALIFY rank_num = 1
 ),
 
 {%- endif %}
-
 
 first_record_in_set AS (
     SELECT
@@ -71,14 +66,14 @@ first_record_in_set AS (
             ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
         ) as asc_rank
     FROM source_data as sd
-    QUALIFY asc_rank= 1
+    QUALIFY asc_rank = 1
 ),
 
 unique_source_records AS (
     SELECT DISTINCT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
     FROM source_data as sd
-    QUALIFY {{ src_hashdiff }} != LAG({{ src_hashdiff }}) OVER (
+    QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
         PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC)
 ),
