@@ -4,20 +4,24 @@ WITH source_data AS (
     WHERE a.CUSTOMER_PK IS NOT NULL
 ),
 
-
 first_record_in_set AS (
     SELECT
-    sd.CUSTOMER_PK, sd.HASHDIFF, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE
-    , ROW_NUMBER() OVER(PARTITION BY CUSTOMER_PK ORDER BY LOAD_DATE ASC) as asc_row_number
+    sd.CUSTOMER_PK, sd.HASHDIFF, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE,
+    RANK() OVER (
+            PARTITION BY sd.CUSTOMER_PK
+            ORDER BY sd.LOAD_DATE ASC
+        ) as asc_rank
     FROM source_data as sd
-    QUALIFY asc_row_number = 1
+    QUALIFY asc_rank = 1
 ),
 
 unique_source_records AS (
     SELECT DISTINCT
         sd.CUSTOMER_PK, sd.HASHDIFF, sd.EFFECTIVE_FROM, sd.LOAD_DATE, sd.RECORD_SOURCE
     FROM source_data as sd
-    QUALIFY HASHDIFF != LAG(HASHDIFF) OVER(PARTITION BY CUSTOMER_PK ORDER BY LOAD_DATE ASC)
+    QUALIFY sd.HASHDIFF != LAG(sd.HASHDIFF) OVER (
+        PARTITION BY sd.CUSTOMER_PK
+        ORDER BY sd.LOAD_DATE ASC)
 ),
 
 records_to_insert AS (
