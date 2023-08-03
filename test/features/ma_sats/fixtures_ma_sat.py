@@ -27,7 +27,7 @@ def set_vault_structure_definition(context):
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE"],
             "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": {"source_column": "HASHDIFF", "alias": "CUSTOMER_HASHDIFF"},
+            "src_hashdiff": {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -133,6 +133,11 @@ def set_staging_definition(context):
             "HASHDIFF": {"is_hashdiff": True,
                          "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
         },
+        "STG_CUSTOMER_HD_ALIAS": {
+            "CUSTOMER_PK": "CUSTOMER_ID",
+            "CUSTOMER_HASHDIFF": {"is_hashdiff": True,
+                                  "columns": ["CUSTOMER_ID", "CUSTOMER_PHONE", "CUSTOMER_NAME"]}
+        },
         "STG_CUSTOMER_TS": {
             "CUSTOMER_PK": "CUSTOMER_ID",
             "HASHDIFF": {"is_hashdiff": True,
@@ -184,6 +189,9 @@ def set_staging_definition(context):
 
     context.derived_columns = {
         "STG_CUSTOMER": {
+            "EFFECTIVE_FROM": "LOAD_DATE"
+        },
+        "STG_CUSTOMER_HD_ALIAS": {
             "EFFECTIVE_FROM": "LOAD_DATE"
         },
         "STG_CUSTOMER_TS": {
@@ -402,7 +410,6 @@ def multi_active_satellite_snowflake(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_HASHDIFF": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
@@ -791,7 +798,6 @@ def multi_active_satellite_bigquery(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_HASHDIFF": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "DATETIME",
                 "LOAD_DATE": "DATETIME",
@@ -1180,7 +1186,6 @@ def multi_active_satellite_sqlserver(context):
                 "CUSTOMER_PK": "BINARY(16)",
                 "CUSTOMER_NAME": "VARCHAR(50)",
                 "CUSTOMER_PHONE": "VARCHAR(50)",
-                "CUSTOMER_HASHDIFF": "BINARY(16)",
                 "HASHDIFF": "BINARY(16)",
                 "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATE": "DATETIME2",
@@ -1640,7 +1645,7 @@ def multi_active_satellite_postgres(context):
             "src_pk": "CUSTOMER_PK",
             "src_cdk": ["CUSTOMER_PHONE"],
             "src_payload": ["CUSTOMER_NAME"],
-            "src_hashdiff": {"source_column": "HASHDIFF", "alias": "CUSTOMER_HASHDIFF"},
+            "src_hashdiff": {"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},
             "src_eff": "EFFECTIVE_FROM",
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
@@ -1728,6 +1733,8 @@ def multi_active_satellite_postgres(context):
             "src_source": "SOURCE"
         }
     }
+
+    set_metadata(context)
 
     context.seed_config = {
         "RAW_STAGE": {
@@ -1861,7 +1868,6 @@ def multi_active_satellite_postgres(context):
                 "CUSTOMER_PK": "BYTEA",
                 "CUSTOMER_NAME": "VARCHAR",
                 "CUSTOMER_PHONE": "VARCHAR",
-                "CUSTOMER_HASHDIFF": "BYTEA",
                 "HASHDIFF": "BYTEA",
                 "EFFECTIVE_FROM": "TIMESTAMPTZ",
                 "LOAD_DATE": "TIMESTAMPTZ",
@@ -2278,6 +2284,7 @@ def multi_active_satellite_cycle_postgres(context):
         }
     }
 
+
 # Databricks
 
 @fixture
@@ -2403,7 +2410,6 @@ def multi_active_satellite_databricks(context):
                 "CUSTOMER_PK": "STRING",
                 "CUSTOMER_NAME": "STRING",
                 "CUSTOMER_PHONE": "STRING",
-                "CUSTOMER_HASHDIFF": "STRING",
                 "HASHDIFF": "STRING",
                 "EFFECTIVE_FROM": "TIMESTAMP",
                 "LOAD_DATE": "TIMESTAMP",

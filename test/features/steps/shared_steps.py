@@ -342,9 +342,9 @@ def load_table(context, model_name, vault_structure):
     context.vault_structure_metadata = metadata
 
     automate_dv_generator.raw_vault_structure(model_name=model_name,
-                                           vault_structure=vault_structure,
-                                           config=config,
-                                           **metadata)
+                                              vault_structure=vault_structure,
+                                              config=config,
+                                              **metadata)
     is_full_refresh = step_helpers.is_full_refresh(context)
     context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
     context.system_record_value = getattr(context, "system_record_value", None)

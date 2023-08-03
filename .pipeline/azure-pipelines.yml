@@ -96,5 +96,5 @@ extends:
         disabledForPlatform: [ ]
       - groupName: 'ref_tables'
         displayName: 'Reference Tables'
-        disabledForPlatform: [ 'databricks', 'postgres', 'bigquery', 'sqlserver' ]
+        disabledForPlatform: [ ]
         subGroups: [ 'main' ]
