@@ -324,7 +324,8 @@ def load_populated_table(context, model_name, vault_structure):
         context.vault_structure_metadata = metadata
 
         if 'src_hashdiff' in metadata:
-            metadata['src_hashdiff'] = metadata['src_hashdiff']['alias']
+            if isinstance(metadata['src_hashdiff'], dict):
+                metadata['src_hashdiff'] = metadata['src_hashdiff']['alias']
 
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
