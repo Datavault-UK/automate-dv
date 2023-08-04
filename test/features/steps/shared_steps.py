@@ -290,8 +290,8 @@ def load_populated_table(context, model_name, vault_structure):
                 data_type = context.seed_config[model_name]['column_types'][col]
                 payload_columns.append([col, data_type])
 
-        sql = f"{{{{- automate_dv_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
-              f"{hashed_columns}, {payload_columns}) -}}}}"
+        sql = f"""{{{{- automate_dv_test.hash_database_table("{context.target_model_name}", """ \
+              f""" "{model_name_unhashed}", {hashed_columns}, {payload_columns}) -}}}}"""
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 
@@ -322,6 +322,9 @@ def load_populated_table(context, model_name, vault_structure):
         metadata = {"source_model": seed_file_name, **context.vault_structure_columns[model_name]}
 
         context.vault_structure_metadata = metadata
+
+        if 'src_hashdiff' in metadata:
+            metadata['src_hashdiff'] = metadata['src_hashdiff']['alias']
 
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
