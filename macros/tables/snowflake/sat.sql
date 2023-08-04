@@ -28,10 +28,7 @@
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set window_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
-{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{%- endif %}
+{%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 WITH source_data AS (
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
@@ -100,17 +97,17 @@ records_to_insert AS (
         {%- endif %}
     UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
     {%- endif %}
-        SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
-        FROM first_record_in_set AS frin
-        {%- if automate_dv.is_any_incremental() %}
-        LEFT JOIN LATEST_RECORDS lr
-            ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
-            AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
-            WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
-        {%- endif %}
-        UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
-        SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
-        FROM unique_source_records as usr
+    SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
+    FROM first_record_in_set AS frin
+    {%- if automate_dv.is_any_incremental() %}
+    LEFT JOIN LATEST_RECORDS lr
+        ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
+        AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
+        WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
+    {%- endif %}
+    UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
+    SELECT {{ automate_dv.prefix(source_cols, 'usr', alias_target='source') }}
+    FROM unique_source_records as usr
 )
 
 SELECT * FROM records_to_insert
