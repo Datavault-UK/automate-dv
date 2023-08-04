@@ -13,7 +13,7 @@ Feature: [SAT-LL-E] Loading empty satellites, with new satellite "union" loading
     And I load the SATELLITE sat
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
-      | 1001        | Ally          | 17-214-233-1214 | 1997-04-24   | 1993-01-02 | *      |
+      | 1001        | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-02 | *      |
     And I stage the STG_CUSTOMER data
     When I load the SATELLITE sat
     Then the SATELLITE table should contain expected data
@@ -22,7 +22,6 @@ Feature: [SAT-LL-E] Loading empty satellites, with new satellite "union" loading
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
       | md5('1003') | Chad          | 17-214-233-1216 | 2013-02-04   | md5('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *      |
       | md5('1004') | Dom           | 17-214-233-1217 | 2018-04-13   | md5('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *      |
-      | md5('1001') | Ally          | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALLY\|\|17-214-233-1214')  | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.satellite
   Scenario: [SAT-LL-E-02] Incremental load into empty sat, with first record same PK/HD as latest and another record with new PK
