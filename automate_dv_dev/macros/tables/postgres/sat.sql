@@ -9,9 +9,7 @@
 {%- set window_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) -%}
-{%- if model.config.materialized == 'vault_insert_by_rank' %}
-    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
-{%- endif %}
+
 
 WITH source_data AS (
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
