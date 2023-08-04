@@ -25,11 +25,11 @@ unique_source_records AS (
 ),
 
 records_to_insert AS (
-        SELECT frin.CUSTOMER_PK, frin.HASHDIFF, frin.EFFECTIVE_FROM, frin.LOAD_DATE, frin.RECORD_SOURCE
-        FROM first_record_in_set AS frin
-        UNION
-        SELECT usr.CUSTOMER_PK, usr.HASHDIFF, usr.EFFECTIVE_FROM, usr.LOAD_DATE, usr.RECORD_SOURCE
-        FROM unique_source_records as usr
+    SELECT frin.CUSTOMER_PK, frin.HASHDIFF, frin.EFFECTIVE_FROM, frin.LOAD_DATE, frin.RECORD_SOURCE
+    FROM first_record_in_set AS frin
+    UNION
+    SELECT usr.CUSTOMER_PK, usr.HASHDIFF, usr.EFFECTIVE_FROM, usr.LOAD_DATE, usr.RECORD_SOURCE
+    FROM unique_source_records as usr
 )
 
 SELECT * FROM records_to_insert

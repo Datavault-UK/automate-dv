@@ -25,11 +25,11 @@ unique_source_records AS (
 ),
 
 records_to_insert AS (
-        SELECT frin.CUSTOMER_PK, frin.HASHDIFF, frin.TEST_COLUMN_1, frin.TEST_COLUMN_2, frin.TEST_COLUMN_3, frin.TEST_COLUMN_4, frin.TEST_COLUMN_5, frin.TEST_COLUMN_6, frin.TEST_COLUMN_7, frin.TEST_COLUMN_8, frin.TEST_COLUMN_9, frin.EFFECTIVE_FROM, frin.LOAD_DATE, frin.RECORD_SOURCE
-        FROM first_record_in_set AS frin
-        UNION
-        SELECT usr.CUSTOMER_PK, usr.HASHDIFF, usr.TEST_COLUMN_1, usr.TEST_COLUMN_2, usr.TEST_COLUMN_3, usr.TEST_COLUMN_4, usr.TEST_COLUMN_5, usr.TEST_COLUMN_6, usr.TEST_COLUMN_7, usr.TEST_COLUMN_8, usr.TEST_COLUMN_9, usr.EFFECTIVE_FROM, usr.LOAD_DATE, usr.RECORD_SOURCE
-        FROM unique_source_records as usr
+    SELECT frin.CUSTOMER_PK, frin.HASHDIFF, frin.TEST_COLUMN_1, frin.TEST_COLUMN_2, frin.TEST_COLUMN_3, frin.TEST_COLUMN_4, frin.TEST_COLUMN_5, frin.TEST_COLUMN_6, frin.TEST_COLUMN_7, frin.TEST_COLUMN_8, frin.TEST_COLUMN_9, frin.EFFECTIVE_FROM, frin.LOAD_DATE, frin.RECORD_SOURCE
+    FROM first_record_in_set AS frin
+    UNION
+    SELECT usr.CUSTOMER_PK, usr.HASHDIFF, usr.TEST_COLUMN_1, usr.TEST_COLUMN_2, usr.TEST_COLUMN_3, usr.TEST_COLUMN_4, usr.TEST_COLUMN_5, usr.TEST_COLUMN_6, usr.TEST_COLUMN_7, usr.TEST_COLUMN_8, usr.TEST_COLUMN_9, usr.EFFECTIVE_FROM, usr.LOAD_DATE, usr.RECORD_SOURCE
+    FROM unique_source_records as usr
 )
 
 SELECT * FROM records_to_insert
