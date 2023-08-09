@@ -30,10 +30,23 @@
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
+{%- if model.config.materialized == 'vault_insert_by_rank' %}
+    {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
+{%- endif %}
+
 WITH source_data AS (
+    {%- if model.config.materialized == 'vault_insert_by_rank' %}
+    SELECT {{ automate_dv.prefix(source_cols_with_rank, 'a', alias_target='source') }}
+    {%- else %}
     SELECT {{ automate_dv.prefix(source_cols, 'a', alias_target='source') }}
+    {%- endif %}
     FROM {{ ref(source_model) }} AS a
     WHERE {{ automate_dv.multikey(src_pk, prefix='a', condition='IS NOT NULL') }}
+    {%- if model.config.materialized == 'vault_insert_by_period' %}
+    AND __PERIOD_FILTER__
+    {% elif model.config.materialized == 'vault_insert_by_rank' %}
+    AND __RANK_FILTER__
+    {% endif %}
 ),
 
 {%- if automate_dv.is_any_incremental() %}

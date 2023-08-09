@@ -7,6 +7,8 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
+    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_rank') }}
+
     {% if target.type == "sqlserver" %}
         {%- set target_relation = this.incorporate(type='table') -%}
     {%  else %}
@@ -53,14 +55,7 @@
     {% else %}
 
         {% if min_max_ranks.max_rank | int > 100000 %}
-            {%- set error_message -%}
-            'Max iterations is 100,000. Consider using a different rank column
-            or loading a smaller amount of data.
-            vault_insert_by materialisations are not intended for this purpose,
-            please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-            {%- endset -%}
-
-            {{- exceptions.raise_compiler_error(error_message) -}}
+            {{ automate_dv.max_iterations_error(func_name='vault_insert_by_rank') }}
         {% else %}
             {% set target_columns = adapter.get_columns_in_relation(target_relation) %}
             {%- set target_cols_csv = target_columns | map(attribute='quoted') | join(', ') -%}

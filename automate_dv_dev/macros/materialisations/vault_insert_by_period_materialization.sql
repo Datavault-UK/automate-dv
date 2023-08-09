@@ -7,6 +7,8 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
+    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
+
     {% if target.type == "sqlserver" %}
         {%- set target_relation = this.incorporate(type='table') -%}
     {%  else %}
@@ -22,21 +24,9 @@
 
     {%- set period = config.get('period', default='day') -%}
     {%- if period == 'microsecond' -%}
-        {%- set error_message -%}
-        'This datepart ({{ period }}) is too small and cannot be used for this purpose, consider using a different datepart value (e.g. day).
-         Vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.raise_compiler_error(error_message) -}}
+        {{ automate_dv.datepart_too_small_error(period=period) }}
     {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
-        {%- set warn_message -%}
-        'WARNING: The use of this datepart ({{ period }}) is not recommended, consider using a different datepart value (e.g. day).
-        Vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.warn(warn_message) -}}
+        {{ automate_dv.datepart_not_recommended_warning(period=period) }}
     {%- endif -%}
 
     {%- set to_drop = [] -%}
