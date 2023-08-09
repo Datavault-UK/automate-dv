@@ -29,13 +29,13 @@
 {%- macro datepart_too_small_error(period) -%}
 
     {%- set message -%}
-    This datepart ({{ period }}) is too small and not recommended, donsider using a different datepart value (e.g. day) or rank column.
-    'vault_insert_by_x' materialisations are not intended for production use.
+    This datepart ({{ period }}) is too small and not recommended, consider using a different datepart value (e.g. day) or rank column.
+    'vault_insert_by_x' materialisations are intended for experimental or testing purposes only. They are not intended for use in production.
 
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset -%}
 
-    {{- exceptions.raise_compiler_error(error_message) -}}
+    {{- exceptions.raise_compiler_error(message) -}}
 
 {%- endmacro -%}
 
@@ -44,7 +44,7 @@
 
     {%- set message -%}
     This datepart ({{ period }}) is too small and not recommended, consider using a different datepart value (e.g. day) or rank column.
-    'vault_insert_by_x' materialisations are not intended for production use.
+    'vault_insert_by_x' materialisations are intended for experimental or testing purposes only. They are not intended for use in production.
 
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset -%}
@@ -58,7 +58,7 @@
 
     {%- set message -%}
     Max iterations is 100,000. Consider using a different datepart value (e.g. day), rank column or loading data for a shorter time period.
-    'vault_insert_by_x' materialisations are not intended for production use.
+    'vault_insert_by_x' materialisations are intended for experimental or testing purposes only. They are not intended for use in production.
 
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset %}

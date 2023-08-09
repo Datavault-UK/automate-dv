@@ -7,6 +7,15 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
+    {%- set period = config.get('period', default='day') -%}
+
+    {#- Raise the errors/warnings in this order so that we do not get both -#}
+    {%- if period == 'microsecond' -%}
+        {{ automate_dv.datepart_too_small_error(period=period) }}
+    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
+        {{ automate_dv.datepart_not_recommended_warning(period=period) }}
+    {%- endif -%}
+
     {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
 
     {% if target.type == "sqlserver" %}
@@ -21,13 +30,6 @@
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = automate_dv.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
-
-    {%- set period = config.get('period', default='day') -%}
-    {%- if period == 'microsecond' -%}
-        {{ automate_dv.datepart_too_small_error(period=period) }}
-    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
-        {{ automate_dv.datepart_not_recommended_warning(period=period) }}
-    {%- endif -%}
 
     {%- set to_drop = [] -%}
 
