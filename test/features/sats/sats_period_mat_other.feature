@@ -1,4 +1,4 @@
-Feature: [SAT-PM-O] Typical Satellite Loaded, with period_mat_other scenarios
+Feature: [SAT-PM-O] Satellites Loaded using Period Materialization for other scenarios
 
   # ABORTED LOADS
 
@@ -31,7 +31,7 @@ Feature: [SAT-PM-O] Typical Satellite Loaded, with period_mat_other scenarios
       | 1010        | Jenny         | 1991-03-25   | 17-214-233-1210 | 2019-05-07     | 2019-05-07 | *      |
       | 1011        | Karen         | 1978-06-16   | 17-214-233-1211 | 2019-05-07     | 2019-05-07 | *      |
     And I stage the STG_CUSTOMER data
-    And I load the SATELLITE sat
+    And I insert by period into the SATELLITE sat by day
     Then the SATELLITE table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                                | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | md5('1990-02-03\|\|1001\|\|ALBERT\|\|17-214-233-1201')  | Albert        | 1990-02-03   | 17-214-233-1201 | 2019-05-04     | 2019-05-04 | *      |
