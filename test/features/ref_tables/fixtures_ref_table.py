@@ -1,5 +1,6 @@
 from behave import fixture
 
+
 def set_vault_structure_definition(context):
     context.vault_structure_columns = {
         "REF_TABLE": {
@@ -50,6 +51,7 @@ def single_source_ref_table_snowflake(context):
         }
     }
 
+
 # BigQuery
 
 @fixture
@@ -84,6 +86,7 @@ def single_source_ref_table_bigquery(context):
             }
         }
     }
+
 
 # SQLServer
 
@@ -120,6 +123,7 @@ def single_source_ref_table_sqlserver(context):
         }
     }
 
+
 # Databricks
 
 @fixture
@@ -155,6 +159,7 @@ def single_source_ref_table_databricks(context):
         }
     }
 
+
 # Postgres
 
 @fixture
@@ -189,4 +194,3 @@ def single_source_ref_table_postgres(context):
             }
         }
     }
-
