@@ -18,6 +18,7 @@ pool:
 
 variables:
   PIPELINE_BRANCH: $(Build.SourceBranchName)
+  PYTHON_VERSION: '3.11'
 
 resources:
   containers:
