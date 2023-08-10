@@ -357,7 +357,8 @@ def load_table(context, model_name, vault_structure):
     context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
     context.system_record_value = getattr(context, "system_record_value", None)
 
-    args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
+    args = {"enable_ghost_records": context.enable_ghost_records,
+            "system_record_value": context.system_record_value}
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 

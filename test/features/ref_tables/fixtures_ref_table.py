@@ -102,10 +102,10 @@ def single_source_ref_table_sqlserver(context):
         "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
-                "YEAR": "STRING",
-                "MONTH": "STRING",
-                "DAY": "STRING",
-                "DAY_OF_WEEK": "STRING",
+                "YEAR": "VARCHAR(4)",
+                "MONTH": "VARCHAR(2)",
+                "DAY": "VARCHAR(10)",
+                "DAY_OF_WEEK": "VARCHAR(10)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(3)"
             }
@@ -113,10 +113,10 @@ def single_source_ref_table_sqlserver(context):
         "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
-                "YEAR": "STRING",
-                "MONTH": "STRING",
-                "DAY": "STRING",
-                "DAY_OF_WEEK": "STRING",
+                "YEAR": "VARCHAR(4)",
+                "MONTH": "VARCHAR(2)",
+                "DAY": "VARCHAR(10)",
+                "DAY_OF_WEEK": "VARCHAR(10)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(3)"
             }
