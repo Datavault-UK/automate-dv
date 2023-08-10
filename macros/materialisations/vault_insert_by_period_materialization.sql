@@ -23,6 +23,7 @@
     {%  else %}
         {%- set target_relation = this -%}
     {% endif %}
+
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
@@ -68,9 +69,10 @@
                                                                        start_timestamp=start_stop_dates.start_date,
                                                                        stop_timestamp=start_stop_dates.stop_date,
                                                                        offset=0, period=period) %}
-        {% if target.type == "postgres" %}
+        {% if target.type in ['postgres', 'sqlserver'] %}
             {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
+
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
         {% set period_boundaries = automate_dv.get_period_boundaries(target_relation,
