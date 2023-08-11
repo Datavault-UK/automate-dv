@@ -342,8 +342,9 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
     template_to_file(template, model_name)
 
 
-def ref_table(model_name, src_pk, src_ldts, src_source, source_model,
-              config, src_extra_columns=None, depends_on=""):
+def ref_table(model_name, src_pk, source_model,
+              config,  src_ldts=None, src_source=None,
+              src_extra_columns=None, depends_on=""):
     """
     Generate a reference table model template
         :param model_name: Name of the model file
@@ -359,7 +360,9 @@ def ref_table(model_name, src_pk, src_ldts, src_source, source_model,
     template = f"""
     {depends_on}    
     {{{{ config({config}) }}}}
-    {{{{ automate_dv.ref_table(src_pk={src_pk}, src_ldts={src_ldts}, src_source={src_source}, 
+    {{{{ automate_dv.ref_table(src_pk={src_pk},
+                               src_source={src_source if src_source else 'none'}, 
+                               src_ldts={src_ldts if src_ldts else 'none'}, 
                                src_extra_columns={src_extra_columns if src_extra_columns else 'none'}, 
                                source_model={source_model})   }}}}
     """
