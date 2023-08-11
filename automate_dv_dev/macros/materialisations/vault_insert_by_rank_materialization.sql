@@ -7,8 +7,6 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
-    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_rank') }}
-
     {% if target.type == "sqlserver" %}
         {%- set target_relation = this.incorporate(type='table') -%}
     {%  else %}
@@ -57,7 +55,7 @@
 
     {% elif full_refresh_mode %}
         {% set filtered_sql = automate_dv.replace_placeholder_with_rank_filter(sql, rank_column, 1) %}
-        {% if target.type == "postgres" %}
+        {% if target.type in ['postgres', 'sqlserver'] %}
             {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
