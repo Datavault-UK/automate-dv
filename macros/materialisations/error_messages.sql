@@ -35,7 +35,9 @@
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset -%}
 
+    {%- if execute -%}
     {{- exceptions.raise_compiler_error(message) -}}
+    {%- endif -%}
 
 {%- endmacro -%}
 
@@ -49,7 +51,9 @@
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset -%}
 
+    {%- if execute -%}
     {{- exceptions.warn(automate_dv.wrap_warning(message)) -}}
+    {%- endif -%}
 
 {%- endmacro -%}
 
@@ -63,7 +67,9 @@
     Please see: https://automate-dv.readthedocs.io/en/latest/materialisations/
     {%- endset %}
 
-    {{ exceptions.raise_compiler_error(message) }}
+    {%- if execute -%}
+    {{- exceptions.raise_compiler_error(message) -}}
+    {%- endif -%}
 
 {%- endmacro -%}
 
@@ -76,6 +82,8 @@
     Using this functionality in a live production setting may result in unpredictable outcomes, data loss, or system instability.
     {%- endset -%}
 
+    {%- if execute -%}
     {{- exceptions.warn(automate_dv.wrap_warning(message)) -}}
+    {%- endif -%}
 
 {%- endmacro -%}
