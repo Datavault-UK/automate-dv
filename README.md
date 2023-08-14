@@ -30,7 +30,7 @@ powered by [dbt](https://www.getdbt.com/), a registered trademark of [dbt Labs](
 
 Learn quickly with our worked example:
 
-- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/we_worked_example/)
+- [Read the docs](https://automate-dv.readthedocs.io/en/latest/worked_example/)
 
 - [Project Repository](https://github.com/Datavault-UK/snowflakeDemo)
 
