@@ -566,6 +566,8 @@ Feature: [PIT-GR] Point in Time with Ghost Records
       | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   | md5('1003')                      | 2018-06-01 00:00:00.000 |
 
+  #Scenario is inappropriate; in sat, same PK with diff hashdiff are loaded on same day, so latest record is ambiguous
+  @skip
   @fixture.pit_two_sats
   @fixture.enable_ghost_records
   Scenario: [PIT-GR-10] Incremental load with the more recent AS OF dates into an already populated pit table from two satellites with dates and ghost records

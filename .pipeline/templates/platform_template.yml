@@ -14,7 +14,7 @@ stages:
         steps:
           - task: UsePythonVersion@0
             inputs:
-              versionSpec: '3.9'
+              versionSpec: $(PYTHON_VERSION)
           - template: install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
@@ -26,7 +26,7 @@ stages:
         steps:
           - task: UsePythonVersion@0
             inputs:
-              versionSpec: '3.9'
+              versionSpec: $(PYTHON_VERSION)
           - template: install-dependencies-steps.yml
           - script: inv setup -p snowflake -e pipeline
             displayName: "Setup harness"
@@ -57,7 +57,7 @@ stages:
                             steps:
                               - task: UsePythonVersion@0
                                 inputs:
-                                  versionSpec: '3.9'
+                                  versionSpec: $(PYTHON_VERSION)
                               - ${{ if eq(platform, 'sqlserver') }}:
                                   - template: install-deps-setup-sqlserver-steps.yml
                               - template: install-dependencies-steps.yml
@@ -80,7 +80,7 @@ stages:
                         steps:
                           - task: UsePythonVersion@0
                             inputs:
-                              versionSpec: '3.9'
+                              versionSpec: $(PYTHON_VERSION)
                           - ${{ if eq(platform, 'sqlserver') }}:
                               - template: install-deps-setup-sqlserver-steps.yml
                           - template: install-dependencies-steps.yml

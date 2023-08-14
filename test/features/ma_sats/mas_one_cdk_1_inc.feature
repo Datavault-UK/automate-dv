@@ -529,10 +529,10 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | 1005        | Eric          | 17-214-233-1217 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1227 | 1993-01-02 | *      |
       | 1005        | Eric          | 17-214-233-1237 | 1993-01-02 | *      |
-    And I stage the STG_CUSTOMER data
+    And I stage the STG_CUSTOMER_HD_ALIAS data
     When I load the MAS_HD_ALIAS ma_sat
     Then the MAS_HD_ALIAS table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_HASHDIFF                       | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | CUSTOMER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | HASHDIFF                                | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | md5('1001') | Alice         | 17-214-233-1214 | md5('1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1001') | Alice         | 17-214-233-1224 | md5('1001\|\|ALICE\|\|17-214-233-1224') | 1993-01-02     | 1993-01-02 | *      |
       | md5('1001') | Alice         | 17-214-233-1234 | md5('1001\|\|ALICE\|\|17-214-233-1234') | 1993-01-02     | 1993-01-02 | *      |

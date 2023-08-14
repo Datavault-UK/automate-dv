@@ -18,6 +18,7 @@ pool:
 
 variables:
   PIPELINE_BRANCH: $(Build.SourceBranchName)
+  PYTHON_VERSION: '3.11'
 
 resources:
   containers:
@@ -96,5 +97,5 @@ extends:
         disabledForPlatform: [ ]
       - groupName: 'ref_tables'
         displayName: 'Reference Tables'
-        disabledForPlatform: [ 'databricks', 'postgres', 'bigquery', 'sqlserver' ]
+        disabledForPlatform: [ ]
         subGroups: [ 'main' ]

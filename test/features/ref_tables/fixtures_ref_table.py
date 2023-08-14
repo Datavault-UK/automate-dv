@@ -1,5 +1,6 @@
 from behave import fixture
 
+
 def set_vault_structure_definition(context):
     context.vault_structure_columns = {
         "REF_TABLE": {
@@ -7,6 +8,10 @@ def set_vault_structure_definition(context):
             "src_extra_columns": ["YEAR", "MONTH", "DAY", "DAY_OF_WEEK"],
             "src_ldts": "LOAD_DATE",
             "src_source": "SOURCE"
+        },
+        "REF_TABLE_NO_AUDIT": {
+            "src_pk": "DATE_PK",
+            "src_extra_columns": ["YEAR", "MONTH", "DAY", "DAY_OF_WEEK"]
         }
     }
 
@@ -37,6 +42,15 @@ def single_source_ref_table_snowflake(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "REF_TABLE_NO_AUDIT": {
+            "column_types": {
+                "DATE_PK": "DATE",
+                "YEAR": "VARCHAR",
+                "MONTH": "VARCHAR",
+                "DAY": "VARCHAR",
+                "DAY_OF_WEEK": "VARCHAR"
+            }
+        },
         "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
@@ -49,6 +63,7 @@ def single_source_ref_table_snowflake(context):
             }
         }
     }
+
 
 # BigQuery
 
@@ -72,6 +87,15 @@ def single_source_ref_table_bigquery(context):
                 "SOURCE": "STRING"
             }
         },
+        "REF_TABLE_NO_AUDIT": {
+            "column_types": {
+                "DATE_PK": "DATE",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING"
+            }
+        },
         "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
@@ -84,6 +108,7 @@ def single_source_ref_table_bigquery(context):
             }
         }
     }
+
 
 # SQLServer
 
@@ -99,26 +124,36 @@ def single_source_ref_table_sqlserver(context):
         "REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
-                "YEAR": "STRING",
-                "MONTH": "STRING",
-                "DAY": "STRING",
-                "DAY_OF_WEEK": "STRING",
+                "YEAR": "VARCHAR(4)",
+                "MONTH": "VARCHAR(2)",
+                "DAY": "VARCHAR(10)",
+                "DAY_OF_WEEK": "VARCHAR(10)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(3)"
+            }
+        },
+        "REF_TABLE_NO_AUDIT": {
+            "column_types": {
+                "DATE_PK": "DATE",
+                "YEAR": "VARCHAR(4)",
+                "MONTH": "VARCHAR(2)",
+                "DAY": "VARCHAR(10)",
+                "DAY_OF_WEEK": "VARCHAR(10)",
             }
         },
         "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
-                "YEAR": "STRING",
-                "MONTH": "STRING",
-                "DAY": "STRING",
-                "DAY_OF_WEEK": "STRING",
+                "YEAR": "VARCHAR(4)",
+                "MONTH": "VARCHAR(2)",
+                "DAY": "VARCHAR(10)",
+                "DAY_OF_WEEK": "VARCHAR(10)",
                 "LOAD_DATE": "DATE",
                 "SOURCE": "VARCHAR(3)"
             }
         }
     }
+
 
 # Databricks
 
@@ -142,6 +177,15 @@ def single_source_ref_table_databricks(context):
                 "SOURCE": "VARCHAR(100)"
             }
         },
+        "REF_TABLE_NO_AUDIT": {
+            "column_types": {
+                "DATE_PK": "DATE",
+                "YEAR": "STRING",
+                "MONTH": "STRING",
+                "DAY": "STRING",
+                "DAY_OF_WEEK": "STRING",
+            }
+        },
         "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
@@ -154,6 +198,7 @@ def single_source_ref_table_databricks(context):
             }
         }
     }
+
 
 # Postgres
 
@@ -177,6 +222,15 @@ def single_source_ref_table_postgres(context):
                 "SOURCE": "VARCHAR"
             }
         },
+        "REF_TABLE_NO_AUDIT": {
+            "column_types": {
+                "DATE_PK": "DATE",
+                "YEAR": "VARCHAR",
+                "MONTH": "VARCHAR",
+                "DAY": "VARCHAR",
+                "DAY_OF_WEEK": "VARCHAR"
+            }
+        },
         "RAW_REF_TABLE": {
             "column_types": {
                 "DATE_PK": "DATE",
@@ -189,4 +243,3 @@ def single_source_ref_table_postgres(context):
             }
         }
     }
-

@@ -268,6 +268,10 @@ def load_populated_table(context, model_name, vault_structure):
 
         context.vault_structure_metadata = metadata
 
+        if 'src_hashdiff' in metadata:
+            if isinstance(metadata['src_hashdiff'], dict):
+                metadata['src_hashdiff'] = metadata['src_hashdiff']['alias']
+
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
         logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
@@ -290,8 +294,8 @@ def load_populated_table(context, model_name, vault_structure):
                 data_type = context.seed_config[model_name]['column_types'][col]
                 payload_columns.append([col, data_type])
 
-        sql = f"{{{{- automate_dv_test.hash_database_table(\042{context.target_model_name}\042, \042{model_name_unhashed}\042, " \
-              f"{hashed_columns}, {payload_columns}) -}}}}"
+        sql = f"""{{{{- automate_dv_test.hash_database_table("{context.target_model_name}", """ \
+              f""" "{model_name_unhashed}", {hashed_columns}, {payload_columns}) -}}}}"""
 
         dbt_file_utils.generate_model(context.target_model_name, sql)
 
@@ -323,6 +327,10 @@ def load_populated_table(context, model_name, vault_structure):
 
         context.vault_structure_metadata = metadata
 
+        if 'src_hashdiff' in metadata:
+            if isinstance(metadata['src_hashdiff'], dict):
+                metadata['src_hashdiff'] = metadata['src_hashdiff']['alias']
+
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
         logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name])
@@ -345,16 +353,17 @@ def load_table(context, model_name, vault_structure):
                                               vault_structure=vault_structure,
                                               config=config,
                                               **metadata)
-
+    is_full_refresh = step_helpers.is_full_refresh(context)
     context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
     context.system_record_value = getattr(context, "system_record_value", None)
 
-    args = {"enable_ghost_records": context.enable_ghost_records, "system_record_value": context.system_record_value}
+    args = {"enable_ghost_records": context.enable_ghost_records,
+            "system_record_value": context.system_record_value}
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args)
-
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name], args=args,
+                                     full_refresh=is_full_refresh)
     assert "Completed successfully" in logs
 
 

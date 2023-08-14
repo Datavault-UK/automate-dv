@@ -134,3 +134,27 @@ Feature: [REF] Reference Tables
       | 2022-11-05 | 2022 | 11    | 5   | Saturday    | 2022-11-30 | MDS    |
       | 2022-11-06 | 2022 | 11    | 6   | Sunday      | 2022-11-30 | MDS    |
       | 2022-11-07 | 2022 | 11    | 7   | Monday      | 2022-11-30 | MDS    |
+
+  @fixture.single_source_ref_table
+  Scenario: [REF-06] Simple load of reference data into a non-existent reference table without audit columns
+    Given the REF_TABLE_NO_AUDIT table does not exist
+    And the RAW_REF_TABLE table contains data
+      | DATE_PK    | YEAR | MONTH | DAY | DAY_OF_WEEK |
+      | 2022-11-01 | 2022 | 11    | 1   | Tuesday     |
+      | 2022-11-02 | 2022 | 11    | 2   | Wednesday   |
+      | 2022-11-03 | 2022 | 11    | 3   | Thursday    |
+      | 2022-11-04 | 2022 | 11    | 4   | Friday      |
+      | 2022-11-05 | 2022 | 11    | 5   | Saturday    |
+      | 2022-11-06 | 2022 | 11    | 6   | Sunday      |
+      | 2022-11-07 | 2022 | 11    | 7   | Monday      |
+    And I stage the REF_DATE data
+    When I load the REF_TABLE_NO_AUDIT ref_table
+    Then the REF_TABLE_NO_AUDIT table should contain expected data
+      | DATE_PK    | YEAR | MONTH | DAY | DAY_OF_WEEK |
+      | 2022-11-01 | 2022 | 11    | 1   | Tuesday     |
+      | 2022-11-02 | 2022 | 11    | 2   | Wednesday   |
+      | 2022-11-03 | 2022 | 11    | 3   | Thursday    |
+      | 2022-11-04 | 2022 | 11    | 4   | Friday      |
+      | 2022-11-05 | 2022 | 11    | 5   | Saturday    |
+      | 2022-11-06 | 2022 | 11    | 6   | Sunday      |
+      | 2022-11-07 | 2022 | 11    | 7   | Monday      |
