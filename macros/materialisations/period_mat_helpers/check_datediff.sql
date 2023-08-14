@@ -11,7 +11,7 @@
                                                          period=period) %}
 
     {%- if num_periods > 100000 -%}
-        {{ automate_dv.sqlserver_max_iterations_error() }}
+        {{ automate_dv.max_iterations_error() }}
     {%- endif -%}
 
     {% do return(num_periods) %}

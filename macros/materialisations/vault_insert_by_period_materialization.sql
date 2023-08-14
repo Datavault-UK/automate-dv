@@ -7,11 +7,23 @@
 
     {%- set full_refresh_mode = (should_full_refresh()) -%}
 
+    {%- set period = config.get('period', default='day') -%}
+
+    {#- Raise the errors/warnings in this order so that we do not get both -#}
+    {%- if period == 'microsecond' -%}
+        {{ automate_dv.datepart_too_small_error(period=period) }}
+    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
+        {{ automate_dv.datepart_not_recommended_warning(period=period) }}
+    {%- endif -%}
+
+    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
+
     {% if target.type == "sqlserver" %}
         {%- set target_relation = this.incorporate(type='table') -%}
     {%  else %}
         {%- set target_relation = this -%}
     {% endif %}
+
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
@@ -19,25 +31,6 @@
     {%- set date_source_models = config.get('date_source_models', default=none) -%}
 
     {%- set start_stop_dates = automate_dv.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
-
-    {%- set period = config.get('period', default='day') -%}
-    {%- if period == 'microsecond' -%}
-        {%- set error_message -%}
-        'This datepart ({{ period }}) is too small and cannot be used for this purpose, consider using a different datepart value (e.g. day).
-         Vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.raise_compiler_error(error_message) -}}
-    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
-        {%- set warn_message -%}
-        'WARNING: The use of this datepart ({{ period }}) is not recommended, consider using a different datepart value (e.g. day).
-        Vault_insert_by materialisations are not intended for this purpose,
-        please see https://automate-dv.readthedocs.io/en/latest/materialisations/'
-        {%- endset -%}
-
-        {{- exceptions.warn(warn_message) -}}
-    {%- endif -%}
 
     {%- set to_drop = [] -%}
 
@@ -76,9 +69,10 @@
                                                                        start_timestamp=start_stop_dates.start_date,
                                                                        stop_timestamp=start_stop_dates.stop_date,
                                                                        offset=0, period=period) %}
-        {% if target.type == "postgres" %}
+        {% if target.type in ['postgres', 'sqlserver'] %}
             {{ automate_dv.drop_temporary_special(target_relation) }}
         {% endif %}
+
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
         {% set period_boundaries = automate_dv.get_period_boundaries(target_relation,

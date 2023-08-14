@@ -84,7 +84,7 @@
 
 {% macro sqlserver__get_period_boundaries(target_relation, timestamp_field, start_date, stop_date, period) -%}
     {%- if period is in ['microsecond', 'millisecond', 'second'] -%}
-        {{ automate_dv.sqlserver_datepart_too_small_error(period=period) }}
+        {{ automate_dv.datepart_too_small_error(period=period) }}
     {%- endif -%}
 
     {#  MSSQL cannot CAST datetime2 strings with more than 7 decimal places #}
