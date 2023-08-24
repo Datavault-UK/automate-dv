@@ -66,6 +66,15 @@ latest_records AS (
     QUALIFY rank_num = 1
 ),
 
+valid_stg AS (
+    SELECT {{ automate_dv.prefix(source_cols, 'src', alias_target='source') }}
+    FROM source_data AS src
+    LEFT JOIN latest_records AS sat
+    ON {{ automate_dv.multikey(src_pk, prefix=['src', 'sat'], condition='=') }}
+    WHERE {{ automate_dv.prefix([src_ldts], 'src', alias_target='source') }} >= {{ automate_dv.prefix([src_ldts], 'sat', alias_target='target') }}
+),
+
+
 {%- endif %}
 
 first_record_in_set AS (
@@ -75,14 +84,22 @@ first_record_in_set AS (
             PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
             ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
         ) as asc_rank
+    {% if automate_dv.is_any_incremental() %}
+    FROM valid_stg as sd
+    {% else %}
     FROM source_data as sd
+    {% endif %}
     QUALIFY asc_rank = 1
 ),
 
 unique_source_records AS (
     SELECT DISTINCT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
+    {% if automate_dv.is_any_incremental() %}
+    FROM valid_stg as sd
+    {% else %}
     FROM source_data as sd
+    {% endif %}
     QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
         PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC)
@@ -113,7 +130,7 @@ records_to_insert AS (
     SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
     FROM first_record_in_set AS frin
     {%- if automate_dv.is_any_incremental() %}
-    LEFT JOIN LATEST_RECORDS lr
+    LEFT JOIN latest_records lr
         ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
         AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
         WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
