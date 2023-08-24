@@ -359,6 +359,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1003') | md5('1995-08-07\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-07   | 17-214-233-1215 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
       | md5('1003') | md5('1995-08-08\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-08   | 17-214-233-1215 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
 
+  # Failing
   @fixture.satellite
   Scenario: [SAT-IM-15] Idempotent test loading existing and populated satellite - one cycle
     Given the SATELLITE_TZ sat is already populated with data
