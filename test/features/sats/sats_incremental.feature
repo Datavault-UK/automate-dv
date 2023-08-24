@@ -315,7 +315,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
 
   @fixture.satellite_cycle
-  Scenario: [SAT-PM-IM-13] Idempotent intra day satellite load
+  Scenario: [SAT-IM-13] Idempotent intra day satellite load
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
@@ -331,5 +331,55 @@ Feature: [SAT] Sats loaded using Incremental Materialization
     Then the SATELLITE_TZ table should contain expected data
       | CUSTOMER_PK | HASHDIFF                                             | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
-      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
 
+
+  @fixture.satellite_cycle
+  Scenario: [SAT-IM-14] Idempotent intra day satellite load
+    Given the SATELLITE_TZ table does not exist
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | 1002        | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | 1003        | Carl          | 1995-08-07   | 17-214-233-1215 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
+      | 1003        | Carl          | 1995-08-08   | 17-214-233-1215 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
+    And I stage the STG_CUSTOMER_TZ data
+    When I load the SATELLITE_TZ sat
+    Then the SATELLITE_TZ table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                             | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | md5('1003') | md5('1995-08-07\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-07   | 17-214-233-1215 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
+      | md5('1003') | md5('1995-08-08\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-08   | 17-214-233-1215 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
+    And I load the SATELLITE_TZ sat
+    Then the SATELLITE_TZ table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                             | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | md5('1003') | md5('1995-08-07\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-07   | 17-214-233-1215 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
+      | md5('1003') | md5('1995-08-08\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-08   | 17-214-233-1215 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
+
+  @fixture.satellite
+  Scenario: [SAT-IM-15] Idempotent test loading existing and populated satellite - one cycle
+    Given the SATELLITE_TZ sat is already populated with data
+      | CUSTOMER_PK | HASHDIFF                                             | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | md5('1003') | md5('1995-08-07\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-07   | 17-214-233-1216 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
+      | md5('1003') | md5('1995-08-08\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-08   | 17-214-233-1216 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
+    And the RAW_STAGE_TZ table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | 1002        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | 1002        | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | 1003        | Carl          | 1995-08-07   | 17-214-233-1216 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
+      | 1003        | Carl          | 1995-08-08   | 17-214-233-1216 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
+      | 1004        | David         | 1995-08-09   | 17-214-233-1217 | 2019-05-05 12:00:01.000000 | 2019-05-05 12:00:01.000000 | *      |
+    And I stage the STG_CUSTOMER_TZ data
+    When I load the SATELLITE_TZ sat
+    Then the SATELLITE_TZ table should contain expected data
+      | CUSTOMER_PK | HASHDIFF                                              | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
+      | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215')  | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
+      | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215')  | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
+      | md5('1003') | md5('1995-08-07\|\|1003\|\|CARL\|\|17-214-233-1216')  | Carl          | 1995-08-07   | 17-214-233-1216 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
+      | md5('1003') | md5('1995-08-08\|\|1003\|\|CARL\|\|17-214-233-1216')  | Carl          | 1995-08-08   | 17-214-233-1216 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
+      | md5('1004') | md5('1995-08-09\|\|1004\|\|DAVID\|\|17-214-233-1217') | David         | 1995-08-09   | 17-214-233-1217 | 2019-05-05 12:00:01.000000 | 2019-05-05 12:00:01.000000 | *      |
