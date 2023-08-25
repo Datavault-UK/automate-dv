@@ -25,7 +25,7 @@ fixture_registry_utils = {
     "fixture.enable_ghost_records": behave_fixtures.enable_ghost_records,
     "fixture.system_record_value": behave_fixtures.system_record_value,
     "fixture.disable_hashing_upper_case": behave_fixtures.disable_hashing_upper_case,
-    "fixture.set_is_delta_stage_false": behave_fixtures.set_is_delta_stage_false,
+    "fixture.apply_stage_filter": behave_fixtures.apply_stage_filter,
 }
 
 fixtures_registry = {

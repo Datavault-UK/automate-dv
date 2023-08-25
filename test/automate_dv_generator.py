@@ -851,14 +851,14 @@ def append_end_date_config(context, config: dict) -> dict:
     return config
 
 
-def append_is_delta_stage_config(context, config: dict) -> dict:
+def append_apply_stage_filter_config(context, config: dict) -> dict:
     """
-    Append is_delta_stage config if attribute is present.
+    Append apply_stage_filter config if attribute is present.
     """
 
-    if hasattr(context, "is_delta_stage"):
+    if hasattr(context, "apply_stage_filter"):
         config = {**config,
-                  "is_delta_stage": context.is_delta_stage}
+                  "apply_stage_filter": context.apply_stage_filter}
 
     return config
 
