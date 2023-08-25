@@ -299,6 +299,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1005') | Ewan          | 17-214-233-1218 | 1953-01-03   | md5('1953-01-03\|\|1005\|\|EWAN\|\|17-214-233-1218')  | TPCH_CUSTOMER  | 1993-01-02     | 1993-01-02 | *      |
       | md5('1006') | Frida         | 17-214-233-1219 | 1968-09-12   | md5('1968-09-12\|\|1006\|\|FRIDA\|\|17-214-233-1219') | TPCH_CUSTOMER  | 1993-01-02     | 1993-01-02 | *      |
 
+  @fixture.set_is_delta_stage_false
   @fixture.satellite
   Scenario: [SAT-IM-12] Idempotent loads on non existent sat with single record per PK
     Given the SATELLITE table does not exist
@@ -314,6 +315,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1001') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-01     | 1993-01-01 | *      |
 
+  @fixture.set_is_delta_stage_false
   @fixture.satellite_cycle
   Scenario: [SAT-IM-13] Idempotent intra day satellite load
     Given the SATELLITE_TZ table does not exist
@@ -333,7 +335,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1002') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03 12:00:00.000000 | 2019-05-03 12:00:00.000000 | *      |
       | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
 
-
+  @fixture.set_is_delta_stage_false
   @fixture.satellite_cycle
   Scenario: [SAT-IM-14] Idempotent intra day satellite load
     Given the SATELLITE_TZ table does not exist
@@ -359,7 +361,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1003') | md5('1995-08-07\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-07   | 17-214-233-1215 | 2019-05-04 12:00:00.000000 | 2019-05-04 12:00:00.000000 | *      |
       | md5('1003') | md5('1995-08-08\|\|1003\|\|CARL\|\|17-214-233-1215') | Carl          | 1995-08-08   | 17-214-233-1215 | 2019-05-04 12:00:01.000000 | 2019-05-04 12:00:01.000000 | *      |
 
-
+  @fixture.set_is_delta_stage_false
   @fixture.satellite
   Scenario: [SAT-IM-15] Idempotent test loading existing with a single new record into populated satellite - one cycle
     Given the SATELLITE_TZ sat is already populated with data
@@ -385,6 +387,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization
       | md5('1002') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215')  | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-03 12:00:01.000000 | 2019-05-03 12:00:01.000000 | *      |
       | md5('1004') | md5('1995-08-09\|\|1004\|\|DAVID\|\|17-214-233-1217') | David         | 1995-08-09   | 17-214-233-1217 | 2019-05-05 12:00:01.000000 | 2019-05-05 12:00:01.000000 | *      |
 
+  @fixture.set_is_delta_stage_false
   @fixture.satellite
   Scenario: [SAT-IM-16] Idempotent test loading existing with a multiple new records into populated satellite - one cycle
     Given the SATELLITE_TZ sat is already populated with data
