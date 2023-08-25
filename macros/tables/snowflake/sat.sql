@@ -25,7 +25,7 @@
 
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set is_delta_stage = config.get('is_delta_stage', true) -%}
+{%- set apply_stage_filter = config.get('apply_stage_filter', true) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
@@ -68,7 +68,7 @@ latest_records AS (
     QUALIFY rank_num = 1
 ),
 
-{%- if not is_delta_stage %}
+{%- if apply_stage_filter %}
 
 valid_stg AS (
     SELECT {{ automate_dv.prefix(source_cols, 's', alias_target='source') }}
@@ -92,7 +92,7 @@ first_record_in_set AS (
             PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
             ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
         ) as asc_rank
-    {%- if automate_dv.is_any_incremental() and not is_delta_stage %}
+    {%- if automate_dv.is_any_incremental() and apply_stage_filter %}
     FROM valid_stg as sd
     {%- else %}
     FROM source_data as sd
@@ -103,7 +103,7 @@ first_record_in_set AS (
 unique_source_records AS (
     SELECT DISTINCT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    {%- if automate_dv.is_any_incremental() and not is_delta_stage %}
+    {%- if automate_dv.is_any_incremental() and apply_stage_filter %}
     FROM valid_stg as sd
     {%- else %}
     FROM source_data as sd
