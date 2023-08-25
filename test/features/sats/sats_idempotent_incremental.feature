@@ -311,3 +311,39 @@ Feature: [SAT] Sats loaded using Incremental Materialization and checking for id
       | md5('1006') | md5('1995-08-11\|\|1006\|\|FELIX\|\|17-214-233-1229') | Felix         | 1995-08-11   | 17-214-233-1229 | 2019-05-07 12:00:01.000000 | 2019-05-07 12:00:01.000000 | *      |
       | md5('1007') | md5('1995-08-12\|\|1007\|\|GEMMA\|\|17-214-233-1220') | Gemma         | 1995-08-12   | 17-214-233-1220 | 2019-05-08 12:00:01.000000 | 2019-05-08 12:00:01.000000 | *      |
       | md5('1007') | md5('1995-08-12\|\|1007\|\|GEMMA\|\|17-214-233-1230') | Gemma         | 1995-08-12   | 17-214-233-1230 | 2019-05-08 12:00:01.000000 | 2019-05-08 12:00:01.000000 | *      |
+
+  @fixture.apply_stage_filter
+  @fixture.satellite
+  Scenario: [SAT-ID-IM-11] Idempotent loads on non existent sat with single record per PK, with a composite PK
+    Given the SATELLITE_COMP table does not exist
+    And the RAW_STAGE_COMP table contains data
+      | CUSTOMER_ID | ORDER_ID | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | LOAD_DATE  | SOURCE |
+      | 1001        | A        | Alice         | 17-214-233-1214 | 1997-04-24   | 1993-01-01 | *      |
+      | 1002        | B        | Bob           | 17-214-233-1215 | 2006-04-17   | 1993-01-01 | *      |
+    And I stage the STG_CUSTOMER_COMP data
+    When I load the SATELLITE_COMP sat
+    And I load the SATELLITE_COMP sat
+    Then the SATELLITE_COMP table should contain expected data
+      | CUSTOMER_PK | ORDER_PK | CUSTOMER_NAME | CUSTOMER_PHONE  | CUSTOMER_DOB | HASHDIFF                                                   | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1001') | md5('A') | Alice         | 17-214-233-1214 | 1997-04-24   | md5('1997-04-24\|\|1001\|\|ALICE\|\|17-214-233-1214\|\|A') | 1993-01-01     | 1993-01-01 | *      |
+      | md5('1002') | md5('B') | Bob           | 17-214-233-1215 | 2006-04-17   | md5('2006-04-17\|\|1002\|\|BOB\|\|17-214-233-1215\|\|B')   | 1993-01-01     | 1993-01-01 | *      |
+
+  @fixture.apply_stage_filter
+  @fixture.satellite
+  Scenario: [SAT-ID-IM-12] Idempotent intra day satellite load - 2 cycles - second cycle is entirely duplicated, composite PK
+    Given the SATELLITE_COMP table does not exist
+    And the RAW_STAGE_COMP table contains data
+      | CUSTOMER_ID | ORDER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | 1002        | A        | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
+      | 1002        | B        | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
+    And I stage the STG_CUSTOMER_COMP data
+    When I load the SATELLITE_COMP sat
+    Then the SATELLITE_COMP table should contain expected data
+      | CUSTOMER_PK | ORDER_PK | HASHDIFF                                                  | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | md5('A') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215\|\|A') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
+      | md5('1002') | md5('B') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215\|\|B') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
+    And I load the SATELLITE_COMP sat
+    Then the SATELLITE_COMP table should contain expected data
+      | CUSTOMER_PK | ORDER_PK | HASHDIFF                                                  | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | md5('1002') | md5('A') | md5('1995-08-07\|\|1002\|\|BETH\|\|17-214-233-1215\|\|A') | Beth          | 1995-08-07   | 17-214-233-1215 | 2019-05-03     | 2019-05-03 | *      |
+      | md5('1002') | md5('B') | md5('1995-08-08\|\|1002\|\|BETH\|\|17-214-233-1215\|\|B') | Beth          | 1995-08-08   | 17-214-233-1215 | 2019-05-04     | 2019-05-04 | *      |
