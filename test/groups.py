@@ -65,7 +65,8 @@ def feature_sub_types():
                 'sats_cycles'
             ],
             'incremental': [
-                'sats_incremental'
+                'sats_incremental',
+                'sats_idempotent_incremental'
             ],
             'pm_core': [
                 'sats_period_mat_base',
