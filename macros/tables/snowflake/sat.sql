@@ -25,10 +25,12 @@
 
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
+{%- set is_delta_stage = config.get('is_delta_stage', true) -%}
+{%- set enable_ghost_record = var('enable_ghost_records', false) %}
+
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
 {%- set window_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_ldts]) -%}
 {%- set pk_cols = automate_dv.expand_column_list(columns=[src_pk]) -%}
-{%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 {%- if model.config.materialized == 'vault_insert_by_rank' %}
     {%- set source_cols_with_rank = source_cols + [config.get('rank_column')] -%}
@@ -66,6 +68,8 @@ latest_records AS (
     QUALIFY rank_num = 1
 ),
 
+{%- if not is_delta_stage %}
+
 valid_stg AS (
     SELECT {{ automate_dv.prefix(source_cols, 's', alias_target='source') }}
     FROM source_data AS s
@@ -77,6 +81,7 @@ valid_stg AS (
         WHERE {{ automate_dv.multikey(src_pk, prefix=['sat','s'], condition='=') }}
     )
 ),
+{%- endif %}
 
 {%- endif %}
 
@@ -87,22 +92,22 @@ first_record_in_set AS (
             PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
             ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC
         ) as asc_rank
-    {% if automate_dv.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() and not is_delta_stage %}
     FROM valid_stg as sd
-    {% else %}
+    {%- else %}
     FROM source_data as sd
-    {% endif %}
+    {%- endif %}
     QUALIFY asc_rank = 1
 ),
 
 unique_source_records AS (
     SELECT DISTINCT
         {{ automate_dv.prefix(source_cols, 'sd', alias_target='source') }}
-    {% if automate_dv.is_any_incremental() %}
+    {%- if automate_dv.is_any_incremental() and not is_delta_stage %}
     FROM valid_stg as sd
-    {% else %}
+    {%- else %}
     FROM source_data as sd
-    {% endif %}
+    {%- endif %}
     QUALIFY {{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }} != LAG({{ automate_dv.prefix([src_hashdiff], 'sd', alias_target='source') }}) OVER (
         PARTITION BY {{ automate_dv.prefix([src_pk], 'sd', alias_target='source') }}
         ORDER BY {{ automate_dv.prefix([src_ldts], 'sd', alias_target='source') }} ASC)
