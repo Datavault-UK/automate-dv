@@ -18,7 +18,7 @@ Feature: [SAT] Sats loaded using Incremental Materialization and checking for id
 
   @fixture.apply_stage_filter
   @fixture.satellite_cycle
-  Scenario: [SAT-ID-IM-02] Idempotent intra day satellite load
+  Scenario: [SAT-ID-IM-02] Idempotent intra day satellite load - 2 cycles - second cycle is entirely duplicated
     Given the SATELLITE_TZ table does not exist
     And the RAW_STAGE_TZ table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | EFFECTIVE_FROM             | LOAD_DATE                  | SOURCE |
@@ -195,7 +195,6 @@ Feature: [SAT] Sats loaded using Incremental Materialization and checking for id
       | md5('1006') | md5('1995-08-11\|\|1006\|\|FELIX\|\|17-214-233-1219') | Felix         | 1995-08-11   | 17-214-233-1219 | 2019-05-06 12:00:01.000000 | 2019-05-06 12:00:01.000000 | *      |
       | md5('1007') | md5('1995-08-12\|\|1007\|\|GEMMA\|\|17-214-233-1220') | Gemma         | 1995-08-12   | 17-214-233-1220 | 2019-05-06 12:00:01.000000 | 2019-05-06 12:00:01.000000 | *      |
 
-
   @fixture.apply_stage_filter
   @fixture.satellite
   Scenario: [SAT-ID-IM-08] Idempotent test loading existing with a multiple new records into populated satellite - two cycles, second cycle only adds new on different ldts
@@ -270,7 +269,6 @@ Feature: [SAT] Sats loaded using Incremental Materialization and checking for id
       | md5('1005') | md5('1995-08-10\|\|1005\|\|ELLEN\|\|17-214-233-1218') | Ellen         | 1995-08-10   | 17-214-233-1218 | 2019-05-06 12:00:01.000000 | 2019-05-06 12:00:01.000000 | *      |
       | md5('1006') | md5('1995-08-11\|\|1006\|\|FELIX\|\|17-214-233-1219') | Felix         | 1995-08-11   | 17-214-233-1219 | 2019-05-07 12:00:01.000000 | 2019-05-07 12:00:01.000000 | *      |
       | md5('1007') | md5('1995-08-12\|\|1007\|\|GEMMA\|\|17-214-233-1220') | Gemma         | 1995-08-12   | 17-214-233-1220 | 2019-05-08 12:00:01.000000 | 2019-05-08 12:00:01.000000 | *      |
-
 
   @fixture.apply_stage_filter
   @fixture.satellite
