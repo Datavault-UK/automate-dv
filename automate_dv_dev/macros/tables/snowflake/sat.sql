@@ -25,7 +25,7 @@
 
 {%- macro default__sat(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
-{%- set apply_stage_filter = config.get('apply_stage_filter', true) -%}
+{%- set apply_stage_filter = config.get('apply_stage_filter', false) -%}
 {%- set enable_ghost_record = var('enable_ghost_records', false) %}
 
 {%- set source_cols = automate_dv.expand_column_list(columns=[src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source]) -%}
