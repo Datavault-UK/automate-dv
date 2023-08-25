@@ -75,7 +75,7 @@ valid_stg AS (
     FROM source_data AS s
     LEFT JOIN latest_records AS sat
     ON {{ automate_dv.multikey(src_pk, prefix=['s', 'sat'], condition='=') }}
-    WHERE {{ automate_dv.prefix([src_pk], 'sat', alias_target='target') }} IS NULL
+    WHERE {{ automate_dv.multikey(src_pk, prefix='sat', condition='IS NULL') }}
     OR {{ automate_dv.prefix([src_ldts], 's') }} > (
         SELECT MAX({{ src_ldts }}) FROM latest_records AS sat
         WHERE {{ automate_dv.multikey(src_pk, prefix=['sat','s'], condition='=') }}
