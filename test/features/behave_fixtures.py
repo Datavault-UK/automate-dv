@@ -81,8 +81,8 @@ def disable_hashing_upper_case(context):
 
 
 @behave.fixture
-def apply_stage_filter(context):
+def apply_source_filter(context):
     """
     Indicate that the stage does not contain deltas
     """
-    context.apply_stage_filter = True
+    context.apply_source_filter = True

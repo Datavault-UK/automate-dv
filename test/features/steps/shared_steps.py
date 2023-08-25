@@ -344,7 +344,7 @@ def load_table(context, model_name, vault_structure):
                 **context.vault_structure_columns[model_name]}
 
     config = automate_dv_generator.append_end_date_config(context, dict())
-    config = automate_dv_generator.append_apply_stage_filter_config(context, config)
+    config = automate_dv_generator.append_apply_source_filter_config(context, config)
 
     metadata = step_helpers.filter_metadata(context, metadata)
 
