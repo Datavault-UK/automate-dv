@@ -15,7 +15,7 @@
 {%- macro default__create_ghost_record(src_pk, src_hashdiff, src_payload, src_extra_columns, src_eff, src_ldts, src_source, source_model) -%}
 
 {%- set hash = var('hash', 'MD5') -%}
-{%- set system_record_value = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
+{%- set source_str = var('system_record_value', 'AUTOMATE_DV_SYSTEM') -%}
 {%- set columns = adapter.get_columns_in_relation(ref(source_model)) -%}
 {%- set col_definitions = [] -%}
 
@@ -44,29 +44,9 @@
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name | lower) == (src_source | lower) -%}
-
-        {%- if target.type != 'databricks' -%}
-            {% if col.is_string() %}
-                {%- set col_type -%}
-                    {{ col.dtype }}{% if target.type != 'bigquery' %}({{ col.string_size() }}){% endif %}
-                {%- endset -%}
-            {% else %}
-                {%- set col_type -%}
-                    VARCHAR
-                {%- endset -%}
-            {%- endif -%}
-        {%- else -%}
-            {%- if col.is_string() -%}
-                {%- set col_type = '{}({})'.format('VARCHAR', col.string_size()) -%}
-            {%- else -%}
-                {%- set col_type = col.dtype -%}
-            {%- endif -%}
-        {%- endif -%}
-
         {%- set col_sql -%}
-            CAST('{{ system_record_value }}' AS {{ col_type }}) AS {{ src_source }}
+            CAST('{{ source_str }}' AS {{ col.dtype }}) AS {{ src_source }}
         {%- endset -%}
-
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name | lower) is in (string_columns | map('lower') | list) -%}
