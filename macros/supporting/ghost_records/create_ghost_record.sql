@@ -44,9 +44,29 @@
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name | lower) == (src_source | lower) -%}
+
+        {%- if target.type != 'databricks' -%}
+            {% if col.is_string() %}
+                {%- set col_type -%}
+                    {{ col.dtype }}{% if target.type != 'bigquery' %}({{ col.string_size() }}){% endif %}
+                {%- endset -%}
+            {% else %}
+                {%- set col_type -%}
+                    VARCHAR
+                {%- endset -%}
+            {%- endif -%}
+        {%- else -%}
+            {%- if col.is_string() -%}
+                {%- set col_type = '{}({})'.format('VARCHAR', col.string_size()) -%}
+            {%- else -%}
+                {%- set col_type = col.dtype -%}
+            {%- endif -%}
+        {%- endif -%}
+
         {%- set col_sql -%}
-            CAST('{{ system_record_value }}' AS {{ col.dtype }}({{ system_record_value | length }})) AS {{ src_source }}
+            CAST('{{ system_record_value }}' AS {{ col_type }}) AS {{ src_source }}
         {%- endset -%}
+
         {%- do col_definitions.append(col_sql) -%}
 
     {%- elif (col_name | lower) is in (string_columns | map('lower') | list) -%}
