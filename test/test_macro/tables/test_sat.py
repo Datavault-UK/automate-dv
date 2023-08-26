@@ -36,7 +36,7 @@ def test_sat_correctly_generates_sql_for_payload_with_exclude_flag(request, gene
 
 
 @pytest.mark.single_source_sat
-def test_sat_correctly_generates_sql_for_delta_stage_false(request, generate_model):
+def test_sat_correctly_generates_sql_for_apply_source_filter_true(request, generate_model):
     var_dict = {'apply_source_filter': True}
 
     metadata = {
