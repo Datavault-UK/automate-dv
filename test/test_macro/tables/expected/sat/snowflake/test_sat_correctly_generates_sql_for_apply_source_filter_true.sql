@@ -10,7 +10,7 @@ latest_records AS (
            PARTITION BY current_records.CUSTOMER_PK
            ORDER BY current_records.LOAD_DATE DESC
         ) AS rank_num
-    FROM [DATABASE_NAME].[SCHEMA_NAME].test_sat_correctly_generates_sql_for_delta_stage_false AS current_records
+    FROM [DATABASE_NAME].[SCHEMA_NAME].test_sat_correctly_generates_sql_for_apply_source_filter_true AS current_records
         JOIN (
             SELECT DISTINCT source_data.CUSTOMER_PK
             FROM source_data
