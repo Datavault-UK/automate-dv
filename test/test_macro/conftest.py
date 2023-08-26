@@ -33,18 +33,18 @@ def generate_model(request):
         if selected_mark:
             if metadata:
                 automate_dv_generator.raw_vault_structure(model_name=request.node.name,
-                                                       vault_structure=macro_name,
-                                                       **metadata)
+                                                          vault_structure=macro_name,
+                                                          **metadata)
 
             elif selected_mark[0] in mark_metadata_mapping.keys() and selected_mark[0] != "macro":
                 automate_dv_generator.raw_vault_structure(model_name=request.node.name,
-                                                       vault_structure=macro_name,
-                                                       **mark_metadata_mapping[selected_mark[0]]())
+                                                          vault_structure=macro_name,
+                                                          **mark_metadata_mapping[selected_mark[0]]())
         elif "macro" in applied_marks:
 
             automate_dv_generator.macro_model(macro_name=macro_name,
-                                           model_name=request.node.name,
-                                           metadata=metadata)
+                                              model_name=request.node.name,
+                                              metadata=metadata)
 
         else:
             if applied_marks:

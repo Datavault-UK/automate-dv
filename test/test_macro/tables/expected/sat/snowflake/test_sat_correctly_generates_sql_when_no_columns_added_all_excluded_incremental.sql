@@ -42,7 +42,7 @@ unique_source_records AS (
 records_to_insert AS (
     SELECT frin.CUSTOMER_PK, frin.HASHDIFF, frin.TEST_COLUMN_1, frin.TEST_COLUMN_2, frin.TEST_COLUMN_3, frin.TEST_COLUMN_4, frin.TEST_COLUMN_5, frin.TEST_COLUMN_6, frin.TEST_COLUMN_7, frin.TEST_COLUMN_8, frin.TEST_COLUMN_9, frin.EFFECTIVE_FROM, frin.LOAD_DATE, frin.RECORD_SOURCE
     FROM first_record_in_set AS frin
-    LEFT JOIN LATEST_RECORDS lr
+    LEFT JOIN latest_records lr
         ON lr.CUSTOMER_PK = frin.CUSTOMER_PK
         AND lr.HASHDIFF = frin.HASHDIFF
         WHERE lr.HASHDIFF IS NULL

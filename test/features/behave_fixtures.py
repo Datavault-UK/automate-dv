@@ -78,3 +78,11 @@ def disable_hashing_upper_case(context):
     Stop hashing in upper case
     """
     context.hash_content_casing = 'DISABLED'
+
+
+@behave.fixture
+def apply_source_filter(context):
+    """
+    Indicate that the stage does not contain deltas
+    """
+    context.apply_source_filter = True

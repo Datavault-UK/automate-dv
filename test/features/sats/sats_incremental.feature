@@ -1,10 +1,4 @@
 Feature: [SAT] Sats loaded using Incremental Materialization
-#[SAT-IM-04] and [SAT-IM-05] do not pass when tests are run altogether
-# Tests from snowflake_sats.feature that should be moved here:
-# [SAT-03] Load data into an empty satellite
-# [SAT-07] Load data into a populated satellite where all records load
-# [SAT-08] Load data into a populated satellite where some records overlap
-# [SAT-09] Load data into a populated satellite where all PKs have a changed hashdiff/payload
 
   @fixture.satellite
   Scenario: [SAT-IM-01] Load data from empty 2nd stage into an non-existent satellite

@@ -343,7 +343,7 @@ def bridge(model_name, src_pk, as_of_dates_table, bridge_walk, stage_tables_ldts
 
 
 def ref_table(model_name, src_pk, source_model,
-              config,  src_ldts=None, src_source=None,
+              config, src_ldts=None, src_source=None,
               src_extra_columns=None, depends_on=""):
     """
     Generate a reference table model template
@@ -847,6 +847,18 @@ def append_end_date_config(context, config: dict) -> dict:
         if context.auto_end_date:
             config = {**config,
                       "is_auto_end_dating": True}
+
+    return config
+
+
+def append_apply_source_filter_config(context, config: dict) -> dict:
+    """
+    Append apply_source_filter config if attribute is present.
+    """
+
+    if hasattr(context, "apply_source_filter"):
+        config = {**config,
+                  "apply_source_filter": context.apply_source_filter}
 
     return config
 

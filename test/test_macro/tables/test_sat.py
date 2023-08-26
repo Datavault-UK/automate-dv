@@ -36,6 +36,40 @@ def test_sat_correctly_generates_sql_for_payload_with_exclude_flag(request, gene
 
 
 @pytest.mark.single_source_sat
+def test_sat_correctly_generates_sql_for_apply_source_filter_true(request, generate_model):
+    var_dict = {'apply_source_filter': True}
+
+    metadata = {
+        "config": var_dict,
+        "source_model": "raw_source_sat",
+        "src_pk": "CUSTOMER_PK",
+        "src_hashdiff": "HASHDIFF",
+        "src_payload": [
+            "TEST_COLUMN_1",
+            "TEST_COLUMN_2"
+        ],
+        "src_eff": "EFFECTIVE_FROM",
+        "src_ldts": "LOAD_DATE",
+        "src_source": "RECORD_SOURCE"
+    }
+
+    generate_model(metadata)
+
+    dbt_logs_first_run = dbt_runner.run_dbt_models(mode='run',
+                                                   model_names=[request.node.name],
+                                                   full_refresh=True)
+
+    dbt_logs_inc_run = dbt_runner.run_dbt_models(model_names=[request.node.name])
+
+    actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
+    expected_sql = macro_test_helpers.retrieve_expected_sql(request)
+
+    assert macro_test_helpers.is_successful_run(dbt_logs_first_run)
+    assert macro_test_helpers.is_successful_run(dbt_logs_inc_run)
+    assert actual_sql == expected_sql
+
+
+@pytest.mark.single_source_sat
 def test_sat_correctly_generates_sql_when_hashdiff_columns_is_added_to_excluded(request, generate_model):
     metadata = {
         "source_model": "raw_source_sat",

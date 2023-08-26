@@ -668,6 +668,7 @@ def satellite_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
                 "CUSTOMER_MT_ID": "VARCHAR(13)",
+                "EFFECTIVE_FROM": "DATETIME2",
                 "LOAD_DATE": "DATETIME2",
                 "SOURCE": "VARCHAR(50)"
             }
@@ -680,6 +681,7 @@ def satellite_sqlserver(context):
                 "CUSTOMER_PHONE": "VARCHAR(50)",
                 "CUSTOMER_DOB": "DATE",
                 "LOAD_DATE": "DATE",
+                "EFFECTIVE_FROM": "DATE",
                 "SOURCE": "VARCHAR(50)"
             }
         },
