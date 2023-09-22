@@ -15,12 +15,12 @@
 
     {{ automate_dv.log_relation_sources(this, source_model | length) }}
 
-    {{ automate_dv.prepend_generated_by() }}
+    {{- automate_dv.prepend_generated_by() }}
 
     {{ adapter.dispatch('link', 'automate_dv')(src_pk=src_pk, src_fk=src_fk,
-                                             src_extra_columns=src_extra_columns,
-                                             src_ldts=src_ldts, src_source=src_source,
-                                             source_model=source_model) -}}
+                                               src_extra_columns=src_extra_columns,
+                                               src_ldts=src_ldts, src_source=src_source,
+                                               source_model=source_model) -}}
 
 {%- endmacro -%}
 
@@ -62,6 +62,7 @@ row_rank_{{ source_number }} AS (
     {%- set ns.last_cte = "row_rank_{}".format(source_number) %}
 ),{{ "\n" if not loop.last }}
 {% endfor -%}
+
 {% if stage_count > 1 %}
 stage_union AS (
     {%- for src in source_model %}

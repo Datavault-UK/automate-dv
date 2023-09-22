@@ -17,7 +17,7 @@
 {%- macro default__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_DATE('{{ start_timestamp }}'))) AS period_of_load
+        SELECT DATE_TRUNC('{{ period }}', DATEADD({{ period }}, {{ offset }}, TO_TIMESTAMP('{{ start_timestamp }}'))) AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
@@ -31,7 +31,13 @@
 {%- macro bigquery__get_period_of_load(period, offset, start_timestamp) -%}
 
     {% set period_of_load_sql -%}
+        {%- if period is in ['millisecond', 'microsecond', 'second', 'minute', 'hour'] -%}
+        SELECT TIMESTAMP_TRUNC(TIMESTAMP_ADD( TIMESTAMP('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
+        {%- elif period is in ['day', 'week', 'month', 'quarter', 'year'] -%}
         SELECT DATE_TRUNC(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
+        {%- else -%}
+        SELECT DATE_TRUNC(DATE_ADD( DATE('{{ start_timestamp }}'), INTERVAL {{ offset }} {{ period }}), {{ period }}  ) AS PERIOD_OF_LOAD
+        {%- endif -%}
     {%- endset %}
 
     {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}
@@ -63,13 +69,10 @@
 {%- endmacro -%}
 
 
-
 {%- macro postgres__get_period_of_load(period, offset, start_timestamp) -%}
     {# Postgres uses different DateTime arithmetic #}
     {% set period_of_load_sql -%}
-        SELECT DATE_TRUNC('{{ period }}',
-               TO_TIMESTAMP('{{ start_timestamp }}', 'YYYY-MM-DD HH24:MI:SS') + interval '{{ offset }} {{ period }}'
-        ) AS period_of_load
+        SELECT DATE_TRUNC('{{ period }}', TIMESTAMP '{{ start_timestamp }}' + INTERVAL '{{ offset }} {{ period }}') AS period_of_load
     {%- endset %}
 
     {% set period_of_load_dict = automate_dv.get_query_results_as_dict(period_of_load_sql) %}

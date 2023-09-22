@@ -5,17 +5,25 @@
 
 {% materialization vault_insert_by_period, default -%}
 
-    {% if target.type == "postgres" and execute %}
-        {{ exceptions.raise_compiler_error("The vault_insert_by_period materialisation is currently unavailable on Postgres.") }}
-    {% endif %}
-
     {%- set full_refresh_mode = (should_full_refresh()) -%}
+
+    {%- set period = config.get('period', default='day') -%}
+
+    {#- Raise the errors/warnings in this order so that we do not get both -#}
+    {%- if period == 'microsecond' -%}
+        {{ automate_dv.datepart_too_small_error(period=period) }}
+    {%- elif period is in ['millisecond', 'second', 'minute', 'hour'] -%}
+        {{ automate_dv.datepart_not_recommended_warning(period=period) }}
+    {%- endif -%}
+
+    {{ automate_dv.experimental_not_recommended_warning(func_name='vault_insert_by_period') }}
 
     {% if target.type == "sqlserver" %}
         {%- set target_relation = this.incorporate(type='table') -%}
     {%  else %}
         {%- set target_relation = this -%}
     {% endif %}
+
     {%- set existing_relation = load_relation(this) -%}
     {%- set tmp_relation = make_temp_relation(target_relation) -%}
 
@@ -24,7 +32,6 @@
 
     {%- set start_stop_dates = automate_dv.get_start_stop_dates(timestamp_field, date_source_models) | as_native -%}
 
-    {%- set period = config.get('period', default='day') -%}
     {%- set to_drop = [] -%}
 
     {%- do automate_dv.check_placeholder(sql) -%}
@@ -38,10 +45,10 @@
 
     {% if existing_relation is none %}
 
-        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(sql, timestamp_field,
-                                                                       start_stop_dates.start_date,
-                                                                       start_stop_dates.stop_date,
-                                                                       0, period) %}
+        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(core_sql=sql, timestamp_field=timestamp_field,
+                                                                       start_timestamp=start_stop_dates.start_date,
+                                                                       stop_timestamp=start_stop_dates.stop_date,
+                                                                       offset=0, period=period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
         {% do to_drop.append(tmp_relation) %}
 
@@ -51,17 +58,21 @@
         {% do adapter.drop_relation(existing_relation) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
-        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(sql, timestamp_field,
-                                                                       start_stop_dates.start_date,
-                                                                       start_stop_dates.stop_date,
-                                                                       0, period) %}
+        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(core_sql=sql, timestamp_field=timestamp_field,
+                                                                       start_timestamp=start_stop_dates.start_date,
+                                                                       stop_timestamp=start_stop_dates.stop_date,
+                                                                       offset=0, period=period) %}
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
 
     {% elif full_refresh_mode %}
-        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(sql, timestamp_field,
-                                                                       start_stop_dates.start_date,
-                                                                       start_stop_dates.stop_date,
-                                                                       0, period) %}
+        {% set filtered_sql = automate_dv.replace_placeholder_with_period_filter(core_sql=sql, timestamp_field=timestamp_field,
+                                                                       start_timestamp=start_stop_dates.start_date,
+                                                                       stop_timestamp=start_stop_dates.stop_date,
+                                                                       offset=0, period=period) %}
+        {% if target.type in ['postgres', 'sqlserver'] %}
+            {{ automate_dv.drop_temporary_special(target_relation) }}
+        {% endif %}
+
         {% set build_sql = create_table_as(False, target_relation, filtered_sql) %}
     {% else %}
         {% set period_boundaries = automate_dv.get_period_boundaries(target_relation,
@@ -94,7 +105,11 @@
             {# but MSSQL will fail to drop any temporary table created by a previous loop iteration #}
             {# See MSSQL note and drop code below #}
 
-            {# [ ] TODO check dbt postgres implementation for a possible fix #}
+            {# Postgres needs to have an alias appended #}
+            {% if target.type == "postgres" %}
+                {% set tmp_table_sql = tmp_table_sql ~ ' AS SUBQUERY_ALIAS' %}
+            {% endif %}
+
             {% call statement() -%}
                 {{ create_table_as(True, tmp_relation, tmp_table_sql) }}
             {%- endcall %}
