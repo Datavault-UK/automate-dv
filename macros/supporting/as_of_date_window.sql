@@ -79,7 +79,7 @@ new_rows_as_of AS (
     WHERE a.AS_OF_DATE >= (SELECT LAST_SAFE_LOAD_DATETIME FROM last_safe_load_datetime)
     UNION
     {%- endif %}
-    SELECT as_of_date
+    SELECT AS_OF_DATE
     FROM as_of_grain_new_entries
 ),
 

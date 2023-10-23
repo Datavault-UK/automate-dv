@@ -128,7 +128,7 @@ records_to_insert AS (
         SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
         FROM first_record_in_set AS frin
         {%- if automate_dv.is_any_incremental() %}
-        LEFT JOIN LATEST_RECORDS lr
+        LEFT JOIN latest_records lr
             ON {{ automate_dv.multikey(src_pk, prefix=['lr','frin'], condition='=') }}
             AND {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'frin') }}
             WHERE {{ automate_dv.prefix([src_hashdiff], 'lr', alias_target='target') }} IS NULL
