@@ -128,11 +128,13 @@ ghost AS (
 records_to_insert AS (
     {%- if enable_ghost_record %}
     SELECT
-        {{ automate_dv.alias_all(source_cols, 'g') }}
-        FROM ghost AS g
-        {%- if automate_dv.is_any_incremental() %}
-        WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
-        {%- endif %}
+    {{ automate_dv.alias_all(source_cols, 'g') }}
+    FROM ghost AS g
+    {%- if automate_dv.is_any_incremental() %}
+    WHERE NOT EXISTS ( SELECT 1 FROM {{ this }} AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='target') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+    {% else %}
+    WHERE NOT EXISTS ( SELECT 1 FROM source_data AS h WHERE {{ automate_dv.prefix([src_hashdiff], 'h', alias_target='source') }} = {{ automate_dv.prefix([src_hashdiff], 'g') }} )
+    {%- endif %}
     UNION {%- if target.type == 'bigquery' %} DISTINCT {%- endif %}
     {%- endif %}
     SELECT {{ automate_dv.alias_all(source_cols, 'frin') }}
