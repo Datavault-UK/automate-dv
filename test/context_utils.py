@@ -1,7 +1,7 @@
 import logging
 import os
 import re
-from hashlib import md5, sha256
+from hashlib import md5, sha256, sha1
 
 import pandas as pd
 from behave.model import Table
@@ -330,6 +330,8 @@ def calc_hash(columns_as_series: Series) -> Series:
     patterns = {
         'md5': {
             'pattern': r"^(?:md5\(')(.*)(?:'\))", 'function': md5},
+        'sha1': {
+            'pattern': r"^(?:sha1\(')(.*)(?:'\))", 'function': sha1},
         'sha': {
             'pattern': r"^(?:sha\(')(.*)(?:'\))", 'function': sha256}}
 

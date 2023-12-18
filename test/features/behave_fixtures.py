@@ -25,6 +25,29 @@ def enable_sha(context):
 
 
 @behave.fixture
+def enable_sha1(context):
+    """
+    Augment the metadata for a vault structure load to work with SHA hashing instead of MD5
+    """
+
+    context.hashing = "SHA1"
+
+    if hasattr(context, "seed_config"):
+
+        config = dict(context.seed_config)
+
+        for k, v in config.items():
+
+            for c, t in config[k]["column_types"].items():
+
+                if t == "BINARY(16)":
+                    config[k]["column_types"][c] = "BINARY(20)"
+
+    else:
+        raise ValueError("sha behave.fixture used before vault structure behave.fixture.")
+
+
+@behave.fixture
 def enable_auto_end_date(context):
     """
     Indicate that auto end-dating on effectivity satellites should be enabled

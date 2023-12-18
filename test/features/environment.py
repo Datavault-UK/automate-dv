@@ -18,6 +18,7 @@ from test.features.ref_tables import fixtures_ref_table
 
 fixture_registry_utils = {
     "fixture.enable_sha": behave_fixtures.enable_sha,
+    "fixture.enable_sha1": behave_fixtures.enable_sha1,
     "fixture.enable_auto_end_date": behave_fixtures.enable_auto_end_date,
     "fixture.enable_full_refresh": behave_fixtures.enable_full_refresh,
     "fixture.disable_union": behave_fixtures.disable_union,
