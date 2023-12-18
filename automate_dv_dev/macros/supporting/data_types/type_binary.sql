@@ -12,6 +12,8 @@
         BINARY(16)
     {%- elif var('hash', 'MD5') | lower == 'sha' -%}
         BINARY(32)
+    {%- elif var('hash', 'MD5') | lower == 'sha1' -%}
+        BINARY(20)
     {%- else -%}
         BINARY(16)
     {%- endif -%}
