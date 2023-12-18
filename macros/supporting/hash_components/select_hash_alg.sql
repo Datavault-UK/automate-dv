@@ -5,9 +5,10 @@
 
 {%- macro select_hash_alg(hash) -%}
 
-    {%- set available_hash_algorithms = ['md5', 'sha'] -%}
+    {%- set available_hash_algorithms = ['md5', 'sha', 'sha1'] -%}
 
     {%- if execute and hash | lower not in available_hash_algorithms %}
+
         {%- do exceptions.warn("Configured hash ('{}') not recognised. Must be one of: {} (case insensitive)".format(hash | lower, available_hash_algorithms | join(', '))) -%}
     {%- endif -%}
 
@@ -15,6 +16,8 @@
         {%- do return(automate_dv.hash_alg_md5()) -%}
     {%- elif hash | lower == 'sha' -%}
         {%- do return(automate_dv.hash_alg_sha256()) -%}
+    {%- elif hash | lower == 'sha1' -%}
+        {%- do return(automate_dv.hash_alg_sha1()) -%}
     {%- else -%}
         {%- do return(automate_dv.hash_alg_md5()) -%}
     {%- endif -%}
@@ -100,5 +103,18 @@
 {% macro databricks__hash_alg_sha256() -%}
 
     {% do return('UPPER(SHA2([HASH_STRING_PLACEHOLDER], 256))') %}
+
+{% endmacro %}
+
+
+{%- macro hash_alg_sha1() -%}
+
+    {{- adapter.dispatch('hash_alg_sha1', 'automate_dv')() -}}
+
+{%- endmacro %}
+
+{% macro default__hash_alg_sha1() -%}
+
+    {% do return(automate_dv.cast_binary('SHA1_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
