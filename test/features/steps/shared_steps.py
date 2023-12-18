@@ -594,6 +594,32 @@ def stage_processing(context, processed_stage_name):
     assert "Completed successfully" in logs
 
 
+@step("I stage the {processed_stage_name} data, I get a '{warn_message}' warning.")
+def stage_processing(context, processed_stage_name, warn_message):
+    stage_metadata = set_stage_metadata(context, stage_model_name=processed_stage_name)
+
+    args = {k: v for k, v in stage_metadata.items() if
+            ["hash", "null_key_required", "null_key_optional", "enable_ghost_records", "system_record_value",
+             "hash_content_casing"]}
+    text_args = automate_dv_generator.handle_step_text_dict(context)
+
+    automate_dv_generator.raw_vault_structure(model_name=processed_stage_name,
+                                              config=text_args,
+                                              vault_structure="stage",
+                                              source_model=context.raw_stage_models,
+                                              hashed_columns=context.hashed_columns[processed_stage_name],
+                                              derived_columns=context.derived_columns[processed_stage_name],
+                                              ranked_columns=context.ranked_columns[processed_stage_name],
+                                              null_columns=context.null_columns[processed_stage_name],
+                                              include_source_columns=context.include_source_columns)
+
+    logs = dbt_runner.run_dbt_models(mode="run", model_names=[processed_stage_name],
+                                     args=args)
+
+    assert "Completed successfully" in logs
+    assert warn_message in logs
+
+
 @then("the {model_name} table should contain expected data")
 def expect_data(context, model_name):
     if env_utils.platform() == "sqlserver":
@@ -867,3 +893,7 @@ def step_impl(context, table_name):
     logs = dbt_runner.run_dbt_command(["dbt", "test"])
 
     assert "1 of 1 PASS" in logs
+
+@then("if I use sha1 this will warn with {warn_message}' warn message")
+def step_imp(context, warn_message):
+    pass

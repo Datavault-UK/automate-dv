@@ -625,3 +625,26 @@ Feature: [HUB] Hubs
       | md5('1004') | 1004    | TPCH_CUSTOMER  | 1993-01-01 | *      |
       | md5('1005') | 1005    | TPCH_CUSTOMER  | 1993-01-01 | *      |
       | md5('1006') | 1006    | TPCH_CUSTOMER  | 1993-01-01 | *      |
+
+  @postgres
+  @fixture.single_source_hub
+  @fixture.enable_sha1
+  Scenario: Postgres defaults to MD5 when hash is set to SHA1
+    Given the HUB table does not exist
+    And the RAW_STAGE table contains data
+      | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1001        | Alice         | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 | TPCH   |
+      | 1002        | Bob           | 1993-01-01 | TPCH   |
+      | 1003        | Chad          | 1993-01-01 | TPCH   |
+      | 1004        | Dom           | 1993-01-01 | TPCH   |
+    And I stage the STG_CUSTOMER data, I get a 'Configured hash ('sha1') is not supported on Postgres.' warning.
+    When I load the HUB hub
+    Then the HUB table should contain expected data
+      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | md5('1001') | 1001        | 1993-01-01 | TPCH   |
+      | md5('1002') | 1002        | 1993-01-01 | TPCH   |
+      | md5('1003') | 1003        | 1993-01-01 | TPCH   |
+      | md5('1004') | 1004        | 1993-01-01 | TPCH   |

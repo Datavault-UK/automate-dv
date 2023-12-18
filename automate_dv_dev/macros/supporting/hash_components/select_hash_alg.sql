@@ -9,8 +9,8 @@
 
     {%- if execute and hash | lower == 'sha1' and  target.type == 'postgres' -%}
 
+        {%- do exceptions.warn("Configured hash ('{}') is not supported on Postgres. Defaulting to hash 'md5', alternativley configure hash to be 'sha' for SHA256 hashing.".format(hash | lower)) -%}
         {%- set hash = 'md5' -%}
-        {%- do exceptions.warn("Configured hash ('{}') is not surported on Postgres. Defaulting to hash 'md5', alternativley configure hash to be 'sha' for SHA256 hashing.".format(hash | lower)) -%}
 
     {%- endif -%}
 
