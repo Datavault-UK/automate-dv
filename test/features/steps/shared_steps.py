@@ -357,9 +357,11 @@ def load_table(context, model_name, vault_structure):
     is_full_refresh = step_helpers.is_full_refresh(context)
     context.enable_ghost_records = getattr(context, "enable_ghost_records", None)
     context.system_record_value = getattr(context, "system_record_value", None)
+    context.hash = getattr(context, "hashing", None)
 
     args = {"enable_ghost_records": context.enable_ghost_records,
-            "system_record_value": context.system_record_value}
+            "system_record_value": context.system_record_value,
+            "hash": context.hash}
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
