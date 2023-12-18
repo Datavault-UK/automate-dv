@@ -25,6 +25,8 @@
             VARCHAR(16)
         {%- elif var('hash', 'MD5') | lower == 'sha' -%}
             VARCHAR(32)
+        {%- elif var('hash', 'MD5') | lower == 'sha1' -%}
+            VARCHAR(20)
         {%- endif -%}
     {%- else -%}
         VARCHAR({{ char_length }})
