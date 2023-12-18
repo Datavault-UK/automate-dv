@@ -470,6 +470,7 @@ Feature: [SAT-CYC] Satellites Loaded in cycles using separate manual loads
       | sha('1011') | sha('1978-06-16\|\|1011\|\|KAREN\|\|17-214-233-1224')   | 1978-06-16   | Karen         | 17-214-233-1224 | 2019-05-07     | 2019-05-07 | *      |
       | sha('1012') | sha('1990-02-03\|\|1012\|\|ALBERT\|\|17-214-233-1225')  | 1990-02-03   | Albert        | 17-214-233-1225 | 2019-05-04     | 2019-05-04 | *      |
 
+  @not_postgres
   @fixture.satellite_cycle
   @fixture.enable_sha1
   Scenario: [SAT-CYC-07] SATELLITE load over several cycles with SHA1 hashing

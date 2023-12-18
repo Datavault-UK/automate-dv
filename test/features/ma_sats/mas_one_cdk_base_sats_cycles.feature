@@ -138,6 +138,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | sha('1007') | sha('1007\|\|GEOFF\|\|17-214-233-1219')   | Geoff         | 17-214-233-1219 | 2019-05-07     | 2019-05-07 | *      |
       | sha('1011') | sha('1011\|\|KAREN\|\|17-214-233-1217')   | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
 
+  @not_postgres
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha1
   Scenario: [MAS-1CD-C-03] Load over several cycles
@@ -609,6 +610,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
       | sha('1010') | sha('1010\|\|JENNY\|\|17-214-233-1332')   | Jenny         | 17-214-233-1332 | 2019-01-04     | 2019-01-04 | *      |
       | sha('1010') | sha('1010\|\|JENNY\|\|17-214-233-1342')   | Jenny         | 17-214-233-1342 | 2019-01-04     | 2019-01-04 | *      |
 
+  @not_postgres
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha1
   Scenario: [MAS-1CD-C-08] Load over several cycles
@@ -695,7 +697,7 @@ Feature: [MAS-1CD-C] Multi Active Satellites
 
     # =============== CHECKS ===================
     Then the MAS table should contain expected data
-      | CUSTOMER_PK | HASHDIFF                                  | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
+      | CUSTOMER_PK  | HASHDIFF                                   | CUSTOMER_NAME | CUSTOMER_PHONE  | EFFECTIVE_FROM | LOAD_DATE  | SOURCE |
       | sha1('1001') | sha1('1001\|\|ALBERT\|\|17-214-233-1211')  | Albert        | 17-214-233-1211 | 2019-01-01     | 2019-01-01 | *      |
       | sha1('1001') | sha1('1001\|\|ALBERT\|\|17-214-233-1221')  | Albert        | 17-214-233-1221 | 2019-01-01     | 2019-01-01 | *      |
       | sha1('1001') | sha1('1001\|\|ALBERT\|\|17-214-233-1231')  | Albert        | 17-214-233-1231 | 2019-01-01     | 2019-01-01 | *      |

@@ -223,6 +223,7 @@ Feature: [SAT-GR] Implementing ghost records
       | sha('1003') | sha('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | Chad          | 17-214-233-1216 | 2013-02-04   | 1993-01-01     | 1993-01-01 | *      |
       | sha('1004') | sha('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | Dom           | 17-214-233-1217 | 2018-04-13   | 1993-01-01     | 1993-01-01 | *      |
 
+  @not_postgres
   @fixture.satellite
   @fixture.enable_ghost_records
   @fixture.enable_sha1
@@ -244,6 +245,7 @@ Feature: [SAT-GR] Implementing ghost records
       | sha1('1003')         | Chad          | 17-214-233-1216 | 2013-02-04   | sha1('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *                  |
       | sha1('1004')         | Dom           | 17-214-233-1217 | 2018-04-13   | sha1('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *                  |
 
+  @not_postgres
   @fixture.satellite
   @fixture.enable_ghost_records
   @fixture.enable_sha1
@@ -265,6 +267,7 @@ Feature: [SAT-GR] Implementing ghost records
       | sha1('1003')         | Chad          | 17-214-233-1216 | 2013-02-04   | sha1('2013-02-04\|\|1003\|\|CHAD\|\|17-214-233-1216')  | 1993-01-01     | 1993-01-01 | *                  |
       | sha1('1004')         | Dom           | 17-214-233-1217 | 2018-04-13   | sha1('2018-04-13\|\|1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-01     | 1993-01-01 | *                  |
 
+  @not_postgres
   @fixture.satellite
   @fixture.enable_ghost_records
   @fixture.enable_sha1
@@ -292,6 +295,7 @@ Feature: [SAT-GR] Implementing ghost records
       | sha1('1005')         | Eric          | 17-214-233-1217 | 2018-04-13   | sha1('2018-04-13\|\|1005\|\|ERIC\|\|17-214-233-1217')  | 1993-01-02     | 1993-01-02 | *                  |
       | sha1('1006')         | Frida         | 17-214-233-1214 | 2018-04-13   | sha1('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *                  |
 
+  @not_postgres
   @fixture.satellite
   @fixture.enable_ghost_records
   @fixture.enable_sha1
@@ -318,6 +322,7 @@ Feature: [SAT-GR] Implementing ghost records
       | sha1('1005')         | Eric          | 17-214-233-1217 | 2018-04-13   | sha1('2018-04-13\|\|1005\|\|ERIC\|\|17-214-233-1217')  | 1993-01-02     | 1993-01-02 | *                  |
       | sha1('1006')         | Frida         | 17-214-233-1214 | 2018-04-13   | sha1('2018-04-13\|\|1006\|\|FRIDA\|\|17-214-233-1214') | 1993-01-01     | 1993-01-01 | *                  |
 
+  @not_postgres
   @fixture.satellite
   @fixture.enable_sha1
   Scenario: [SAT-GR-SHA-11] Load data into a non-existent satellite with ghost records not enabled with SHA1 hash

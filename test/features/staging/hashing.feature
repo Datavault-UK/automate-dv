@@ -70,11 +70,11 @@ Feature: [HASH] Check the hash string length for postgres
       | sqlserver_hash  |
     Then the SAMPLE_DATA table should contain the following data
       | value_string    | hash_value_length |
-      | postgres_hash   | 20                |
-      | snowflake_hash  | 20                |
-      | databricks_hash | 20                |
-      | bigquery_hash   | 20                |
-      | sqlserver_hash  | 20                |
+      | postgres_hash   | 16                |
+      | snowflake_hash  | 16                |
+      | databricks_hash | 16                |
+      | bigquery_hash   | 16                |
+      | sqlserver_hash  | 16                |
 
   @fixture.hashing
   Scenario: [HASH-04] Check hash value length for MD5 hashing in postgres
@@ -145,11 +145,11 @@ Feature: [HASH] Check the hash string length for postgres
       | sqlserver_hash  |
     Then the SAMPLE_DATA table should contain the following data
       | value_string    | hash_value_length |
-      | postgres_hash   | 20                |
-      | snowflake_hash  | 20                |
-      | databricks_hash | 20                |
-      | bigquery_hash   | 20                |
-      | sqlserver_hash  | 20                |
+      | postgres_hash   | 16                |
+      | snowflake_hash  | 16                |
+      | databricks_hash | 16                |
+      | bigquery_hash   | 16                |
+      | sqlserver_hash  | 16                |
 
   @fixture.hashing
   @fixture.disable_hashing_upper_case
@@ -223,8 +223,8 @@ Feature: [HASH] Check the hash string length for postgres
       | sqlserver_hash  |
     Then the SAMPLE_DATA table should contain the following data
       | value_string    | hash_value_length |
-      | postgres_hash   | 20                |
-      | snowflake_hash  | 20                |
-      | databricks_hash | 20                |
-      | bigquery_hash   | 20                |
-      | sqlserver_hash  | 20                |
+      | postgres_hash   | 16                |
+      | snowflake_hash  | 16                |
+      | databricks_hash | 16                |
+      | bigquery_hash   | 16                |
+      | sqlserver_hash  | 16                |

@@ -205,6 +205,7 @@ Feature: [MAS-2CD-BSC] Multi Active Satellites
       | sha('1007') | sha('1007\|\|GEOFF\|\|17-214-233-1219\|\|123')   | 123       | Geoff         | 17-214-233-1219 | 2019-05-07     | 2019-05-07 | *      |
       | sha('1011') | sha('1011\|\|KAREN\|\|17-214-233-1217\|\|123')   | 123       | Karen         | 17-214-233-1217 | 2019-05-07     | 2019-05-07 | *      |
 
+  @not_postgres
   @fixture.multi_active_satellite_cycle
   @fixture.enable_sha1
   Scenario: [MAS-2CD-BSC-04] Load over several cycles

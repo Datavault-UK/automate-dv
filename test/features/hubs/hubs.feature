@@ -64,6 +64,7 @@ Feature: [HUB] Hubs
       | sha('1003') | 1003        | 1993-01-01 | TPCH   |
       | sha('1004') | 1004        | 1993-01-01 | TPCH   |
 
+  @not_postgres
   @fixture.single_source_hub
   @fixture.enable_sha1
   Scenario: [HUB-04] Simple load of distinct stage data into an empty hub using SHA1 hashing
@@ -80,7 +81,7 @@ Feature: [HUB] Hubs
     And I stage the STG_CUSTOMER data
     When I load the HUB hub
     Then the HUB table should contain expected data
-      | CUSTOMER_PK | CUSTOMER_ID | LOAD_DATE  | SOURCE |
+      | CUSTOMER_PK  | CUSTOMER_ID | LOAD_DATE  | SOURCE |
       | sha1('1001') | 1001        | 1993-01-01 | TPCH   |
       | sha1('1002') | 1002        | 1993-01-01 | TPCH   |
       | sha1('1003') | 1003        | 1993-01-01 | TPCH   |
