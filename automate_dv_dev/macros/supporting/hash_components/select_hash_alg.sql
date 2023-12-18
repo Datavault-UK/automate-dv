@@ -7,6 +7,13 @@
 
     {%- set available_hash_algorithms = ['md5', 'sha', 'sha1'] -%}
 
+    {%- if execute and hash | lower == 'sha1' and  target.type == 'postgres' -%}
+
+        {%- set hash = 'md5' -%}
+        {%- do exceptions.warn("Configured hash ('{}') is not surported on Postgres. Defaulting to hash 'md5', alternativley configure hash to be 'sha' for SHA256 hashing.".format(hash | lower)) -%}
+
+    {%- endif -%}
+
     {%- if execute and hash | lower not in available_hash_algorithms %}
 
         {%- do exceptions.warn("Configured hash ('{}') not recognised. Must be one of: {} (case insensitive)".format(hash | lower, available_hash_algorithms | join(', '))) -%}
@@ -144,6 +151,6 @@
 
 {% macro databricks__hash_alg_sha1() -%}
 
-    {% do return('UPPER(SHA1([HASH_STRING_PLACEHOLDER], 256))') %}
+    {% do return('UPPER(SHA1([HASH_STRING_PLACEHOLDER]))') %}
 
 {% endmacro %}
