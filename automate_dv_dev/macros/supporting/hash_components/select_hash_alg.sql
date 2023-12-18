@@ -106,6 +106,7 @@
 
 {% endmacro %}
 
+{#- SHA1 -#}
 
 {%- macro hash_alg_sha1() -%}
 
@@ -116,5 +117,33 @@
 {% macro default__hash_alg_sha1() -%}
 
     {% do return(automate_dv.cast_binary('SHA1_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
+
+{% endmacro %}
+
+{% macro bigquery__hash_alg_sha1() -%}
+
+    {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA1([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
+
+{% endmacro %}
+
+{% macro sqlserver__hash_alg_sha1() -%}
+
+    {% do return(automate_dv.cast_binary("HASHBYTES('SHA1', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
+
+{% endmacro %}
+
+{% macro postgres__hash_alg_sha1() -%}
+    {#- * MD5 is simple function call to md5(val) -#}
+    {#- * SHA256/SHA1 needs input cast to BYTEA and then its BYTEA result encoded as hex text output -#}
+    {#- e.g. ENCODE(SHA256(1)(CAST(val AS BYTEA)), 'hex') -#}
+    {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
+
+    {% do return("SHA1(CAST([HASH_STRING_PLACEHOLDER] AS BYTEA))")  %}
+
+{% endmacro %}
+
+{% macro databricks__hash_alg_sha1() -%}
+
+    {% do return('UPPER(SHA1([HASH_STRING_PLACEHOLDER], 256))') %}
 
 {% endmacro %}
