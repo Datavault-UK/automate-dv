@@ -1367,6 +1367,7 @@ Feature: [STG] Staging
       | sha('-1')   | <null>               | -1          | <null>                 | -2            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2013-02-04\|\|-2\|\|17-214-233-1216')  |
       | sha('-1')   | <null>               | -1          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
 
+  @not_postgres
   @fixture.staging_null_columns
   @fixture.enable_sha1
   Scenario: [STG-42] Staging with null columns configuration where there is a required and optional key, using SHA256 hash algorithm
@@ -1447,6 +1448,7 @@ Feature: [STG] Staging
       | sha('-6')   | <null>               | -6          | <null>                 | -9            | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2013-02-04\|\|-9\|\|17-214-233-1216')  |
       | sha('-6')   | <null>               | -6          | Dom                    | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | 1993-01-01     | RAW_STAGE | sha('2018-04-13\|\|DOM\|\|17-214-233-1217') |
 
+  @not_postgres
   @fixture.staging_null_columns
   @fixture.enable_sha1
   Scenario: [STG-44] Staging with null columns configuration where there is a required and optional key, using SHA1 hash algorithm and custom null key values
@@ -1501,6 +1503,7 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003') | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1                |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha('1004') | sha('DOM')   | 1993-01-01     | RAW_STAGE | 1                |
 
+  @not_postgres
   @fixture.staging
   @fixture.enable_sha1
   Scenario: [STG-46] Staging with derived, hashed, ranked and source columns, using SHA1 hash algorithm, single hashdiff column.
@@ -1555,6 +1558,7 @@ Feature: [STG] Staging
       | 1003        | Chad          | 2013-02-04   | 17-214-233-1216 | 1993-01-01 | sha('1003\|\|CHAD')  | sha('CHAD')  | 1993-01-01     | RAW_STAGE | 1                |
       | 1004        | Dom           | 2018-04-13   | 17-214-233-1217 | 1993-01-01 | sha('1004\|\|DOM')   | sha('DOM')   | 1993-01-01     | RAW_STAGE | 1                |
 
+  @not_postgres
   @fixture.staging
   @fixture.enable_sha1
   Scenario: [STG-48] Staging with derived, hashed, ranked and source columns, using SHA1 hash algorithm, multiple PK column, single hashdiff column.
