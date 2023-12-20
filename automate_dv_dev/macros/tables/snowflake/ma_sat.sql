@@ -59,12 +59,12 @@ WITH source_data AS (
 latest_records AS (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'mas', alias_target='target') }},
            mas.latest_rank,
-           ROW_NUMBER() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
+           RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
                               ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
            ) AS check_rank
     FROM (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'inner_mas', alias_target='target') }},
-           ROW_NUMBER() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
+           RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'inner_mas') }}
                         ORDER BY {{ automate_dv.prefix([src_ldts], 'inner_mas') }} DESC
            ) AS latest_rank
     FROM {{ this }} AS inner_mas
