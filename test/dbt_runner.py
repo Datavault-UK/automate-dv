@@ -1,4 +1,7 @@
 import json
+import os
+
+from dbt.cli.main import dbtRunnerResult
 import logging
 import sys
 
@@ -8,33 +11,37 @@ import test
 from env import env_utils
 
 
-def run_dbt_command(command) -> str:
+def run_dbt_command(dbt_class, command) -> bool:
     """
     Run a command in dbt and capture dbt logs.
         :param command: Command to run.
         :return: dbt logs
     """
 
-    if 'dbt' not in command and isinstance(command, list):
-        command = ['dbt'] + command
-    elif 'dbt' not in command and isinstance(command, str):
-        command = ['dbt', command]
-
-    joined_command = " ".join(command)
-
-    test.logger.log(msg=f"Running on platform {str(env_utils.platform()).upper()}", level=logging.INFO)
-
-    test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
-
-    child = pexpect.spawn(command=joined_command, cwd=test.TEST_PROJECT_ROOT, encoding="utf-8", timeout=1000)
-    child.logfile_read = sys.stdout
-    logs = child.read()
-    child.close()
-
-    return logs
+#    if 'dbt' not in command and isinstance(command, list):
+#        command = command
+#    elif 'dbt' not in command and isinstance(command, str):
+#        command = ['dbt', command]
+    if 'dbt' in command and isinstance(command, list):
+        command.remove('dbt')
 
 
-def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
+    res: dbtRunnerResult = dbt_class.invoke(command)
+    #joined_command = " ".join(command)
+#
+    #test.logger.log(msg=f"Running on platform {str(env_utils.platform()).upper()}", level=logging.INFO)
+#
+    #test.logger.log(msg=f"Running with dbt command: {joined_command}", level=logging.INFO)
+#
+    #child = pexpect.spawn(command=joined_command, cwd=test.TEST_PROJECT_ROOT, encoding="utf-8", timeout=1000)
+    #child.logfile_read = sys.stdout
+    #logs = child.read()
+    #child.close()
+
+    return res.result.success
+
+
+def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False) -> str:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -51,10 +58,10 @@ def run_dbt_seeds(seed_file_names=None, full_refresh=False) -> str:
     if "full-refresh" not in command and full_refresh:
         command.append('--full-refresh')
 
-    return run_dbt_command(command)
+    return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_seed_model(seed_model_name=None) -> str:
+def run_dbt_seed_model(dbt_class, seed_model_name=None) -> str:
     """
     Run seed model files in dbt
         :return: dbt logs
@@ -65,10 +72,10 @@ def run_dbt_seed_model(seed_model_name=None) -> str:
     if seed_model_name:
         command.extend(['-m', seed_model_name, '--full-refresh'])
 
-    return run_dbt_command(command)
+    return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
+def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
@@ -89,10 +96,10 @@ def run_dbt_models(*, mode='compile', model_names: list, args=None, full_refresh
         args = json.dumps(args)
         command.extend([f"--vars '{args}'"])
 
-    return run_dbt_command(command)
+    return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_operation(macro_name: str, args=None, dbt_vars=None) -> str:
+def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None) -> str:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation
@@ -104,10 +111,10 @@ def run_dbt_operation(macro_name: str, args=None, dbt_vars=None) -> str:
 
     if args:
         args = str(args).replace('\'', '')
-        command.extend([f"--args '{args}'"])
+        command.extend(['--args', f"{args}"])
 
     if dbt_vars:
         vargs = json.dumps(dbt_vars)
         command.extend([f"--vars '{vargs}'"])
 
-    return run_dbt_command(command)
+    return run_dbt_command(dbt_class, command)

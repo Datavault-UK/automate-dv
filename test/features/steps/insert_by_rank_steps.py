@@ -21,7 +21,7 @@ def rank_insert(context, model_name, vault_structure, rank_column):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+    logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name],
                                      full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
@@ -47,7 +47,7 @@ def rank_insert(context, model_name, vault_structure):
 
     is_full_refresh = step_helpers.is_full_refresh(context)
 
-    logs = dbt_runner.run_dbt_models(mode="run", model_names=[model_name],
+    logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name],
                                      full_refresh=is_full_refresh)
 
     assert "Completed successfully" in logs
