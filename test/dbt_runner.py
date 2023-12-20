@@ -38,10 +38,10 @@ def run_dbt_command(dbt_class, command) -> bool:
     #logs = child.read()
     #child.close()
 
-    return res.result.success
+    return res.success
 
 
-def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False) -> str:
+def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False) -> bool:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -50,7 +50,7 @@ def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False) -> str:
     if isinstance(seed_file_names, str):
         seed_file_names = [seed_file_names]
 
-    command = ['dbt', 'seed']
+    command = ['seed']
 
     if seed_file_names:
         command.extend(['--select', " ".join(seed_file_names), '--full-refresh'])
@@ -61,7 +61,7 @@ def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False) -> str:
     return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_seed_model(dbt_class, seed_model_name=None) -> str:
+def run_dbt_seed_model(dbt_class, seed_model_name=None) -> bool:
     """
     Run seed model files in dbt
         :return: dbt logs
@@ -75,7 +75,7 @@ def run_dbt_seed_model(dbt_class, seed_model_name=None) -> str:
     return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False) -> str:
+def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False) -> bool:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
@@ -87,19 +87,19 @@ def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, f
 
     model_name_string = " ".join(model_names)
 
-    command = ['dbt', mode, '-m', model_name_string]
+    command = [mode, '-m', model_name_string]
 
     if full_refresh:
         command.append('--full-refresh')
 
     if args:
         args = json.dumps(args)
-        command.extend([f"--vars '{args}'"])
+        command.extend(['--vars', f"{args}"])
 
     return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None) -> str:
+def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None) -> bool:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation

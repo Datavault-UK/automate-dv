@@ -35,7 +35,7 @@ def context_table_to_df(table: Table, use_nan=True) -> pd.DataFrame:
     return table_df
 
 
-def context_table_to_database_table(table: Table, model_name, use_nan=True) -> list:
+def context_table_to_database_table(dbt, table: Table, model_name, use_nan=True) -> list:
     """
     Converts a context table in a feature file into a pandas DataFrame
         :param table: The context.table from a scenario
@@ -70,7 +70,7 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> l
 
     table_df.to_sql(name=model_name, con=engine, schema=schema, if_exists='replace')
 
-    dbt_runner.run_dbt_operation(macro_name='check_table_exists',
+    dbt_runner.run_dbt_operation(dbt, macro_name='check_table_exists',
                                  args={"model_name": model_name})
 
     return hashed_columns_list

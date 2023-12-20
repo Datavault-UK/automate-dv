@@ -31,26 +31,16 @@
 {% macro check_model_exists(model_name) %}
 
     {% set schema_name = automate_dv_test.get_schema_name() %}
+    {%- set query -%}
+        SELECT * FROM
+        {{target.database}}.{{schema_name}}.{{model_name}}
+        LIMIT 1
+    {%- endset -%}
 
-    {%- if target.type == 'databricks' -%}
-        {%- set source_relation = adapter.get_relation(
-              database=schema_name,
-              schema=schema_name,
-              identifier=model_name) -%}
-    {%- else -%}
-        {%- set source_relation = adapter.get_relation(
-              database=target.database,
-              schema=schema_name,
-              identifier=model_name) -%}
-    {%- endif -%}
-
-    {% if source_relation %}
-        {% do log('Model {} exists.'.format(model_name), true) %}
-    {% else %}
-        {% do log('Model {} does not exist.'.format(model_name), true) %}
-    {% endif %}
+    {%- do run_query(query) -%}
 
 {% endmacro %}
+
 
 {% macro drop_all_custom_schemas(schema_prefix=none) %}
 

@@ -67,26 +67,16 @@ def check_exists(context, model_name):
 
     context.target_model_name = model_name
 
-    if operation_success:
-
-        if 'schema' in list(text_args):
-            dbt_runner.run_dbt_operation(context.dbt, macro_name="drop_current_schema",
-                                         dbt_vars=text_args)
-
-        logs = dbt_runner.run_dbt_operation(context.dbt, macro_name="check_model_exists",
-                                            args={"model_name": model_name},
-                                            dbt_vars=text_args)
-
-    assert logs
+    assert not operation_success
 
 
 @given("the {schema_name} schema does not exist")
 def check_exists(context, schema_name):
-    logs = dbt_runner.run_dbt_operation(context.dbt, macro_name="drop_selected_schema",
+    operation_success = dbt_runner.run_dbt_operation(context.dbt, macro_name="drop_selected_schema",
                                         args={"schema_to_drop": schema_name},
                                         dbt_vars=automate_dv_generator.handle_step_text_dict(context))
 
-    assert f"Schema '{schema_name}' dropped." in logs
+    assert operation_success
 
 
 @given("the raw vault contains empty tables")
@@ -120,9 +110,9 @@ def clear_schema(context):
 
         seed_file_names.append(seed_file_name)
 
-    logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=seed_file_names)
+    operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=seed_file_names)
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @step("the {model_name} {vault_structure} is empty")
@@ -150,7 +140,7 @@ def load_empty_table(context, model_name, vault_structure):
                                           additional_config=automate_dv_generator.handle_step_text_dict(
                                               context))
 
-    logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+    operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
     if getattr(context, "create_empty_stage", False) and getattr(context, "empty_stage_name", False):
         source_model_name = context.empty_stage_name
@@ -164,9 +154,9 @@ def load_empty_table(context, model_name, vault_structure):
 
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name])
+        operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name])
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @given("I have an empty {raw_stage_name} raw stage")
@@ -187,11 +177,11 @@ def create_empty_stage(context, raw_stage_name):
     automate_dv_generator.add_seed_config(seed_name=seed_file_name,
                                           seed_config=context.seed_config[raw_stage_name])
 
-    logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+    operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
     context.raw_stage_name = raw_stage_name
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @given("I have an empty {processed_stage_name} primed stage")
@@ -233,9 +223,9 @@ def create_empty_stage(context, processed_stage_name):
     automate_dv_generator.add_seed_config(seed_name=seed_file_name,
                                           seed_config=context.seed_config[processed_stage_name])
 
-    logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+    operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @step("the {model_name} {vault_structure} is already populated with data")
@@ -262,7 +252,7 @@ def load_populated_table(context, model_name, vault_structure):
 
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        seed_logs = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
+        seed_operation_success = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
 
         metadata = {"source_model": seed_model_name, **context.vault_structure_columns[model_name]}
 
@@ -274,10 +264,10 @@ def load_populated_table(context, model_name, vault_structure):
 
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name])
+        operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name])
 
-        assert "Completed successfully" in seed_logs
-        assert "Completed successfully" in logs
+        assert seed_operation_success
+        assert operation_success
 
     elif env_utils.platform() == "postgres":
 
@@ -305,9 +295,9 @@ def load_populated_table(context, model_name, vault_structure):
 
         args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
-        logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name], args=args)
+        operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name], args=args)
 
-        assert "Completed successfully" in logs
+        assert operation_success
 
     else:
 
@@ -333,9 +323,9 @@ def load_populated_table(context, model_name, vault_structure):
 
         automate_dv_generator.raw_vault_structure(model_name, vault_structure, **metadata)
 
-        logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name])
+        operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name])
 
-        assert "Completed successfully" in logs
+        assert operation_success
 
 
 @step("I load the {model_name} {vault_structure}")
@@ -363,9 +353,9 @@ def load_table(context, model_name, vault_structure):
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
-    logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name], args=args,
+    operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name], args=args,
                                      full_refresh=is_full_refresh)
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @step("I load the vault")
@@ -394,10 +384,10 @@ def load_vault(context):
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
-    logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=model_names, args=args,
+    operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=model_names, args=args,
                                      full_refresh=is_full_refresh)
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @given("the {raw_stage_model_name} table contains data")
@@ -417,13 +407,13 @@ def create_csv(context, raw_stage_model_name):
                                                                model_name=raw_stage_model_name,
                                                                target_model_name=raw_stage_model_name)
 
-        logs = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
+        operation_success = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
 
         context.raw_stage_models = seed_model_name
 
         context.raw_stage_model_name = raw_stage_model_name
 
-        assert "Completed successfully" in logs
+        assert operation_success
 
     else:
 
@@ -435,13 +425,13 @@ def create_csv(context, raw_stage_model_name):
                                               additional_config=automate_dv_generator.handle_step_text_dict(
                                                   context))
 
-        logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+        operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
         context.raw_stage_models = seed_file_name
 
         context.raw_stage_model_name = raw_stage_model_name
 
-        assert "Completed successfully" in logs
+        assert operation_success
 
 
 @step("the {table_name} table is created and populated with data")
@@ -463,7 +453,7 @@ def create_csv(context, table_name):
 
         context.target_model_name = table_name
 
-        seed_logs = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
+        seed_operation_success = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
@@ -476,13 +466,13 @@ def create_csv(context, table_name):
                                                   source_model=seed_model_name,
                                                   config={'materialized': 'table'})
 
-        run_logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[table_name],
+        run_operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[table_name],
                                              args=args, full_refresh=True)
 
         context.raw_stage_models = seed_model_name
 
-        assert "Completed successfully" in seed_logs
-        assert "Completed successfully" in run_logs
+        assert seed_operation_success
+        assert run_operation_success
 
     else:
 
@@ -495,7 +485,7 @@ def create_csv(context, table_name):
                                                   context)
                                               )
 
-        seed_logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+        seed_operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
         stage_metadata = set_stage_metadata(context, stage_model_name=table_name)
 
@@ -508,13 +498,13 @@ def create_csv(context, table_name):
                                                   source_model=seed_file_name,
                                                   config={'materialized': 'table'})
 
-        run_logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[table_name],
+        run_operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[table_name],
                                              args=args, full_refresh=True)
 
         context.raw_stage_models = seed_file_name
 
-        assert "Completed successfully" in seed_logs
-        assert "Completed successfully" in run_logs
+        assert seed_operation_success
+        assert run_operation_success
 
 
 @step("the {raw_stage_model_name} is loaded")
@@ -541,11 +531,11 @@ def create_csv(context, raw_stage_model_name):
 
         context.target_model_name = raw_stage_model_name
 
-        logs = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
+        operation_success = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
 
         context.raw_stage_models = seed_model_name
 
-        assert "Completed successfully" in logs
+        assert operation_success
 
     else:
 
@@ -560,11 +550,11 @@ def create_csv(context, raw_stage_model_name):
                                                   context)
                                               )
 
-        logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+        operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
         context.raw_stage_models = seed_file_name
 
-        assert "Completed successfully" in logs
+        assert operation_success
 
 
 @step("I stage the {processed_stage_name} data")
@@ -586,10 +576,10 @@ def stage_processing(context, processed_stage_name):
                                               null_columns=context.null_columns[processed_stage_name],
                                               include_source_columns=context.include_source_columns)
 
-    logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[processed_stage_name],
+    operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[processed_stage_name],
                                      args=args)
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @then("the {model_name} table should contain expected data")
@@ -610,7 +600,7 @@ def expect_data(context, model_name):
 
         context.target_model_name = seed_model_name
 
-        seed_logs = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
+        seed_operation_success = dbt_runner.run_dbt_seed_model(context.dbt, seed_model_name=seed_model_name)
 
         columns_to_compare = context.table.headings
         unique_id = columns_to_compare[0]
@@ -622,17 +612,17 @@ def expect_data(context, model_name):
 
         automate_dv_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
+        operation_success = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
 
-        assert "Completed successfully" in seed_logs
-        assert "1 of 1 PASS" in logs
+        assert seed_operation_success
+        assert operation_success
 
     elif env_utils.platform() == "postgres":
 
         model_name_unhashed = f"{model_name}_expected_unhashed"
         model_name_expected = f"{model_name}_expected"
 
-        hashed_columns = context_utils.context_table_to_database_table(table=context.table,
+        hashed_columns = context_utils.context_table_to_database_table(dbt=context.dbt, table=context.table,
                                                                        model_name=model_name_unhashed)
 
         payload_columns = []
@@ -665,9 +655,9 @@ def expect_data(context, model_name):
 
         automate_dv_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
+        operation_success = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
 
-        assert "1 of 1 PASS" in logs
+        assert operation_success
 
     else:
 
@@ -693,9 +683,9 @@ def expect_data(context, model_name):
 
         dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[expected_output_csv_name])
 
-        logs = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
+        operation_success = dbt_runner.run_dbt_command(context.dbt, ["test"])
 
-        assert logs
+        assert operation_success
 
 
 @then("the {model_name} table should be empty")
@@ -725,7 +715,7 @@ def expect_data(context, model_name):
                                                   context)
                                               )
 
-        seed_logs = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
+        seed_operation_success = dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[seed_file_name])
 
         # Run comparison test between target table and expected data table
         unique_id = context.vault_structure_columns[model_name]['src_pk']
@@ -737,10 +727,10 @@ def expect_data(context, model_name):
 
         automate_dv_generator.append_dict_to_schema_yml(test_yaml)
 
-        logs = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
+        operation_success = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
 
-        assert "Completed successfully" in seed_logs
-        assert "1 of 1 PASS" in logs
+        assert seed_operation_success
+        assert operation_success
 
     else:
 
@@ -771,9 +761,9 @@ def expect_data(context, model_name):
 
         dbt_runner.run_dbt_seeds(context.dbt, seed_file_names=[expected_output_csv_name])
 
-        logs = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
+        operation_success = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
 
-        assert "1 of 1 PASS" in logs
+        assert operation_success
 
 
 @step("I exclude the following columns for the {model_name} table")
@@ -808,10 +798,10 @@ def step_impl(context):
 
     context.input_seed_name = context_helpers.sample_data_to_database(context, context.sample_table_name)
 
-    logs = dbt_runner.run_dbt_operation(context.dbt, macro_name='check_table_exists',
+    operation_success = dbt_runner.run_dbt_operation(context.dbt, macro_name='check_table_exists',
                                         args={"model_name": context.sample_table_name})
 
-    assert f"Table '{context.sample_table_name}' exists." in logs
+    assert operation_success
 
 
 @step("using {project_type} hash calculation on table")
@@ -844,9 +834,9 @@ def step_impl(context, project_type):
 
     args = {vkey: vdata for vkey, vdata in args.items() if vdata}
 
-    logs = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name], args=args)
+    operation_success = dbt_runner.run_dbt_models(context.dbt, mode="run", model_names=[model_name], args=args)
 
-    assert "Completed successfully" in logs
+    assert operation_success
 
 
 @then("the {table_name} table should contain the following data")
@@ -862,6 +852,6 @@ def step_impl(context, table_name):
                                                unique_id=context.unique_id,
                                                columns_to_compare=columns_to_compare)
 
-    logs = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
+    operation_success = dbt_runner.run_dbt_command(context.dbt, ["dbt", "test"])
 
-    assert "1 of 1 PASS" in logs
+    assert operation_success
