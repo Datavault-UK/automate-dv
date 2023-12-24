@@ -87,7 +87,7 @@ Feature: [MAS-1CD-I] Multi Active Satellites
       | md5('1006') | Frida         | 17-214-233-1234 | md5('1006\|\|FRIDA\|\|17-214-233-1234') | 1993-01-01     | 1993-01-01 | *      |
       | md5('1002') | Bob           | 17-214-233-1215 | md5('1002\|\|BOB\|\|17-214-233-1215')   | 1993-01-02     | 1993-01-02 | *      |
       | md5('1002') | Bob           | 17-214-233-1235 | md5('1002\|\|BOB\|\|17-214-233-1235')   | 1993-01-02     | 1993-01-02 | *      |
-      | MD5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-02     | 1993-01-02 | *      |
+      | md5('1004') | Dom           | 17-214-233-1217 | md5('1004\|\|DOM\|\|17-214-233-1217')   | 1993-01-02     | 1993-01-02 | *      |
 
   @fixture.multi_active_satellite
   Scenario: [MAS-1CD-I-03] Load data into a populated multi-active satellite where some sets of records have extra records
