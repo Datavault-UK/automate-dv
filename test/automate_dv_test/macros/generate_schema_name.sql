@@ -52,6 +52,7 @@
         {%- set custom_schema_name = target.schema -%}
     {%- endif -%}
 
+
     {%- set schema_name = var('schema', custom_schema_name) -%}
 
     {%- set schema_name = "{}_{}{}".format(schema_name, target.user, automate_dv_test.pipeline_string()) -%}

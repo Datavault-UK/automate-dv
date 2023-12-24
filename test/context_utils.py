@@ -53,6 +53,8 @@ def context_table_to_database_table(table: Table, model_name, use_nan=True) -> l
     else:
         schema = f"{os.environ['POSTGRES_DB_SCHEMA']}_{os.environ['POSTGRES_DB_USER']}".upper()
 
+    schema = schema.replace('-', '_').replace('.', '_').replace('/', '_').replace(' ', '_')
+
     table_df = pd.DataFrame(columns=table.headings, data=table.rows)
 
     table_df = table_df.apply(parse_escapes)
