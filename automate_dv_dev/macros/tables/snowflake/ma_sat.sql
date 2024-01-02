@@ -59,7 +59,7 @@ WITH source_data AS (
 latest_records AS (
     SELECT {{ automate_dv.prefix(cols_for_latest, 'mas', alias_target='target') }},
            mas.latest_rank,
-           RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
+           DENSE_RANK() OVER (PARTITION BY {{ automate_dv.prefix([src_pk], 'mas') }}
                               ORDER BY {{ automate_dv.prefix([src_hashdiff], 'mas', alias_target='target') }}, {{ automate_dv.prefix(cdk_cols, 'mas') }} ASC
            ) AS check_rank
     FROM (
