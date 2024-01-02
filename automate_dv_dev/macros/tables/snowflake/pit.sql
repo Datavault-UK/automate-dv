@@ -42,16 +42,12 @@
     {%- set as_of_table_relation = ref(as_of_dates_table) -%}
 {%- endif -%}
 
-{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
+{#- Setting ghost values to replace NULLS -#}
+{%- set ghost_pk = '0000000000000000' -%}
+{%- set ghost_date = '1900-01-01 00:00:00.000' %}
 {%- set hash = var('hash', 'MD5') -%}
 
-{%- if not enable_ghost_record -%}
-    {#- Setting ghost values to replace NULLS -#}
-    {%- set ghost_date = '1900-01-01 00:00:00.000' %}
-    {%- do exceptions.warn("The string length of a ghost record has been updated in version 0.10.2. Please consult the docs on how to fix this.") -%}
-    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_length(hash)) -%}
-{%- endif -%}
-
+{%- set enable_ghost_record = var('enable_ghost_records', false) -%}
 
 {%- if automate_dv.is_any_incremental() -%}
     {%- set new_as_of_dates_cte = 'new_rows_as_of' -%}
