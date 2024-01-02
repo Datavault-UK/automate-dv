@@ -1370,7 +1370,7 @@ Feature: [STG] Staging
   @not_postgres
   @fixture.staging_null_columns
   @fixture.enable_sha1
-  Scenario: [STG-42] Staging with null columns configuration where there is a required and optional key, using SHA256 hash algorithm
+  Scenario: [STG-42] Staging with null columns configuration where there is a required and optional key, using SHA1 hash algorithm
     Given the STG_CUSTOMER table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | CUSTOMER_DOB | CUSTOMER_PHONE  | LOAD_DATE  | SOURCE |

@@ -27,7 +27,7 @@ def enable_sha(context):
 @behave.fixture
 def enable_sha1(context):
     """
-    Augment the metadata for a vault structure load to work with SHA hashing instead of MD5
+    Augment the metadata for a vault structure load to work with SHA1 hashing instead of MD5
     """
 
     context.hashing = "SHA1"

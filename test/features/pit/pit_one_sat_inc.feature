@@ -2,7 +2,6 @@ Feature: [PIT-1SI] Point in Time
   Base PIT behaviour with one hub and one satellite - Incremental Loads
 
   # DATES
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-01] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -61,7 +60,7 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
       | md5('1004') | 2018-06-05 00:00:00.000 | md5('1004')                      | 2018-06-05 00:00:00.000   |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-01-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -121,7 +120,6 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-05 00:00:00.000 | md5('1004')                        | 2018-06-05 00:00:00.000   |
 
   # TIMESTAMPS
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-02] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -188,7 +186,7 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-02 12:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                      | 2018-06-02 23:59:59.999      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-02-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -256,7 +254,6 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                        | 2018-06-02 23:59:59.999      |
 
   # AS OF - LOWER GRANULARITY
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-03] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -315,7 +312,7 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-02 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                      | 2018-06-02 23:59:59.999      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-03-BQ] Incremental load with the more recent AS OF dates into an already populated pit table from one satellite with timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -375,7 +372,6 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-03 00:00:00.000 | md5('1004')                        | 2018-06-02 23:59:59.999      |
 
   # AS OF - HIGHER GRANULARITY
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-04] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -434,7 +430,7 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-04 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01                |
       | md5('1004') | 2018-06-06 00:00:00.000 | md5('1004')                      | 2018-06-05                |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-04-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -494,7 +490,6 @@ Feature: [PIT-1SI] Point in Time
       | md5('1004') | 2018-06-06 00:00:00.000 | md5('1004')                        | 2018-06-05                |
 
   # AS OF - HIGHER GRANULARITY
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-05] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -532,7 +527,7 @@ Feature: [PIT-1SI] Point in Time
       | md5('1001') | 2018-06-04 00:00:00.000 | md5('1001')             | 2018-06-03                |
       | md5('1001') | 2018-06-06 00:00:00.000 | md5('1001')             | 2018-06-03                |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SI-05-BQ] Incremental load with the more recent AS OF timestamps into an already populated pit table from one satellite with dates
     Given the PIT_CUSTOMER_1S table does not exist

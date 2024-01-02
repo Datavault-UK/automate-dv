@@ -629,7 +629,7 @@ Feature: [HUB] Hubs
   @postgres
   @fixture.single_source_hub
   @fixture.enable_sha1
-  Scenario: Postgres defaults to MD5 when hash is set to SHA1
+  Scenario: [HUB-21] Postgres defaults to MD5 when hash is set to SHA1
     Given the HUB table does not exist
     And the RAW_STAGE table contains data
       | CUSTOMER_ID | CUSTOMER_NAME | LOAD_DATE  | SOURCE |

@@ -7,13 +7,6 @@
 
     {%- set available_hash_algorithms = ['md5', 'sha', 'sha1'] -%}
 
-    {%- if execute and hash | lower == 'sha1' and  target.type == 'postgres' -%}
-
-        {%- do exceptions.warn("Configured hash ('{}') is not supported on Postgres. Defaulting to hash 'md5', alternativley configure hash to be 'sha' for SHA256 hashing.".format(hash | lower)) -%}
-        {%- set hash = 'md5' -%}
-
-    {%- endif -%}
-
     {%- if execute and hash | lower not in available_hash_algorithms %}
 
         {%- do exceptions.warn("Configured hash ('{}') not recognised. Must be one of: {} (case insensitive)".format(hash | lower, available_hash_algorithms | join(', '))) -%}
@@ -140,12 +133,9 @@
 {% endmacro %}
 
 {% macro postgres__hash_alg_sha1() -%}
-    {#- * MD5 is simple function call to md5(val) -#}
-    {#- * SHA256/SHA1 needs input cast to BYTEA and then its BYTEA result encoded as hex text output -#}
-    {#- e.g. ENCODE(SHA256(1)(CAST(val AS BYTEA)), 'hex') -#}
-    {#- Ref: https://www.postgresql.org/docs/11/functions-binarystring.html  -#}
 
-    {% do return("SHA1(CAST([HASH_STRING_PLACEHOLDER] AS BYTEA))")  %}
+    {%- do exceptions.warn("Configured hash ('{}') is not supported on Postgres. Defaulting to hash 'md5', alternativley configure hash to be 'sha' for SHA256 hashing.".format(hash | lower)) -%}
+    {{ automate_dv.hash_alg_md5() }}
 
 {% endmacro %}
 

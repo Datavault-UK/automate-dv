@@ -2,7 +2,6 @@ Feature: [PIT-1SB] Point in Time
   Base PIT behaviour with one hub and one satellite - Base Loads
 
   # DATES
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-01] Base load into a pit table from one satellite with dates with AS OF dates all in the past
     Given the PIT_CUSTOMER_1S table does not exist
@@ -36,7 +35,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-30 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-01-BQ] Base load into a pit table from one satellite with dates with AS OF dates all in the past
     Given the PIT_CUSTOMER_1S table does not exist
@@ -70,7 +69,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-30 00:00:00.000 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 00:00:00.000 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-02] Base load into a pit table from one satellite with dates with AS OF dates in the past and in between LDTS
     Given the PIT_CUSTOMER_1S table does not exist
@@ -108,7 +106,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-02 | md5('1003')                      | 2018-06-01 00:00:00.000   |
       | md5('1003') | 2018-06-04 | md5('1003')                      | 2018-06-03 00:00:00.000   |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-02-BQ] Base load into a pit table from one satellite with dates with AS OF dates in the past and in between LDTS
     Given the PIT_CUSTOMER_1S table does not exist
@@ -212,7 +210,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-07 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
       | md5('1003') | 2018-06-08 00:00:00.000 | md5('1003')             | 2018-06-05 00:00:00.000   |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-05] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -262,7 +259,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-05 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   |
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                      | 2018-06-05 00:00:00.000   |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-05-BQ] Base load into a pit table from one satellite with dates with an encompassing range of AS OF dates
     Given the PIT_CUSTOMER_1S table does not exist
@@ -313,7 +310,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-06 00:00:00.000 | md5('1003')                        | 2018-06-05 00:00:00.000   |
 
   # TIMESTAMPS
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-06] Base load into a pit table from one satellite with timestamps with al AS OF timestamps in the past
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -347,7 +343,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 23:59:59.998 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 23:59:59.999 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-06-BQ] Base load into a pit table from one satellite with timestamps with al AS OF timestamps in the past
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -381,7 +377,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 23:59:59.998 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 23:59:59.999 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-07] Base load into a pit table from one satellite with timestamps with some AS OF timestamps in the past and some in between LDTS
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -419,7 +414,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 12:00:00.000 | md5('1003')                      | 2018-06-01 00:00:00.000      |
       | md5('1003') | 2018-06-01 23:59:59.990 | md5('1003')                      | 2018-06-01 12:00:00.001      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-07-BQ] Base load into a pit table from one satellite with timestamps with some AS OF timestamps in the past and some in between LDTS
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -523,7 +518,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1002') | 2019-06-02 00:00:00.000 | md5('1002')                | 2018-06-01 23:59:59.999      |
       | md5('1003') | 2019-06-02 00:00:00.000 | md5('1003')                | 2018-06-01 23:59:59.999      |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-10] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -573,7 +567,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 23:59:59.999 | md5('1003')                      | 2018-06-01 23:59:59.999      |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                      | 2018-06-01 23:59:59.999      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-10-BQ] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -654,7 +648,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-03 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.002      |
       | md5('1003') | 2018-06-04 00:00:00.000 | md5('1003')                | 2018-06-01 00:00:00.002      |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-12] Base load into a pit table from one satellite with timestamps where AS OF dates are in the past
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -685,7 +678,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-30 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-12-BQ] Base load into a pit table from one satellite with timestamps where AS OF dates are in the past
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -716,7 +709,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-30 00:00:00.000 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-05-31 00:00:00.000 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-13] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -747,7 +739,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 00:00:00.000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000      |
       | md5('1003') | 2018-06-02 00:00:00.000 | md5('1003')                      | 2018-06-01 00:00:00.002      |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-13-BQ] Base load into a pit table from one satellite with timestamps with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -809,7 +801,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 12:00:00.001 | md5('1003')             | 2018-06-01 00:00:00.000   |
       | md5('1003') | 2018-06-02 00:00:00.001 | md5('1003')             | 2018-06-01 00:00:00.000   |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-15] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
     Given the PIT_CUSTOMER_1S_TS table does not exist
@@ -840,7 +831,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 12:30:00.001 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 23:59:59.999 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-15-BQ] Base load into a pit table from one satellite with dates where AS OF timestamps are in the past
     Given the PIT_CUSTOMER_1S table does not exist
@@ -871,7 +862,6 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-05-31 12:30:00.001 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
       | md5('1003') | 2018-05-31 23:59:59.999 | 0x00000000000000000000000000000000 | 1900-01-01 00:00:00.000   |
 
-  @not_bigquery
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-16] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_1S table does not exist
@@ -910,7 +900,7 @@ Feature: [PIT-1SB] Point in Time
       | md5('1003') | 2018-06-01 23:59:59.999 | md5('1003')                      | 2018-06-01 00:00:00.000   |
       | md5('1003') | 2018-06-02 00:00:00.001 | md5('1003')                      | 2018-06-01 00:00:00.000   |
 
-  @bigquery
+  @skip
   @fixture.pit_one_sat
   Scenario: [PIT-1SB-16-BQ] Base load into a pit table from one satellite with dates with an encompassing range of AS OF timestamps
     Given the PIT_CUSTOMER_1S table does not exist

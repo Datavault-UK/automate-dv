@@ -47,7 +47,6 @@ Feature: [PIT] Point in Time
       | md5('1001') | 2019-01-03 00:00:00.000000 | md5('1001')             | 2018-06-01 00:00:00.000000 | md5('1001')           | 2019-01-03 00:00:00.000000 | md5('1001')             | 2019-01-03 00:00:00.000000 |
       | md5('1001') | 2019-01-04 00:00:00.000000 | md5('1001')             | 2018-06-01 00:00:00.000000 | md5('1001')           | 2019-01-04 00:00:00.000000 | md5('1001')             | 2019-01-04 00:00:00.000000 |
 
-  @not_bigquery
   @fixture.pit
   Scenario: [PIT-02] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT_CUSTOMER table does not exist
@@ -93,7 +92,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-03 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | md5('1002')             | 2019-01-03 00:00:00.000000 |
       | md5('1002') | 2019-01-04 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')                      | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
 
-  @bigquery
+  @skip
   @fixture.pit
   Scenario: [PIT-02-BQ] Load into a pit table where the AS OF table is already established but the final pit table will deal with NULL Values as ghosts
     Given the PIT_CUSTOMER table does not exist
@@ -186,7 +185,6 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-01 10:45:00 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-01 10:45:00     | md5('1002')             | 2019-01-01 10:45:00       |
       | md5('1002') | 2019-01-01 11:15:00 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-01 11:15:00     | md5('1002')             | 2019-01-01 11:15:00       |
 
-  @not_bigquery
   @fixture.pit
   Scenario: [PIT-04] Load into a pit table where the AS OF table dates are before the satellites have received any entries
     Given the PIT_CUSTOMER table does not exist
@@ -234,7 +232,7 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2017-01-03 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 |
       | md5('1002') | 2017-01-04 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 |
 
-  @bigquery
+  @skip
   @fixture.pit
   Scenario: [PIT-04-BQ] Load into a pit table where the AS OF table dates are before the satellites have received any entries
     Given the PIT_CUSTOMER table does not exist
@@ -329,7 +327,6 @@ Feature: [PIT] Point in Time
       | md5('1002') | 2019-01-06 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
       | md5('1002') | 2019-01-07 00:00:00.000000 | md5('1002')             | 2018-12-01 00:00:00.000000 | md5('1002')           | 2019-01-04 00:00:00.000000 | md5('1002')             | 2019-01-04 00:00:00.000000 |
 
-  @not_bigquery
   @fixture.pit
   Scenario: [PIT-06] Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
@@ -434,7 +431,7 @@ Feature: [PIT] Point in Time
       | md5('1003') | 2019-01-05 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 | 00000000000000000000000000000000 | 1900-01-01 00:00:00.000000 |
       | md5('1003') | 2019-01-06 00:00:00.000000 | md5('1003')                      | 2019-01-06 00:00:00.000000 | md5('1003')                      | 2019-01-06 00:00:00.000000 | md5('1003')                      | 2019-01-06 00:00:00.000000 |
 
-  @bigquery
+  @skip
   @fixture.pit
   Scenario: [PIT-06-BQ] Load into a pit table over several cycles where new record is introduced on the 3rd day
     Given the raw vault contains empty tables
