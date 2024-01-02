@@ -19,15 +19,7 @@
 {%- if not enable_ghost_record -%}
     {%- do exceptions.warn("The string length of a ghost record has been updated in version 0.10.2. Please consult the docs on how to fix this.") -%}
     {#- Setting ghost values to replace NULLS -#}
-    {%- if hash == 'md5' -%}
-        {%- set ghost_pk = '0x00000000000000000000000000000000' -%}
-    {%- elif hash == 'sha' -%}
-        {%- set ghost_pk = '0x0000000000000000000000000000000000000000000000000000000000000000' -%}
-    {%- elif hash == 'sha1' -%}
-        {%- set ghost_pk = '0x0000000000000000000000000000000000000000' -%}
-    {%- else -%}
-        {%- set ghost_pk = '0x00000000000000000000000000000000' -%}
-    {%- endif -%}
+    {%- set ghost_pk = modules.itertools.repeat('0', automate_dv.get_hash_length(hash)) -%}
     {%- set ghost_date = '1900-01-01 00:00:00.000000' %}
 {%- endif -%}
 
@@ -77,7 +69,7 @@ backfill AS (
 
         {%- else -%}
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-        '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        {{ ghost_pk }}) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
@@ -136,7 +128,7 @@ new_rows AS (
         {%- else -%}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-        '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        {{ ghost_pk }}) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
