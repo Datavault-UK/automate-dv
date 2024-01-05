@@ -17,7 +17,7 @@
     {%- elif hash | lower == 'sha' -%}
         {%- do return(automate_dv.hash_alg_sha256()) -%}
     {%- elif hash | lower == 'sha1' -%}
-        {%- do return(automate_dv.hash_alg_sha1()) -%}
+        {%- do return(automate_dv.hash_alg_sha1(hash)) -%}
     {%- else -%}
         {%- do return(automate_dv.hash_alg_md5()) -%}
     {%- endif -%}
@@ -108,38 +108,38 @@
 
 {#- SHA1 -#}
 
-{%- macro hash_alg_sha1() -%}
+{%- macro hash_alg_sha1(hash) -%}
 
-    {{- adapter.dispatch('hash_alg_sha1', 'automate_dv')() -}}
+    {{- adapter.dispatch('hash_alg_sha1', 'automate_dv')(hash=hash) -}}
 
 {%- endmacro %}
 
-{% macro default__hash_alg_sha1() -%}
+{% macro default__hash_alg_sha1(hash) -%}
 
     {% do return(automate_dv.cast_binary('SHA1_BINARY([HASH_STRING_PLACEHOLDER])', quote=false)) %}
 
 {% endmacro %}
 
-{% macro bigquery__hash_alg_sha1() -%}
+{% macro bigquery__hash_alg_sha1(hash) -%}
 
     {% do return(automate_dv.cast_binary('UPPER(TO_HEX(SHA1([HASH_STRING_PLACEHOLDER])))', quote=false)) %}
 
 {% endmacro %}
 
-{% macro sqlserver__hash_alg_sha1() -%}
+{% macro sqlserver__hash_alg_sha1(hash) -%}
 
     {% do return(automate_dv.cast_binary("HASHBYTES('SHA1', [HASH_STRING_PLACEHOLDER])", quote=false)) %}
 
 {% endmacro %}
 
-{% macro postgres__hash_alg_sha1() -%}
+{% macro postgres__hash_alg_sha1(hash) -%}
 
     {%- do exceptions.warn("Configured hash ('{}') is not supported on Postgres. Defaulting to hash 'md5', alternativley configure hash to be 'sha' for SHA256 hashing.".format(hash | lower)) -%}
     {{ automate_dv.hash_alg_md5() }}
 
 {% endmacro %}
 
-{% macro databricks__hash_alg_sha1() -%}
+{% macro databricks__hash_alg_sha1(hash) -%}
 
     {% do return('UPPER(SHA1([HASH_STRING_PLACEHOLDER]))') %}
 
