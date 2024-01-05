@@ -68,7 +68,7 @@ backfill AS (
 
         {%- else -%}
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-        {{ ghost_pk }}) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
@@ -127,7 +127,7 @@ new_rows AS (
         {%- else -%}
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_pk }}),
-        {{ ghost_pk }}) AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
+        '{{ ghost_pk }}') AS {{ sat_name | upper }}_{{ sat_pk_name | upper }},
 
         COALESCE(MAX({{ sat_name | lower ~ '_src' }}.{{ sat_ldts }}),
         PARSE_DATETIME('%F %H:%M:%E6S', '{{ ghost_date }}')) AS {{ sat_name | upper }}_{{ sat_ldts_name | upper }}
