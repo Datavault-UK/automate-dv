@@ -11,14 +11,16 @@ import test
 from env import env_utils
 
 
-def run_dbt_command(dbt_class, command, period_step=False) -> bool | bytes:
+def run_dbt_command(dbt_class, command, logs_required=False) -> bool | bytes:
     """
     Run a command in dbt and capture dbt logs.
+        :param dbt_class: Initialisation of dbtRunner
         :param command: Command to run.
+        :param logs_required: True if error message in the logs needs to be read
         :return: dbt logs
     """
 
-    if not period_step:
+    if not logs_required:
         if 'dbt' in command and isinstance(command, list):
             command.remove('dbt')
 
@@ -46,7 +48,7 @@ def run_dbt_command(dbt_class, command, period_step=False) -> bool | bytes:
         return logs
 
 
-def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, period_step=False) -> bool:
+def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, logs_required=False) -> bool:
     """
     Run seed files in dbt
         :return: dbt logs
@@ -66,7 +68,7 @@ def run_dbt_seeds(dbt_class, seed_file_names=None, full_refresh=False, period_st
     return run_dbt_command(dbt_class, command)
 
 
-def run_dbt_seed_model(dbt_class, seed_model_name=None, period_step=False) -> bool:
+def run_dbt_seed_model(dbt_class, seed_model_name=None, logs_required=False) -> bool:
     """
     Run seed model files in dbt
         :return: dbt logs
@@ -77,10 +79,10 @@ def run_dbt_seed_model(dbt_class, seed_model_name=None, period_step=False) -> bo
     if seed_model_name:
         command.extend(['-m', seed_model_name, '--full-refresh'])
 
-    return run_dbt_command(dbt_class, command, period_step)
+    return run_dbt_command(dbt_class, command, logs_required)
 
 
-def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False, period_step=False) -> bool:
+def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, full_refresh=False, logs_required=False) -> bool:
     """
     Run or Compile a specific dbt model, with optionally provided variables.
         :param mode: dbt command to run, 'run' or 'compile'. Defaults to compile
@@ -99,12 +101,12 @@ def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, f
 
     if args:
         args = json.dumps(args)
-        command.extend(['--vars', f"{args}"])
+        command.extend(['--vars', f"'{args}'"])
 
-    return run_dbt_command(dbt_class, command, period_step)
+    return run_dbt_command(dbt_class, command, logs_required)
 
 
-def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None, period_step=False) -> bool:
+def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None, logs_required=False) -> bool:
     """
     Run a specified macro in dbt, with the given arguments.
         :param macro_name: Name of macro/operation
@@ -122,4 +124,4 @@ def run_dbt_operation(dbt_class, macro_name: str, args=None, dbt_vars=None, peri
         vargs = json.dumps(dbt_vars)
         command.extend([f"--vars '{vargs}'"])
 
-    return run_dbt_command(dbt_class, command, period_step)
+    return run_dbt_command(dbt_class, command, logs_required)

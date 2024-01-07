@@ -277,7 +277,6 @@ def before_all(context):
 
     # Initialise dbtRunner
     os.chdir('test/automate_dv_test')
-    cwd = os.getcwd()
     context.dbt = dbtRunner()
 
 
@@ -289,7 +288,7 @@ def before_scenario(context, scenario):
     do_run = decide_to_run(scenario.effective_tags, scenario, 'Scenario')
 
     if do_run:
-        behave_helpers.replace_test_schema(context)
+        behave_helpers.replace_test_schema(context.dbt)
 
         behave_helpers.clean_seeds()
         behave_helpers.clean_models()

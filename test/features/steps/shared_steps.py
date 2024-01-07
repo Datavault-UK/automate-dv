@@ -81,7 +81,7 @@ def check_exists(context, schema_name):
 
 @given("the raw vault contains empty tables")
 def clear_schema(context):
-    behave_helpers.replace_test_schema(context)
+    behave_helpers.replace_test_schema(context.dbt)
 
     model_names = context_utils.context_table_to_dicts(table=context.table,
                                                        orient="list")

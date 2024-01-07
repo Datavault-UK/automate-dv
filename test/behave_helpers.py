@@ -50,12 +50,12 @@ def clean_models(model_name=None):
             os.remove(file)
 
 
-def replace_test_schema(context):
+def replace_test_schema(dbt_class):
     """
     Drop and create the TEST schema
     """
 
-    run_dbt_operation(context.dbt, macro_name='recreate_current_schemas')
+    run_dbt_operation(dbt_class, macro_name='recreate_current_schemas')
 
 
 def create_test_schemas(context):

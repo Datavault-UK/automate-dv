@@ -8,6 +8,7 @@ import test
 from env import env_utils
 from test import automate_dv_generator, behave_helpers, dbt_runner
 from . import structure_metadata
+from dbt.cli.main import dbtRunner
 
 mark_metadata_mapping = {
     "single_source_hub": structure_metadata.single_source_hub,
@@ -59,11 +60,13 @@ def generate_model(request):
 def setup(tmp_path_factory, worker_id):
     def test_setup():
         os.chdir(test.TEST_PROJECT_ROOT)
+        dbt_init = dbtRunner()
+
         env_utils.setup_environment()
         behave_helpers.clean_models()
         behave_helpers.clean_target()
-        behave_helpers.replace_test_schema()
-        dbt_runner.run_dbt_seeds()
+        behave_helpers.replace_test_schema(dbt_init)
+        dbt_runner.run_dbt_seeds(dbt_init)
 
     # If not parallel
     if worker_id == "master":
