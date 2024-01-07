@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "link"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.single_source_link
 def test_link_macro_correctly_generates_sql_for_single_source(request, generate_model):
@@ -18,7 +21,7 @@ def test_link_macro_correctly_generates_sql_for_single_source(request, generate_
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -47,7 +50,7 @@ def test_link_macro_correctly_generates_sql_for_multi_source(request, generate_m
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 

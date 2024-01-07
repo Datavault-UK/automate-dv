@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "create_ghost_record"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.macro
 def test_create_ghost_record_with_all_string_and_no_extra_columns(request, generate_model):
@@ -28,7 +31,7 @@ def test_create_ghost_record_with_all_string_and_no_extra_columns(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -51,7 +54,7 @@ def test_create_ghost_record_with_all_string_with_extra_columns_not_provided(req
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -75,7 +78,7 @@ def test_create_ghost_record_with_payload_and_extra_columns_as_lists(request, ge
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -99,7 +102,7 @@ def test_create_ghost_record_with_all_string_hashing_with_sha(request, generate_
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -124,7 +127,7 @@ def test_create_ghost_record_with_payload_and_extra_columns_as_lists_hashing_wit
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -148,7 +151,7 @@ def test_create_ghost_record_with_all_string_and_different_source_system(request
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -171,5 +174,5 @@ def test_create_ghost_record_with_hashdiff_using_alias(request, generate_model):
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql

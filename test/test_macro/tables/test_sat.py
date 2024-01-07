@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "sat"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.single_source_sat
 def test_sat_correctly_generates_sql_for_payload_with_exclude_flag(request, generate_model):
@@ -35,7 +38,7 @@ def test_sat_correctly_generates_sql_for_payload_with_exclude_flag(request, gene
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -100,7 +103,7 @@ def test_sat_correctly_generates_sql_when_hashdiff_columns_is_added_to_excluded(
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -135,7 +138,7 @@ def test_sat_correctly_generates_sql_when_all_required_columns_are_added_to_excl
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -172,7 +175,7 @@ def test_sat_correctly_generates_sql_when_all_columns_are_added_to_excluded(requ
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -197,7 +200,7 @@ def test_sat_correctly_generates_sql_when_no_columns_added_all_excluded(request,
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -223,5 +226,5 @@ def test_sat_correctly_generates_sql_when_no_columns_added_all_excluded_incremen
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql

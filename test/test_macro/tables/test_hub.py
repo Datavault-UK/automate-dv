@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "hub"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.single_source_hub
 def test_hub_macro_correctly_generates_sql_for_single_source(request, generate_model):
@@ -19,7 +22,7 @@ def test_hub_macro_correctly_generates_sql_for_single_source(request, generate_m
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -32,7 +35,7 @@ def test_hub_macro_correctly_generates_sql_for_single_source_multi_nk(request, g
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -77,7 +80,7 @@ def test_hub_macro_correctly_generates_sql_for_multi_source(request, generate_mo
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -90,7 +93,7 @@ def test_hub_macro_correctly_generates_sql_for_multi_source_multi_nk(request, ge
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 

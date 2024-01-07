@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "null_expression"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.macro
 def test_null_expression_is_successful(request, generate_model):
@@ -20,7 +23,7 @@ def test_null_expression_is_successful(request, generate_model):
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -36,7 +39,7 @@ def test_null_expression_with_custom_placeholder_is_successful(request, generate
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 

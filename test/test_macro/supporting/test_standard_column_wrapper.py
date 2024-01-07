@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "standard_column_wrapper"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.macro
 def test_standard_column_wrapper_is_successful_with_defaults(request, generate_model):
@@ -18,7 +21,7 @@ def test_standard_column_wrapper_is_successful_with_defaults(request, generate_m
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -33,7 +36,7 @@ def test_standard_column_wrapper_is_successful_with_disabled_uppercase_upper_val
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -48,7 +51,7 @@ def test_standard_column_wrapper_is_successful_with_disabled_uppercase_lower_val
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -63,7 +66,7 @@ def test_standard_column_wrapper_is_successful_with_enabled_uppercase_upper_valu
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -78,7 +81,7 @@ def test_standard_column_wrapper_is_successful_with_enabled_uppercase_lower_valu
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 

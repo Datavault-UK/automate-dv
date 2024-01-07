@@ -10,6 +10,7 @@ macro_name = "alias_all"
 os.chdir(test.TEST_PROJECT_ROOT)
 dbt_init = dbtRunner()
 
+
 @pytest.mark.macro
 def test_alias_all_correctly_generates_sql_for_full_alias_list_with_prefix(request, generate_model):
     var_dict = {'columns': [{"source_column": "CUSTOMER_HASHDIFF", "alias": "HASHDIFF"},

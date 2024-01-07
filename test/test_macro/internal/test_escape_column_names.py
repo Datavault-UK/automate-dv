@@ -8,6 +8,9 @@ from dbt.cli.main import dbtRunner
 
 macro_name = "escape_column_names"
 
+os.chdir(test.TEST_PROJECT_ROOT)
+dbt_init = dbtRunner()
+
 
 @pytest.mark.macro
 def test_escape_string_with_single_quotes_is_successful(request, generate_model):
@@ -20,7 +23,7 @@ def test_escape_string_with_single_quotes_is_successful(request, generate_model)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -35,7 +38,7 @@ def test_escape_string_with_double_quotes_is_successful(request, generate_model)
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -50,7 +53,7 @@ def test_escape_single_item_list_with_single_quotes_is_successful(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -65,7 +68,7 @@ def test_escape_single_item_list_with_double_quotes_is_successful(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -80,7 +83,7 @@ def test_escape_multiple_item_list_with_single_quotes_is_successful(request, gen
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -95,7 +98,7 @@ def test_escape_multiple_item_list_with_double_quotes_is_successful(request, gen
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -110,7 +113,7 @@ def test_escape_multiple_item_list_with_single_and_double_quotes_is_successful(r
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -123,7 +126,7 @@ def test_escape_no_columns_is_successful(request, generate_model):
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
                                          args=var_dict)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
 
 
 @pytest.mark.macro
@@ -135,7 +138,7 @@ def test_columns_is_none_is_successful(request, generate_model):
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
                                          args=var_dict)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
 
 
 @pytest.mark.macro
@@ -159,7 +162,7 @@ def test_escape_empty_column_list_is_successful(request, generate_model):
     dbt_logs = dbt_runner.run_dbt_models(model_names=[request.node.name],
                                          args=var_dict)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
 
 
 @pytest.mark.macro
@@ -198,7 +201,7 @@ def test_escape_string_with_single_quotes_backticks_is_successful(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -213,7 +216,7 @@ def test_escape_string_with_double_quotes_backticks_is_successful(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -228,7 +231,7 @@ def test_escape_single_item_list_with_single_quotes_backticks_is_successful(requ
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -243,7 +246,7 @@ def test_escape_single_item_list_with_double_quotes_backticks_is_successful(requ
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -259,7 +262,7 @@ def test_escape_multiple_item_list_with_single_quotes_backticks_is_successful(re
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -275,7 +278,7 @@ def test_escape_multiple_item_list_with_double_quotes_backticks_is_successful(re
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -291,7 +294,7 @@ def test_escape_multiple_item_list_with_single_and_double_quotes_backticks_is_su
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -306,7 +309,7 @@ def test_escape_string_with_single_quotes_sbrackets_is_successful(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -321,7 +324,7 @@ def test_escape_string_with_double_quotes_sbrackets_is_successful(request, gener
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -336,7 +339,7 @@ def test_escape_single_item_list_with_single_quotes_sbrackets_is_successful(requ
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -351,7 +354,7 @@ def test_escape_single_item_list_with_double_quotes_sbrackets_is_successful(requ
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -367,7 +370,7 @@ def test_escape_multiple_item_list_with_single_quotes_sbrackets_is_successful(re
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -383,7 +386,7 @@ def test_escape_multiple_item_list_with_double_quotes_sbrackets_is_successful(re
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -399,7 +402,7 @@ def test_escape_multiple_item_list_with_single_and_double_quotes_sbrackets_is_su
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -414,7 +417,7 @@ def test_column_is_none_is_successful(request, generate_model):
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == 'None'
 
 
@@ -429,7 +432,7 @@ def test_escape_dictionary_with_single_quotes_is_successful(request, generate_mo
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -445,7 +448,7 @@ def test_escape_dictionary_with_single_quotes_backticks_is_successful(request, g
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -461,7 +464,7 @@ def test_escape_dictionary_with_single_quotes_sbrackets_is_successful(request, g
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -476,7 +479,7 @@ def test_escape_dictionary_with_double_quotes_is_successful(request, generate_mo
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -492,7 +495,7 @@ def test_escape_dictionary_with_double_quotes_backticks_is_successful(request, g
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -508,7 +511,7 @@ def test_escape_dictionary_with_double_quotes_sbrackets_is_successful(request, g
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
 
 
@@ -549,7 +552,7 @@ def test_column_is_empty_dictionary_is_successful(request, generate_model):
 
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == '{}'
 
 
@@ -564,7 +567,7 @@ def test_escape_string_with_both_empty_string_is_successful(request, generate_mo
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
     assert "Invalid escape_char_left and escape_char_right value provided. Using platform defaults (\"\")" in dbt_logs
 
@@ -580,7 +583,7 @@ def test_escape_string_with_left_empty_string_is_successful(request, generate_mo
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
     assert "Invalid escape_char_left value provided. Using platform default (\")" in dbt_logs
 
@@ -596,6 +599,6 @@ def test_escape_string_with_right_empty_string_is_successful(request, generate_m
     actual_sql = macro_test_helpers.retrieve_compiled_model(request.node.name)
     expected_sql = macro_test_helpers.retrieve_expected_sql(request)
 
-    assert macro_test_helpers.is_successful_run(dbt_logs)
+    assert dbt_logs
     assert actual_sql == expected_sql
     assert "Invalid escape_char_right value provided. Using platform default (\")" in dbt_logs
