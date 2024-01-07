@@ -101,7 +101,7 @@ def run_dbt_models(dbt_class, *, mode='compile', model_names: list, args=None, f
 
     if args:
         args = json.dumps(args)
-        command.extend(['--vars', f"'{args}'"])
+        command.extend(['--vars', str(args)])
 
     return run_dbt_command(dbt_class, command, logs_required)
 

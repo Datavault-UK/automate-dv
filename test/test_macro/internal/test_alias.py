@@ -1,8 +1,9 @@
 import pytest
-import os
 import test
-from dbt.cli.main import dbtRunner
+import os
+
 from test import dbt_runner, macro_test_helpers
+from dbt.cli.main import dbtRunner
 
 macro_name = "alias"
 os.chdir(test.TEST_PROJECT_ROOT)
